@@ -91,44 +91,15 @@ namespace Models.WaterModel
         [Link]
         SoilNitrogen soilNitrogen = null;
 
-        // --- Events --------------------------------------------------------------------
-
-        /// <summary>Invoked to tell soil nitrogen about the new NO3, NH4 values.</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         // --- Settable properties -------------------------------------------------------
 
         /// <summary>Amount of water in the soil (mm).</summary>
         [XmlIgnore]
         public double[] Water { get; set; }
-
-        /// <summary>Nitrate in the soil (kg/ha).</summary>
-        [XmlIgnore]
-        public double[] NO3
-        {
-            get
-            {
-                return soilNitrogen.NO3;
-            }
-            set
-            {
-                soilNitrogen.NO3 = value;
-            }
-        }
-
-        /// <summary>Ammonia in the soil (kg/ha).</summary>
-        [XmlIgnore]
-        public double[] NH4
-        {
-            get
-            {
-                return soilNitrogen.NH4;
-            }
-            set
-            {
-                soilNitrogen.NH4 = value;
-            }
-        }
 
         /// <summary>Runon (mm).</summary>
         [XmlIgnore]
@@ -231,7 +202,7 @@ namespace Models.WaterModel
             MathUtilities.Subtract(Water, LateralFlow);
 
             // Calculate runoff.
-            Runoff = runoffModel.Value;
+            Runoff = runoffModel.Value();
 
             // Calculate infiltration.
             Infiltration = PotentialInfiltration - Runoff;
@@ -283,33 +254,18 @@ namespace Models.WaterModel
 
             CheckForErrors();
 
-            double waterTableDepth = waterTableModel.Value;
+            double waterTableDepth = waterTableModel.Value();
             double[] NO3Up = CalculateSoluteMovementUpDown(soilNitrogen.NO3, Water, Flow, SoluteFlowEfficiency);
             double[] NH4Up = CalculateSoluteMovementUpDown(soilNitrogen.NH4, Water, Flow, SoluteFlowEfficiency);
             MoveUp(NO3, NO3Up);
             MoveUp(NH4, NH4Up);
 
-            // Send NitrogenChanged event.
-            SendNitrogenChangedEvent(NO3, NH4);
+            // Set deltas
+            solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.NO3, NO3));
+            solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.NH4, NH4));
 
             ResidueInterception = 0;
             CanopyInterception = 0;
-        }
-
-        /// <summary>Send a nitrogen changed event.</summary>
-        /// <param name="NO3">The no3 values.</param>
-        /// <param name="NH4">The nh4 values.</param>
-        private void SendNitrogenChangedEvent(double[] NO3, double[] NH4)
-        {
-            NitrogenChangedType NitrogenDeltas = new NitrogenChangedType();
-            NitrogenDeltas.Sender = "Soil";
-            NitrogenDeltas.SenderType = "Soil";
-
-            NitrogenDeltas.DeltaNO3 = MathUtilities.Subtract(soilNitrogen.NO3, NO3);
-            NitrogenDeltas.DeltaNH4 = MathUtilities.Subtract(soilNitrogen.NH4, NH4);
-
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NitrogenDeltas);
         }
 
         /// <summary>Move water down the profile</summary>

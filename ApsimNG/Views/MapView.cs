@@ -5,14 +5,12 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
-    ///using GMap.NET.WindowsForms;
     using System;
     using System.IO;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Drawing;
-    using System.Threading;
-    ///using System.Windows.Forms;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Describes an interface for an axis view.
@@ -43,6 +41,11 @@ namespace UserInterface.Views
         /// Get or set the center position of the map
         /// </summary>
         Models.Map.Coordinate Center { get; set; }
+
+        /// <summary>
+        /// Store current position and zoom settings
+        /// </summary>
+        void StoreSettings();
     }
 
     /// It would be good if we could retrieve the current center and zoom values for a map,
@@ -84,7 +87,7 @@ namespace UserInterface.Views
 <head>
 <script src='http://maps.googleapis.com/maps/api/js?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw'>
 </script>";
-            if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+            if (ProcessUtilities.CurrentOS.IsWindows)
             {
                 html +=
 @"<script>
@@ -210,6 +213,12 @@ google.maps.event.addDomListener(window, 'load', initialize);
         }
 
         /// <summary>
+        /// Returns the Popup window used for exporting
+        /// </summary>
+        /// <returns></returns>
+        public Gtk.Window GetPopupWin() { return popupWin; }
+
+        /// <summary>
         /// Export the map to an image.
         /// </summary>
         public Image Export()
@@ -217,7 +226,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
-            if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+            Gdk.Window gridWindow = MainWidget.GdkWindow;
+            gridWindow.GetSize(out width, out height);
+            if (ProcessUtilities.CurrentOS.IsWindows)
             {
                 // Give the browser half a second to run all its scripts
                 // It would be better if we could tap into the browser's Javascript engine
@@ -227,9 +238,16 @@ google.maps.event.addDomListener(window, 'load', initialize);
                 watch.Start();
                 while (watch.ElapsedMilliseconds < 500)
                     Gtk.Application.RunIteration();
+                if ((browser as TWWebBrowserIE) != null)
+                {
+                    System.Windows.Forms.WebBrowser wb = (browser as TWWebBrowserIE).wb;
+                    System.Drawing.Bitmap bm = new System.Drawing.Bitmap(width, height);
+                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
+                    wb.DrawToBitmap(bm, rect);
+                    return bm;
+                }
+
             }
-            Gdk.Window gridWindow = MainWidget.GdkWindow;
-            gridWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
             MemoryStream stream = new MemoryStream(buffer);
@@ -252,18 +270,14 @@ google.maps.event.addDomListener(window, 'load', initialize);
             }
             set
             {
-                if (browser is TWWebBrowserIE)
-                    (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetZoom", new object[] { value });
-                else if (browser is TWWebBrowserWK)
+                _zoom = Math.Truncate(value + 0.5);
+                browser.ExecJavaScript("SetZoom", new object[] { (int)_zoom });
+                if (popupWin != null)
                 {
-                    (browser as TWWebBrowserWK).wb.ExecuteScript("SetZoom(" + (int)Math.Round(value) + ")");
-                    if (popupWin != null)
-                    {
-                        Stopwatch watch = new Stopwatch();
-                        watch.Start(); 
-                        while (watch.ElapsedMilliseconds < 500)
-                            Gtk.Application.RunIteration();
-                    }
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+                    while (watch.ElapsedMilliseconds < 500)
+                        Gtk.Application.RunIteration();
                 }
             }
         }
@@ -279,22 +293,23 @@ google.maps.event.addDomListener(window, 'load', initialize);
             }
             set
             {
-                if (browser is TWWebBrowserIE)
-                    (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetCenter", new object[] { value.Latitude, value.Longitude });
-                else if (browser is TWWebBrowserWK)
+                browser.ExecJavaScript("SetCenter", new object[] { value.Latitude, value.Longitude });
+
+                // With WebKit, it appears we need to give it time to actually update the display
+                // Really only a problem with the temporary windows used for generating documentation
+                if (popupWin != null)
                 {
-                    (browser as TWWebBrowserWK).wb.ExecuteScript("SetCenter(" + value.Latitude + ", " + value.Longitude + ")");
-                    // With WebKit, it appears we need to give it time to actually update the display
-                    // Really only a problem with the temporary windows used for generating documentation
-                    if (popupWin != null) 
-                    {
-                        Stopwatch watch = new Stopwatch();
-                        watch.Start(); 
-                        while (watch.ElapsedMilliseconds < 500)
-                            Gtk.Application.RunIteration();
-                    }
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+                    while (watch.ElapsedMilliseconds < 500)
+                        Gtk.Application.RunIteration();
                 }
             }
+        }
+
+        public void StoreSettings()
+        {
+            NewTitle(browser.GetTitle());
         }
 
         protected override void NewTitle(string title)

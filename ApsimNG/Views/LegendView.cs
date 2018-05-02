@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Glade;
 using Gtk;
 
 namespace UserInterface.Views
@@ -32,11 +31,8 @@ namespace UserInterface.Views
         public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
 
-        [Widget]
         private ComboBox combobox1 = null;
-        [Widget]
         private HBox hbox1 = null;
-        [Widget]
         private TreeView listview = null;
 
         private ListStore comboModel = new ListStore(typeof(string));
@@ -51,8 +47,10 @@ namespace UserInterface.Views
         /// </summary>
         public LegendView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.LegendView.glade", "hbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
+            hbox1 = (HBox)builder.GetObject("hbox1");
+            combobox1 = (ComboBox)builder.GetObject("combobox1");
+            listview = (TreeView)builder.GetObject("listview");
             _mainWidget = hbox1;
             combobox1.Model = comboModel;
             combobox1.PackStart(comboRender, false);
@@ -79,6 +77,13 @@ namespace UserInterface.Views
             combobox1.Changed -= OnPositionComboChanged;
             combobox1.Focused -= OnTitleTextBoxEnter;
             listToggle.Toggled -= OnItemChecked;
+            comboModel.Dispose();
+            comboRender.Destroy();
+            listModel.Dispose();
+            listRender.Destroy();
+            listToggle.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private bool settingCombo = false;

@@ -35,7 +35,7 @@ namespace Models
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
-    public class Weather : Model, IWeather
+    public class Weather : Model, IWeather, IReferenceExternalFiles
     {
         /// <summary>
         /// A link to the clock model.
@@ -193,6 +193,7 @@ namespace Models
         /// Gets or sets the maximum temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [Units("°C")]
         [XmlIgnore]
         public double MaxT
         {
@@ -212,6 +213,7 @@ namespace Models
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         [XmlIgnore]
+        [Units("°C")]
         public double MinT
         {
             get
@@ -228,13 +230,15 @@ namespace Models
         /// Daily Mean temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [Units("°C")]
         [XmlIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
-            /// <summary>
-            /// Gets or sets the rainfall (mm)
-            /// </summary>
-            [XmlIgnore]
+        /// <summary>
+        /// Gets or sets the rainfall (mm)
+        /// </summary>
+        [Units("mm")]
+        [XmlIgnore]
         public double Rain
         {
             get
@@ -251,6 +255,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the solar radiation. MJ/m2/day
         /// </summary>
+        [Units("MJ/m^2/d")]
         [XmlIgnore]
         public double Radn
         {
@@ -264,10 +269,11 @@ namespace Models
                 this.todaysMetData.Radn = value;
             }
         }
-		
+
         /// <summary>
         /// Gets or sets the Pan Evaporation (mm) (Class A pan)
         /// </summary>
+        [Units("mm")]
         [XmlIgnore]
         public double PanEvap
             {
@@ -302,6 +308,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the vapor pressure (hPa)
         /// </summary>
+        [Units("hPa")]
         [XmlIgnore]
         public double VP
         {
@@ -338,6 +345,14 @@ namespace Models
         /// </summary>
         [XmlIgnore]
         public double CO2 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
+        /// </summary>
+        [Units("hPa")]
+        [XmlIgnore]
+        public double AirPressure { get; set; }
+
 
         /// <summary>
         /// Gets the latitude
@@ -378,6 +393,7 @@ namespace Models
         /// <summary>
         /// Gets the average temperature
         /// </summary>
+        [Units("°C")]
         public double Tav
         {
             get
@@ -415,6 +431,40 @@ namespace Models
 
                 return this.reader.ConstantAsDouble("amp");
             }
+        }
+
+        /// <summary>
+        /// Temporarily stores which tab is currently displayed.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
+        /// <summary>
+        /// Temporarily stores the starting date for charts.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int StartYear = -1;
+        /// <summary>
+        /// Temporarily stores the years to show in charts.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ShowYears = 1;
+
+
+        /// <summary>
+        /// Gets the daily Photothermal Quotient (ptq).
+        /// </summary>
+        public double PhotothermalQuotient
+        {
+            get
+            {
+                return this.MetData.Radn / ((this.MetData.Maxt + this.MetData.Mint) / 2);
+            }
+        }
+
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
         }
 
         /// <summary>
@@ -470,6 +520,7 @@ namespace Models
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.CO2 = 350;
+            this.AirPressure = 1010;
         }
 
         /// <summary>
@@ -741,8 +792,8 @@ namespace Models
                 values = this.reader.GetNextLineOfData();
                 curDate = this.reader.GetDateFromValues(values);
                 int yearIndex = curDate.Year - start.Year;
-                maxt = Convert.ToDouble(values[this.maximumTemperatureIndex]);
-                mint = Convert.ToDouble(values[this.minimumTemperatureIndex]);
+                maxt = Convert.ToDouble(values[this.maximumTemperatureIndex], System.Globalization.CultureInfo.InvariantCulture);
+                mint = Convert.ToDouble(values[this.minimumTemperatureIndex], System.Globalization.CultureInfo.InvariantCulture);
 
                 // accumulate the daily mean for each month
                 if (curMonth != curDate.Month)

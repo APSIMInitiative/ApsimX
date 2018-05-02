@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-
+using System.Linq;
 using Models.Core;
-using Models.PMF.Functions;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Struct;
+using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -44,18 +44,25 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class LeafCohort : Model
+    public class LeafCohort : Model, ICustomDocumentation
     {
         #region Paramater Input Classes
+
         /// <summary>The plant</summary>
         [Link]
         private Plant Plant = null;
+
         /// <summary>The structure</summary>
         [Link]
         private Structure Structure = null;
+
         /// <summary>The leaf</summary>
         [Link]
         private Leaf Leaf = null;
+
+        [Link]
+        private IApex Apex = null;
+
         /// <summary>The clock</summary>
         [Link]
         public Clock Clock = null;
@@ -66,281 +73,325 @@ namespace Models.PMF.Organs
         /// <summary>The live</summary>
         [XmlIgnore]
         public Biomass Live = new Biomass();
+
         /// <summary>The dead</summary>
         [XmlIgnore]
         public Biomass Dead = new Biomass();
+
         /// <summary>The live start</summary>
-        private Biomass LiveStart = null;
+        public Biomass LiveStart = null;
 
         #endregion
 
         #region Class Fields
+
         /// <summary>The rank</summary>
         [Description("Rank")]
-        public int Rank { get; set; }  // 1 based ranking
+        public int Rank { get; set; } // 1 based ranking
+
         /// <summary>The area</summary>
-        [Description("Area")]
+        [Description("Area mm2")]
         public double Area { get; set; }
+
         //Leaf coefficients
         /// <summary>The age</summary>
         [XmlIgnore]
-        public double Age = 0;
+        public double Age;
+
         /// <summary>The n reallocation factor</summary>
-        private double NReallocationFactor = 0;
+        public double NReallocationFactor;
+
         /// <summary>The dm reallocation factor</summary>
-        private double DMReallocationFactor = 0;
+        public double DMReallocationFactor;
+
         /// <summary>The n retranslocation factor</summary>
-        private double NRetranslocationFactor = 0;
+        public double NRetranslocationFactor;
+
         /// <summary>The dm retranslocation factor</summary>
-        private double DMRetranslocationFactor = 0;
+        public double DMRetranslocationFactor;
+
         /// <summary>The functional n conc</summary>
-        private double FunctionalNConc = 0;
+        private double FunctionalNConc;
+
         /// <summary>The luxary n conc</summary>
-        private double LuxaryNConc = 0;
+        private double LuxaryNConc;
+
         /// <summary>The structural fraction</summary>
         [XmlIgnore]
-        public double StructuralFraction = 0;
+        public double StructuralFraction;
+
         /// <summary>The non structural fraction</summary>
         [XmlIgnore]
-        public double NonStructuralFraction = 0;
+        public double StorageFraction;
+
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
-        public double MaxLiveArea = 0;
+        public double MaxLiveArea;
+
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
-        public double MaxCohortPopulation = 0;
+        public double MaxCohortPopulation;
+
         /// <summary>The growth duration</summary>
         [XmlIgnore]
-        public double GrowthDuration = 0;
+        public double GrowthDuration;
+
         /// <summary>The lag duration</summary>
         [XmlIgnore]
-        public double LagDuration = 0;
+        public double LagDuration;
+
         /// <summary>The senescence duration</summary>
         [XmlIgnore]
-        public double SenescenceDuration = 0;
+        public double SenescenceDuration;
+
         /// <summary>The detachment lag duration</summary>
         [XmlIgnore]
-        public double DetachmentLagDuration = 0;
+        public double DetachmentLagDuration;
+
         /// <summary>The detachment duration</summary>
         [XmlIgnore]
-        public double DetachmentDuration = 0;
+        public double DetachmentDuration;
+
         /// <summary>The specific leaf area maximum</summary>
         [XmlIgnore]
-        public double SpecificLeafAreaMax = 0;
+        public double SpecificLeafAreaMax;
+
         /// <summary>The specific leaf area minimum</summary>
         [XmlIgnore]
-        public double SpecificLeafAreaMin = 0;
+        public double SpecificLeafAreaMin;
+
         /// <summary>The maximum n conc</summary>
         [XmlIgnore]
-        public double MaximumNConc = 0;
+        public double MaximumNConc;
+
         /// <summary>The minimum n conc</summary>
         [XmlIgnore]
-        public double MinimumNConc = 0;
+        public double MinimumNConc;
+
         /// <summary>The initial n conc</summary>
         [XmlIgnore]
-        public double InitialNConc = 0;
+        public double InitialNConc;
+
         /// <summary>The live area</summary>
         [XmlIgnore]
-        public double LiveArea = 0;
+        public double LiveArea;
+
         /// <summary>The dead area</summary>
         [XmlIgnore]
-        public double DeadArea = 0;
+        public double DeadArea;
+
         /// <summary>The maximum area</summary>
         [XmlIgnore]
-        public double MaxArea = 0;
+        public double MaxArea;
+
         /// <summary>The maximum area</summary>
         [XmlIgnore]
         public double LeafSizeShape = 0.01;
+
         /// <summary>The size of senessing leaves relative to the other leaves in teh cohort</summary>
         [XmlIgnore]
         public double SenessingLeafRelativeSize = 1;
+
         /// <summary>Gets or sets the cover above.</summary>
         /// <value>The cover above.</value>
         [XmlIgnore]
         public double CoverAbove { get; set; }
+
         /// <summary>The shade induced sen rate</summary>
-        private double ShadeInducedSenRate = 0;
+        public double ShadeInducedSenRate;
+
         /// <summary>The senesced frac</summary>
-        private double SenescedFrac = 0;
+        public double SenescedFrac;
+
         /// <summary>The detached frac</summary>
-        private double DetachedFrac = 0;
+        private double DetachedFrac;
+
         /// <summary>The cohort population</summary>
         [XmlIgnore]
-        public double CohortPopulation = 0; //Number of leaves in this cohort
+        public double CohortPopulation; //Number of leaves in this cohort
+
+        /// <summary>Number of apex age groups in the cohort</summary>
+        [XmlIgnore]
+        public int GroupNumber;
+
+        /// <summary>The number of leaves in each age group</summary>
+        [XmlIgnore]
+        public double[] GroupSize;
+
+        /// <summary>The age of apex in each age group</summary>
+        [XmlIgnore]
+        public double[] GroupAge;
+
         /// <summary>The cell division stress factor</summary>
         [XmlIgnore]
         public double CellDivisionStressFactor = 1;
+
         /// <summary>The cell division stress accumulation</summary>
         [XmlIgnore]
-        public double CellDivisionStressAccumulation = 0;
+        public double CellDivisionStressAccumulation;
+
         /// <summary>The cell division stress days</summary>
         [XmlIgnore]
-        public double CellDivisionStressDays = 0;
+        public double CellDivisionStressDays;
+
         //Leaf Initial status paramaters
         /// <summary>The leaf start n retranslocation supply</summary>
         [XmlIgnore]
-        public double LeafStartNRetranslocationSupply = 0;
+        public double LeafStartNRetranslocationSupply;
+
         /// <summary>The leaf start n reallocation supply</summary>
         [XmlIgnore]
-        public double LeafStartNReallocationSupply = 0;
+        public double LeafStartNReallocationSupply;
+
         /// <summary>The leaf start dm retranslocation supply</summary>
         [XmlIgnore]
-        public double LeafStartDMRetranslocationSupply = 0;
+        public double LeafStartDMRetranslocationSupply;
+
         /// <summary>The leaf start dm reallocation supply</summary>
         [XmlIgnore]
-        public double LeafStartDMReallocationSupply = 0;
+        public double LeafStartDMReallocationSupply;
+
         /// <summary>The leaf start area</summary>
         [XmlIgnore]
-        public double LeafStartArea = 0;
+        public double LeafStartArea;
+
         /// <summary>
         /// The leaf start metabolic n reallocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartMetabolicNReallocationSupply = 0;
+        public double LeafStartMetabolicNReallocationSupply;
+
         /// <summary>
         /// The leaf start non structural n reallocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartNonStructuralNReallocationSupply = 0;
+        public double LeafStartStorageNReallocationSupply;
+
         /// <summary>
         /// The leaf start metabolic n retranslocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartMetabolicNRetranslocationSupply = 0;
+        public double LeafStartMetabolicNRetranslocationSupply;
+
         /// <summary>
         /// The leaf start non structural n retranslocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartNonStructuralNRetranslocationSupply = 0;
+        public double LeafStartStorageNRetranslocationSupply;
+
         /// <summary>
         /// The leaf start metabolic dm reallocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartMetabolicDMReallocationSupply = 0;
+        public double LeafStartMetabolicDMReallocationSupply;
+
         /// <summary>
         /// The leaf start non structural dm reallocation supply
         /// </summary>
         [XmlIgnore]
-        public double LeafStartNonStructuralDMReallocationSupply = 0;
-        /// <summary>
-        /// The leaf start metabolic dm retranslocation supply
-        /// </summary>
-        [XmlIgnore]
-        public double LeafStartMetabolicDMRetranslocationSupply = 0;
-        /// <summary>
-        /// The leaf start non structural dm retranslocation supply
-        /// </summary>
-        [XmlIgnore]
-        public double LeafStartNonStructuralDMRetranslocationSupply = 0;
-        //variables used in calculating daily supplies and deltas
-        /// <summary>The delta wt</summary>
-        [XmlIgnore]
-        public double DeltaWt = 0;
+        public double LeafStartStorageDMReallocationSupply;
 
+        //variables used in calculating daily supplies and deltas
         /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
         [XmlIgnore]
-        public double DetachedWt { get; set; }
-        
-        /// <summary>Gets the N amount detached (send to surface OM) (g/m2)</summary>
-        [XmlIgnore]
-        public double DetachedN { get; set; }
-        
+        public Biomass Detached { get; set; }
+
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public double RemovedWt { get; set; }
+        public Biomass Removed { get; set; }
 
-        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedN { get; set; }
-
-        /// <summary>The potential area growth</summary>
-        [XmlIgnore]
-        public double PotentialAreaGrowth = 0;
         /// <summary>The delta potential area</summary>
-        private double DeltaPotentialArea = 0;
+        public double DeltaPotentialArea;
+
         /// <summary>The delta water constrained area</summary>
-        public double DeltaWaterConstrainedArea = 0;
+        public double DeltaStressConstrainedArea;
+
         /// <summary>The delta carbon constrained area</summary>
-        public double DeltaCarbonConstrainedArea = 0;
-        //private double StructuralDMDemand = 0;
-        //private double MetabolicDMDemand = 0;
+        public double DeltaCarbonConstrainedArea;
+
         /// <summary>The potential structural dm allocation</summary>
-        private double PotentialStructuralDMAllocation = 0;
+        public double PotentialStructuralDMAllocation;
+
         /// <summary>The potential metabolic dm allocation</summary>
-        private double PotentialMetabolicDMAllocation = 0;
+        public double PotentialMetabolicDMAllocation;
+
         /// <summary>The metabolic n reallocated</summary>
-        private double MetabolicNReallocated = 0;
+        public double MetabolicNReallocated;
+
         /// <summary>The metabolic wt reallocated</summary>
-        private double MetabolicWtReallocated = 0;
+        public double MetabolicWtReallocated;
+
         /// <summary>The non structural n reallocated</summary>
-        private double NonStructuralNReallocated = 0;
+        public double StorageNReallocated;
+
         /// <summary>The non structural wt reallocated</summary>
-        private double NonStructuralWtReallocated = 0;
+        public double StorageWtReallocated;
+
         /// <summary>The metabolic n retranslocated</summary>
-        private double MetabolicNRetranslocated = 0;
+        public double MetabolicNRetranslocated;
+
         /// <summary>The non structural n retrasnlocated</summary>
-        private double NonStructuralNRetrasnlocated = 0;
+        public double StorageNRetrasnlocated;
+
         /// <summary>The dm retranslocated</summary>
-        private double DMRetranslocated = 0;
+        public double DMRetranslocated;
+
         /// <summary>The metabolic n allocation</summary>
-        private double MetabolicNAllocation = 0;
+        public double MetabolicNAllocation;
+
         /// <summary>The structural dm allocation</summary>
-        private double StructuralDMAllocation = 0;
+        public double StructuralDMAllocation;
+
         /// <summary>The metabolic dm allocation</summary>
-        private double MetabolicDMAllocation = 0;
+        public double MetabolicDMAllocation;
+
         #endregion
 
         #region Class Properties
-        /// <summary>Gets the node age.</summary>
-        /// <value>The node age.</value>
-        public double NodeAge
-        {
-            get { return Age; }
-        }
-        /// <summary>The is initialised</summary>
+
+        /// <summary>Has the leaf chort been initialised?</summary>
         [XmlIgnore]
-        public bool IsInitialised = false;
-        /// <summary>Gets a value indicating whether this instance is not appeared.</summary>
+        public bool IsInitialised;
+
+        /// <summary>Gets a value indicating whether this instance has not appeared.</summary>
         /// <value>
         /// <c>true</c> if this instance is not appeared; otherwise, <c>false</c>.
         /// </value>
         public bool IsNotAppeared
         {
-            get
-            {
-                return (IsInitialised && Age == 0);
-            }
+            get { return IsInitialised && Age <= 0; }
         }
+
         /// <summary>Gets a value indicating whether this instance is growing.</summary>
         /// <value>
         /// <c>true</c> if this instance is growing; otherwise, <c>false</c>.
         /// </value>
         public bool IsGrowing
         {
-            get { return (Age < GrowthDuration); }
+            get { return Age < GrowthDuration; }
         }
+
         /// <summary>Gets or sets a value indicating whether this instance is appeared.</summary>
         /// <value>
         /// <c>true</c> if this instance is appeared; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
         public bool IsAppeared { get; set; }
+
         /// <summary>Gets a value indicating whether this instance is fully expanded.</summary>
         /// <value>
         /// <c>true</c> if this instance is fully expanded; otherwise, <c>false</c>.
         /// </value>
         public bool IsFullyExpanded
         {
-            get
-            {
-                return (IsAppeared && Age > GrowthDuration);
-            }
+            get { return IsAppeared && Age > GrowthDuration; }
         }
+
         /// <summary>Gets a value indicating whether this instance is green.</summary>
         /// <value><c>true</c> if this instance is green; otherwise, <c>false</c>.</value>
         public bool IsGreen
         {
-            get { return (Age < (GrowthDuration + LagDuration + SenescenceDuration)); }
+            get { return Age < GrowthDuration + LagDuration + SenescenceDuration; }
         }
         /// <summary>Gets a value indicating whether this instance is senescing.</summary>
         /// <value>
@@ -348,7 +399,8 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return (Age > (GrowthDuration + LagDuration)); }
+            get { return Age > GrowthDuration + LagDuration & Age < GrowthDuration + LagDuration + SenescenceDuration; }
+
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
         /// <value>
@@ -356,30 +408,13 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsNotSenescing
         {
-            get { return (Age < (GrowthDuration + LagDuration)); }
-        }
-        /// <summary>
-        /// Gets a value indicating whether [should be dead].
-        /// </summary>
-        /// <value><c>true</c> if [should be dead]; otherwise, <c>false</c>.</value>
-        public bool ShouldBeDead
-        {
-            get { return !IsGreen; }
+            get { return Age < GrowthDuration + LagDuration; }
         }
         /// <summary>Gets a value indicating whether this <see cref="LeafCohort"/> is finished.</summary>
         /// <value><c>true</c> if finished; otherwise, <c>false</c>.</value>
         public bool Finished
         {
-            get
-            {
-                return IsAppeared && !IsGreen;
-            }
-        }
-        /// <summary>Gets a value indicating whether this instance is alive.</summary>
-        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
-        public bool IsAlive
-        {
-            get { return ((Age >= 0) && (Age < (GrowthDuration + LagDuration + SenescenceDuration))); }
+            get { return IsAppeared && !IsGreen; }
         }
         /// <summary>Gets a value indicating whether this instance is dead.</summary>
         /// <value><c>true</c> if this instance is dead; otherwise, <c>false</c>.</value>
@@ -391,65 +426,21 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets the maximum size.</summary>
-        /// <value>The maximum size.</value>
-        public double MaxSize
-        {
-            get
-            {
-                if (MaxLiveArea == 0)
-                    return 0;
-                else
-                    return MaxLiveArea / MaxCohortPopulation;
-            }
-        }
-        /// <summary>Gets the live population.</summary>
-        /// <value>The live population.</value>
-        public double LivePopulation
-        {
-            get
-            {
-                return CohortPopulation;
-            }
-        }
-        /// <summary>Gets the size.</summary>
-        /// <value>The size.</value>
-        public double Size
-        {
-            get
-            {
-                if (IsAppeared)
-                    return LiveArea / CohortPopulation;
-                else
-                    return 0;
-            }
-        }
+
         /// <summary>Gets the fraction expanded.</summary>
         /// <value>The fraction expanded.</value>
         public double FractionExpanded
         {
             get
             {
-                if (Age == 0)
+                if (Age <= 0)
                     return 0;
-                else if (Age >= GrowthDuration)
+                if (Age >= GrowthDuration)
                     return 1;
-                else
-                    return Age / GrowthDuration;
+                return Age/GrowthDuration;
             }
         }
-        /// <summary>ns the fac.</summary>
-        /// <returns></returns>
-        private double NFac()
-        {
-            if (IsAppeared)
-            {
-                double Nconc = Live.NConc;
-                double value = Math.Min(1.0, Math.Max(0.0, (Nconc - MinimumNConc) / (MaximumNConc - MinimumNConc)));
-                return value;
-            }
-            else
-                return 0;
-        }
+
         /// <summary>Gets the specific area.</summary>
         /// <value>The specific area.</value>
         public double SpecificArea
@@ -457,119 +448,118 @@ namespace Models.PMF.Organs
             get
             {
                 if (Live.Wt > 0)
-                    return LiveArea / Live.Wt;
-                else
-                    return 0;
+                    return LiveArea/Live.Wt;
+                return 0;
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
+
+        /// <summary>MaintenanceRespiration</summary>
         public double MaintenanceRespiration { get; set; }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public List<double> ApexGroupSize { get; set; }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public List<double> ApexGroupAge { get; set; }
         #endregion
 
         #region Arbitration methods
+
         /// <summary>Gets the structural dm demand.</summary>
         /// <value>The structural dm demand.</value>
-        virtual public double StructuralDMDemand
+        public double StructuralDMDemand
         {
             get
             {
                 if (IsGrowing)
                 {
-                    double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2), DeltaWaterConstrainedArea / SpecificLeafAreaMin);
-                    if(TotalDMDemand < 0)
+                    double TotalDMDemand = Math.Min(DeltaPotentialArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2),
+                        DeltaStressConstrainedArea/SpecificLeafAreaMin);
+                    if (TotalDMDemand < 0)
                         throw new Exception("Negative DMDemand in" + this);
-                    return TotalDMDemand * StructuralFraction;
+                    return TotalDMDemand*StructuralFraction;
 
                 }
-                else return 0;
+                return 0;
             }
         }
+
         /// <summary>Gets the metabolic dm demand.</summary>
         /// <value>The metabolic dm demand.</value>
-        virtual public double MetabolicDMDemand
+        public double MetabolicDMDemand
         {
             get
             {
                 if (IsGrowing)
                 {
-                    double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2), DeltaWaterConstrainedArea / SpecificLeafAreaMin);
-                    return TotalDMDemand * (1 - StructuralFraction);
+                    double TotalDMDemand = Math.Min(DeltaPotentialArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2),
+                        DeltaStressConstrainedArea/SpecificLeafAreaMin);
+                    return TotalDMDemand*(1 - StructuralFraction);
                 }
-                else return 0;
+                return 0;
             }
         }
+
         /// <summary>Gets the non structural dm demand.</summary>
         /// <value>The non structural dm demand.</value>
-        virtual public double NonStructuralDMDemand
+        public double StorageDMDemand
         {
             get
             {
                 if (IsNotSenescing)
                 {
-                    double MaxNonStructuralDM = (MetabolicDMDemand + StructuralDMDemand + LiveStart.MetabolicWt + LiveStart.StructuralWt) * NonStructuralFraction;
-                    return Math.Max(0.0, MaxNonStructuralDM - LiveStart.NonStructuralWt);
+                    double MaxStorageDM = (MetabolicDMDemand + StructuralDMDemand + LiveStart.MetabolicWt +
+                                                 LiveStart.StructuralWt)*StorageFraction;
+                    return Math.Max(0.0, MaxStorageDM - LiveStart.StorageWt);
                 }
-                else
-                    return 0.0;
+                return 0.0;
             }
         }
-        /// <summary>Gets the total dm demand.</summary>
-        /// <value>The total dm demand.</value>
-        virtual public double TotalDMDemand
-        {
-            get
-            {
-                return StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand;
-            }
-        }
+
         /// <summary>Gets the structural n demand.</summary>
         /// <value>The structural n demand.</value>
-        virtual public double StructuralNDemand
+        public double StructuralNDemand
         {
             get
             {
-                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0)) // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
-                    return MinimumNConc * PotentialStructuralDMAllocation;
-                else
-                    return 0.0;
+                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0))
+                    // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
+                    return MinimumNConc*PotentialStructuralDMAllocation;
+                return 0.0;
             }
         }
+
         /// <summary>Gets the non structural n demand.</summary>
         /// <value>The non structural n demand.</value>
-        virtual public double NonStructuralNDemand
+        public double StorageNDemand
         {
             get
             {
-                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0) && (NonStructuralFraction > 0)) // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
-                    return Math.Max(0.0, LuxaryNConc * (LiveStart.StructuralWt + LiveStart.MetabolicWt 
-                                    + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) - Live.NonStructuralN);//Math.Max(0.0, MaxN - CritN - LeafStartNonStructuralN); //takes the difference between the two above as the maximum nonstructural N conc and subtracts the current nonstructural N conc to give a value
-                else
-                    return 0.0;
+                if (IsNotSenescing && (ShadeInducedSenRate == 0.0) && (StorageFraction > 0))
+                    // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
+                    return Math.Max(0.0, LuxaryNConc*(LiveStart.StructuralWt + LiveStart.MetabolicWt
+                                                      + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) -
+                                         Live.StorageN);
+                return 0.0;
             }
         }
+
         /// <summary>Gets the metabolic n demand.</summary>
         /// <value>The metabolic n demand.</value>
-        virtual public double MetabolicNDemand
+        public double MetabolicNDemand
         {
             get
             {
-                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0)) // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
-                    return FunctionalNConc * PotentialMetabolicDMAllocation;
-                else
-                    return 0.0;
+                if (IsNotSenescing && (ShadeInducedSenRate == 0.0))
+                    // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
+                    return FunctionalNConc*PotentialMetabolicDMAllocation;
+
+                return 0.0;
             }
         }
-        /// <summary>Gets the total n demand.</summary>
-        /// <value>The total n demand.</value>
-        virtual public double TotalNDemand
-        {
-            get
-            {
-                return StructuralNDemand + NonStructuralNDemand + MetabolicNDemand;
-            }
-        }
+
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         /// <exception cref="System.Exception">
@@ -585,34 +575,39 @@ namespace Models.PMF.Organs
         /// or
         /// A leaf cohort cannot supply that amount for DM retranslocation
         /// </exception>
-        virtual public BiomassAllocationType DMAllocation
+        public BiomassAllocationType DMAllocation
         {
             set
             {
                 //Firstly allocate DM
-                if (value.Structural + value.NonStructural + value.Metabolic < -0.0000000001)
+                if (value.Structural + value.Storage + value.Metabolic < -0.0000000001)
                     throw new Exception("-ve DM Allocation to Leaf Cohort");
-                if ((value.Structural + value.NonStructural + value.Metabolic - TotalDMDemand) > 0.0000000001)
+                if (value.Structural + value.Storage + value.Metabolic - (StructuralDMDemand + MetabolicDMDemand + StorageDMDemand) > 0.0000000001)
                     throw new Exception("DM Allocated to Leaf Cohort is in excess of its Demand");
-                if (TotalDMDemand > 0)
+                if (StructuralDMDemand + MetabolicDMDemand + StorageDMDemand > 0)
                 {
                     StructuralDMAllocation = value.Structural;
                     MetabolicDMAllocation = value.Metabolic;
                     Live.StructuralWt += value.Structural;
                     Live.MetabolicWt += value.Metabolic;
-                    Live.NonStructuralWt += value.NonStructural;
+                    Live.StorageWt += value.Storage;
                 }
 
                 //Then remove reallocated DM
-                if (value.Reallocation - (LeafStartMetabolicDMReallocationSupply + LeafStartNonStructuralDMReallocationSupply) > 0.00000000001)
+                if (value.Reallocation -
+                    (LeafStartMetabolicDMReallocationSupply + LeafStartStorageDMReallocationSupply) >
+                    0.00000000001)
                     throw new Exception("A leaf cohort cannot supply that amount for DM Reallocation");
                 if (value.Reallocation < -0.0000000001)
                     throw new Exception("Leaf cohort given negative DM Reallocation");
                 if (value.Reallocation > 0.0)
                 {
-                    NonStructuralWtReallocated = Math.Min(LeafStartNonStructuralDMReallocationSupply, value.Reallocation); //Reallocate nonstructural first
-                    MetabolicWtReallocated = Math.Max(0.0, Math.Min(value.Reallocation - NonStructuralWtReallocated, LeafStartMetabolicDMReallocationSupply)); //Then reallocate metabolic DM
-                    Live.NonStructuralWt -= NonStructuralWtReallocated;
+                    StorageWtReallocated = Math.Min(LeafStartStorageDMReallocationSupply, value.Reallocation);
+                        //Reallocate Storage first
+                    MetabolicWtReallocated = Math.Max(0.0,
+                            Math.Min(value.Reallocation - StorageWtReallocated, LeafStartMetabolicDMReallocationSupply));
+                        //Then reallocate metabolic DM
+                    Live.StorageWt -= StorageWtReallocated;
                     Live.MetabolicWt -= MetabolicWtReallocated;
                 }
 
@@ -622,30 +617,10 @@ namespace Models.PMF.Organs
                 if (value.Retranslocation > LeafStartDMRetranslocationSupply)
                     throw new Exception("A leaf cohort cannot supply that amount for DM retranslocation");
                 if ((value.Retranslocation > 0) && (LeafStartDMRetranslocationSupply > 0))
-                    Live.NonStructuralWt -= value.Retranslocation;
+                    Live.StorageWt -= value.Retranslocation;
             }
         }
-        /*virtual public double NAllocation
-        {
-            set
-            {
-                if (value < -0.000000001)
-                    throw new Exception("-ve N allocation to Leaf cohort");
-                if ((value - TotalNDemand) > 0.0000000001)
-                    throw new Exception("N Allocation to leaf cohort in excess of its Demand");
-                if (TotalNDemand > 0.0)
-                {
-                    double StructDemFrac = 0;
-                    if (StructuralNDemand > 0)
-                        StructDemFrac = StructuralNDemand / (StructuralNDemand + MetabolicNDemand);
-                    StructuralNAllocation = Math.Min(value * StructDemFrac, StructuralNDemand);
-                    MetabolicNAllocation = Math.Min(value - StructuralNAllocation, MetabolicNDemand);
-                    Live.StructuralN += StructuralNAllocation;
-                    Live.MetabolicN += MetabolicNAllocation;//Then partition N to Metabolic
-                    Live.NonStructuralN += Math.Max(0.0, value - StructuralNAllocation - MetabolicNAllocation); //Then partition N to NonStructural
-                }
-            }
-        }*/
+
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
         /// <exception cref="System.Exception">
@@ -657,93 +632,49 @@ namespace Models.PMF.Organs
         /// or
         /// Leaf cohort given negative N Retranslocation
         /// </exception>
-        virtual public BiomassAllocationType NAllocation
+        public BiomassAllocationType NAllocation
         {
             set
             {
                 //Fresh allocations
                 Live.StructuralN += value.Structural;
                 Live.MetabolicN += value.Metabolic;
-                Live.NonStructuralN += value.NonStructural;
+                Live.StorageN += value.Storage;
                 //Reallocation
-                if (value.Reallocation - (LeafStartMetabolicNReallocationSupply + LeafStartNonStructuralNReallocationSupply) > 0.00000000001)
+                if (value.Reallocation -
+                    (LeafStartMetabolicNReallocationSupply + LeafStartStorageNReallocationSupply) > 0.00000000001)
                     throw new Exception("A leaf cohort cannot supply that amount for N Reallocation");
                 if (value.Reallocation < -0.0000000001)
                     throw new Exception("Leaf cohort given negative N Reallocation");
                 if (value.Reallocation > 0.0)
                 {
-                    NonStructuralNReallocated = Math.Min(LeafStartNonStructuralNReallocationSupply, value.Reallocation); //Reallocate nonstructural first
-                    MetabolicNReallocated = Math.Max(0.0, value.Reallocation - LeafStartNonStructuralNReallocationSupply); //Then reallocate metabolic N
-                    Live.NonStructuralN -= NonStructuralNReallocated;
+                    StorageNReallocated = Math.Min(LeafStartStorageNReallocationSupply, value.Reallocation);
+                        //Reallocate Storage first
+                    MetabolicNReallocated = Math.Max(0.0, value.Reallocation - LeafStartStorageNReallocationSupply);
+                        //Then reallocate metabolic N
+                    Live.StorageN -= StorageNReallocated;
                     Live.MetabolicN -= MetabolicNReallocated;
                 }
                 //Retranslocation
-                if (value.Retranslocation - (LeafStartMetabolicNRetranslocationSupply + LeafStartNonStructuralNRetranslocationSupply) > 0.00000000001)
+                if (value.Retranslocation -
+                    (LeafStartMetabolicNRetranslocationSupply + LeafStartStorageNRetranslocationSupply) >
+                    0.00000000001)
                     throw new Exception("A leaf cohort cannot supply that amount for N Retranslocation");
                 if (value.Retranslocation < -0.0000000001)
                     throw new Exception("Leaf cohort given negative N Retranslocation");
                 if (value.Retranslocation > 0.0)
                 {
-                    NonStructuralNRetrasnlocated = Math.Min(LeafStartNonStructuralNRetranslocationSupply, value.Retranslocation); //Reallocate nonstructural first
-                    MetabolicNRetranslocated = Math.Max(0.0, value.Retranslocation - LeafStartNonStructuralNRetranslocationSupply); //Then reallocate metabolic N
-                    Live.NonStructuralN -= NonStructuralNRetrasnlocated;
+                    StorageNRetrasnlocated = Math.Min(LeafStartStorageNRetranslocationSupply,
+                        value.Retranslocation); //Reallocate Storage first
+                    MetabolicNRetranslocated = Math.Max(0.0,
+                            value.Retranslocation - LeafStartStorageNRetranslocationSupply);
+                        //Then reallocate metabolic N
+                    Live.StorageN -= StorageNRetrasnlocated;
                     Live.MetabolicN -= MetabolicNRetranslocated;
                 }
             }
         }
-        /// <summary>Gets the n retranslocation supply.</summary>
-        /// <value>The n retranslocation supply.</value>
-        virtual public double NRetranslocationSupply
-        {
-            get
-            {
-                return LeafStartNonStructuralNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
-            }
-        }
-        /*virtual public double NRetranslocation
-        {
-            set
-            {
-                if (value - (LeafStartMetabolicNRetranslocationSupply + LeafStartNonStructuralNRetranslocationSupply) > 0.00000000001)
-                    throw new Exception("A leaf cohort cannot supply that amount for N Retranslocation");
-                if (value < -0.0000000001)
-                    throw new Exception("Leaf cohort given negative N Retranslocation");
-                if (value > 0.0)
-                {
-                    NonStructuralNRetrasnlocated = Math.Min(LeafStartNonStructuralNRetranslocationSupply, value); //Reallocate nonstructural first
-                    MetabolicNRetranslocated = Math.Max(0.0, value - LeafStartNonStructuralNRetranslocationSupply); //Then reallocate metabolic N
-                    Live.NonStructuralN -= NonStructuralNRetrasnlocated;
-                    Live.MetabolicN -= MetabolicNRetranslocated;
-                }
-            }
-        }*/
-        /// <summary>Gets the dm retranslocation supply.</summary>
-        /// <value>The dm retranslocation supply.</value>
-        public double DMRetranslocationSupply
-        {
-            get
-            {
-                return LeafStartDMRetranslocationSupply;
-            }
-        }
-        /// <summary>Gets the n reallocation supply.</summary>
-        /// <value>The n reallocation supply.</value>
-        public double NReallocationSupply
-        {
-            get
-            {
-                return LeafStartNonStructuralNReallocationSupply + LeafStartMetabolicNReallocationSupply;
-            }
-        }
-        /// <summary>Gets the dm reallocation supply.</summary>
-        /// <value>The dm reallocation supply.</value>
-        public double DMReallocationSupply
-        {
-            get
-            {
-                return LeafStartNonStructuralDMReallocationSupply + LeafStartMetabolicDMReallocationSupply;
-            }
-        }
+
         /// <summary>Sets the dm potential allocation.</summary>
         /// <value>The dm potential allocation.</value>
         /// <exception cref="System.Exception">
@@ -755,7 +686,7 @@ namespace Models.PMF.Organs
         /// or
         /// Potential DM Allocation to Leaf Cohortis in excess of its Demand
         /// </exception>
-        virtual public BiomassPoolType DMPotentialAllocation
+        public BiomassPoolType DMPotentialAllocation
         {
             set
             {
@@ -763,166 +694,142 @@ namespace Models.PMF.Organs
                     throw new Exception("-ve Potential DM Allocation to Leaf Cohort");
                 if ((value.Structural - StructuralDMDemand) > 0.0000000001)
                     throw new Exception("Potential DM Allocation to Leaf Cohortis in excess of its Demand");
-                if (StructuralDMDemand > 0)
-                {
-                    PotentialStructuralDMAllocation = value.Structural;
-                    //double StructuralDMDemandFrac = StructuralDMDemand / (StructuralDMDemand + MetabolicDMDemand);
-                    //PotentialStructuralDMAllocation = value * StructuralDMDemandFrac;
-                    //PotentialMetabolicDMAllocation = value * (1 - StructuralDMDemandFrac);
-                }
-
                 if (value.Metabolic < -0.0000000001)
                     throw new Exception("-ve Potential DM Allocation to Leaf Cohort");
                 if ((value.Metabolic - MetabolicDMDemand) > 0.0000000001)
                     throw new Exception("Potential DM Allocation to Leaf Cohortis in excess of its Demand");
+
+                if (StructuralDMDemand > 0)
+                    PotentialStructuralDMAllocation = value.Structural;
                 if (MetabolicDMDemand > 0)
-                {
                     PotentialMetabolicDMAllocation = value.Metabolic;
-                    //double StructuralDMDemandFrac = StructuralDMDemand / (StructuralDMDemand + MetabolicDMDemand);
-                    //PotentialStructuralDMAllocation = value * StructuralDMDemandFrac;
-                    //PotentialMetabolicDMAllocation = value * (1 - StructuralDMDemandFrac);
-                }
             }
-
-
         }
-        /*public double NReallocation
-        {
-            set
-            {
-                if (value - (LeafStartMetabolicNReallocationSupply + LeafStartNonStructuralNReallocationSupply) > 0.00000000001)
-                    throw new Exception("A leaf cohort cannot supply that amount for N Reallocation");
-                if (value < -0.0000000001)
-                    throw new Exception("Leaf cohort given negative N Reallocation");
-                if (value > 0.0)
-                {
-                    NonStructuralNReallocated = Math.Min(LeafStartNonStructuralNReallocationSupply, value); //Reallocate nonstructural first
-                    MetabolicNReallocated = Math.Max(0.0, value - LeafStartNonStructuralNReallocationSupply); //Then reallocate metabolic N
-                    Live.NonStructuralN -= NonStructuralNReallocated;
-                    Live.MetabolicN -= MetabolicNReallocated;
-                }
-            }
-        }*/
         #endregion
 
         #region Functions
-        /// <summary>The default constuctor that will be called by the APSIM infrastructure.</summary>
+        /// <summary>Constructor</summary>
         public LeafCohort()
         {
+            Detached = new Biomass();
+            Removed = new Biomass();
         }
+        
         /// <summary>Returns a clone of this object</summary>
         /// <returns></returns>
         public virtual LeafCohort Clone()
         {
-            LeafCohort NewLeaf = (LeafCohort)this.MemberwiseClone();
-            NewLeaf.Live = new Biomass();
-            NewLeaf.Dead = new Biomass();
-            return NewLeaf;
+            LeafCohort newLeaf = (LeafCohort) MemberwiseClone();
+            newLeaf.Live = new Biomass();
+            newLeaf.Dead = new Biomass();
+            newLeaf.Detached = new Biomass();
+            newLeaf.Removed = new Biomass();
+            return newLeaf;
         }
+
         /// <summary>Does the initialisation.</summary>
         public void DoInitialisation()
         {
             IsInitialised = true;
             Age = 0;
         }
+
         /// <summary>Does the appearance.</summary>
-        /// <param name="LeafFraction">The leaf fraction.</param>
-        /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        public void DoAppearance(double LeafFraction, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
+        /// <param name="leafFraction">The leaf fraction.</param>
+        /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
+        public void DoAppearance(double leafFraction, Leaf.LeafCohortParameters leafCohortParameters)
         {
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
             if (CohortPopulation == 0)
-                CohortPopulation = Structure.TotalStemPopn;
-            MaxArea = LeafCohortParameters.MaxArea.Value * CellDivisionStressFactor * LeafFraction;//Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
-            GrowthDuration = LeafCohortParameters.GrowthDuration.Value * LeafFraction;
-            LagDuration = LeafCohortParameters.LagDuration.Value;
-            SenescenceDuration = LeafCohortParameters.SenescenceDuration.Value;
-            DetachmentLagDuration = LeafCohortParameters.DetachmentLagDuration.Value;
-            DetachmentDuration = LeafCohortParameters.DetachmentDuration.Value;
-            StructuralFraction = LeafCohortParameters.StructuralFraction.Value;
-            SpecificLeafAreaMax = LeafCohortParameters.SpecificLeafAreaMax.Value;
-            SpecificLeafAreaMin = LeafCohortParameters.SpecificLeafAreaMin.Value;
-            MaximumNConc = LeafCohortParameters.MaximumNConc.Value;
-            MinimumNConc = LeafCohortParameters.MinimumNConc.Value;
-            if (LeafCohortParameters.NonStructuralFraction != null)
-                NonStructuralFraction = LeafCohortParameters.NonStructuralFraction.Value;
-            if (LeafCohortParameters.InitialNConc != null) //FIXME HEB I think this can be removed
-                InitialNConc = LeafCohortParameters.InitialNConc.Value;
-            if(Area>0)  //Only set age for cohorts that have an area specified in the xml.
-                Age = Area / MaxArea * GrowthDuration; //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
+                CohortPopulation = Apex.Appearance(Structure.ApexNum, Plant.Population, Structure.TotalStemPopn);
+
+            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * leafFraction;
+            //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
+            GrowthDuration = leafCohortParameters.GrowthDuration.Value() * leafFraction;
+            LagDuration = leafCohortParameters.LagDuration.Value();
+            SenescenceDuration = leafCohortParameters.SenescenceDuration.Value();
+            DetachmentLagDuration = leafCohortParameters.DetachmentLagDuration.Value();
+            DetachmentDuration = leafCohortParameters.DetachmentDuration.Value();
+            StructuralFraction = leafCohortParameters.StructuralFraction.Value();
+            SpecificLeafAreaMax = leafCohortParameters.SpecificLeafAreaMax.Value();
+            SpecificLeafAreaMin = leafCohortParameters.SpecificLeafAreaMin.Value();
+            MaximumNConc = leafCohortParameters.MaximumNConc.Value();
+            MinimumNConc = leafCohortParameters.MinimumNConc.Value();
+            StorageFraction = leafCohortParameters.StorageFraction.Value();
+            InitialNConc = leafCohortParameters.InitialNConc.Value();
+            if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
+                Age = Area / MaxArea * GrowthDuration;
+            //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
-            FunctionalNConc = (LeafCohortParameters.CriticalNConc.Value - (LeafCohortParameters.MinimumNConc.Value * StructuralFraction)) * (1 / (1 - StructuralFraction));
-            LuxaryNConc = (LeafCohortParameters.MaximumNConc.Value - LeafCohortParameters.CriticalNConc.Value);
-            Live.MetabolicWt = (Live.StructuralWt * 1 / StructuralFraction) - Live.StructuralWt;
-            Live.NonStructuralWt = 0;
+            FunctionalNConc = (leafCohortParameters.CriticalNConc.Value() -
+                               leafCohortParameters.MinimumNConc.Value() * StructuralFraction) *
+                              (1 / (1 - StructuralFraction));
+            LuxaryNConc = leafCohortParameters.MaximumNConc.Value() -
+                           leafCohortParameters.CriticalNConc.Value();
+            Live.MetabolicWt = Live.StructuralWt * 1 / StructuralFraction - Live.StructuralWt;
+            Live.StorageWt = 0;
             Live.StructuralN = Live.StructuralWt * MinimumNConc;
             Live.MetabolicN = Live.MetabolicWt * FunctionalNConc;
-            Live.NonStructuralN = 0;
-            NReallocationFactor = LeafCohortParameters.NReallocationFactor.Value;
-            if (LeafCohortParameters.DMReallocationFactor != null)
-                DMReallocationFactor = LeafCohortParameters.DMReallocationFactor.Value;
-            NRetranslocationFactor = LeafCohortParameters.NRetranslocationFactor.Value;
-            if (LeafCohortParameters.DMRetranslocationFactor != null)
-                DMRetranslocationFactor = LeafCohortParameters.DMRetranslocationFactor.Value;
-            else DMRetranslocationFactor = 0;
-            if (LeafCohortParameters.LeafSizeShapeParameter != null)
-                LeafSizeShape = LeafCohortParameters.LeafSizeShapeParameter.Value;
-            else LeafSizeShape = 0.01;
+            Live.StorageN = 0;
+            NReallocationFactor = leafCohortParameters.NReallocationFactor.Value();
+            DMReallocationFactor = leafCohortParameters.DMReallocationFactor.Value();
+            NRetranslocationFactor = leafCohortParameters.NRetranslocationFactor.Value();
+            DMRetranslocationFactor = leafCohortParameters.DMRetranslocationFactor.Value();
+            LeafSizeShape = leafCohortParameters.LeafSizeShapeParameter.Value();
         }
+
         /// <summary>Does the potential growth.</summary>
-        /// <param name="TT">The tt.</param>
-        /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        virtual public void DoPotentialGrowth(double TT, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
+        /// <param name="tt">The tt.</param>
+        /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
+        public void DoPotentialGrowth(double tt, Leaf.LeafCohortParameters leafCohortParameters)
         {
             //Reduce leaf Population in Cohort due to plant mortality
-            double StartPopulation = CohortPopulation;
+            double startPopulation = CohortPopulation;
+
             if (Structure.ProportionPlantMortality > 0)
-            {
                 CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
-            }
+
             //Reduce leaf Population in Cohort  due to branch mortality
-            if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))  //Ensure we there are some branches.
-            {
-                double deltaPopn = Math.Min(CohortPopulation * Structure.ProportionBranchMortality, CohortPopulation - Structure.MainStemPopn); //Ensure we are not killing more branches that the cohort has.
-                CohortPopulation -= CohortPopulation * Structure.ProportionBranchMortality;
-            }
-            double PropnStemMortality = (StartPopulation - CohortPopulation) / StartPopulation;
+            if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
+                //Ensure we there are some branches.
+                CohortPopulation -= Math.Min(Structure.ProportionBranchMortality * (CohortPopulation - Structure.MainStemPopn), CohortPopulation - Plant.Population);
+
+            double propnStemMortality = (startPopulation - CohortPopulation) / startPopulation;
 
             //Calculate Accumulated Stress Factor for reducing potential leaf size
-            if (IsNotAppeared && (LeafCohortParameters.CellDivisionStress != null))
+            if (IsNotAppeared)
             {
                 CellDivisionStressDays += 1;
-                CellDivisionStressAccumulation += LeafCohortParameters.CellDivisionStress.Value;
-                //FIXME HEB  The limitation below should be used to avoid zero values for maximum leaf size.
-                //CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
-                CellDivisionStressFactor = CellDivisionStressAccumulation / CellDivisionStressDays;
+                CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStress.Value();
+                CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
             }
 
             if (IsAppeared)
             {
-                // The following line needs to be CHANGED!!!!!!
-                //Leaf.CurrentRank = Rank - 1; //Set currentRank variable in parent leaf for use in experssion functions
-                //Acellerate thermal time accumulation if crop is water stressed.
-                double _ThermalTime;
-                if ((LeafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
-                    _ThermalTime = TT * LeafCohortParameters.DroughtInducedSenAcceleration.Value;
-                else _ThermalTime = TT;
+                //Accelerate thermal time accumulation if crop is water stressed.
+                double thermalTime;
+                if (IsFullyExpanded && IsNotSenescing)
+                    thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
+                else if (IsSenescing)
+                    thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
+                else thermalTime = tt;
 
                 //Leaf area growth parameters
-                DeltaPotentialArea = PotentialAreaGrowthFunction(_ThermalTime); //Calculate delta leaf area in the absence of water stress
-                DeltaWaterConstrainedArea = DeltaPotentialArea * LeafCohortParameters.ExpansionStress.Value; //Reduce potential growth for water stress
+                DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime);
+                //Calculate delta leaf area in the absence of water stress
+                DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
+                //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
-                if (LeafCohortParameters.ShadeInducedSenescenceRate != null)
-                    ShadeInducedSenRate = LeafCohortParameters.ShadeInducedSenescenceRate.Value;
-                SenessingLeafRelativeSize = LeafCohortParameters.SenessingLeafRelativeSize.Value;
-                SenescedFrac = FractionSenescing(_ThermalTime, PropnStemMortality, SenessingLeafRelativeSize);
+                ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
+                SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
+                SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);
 
                 // Doing leaf mass growth in the cohort
-                Biomass LiveBiomass = new Biomass(Live);
+                Biomass liveBiomass = new Biomass(Live);
 
                 //Set initial leaf status values
                 LeafStartArea = LiveArea;
@@ -934,346 +841,352 @@ namespace Models.PMF.Organs
                     // DM to reallocate.
 
                     LeafStartMetabolicDMReallocationSupply = LiveStart.MetabolicWt * SenescedFrac * DMReallocationFactor;
-                    LeafStartNonStructuralDMReallocationSupply = LiveStart.NonStructuralWt * SenescedFrac * DMReallocationFactor;
+                    LeafStartStorageDMReallocationSupply = LiveStart.StorageWt * SenescedFrac *
+                                                                 DMReallocationFactor;
 
-                    LeafStartDMReallocationSupply = LeafStartMetabolicDMReallocationSupply + LeafStartNonStructuralDMReallocationSupply;
-                    LiveBiomass.MetabolicWt -= LeafStartMetabolicDMReallocationSupply;
-                    LiveBiomass.NonStructuralWt -= LeafStartNonStructuralDMReallocationSupply;
+                    LeafStartDMReallocationSupply = LeafStartMetabolicDMReallocationSupply +
+                                                    LeafStartStorageDMReallocationSupply;
+                    liveBiomass.MetabolicWt -= LeafStartMetabolicDMReallocationSupply;
+                    liveBiomass.StorageWt -= LeafStartStorageDMReallocationSupply;
 
                 }
                 else
                 {
-                    LeafStartMetabolicDMReallocationSupply = LeafStartNonStructuralDMReallocationSupply = LeafStartDMReallocationSupply = 0;
+                    LeafStartMetabolicDMReallocationSupply =
+                        LeafStartStorageDMReallocationSupply = LeafStartDMReallocationSupply = 0;
                 }
 
-                LeafStartDMRetranslocationSupply = LiveBiomass.NonStructuralWt * DMRetranslocationFactor;
+                LeafStartDMRetranslocationSupply = liveBiomass.StorageWt * DMRetranslocationFactor;
                 //Nretranslocation is that which occurs before uptake (senessed metabolic N and all non-structuralN)
-                LeafStartMetabolicNReallocationSupply = SenescedFrac * LiveBiomass.MetabolicN * NReallocationFactor;
-                LeafStartNonStructuralNReallocationSupply = SenescedFrac * LiveBiomass.NonStructuralN * NReallocationFactor;
+                LeafStartMetabolicNReallocationSupply = SenescedFrac * liveBiomass.MetabolicN * NReallocationFactor;
+                LeafStartStorageNReallocationSupply = SenescedFrac * liveBiomass.StorageN * NReallocationFactor;
                 //Retranslocated N is only that which occurs after N uptake. Both Non-structural and metabolic N are able to be retranslocated but metabolic N will only be moved if remobilisation of non-structural N does not meet demands
-                LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0, (LiveBiomass.MetabolicN * NRetranslocationFactor) - LeafStartMetabolicNReallocationSupply);
-                LeafStartNonStructuralNRetranslocationSupply = Math.Max(0.0, (LiveBiomass.NonStructuralN * NRetranslocationFactor) - LeafStartNonStructuralNReallocationSupply);
-                LeafStartNReallocationSupply = NReallocationSupply;
-                LeafStartNRetranslocationSupply = NRetranslocationSupply;
+                LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0,
+                    liveBiomass.MetabolicN * (1 - SenescedFrac) * NRetranslocationFactor);
+                LeafStartStorageNRetranslocationSupply = Math.Max(0.0,
+                    liveBiomass.StorageN * (1 - SenescedFrac) * NRetranslocationFactor);
+                LeafStartNReallocationSupply = LeafStartStorageNReallocationSupply + LeafStartMetabolicNReallocationSupply;
+                LeafStartNRetranslocationSupply = LeafStartStorageNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
 
                 //zero locals variables
                 PotentialStructuralDMAllocation = 0;
                 PotentialMetabolicDMAllocation = 0;
                 DMRetranslocated = 0;
                 MetabolicNReallocated = 0;
-                NonStructuralNReallocated = 0;
+                StorageNReallocated = 0;
                 MetabolicWtReallocated = 0;
-                NonStructuralWtReallocated = 0;
+                StorageWtReallocated = 0;
                 MetabolicNRetranslocated = 0;
-                NonStructuralNRetrasnlocated = 0;
+                StorageNRetrasnlocated = 0;
                 MetabolicNAllocation = 0;
                 StructuralDMAllocation = 0;
                 MetabolicDMAllocation = 0;
             }
-
         }
+
         /// <summary>Does the actual growth.</summary>
-        /// <param name="TT">The tt.</param>
-        /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        virtual public void DoActualGrowth(double TT, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
+        /// <param name="tt">The tt.</param>
+        /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
+        public void DoActualGrowth(double tt, Leaf.LeafCohortParameters leafCohortParameters)
         {
-            if (IsAppeared)
+            if (!IsAppeared)
+                return;
+
+            //Accellerate thermal time accumulation if crop is water stressed.
+            double thermalTime;
+            if (IsFullyExpanded && IsNotSenescing)
+                thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
+            else if (IsSenescing)
+                thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
+            else thermalTime = tt;
+
+            //Growing leaf area after DM allocated
+            DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation)*SpecificLeafAreaMax;
+            //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
+            double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
+
+            //Modify leaf area using tillering approach
+            double totalf = ApexGroupSize[0];
+            for(int i=1; i< ApexGroupAge.Count;i++)
             {
-                //Acellerate thermal time accumulation if crop is water stressed.
-                double _ThermalTime;
-                if ((LeafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
-                    _ThermalTime = TT * LeafCohortParameters.DroughtInducedSenAcceleration.Value;
-                else _ThermalTime = TT;
-
-                //Growing leaf area after DM allocated
-                DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;  //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
-                double DeltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
-                LiveArea += DeltaActualArea; // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
-
-                //Senessing leaf area
-                double AreaSenescing = LiveArea * SenescedFrac;
-                double AreaSenescingN = 0;
-                if ((Live.MetabolicNConc <= MinimumNConc) & ((MetabolicNRetranslocated - MetabolicNAllocation) > 0.0))
-                    AreaSenescingN = LeafStartArea * (MetabolicNRetranslocated - MetabolicNAllocation) / LiveStart.MetabolicN;
-
-                double LeafAreaLoss = Math.Max(AreaSenescing, AreaSenescingN);
-                if (LeafAreaLoss > 0)
-                    SenescedFrac = Math.Min(1.0, LeafAreaLoss / LeafStartArea);
-
-                double StructuralWtSenescing = SenescedFrac * LiveStart.StructuralWt;
-                double StructuralNSenescing = SenescedFrac * LiveStart.StructuralN;
-                double MetabolicWtSenescing = SenescedFrac * LiveStart.MetabolicWt;
-                double MetabolicNSenescing = SenescedFrac * LiveStart.MetabolicN;
-                double NonStructuralWtSenescing = SenescedFrac * LiveStart.NonStructuralWt;
-                double NonStructuralNSenescing = SenescedFrac * LiveStart.NonStructuralN;
-
-                DeadArea = DeadArea + LeafAreaLoss;
-                LiveArea = LiveArea - LeafAreaLoss; // Final leaf area of cohort that will be integrated in Leaf.cs? (FIXME-EIT)
-
-                Live.StructuralWt -= StructuralWtSenescing;
-                Dead.StructuralWt += StructuralWtSenescing;
-
-                Live.StructuralN -= StructuralNSenescing;
-                Dead.StructuralN += StructuralNSenescing;
-
-                Live.MetabolicWt -= Math.Max(0.0, MetabolicWtSenescing - MetabolicWtReallocated);
-                Dead.MetabolicWt += Math.Max(0.0, MetabolicWtSenescing - MetabolicWtReallocated);
-
-
-                Live.MetabolicN -= Math.Max(0.0, (MetabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated));  //Don't Seness todays N if it has been taken for reallocation
-                Dead.MetabolicN += Math.Max(0.0, (MetabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated));
-
-                Live.NonStructuralN -= Math.Max(0.0, NonStructuralNSenescing - NonStructuralNReallocated - NonStructuralNRetrasnlocated);  //Dont Senesess todays NonStructural N if it was retranslocated or reallocated 
-                Dead.NonStructuralN += Math.Max(0.0, NonStructuralNSenescing - NonStructuralNReallocated - NonStructuralNRetrasnlocated);
-
-                Live.NonStructuralWt -= Math.Max(0.0, NonStructuralWtSenescing - DMRetranslocated);
-                Live.NonStructuralWt = Math.Max(0.0, Live.NonStructuralWt);
-
-                Dead.NonStructuralWt += Math.Max(0.0, NonStructuralWtSenescing - DMRetranslocated - NonStructuralWtReallocated);
-
-                MaintenanceRespiration = 0;
-                //Do Maintenance respiration
-                if (LeafCohortParameters.MaintenanceRespirationFunction != null)
-                {
-                    MaintenanceRespiration += Live.MetabolicWt * LeafCohortParameters.MaintenanceRespirationFunction.Value;
-                    Live.MetabolicWt *= (1 - LeafCohortParameters.MaintenanceRespirationFunction.Value);
-                    MaintenanceRespiration += Live.NonStructuralWt * LeafCohortParameters.MaintenanceRespirationFunction.Value;
-                    Live.NonStructuralWt *= (1- LeafCohortParameters.MaintenanceRespirationFunction.Value);
-                }
-
-                Age = Age + _ThermalTime;
-
-                // Do Detachment of this Leaf Cohort
-                // ---------------------------------
-                DetachedFrac = FractionDetaching(_ThermalTime);
-                if (DetachedFrac > 0.0)
-                {
-                    double DetachedArea = DeadArea * DetachedFrac;
-                    double DetachedWt = Dead.Wt * DetachedFrac;
-                    double DetachedN = Dead.N * DetachedFrac;
-
-                    DeadArea *= (1 - DetachedFrac);
-                    Dead.StructuralWt *= (1 - DetachedFrac);
-                    Dead.StructuralN *= (1 - DetachedFrac);
-                    Dead.NonStructuralWt *= (1 - DetachedFrac);
-                    Dead.NonStructuralN *= (1 - DetachedFrac);
-                    Dead.MetabolicWt *= (1 - DetachedFrac);
-                    Dead.MetabolicN *= (1 - DetachedFrac);
-
-                    if (DetachedWt > 0)
-                        SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, "Leaf");
-                }
+                double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
+                totalf += f * Leaf.ApexGroupSize[i];
             }
-        }
-        /// <summary>Removes leaf area and biomass on thinning event</summary>
-        /// <param name="value">The fractions of biomass to remove.</param>
-        virtual public void DoLeafBiomassRemoval(OrganBiomassRemovalType value)
-        {
-            if (IsInitialised)
+
+            //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
+            deltaActualArea = deltaActualArea * totalf / ApexGroupSize.Sum();
+            LiveArea += deltaActualArea;
+            
+            //Senessing leaf area
+            double areaSenescing = LiveArea*SenescedFrac;
+            double areaSenescingN = 0;
+            if ((Live.MetabolicNConc <= MinimumNConc) & (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
+                areaSenescingN = LeafStartArea*(MetabolicNRetranslocated - MetabolicNAllocation)/LiveStart.MetabolicN;
+
+            double leafAreaLoss = Math.Max(areaSenescing, areaSenescingN);
+            if (leafAreaLoss > 0)
+                SenescedFrac = Math.Min(1.0, leafAreaLoss/LeafStartArea);
+
+            double structuralWtSenescing = SenescedFrac*LiveStart.StructuralWt;
+            double structuralNSenescing = SenescedFrac*LiveStart.StructuralN;
+            double metabolicWtSenescing = SenescedFrac*LiveStart.MetabolicWt;
+            double metabolicNSenescing = SenescedFrac*LiveStart.MetabolicN;
+            double StorageWtSenescing = SenescedFrac*LiveStart.StorageWt;
+            double StorageNSenescing = SenescedFrac*LiveStart.StorageN;
+
+            DeadArea = DeadArea + leafAreaLoss;
+            LiveArea = LiveArea - leafAreaLoss;
+            // Final leaf area of cohort that will be integrated in Leaf.cs? (FIXME-EIT)
+
+            Live.StructuralWt -= structuralWtSenescing;
+            Dead.StructuralWt += structuralWtSenescing;
+
+            Live.StructuralN -= structuralNSenescing;
+            Dead.StructuralN += structuralNSenescing;
+
+            Live.MetabolicWt -= Math.Max(0.0, metabolicWtSenescing - MetabolicWtReallocated);
+            Dead.MetabolicWt += Math.Max(0.0, metabolicWtSenescing - MetabolicWtReallocated);
+
+
+            Live.MetabolicN -= Math.Max(0.0, metabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated);
+            //Don't Seness todays N if it has been taken for reallocation
+            Dead.MetabolicN += Math.Max(0.0, metabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated);
+
+            Live.StorageN -= Math.Max(0.0,
+                StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
+            //Dont Senesess todays Storage N if it was retranslocated or reallocated 
+            Dead.StorageN += Math.Max(0.0,
+                StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
+
+            Live.StorageWt -= Math.Max(0.0, StorageWtSenescing - DMRetranslocated);
+            Live.StorageWt = Math.Max(0.0, Live.StorageWt);
+
+            Dead.StorageWt += Math.Max(0.0,
+                StorageWtSenescing - DMRetranslocated - StorageWtReallocated);
+
+            MaintenanceRespiration = 0;
+            //Do Maintenance respiration
+            MaintenanceRespiration += Live.MetabolicWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
+            Live.MetabolicWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
+            MaintenanceRespiration += Live.StorageWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
+            Live.StorageWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
+
+            Age = Age + thermalTime;
+
+            // Do Detachment of this Leaf Cohort
+            // ---------------------------------
+            DetachedFrac = FractionDetaching(thermalTime);
+            if (DetachedFrac > 0.0)
             {
-                double totalFractionBeingRemoved = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                                   + value.FractionLiveToResidue + value.FractionDeadToResidue;
-                if (totalFractionBeingRemoved > 1.0)
-                {
-                    throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
-                                        + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
-                                        + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
-                                        + Name + " than there is to remove");
-                }
-                else if (totalFractionBeingRemoved > 0.0)
-                {
-                    double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
-                    double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
+                double detachedWt = Dead.Wt*DetachedFrac;
+                double detachedN = Dead.N*DetachedFrac;
 
-                    LiveArea *= RemainingLiveFraction;
+                DeadArea *= 1 - DetachedFrac;
+                Dead.StructuralWt *= 1 - DetachedFrac;
+                Dead.StructuralN *= 1 - DetachedFrac;
+                Dead.StorageWt *= 1 - DetachedFrac;
+                Dead.StorageN *= 1 - DetachedFrac;
+                Dead.MetabolicWt *= 1 - DetachedFrac;
+                Dead.MetabolicN *= 1 - DetachedFrac;
 
-                    RemovedWt += (Live.Wt * value.FractionLiveToRemove) + (Dead.Wt * value.FractionDeadToRemove);
-                    RemovedN += (Live.N * value.FractionLiveToRemove) + (Dead.N * value.FractionDeadToRemove);
-                    DetachedWt += (Live.Wt * value.FractionLiveToResidue) + (Dead.Wt * value.FractionDeadToResidue);
-                    DetachedN += (Live.N * value.FractionLiveToResidue) + (Dead.N * value.FractionDeadToResidue);
-
-                    Live.StructuralWt *= RemainingLiveFraction;
-                    Live.NonStructuralWt *= RemainingLiveFraction;
-                    Live.MetabolicWt *= RemainingLiveFraction;
-                    Dead.StructuralWt *= RemainingDeadFraction;
-                    Dead.NonStructuralWt *= RemainingDeadFraction;
-                    Dead.MetabolicWt *= RemainingDeadFraction;
-
-                    Live.StructuralN *= RemainingLiveFraction;
-                    Live.NonStructuralN *= RemainingLiveFraction;
-                    Live.MetabolicN *= RemainingLiveFraction;
-                    Dead.StructuralN *= RemainingDeadFraction;
-                    Dead.NonStructuralN *= RemainingDeadFraction;
-                    Dead.MetabolicN *= RemainingDeadFraction;
-
-                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
-                    //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-                }
+                if (detachedWt > 0)
+                    SurfaceOrganicMatter.Add(detachedWt*10, detachedN*10, 0, Plant.CropType, "Leaf");
             }
         }
 
-        /// <summary>Removes leaves for cohort due to thin event.  </summary>
-        /// <param name="ProportionRemoved">The fraction.</param>
-        virtual public void DoThin(double ProportionRemoved)
-        {
-            CohortPopulation *= (1- ProportionRemoved);;
-        }
         /// <summary>Does the kill.</summary>
         /// <param name="fraction">The fraction.</param>
-        virtual public void DoKill(double fraction)
+        public void DoKill(double fraction)
         {
-            if (IsInitialised)
-            {
-                double change;
-                change = LiveArea * fraction;
-                LiveArea -= change;
-                DeadArea += change;
+            if (!IsInitialised)
+                return;
 
-                change = Live.StructuralWt * fraction;
-                Live.StructuralWt -= change;
-                Dead.StructuralWt += change;
+            double change = LiveArea*fraction;
+            LiveArea -= change;
+            DeadArea += change;
 
-                change = Live.NonStructuralWt * fraction;
-                Live.NonStructuralWt -= change;
-                Dead.NonStructuralWt += change;
+            change = Live.StructuralWt*fraction;
+            Live.StructuralWt -= change;
+            Dead.StructuralWt += change;
 
-                change = Live.StructuralN * fraction;
-                Live.StructuralN -= change;
-                Dead.StructuralN += change;
+            change = Live.StorageWt*fraction;
+            Live.StorageWt -= change;
+            Dead.StorageWt += change;
 
-                change = Live.NonStructuralN * fraction;
-                Live.NonStructuralN -= change;
-                Dead.NonStructuralN += change;
-            }
+            change = Live.StructuralN*fraction;
+            Live.StructuralN -= change;
+            Dead.StructuralN += change;
+
+            change = Live.StorageN*fraction;
+            Live.StorageN -= change;
+            Dead.StorageN += change;
         }
+
         /// <summary>Does the frost.</summary>
         /// <param name="fraction">The fraction.</param>
-        virtual public void DoFrost(double fraction)
+        public void DoFrost(double fraction)
         {
             if (IsAppeared)
                 DoKill(fraction);
         }
 
         /// <summary>Does the zeroing of some varibles.</summary>
-        virtual protected void DoDailyCleanup()
+        protected void DoDailyCleanup()
         {
-            DetachedWt = 0.0;
-            DetachedN = 0.0;
-            RemovedWt = 0.0;
-            RemovedN = 0.0;
+            Detached.Clear();
+            Removed.Clear();
         }
 
         /// <summary>Potential delta LAI</summary>
-        /// <param name="TT">thermal-time</param>
+        /// <param name="tt">thermal-time</param>
         /// <returns>(mm2 leaf/cohort position/m2 soil/day)</returns>
-        virtual public double PotentialAreaGrowthFunction(double TT)
+        public double PotentialAreaGrowthFunction(double tt)
         {
-            double BranchNo = Structure.TotalStemPopn - Structure.MainStemPopn;  //Fixme, this line appears redundant
-            double leafSizeDelta = SizeFunction(Age + TT) - SizeFunction(Age); //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
-            double growth = CohortPopulation * leafSizeDelta; // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
+            double leafSizeDelta = SizeFunction(Age + tt) - SizeFunction(Age);
+                //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
+            double growth = CohortPopulation*leafSizeDelta;
+                // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
             if (growth < 0)
                 throw new Exception("Netagive potential leaf area expansion in" + this);
-            return growth;                              
+            return growth;
         }
+
         /// <summary>Potential average leaf size for today per cohort (no stress)</summary>
-        /// <param name="TT">Thermal-time accumulation since cohort initiation</param>
+        /// <param name="tt">Thermal-time accumulation since cohort initiation</param>
         /// <returns>Average leaf size (mm2/leaf)</returns>
-        protected double SizeFunction(double TT)
+        protected double SizeFunction(double tt)
         {
             if (GrowthDuration <= 0)
-                throw new Exception("Trying to calculate leaf size with a growth duration parameter value of zero won't work");
-            double OneLessShape = 1 - LeafSizeShape;
-            double alpha = -Math.Log((1 / OneLessShape - 1) / (MaxArea / (MaxArea * LeafSizeShape) - 1)) / GrowthDuration;
-            double LeafSize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * TT));
-            double y0 = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * 0));
-            double yDiffprop = y0 / (MaxArea/2);
-            double ScaledLeafSize = (LeafSize - y0) / (1 - yDiffprop);
-            return ScaledLeafSize;
+                throw new Exception(
+                    "Trying to calculate leaf size with a growth duration parameter value of zero won't work");
+            double oneLessShape = 1 - LeafSizeShape;
+            double alpha = -Math.Log((1/oneLessShape - 1)/(MaxArea/(MaxArea*LeafSizeShape) - 1))/GrowthDuration;
+            double leafSize = MaxArea/(1 + (MaxArea/(MaxArea*LeafSizeShape) - 1)*Math.Exp(-alpha*tt));
+            double y0 = MaxArea/(1 + (MaxArea/(MaxArea*LeafSizeShape) - 1)*Math.Exp(-alpha*0));
+            double yDiffprop = y0/(MaxArea/2);
+            double scaledLeafSize = (leafSize - y0)/(1 - yDiffprop);
+            return scaledLeafSize;
         }
+
+        /// <summary>Live leaf number</summary>
+        /// 
+
+        public double LiveStemNumber (Leaf.LeafCohortParameters leafCohortParameters)
+        {
+            double _lagDuration;
+            double _senescenceDuration;
+            double lsn = 0;
+            for (int i = 0; i < ApexGroupAge.Count; i++)
+            {
+                if (i == 0)
+                {
+                    _lagDuration = LagDuration;
+                    _senescenceDuration = SenescenceDuration;
+                }
+                else
+                {
+                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                }
+
+                if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2) 
+                {
+                    lsn += ApexGroupSize[i];
+                }
+            }
+            return lsn * CohortPopulation / MathUtilities.Sum(ApexGroupSize);           
+        }
+
         /// <summary>Fractions the senescing.</summary>
-        /// <param name="TT">The tt.</param>
-        /// <param name="StemMortality">The stem mortality.</param>
-        /// <param name="SenessingLeafRelativeSize">The relative size of senessing tillers leaves relative to the other leaves in the cohort</param>
+        /// <param name="tt">The tt.</param>
+        /// <param name="stemMortality">The stem mortality.</param>
+        /// <param name="senessingLeafRelativeSize">The relative size of senessing tillers leaves relative to the other leaves in the cohort</param>
+        /// <param name="leafCohortParameters">The associated leaf cohort parameters</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Bad Fraction Senescing</exception>
-        public double FractionSenescing(double TT, double StemMortality, double SenessingLeafRelativeSize)
+        public double FractionSenescing(double tt, double stemMortality, double senessingLeafRelativeSize, Leaf.LeafCohortParameters leafCohortParameters)
         {
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
-            if (IsAppeared)
-            {
-                double FracSenAge = 0;
-                double TTInSenPhase = Math.Max(0.0, Age + TT - LagDuration - GrowthDuration);
-                if (TTInSenPhase > 0)
-                {
-                    double LeafDuration = GrowthDuration + LagDuration + SenescenceDuration;
-                    double RemainingTT = Math.Max(0, LeafDuration - Age);
+            if (!IsAppeared)
+                return 0;
 
-                    if (RemainingTT == 0)
-                        FracSenAge = 1;
+            double _lagDuration;
+            double _senescenceDuration;
+            double fracSenAge = 0;
+            for (int i = 0; i < ApexGroupAge.Count; i++)
+            {
+                if (i == 0)
+                {
+                    _lagDuration = LagDuration;
+                    _senescenceDuration = SenescenceDuration;
+                } else
+                {
+                    _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                    _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexGroupAge[i]);
+                }
+                
+                double ttInSenPhase = Math.Max(0.0, Age + tt - _lagDuration - GrowthDuration);
+                double _fracSenAge = 0;
+                if (ttInSenPhase > 0)
+                {
+                    double leafDuration = GrowthDuration + _lagDuration + _senescenceDuration;
+                    double remainingTt = Math.Max(0, leafDuration - Age);
+
+                    if (remainingTt == 0)
+                        _fracSenAge = 1;
                     else
-                        FracSenAge = Math.Min(1, Math.Min(TT, TTInSenPhase) / RemainingTT);
-                    if ((FracSenAge > 1) || (FracSenAge < 0))
-                    {
+                        _fracSenAge = Math.Min(1, Math.Min(tt, ttInSenPhase) / remainingTt);
+                    if ((_fracSenAge > 1) || (_fracSenAge < 0))
                         throw new Exception("Bad Fraction Senescing");
-                    }
                 }
                 else
                 {
-                    FracSenAge = 0;
+                    _fracSenAge = 0;
                 }
 
-                if (MaxLiveArea < LiveArea)
-                    MaxLiveArea = LiveArea;
-                if (MaxCohortPopulation < CohortPopulation)
-                    MaxCohortPopulation = CohortPopulation;
-
-                double FracSenShade = 0;
-                if (LiveArea > 0)
-                {
-                    FracSenShade = Math.Min(MaxLiveArea * ShadeInducedSenRate, LiveArea) / LiveArea;
-                    FracSenShade += StemMortality * SenessingLeafRelativeSize;
-                    FracSenShade = Math.Min(FracSenShade, 1.0);
-                }
-
-                return Math.Max(FracSenAge, FracSenShade);
+                fracSenAge += _fracSenAge * ApexGroupSize[i];
             }
-            else
-                return 0;
+            fracSenAge = fracSenAge / ApexGroupSize.Sum();
+            MaxLiveArea = Math.Max(MaxLiveArea, LiveArea);
+            MaxCohortPopulation = Math.Max(MaxCohortPopulation, CohortPopulation);
+
+            double fracSenShade = 0;
+            if (LiveArea > 0)
+            {
+                fracSenShade = Math.Min(MaxLiveArea*ShadeInducedSenRate, LiveArea)/LiveArea;
+                fracSenShade += stemMortality*senessingLeafRelativeSize;
+                fracSenShade = Math.Min(fracSenShade, 1.0);
+            }
+
+            return Math.Max(fracSenAge, fracSenShade);
         }
+
         /// <summary>Fractions the detaching.</summary>
-        /// <param name="TT">The tt.</param>
+        /// <param name="tt">The thermal time.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Bad Fraction Detaching</exception>
-        public double FractionDetaching(double TT)
+        public double FractionDetaching(double tt)
         {
-            double FracDetach = 0;
-            double TTInDetachPhase = Math.Max(0.0, Age + TT - LagDuration - GrowthDuration - SenescenceDuration - DetachmentLagDuration);
-            if (TTInDetachPhase > 0)
+            double fracDetach;
+            double ttInDetachPhase = Math.Max(0.0,
+                Age + tt - LagDuration - GrowthDuration - SenescenceDuration - DetachmentLagDuration);
+            if (ttInDetachPhase > 0)
             {
-                double LeafDuration = GrowthDuration + LagDuration + SenescenceDuration + DetachmentLagDuration + DetachmentDuration;
-                double RemainingTT = Math.Max(0, LeafDuration - Age);
+                double leafDuration = GrowthDuration + LagDuration + SenescenceDuration + DetachmentLagDuration +
+                                      DetachmentDuration;
+                double remainingTt = Math.Max(0, leafDuration - Age);
 
-                if (RemainingTT == 0)
-                    FracDetach = 1;
+                if (remainingTt == 0)
+                    fracDetach = 1;
                 else
-                    FracDetach = Math.Min(1, Math.Min(TT, TTInDetachPhase) / RemainingTT);
-                if ((FracDetach > 1) || (FracDetach < 0))
+                    fracDetach = Math.Min(1, Math.Min(tt, ttInDetachPhase)/remainingTt);
+                if ((fracDetach > 1) || (fracDetach < 0))
                     throw new Exception("Bad Fraction Detaching");
             }
             else
-                FracDetach = 0;
+                fracDetach = 0;
 
-            return FracDetach;
-
-        }
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            //MyPaddock.Subscribe(Structure.InitialiseStage, DoInitialisation);
+            return fracDetach;
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -1287,19 +1200,20 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+            if (IncludeInDocumentation)
+            {
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+                tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+            }
         }
     }
 }
-   

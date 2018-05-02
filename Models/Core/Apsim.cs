@@ -133,13 +133,41 @@ namespace Models.Core
         public static List<IModel> FindAll(IModel model)
         {
             var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-            if (simulation == null || simulation.Scope == null)
+            if (simulation == null)
             {
                 ScopingRules scope = new ScopingRules();
-                return scope.FindAll(model).ToList();
+                List<IModel>result = scope.FindAll(model).ToList();
+                scope.Clear();
+                return result;
             }
             return simulation.Scope.FindAll(model).ToList();
         }
+
+        /// <summary>
+        /// Clears the cached scoping values for the simulation 
+        /// We need to do this when models have been added or deleted,
+        /// as the cache will then be incorrect
+        /// </summary>
+        /// <param name="model"></param>
+        public static void ClearCaches(IModel model)
+        {
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
+            if (simulation != null && simulation.Scope != null)
+            {
+                simulation.ClearCaches();
+            }
+            else
+            {
+                // If the model didn't have a Simulation object as an ancestor, then it's likely to 
+                // have a Simulations object as one. If so, the Simulations links may need to be updated.
+                var simulations = Apsim.Parent(model, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                {
+                    simulations.ClearLinks();
+                }
+            }
+        }
+
 
         /// <summary>
         /// Locates and returns all models in scope of the specified type.
@@ -161,22 +189,25 @@ namespace Models.Core
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            // Get rid of our parent temporarily as we don't want to serialise that.
-            IModel parent = model.Parent;
-            model.Parent = null;
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
+            lock (model)
             {
-                formatter.Serialize(stream, model);
-                stream.Seek(0, SeekOrigin.Begin);
-                IModel returnObject = (IModel)formatter.Deserialize(stream);
+                // Get rid of our parent temporarily as we don't want to serialise that.
+                IModel parent = model.Parent;
+                model.Parent = null;
 
-                // Reinstate parent
-                model.Parent = parent;
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new MemoryStream();
+                using (stream)
+                {
+                    formatter.Serialize(stream, model);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    IModel returnObject = (IModel)formatter.Deserialize(stream);
 
-                return returnObject;
+                    // Reinstate parent
+                    model.Parent = parent;
+
+                    return returnObject;
+                }
             }
         }
 
@@ -226,10 +257,9 @@ namespace Models.Core
             IModel modelToAdd = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Model;
 
             // Call deserialised
-            Events events = new Events(null);
-            events.AddModelEvents(modelToAdd);
+            Events events = new Events(modelToAdd);
             object[] args = new object[] { true };
-            events.CallEventHandler(modelToAdd, "Deserialised", args);
+            events.Publish("Deserialised", args);
 
             // Correctly parent all models.
             Add(parent, modelToAdd);
@@ -238,7 +268,8 @@ namespace Models.Core
             Apsim.EnsureNameIsUnique(modelToAdd);
 
             // Call OnLoaded
-            events.CallEventHandler(modelToAdd, "Loaded", null);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { modelToAdd, loadedArgs });
 
             Locator(parent).Clear();
 
@@ -253,6 +284,7 @@ namespace Models.Core
             modelToAdd.Parent = parent;
             Apsim.ParentAllChildren(modelToAdd);
             parent.Children.Add(modelToAdd as Model);
+            Apsim.ClearCaches(modelToAdd);
         }
 
         /// <summary>Deletes the specified model.</summary>
@@ -260,6 +292,7 @@ namespace Models.Core
         public static bool Delete(IModel model)
         {
             Locator(model.Parent).Clear();
+            Apsim.ClearCaches(model);
             return model.Parent.Children.Remove(model as Model);
         }
 
@@ -276,19 +309,18 @@ namespace Models.Core
         /// <returns>The string version of the model</returns>
         public static string Serialise(IModel model)
         {
-            Events events = new Events(null);
-            events.AddModelEvents(model);
+            Events events = new Events(model);
 
             // Let all models know that we're about to serialise.
             object[] args = new object[] { true };
-            events.CallEventHandler(model, "Serialising", args);
+            events.Publish("Serialising", args);
 
             // Do the serialisation
             StringWriter writer = new StringWriter();
-            writer.Write(XmlUtilities.Serialise(model, true));
+            writer.Write(XmlUtilities.Serialise(model, false));
 
             // Let all models know that we have completed serialisation.
-            events.CallEventHandler(model, "Serialised", args);
+            events.Publish("Serialised", args);
 
             // Set the clipboard text.
             return writer.ToString();
@@ -337,12 +369,11 @@ namespace Models.Core
         /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model)
-        {
+        {            
             List<IModel> models = new List<IModel>();
-
             foreach (Model child in model.Children)
-            {
-                models.Add(child);
+            {                
+                models.Add(child);                
                 models.AddRange(ChildrenRecursively(child));
             }
             return models;

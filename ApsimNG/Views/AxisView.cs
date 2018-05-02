@@ -6,70 +6,66 @@
 namespace UserInterface.Views
 {
     using System;
-    using Glade;
     using Gtk;
-
-    /// <summary>
-    /// Describes an interface for an axis view.
-    /// </summary>
-    interface IAxisView
-    {
-        /// <summary>
-        /// Invoked when the user has changed the title.
-        /// </summary>
-        event EventHandler TitleChanged;
-
-        /// <summary>
-        /// Invoked when the user has changed the inverted field
-        /// </summary>
-        event EventHandler InvertedChanged;
-
-        /// <summary>
-        /// Invoked when the user has changed the minimum field
-        /// </summary>
-        event EventHandler MinimumChanged;
-
-        /// <summary>
-        /// Invoked when the user has changed the maximum field
-        /// </summary>
-        event EventHandler MaximumChanged;
-
-        /// <summary>
-        /// Invoked when the user has changed the interval field
-        /// </summary>
-        event EventHandler IntervalChanged;
-
-        /// <summary>
-        /// Gets or sets the title.
-        /// </summary>
-        string Title { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the axis is inverted.
-        /// </summary>
-        bool Inverted { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum axis scale. double.Nan for auto scale
-        /// </summary>
-        double Minimum { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the maximum axis scale. double.Nan for auto scale
-        /// </summary>
-        double Maximum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the axis scale interval. double.Nan for auto scale
-        /// </summary>
-        double Interval { get; set; }
-    }
+    using Interfaces;
 
     /// <summary>
     /// A Windows forms implementation of an AxisView
     /// </summary>
     public class AxisView : ViewBase, IAxisView
     {
+        /// <summary>
+        /// The table
+        /// </summary>
+        private Table table1 = null;
+
+        /// <summary>
+        /// The minumum value
+        /// </summary>
+        private Entry entryMin = null;
+
+        /// <summary>
+        /// The maximum value
+        /// </summary>
+        private Entry entryMax = null;
+
+        /// <summary>
+        /// The interval
+        /// </summary>
+        private Entry entryInterval = null;
+
+        /// <summary>
+        /// The title
+        /// </summary>
+        private Entry entryTitle = null;
+
+        /// <summary>
+        /// Check button object
+        /// </summary>
+        private CheckButton checkbutton1 = null;
+        
+        /// <summary>
+        /// The constructor
+        /// </summary>
+        /// <param name="owner">The owning view</param>
+        public AxisView(ViewBase owner) : base(owner)
+        {
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
+            table1 = (Table)builder.GetObject("table1");
+            entryMin = (Entry)builder.GetObject("entryMin");
+            entryMax = (Entry)builder.GetObject("entryMax");
+            entryInterval = (Entry)builder.GetObject("entryInterval");
+            entryTitle = (Entry)builder.GetObject("entryTitle");
+            checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
+            _mainWidget = table1;
+            entryTitle.Changed += TitleTextBox_TextChanged;
+            entryMin.Changed += OnMinimumChanged;
+            entryMax.Changed += OnMaximumChanged;
+            entryInterval.Changed += OnIntervalChanged;
+            checkbutton1.Toggled += OnCheckedChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
         /// <summary>
         /// Invoked when the user has changed the title.
         /// </summary>
@@ -94,44 +90,6 @@ namespace UserInterface.Views
         /// Invoked when the user has changed the interval field
         /// </summary>
         public event EventHandler IntervalChanged;
-
-        [Widget]
-        private Table table1 = null;
-        [Widget]
-        private Entry entryMin = null;
-        [Widget]
-        private Entry entryMax = null;
-        [Widget]
-        private Entry entryInterval = null;
-        [Widget]
-        private Entry entryTitle = null;
-        [Widget]
-        private CheckButton checkbutton1 = null;
-
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        public AxisView(ViewBase owner) : base(owner)
-        {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.AxisView.glade", "table1");
-            gxml.Autoconnect(this);
-            _mainWidget = table1;
-            entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.Changed += OnMinimumChanged;
-            entryMax.Changed += OnMaximumChanged;
-            entryInterval.Changed += OnIntervalChanged;
-            checkbutton1.Toggled += OnCheckedChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
-        }
-
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
-        {
-            entryTitle.Changed -= TitleTextBox_TextChanged;
-            entryMin.Changed -= OnMinimumChanged;
-            entryMax.Changed -= OnMaximumChanged;
-            entryInterval.Changed -= OnIntervalChanged;
-            checkbutton1.Toggled -= OnCheckedChanged;
-        }
 
         /// <summary>
         /// Gets or sets the title.
@@ -172,16 +130,18 @@ namespace UserInterface.Views
         { 
             get
             {
-                if (String.IsNullOrEmpty(entryMin.Text))
+                if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryMin.Text);
+                    return Convert.ToDouble(
+                                            entryMin.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
             {
                 if (double.IsNaN(value))
-                    entryMin.Text = "";
+                    entryMin.Text = string.Empty;
                 else
                     entryMin.Text = value.ToString();
             }
@@ -194,16 +154,18 @@ namespace UserInterface.Views
         {
             get
             {
-                if (String.IsNullOrEmpty(entryMax.Text))
+                if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryMax.Text);
+                    return Convert.ToDouble(
+                                            entryMax.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
             {
                 if (double.IsNaN(value))
-                    entryMax.Text = "";
+                    entryMax.Text = string.Empty;
                 else
                     entryMax.Text = value.ToString();
             }
@@ -216,24 +178,44 @@ namespace UserInterface.Views
         {
             get
             {
-                if (String.IsNullOrEmpty(entryInterval.Text))
+                if (string.IsNullOrEmpty(entryInterval.Text))
                     return double.NaN;
                 else
-                    return Convert.ToDouble(entryInterval.Text);
+                    return Convert.ToDouble(
+                                            entryInterval.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
 
             set
             {
                 if (double.IsNaN(value))
-                    entryInterval.Text = "";
+                    entryInterval.Text = string.Empty;
                 else
                     entryInterval.Text = value.ToString();
             }
         }
 
         /// <summary>
+        /// Destroying the main widget
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            entryTitle.Changed -= TitleTextBox_TextChanged;
+            entryMin.Changed -= OnMinimumChanged;
+            entryMax.Changed -= OnMaximumChanged;
+            entryInterval.Changed -= OnIntervalChanged;
+            checkbutton1.Toggled -= OnCheckedChanged;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
+        }
+
+        /// <summary>
         /// Invoked when the user changes the title text box.
         /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void TitleTextBox_TextChanged(object sender, EventArgs e)
         {
             if (TitleChanged != null)
@@ -243,6 +225,8 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user changes the inverted box.
         /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void OnCheckedChanged(object sender, EventArgs e)
         {
             if (InvertedChanged != null)
@@ -252,6 +236,8 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user changes the minimum box.
         /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void OnMinimumChanged(object sender, EventArgs e)
         {
             if (MinimumChanged != null)
@@ -261,6 +247,8 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user changes the maximum box.
         /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="e">The event arguments</param>
         private void OnMaximumChanged(object sender, EventArgs e)
         {
             if (MaximumChanged != null)
@@ -270,6 +258,8 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user changes the maximum box.
         /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="e">The event arguments</param>
         private void OnIntervalChanged(object sender, EventArgs e)
         {
             if (IntervalChanged != null)

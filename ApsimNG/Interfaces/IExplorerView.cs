@@ -23,6 +23,8 @@ namespace UserInterface.Interfaces
         public string ResourceNameForImage;
         /// <summary>The children</summary>
         public List<NodeDescriptionArgs> Children = new List<NodeDescriptionArgs>();
+        /// <summary>Whether this node will be included in auto-docs.</summary>
+        public bool IncludeInDocumentation { get; set; }
     }
 
     /// <summary>A class for holding info about a collection of menu items.</summary>
@@ -36,6 +38,8 @@ namespace UserInterface.Interfaces
         public string ResourceNameForImage;
         /// <summary>The on click</summary>
         public EventHandler OnClick;
+        /// <summary>Flags whether this item should show a checkbox</summary>
+        public bool ShowCheckbox;
         /// <summary>The checked</summary>
         public bool Checked;
         /// <summary>The shortcut key</summary>
@@ -128,9 +132,6 @@ namespace UserInterface.Interfaces
         /// <summary>Invoked then a node is renamed.</summary>
         event EventHandler<NodeRenameArgs> Renamed;
 
-        /// <summary>Invoked when a shortcut key is pressed.</summary>
-        event EventHandler<KeysArgs> ShortcutKeyPressed;
-
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
         void Refresh(NodeDescriptionArgs nodeDescriptions);
@@ -169,6 +170,11 @@ namespace UserInterface.Interfaces
         /// <value>The shortcut keys.</value>
         string[] ShortcutKeys { get; set; }
 
+        /// <summary>
+        /// If true, a small tick will be displayed beside nodes which are to be included in auto-docs.
+        /// </summary>
+        bool ShowIncludeInDocumentation { get; set; }
+
         /// <summary>Populate the main menu tool strip.</summary>
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
         void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions);
@@ -196,13 +202,13 @@ namespace UserInterface.Interfaces
         /// Get whatever text is currently on the clipboard
         /// </summary>
         /// <returns></returns>
-        string GetClipboardText();
+        string GetClipboardText(string clipboardName);
 
         /// <summary>
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text"></param>
-        void SetClipboardText(string text);
+        void SetClipboardText(string text, string clipboardName);
 
         /// <summary>
         /// Gets or sets the width of the tree view.

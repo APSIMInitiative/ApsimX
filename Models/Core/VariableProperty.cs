@@ -129,6 +129,27 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// This is derived from the BriefLabel attribute or,
+        /// if that does not exist, from the Description attribute
+        /// </summary>
+        public override string Caption
+        {
+            get
+            {
+                CaptionAttribute labelAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(CaptionAttribute), false) as CaptionAttribute;
+                if (labelAttribute == null)
+                {
+                    return Description;
+                }
+                else
+                {
+                    return labelAttribute.ToString();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the units of the property
         /// </summary>
         public override string Units
@@ -175,7 +196,6 @@ namespace Models.Core
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                MethodInfo unitsToStringInfo = this.Object.GetType().GetMethod(this.property.Name + "UnitsToString");
                 if (unitsAttribute != null)
                 {
                     unitString = unitsAttribute.ToString();
@@ -183,13 +203,11 @@ namespace Models.Core
                 else if (unitsInfo != null)
                 {
                     object val = unitsInfo.GetValue(this.Object, null);
-                    if (unitsToStringInfo != null)
-                        unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { val });
+                    if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
+                        unitString = GetEnumDescription(val as Enum);
                     else
                         unitString = val.ToString();
                 }
-                else if (unitsToStringInfo != null)
-                    unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
                 if (unitString != null)
                     return "(" + unitString + ")";
                 else
@@ -198,19 +216,75 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets a list of allowable units
+        /// Looks for a description string associated with an enumerated value
+        /// Adapted from http://blog.spontaneouspublicity.com/associating-strings-with-enums-in-c
         /// </summary>
-        public string[] AllowableUnits
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetEnumDescription(Enum value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes =
+                (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attributes != null && attributes.Length > 0)
+                return attributes[0].ToString();
+            else
+                return value.ToString();
+        }
+        
+        /// <summary>
+        /// Simple structure to hold both a name and an associated label
+        /// </summary>
+        public struct NameLabelPair
+        {
+            /// <summary>
+            /// Name of an object
+            /// </summary>
+            public string Name;
+            /// <summary>
+            /// Display label for the object
+            /// </summary>
+            public string Label;
+            /// <summary>
+            /// Constructs a NameLabelPair
+            /// </summary>
+            /// <param name="name">Name of the object</param>
+            /// <param name="label">Display label for the object</param>
+            public NameLabelPair(string name, string label = null)
+            {
+                Name = name;
+                if (String.IsNullOrEmpty(label))
+                    Label = name;
+                else
+                    Label = label;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of allowable units
+        /// The list contains both the actual name and a display name for each entry
+        /// </summary>
+        public NameLabelPair[] AllowableUnits
         {
             get
             {
                 PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsInfo != null)
+                if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
                 {
-                    return Enum.GetNames(unitsInfo.PropertyType);
+                    Array enumValArray = Enum.GetValues(unitsInfo.PropertyType);
+                    List<NameLabelPair> enumValList = new List<NameLabelPair>(enumValArray.Length);
+
+                    foreach (int val in enumValArray)
+                    {
+                        object parsedEnum = Enum.Parse(unitsInfo.PropertyType, val.ToString());
+                        enumValList.Add(new NameLabelPair(parsedEnum.ToString(), GetEnumDescription((Enum)parsedEnum)));
+                    }
+                    return enumValList.ToArray();
                 }
                 else
-                    return new string[0];
+                    return new NameLabelPair[0];
             }
         }
 
@@ -276,9 +350,16 @@ namespace Models.Core
             {
                 if (elementPropertyName != null)
                     return ProcessPropertyOfArrayElement();
-                
-                object obj = this.property.GetValue(this.Object, null);
 
+                object obj = null;
+                try
+                {
+                    obj = this.property.GetValue(this.Object, null);
+                }
+                catch (Exception err)
+                {
+                    throw err.InnerException;
+                }
                 if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
                 {
                     IList array = obj as IList;
@@ -370,6 +451,35 @@ namespace Models.Core
             return values;
         }
 
+        /// <summary>
+        /// Returns the string representation of our value
+        /// </summary>
+        /// <returns></returns>
+        public string ValueAsString()
+        {
+            if (this.DataType.IsArray)
+                return ValueWithArrayHandling.ToString();
+            else
+                return AsString(this.Value);
+        }
+
+        /// <summary>
+        /// Returns the string representation of a scalar value. 
+        /// Uses InvariantCulture when converting doubles
+        /// to ensure a consistent representation of Nan and Inf
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private string AsString(object value)
+        {
+            if (value == null)
+                return string.Empty;
+            Type type = value.GetType();
+            if (type == typeof(double))
+                return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            else
+                return value.ToString();
+        }
 
         /// <summary>
         /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
@@ -402,7 +512,7 @@ namespace Models.Core
 
                         Array arr2d = arr.GetValue(j) as Array;
                         if (arr2d == null)
-                            stringValue += arr.GetValue(j).ToString();
+                           stringValue += AsString(arr.GetValue(j));
                         else
                         {
                             for (int k = 0; k < arr2d.Length; k++)
@@ -411,8 +521,7 @@ namespace Models.Core
                                 {
                                     stringValue += " \r\n ";
                                 }
-                                
-                                stringValue += arr2d.GetValue(k).ToString();
+                                stringValue += AsString(arr2d.GetValue(k));
                             }
                         }
                     }
@@ -449,7 +558,7 @@ namespace Models.Core
                     return displayFormatAttribute.Format;
                 }
 
-                return null;
+                return string.Empty;
             }
         }
 
@@ -569,6 +678,14 @@ namespace Models.Core
                 else if (this.DataType == typeof(bool))
                 {
                     this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
+                }
+                else if (this.DataType == typeof(DateTime))
+                {
+                    this.Value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                }
+                else if (this.DataType.IsEnum)
+                {
+                    this.Value = Enum.Parse(this.DataType, value);
                 }
                 else
                 {

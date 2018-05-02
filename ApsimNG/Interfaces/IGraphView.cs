@@ -79,6 +79,7 @@ namespace UserInterface.Interfaces
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -92,6 +93,7 @@ namespace UserInterface.Interfaces
              string title, 
              IEnumerable x, 
              IEnumerable y,
+             IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType, 
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
@@ -228,7 +230,7 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        void Export(ref Bitmap bitmap, bool legendOutside);
+        void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside);
 
         /// <summary>
         /// Export the graph to the clipboard
@@ -241,7 +243,15 @@ namespace UserInterface.Interfaces
         /// <param name="menuText">Menu item text</param>
         /// <param name="ticked">Menu ticked?</param>
         /// <param name="onClick">Event handler for menu item click</param>
-        void AddContextAction(string menuText, bool ticked, System.EventHandler onClick);
+        void AddContextAction(string menuText, System.EventHandler onClick);
+
+        /// <summary>
+        /// Add an option (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        /// <param name="active">Indicates whether the option is current selected</param>
+        void AddContextOption(string menuItemText, System.EventHandler onClick, bool active);
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.

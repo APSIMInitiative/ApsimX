@@ -1,46 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtk;
-using Glade;
 using Mono.TextEditor;
-using System.IO;
 using Cairo;
+using UserInterface;
 
 namespace Utility
 {
     public class FindAndReplaceForm
     {
-        [Widget]
+        // Gtk Widgets
         private Window window1 = null;
-        [Widget]
         private CheckButton chkMatchCase = null;
-        [Widget]
         private CheckButton chkMatchWholeWord = null;
-        [Widget]
         private Entry txtLookFor = null;
-        [Widget]
         private Entry txtReplaceWith = null;
-        [Widget]
         private Button btnReplace = null;
-        [Widget]
         private Button btnReplaceAll = null;
-        [Widget]
         private Button btnHighlightAll = null;
-        [Widget]
         private Button btnCancel = null;
-        [Widget]
         private Button btnFindPrevious = null;
-        [Widget]
         private Button btnFindNext = null;
-        [Widget]
         private Label lblReplaceWith = null;
 
         private bool selectionOnly = false;
 
         public FindAndReplaceForm()
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.FindAndReplace.glade", "window1");
-            gxml.Autoconnect(this);
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.FindAndReplace.glade");
+            window1 = (Window)builder.GetObject("window1");
+            chkMatchCase = (CheckButton)builder.GetObject("chkMatchCase");
+            chkMatchWholeWord = (CheckButton)builder.GetObject("chkMatchWholeWord");
+            txtLookFor = (Entry)builder.GetObject("txtLookFor");
+            txtReplaceWith = (Entry)builder.GetObject("txtReplaceWith");
+            btnReplace = (Button)builder.GetObject("btnReplace");
+            btnReplaceAll = (Button)builder.GetObject("btnReplaceAll");
+            btnHighlightAll = (Button)builder.GetObject("btnHighlightAll");
+            btnCancel = (Button)builder.GetObject("btnCancel");
+            btnFindPrevious = (Button)builder.GetObject("btnFindPrevious");
+            btnFindNext = (Button)builder.GetObject("btnFindNext");
+            lblReplaceWith = (Label)builder.GetObject("lblReplaceWith");
+
             btnFindNext.Clicked += btnFindNext_Click;
             btnFindPrevious.Clicked += btnFindPrevious_Click;
             btnCancel.Clicked += btnCancel_Click;
@@ -49,6 +49,9 @@ namespace Utility
             btnHighlightAll.Clicked += btnHighlightAll_Click;
             window1.DeleteEvent += Window1_DeleteEvent;
             window1.Destroyed += Window1_Destroyed;
+            AccelGroup agr = new AccelGroup();
+            btnCancel.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.Escape, Gdk.ModifierType.None, AccelFlags.Visible));
+            window1.AddAccelGroup(agr);
         }
 
 
@@ -74,8 +77,8 @@ namespace Utility
             args.RetVal = true;
         }
 
-        MonoTextEditor _editor;
-        MonoTextEditor Editor
+        TextEditor _editor;
+        TextEditor Editor
         {
             get { return _editor; }
             set
@@ -99,15 +102,15 @@ namespace Utility
             string text = ReplaceMode ? "Find & replace" : "Find";
             if (_editor != null && _editor.FileName != null)
                 text += " - " + System.IO.Path.GetFileName(_editor.FileName);
-            if (selectionOnly)
-              text += " (selection only)";
+            if (this.selectionOnly)
+                text += " (selection only)";
             window1.Title = text;
         }
 
-        public void ShowFor(MonoTextEditor editor, bool replaceMode)
+        public void ShowFor(TextEditor editor, bool replaceMode)
         {
             Editor = editor;
-            selectionOnly = false;
+            this.selectionOnly = false;
             window1.TransientFor = Editor.Toplevel as Window;
             Mono.TextEditor.Selection selected = Editor.MainSelection;
             if (Editor.SelectedText != null)
@@ -117,7 +120,7 @@ namespace Utility
                 else
                 {
                     Editor.SearchEngine.SearchRequest.SearchRegion = Editor.SelectionRange;
-                    selectionOnly = true;
+                    this.selectionOnly = true;
                 }
             }
             else
@@ -129,6 +132,7 @@ namespace Utility
                 txtLookFor.Text = Editor.GetTextBetween(start, end);
             }
             ReplaceMode = replaceMode;
+            editor.HighlightSearchPattern = true;
 
             window1.Parent = editor.Toplevel;
             UpdateTitleBar();
@@ -145,7 +149,7 @@ namespace Utility
                 window1.AllowShrink = !value;
                 btnReplace.Visible = btnReplaceAll.Visible = value;
                 lblReplaceWith.Visible = txtReplaceWith.Visible = value;
-                btnHighlightAll.Visible = !value;
+                btnHighlightAll.Visible = false;  // !value;
                 window1.Default = value ? btnReplace : btnFindNext;
             }
         }
@@ -159,66 +163,34 @@ namespace Utility
             FindNext(false, true, "Text not found");
         }
 
-        public bool _lastSearchWasBackward = false;
-        public bool _lastSearchLoopedAround;
 
-        
-        public SearchResult FindNext(bool viaF3, bool searchBackward, string messageIfNotFound)
+        public SearchResult FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
         {
+            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
+            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
+            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
                 ShowMsg("No string specified to look for!");
                 return null;
             }
-            _lastSearchWasBackward = searchBackward;
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
 
             SearchResult range = null;
-            if (searchBackward)
+            if (searchForward)
                 range = Editor.FindNext(true);
             else
                 range = Editor.FindPrevious(true);
             if (range == null && messageIfNotFound != null)
                 ShowMsg(messageIfNotFound);
+            else
+                Editor.ScrollTo(range.Offset);
             return range;
         }
-        
-        Dictionary<MonoTextEditor, HighlightGroup> _highlightGroups = new Dictionary<MonoTextEditor, HighlightGroup>();
 
         private void btnHighlightAll_Click(object sender, EventArgs e)
         {
-            if (!_highlightGroups.ContainsKey(_editor))
-                _highlightGroups[_editor] = new HighlightGroup(_editor);
-            HighlightGroup group = _highlightGroups[_editor];
-
-            if (string.IsNullOrEmpty(LookFor))
-                // Clear highlights
-                group.ClearMarkers();
-            else
-            {
-                Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-                Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-                Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
-
-                int offset = 0, count = 0;
-                for (;;)
-                {
-                    SearchResult range = Editor.SearchEngine.SearchForward(offset);
-                    if (range == null || range.SearchWrapped)
-                        break;
-                    offset = range.Offset + range.Length;
-                    count++;
-
-                    HighlightSegmentMarker m = new HighlightSegmentMarker(range.Offset, range.Length);
-                    group.AddMarker(m);
-                }
-                if (count == 0)
-                    ShowMsg("Search text not found.");
-                else
-                    window1.Hide();
-            }
+            _editor.HighlightSearchPattern = true;
+            btnFindNext_Click(sender, e);
         }
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -245,55 +217,10 @@ namespace Utility
             else
                 ShowMsg(string.Format("Replaced {0} occurrences.", count));
         }
+
         public string LookFor { get { return txtLookFor.Text; } }
     }
 
-    /// <summary>
-    /// Extends the TextSegementMarker class to allow a different background color to be used
-    /// Is there a better way to do this? There isn't really much documentation
-    /// on the Mono.TextEditor stuff. The source code is the documentation...
-    /// </summary>
-    public class HighlightSegmentMarker : TextSegmentMarker
-    {
-        public HighlightSegmentMarker(int Offset, int Length) : base (Offset, Length) {}
-
-        public override void DrawBackground(MonoTextEditor editor, Context cr, LineMetrics metrics, int startOffset, int endOffset)
-        {
-            int x1 = editor.LocationToPoint(editor.OffsetToLocation(this.Offset), false).X;
-            int x2 = editor.LocationToPoint(editor.OffsetToLocation(this.Offset + this.Length), false).X;
-            cr.Rectangle(x1, metrics.LineYRenderStartPosition + 0.5, x2 - x1, metrics.LineHeight - 1);
-            cr.SetSourceRGB(1.0, 1.0, 0.0);
-            cr.Fill();
-        }
-    }
-
-    /// <summary>Bundles a group of markers together so that they can be cleared 
-    /// together.</summary>
-    public class HighlightGroup : IDisposable
-    {
-        List<HighlightSegmentMarker> _markers = new List<HighlightSegmentMarker>();
-        Mono.TextEditor.MonoTextEditor _editor;
-        TextDocument _document;
-        public HighlightGroup(Mono.TextEditor.MonoTextEditor editor)
-        {
-            _editor = editor;
-            _document = editor.Document;
-        }
-        public void AddMarker(HighlightSegmentMarker marker)
-        {
-            _markers.Add(marker);
-            _document.AddMarker(marker);
-        }
-        public void ClearMarkers()
-        {
-            foreach (HighlightSegmentMarker m in _markers)
-                _document.RemoveMarker(m);
-            _markers.Clear();
-            _editor.QueueDraw();
-        }
-        public void Dispose() { ClearMarkers(); GC.SuppressFinalize(this); }
-        ~HighlightGroup() { Dispose(); }
-
-        public IList<HighlightSegmentMarker> Markers { get { return _markers.AsReadOnly(); } }
-    }
 }
+
+    

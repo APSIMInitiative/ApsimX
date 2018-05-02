@@ -1,10 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
-///using System.Windows.Forms;
-using Glade;
 using Gtk;
+using System.Collections.Generic;
 
 namespace UserInterface.Views
 {
@@ -27,6 +24,7 @@ namespace UserInterface.Views
         string[] MemoLines { get; set; }
         bool ReadOnly { get; set; }
         string LabelText { get; set; }
+        bool WordWrap { get; set; }
 
         void Export(int width, int height, Graphics graphics);
     }
@@ -39,27 +37,55 @@ namespace UserInterface.Views
         public event EventHandler<EditorArgs> MemoLeave;
         public event EventHandler<EditorArgs> MemoChange;
 
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         public TextView textView = null;
-        [Widget]
         private Label label1 = null;
 
+        private class MenuInfo
+        {
+            public string menuText;
+            public EventHandler action;
+        }
+
+        List<MenuInfo> menuItemList = new List<MenuInfo>();
+        
         public MemoView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MemoView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            textView = (TextView)builder.GetObject("textView");
+            label1 = (Label)builder.GetObject("label1");
             _mainWidget = vbox1;
+            textView.ModifyFont(Pango.FontDescription.FromString("monospace"));
             textView.FocusOutEvent += richTextBox1_Leave;
             textView.Buffer.Changed += richTextBox1_TextChanged;
+            textView.PopulatePopup += TextView_PopulatePopup;
+            textView.ButtonPressEvent += TextView_ButtonPressEvent;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        // Let a right click move the cursor if we're about to display a popup menu,
+        // so the popup has the expected context
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
+        private void TextView_ButtonPressEvent(object o, ButtonPressEventArgs args)
+        {
+            if (menuItemList.Count > 0 && args.Event.Button == 3)
+            {
+                int x, y;
+                textView.WindowToBufferCoords(TextWindowType.Text, (int)(args.Event.X), (int)(args.Event.Y), out x, out y);
+                TextIter where = textView.GetIterAtLocation(x, y);
+                textView.Buffer.PlaceCursor(where);
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             textView.FocusOutEvent -= richTextBox1_Leave;
             textView.Buffer.Changed -= richTextBox1_TextChanged;
+            textView.PopulatePopup -= TextView_PopulatePopup;
+            menuItemList.Clear();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -108,6 +134,11 @@ namespace UserInterface.Views
             set { label1.Text = value; }
         }
 
+        public bool WordWrap
+        {
+            get { return textView.WrapMode == WrapMode.Word; }
+            set { textView.WrapMode = value ? WrapMode.Word : WrapMode.None;  }
+        }
 
         /// <summary>
         /// The memo has been updated and now send the changed text to the model.
@@ -139,11 +170,30 @@ namespace UserInterface.Views
         /// </summary>
         public void AddContextAction(string buttonText, System.EventHandler onClick)
         {
-            /* TBI
-            contextMenuStrip1.Items.Add(buttonText);
-            contextMenuStrip1.Items[0].Click += onClick;
-            richTextBox1.ContextMenuStrip = contextMenuStrip1;
-            */
+            MenuInfo item = new MenuInfo();
+            item.menuText = buttonText;
+            item.action = onClick;
+            menuItemList.Add(item);
+        }
+
+        private void TextView_PopulatePopup(object o, PopulatePopupArgs args)
+        {
+            if (menuItemList.Count > 0)
+            {
+                foreach (Widget w in args.Menu)
+                {
+                    args.Menu.Remove(w);
+                    w.Destroy();
+                }
+                foreach (MenuInfo item in menuItemList)
+                {
+                    MenuItem menuItem = new MenuItem(item.menuText);
+                    menuItem.Activated += item.action;
+                    menuItem.Visible = true;
+                    args.Menu.Append(menuItem);
+                }
+                args.RetVal = true;
+            }
         }
 
         /// <summary>

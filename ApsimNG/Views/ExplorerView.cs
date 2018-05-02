@@ -14,7 +14,6 @@
 namespace UserInterface.Views
 {
     using EventArguments;
-    using Glade;
     using Gtk;
     using Interfaces;
     using System;
@@ -57,55 +56,64 @@ namespace UserInterface.Views
         /// <summary>The node path before rename.</summary>
         private string nodePathBeforeRename;
 
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Toolbar toolStrip = null;
-        [Widget]
         private TreeView treeview1 = null;
-        [Widget]
         private Viewport RightHandView = null;
-        [Widget]
         private Label toolbarlabel = null;
 
         private Menu Popup = new Menu();
 
-        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
+        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
         private CellRendererText textRender;
         private AccelGroup accel = new AccelGroup();
+        private bool showIncludeInDocs = false;
+        private const string modelMime = "application/x-model-component";
+
+        System.Timers.Timer timer = new System.Timers.Timer();
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            toolStrip = (Toolbar)builder.GetObject("toolStrip");
+            treeview1 = (TreeView)builder.GetObject("treeview1");
+            RightHandView = (Viewport)builder.GetObject("RightHandView");
             _mainWidget = vbox1;
+            RightHandView.ShadowType = ShadowType.EtchedOut;
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
             column.PackStart(iconRender, false);
             textRender = new Gtk.CellRendererText();
-            textRender.Editable = true;
+            textRender.Editable = false;
             textRender.EditingStarted += OnBeforeLabelEdit;
             textRender.Edited += OnAfterLabelEdit;
             column.PackStart(textRender, true);
+            CellRendererText tickCell = new CellRendererText();
+            tickCell.Editable = false;
+            column.PackEnd(tickCell, false);
             column.SetAttributes(iconRender, "pixbuf", 1);
             column.SetAttributes(textRender, "text", 0);
-//            column.SetCellDataFunc(textRender, treecelldatafunc);
+            column.SetAttributes(tickCell, "text", 3);
+            // column.SetCellDataFunc(textRender, treecelldatafunc);
             treeview1.AppendColumn(column);
             treeview1.TooltipColumn = 2;
 
             treeview1.CursorChanged += OnAfterSelect;
             treeview1.ButtonReleaseEvent += OnButtonUp;
+            treeview1.ButtonPressEvent += OnButtonPress;
+            treeview1.RowActivated += OnRowActivated;
 
             TargetEntry[] target_table = new TargetEntry[] {
-               new TargetEntry ("application/x-model-component", TargetFlags.App, 0)
+               new TargetEntry(modelMime, TargetFlags.App, 0)
             };
 
             Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
-            //treeview1.EnableModelDragDest(target_table, actions);
-            //treeview1.EnableModelDragSource(Gdk.ModifierType.Button1Mask, target_table, actions);
+            // treeview1.EnableModelDragDest(target_table, actions);
+            // treeview1.EnableModelDragSource(Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.SourceSet(treeview1, Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.DestSet(treeview1, 0, target_table, actions);
             treeview1.DragMotion += OnDragOver;
@@ -114,9 +122,9 @@ namespace UserInterface.Views
             treeview1.DragDataGet += OnDragDataGet;
             treeview1.DragDataReceived += OnDragDataReceived;
             treeview1.DragEnd += OnDragEnd;
-            treeview1.DragDataDelete += OnDragDataDelete;
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
+            timer.Elapsed += Timer_Elapsed;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -134,15 +142,17 @@ namespace UserInterface.Views
             textRender.Edited -= OnAfterLabelEdit;
             treeview1.CursorChanged -= OnAfterSelect;
             treeview1.ButtonReleaseEvent -= OnButtonUp;
+            treeview1.ButtonPressEvent -= OnButtonPress;
+            treeview1.RowActivated -= OnRowActivated;
             treeview1.DragMotion -= OnDragOver;
             treeview1.DragDrop -= OnDragDrop;
             treeview1.DragBegin -= OnDragBegin;
             treeview1.DragDataGet -= OnDragDataGet;
             treeview1.DragDataReceived -= OnDragDataReceived;
             treeview1.DragEnd -= OnDragEnd;
-            treeview1.DragDataDelete -= OnDragDataDelete;
             treeview1.FocusInEvent -= Treeview1_FocusInEvent;
             treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
+            timer.Elapsed -= Timer_Elapsed;
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
@@ -158,15 +168,20 @@ namespace UserInterface.Views
                         }
                     }
                 }
+                toolStrip.Remove(child);
+                child.Destroy();
             }
             ClearPopup();
+            Popup.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         private void ClearPopup()
         {
             foreach (Widget w in Popup)
             {
-                if (w is ImageMenuItem)
+                if (w is MenuItem)
                 {
                     PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
                     if (pi != null)
@@ -175,11 +190,12 @@ namespace UserInterface.Views
                         if (handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as ImageMenuItem).Activated -= handler;
+                            (w as MenuItem).Activated -= handler;
                         }
                     }
-                    Popup.Remove(w);
                 }
+                Popup.Remove(w);
+                w.Destroy();
             }
         }
 
@@ -205,18 +221,47 @@ namespace UserInterface.Views
         /// <summary>Invoked then a node is renamed.</summary>
         public event EventHandler<NodeRenameArgs> Renamed;
 
-        /// <summary>Invoked when a global key is pressed.</summary>
-        public event EventHandler<KeysArgs> ShortcutKeyPressed;
+        /// <summary>
+        /// If true, a small tick will be displayed beside nodes which are to be included in auto-docs.
+        /// </summary>
+        public bool ShowIncludeInDocumentation
+        {
+            get
+            {
+                return showIncludeInDocs;
+            }
+            set
+            {
+                showIncludeInDocs = value;
+            }
+        }
 
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
         public void Refresh(NodeDescriptionArgs nodeDescriptions)
         {
+            // Record which rows are currently expanded.
+            // We can't directly use a TreePath to an outdated TreeModel/TreeView, so we store the path as a string, and 
+            // then parse that into a new TreePath after the model is reassembled. This assumes that the structure of the 
+            // tree view/model does not change when RefreshNode() is called (e.g. it still has the same number of rows/columns).
+            List<string> expandedRows = new List<string>();
+            treeview1.MapExpandedRows(new TreeViewMappingFunc((tree, path) =>
+            {
+                expandedRows.Add(path.ToString());
+            }));
             treemodel.Clear();
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions);
             treeview1.ShowAll();
             treeview1.ExpandRow(new TreePath("0"), false);
+            // Expand all rows which were previously expanded by the user.
+            try
+            {
+                expandedRows.ForEach(row => treeview1.ExpandRow(new TreePath(row), false));
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>Moves the specified node up 1 position.</summary>
@@ -255,6 +300,7 @@ namespace UserInterface.Views
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
         public void BeginRenamingCurrentNode()
         {
+            textRender.Editable = true;
             TreePath selPath;
             TreeViewColumn selCol;
             treeview1.GetCursor(out selPath, out selCol);
@@ -267,7 +313,25 @@ namespace UserInterface.Views
         public void Delete(string nodePath)
         {
             TreeIter node = FindNode(nodePath);
+
+            // We will typically be deleting the currently selected node. If this is the case,
+            // Gtk will not automatically move the cursor for us.
+            // We need to work out where we want selection to be after this node is deleted
+            TreePath cursorPath;
+            TreeViewColumn cursorCol;
+            treeview1.GetCursor(out cursorPath, out cursorCol);
+            TreeIter nextSel = node;
+            TreePath pathToSelect = treemodel.GetPath(node);
+            if (pathToSelect.Compare(cursorPath) != 0)
+                pathToSelect = null;
+            else if (!treemodel.IterNext(ref nextSel)) // If there's a "next" sibling, the current TreePath will do
+            {                                     // Otherwise
+                if (!pathToSelect.Prev())         // If there's a "previous" sibling, use that
+                    pathToSelect.Up();            // and if that didn't work, use the parent
+            }
             treemodel.Remove(ref node);
+            if (pathToSelect != null)
+                treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
         }
 
         /// <summary>Adds a child node.</summary>
@@ -284,6 +348,7 @@ namespace UserInterface.Views
             else
                 iter = treemodel.InsertNode(node, position);
             RefreshNode(iter, nodeDescription);
+            treeview1.ExpandToPath(treemodel.GetPath(iter));
         }
 
         /// <summary>Gets or sets the currently selected node.</summary>
@@ -324,7 +389,10 @@ namespace UserInterface.Views
         public void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions)
         {
             foreach (Widget child in toolStrip.Children)
+            {
                 toolStrip.Remove(child);
+                child.Destroy();
+            }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 if (!hasResource(description.ResourceNameForImage))
@@ -341,9 +409,6 @@ namespace UserInterface.Views
                     ToolButton button = new ToolButton(new Gtk.Image(pixbuf), description.Name);
                     button.Homogeneous = false;
                     button.LabelWidget = new Label(description.Name);
-                    Pango.FontDescription font = new Pango.FontDescription();
-                    font.Size = (int)(8 * Pango.Scale.PangoScale);
-                    button.LabelWidget.ModifyFont(font);
                     if (description.OnClick != null)
                         button.Clicked += description.OnClick;
                     toolStrip.Add(button);
@@ -368,9 +433,23 @@ namespace UserInterface.Views
             ClearPopup();
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
-                ImageMenuItem item = new ImageMenuItem(Description.Name);
-                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage) )
-                    item.Image = new Image(null, Description.ResourceNameForImage);
+                MenuItem item;
+                if (Description.ShowCheckbox)
+                {
+                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
+                    checkItem.Active = Description.Checked;
+                    item = checkItem;
+                }
+                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
+                {
+                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
+                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    item = imageItem;
+                }
+                else
+                {
+                    item = new MenuItem(Description.Name);
+                }
                 if (!String.IsNullOrEmpty(Description.ShortcutKey))
                 {
                     string keyName = String.Empty;
@@ -477,36 +556,6 @@ namespace UserInterface.Views
             return -1;
         }
 
-        /// <summary>A helper function that asks user for a folder.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected folder or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFolder(string prompt)
-        {
-            string folderName = null;
-            FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, FileChooserAction.SelectFolder, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                folderName = fileChooser.Filename;
-            fileChooser.Destroy();
-            return folderName;
-        }
-
-        /// <summary>A helper function that asks user for a file.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected file or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFile(string prompt)
-        {
-            string fileName = null;
-            FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                fileName = fileChooser.Filename;
-            fileChooser.Destroy();
-            return fileName;
-        }
-
         /// <summary>Show the wait cursor</summary>
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         public void ShowWaitCursor(bool wait)
@@ -535,9 +584,22 @@ namespace UserInterface.Views
             if (hasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
             else
-                pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
-
-            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip);
+            {
+                // Search for image based on resource name including model name from namespace
+                string[] splitResourceName = description.ResourceNameForImage.Split('.');
+                string resourceNameOnly = "ApsimNG.Resources.TreeViewImages." + splitResourceName[splitResourceName.Length - 2] + "." + splitResourceName[splitResourceName.Length - 1];
+                if (hasResource(resourceNameOnly))
+                {
+                    pixbuf = new Gdk.Pixbuf(null, resourceNameOnly);
+                }
+                else
+                {
+                    // Is there something else we could use as a default?
+                    pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png");
+                }
+            }
+            string tick = description.IncludeInDocumentation && showIncludeInDocs ? "✔" : "";
+            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick);
 
             for (int i = 0; i < description.Children.Count; i++)
             {
@@ -606,7 +668,6 @@ namespace UserInterface.Views
             return result;         
         }
 
-
         #endregion
 
         #region Events
@@ -623,7 +684,8 @@ namespace UserInterface.Views
                 TreeViewColumn selCol;
                 treeview1.GetCursor(out selPath, out selCol);
                 selectionChangedData.NewNodePath = FullPath(selPath);
-                SelectedNodeChanged.Invoke(this, selectionChangedData);
+                if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                    SelectedNodeChanged.Invoke(this, selectionChangedData);
                 previouslySelectedNodePath = selectionChangedData.NewNodePath;
             }
         }
@@ -649,6 +711,61 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Handle button press events to possibly begin editing an item name.
+        /// This is in an attempt to rather slavishly follow Windows conventions.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [GLib.ConnectBefore]
+        private void OnButtonPress(object sender, ButtonPressEventArgs e)
+        {
+            timer.Stop();
+            if (e.Event.Button == 1 && e.Event.Type == Gdk.EventType.ButtonPress)
+            {
+                TreePath path;
+                TreeViewColumn col;
+                // Get the clicked location
+                if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out col))
+                {
+                    // See if the click was on the current selection
+                    TreePath selPath;
+                    TreeViewColumn selCol;
+                    treeview1.GetCursor(out selPath, out selCol);
+                    if (selPath != null && path.Compare(selPath) == 0)
+                    {
+                        // Check where on the row we are located, allowing 16 pixels for the image, and 2 for its border
+                        Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
+                        if (e.Event.X > rect.X + 18)
+                        {
+                            timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                            timer.AutoReset = false;
+                            timer.Start();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                BeginRenamingCurrentNode();
+            });
+        }
+
+        private void OnRowActivated(object sender, RowActivatedArgs e)
+        {
+            timer.Stop();
+            if (treeview1.GetRowExpanded(e.Path))
+                treeview1.CollapseRow(e.Path);
+            else
+                treeview1.ExpandRow(e.Path, false);
+            e.RetVal = true;
+        }
+
+
+        /// <summary>
         /// Displays the popup menu when the right mouse button is released
         /// </summary>
         /// <param name="sender"></param>
@@ -659,11 +776,6 @@ namespace UserInterface.Views
                 Popup.Popup();
         }
 
-        // Looks like drag and drop is broken on Mono on Mac. The data being dragged needs to be
-        // serializable which is ok but it still doesn work. Gives the error:
-        //     System.Runtime.Serialization.SerializationException: Unexpected binary element: 46
-        //     at System.Runtime.Serialization.Formatters.Binary.ObjectReader.ReadObject (BinaryElement element, System.IO.BinaryReader reader, System.Int64& objectId, System.Object& value, System.Runtime.Serialization.SerializationInfo& info) [0x00000] in <filename unknown>:0 
-
         private GCHandle dragSourceHandle;
 
         /// <summary>Node has begun to be dragged.</summary>
@@ -671,8 +783,10 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
+            if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
+                textRender.StopEditing(true);
             DragStartArgs args = new DragStartArgs();
-            args.NodePath = SelectedNode; //  FullPath(e.Item as TreeNode);
+            args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
             if (DragStarted != null)
             {
                 DragStarted(this, args);
@@ -698,17 +812,20 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragOver(object sender, DragMotionArgs e)
         {
-            //e.Effect = DragDropEffects.None;
+            // e.Effect = DragDropEffects.None;
             e.RetVal = false;
+            Gdk.Drag.Status(e.Context, 0, e.Time); // Default to no drop
 
+            Gdk.Atom target = Drag.DestFindTarget(treeview1, e.Context, null);
             // Get the drop location
             TreePath path;
             TreeIter dest;
-            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path))
+            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path) &&
+                target != Gdk.Atom.Intern("GDK_NONE", false))
             {
                 AllowDropArgs Args = new AllowDropArgs();
                 Args.NodePath = FullPath(path);
-                Drag.GetData(treeview1, e.Context, e.Context.Targets[0], e.Time);
+                Drag.GetData(treeview1, e.Context, target, e.Time);
                 if (DragDropData != null)
                 {
                     Args.DragObject = DragDropData;
@@ -721,7 +838,7 @@ namespace UserInterface.Views
                             string SourceParent = null;
                             if (sourcePathOfItemBeingDragged != null)
                                 SourceParent = StringUtilities.ParentName(sourcePathOfItemBeingDragged);
-                            
+                                                              
                             // Now determine the effect. If the drag originated from a different view 
                             // (e.g. a toolbox or another file) then only copy is supported.
                             if (sourcePathOfItemBeingDragged == null)
@@ -729,13 +846,10 @@ namespace UserInterface.Views
                             else if (SourceParent == Args.NodePath)
                                 Gdk.Drag.Status(e.Context, Gdk.DragAction.Copy, e.Time);
                             else
-                            // The "SuggestedAction" will normally be Copy, but will be Move 
-                            // if shift is pressed, and Link if Ctrl-Shift is pressed
+                                // The "SuggestedAction" will normally be Copy, but will be Move 
+                                // if shift is pressed, and Link if Ctrl-Shift is pressed
                                 Gdk.Drag.Status(e.Context, e.Context.SuggestedAction, e.Time);
-
                         }
-                        else
-                            Gdk.Drag.Status(e.Context, 0, e.Time);
                     }
                 }
             }
@@ -748,10 +862,11 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragDataGet(object sender, DragDataGetArgs e)
         {
-            Gdk.Atom[] targets = e.Context.Targets;
             IntPtr data = (IntPtr)dragSourceHandle;
             Int64 ptrInt = data.ToInt64();
-            e.SelectionData.Set(targets[0], 8, BitConverter.GetBytes(ptrInt));
+            Gdk.Atom target = Drag.DestFindTarget(sender as Widget, e.Context, null);
+            if (target != Gdk.Atom.Intern("GDK_NONE", false))
+               e.SelectionData.Set(target, 8, BitConverter.GetBytes(ptrInt));
         }
 
         private void OnDragDataReceived(object sender, DragDataReceivedArgs e)
@@ -770,16 +885,18 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragDrop(object sender, DragDropArgs e)
         {
-            // Get the drop location
-            TreePath path;
+            Gdk.Atom target = Drag.DestFindTarget(treeview1, e.Context, null);
+                // Get the drop location
+                TreePath path;
             TreeIter dest;
             bool success = false;
-            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path))
+            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path) &&
+                target != Gdk.Atom.Intern("GDK_NONE", false))                
             {
                 AllowDropArgs Args = new AllowDropArgs();
                 Args.NodePath = FullPath(path);
 
-                Drag.GetData(treeview1, e.Context, e.Context.Targets[0], e.Time);
+                Drag.GetData(treeview1, e.Context, target, e.Time);
                 if (DragDropData != null)
                 {
                     DropArgs args = new DropArgs();
@@ -800,31 +917,22 @@ namespace UserInterface.Views
             e.RetVal = success;
         }
 
-        /// <summary>
-        /// Delete the source item at the end of a drag Move operation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDragDataDelete(object sender, DragDataDeleteArgs e) 
-        {
-            Delete(sourcePathOfItemBeingDragged);
-        }
-
         /// <summary>User is about to start renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
         private void OnBeforeLabelEdit(object sender, EditingStartedArgs e)
         {
             nodePathBeforeRename = SelectedNode;
-            //TreeView.ContextMenuStrip = null;
-            //e.CancelEdit = false;
+            // TreeView.ContextMenuStrip = null;
+            // e.CancelEdit = false;
         }
         
-        /// <summary>User has finished renamed a node.</summary>
+        /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, EditedArgs e)
         {
+            textRender.Editable = false;
             // TreeView.ContextMenuStrip = this.PopupMenu;
             if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
             {
@@ -840,23 +948,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Get whatever text is currently on the clipboard
+        /// Get whatever text is currently on a specific clipboard.
         /// </summary>
+        /// <param name="clipboardName">Name of the clipboard.</param>
         /// <returns></returns>
-        public string GetClipboardText()
+        public string GetClipboardText(string clipboardName)
         {
-            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            
             return cb.WaitForText();
         }
 
         /// <summary>
-        /// Place text on the clipboard
+        /// Place text on a specific clipboard.
         /// </summary>
-        /// <param name="text"></param>
-        public void SetClipboardText(string text)
+        /// <param name="text">Text to place on the clipboard.</param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        public void SetClipboardText(string text, string clipboardName)
         {
-            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
-            cb.Text = text;
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            cb.Text = text;            
         }
 
         /*
@@ -873,4 +986,3 @@ namespace UserInterface.Views
 
     }
 }
-

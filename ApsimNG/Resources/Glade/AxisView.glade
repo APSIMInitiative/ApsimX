@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.24 -->
+<interface>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkTable" id="table1">
+  <object class="GtkTable" id="table1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="n_rows">3</property>
@@ -16,7 +16,7 @@
       <placeholder/>
     </child>
     <child>
-      <widget class="GtkEntry" id="entryMin">
+      <object class="GtkEntry" id="entryMin">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
@@ -24,7 +24,7 @@
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
         <property name="secondary_icon_sensitive">True</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">3</property>
         <property name="right_attach">4</property>
@@ -33,7 +33,7 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkEntry" id="entryMax">
+      <object class="GtkEntry" id="entryMax">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
@@ -41,7 +41,7 @@
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
         <property name="secondary_icon_sensitive">True</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">3</property>
         <property name="right_attach">4</property>
@@ -52,7 +52,7 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkEntry" id="entryInterval">
+      <object class="GtkEntry" id="entryInterval">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
@@ -60,7 +60,7 @@
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
         <property name="secondary_icon_sensitive">True</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">3</property>
         <property name="right_attach">4</property>
@@ -71,12 +71,12 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkLabel" id="label1">
+      <object class="GtkLabel" id="label1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="xalign">0</property>
         <property name="label" translatable="yes">Minimum:</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">2</property>
         <property name="right_attach">3</property>
@@ -85,19 +85,19 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkLabel" id="label2">
+      <object class="GtkLabel" id="label2">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="xalign">0.94999998807907104</property>
         <property name="label" translatable="yes">Title:</property>
-      </widget>
+      </object>
       <packing>
         <property name="x_options">GTK_FILL</property>
         <property name="y_options"/>
       </packing>
     </child>
     <child>
-      <widget class="GtkEntry" id="entryTitle">
+      <object class="GtkEntry" id="entryTitle">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
@@ -105,7 +105,7 @@
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
         <property name="secondary_icon_sensitive">True</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">1</property>
         <property name="right_attach">2</property>
@@ -114,13 +114,13 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkLabel" id="label3">
+      <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="xalign">0</property>
         <property name="yalign">0</property>
         <property name="label" translatable="yes">(Leave blank for auto title)</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">1</property>
         <property name="right_attach">2</property>
@@ -131,12 +131,12 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkLabel" id="label4">
+      <object class="GtkLabel" id="label4">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="xalign">0</property>
         <property name="label" translatable="yes">Maximum</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">2</property>
         <property name="right_attach">3</property>
@@ -147,12 +147,12 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkLabel" id="label5">
+      <object class="GtkLabel" id="label5">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="xalign">0</property>
         <property name="label" translatable="yes">Interval:</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">2</property>
         <property name="right_attach">3</property>
@@ -163,14 +163,14 @@
       </packing>
     </child>
     <child>
-      <widget class="GtkCheckButton" id="checkbutton1">
+      <object class="GtkCheckButton" id="checkbutton1">
         <property name="label" translatable="yes">Inverted</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">False</property>
         <property name="xalign">0</property>
         <property name="draw_indicator">True</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">1</property>
         <property name="right_attach">2</property>
@@ -180,5 +180,5 @@
         <property name="y_options"/>
       </packing>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

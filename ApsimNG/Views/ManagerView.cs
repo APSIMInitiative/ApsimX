@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-///using System.Windows.Forms;
-using Gtk;
+﻿using Gtk;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -22,6 +14,11 @@ namespace UserInterface.Views
         /// Provides access to the editor.
         /// </summary>
         IEditorView Editor { get; }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get;  set; }
     }
 
     public class ManagerView : ViewBase,  IManagerView
@@ -43,6 +40,26 @@ namespace UserInterface.Views
             ScriptEditor = new EditorView(this);
             notebook.AppendPage(Grid.MainWidget, new Label("Properties"));
             notebook.AppendPage(ScriptEditor.MainWidget, new Label("Script"));
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        {
+            Grid.MainWidget.Destroy();
+            Grid = null;
+            ScriptEditor.MainWidget.Destroy();
+            ScriptEditor = null;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
+        }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        public int TabIndex
+        {
+            get { return notebook.CurrentPage; }
+            set { notebook.CurrentPage = value; }
         }
 
         public IGridView GridView { get { return Grid; } }

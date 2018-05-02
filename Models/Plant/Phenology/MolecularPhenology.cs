@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     /// <summary>
+    /// # [Name]
     /// Molecular phenology model
     /// </summary>
     [Serializable]
@@ -145,7 +146,7 @@ namespace Models.PMF.Phen
                 //Pre-Vernalisation lag, determine the repression of Vrn4
                 if (IsPreVernalised == false)
                 {
-                    DeltaVrn1 = Vrn1rate.Value * DeltaHaunStage.Value;
+                    DeltaVrn1 = Vrn1rate.Value() * DeltaHaunStage.Value();
                     Vrn4 -= DeltaVrn1;
                     Vrn4 = Math.Max(Vrn4, 0.0);
                     if (Vrn4 == 0.0)
@@ -155,7 +156,7 @@ namespace Models.PMF.Phen
                 //Vernalisation, determine extent of Vrn1 expression when Vrn 4 is suppressed
                 if ((IsPreVernalised) && (IsVernalised == false))
                 {
-                    DeltaVrn1 = Vrn1rate.Value * DeltaHaunStage.Value;
+                    DeltaVrn1 = Vrn1rate.Value() * DeltaHaunStage.Value();
                     Vrn1 += DeltaVrn1;
                     Vrn1 = Math.Min(1.0, Vrn1);
                 }
@@ -163,10 +164,10 @@ namespace Models.PMF.Phen
                 //Update Vernalisation target to reflect photoperiod conditions and determine Vernalisation status
                 if ((IsVernalised == false) && (Vrn1Target <= 1.0))
                 {
-                    if (HaunStage.Value >= 1.1)
+                    if (HaunStage.Value() >= 1.1)
                     {
-                        Vrn2 += Vrn2rate.Value * DeltaHaunStage.Value;
-                        Vrn1Target = Math.Min(1.0, ShortDayVrnSatTarget.Value + Vrn2);
+                        Vrn2 += Vrn2rate.Value() * DeltaHaunStage.Value();
+                        Vrn1Target = Math.Min(1.0, ShortDayVrnSatTarget.Value() + Vrn2);
                     }
                     if (Vrn1 >= Vrn1Target)
                         IsVernalised = true;
@@ -174,7 +175,7 @@ namespace Models.PMF.Phen
                 //If Vernalisation is complete begin expressing Vrn3
                 if ((IsVernalised) && (IsReproductive == false))
                 {
-                    DeltaVrn3 = Vrn3rate.Value * DeltaHaunStage.Value;
+                    DeltaVrn3 = Vrn3rate.Value() * DeltaHaunStage.Value();
                     Vrn3 += DeltaVrn3;
                     Vrn3 = Math.Min(1.0, Vrn3);
                 }
@@ -183,12 +184,12 @@ namespace Models.PMF.Phen
                 if ((Vrn3 >= 0.3) && (IsInduced == false))
                 {
                     IsInduced = true;
-                    FIHS = HaunStage.Value;
+                    FIHS = HaunStage.Value();
                 }
                 if ((Vrn3 >= 1.0) && (IsReproductive == false))
                 {
                     IsReproductive = true;
-                    TSHS = HaunStage.Value + 1.0;
+                    TSHS = HaunStage.Value() + 1.0;
                     FLN = 2.86 + 1.1 * TSHS;
                 }
             }

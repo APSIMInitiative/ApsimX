@@ -11,7 +11,6 @@ namespace UserInterface.Forms
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
-    using Glade;
     using Gtk;
     using Views;
 
@@ -32,46 +31,41 @@ namespace UserInterface.Forms
         /// <summary>
         /// A list of potential upgrades available.
         /// </summary>
-        private Upgrade[] upgrades;
+        private Upgrade[] upgrades = new Upgrade[0];
+
+        private bool loadFailure = false;
 
         /// <summary>
         /// Our explorer presenter.
         /// </summary>
         private IMainView tabbedExplorerView;
-        [Widget]
+
+        // Glade widgets
         private Window window1 = null;
-        [Widget]
         private Button button1 = null;
-        [Widget]
         private Button button2 = null;
-        [Widget]
+        private Table table1 = null;
+        private Table table2 = null;
         private Entry firstNameBox = null;
-        [Widget]
         private Entry lastNameBox = null;
-        [Widget]
         private Entry organisationBox = null;
-        [Widget]
         private Entry emailBox = null;
-        [Widget]
         private Entry address1Box = null;
-        [Widget]
         private Entry address2Box = null;
-        [Widget]
         private Entry cityBox = null;
-        [Widget]
         private Entry stateBox = null;
-        [Widget]
         private Entry countryBox = null;
-        [Widget]
         private Entry postcodeBox = null;
-        [Widget]
         private Label label1 = null;
-        [Widget]
         private Alignment HTMLalign = null;
-        [Widget]
         private CheckButton checkbutton1 = null;
-        [Widget]
         private TreeView listview1 = null;
+        private Alignment alignment3 = null;
+        private Alignment alignment4 = null;
+        private Alignment alignment5 = null;
+        private Alignment alignment6 = null;
+        private Alignment alignment7 = null;
+
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
         private Views.HTMLView HTMLview;
 
@@ -80,8 +74,32 @@ namespace UserInterface.Forms
         /// </summary>
         public UpgradeForm(IMainView explorerPresenter)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.UpgradeForm.glade", "window1");
-            gxml.Autoconnect(this);
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeForm.glade");
+            window1 = (Window)builder.GetObject("window1");
+            button1 = (Button)builder.GetObject("button1");
+            button2 = (Button)builder.GetObject("button2");
+            table1 = (Table)builder.GetObject("table1");
+            table2 = (Table)builder.GetObject("table2");
+            firstNameBox = (Entry)builder.GetObject("firstNameBox");
+            lastNameBox = (Entry)builder.GetObject("lastNameBox");
+            organisationBox = (Entry)builder.GetObject("organisationBox");
+            emailBox = (Entry)builder.GetObject("emailBox");
+            address1Box = (Entry)builder.GetObject("address1Box");
+            address2Box = (Entry)builder.GetObject("address2Box");
+            cityBox = (Entry)builder.GetObject("cityBox");
+            stateBox = (Entry)builder.GetObject("stateBox");
+            countryBox = (Entry)builder.GetObject("countryBox");
+            postcodeBox = (Entry)builder.GetObject("postcodeBox");
+            label1 = (Label)builder.GetObject("label1");
+            HTMLalign = (Alignment)builder.GetObject("HTMLalign");
+            checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
+            listview1 = (TreeView)builder.GetObject("listview1");
+            alignment3 = (Alignment)builder.GetObject("alignment3");
+            alignment4 = (Alignment)builder.GetObject("alignment4");
+            alignment5 = (Alignment)builder.GetObject("alignment5");
+            alignment6 = (Alignment)builder.GetObject("alignment6");
+            alignment7 = (Alignment)builder.GetObject("alignment7");
+
             listview1.Model = listmodel;
 
             CellRendererText textRender = new Gtk.CellRendererText();
@@ -96,6 +114,11 @@ namespace UserInterface.Forms
             listview1.AppendColumn(column1);
             column1.Sizing = TreeViewColumnSizing.Autosize;
             column1.Resizable = true;
+
+            // Make the tab order a little more sensible than the defaults
+            table1.FocusChain = new Widget[] { alignment7, button1, button2 };
+            table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, organisationBox, emailBox,
+                          alignment3, alignment4, cityBox, alignment5, countryBox, alignment6 };
 
             HTMLview = new HTMLView(new ViewBase(null));
             HTMLalign.Add(HTMLview.MainWidget);
@@ -123,6 +146,8 @@ namespace UserInterface.Forms
                 Gtk.Application.RunIteration();
             PopulateForm();
             window1.GdkWindow.Cursor = null;
+            if (loadFailure)
+                window1.Destroy();
         }
 
         /// <summary>
@@ -136,7 +161,16 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
             {
-                PopulateUpgradeList();
+                try
+                {
+                    PopulateUpgradeList();
+                }
+                catch (Exception)
+                {
+                    ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok);
+                    loadFailure = true;
+                    return;
+                }
                 if (upgrades.Length > 0)
                 {
                     label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
@@ -165,12 +199,14 @@ namespace UserInterface.Forms
 
             try
             {
-                web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false);
+                // web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
+                // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
+                HTMLview.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
             }
             catch (Exception)
             {
                 ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok);
+                loadFailure = true;
             }
 
         }
@@ -212,6 +248,10 @@ namespace UserInterface.Forms
                 Process.Start(upgrades[selIndex].IssueURL);
         }
 
+        Gtk.MessageDialog waitDlg = null;
+        string tempSetupFileName = null;
+        string versionNumber = null;
+
         /// <summary>
         /// User has requested an upgrade.
         /// </summary>
@@ -232,7 +272,7 @@ namespace UserInterface.Forms
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
                     Upgrade upgrade = upgrades[selIndex];
-                    string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
                     if ((Gtk.ResponseType)ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo) == Gtk.ResponseType.Yes)
@@ -241,64 +281,122 @@ namespace UserInterface.Forms
 
                         WebClient web = new WebClient();
 
-                        string tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
+                        tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
+
+                        string sourceURL;
+                        if (ProcessUtilities.CurrentOS.IsMac)
+                        {
+                            sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
+                            tempSetupFileName = Path.ChangeExtension(tempSetupFileName, "dmg");
+                        }
+                        else if (ProcessUtilities.CurrentOS.IsUnix)
+                        {
+                            sourceURL = System.IO.Path.ChangeExtension(upgrade.ReleaseURL, "deb");
+                            tempSetupFileName = System.IO.Path.ChangeExtension(tempSetupFileName, "deb");
+                        }
+                        else
+                            sourceURL = upgrade.ReleaseURL;
+
                         if (File.Exists(tempSetupFileName))
                             File.Delete(tempSetupFileName);
 
                         try
                         {
-                            web.DownloadFile(upgrade.ReleaseURL, tempSetupFileName);
+                            waitDlg = new Gtk.MessageDialog(window1, Gtk.DialogFlags.Modal,
+                                Gtk.MessageType.Info, Gtk.ButtonsType.Cancel, "Downloading file. Please wait...");
+                            waitDlg.Title = "APSIM Upgrade";
+                            web.DownloadFileCompleted += Web_DownloadFileCompleted;
+                            web.DownloadFileAsync(new Uri(sourceURL), tempSetupFileName);
+                            if (waitDlg.Run() == (int)ResponseType.Cancel)
+                                web.CancelAsync();
                         }
                         catch (Exception err)
                         {
                             ShowMsgDialog("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageType.Error, ButtonsType.Ok);
                         }
-
-                        // Write to the registration database.
-                        WriteUpgradeRegistration(versionNumber);
-
-                        if (File.Exists(tempSetupFileName))
+                        finally
                         {
-                            // Copy the separate upgrader executable to the temp directory.
-                            string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
-                            string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
-
-                            // Check to see if upgrader is already running for whatever reason.
-                            // Kill them if found.
-                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
-                                process.Kill();
-
-                            // Delete the old upgrader.
-                            if (File.Exists(upgraderFileName))
-                                File.Delete(upgraderFileName);
-                            // Copy in the new upgrader.
-                            File.Copy(sourceUpgraderFileName, upgraderFileName, true);
-
-                            // Run the upgrader.
-                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
-                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
-                            string arguments = StringUtilities.DQuote(ourDirectory) + " " + 
-                                               StringUtilities.DQuote(newDirectory);
-
-                            ProcessStartInfo info = new ProcessStartInfo();
-                            info.FileName = upgraderFileName;
-                            info.Arguments = arguments;
-                            info.WorkingDirectory = Path.GetTempPath();
-                            Process.Start(info);
-
-                            window1.GdkWindow.Cursor = null;
-
-                            // Shutdown the user interface
-                            window1.Destroy();
-                            tabbedExplorerView.Close();
+                            if (waitDlg != null)
+                            {
+                                waitDlg.Destroy();
+                                waitDlg = null;
+                            }
+                            if (window1 != null && window1.GdkWindow != null)
+                                window1.GdkWindow.Cursor = null;
                         }
+
                     }
                 }
                 catch (Exception err)
                 {
                     window1.GdkWindow.Cursor = null;
                     ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok);
+                }
+            }
+        }
+
+        private void Web_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            if (waitDlg != null)
+            {
+                waitDlg.Destroy();
+                waitDlg = null;
+            }
+            if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
+            {
+                try
+                {
+                    // Write to the registration database.
+                    WriteUpgradeRegistration(versionNumber);
+
+                    if (File.Exists(tempSetupFileName))
+                    {
+                        // Copy the separate upgrader executable to the temp directory.
+                        string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
+                        string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
+
+                        // Check to see if upgrader is already running for whatever reason.
+                        // Kill them if found.
+                        foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
+                            process.Kill();
+
+                        // Delete the old upgrader.
+                        if (File.Exists(upgraderFileName))
+                            File.Delete(upgraderFileName);
+                        // Copy in the new upgrader.
+                        File.Copy(sourceUpgraderFileName, upgraderFileName, true);
+
+                        // Run the upgrader.
+                        string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                        string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+                        string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
+                        string arguments = StringUtilities.DQuote(ourDirectory) + " " +
+                                           StringUtilities.DQuote(newDirectory);
+
+                        ProcessStartInfo info = new ProcessStartInfo();
+                        if (ProcessUtilities.CurrentOS.IsMac)
+                        {
+                            info.FileName = "mono";
+                            info.Arguments = upgraderFileName + " " + arguments;
+                        }
+                        else
+                        {
+                            info.FileName = upgraderFileName;
+                            info.Arguments = arguments;
+                        }
+                        info.WorkingDirectory = Path.GetTempPath();
+                        Process.Start(info);
+                        window1.GdkWindow.Cursor = null;
+
+                        // Shutdown the user interface
+                        window1.Destroy();
+                        tabbedExplorerView.Close();
+                    }
+                }
+                catch (Exception err)
+                {
+                    window1.GdkWindow.Cursor = null;
+                    ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok);
                 }
             }
         }

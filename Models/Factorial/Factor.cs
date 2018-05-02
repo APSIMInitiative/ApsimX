@@ -81,31 +81,37 @@ namespace Models.Factorial
                         allValues.Add(localValues);
                 }
             }
-         
-            // Look for child Factor models.
-            foreach (Factor childFactor in Apsim.Children(this, typeof(Factor)))
+
+            if (allValues.Count > 0 && Specifications.Count == allValues[0].Count)
             {
-                foreach (FactorValue childFactorValue in childFactor.CreateValues())
+                FactorValue factorValue = new FactorValue(this, Name, Specifications, Children.ToList<object>());
+                factorValues.Add(factorValue);
+            }
+            else
+            {
+                // Look for child Factor models.
+                foreach (Factor childFactor in Apsim.Children(this, typeof(Factor)))
                 {
-                    childFactorValue.Name = Name + childFactorValue.Name;
-                    factorValues.Add(childFactorValue);
+                    foreach (FactorValue childFactorValue in childFactor.CreateValues())
+                    {
+                        childFactorValue.Name = Name + childFactorValue.Name;
+                        factorValues.Add(childFactorValue);
+                    }
+                }
+
+                if (allValues.Count == 0)
+                {
+                    PathValuesPairToFactorValue(factorValues, fixedValues, null);
+                }
+
+                List<List<PathValuesPair>> allCombinations = MathUtilities.AllCombinationsOf<PathValuesPair>(allValues.ToArray());
+
+                if (allCombinations != null)
+                {
+                    foreach (List<PathValuesPair> combination in allCombinations)
+                        PathValuesPairToFactorValue(factorValues, fixedValues, combination);
                 }
             }
-
-
-            if (allValues.Count == 0)
-            {
-                PathValuesPairToFactorValue(factorValues, fixedValues, null);
-            }
-
-            List<List<PathValuesPair>> allCombinations = MathUtilities.AllCombinationsOf<PathValuesPair>(allValues.ToArray());
-
-            if (allCombinations != null)
-            {
-                foreach (List<PathValuesPair> combination in allCombinations)
-                    PathValuesPairToFactorValue(factorValues, fixedValues, combination);
-            }
-
             return factorValues;
         }
 
@@ -157,13 +163,22 @@ namespace Models.Factorial
             // factor value for each value.
 
             string path = specification;
-            string value = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
+            string value = StringUtilities.SplitOffAfterDelimiter(ref path, "=").Trim();
 
             if (value == null)
                 throw new ApsimXException(this, "Cannot find any values on the specification line: " + Specifications[0]);
-            string[] valueStrings = value.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            foreach (string stringValue in valueStrings)
-                pairs.Add(new PathValuesPair() { path = path.Trim(), value = stringValue.Trim() });
+            if (value.StartsWith("{"))
+            {
+                string rawValue = value.Replace("{", "").Replace("}", "");
+                pairs.Add(new PathValuesPair() { path = path.Trim(), value = rawValue });
+            }
+            else
+            {
+                string[] valueStrings = value.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string stringValue in valueStrings)
+                    pairs.Add(new PathValuesPair() { path = path.Trim(), value = stringValue.Trim() });
+            }
+
             return pairs;
         }
 
@@ -208,8 +223,16 @@ namespace Models.Factorial
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
 
-                foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
-                    pairs.Add(new PathValuesPair() { path = specification, value = newModel });
+                if (Specifications.Count == 1)
+                {
+                    foreach (IModel newModel in Children)
+                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
+                }
+                else
+                {
+                    foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
+                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
+                }
             }
             return pairs;
         }

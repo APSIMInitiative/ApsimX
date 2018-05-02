@@ -15,6 +15,7 @@
     using APSIM.Shared.Utilities;
 
     /// <summary>
+    /// # [Name]
     /// The surface organic matter model, ported by Ben Jolley from the
     /// Fortran version.
     /// Tidied up (somewhat) for ApsimX by Eric Zurcher, August 2014.
@@ -46,6 +47,16 @@
         /// </summary>
         [Link]
         private IWeather weather = null;
+
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
+        /// <summary>
+        /// Link to the soil N model
+        /// </summary>
+        [Link]
+        private INutrient SoilNitrogen = null;
+
         #endregion
 
         // ====================================================================
@@ -355,7 +366,7 @@
         /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
         /// <value>The Carbon:Phosphorus ratio.</value>
         [Summary]
-        [Description("Carbon:Phosphorus ratio (g/g)")]
+        [Description("Carbon:Phosphorus ratio")]
         [Units("g/g")]
         public string cpr
         {
@@ -1395,11 +1406,14 @@
         public event FOMPoolDelegate IncorpFOMPool;
 
         /// <summary>Publishes the fom pool.</summary>
-        /// <param name="data">The data.</param>
+        /// <param name="data">The fom data.</param>
         private void PublishFOMPool(FOMPoolType data)
         {
             if (IncorpFOMPool != null)
                 IncorpFOMPool.Invoke(data);
+            //else
+            //    soil.SoilNitrogen.DoIncorpFOM(data);
+            //TODO: figure out why the event above stopped working, or whether the code below is better
         }
 
         /// <summary>
@@ -1525,9 +1539,6 @@
         /// <summary>Occurs when [surface o m_removed].</summary>
         public event SurfaceOM_removedDelegate SurfaceOM_removed;
 
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
-
         #endregion
 
         #region event handlers
@@ -1549,6 +1560,8 @@
             MetData.Rain = weather.Rain;
             MetData.VP = weather.VP;
             MetData.Wind = weather.Wind;
+
+            dlayer = soil.Thickness;
         }
 
         /// <summary>The initialised</summary>
@@ -1592,6 +1605,13 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+
+            Reset();
+        }
+
+        /// <summary>Called when [reset].</summary>
+        public void Reset()
+        {
             if (ResidueTypes == null)
                 ResidueTypes = new ResidueTypesList();
             if (TillageTypes == null)
@@ -1607,13 +1627,6 @@
             PondActive = "no";
             oldSOMState = new OMFractionType();
             ZeroVariables();
-            OnReset();
-        }
-
-        /// <summary>Called when [reset].</summary>
-        [EventSubscribe("Reset")]
-        private void OnReset()
-        {
             initialised = true; 
             SurfomReset();
         }
@@ -1702,13 +1715,13 @@
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
             GetOtherVariables();
+
             return Process();
         }
 
         /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
         /// <value>The actual som decomp.</value>
-        [XmlIgnore]
-        public SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
+        private SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
 
         /// <summary>Do the daily residue decomposition for today.</summary>
         /// <param name="sender">The sender.</param>
@@ -1716,7 +1729,9 @@
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
-            DecomposeSurfom(ActualSOMDecomp);
+            ActualSOMDecomp = SoilNitrogen.CalculateActualSOMDecomp();
+            if (ActualSOMDecomp != null)
+                DecomposeSurfom(ActualSOMDecomp);
         }
 
         /// <summary>
@@ -2231,16 +2246,8 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-                NitrogenChanges.Sender = "SurfaceOrganicMatter";
-                NitrogenChanges.SenderType = "SurfaceOrganicMatter";
-                NitrogenChanges.DeltaNH4 = new double[dlayer.Length];
-                NitrogenChanges.DeltaNO3 = new double[dlayer.Length];
-                NitrogenChanges.DeltaUrea = new double[dlayer.Length];
-                NitrogenChanges.DeltaNH4[0] = nh4Incorp;
-                NitrogenChanges.DeltaNO3[0] = no3Incorp;
-
-                NitrogenChanged.Invoke(NitrogenChanges);
+                solutes.AddToLayer(0, "NH4", SoluteManager.SoluteSetterType.Soil, nh4Incorp);
+                solutes.AddToLayer(0, "NO3", SoluteManager.SoluteSetterType.Soil, no3Incorp);
 
                 if (phosphorusAware)
                 {

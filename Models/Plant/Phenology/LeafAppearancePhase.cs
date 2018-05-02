@@ -5,17 +5,17 @@ using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Functions;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase extends from the end of the previous phase until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate and the final main stem node number.  
-    /// As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure object) are important for predicting the duration of the crop correctly.
+    /// It continues until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure model) are important for predicting the duration of the crop correctly.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class LeafAppearancePhase : Phase
+    public class LeafAppearancePhase : Phase, ICustomDocumentation
     {
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
@@ -71,12 +71,12 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.FinalLeafNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
-                    LeafNoAtStart = HaunStage.Value;
-                    TargetLeafForCompletion = FinalLeafNumber.Value;
+                    LeafNoAtStart = HaunStage.Value();
+                    TargetLeafForCompletion = FinalLeafNumber.Value();
                 }
                 
                 First = false;
@@ -93,7 +93,7 @@ namespace Models.PMF.Phen
             }
             else
             {
-                if (HaunStage.Value >= FinalLeafNumber.Value)
+                if (HaunStage.Value() >= FinalLeafNumber.Value())
                     return 0.00001;
                 else
                     return 0;
@@ -112,12 +112,12 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.FinalLeafNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
-                    LeafNoAtStart = HaunStage.Value;
-                    TargetLeafForCompletion = FinalLeafNumber.Value;
+                    LeafNoAtStart = HaunStage.Value();
+                    TargetLeafForCompletion = FinalLeafNumber.Value();
                 }
                 First = false;
             }
@@ -133,7 +133,7 @@ namespace Models.PMF.Phen
             }
             else
             {
-                if (HaunStage.Value >= FinalLeafNumber.Value)
+                if (HaunStage.Value() >= FinalLeafNumber.Value())
                     return 0.00001;
                 else
                     return 0;
@@ -152,7 +152,7 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                     F = (Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
                 else
-                    F = (HaunStage.Value - LeafNoAtStart) / TargetLeafForCompletion;
+                    F = (HaunStage.Value() - LeafNoAtStart) / TargetLeafForCompletion;
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
@@ -166,22 +166,24 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // get description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-            // get description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            }
         }
-
     }
 }
 

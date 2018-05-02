@@ -8,7 +8,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase simulates time to emergence as a function of sowing depth.  A <i>ThermalTime Target</i> from sowing to emergence = SowingDepth (set with sow()
+    /// It simulates time to emergence as a function of sowing depth.  A <i>ThermalTime Target</i> from sowing to emergence = SowingDepth (set with sow()
     /// method called from the manager)  x ShootRate + ShootLag.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
@@ -34,7 +34,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EmergingPhase : GenericPhase
+    public class EmergingPhase : GenericPhase, ICustomDocumentation
     {
         /// <summary>The plant</summary>
         [Link]
@@ -67,56 +67,35 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
-                + " The <i>ThermalTime Target</i> from Sowing to Emergence is given by:<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
-                + "Where:<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
-                + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
+                    + " The <i>ThermalTime Target</i> from Sowing to Emergence is given by:<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
+                    + "Where:<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
+                    + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation where thermal time is calculated as:", indent));
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent);
+                tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation where thermal time is calculated as:", indent));
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
         }
     }
 
-    /// <summary>
-    /// The class below is for Plant15. Need to get rid of this eventually.
-    /// </summary>
-    [Serializable]
-    public class EmergingPhase15 : GenericPhase
-    {
-        /// <summary>The plant</summary>
-        [Link]
-        Models.PMF.OldPlant.Plant15 Plant = null;
 
-        /// <summary>Gets or sets the shoot lag.</summary>
-        /// <value>The shoot lag.</value>
-        public double ShootLag { get; set; }
-        /// <summary>Gets or sets the shoot rate.</summary>
-        /// <value>The shoot rate.</value>
-        public double ShootRate { get; set; }
-
-        /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
-        /// <returns></returns>
-        public override double CalcTarget()
-        {
-            return ShootLag + Plant.SowingData.Depth * ShootRate;
-        }
-
-    }
 }

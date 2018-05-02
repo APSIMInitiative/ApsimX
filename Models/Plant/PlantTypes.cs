@@ -5,6 +5,7 @@
     using Models.Core;
     using PMF.Interfaces;
     using System.Collections.Generic;
+    using Library;
 
     /// <summary>
     /// An event arguments class for some events.
@@ -204,50 +205,32 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
+    [ValidParent(ParentType = typeof(BiomassRemoval))]
     public class OrganBiomassRemovalType : Model
     {
         /// <summary>
         /// The amount of live biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
         /// </summary>
-        [Description("Fraction of live biomass to remove from plant (lost to system)")]
+        [Description("Fraction of live biomass to remove from plant (remove from the system)")]
         public double FractionLiveToRemove { get; set; }
 
         /// <summary>
         /// The amount of dead biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
         /// </summary>
-        [Description("Fraction of dead biomass to remove from plant (lost to system)")]
+        [Description("Fraction of dead biomass to remove from plant (remove from the system)")]
         public double FractionDeadToRemove { get; set; }
 
         /// <summary>
         /// The amount of live biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
         /// </summary>
-        [Description("Fraction of live biomass to remove from plant (and send to surface organic matter")]
+        [Description("Fraction of live biomass to remove from plant (send to surface organic matter")]
         public double FractionLiveToResidue { get; set; }
 
         /// <summary>
         /// The amount of dead biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
         /// </summary>
-        [Description("Fraction of dead biomass to remove from plant (and send to surface organic matter")]
+        [Description("Fraction of dead biomass to remove from plant (send to surface organic matter")]
         public double FractionDeadToResidue { get; set; }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            double totalPercent = (FractionLiveToRemove + FractionLiveToResidue) * 100;
-
-            string text = "If a **" + Name.ToLower() + "** is performed and no fractions are specified then " + totalPercent + "% of " +
-                           Parent.Parent.Name.ToLower() + " biomass will be removed";
-            if (FractionLiveToResidue == 0)
-                text += " with none of it going to the surface organic matter pool";
-            else if (FractionLiveToRemove == 0)
-                text += " with all of it going to the surface organic matter pool";
-            else
-                text += " with " + (FractionLiveToResidue * 100) + "% of it going to the surface organic matter pool";
-            tags.Add(new AutoDocumentation.Paragraph(text, indent));
-        }
     }
 
     ///<summary>Data structure to hold removal and residue returns fractions for all plant organs</summary>
@@ -267,6 +250,11 @@
         /// The Phenological stage that biomass removal resets phenology to.
         ///</summary>
         public double SetPhenologyStage { get; set; }
+
+        /// <summary>
+        /// The nunber of Main-stem nodes to remove
+        /// </summary>
+        public int NodesToRemove { get; set; }
 
         /// <summary>
         /// Method to set the FractionToRemove for specified Organ

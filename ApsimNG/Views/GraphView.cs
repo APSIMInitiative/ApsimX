@@ -8,11 +8,10 @@ namespace UserInterface.Views
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Drawing;
     using System.IO;
+    using System.Reflection;
     using Gtk;
-    using Glade;
     using Interfaces;
     using Models.Graph;
     using OxyPlot;
@@ -35,6 +34,11 @@ namespace UserInterface.Views
         public double FontSize = 14;
 
         /// <summary>
+        /// Overall font size for the graph.
+        /// </summary>
+        public double MarkerSize = -1;
+
+        /// <summary>
         /// Overall font to use.
         /// </summary>
         private const string Font = "Calibri Light";
@@ -50,27 +54,29 @@ namespace UserInterface.Views
         /// <summary>The largest date used on any axis</summary>
         private DateTime largestDate = DateTime.MinValue;
 
+        private bool inRightClick = false;
+
         private OxyPlot.GtkSharp.PlotView plot1;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Expander expander1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private Label captionLabel = null;
-        [Widget]
         private EventBox captionEventBox = null;
-        [Widget]
         private Label label2 = null;
+        private Menu Popup = new Menu();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.GraphView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            expander1 = (Expander)builder.GetObject("expander1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            captionLabel = (Label)builder.GetObject("captionLabel");
+            captionEventBox = (EventBox)builder.GetObject("captionEventBox");
+            label2 = (Label)builder.GetObject("label2");
             _mainWidget = vbox1;
 
             plot1 = new PlotView();
@@ -85,17 +91,48 @@ namespace UserInterface.Views
             captionEventBox.Visible = true;
 
             plot1.Model.MouseDown += OnChartClick;
+            plot1.Model.MouseUp += OnChartMouseUp;
+            plot1.Model.MouseMove += OnChartMouseMove;
+            Popup.AttachToWidget(plot1, null);
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+            BackColor = OxyPlot.OxyColors.White;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             plot1.Model.MouseDown -= OnChartClick;
+            plot1.Model.MouseUp -= OnChartMouseUp;
             captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
+            // It's good practice to disconnect the event handlers, as it makes memory leaks
+            // less likely. However, we may not "own" the event handlers, so how do we 
+            // know what to disconnect?
+            // We can do this via reflection. Here's how it currently can be done in Gtk#.
+            // Windows.Forms would do it differently.
+            // This may break if Gtk# changes the way they implement event handlers.
+            foreach (Widget w in Popup)
+            {
+                if (w is MenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as MenuItem).Activated -= handler;
+                        }
+                    }
+                }
+            }
             Clear();
+            Popup.Dispose();
+            plot1.Destroy();
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>
@@ -144,13 +181,13 @@ namespace UserInterface.Views
 
         public int Width
         {
-            get { return this.plot1.Allocation.Width; }
+            get { return this.plot1.Allocation.Width > 1 ? this.plot1.Allocation.Width : this.plot1.ChildRequisition.Width; }
             set { this.plot1.WidthRequest = value; }
         }
 
         public int Height
         {
-            get { return this.plot1.Allocation.Height; }
+            get { return this.plot1.Allocation.Height > 1 ? this.plot1.Allocation.Height : this.plot1.ChildRequisition.Height; }
             set { this.plot1.HeightRequest = value; }
         }
 
@@ -172,7 +209,7 @@ namespace UserInterface.Views
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
-            //modLMC - 11/05/2016 - Need to clear the chart title as well
+            // modLMC - 11/05/2016 - Need to clear the chart title as well
             this.FormatTitle("");
         }
 
@@ -194,7 +231,7 @@ namespace UserInterface.Views
             this.plot1.Model.DefaultFontSize = FontSize;
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0.0);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
-            this.plot1.Model.LegendBackground = OxyColors.White;
+            this.plot1.Model.LegendBackground = OxyColors.Transparent;
 
             if (this.LeftRightPadding != 0)
                 this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
@@ -223,6 +260,7 @@ namespace UserInterface.Views
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -236,6 +274,7 @@ namespace UserInterface.Views
              string title,
              IEnumerable x,
              IEnumerable y,
+             IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType,
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
@@ -245,9 +284,10 @@ namespace UserInterface.Views
              Models.Graph.MarkerSizeType markerSize,
              bool showOnLegend)
         {
+            Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
             {
-                Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
+                series = new Utility.LineSeriesWithTracker();
                 series.OnHoverOverPoint += OnHoverOverPoint;
                 if (showOnLegend)
                     series.Title = title;
@@ -287,7 +327,9 @@ namespace UserInterface.Views
                     series.MarkerType = type;
                 }
 
-                if (markerSize == MarkerSizeType.Normal)
+                if (MarkerSize > -1)
+                    series.MarkerSize = MarkerSize;
+                else if (markerSize == MarkerSizeType.Normal)
                     series.MarkerSize = 7.0;
                 else
                     series.MarkerSize = 5.0;
@@ -300,7 +342,17 @@ namespace UserInterface.Views
                 }
 
                 this.plot1.Model.Series.Add(series);
+                if (error != null)
+                {
+                    ScatterErrorSeries errorSeries = new ScatterErrorSeries();
+                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, error, xAxisType, yAxisType);
+                    errorSeries.XAxisKey = xAxisType.ToString();
+                    errorSeries.YAxisKey = yAxisType.ToString();
+                    errorSeries.ErrorBarColor = series.MarkerFill;
+                    this.plot1.Model.Series.Add(errorSeries);
+                }
             }
+
         }
 
         /// <summary>
@@ -420,7 +472,7 @@ namespace UserInterface.Views
             if (x is DateTime)
                 xPosition = DateTimeAxis.ToDouble(x);
             else
-                xPosition = Convert.ToDouble(x);
+                xPosition = Convert.ToDouble(x, System.Globalization.CultureInfo.InvariantCulture);
             double yPosition = 0.0;
             if ((double)y == double.MinValue)
             {
@@ -433,6 +485,7 @@ namespace UserInterface.Views
                 yPosition = (double)y;
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
             annotation.TextColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+            //annotation.Text += "\r\n\r\n";
             this.plot1.Model.Annotations.Add(annotation);
         }
         /// <summary>
@@ -462,7 +515,7 @@ namespace UserInterface.Views
             if (x1 is DateTime)
                 x1Position = DateTimeAxis.ToDouble(x1);
             else
-                x1Position = Convert.ToDouble(x1);
+                x1Position = Convert.ToDouble(x1, System.Globalization.CultureInfo.InvariantCulture);
             double y1Position = 0.0;
             if ((double)y1 == double.MinValue)
                 y1Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
@@ -474,7 +527,7 @@ namespace UserInterface.Views
             if (x2 is DateTime)
                 x2Position = DateTimeAxis.ToDouble(x2);
             else
-                x2Position = Convert.ToDouble(x2);
+                x2Position = Convert.ToDouble(x2, System.Globalization.CultureInfo.InvariantCulture);
             double y2Position = 0.0;
             if ((double)y2 == double.MinValue)
                 y2Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
@@ -493,8 +546,8 @@ namespace UserInterface.Views
             annotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
             // Line type.
-            //LineStyle oxyLineType;
-            //if (Enum.TryParse<LineStyle>(type.ToString(), out oxyLineType))
+            // LineStyle oxyLineType;
+            // if (Enum.TryParse<LineStyle>(type.ToString(), out oxyLineType))
             //    annotation.LineStyle = oxyLineType;
 
             // Line thickness
@@ -523,7 +576,7 @@ namespace UserInterface.Views
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
             {
-                oxyAxis.Title = title;
+                oxyAxis.Title = title.Trim();
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
@@ -560,7 +613,7 @@ namespace UserInterface.Views
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
-            //this.plot1.Model.LegendSymbolLength = 60;
+            // this.plot1.Model.LegendSymbolLength = 60;
         }
 
         /// <summary>
@@ -570,6 +623,9 @@ namespace UserInterface.Views
         public void FormatTitle(string text)
         {
             this.plot1.Model.Title = text;
+            this.plot1.Model.TitleFont = Font;
+            this.plot1.Model.TitleFontSize = 30;
+            this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
         }
 
         /// <summary>
@@ -583,7 +639,7 @@ namespace UserInterface.Views
             {
                 captionLabel.Text = text;
                 if (italics)
-                    text = "<i>" + text + "<i/>";
+                    text = "<i>" + text + "</i>";
                 captionLabel.Markup = text;
             }
             else
@@ -602,7 +658,14 @@ namespace UserInterface.Views
             Widget editor = editorObj as Widget;
             if (editor != null)
             {
-                expander1.Foreach(delegate(Widget widget) { if (widget != label2) expander1.Remove(widget); });
+                expander1.Foreach(delegate(Widget widget) 
+                {
+                    if (widget != label2)
+                    {
+                        expander1.Remove(widget);
+                        widget.Destroy();
+                    }
+                });
                 expander1.Add(editor);
                 expander1.Visible = true;
                 expander1.Expanded = true;
@@ -615,14 +678,18 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        public void Export(ref Bitmap bitmap, bool legendOutside)
+        public void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside)
         {
             MemoryStream stream = new MemoryStream();
             PngExporter pngExporter = new PngExporter();
-            pngExporter.Width = bitmap.Width;
-            pngExporter.Height = bitmap.Height;
+            pngExporter.Width = r.Width;
+            pngExporter.Height = r.Height;
             pngExporter.Export(plot1.Model, stream);
-            bitmap = new Bitmap(stream);
+            using (Graphics gfx = Graphics.FromImage(bitmap))
+            {
+                Bitmap newBitmap = new Bitmap(stream);
+                gfx.DrawImage(newBitmap, r);
+            }
         }
 
         /// <summary>
@@ -635,6 +702,7 @@ namespace UserInterface.Views
             pngExporter.Width = 800;
             pngExporter.Height = 600;
             pngExporter.Export(plot1.Model, stream);
+            stream.Seek(0, SeekOrigin.Begin);
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(stream);
         }
@@ -645,20 +713,59 @@ namespace UserInterface.Views
         /// <param name="menuText">Menu item text</param>
         /// <param name="ticked">Menu ticked?</param>
         /// <param name="onClick">Event handler for menu item click</param>
-        public void AddContextAction(string menuText, bool ticked, System.EventHandler onClick)
+        public void AddContextAction(string menuText, System.EventHandler onClick)
         {
-            /* TBI
-            ToolStripMenuItem item = null;
-            foreach (ToolStripMenuItem i in contextMenuStrip1.Items)
-                if (i.Text == menuText)
-                    item = i;
+            ImageMenuItem item = new ImageMenuItem(menuText);
+            item.Activated += onClick;
+            Popup.Append(item);
+            Popup.ShowAll();
+        }
+
+        /// <summary>
+        /// Add an action (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
+        {
+            CheckMenuItem item = null;
+            foreach (Widget w in Popup)
+            {
+                CheckMenuItem oldItem = w as CheckMenuItem;
+                if (oldItem != null)
+                {
+                    AccelLabel itemText = oldItem.Child as AccelLabel;
+                    if (itemText.Text == menuItemText)
+                    {
+                        item = oldItem;
+                        // Deactivate the "Activate" handler
+                        PropertyInfo pi = item.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (pi != null)
+                        {
+                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                            if (handlers != null && handlers.ContainsKey("activate"))
+                            {
+                                EventHandler handler = (EventHandler)handlers["activate"];
+                                item.Activated -= handler;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
             if (item == null)
             {
-                item = contextMenuStrip1.Items.Add(menuText) as ToolStripMenuItem;
-                item.Click += onClick;
+                item = new CheckMenuItem(menuItemText);
+                item.DrawAsRadio = false;
+                Popup.Append(item);
+                Popup.ShowAll();
             }
-            item.Checked = ticked;
-            */
+            // Be sure to set the Active property before attaching the Activated event, since
+            // the event handler will call this function again when Active is changed.
+            // This can lead to infinite recursion. This is also why we deactivate the handler
+            // (done above) when the item is already found in the menu
+            item.Active = active;
+            item.Activated += onClick;
         }
 
         /// <summary>
@@ -681,7 +788,7 @@ namespace UserInterface.Views
         /// <param name="axis">The axis to format</param>
         private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
         {
-            //axis.IntervalLength = 100;
+            // axis.IntervalLength = 100;
 
             if (axis is DateTimeAxis)
             {
@@ -749,7 +856,7 @@ namespace UserInterface.Views
                 double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
 
                 // Create data points
-                for (int i = 0; i < Math.Min(xValues.Length,yValues.Length); i++)
+                for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
                     if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
                         points.Add(new DataPoint(xValues[i], yValues[i]));
 
@@ -757,6 +864,44 @@ namespace UserInterface.Views
             }
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Populate the specified DataPointSeries with data from the data table.
+        /// </summary>
+        /// <param name="x">The x values</param>
+        /// <param name="y">The y values</param>
+        /// <param name="error">The error size values</param>
+        /// <param name="xAxisType">The x axis the data is associated with</param>
+        /// <param name="yAxisType">The y axis the data is associated with</param>
+        /// <returns>A list of 'DataPoint' objects ready to be plotted</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        private List<ScatterErrorPoint> PopulateErrorPointSeries(
+            IEnumerable x,
+            IEnumerable y,
+            IEnumerable error,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType)
+        {
+            List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
+            if (x != null && y != null && error != null)
+            {
+                // Create a new data point for each x.
+                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
+                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
+                double[] errorValues = GetDataPointValues(error.GetEnumerator(), yAxisType);
+
+                if (xValues.Length == yValues.Length && xValues.Length == errorValues.Length)
+                {
+                    // Create data points
+                    for (int i = 0; i < xValues.Length; i++)
+                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(errorValues[i]))
+                            points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, errorValues[i], 0));
+
+                    return points;
+                }
+            }
+            return null;
         }
 
         /// <summary>Gets an array of values for the given enumerator</summary>
@@ -787,7 +932,8 @@ namespace UserInterface.Views
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
-                    dataPointValues.Add(Convert.ToDouble(enumerator.Current));
+                    dataPointValues.Add(Convert.ToDouble(enumerator.Current, 
+                                                         System.Globalization.CultureInfo.InvariantCulture));
                 while (enumerator.MoveNext());
             }
             else
@@ -810,7 +956,6 @@ namespace UserInterface.Views
 
             return dataPointValues.ToArray();
         }
-
 
         /// <summary>
         /// Ensure the specified X exists. Uses the 'DataType' property of the DataColumn
@@ -990,7 +1135,6 @@ namespace UserInterface.Views
                 OnCaptionClick.Invoke(this, e);
         }
 
-
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
@@ -1059,13 +1203,36 @@ namespace UserInterface.Views
         private void OnChartClick(object sender, OxyMouseDownEventArgs e)
         {
             e.Handled = false;
+            inRightClick = e.ChangedButton == OxyMouseButton.Right;
             if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
             {
                 if (e.ClickCount == 1 && SingleClick != null)
                     SingleClick.Invoke(this, e);
-                else if (e.ClickCount == 2)  
+                else if (e.ClickCount == 2)
                     OnMouseDoubleClick(sender, e);
             }
+        }
+
+        /// <summary>Mouse up event on chart. If in a right click, display the popup menu.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnChartMouseUp(object sender, OxyMouseEventArgs e)
+        {
+            e.Handled = false;
+            if (inRightClick)
+                Popup.Popup();
+            inRightClick = false;
+        }
+
+        /// <summary>Mouse has moved on the chart.
+        /// If the user was just dragging the chart, we won't want to 
+        /// display the popup menu when the mouse is released</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnChartMouseMove(object sender, OxyMouseEventArgs e)
+        {
+            e.Handled = false;
+            inRightClick = false;
         }
 
         public void ShowControls(bool visible)

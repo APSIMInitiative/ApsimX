@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OnEventFunction : Model, IFunction
+    public class OnEventFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The _ value</summary>
         private double _Value = 0;
@@ -39,7 +39,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.Value();
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -58,42 +58,48 @@ namespace Models.PMF.Functions
         /// <summary>Called when [re set event].</summary>
         public void OnReSetEvent()
         {
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.Value();
         }
 
         /// <summary>Called when [set event].</summary>
         public void OnSetEvent()
         {
-            _Value = PostEventValue.Value;
+            _Value = PostEventValue.Value();
         }
 
         /// <summary>Gets the value.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Value;
-            }
+            return _Value;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
-            (PreEventValue as IModel).Document(tags, -1, indent + 1);
+                if (PreEventValue != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
+                    AutoDocumentation.DocumentModel(PreEventValue as IModel, tags, headingLevel + 1, indent + 1);
+                }
 
-            tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
-            (PostEventValue as IModel).Document(tags, -1, indent + 1);
+                if (PostEventValue != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
+                    AutoDocumentation.DocumentModel(PostEventValue as IModel, tags, headingLevel + 1, indent + 1);
+                }
+            }
         }
 
     }

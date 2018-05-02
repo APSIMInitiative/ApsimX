@@ -33,6 +33,9 @@ namespace Utility
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 
+        /// <summary>The previous height of the status panel</summary>
+        public int StatusPanelHeight { get; set; }
+
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
         {
@@ -68,6 +71,13 @@ namespace Utility
         public string Country { get; set; }
         public string Email { get; set; }
 
+        /// <summary>The maximum number of rows to show on a report grid</summary>
+        public int MaximumRowsOnReportGrid { get; set; }
+
+        /// <summary>
+        /// Store the style name used in the editor
+        /// </summary>
+        public string EditorStyleName { get; set; } = "Visual Studio";
 
         /// <summary>Add a filename to the list.</summary>
         /// <param name="filename">File path</param>
@@ -111,6 +121,25 @@ namespace Utility
             }
         }
 
+        /// <summary>Rename a specified file in the list</summary>
+        /// <param name="filename">The file name to rename</param>
+        /// <param name="newname">The new file name</param>
+        public void RenameMruFile(string filename, string newname)
+        {
+            if (filename.Length > 0)
+            {
+                if (MruList.Count > 0)
+                {
+                    int idx = MruList.IndexOf(filename);
+                    if (idx >= 0)
+                    {
+                        MruList.RemoveAt(idx);
+                        MruList.Insert(idx, newname);
+                    }
+                }
+            }
+        }
+
         /// <summary>Clean the list by removing missing files</summary>
         public void CleanMruList()
         {
@@ -133,7 +162,7 @@ namespace Utility
         {
             get
             {
-                //On Linux and Mac the path will be .config/
+                // On Linux and Mac the path will be .config/
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                     "ApsimInitiative",
                                     "ApsimX");
@@ -158,7 +187,7 @@ namespace Utility
                     return instance;
 
                 string ConfigurationFile = Path.Combine(ConfigurationFolder, "ApsimX.xml");
-                //deserialise the file
+                // deserialise the file
                 if (File.Exists(ConfigurationFile))
                 {
                     System.Xml.Serialization.XmlSerializer xmlreader = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
@@ -197,7 +226,7 @@ namespace Utility
         }
 
         /// <summary>Store the configuration settings to file</summary>
-        private void Save()
+        public void Save()
         {
             string ConfigPath = Path.GetDirectoryName(ConfigurationFile);
             if (!Directory.Exists(ConfigPath))

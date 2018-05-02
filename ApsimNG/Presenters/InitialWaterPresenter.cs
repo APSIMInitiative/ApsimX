@@ -7,9 +7,8 @@ namespace UserInterface.Presenters
 {
     using System;
     using Interfaces;
-    using Models.Soils;
-    using Models.Core;
     using Models.Graph;
+    using Models.Soils;
 
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
@@ -57,7 +56,7 @@ namespace UserInterface.Presenters
             this.ConnectViewEvents();
             this.PopulateView();
 
-            this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
@@ -72,7 +71,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
             this.DisconnectViewEvents();
             this.initialWater.Parent.Children.Remove(this.graph);
         }
@@ -83,21 +82,31 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             this.DisconnectViewEvents();
-            this.initialWaterView.PercentFull = Convert.ToInt32((this.initialWater.FractionFull * 100));
+            this.initialWaterView.PercentFull = Convert.ToInt32(this.initialWater.FractionFull * 100);
             this.initialWaterView.PAW = (int)this.initialWater.PAW;
             if (double.IsNaN(this.initialWater.DepthWetSoil))
+            {
                 this.initialWaterView.DepthOfWetSoil = int.MinValue;
+            }
             else
+            {
                 this.initialWaterView.DepthOfWetSoil = (int)this.initialWater.DepthWetSoil / 10; // mm to cm
+            }
+
             this.initialWaterView.FilledFromTop = this.initialWater.PercentMethod == InitialWater.PercentMethodEnum.FilledFromTop;
             this.initialWaterView.RelativeTo = this.initialWater.RelativeTo;
             if (this.initialWaterView.RelativeTo == string.Empty)
+            {
                 this.initialWaterView.RelativeTo = "LL15";
+            }
+
             this.ConnectViewEvents();
 
             // Refresh the graph.
             if (this.graph != null)
+            {
                 this.graphPresenter.DrawGraph();
+            }
         }
 
         /// <summary>
@@ -159,7 +168,7 @@ namespace UserInterface.Presenters
         private void OnPAWChanged(object sender, System.EventArgs e)
         {
             Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "PAW", Convert.ToDouble(this.initialWaterView.PAW));
+                this.initialWater, "PAW", Convert.ToDouble(this.initialWaterView.PAW, System.Globalization.CultureInfo.InvariantCulture));
 
             this.explorerPresenter.CommandHistory.Add(command);
         }
@@ -194,7 +203,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDepthWetSoilChanged(object sender, System.EventArgs e)
         {
-            double depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil) * 10; // cm to mm
+            double depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil, System.Globalization.CultureInfo.InvariantCulture) * 10; // cm to mm
             Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "DepthWetSoil", depthOfWetSoil);
 
@@ -205,10 +214,12 @@ namespace UserInterface.Presenters
         /// The model has changed. Update the view.
         /// </summary>
         /// <param name="changedModel">The model that has changed.</param>
-        void OnModelChanged(object changedModel)
+        private void OnModelChanged(object changedModel)
         {
             if (changedModel == this.initialWater)
+            {
                 this.PopulateView();
+            }
         }
     }
 }

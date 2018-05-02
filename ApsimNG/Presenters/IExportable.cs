@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.IO;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="IExportable.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
-    /// <summary>
-    /// Defines an interface for Views that are printable.
-    /// </summary>
-    interface IExportable
+    /// <summary>Defines an interface for presenters that are exportable.</summary>
+    public interface IExportable
     {
-        /// <summary>
-        /// Convert the node to HTML and return the HTML string. Returns
-        /// null if not convertable. The 'folder' is where any images
-        /// should be created.
-        /// </summary>
-        string ConvertToHtml(string folder);
+        /// <summary>Export the object to a png file and return the file name</summary>
+        string ExportToPNG(string folder);
     }
 }

@@ -1,23 +1,38 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Library;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// A generic leaf model
+    /// # [Name]
+    /// The leaves are modeled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.  
+    ///   A cohort represents all the leaves of a given main stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
+    ///   The number of leaves in each cohort is the product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
+    ///   The *Structure* class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the *Leaf* class models the area and biomass dynamics of each.  
+    ///   It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to *LeafCohort* classes.  
+    /// 
+    /// ## Dry Matter Fixation
+    /// The most important DM supply from leaf is the photosynthetic fixiation supply.  Radiation interception is calculated from
+    ///   LAI using an extinction coefficient of:
+    /// [Document ExtinctionCoeff]
+    /// [Document Photosynthesis]
+    /// 
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration
     {
 
         /// <summary>The met data</summary>
@@ -25,19 +40,23 @@ namespace Models.PMF.Organs
         public IWeather MetData = null;
         #region Canopy interface
 
+        /// <summary>The apex model to use</summary>
+        [Link]
+        public IApex Apex = null;
+
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
         /// <summary>Albedo.</summary>
-        [Description("Albedo")]
+        [Description("Canopy Albedo")]
         public double Albedo { get; set; }
 
         /// <summary>Gets or sets the gsmax.</summary>
-        [Description("GSMAX")]
+        [Description("GSMAX: maximum canopy conductance(m/s)")]
         public double Gsmax { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
-        [Description("R50")]
+        [Description("R50: solar radiation at which stomatal conductance decreases to 50% (W/m^2)")]
         public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
@@ -47,14 +66,10 @@ namespace Models.PMF.Organs
             get
             {
                 int MM2ToM2 = 1000000; // Conversion of mm2 to m2
-                double value = 0;
                 foreach (LeafCohort L in Leaves)
-                {
                     if (Double.IsNaN(L.LiveArea))
                         throw new Exception("LiveArea of leaf cohort " + L.Name + " is Nan");
-                    value = value + L.LiveArea / MM2ToM2;
-                }
-                return value;
+                return Leaves.Sum(x => x.LiveArea) / MM2ToM2;
             }
         }
 
@@ -68,29 +83,21 @@ namespace Models.PMF.Organs
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)), 0.999999999);
-                else
-                    return 0;
+                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value() * LAI / MaxCover)), 0.999999999);
+                return 0;
             }
         }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
-        public double CoverTotal 
-        { 
-            get 
+        public double CoverTotal
+        {
+            get
             {
-                if (Plant != null)
-                {
-                    if (Plant.IsAlive)
-                        return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
-                    else
-                        return 0;
-                }
-                else
-                    return 0;
-
-            } 
+                if (Plant != null && Plant.IsAlive)
+                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                return 0;
+            }
         }
 
         /// <summary>Gets the height.</summary>
@@ -102,34 +109,137 @@ namespace Models.PMF.Organs
         public double Depth { get { return Structure.Height; } }
 
         /// <summary>Gets  FRGR.</summary>
+        [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
         [Units("0-1")]
         public double FRGR { get; set; }
-        
+
+        private double _PotentialEP;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
-        public double PotentialEP { get;  set; }
-
-        /// <summary>
-        /// This paramater is applied to ETDemand.  It is a fudge for testing
-        /// </summary>
-        public double FudgeToGetETDemandRight { get; set; }
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+        #endregion
+
+        #region Has Water Demand Interface
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent { get; set; }
+
+        /// <summary>Calculates the water demand.</summary>
+        public double CalculateWaterDemand()
+        {
+            return PotentialEP;
+        }
+
+        /// <summary>Gets or sets the water allocation.</summary>
+        [XmlIgnore]
+        public double WaterAllocation { get; set; }
+
         #endregion
 
         #region Links
         /// <summary>The structure</summary>
         [Link]
         public Structure Structure = null;
-
         #endregion
-
-    
 
         #region Structures
         /// <summary>
+        /// # Potential Leaf Area index
+        /// Leaf area index is calculated as the sum of the area of each cohort of leaves 
+        /// The appearance of a new cohort of leaves occurs each time Structure.LeafTipsAppeared increases by one.
+        /// From tip appearance the area of each cohort will increase for a certian number of degree days defined by the <i>GrowthDuration</i>
+        /// [Document GrowthDuration]
         /// 
+        /// If no stress occurs the leaves will reach a Maximum area (<i>MaxArea</i>) at the end of the <i>GrowthDuration</i>.
+        /// The <i>MaxArea</i> is defined by:
+        /// [Document MaxArea]
+        /// 
+        /// In the absence of stress the leaf will remain at <i>MaxArea</i> for a number of degree days
+        /// set by the <i>LagDuration</i> and then area will senesce to zero at the end of the <i>SenescenceDuration</i>
+        /// [Document LagDuration]
+        /// [Document SenescenceDuration]
+        /// 
+        /// Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes too great.
+        /// Each cohort models the proportion of its area that is lost to shade induced senescence each day as:
+        /// [Document ShadeInducedSenescenceRate]
+        /// 
+        /// # Stress effects on Leaf Area Index
+        /// Stress reduces leaf area in a number of ways.
+        /// Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size.
+        /// Leaf captures this by multiplying the <i>MaxSize</i> of each cohort by a <i>CellDivisionStress</i> factor which is calculated as:
+        /// [Document CellDivisionStress]
+        /// 
+        /// Leaf.FN quantifys the N stress status of the plant and represents the concentration of metabolic N relative the maximum potentil metabolic N content of the leaf
+        /// calculated as (<i>Leaf.NConc - MinimumNConc</i>)/(<i>CriticalNConc - MinimumNConc</i>).
+        /// 
+        /// Leaf.FW quantifies water stress and is
+        /// calculated as <i>Leaf.Transpiration</i>/<i>Leaf.WaterDemand</i>, where <i>Leaf.Transpiration</i> is the minimum of <i>Leaf.WaterDemand</i> and <i>Root.WaterUptake</i>
+        ///
+        /// Stress during the <i>GrowthDuration</i> of the cohort reduces the size increase of the cohort by
+        /// multiplying the potential increase by a <i>ExpansionStress</i> factor:
+        /// [Document ExpansionStress]
+        /// 
+        /// Stresses can also acellerate the onset and rate of senescence in a number of ways.
+        /// Nitrogen shortage will cause N to be retranslocated out of lower order leaves to support the expansion of higher order leaves and other organs
+        /// When this happens the lower order cohorts will have their area reduced in proportion to the amount of N that is remobilised out of them.
+        ///
+        /// Water stress hastens senescence by increasing the rate of thermal time accumulation in the lag and senescence phases.
+        /// This is done by multiplying thermal time accumulation by <i>DroughtInducedLagAcceleration</i> and <i>DroughtInducedSenescenceAcceleration</i> factors, respectively:
+        /// [Document DroughtInducedLagAcceleration]
+        /// [Document DroughtInducedSenAcceleration]
+        /// 
+        /// # Dry matter Demand
+        /// Leaf calculates the DM demand from each cohort as a function of the potential size increment (DeltaPotentialArea) an specific leaf area bounds.
+        /// Under non stressed conditions the demand for non-storage DM is calculated as <i>DeltaPotentialArea</i> divided by the mean of <i>SpecificLeafAreaMax</i> and <i>SpecificLeafAreaMin</i>.
+        /// Under stressed conditions it is calculated as <i>DeltaWaterConstrainedArea</i> divided by <i>SpecificLeafAreaMin</i>.
+        /// [Document SpecificLeafAreaMax]
+        /// [Document SpecificLeafAreaMin]
+        /// 
+        /// Non-storage DM Demand is then seperated into structural and metabolic DM demands using the <i>StructuralFraction</i>:
+        /// [Document StructuralFraction]
+        /// 
+        /// The storage DM demand is calculated from the sum of metabolic and structural DM (including todays demands)
+        /// multiplied by a <i>NonStructuralFraction</i>:
+        /// [Document NonStructuralFraction]
+        /// 
+        /// # Nitrogen Demand
+        /// 
+        /// Leaf calculates the N demand from each cohort as a function of the potential DM increment and N concentration bounds.
+        /// Structural N demand = <i>PotentialStructuralDMAllocation</i> * <i>MinimumNConc</i> where:
+        /// [Document MinimumNConc]
+        /// 
+        /// Metabolic N demand is calculated as <i>PotentialMetabolicDMAllocation</i> * (<i>CriticalNConc</i> - <i>MinimumNConc</i>) where:
+        /// [Document CriticalNConc]
+        /// 
+        /// Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands)
+        /// multiplied by <i>LuxaryNconc</i> (<i>MaximumNConc</i> - <i>CriticalNConc</i>) less the amount of storage N already present.  <i>MaximumNConc</i> is given by:
+        /// [Document MaximumNConc]
+        ///
+        /// # Drymatter supply
+        /// In additon to photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM:
+        /// Reallocation supply is a proportion of the metabolic and non-structural DM that would be senesced each day where the proportion is set by:
+        /// [Document DMReallocationFactor]
+        /// Retranslocation supply is calculated as a proportion of the amount of storage DM in each cohort where the proportion is set by :
+        /// [Document DMRetranslocationFactor]
+        ///
+        /// # Nitrogen supply
+        /// Nitrogen supply from the leaf comes from the reallocation of metabolic and storage N in senescing material
+        /// and the retranslocation of metabolic and storage N.  Reallocation supply is a proportion of the Metabolic and Storage DM that would be senesced each day where the proportion is set by:
+        /// [Document NReallocationFactor]
+        /// Retranslocation supply is calculated as a proportion of the amount of storage and metabolic N in each cohort where the proportion is set by :
+        /// [Document NRetranslocationFactor]
         /// </summary>
         [Serializable]
         public class LeafCohortParameters : Model
@@ -180,7 +290,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction NReallocationFactor = null;
             /// <summary>The dm reallocation factor</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DMReallocationFactor = null;
             /// <summary>The n retranslocation factor</summary>
             [Link]
@@ -188,6 +298,10 @@ namespace Models.PMF.Organs
             /// <summary>The expansion stress</summary>
             [Link]
             public IFunction ExpansionStress = null;
+
+            /// <summary>The expansion stress</summary>
+            public double ExpansionStressValue { get; set; }
+
             /// <summary>The critical n conc</summary>
             [Link]
             public IFunction CriticalNConc = null;
@@ -197,26 +311,39 @@ namespace Models.PMF.Organs
             /// <summary>The shade induced senescence rate</summary>
             [Link]
             public IFunction ShadeInducedSenescenceRate = null;
-            /// <summary>The drought induced sen acceleration</summary>
-            [Link(IsOptional = true)]
+            /// <summary>The drought induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            [Link]
+            public IFunction DroughtInducedLagAcceleration = null;
+            /// <summary>The drought induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            [Link]
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
             [Link]
-            public IFunction NonStructuralFraction = null;
+            public IFunction StorageFraction = null;
             /// <summary>The cell division stress</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction SenessingLeafRelativeSize = null;
-            /// <summary>
-            /// The proportion of mass that is respired each day
-            /// </summary>
-            [Link(IsOptional = true)]
+            /// <summary>The proportion of mass that is respired each day</summary>
+            [Link]
             public IFunction MaintenanceRespirationFunction = null;
+            /// <summary>Modify leaf size by age</summary>
+            [Link]
+            public IFunction LeafSizeAgeMultiplier = null;
+            /// <summary>Modify lag duration by age</summary>
+            [Link]
+            public IFunction LagDurationAgeMultiplier = null;
+            /// <summary>Modify senescence duration by age</summary>
+            [Link]
+            public IFunction SenescenceDurationAgeMultiplier = null;
+            /// <summary>The cost for remobilisation</summary>
+            [Link]
+            public IFunction RemobilisationCost = null;
         }
         #endregion
 
@@ -248,9 +375,18 @@ namespace Models.PMF.Organs
         /// <summary>The dm demand function</summary>
         [Link(IsOptional = true)]
         IFunction DMDemandFunction = null;
+        /// <summary>The dm demand function</summary>
+        [Link]
+        IFunction DMConversionEfficiency = null;
 
-        [Link(IsOptional = true)]
-        IFunction DMConversionEfficiencyFunction = null;
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        [Link]
+        IFunction CarbonConcentration = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Gets or sets the k dead.</summary>
         [Description("Extinction Coefficient (Dead)")]
@@ -260,12 +396,30 @@ namespace Models.PMF.Organs
         [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupSize { get { return apexGroupSize.ToArray(); } }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupAge { get { return apexGroupAge.ToArray(); } }
+
+        /// <summary>The number of apex in each age group.</summary>
+        private List<double> apexGroupSize = new List<double>();
+        /// <summary>The age of apex in age group.</summary>
+        private List<double> apexGroupAge = new List<double>();
+
+        /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
+        private bool needToRecalculateLiveDead = true;
+        private Biomass liveBiomass = new Biomass();
+        private Biomass deadBiomass = new Biomass();
         #endregion
 
         #region States
 
         /// <summary>The leaves</summary>
-        private List<LeafCohort> Leaves = new List<LeafCohort>();
+        public List<LeafCohort> Leaves = new List<LeafCohort>();
 
         /// <summary>Initialise all state variables.</summary>
         public double CurrentExpandingLeaf = 0;
@@ -275,10 +429,6 @@ namespace Models.PMF.Organs
         public double FractionNextleafExpanded = 0;
         /// <summary>The dead nodes yesterday</summary>
         public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
-        /// <summary>
-        /// 
-        /// </summary>
-        public override double DMConversionEfficiency { get; set; }
         #endregion
 
         #region Outputs
@@ -288,6 +438,20 @@ namespace Models.PMF.Organs
         //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
         //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
 
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [XmlIgnore]
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
+
         /// <summary>Return the</summary>
         public double CohortCurrentRankCoverAbove
         {
@@ -295,23 +459,36 @@ namespace Models.PMF.Organs
             {
                 if (CurrentRank > Leaves.Count)
                     throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
-                else if (CurrentRank <= 0)
+                if (CurrentRank <= 0)
                     return 0;
-                else
-                    return Leaves[CurrentRank - 1].CoverAbove;
+                return Leaves[CurrentRank - 1].CoverAbove;
             }
         }
 
         /// <summary>
         /// The number of leaves that have visiable tips on the day of emergence
         /// </summary>
-        public int TipsAtEmergence {get; set;}
-        
+        public int TipsAtEmergence { get; set; }
+
         /// <summary>
         /// The number of leaf cohorts to initialised
         /// </summary>
         public int CohortsAtInitialisation { get; set; }
-        
+
+        /// <Summary>Spcific leaf nitrogen</Summary>
+        [Description("Specific leaf nitrogen")]
+        [Units("g/m2")]
+        public double SpecificNitrogen
+        {
+            get
+            {
+                if (Math.Abs(LAI) < double.Epsilon)
+                {
+                    return 0;
+                }
+                return (Live.N / LAI);
+            }
+        }
         /// <summary>Gets or sets the fraction died.</summary>
         public double FractionDied { get; set; }
         /// <summary>
@@ -324,33 +501,37 @@ namespace Models.PMF.Organs
         [Units("max units")]
         public double MaxCover;
 
+        /// <summary>The number of cohorts initiated that have not yet emerged</summary>
+        [Description("The number of cohorts initiated that have not yet emerged")]
+        public int ApicalCohortNo { get { return InitialisedCohortNo - AppearedCohortNo; } }
+        
         /// <summary>Gets the initialised cohort no.</summary>
-        [Description("Number of leaf cohort objects that have been initialised")] 
-        public double InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
+        [Description("Number of leaf cohort objects that have been initialised")]
+        public int InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
 
         /// <summary>Gets the appeared cohort no.</summary>
-        [Description("Number of leaf cohort that have appeared")] 
-        public double AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
+        [Description("Number of leaf cohort that have appeared")]
+        public int AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
 
         /// <summary>Gets the expanding cohort no.</summary>
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
-        public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
+        public int ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
 
         /// <summary>Gets the expanded cohort no.</summary>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
+        public int ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
 
         /// <summary>Gets the green cohort no.</summary>
-         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
-        public double GreenCohortNo  { get { return CohortCounter("IsGreen"); } }
+        [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
+        public int GreenCohortNo { get { return CohortCounter("IsGreen"); } }
 
         /// <summary>Gets the senescing cohort no.</summary>
         [Description("Number of leaf cohorts that are Senescing")]
-        public double SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
+        public int SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNumber.Value); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.FinalLeafNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
@@ -359,11 +540,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double n = 0;
-                foreach (LeafCohort L in Leaves)
-                    if ((L.IsAppeared) && (!L.Finished))
-                        n += L.CohortPopulation;
-                return n / Plant.Population;
+                return Leaves.Where(l => l.IsAppeared && !l.Finished).Sum(l => l.CohortPopulation) / Plant.Population;
             }
         }
 
@@ -372,67 +549,62 @@ namespace Models.PMF.Organs
         [Description("Number of leaves per plant that have appeared")]
         public double PlantAppearedLeafNo
         {
-            get
-            {
-                double n = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsAppeared)
-                        n += L.CohortPopulation;
-                return n;
-            }
+            get { return Leaves.Where(l => l.IsAppeared).Sum(l => l.CohortPopulation); }
         }
-
 
         /// <summary>Gets the plant senesced leaf no.</summary>
         [Units("/plant")]
         [Description("Number of leaves per plant that have senesced")]
         public double PlantsenescedLeafNo
         {
-            get
-            {
-                return PlantAppearedLeafNo/ Plant.Population - PlantAppearedGreenLeafNo;
-            }
+            get { return PlantAppearedLeafNo / Plant.Population - PlantAppearedGreenLeafNo; }
         }
 
         /// <summary>Gets the lai dead.</summary>
         [Units("m^2/m^2")]
         public double LAIDead
         {
-            get
-            {
-                double value = 0;
-                foreach (LeafCohort L in Leaves)
-                    value = value + L.DeadArea / 1000000;
-                return value;
-            }
+            get { return Leaves.Sum(l => l.DeadArea) / 1000000; }
         }
 
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public Biomass CohortLive
+        public Biomass Live
         {
             get
             {
-                Biomass Biomass = new Biomass();
-                foreach (LeafCohort L in Leaves)
-                    Biomass = Biomass + L.Live;
-                return Biomass;
+                RecalculateLiveDead();
+                return liveBiomass;
             }
-            
+
         }
 
         /// <summary>Gets the cohort dead.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public Biomass CohortDead
+        public Biomass Dead
         {
             get
             {
-                Biomass Biomass = new Biomass();
+                RecalculateLiveDead();
+                return deadBiomass;
+            }
+        }
+
+        /// <summary>Recalculate live and dead biomass if necessary</summary>
+        private void RecalculateLiveDead()
+        {
+            if (needToRecalculateLiveDead)
+            {
+                needToRecalculateLiveDead = false;
+                liveBiomass.Clear();
+                deadBiomass.Clear();
                 foreach (LeafCohort L in Leaves)
-                    Biomass = Biomass + L.Dead;
-                return Biomass;
+                {
+                    liveBiomass.Add(L.Live);
+                    deadBiomass.Add(L.Dead);
+                }
             }
         }
 
@@ -443,104 +615,25 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;                    
+                }
+                else
+                    return CoverGreen * MetData.Radn;
+            }
+        }
 
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
-        public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt , 0); } }
-
-        /// <summary>Gets the growth duration of the cohort.</summary>
-        [XmlIgnore]
-        [Units("mm3")]
-        public double[] CohortGrowthDuration
-        {
-            get
-            {
-                int i = 0;
-
-                double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    values[i] = L.GrowthDuration;
-                    i++;
-                }
-                return values;
-            }
-        }
-
-        /// <summary>Gets the lag duration of the cohort.</summary>
-        [XmlIgnore]
-        [Units("mm3")]
-        public double[] CohortLagDuration
-        {
-            get
-            {
-                int i = 0;
-
-                double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    values[i] = L.LagDuration;
-                    i++;
-                }
-                return values;
-            }
-        }
-
-
-
-        /// <summary>Gets the delta water constrained area of the cohort.</summary>
-        [XmlIgnore]
-        [Units("mm3")]
-        public double[] CohortDeltaWaterConstrainedArea
-        {
-            get
-            {
-                int i = 0;
-
-                double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    values[i] = L.DeltaWaterConstrainedArea;
-                    i++;
-                }
-                return values;
-            }
-        }
-
-        /// <summary>Gets the delta carbon constrained area of the cohort.</summary>
-        [XmlIgnore]
-        [Units("mm3")]
-        public double[] CohortDeltaCarbonConstrainedArea
-        {
-            get
-            {
-                int i = 0;
-
-                double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    values[i] = L.DeltaCarbonConstrainedArea;
-                    i++;
-                }
-                return values;
-            }
-        }
-
-
-
+        public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt, 0); } }
 
         /// <summary>
         /// Returns the relative expansion of the next leaf to produce its ligule
@@ -552,18 +645,167 @@ namespace Models.PMF.Organs
                 if (Plant.IsEmerged)
                     if (ExpandedCohortNo < InitialisedCohortNo)
                         if (Leaves[(int)ExpandedCohortNo].Age > 0)
-                            if(AppearedCohortNo < InitialisedCohortNo)
-                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration));
+                            if (AppearedCohortNo < InitialisedCohortNo)
+                                return Math.Min(1,
+                                    Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration);
                             else
-                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration)*Structure.NextLeafProportion);
+                                return Math.Min(1,
+                                    Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration *
+                                    Structure.NextLeafProportion);
                         else
                             return 0;
                     else
-                        return Structure.NextLeafProportion - 1 ;
-                else
-                    return 0;
+                        return Structure.NextLeafProportion - 1;
+                return 0;
             }
         }
+        
+        /// <summary>Gets the DeltaPotentialArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] DeltaPotentialArea
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] = L.DeltaPotentialArea;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+        /// <summary>Gets the DeltaStressConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double [] DeltaStressConstrainedArea
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.DeltaStressConstrainedArea;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double [] DeltaCarbonConstrainedArea
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.DeltaCarbonConstrainedArea;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortStructuralDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.StructuralDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortMetabolicDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.MetabolicDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
+        [XmlIgnore]
+        [Units("mm2")]
+        public double[] CohortStorageDMDemand
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsGrowing)
+                        values[i] += L.StorageDMDemand;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Gets the cohort population.</summary>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortPopulation
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsAppeared)
+                        values[i] = L.CohortPopulation;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
 
         /// <summary>Gets the size of the cohort.</summary>
         [XmlIgnore]
@@ -573,51 +815,15 @@ namespace Models.PMF.Organs
             get
             {
                 int i = 0;
-
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
+
                 foreach (LeafCohort L in Leaves)
                 {
-                    values[i] = L.Size;
+                    if (L.IsAppeared)
+                        values[i] = L.LiveArea / L.CohortPopulation;
+                    else values[i] = 0;
                     i++;
                 }
-                return values;
-            }
-        }
-
-        /// <summary>Returns the area of the largest leaf.</summary>
-        [Units("mm2")]
-        public double AreaLargestLeaf
-        {
-            get
-            {
-                double LLA = 0;
-                foreach (LeafCohort L in Leaves)
-                    LLA = Math.Max(LLA, L.MaxArea);
-                return LLA;
-            }
-        }
-
-        /// <summary>Gets the maximum leaf area.</summary>
-        [Units("mm2")]
-        public double[] MaxLeafArea
-        {
-            get
-            {
-                int i = 0;
-
-                double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    values[i] = L.MaxArea;
-                    i++;
-                }
-
                 return values;
             }
         }
@@ -629,39 +835,13 @@ namespace Models.PMF.Organs
             get
             {
                 int i = 0;
-
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
+
                 foreach (LeafCohort L in Leaves)
                 {
                     values[i] = L.LiveArea;
                     i++;
                 }
-
-                return values;
-            }
-        }
-
-        /// <summary>Gets the cohort age.</summary>
-        [Units("mm2")]
-        public double[] CohortAge
-        {
-            get
-            {
-                int i = 0;
-
-                double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
-                foreach (LeafCohort L in Leaves)
-                {
-                    values[i] = L.Age;
-                    i++;
-                }
-
                 return values;
             }
         }
@@ -673,42 +853,56 @@ namespace Models.PMF.Organs
             get
             {
                 int i = 0;
-
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
+
                 foreach (LeafCohort L in Leaves)
                 {
-                    values[i] = L.MaxSize;
+                    values[i] = L.MaxLiveArea / L.MaxCohortPopulation;
                     i++;
                 }
-
                 return values;
             }
         }
 
-        /// <summary>Gets the cohort maximum area.</summary>
-        [Units("mm2")]
-        public double[] CohortMaxArea
+        /// <summary>Gets lag duration</summary>
+        [Units("oCd")]
+        public double[] CohortLagDuration
         {
             get
             {
                 int i = 0;
-
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
+
                 foreach (LeafCohort L in Leaves)
                 {
-                    values[i] = L.MaxArea;
+                    values[i] = L.LagDuration;
+                    ;
                     i++;
                 }
-
                 return values;
             }
         }
+
+
+        /// <summary>Gets fraction of leaf senescence.</summary>
+        [Units("")]
+        public double[] CohortSenescedFrac
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.SenescedFrac;
+                    ;
+                    i++;
+                }
+                return values;
+            }
+        }
+
 
         /// <summary>Gets the cohort sla.</summary>
         [Units("mm2/g")]
@@ -717,52 +911,89 @@ namespace Models.PMF.Organs
             get
             {
                 int i = 0;
-
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
+
                 foreach (LeafCohort L in Leaves)
                 {
                     values[i] = L.SpecificArea;
                     i++;
                 }
-
                 return values;
             }
         }
-
-        /// <summary>Gets the cohort structural frac.</summary>
-        [Units("0-1")]
-        public double[] CohortStructuralFrac
+        /// <summary>Gets the cohort MaxArea.</summary> 
+        [Units("mm2")]
+        public double[] CohortMaxArea
         {
             get
             {
                 int i = 0;
-
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
-                    values[i] = 0;
-                i = 0;
+
                 foreach (LeafCohort L in Leaves)
                 {
-                    if ((L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt) > 0.0)
-                    {
-                        values[i] = L.Live.StructuralWt / (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt);
-                        i++;
-                    }
-                    else
-                    {
-                        values[i] = 0;
-                        i++;
-                    }
+                    values[i] = L.MaxArea;
+                    i++;
                 }
-
                 return values;
             }
         }
 
+        
+        /// <summary>Gets the cohort Wt.</summary> 
+        [Units("mm2")]
+        public double[] CohortLiveWt
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.Live.Wt;
+                    i++;
+                }
+                return values;
+            }
+        }
         //General Leaf State variables
+        /// <summary>Returns the area of the largest leaf.</summary>
+        /// <value>The area of the largest leaf</value>
+        [Units("mm2")]
+        public double AreaLargestLeaf
+        {
+            get
+            {
+                double LLA = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    LLA = Math.Max(LLA, L.MaxArea);
+                }
+
+                return LLA;
+            }
+        }
+
+        /// <summary>Gets the live stem  number to represent the observed stem numbers in an experiment.</summary>
+        /// <value>Stem number.</value>
+        [Units("0-1")]
+        [XmlIgnore]
+        [Description("In the field experiment, we count stem number according whether a stem number has a green leaf. A green leaf is definied as a leaf has more than half green part.")]
+        public double LiveStemNumber
+        {
+            get
+            {
+                double sn = 0;
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    sn = Math.Max(sn, L.LiveStemNumber(CohortParameters));
+                }
+                return sn;
+
+            }
+        }
 
         /// <summary>Gets the live n conc.</summary>
         [Units("g/g")]
@@ -780,18 +1011,12 @@ namespace Models.PMF.Organs
         /// </summary>
         public override double MaintenanceRespiration
         {
-            get
-            {
-                double value = 0;
-                foreach (LeafCohort L in Leaves)
-                    value = value + L.MaintenanceRespiration;
-                return value;
-            }
+            get { return Leaves.Sum(l => l.MaintenanceRespiration); }
         }
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]
@@ -799,100 +1024,129 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double F = 1;
-                if (CohortParameters != null)
-                {
-                    double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
-                    if (FunctionalNConc == 0)
-                        F = 1;
-                    else
-                    {
-                        F = Live.MetabolicNConc / FunctionalNConc;
-                        F = Math.Max(0.0, Math.Min(F, 1.0));
-                    }
-                }
-                return F;
+                if (CohortParameters == null)
+                    return 1;
+
+                double f;
+                double functionalNConc = (CohortParameters.CriticalNConc.Value() -
+                                          CohortParameters.MinimumNConc.Value() * CohortParameters.StructuralFraction.Value()) *
+                                         (1 / (1 - CohortParameters.StructuralFraction.Value()));
+                if (functionalNConc <= 0)
+                    f = 1;
+                else
+                    f = Math.Max(0.0, Math.Min(Live.MetabolicNConc / functionalNConc, 1.0));
+
+                return f;
             }
         }
+
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        public double ApexNumByAge(double age)
+        {
+            double num = 0;
+            for (int i = 0; i < apexGroupAge.Count; i++)
+            {
+                if (apexGroupAge[i] <= age)
+                {
+                    num += apexGroupSize[i++];
+                }
+            }
+
+            return num;
+
+        }
+
+
         #endregion
 
         #region Functions
-         /// <summary>1 based rank of the current leaf.</summary>
+
+        /// <summary>1 based rank of the current leaf.</summary>
         private int CurrentRank { get; set; }
 
-        /// <summary>Cohorts the counter.</summary>
+        /// <summary>Counts cohorts with a given condition.</summary>
         /// <param name="Condition">The condition.</param>
         /// <returns></returns>
         private int CohortCounter(string Condition)
         {
-            int Count = 0;
+            int count = 0;
             foreach (LeafCohort L in Leaves)
             {
                 object o = ReflectionUtilities.GetValueOfFieldOrProperty(Condition, L);
                 if (o == null)
-                    throw new NotImplementedException();
-                bool ok = (bool)o;
-                if (ok)
-                    Count++;
+                    throw new ApsimXException(this, "Leaf.CohortCounter returned null for function GetValueOfFieldOrProperty for condition " + Condition);
+                if ((bool)o)
+                    count++;
             }
-            return Count;
+            return count;
         }
-        /// <summary>Copies the leaves.</summary>
-        /// <param name="From">From.</param>
-        /// <param name="To">To.</param>
-        public void CopyLeaves(LeafCohort[] From, List<LeafCohort> To)
-        {
-            foreach (LeafCohort Leaf in From)
-                To.Add(Leaf.Clone());
-        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (Plant.IsEmerged)
+            if (!Plant.IsEmerged)
+                return;
+
+            if (MicroClimatePresent == false)
+                throw new Exception(Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
+
+            if (FrostFraction.Value() > 0)
+                foreach (LeafCohort l in Leaves)
+                    l.DoFrost(FrostFraction.Value());
+
+            CohortParameters.ExpansionStressValue = CohortParameters.ExpansionStress.Value();
+            bool nextExpandingLeaf = false;
+            foreach (LeafCohort L in Leaves)
             {
-                if (FrostFraction.Value > 0)
-                    foreach (LeafCohort L in Leaves)
-                        L.DoFrost(FrostFraction.Value);
-
-                bool NextExpandingLeaf = false;
-                foreach (LeafCohort L in Leaves)
+                CurrentRank = L.Rank;
+                L.DoPotentialGrowth(ThermalTime.Value(), CohortParameters);
+                needToRecalculateLiveDead = true;
+                if ((L.IsFullyExpanded == false) && (nextExpandingLeaf == false))
                 {
-                    CurrentRank = L.Rank;
-                    L.DoPotentialGrowth(ThermalTime.Value, CohortParameters);
-                    if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
+                    nextExpandingLeaf = true;
+                    if (CurrentExpandingLeaf != L.Rank)
                     {
-                        NextExpandingLeaf = true;
-                        if (CurrentExpandingLeaf != L.Rank)
-                        {
-                            CurrentExpandingLeaf = L.Rank;
-                            StartFractionExpanded = L.FractionExpanded;
-                        }
-                        FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
+                        CurrentExpandingLeaf = L.Rank;
+                        StartFractionExpanded = L.FractionExpanded;
                     }
+                    FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                 }
-               
-                FRGR = FRGRFunction.Value;
-
             }
+            FRGR = FRGRFunction.Value();
         }
+
         /// <summary>Clears this instance.</summary>
-        protected override void Clear()
+        public void Reset()
         {
             Leaves = new List<LeafCohort>();
-            WaterDemand = 0;
+            needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
+            Structure.TipToAppear = 0;
+            apexGroupAge.Clear();
+            dryMatterSupply.Clear();
+            dryMatterDemand.Clear();
+            nitrogenSupply.Clear();
+            nitrogenDemand.Clear();
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
         private void OnInitialiseLeafCohorts(object sender, EventArgs e) //This sets up cohorts (eg at germination)
         {
             Leaves = new List<LeafCohort>();
-            CopyLeaves(InitialLeaves, Leaves);
+            foreach (LeafCohort Leaf in InitialLeaves)
+            {
+                LeafCohort NewLeaf = Leaf.Clone();
+                DoApexCalculations(ref NewLeaf);
+                Leaves.Add(NewLeaf);
+                needToRecalculateLiveDead = true;
+            }
+
             foreach (LeafCohort Leaf in Leaves)
             {
                 CohortsAtInitialisation += 1;
@@ -915,8 +1169,50 @@ namespace Models.PMF.Organs
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
+            DoApexCalculations(ref NewLeaf);
             Leaves.Add(NewLeaf);
+            needToRecalculateLiveDead = true;
         }
+
+        private void DoApexCalculations(ref LeafCohort NewLeaf)
+        {
+            for (int i = 0; i < apexGroupAge.Count; i++)
+                apexGroupAge[i]++;
+
+            while (apexGroupSize.Sum() < Structure.ApexNum)
+            {
+                if (apexGroupSize.Count == 0)
+                    apexGroupSize.Add(Structure.ApexNum);
+                else
+                    apexGroupSize.Add(Structure.ApexNum - apexGroupSize[apexGroupSize.Count - 1]);
+                apexGroupAge.Add(1);
+            }
+
+            if (apexGroupSize.Count > 1)
+            {
+                while (apexGroupSize.Sum() > Structure.ApexNum)
+                {
+                    double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                    double remainingRemoveApex = removeApex;
+                    for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                    {
+                        double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                        apexGroupSize[i] -= remove;
+                        remainingRemoveApex -= remove;
+                        if (remainingRemoveApex <= 0)
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                // not sure what to do here as the while loop would not have exited.... ever!
+            }
+            
+            NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
+            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
+        }
+
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
         [EventSubscribe("LeafTipAppearance")]
         private void OnLeafTipAppearance(object sender, ApparingLeafParams CohortParams)
@@ -926,9 +1222,11 @@ namespace Models.PMF.Organs
             if (CohortParams.CohortToAppear > InitialisedCohortNo)
                 throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
             int i = CohortParams.CohortToAppear - 1;
-            Leaves[i].CohortPopulation = CohortParams.TotalStemPopn;
+
+            Leaves[i].CohortPopulation = Apex.LeafTipAppearance(Structure.ApexNum, Plant.Population, CohortParams.TotalStemPopn);
             Leaves[i].Age = CohortParams.CohortAge;
             Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
+            needToRecalculateLiveDead = true;
             if (NewLeaf != null)
                 NewLeaf.Invoke();
         }
@@ -939,11 +1237,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-           // WaterAllocation = 0;
             if (Plant.IsAlive)
             {
                 foreach (LeafCohort L in Leaves)
-                    L.DoActualGrowth(ThermalTime.Value, CohortParameters);
+                {
+                    L.DoActualGrowth(ThermalTime.Value(), CohortParameters);
+                    needToRecalculateLiveDead = true;
+                }
 
                 Structure.UpdateHeight();
 
@@ -951,8 +1251,8 @@ namespace Models.PMF.Organs
                 FractionDied = 0;
                 if (DeadCohortNo > 0 && GreenCohortNo > 0)
                 {
-                    double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
-                    FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                    double deltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
+                    FractionDied = deltaDeadLeaves / GreenCohortNo;
                     DeadNodesYesterday = DeadCohortNo;
                 }
             }
@@ -963,8 +1263,10 @@ namespace Models.PMF.Organs
             Structure.LeafTipsAppeared = 0;
             Structure.Clear();
             Leaves.Clear();
+            needToRecalculateLiveDead = true;
             Summary.WriteMessage(this, "Removing leaves from plant");
         }
+
         /// <summary>Fractional interception "above" a given node position</summary>
         /// <param name="cohortno">cohort position</param>
         /// <returns>fractional interception (0-1)</returns>
@@ -974,31 +1276,28 @@ namespace Models.PMF.Organs
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
                 LAIabove += Leaves[i].LiveArea / MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
+            return 1 - Math.Exp(-ExtinctionCoeff.Value() * LAIabove);
         }
 
         /// <summary>
         /// remove biomass from the leaf.
         /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The frations of biomass to remove</param>
-        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
+            bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
             {
-                leaf.DoLeafBiomassRemoval(value);
-                DetachedWt += leaf.DetachedWt;
-                DetachedN += leaf.DetachedN;
-                RemovedWt += leaf.RemovedWt;
-                RemovedN += leaf.RemovedN;
+                if (leaf.IsInitialised)
+                {
+                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    leaf.LiveArea *= remainingLiveFraction;
+                    writeToSummary = false; // only want it written once.
+                    Detached.Add(leaf.Detached);
+                    Removed.Add(leaf.Removed);
+                }
             }
-
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-            double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-            Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                     + "% of " + Name + " Biomass from " + Plant.Name
-                                     + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                     + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
         }
 
         /// <summary>
@@ -1008,532 +1307,487 @@ namespace Models.PMF.Organs
         public void DoThin(double ProportionRemoved)
         {
             foreach (LeafCohort leaf in Leaves)
-                leaf.DoThin(ProportionRemoved);
+                leaf.CohortPopulation *= 1 - ProportionRemoved;
+        }
+
+        /// <summary>
+        /// Called when defoliation calls for removal of main-stem nodes
+        /// </summary>
+        public void RemoveHighestLeaf()
+        {
+            Leaves.RemoveAt(InitialisedCohortNo-1);
+            needToRecalculateLiveDead = true;
+            
+            
         }
         #endregion
 
         #region Arbitrator methods
 
-        /// <summary>Gets or sets the dm demand.</summary>
-        [Units("g/m^2")]
-        public override BiomassPoolType DMDemand
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateDryMatterSupply()
         {
-            get
-            {
-                if (DMConversionEfficiencyFunction == null)
-                    DMConversionEfficiency = 1;
-                else
-                    DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
-                double StructuralDemand = 0.0;
-                double NonStructuralDemand = 0.0;
-                double MetabolicDemand = 0.0;
+            // Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)
+            double Retranslocation = 0;
+            double Reallocation = 0;
 
-                if (DMDemandFunction != null)
-                {
-                    StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;
-                    NonStructuralDemand = DMDemandFunction.Value * (1 - StructuralFraction.Value);
-                }
-                else
-                {
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
-                        MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
-                        NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
-                    }
-                }
-                return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
+            foreach (LeafCohort L in Leaves)
+            {
+                Retranslocation += L.LeafStartDMRetranslocationSupply;
+                Reallocation += L.LeafStartDMReallocationSupply;
             }
 
-        }
-        /// <summary>Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)</summary>
-        [Units("g/m^2")]
-        public override BiomassSupplyType DMSupply
-        {
-            get
-            {
-                double Retranslocation = 0;
-                double Reallocation = 0;
+            dryMatterSupply.Fixation = Photosynthesis.Value();
+            dryMatterSupply.Retranslocation = Retranslocation;
+            dryMatterSupply.Reallocation = Reallocation;
 
+            return dryMatterSupply;
+        }
+
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateNitrogenSupply()
+        {
+            double RetransSupply = 0;
+            double ReallocationSupply = 0;
+            foreach (LeafCohort L in Leaves)
+            {
+                RetransSupply += Math.Max(0, L.LeafStartNRetranslocationSupply);
+                ReallocationSupply += L.LeafStartNReallocationSupply;
+            }
+            nitrogenSupply.Retranslocation = RetransSupply;
+            nitrogenSupply.Reallocation = ReallocationSupply;
+
+            return nitrogenSupply;
+        }
+
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        public override BiomassPoolType CalculateDryMatterDemand()
+        {
+            double StructuralDemand = 0.0;
+            double StorageDemand = 0.0;
+            double MetabolicDemand = 0.0;
+
+            if (DMDemandFunction != null)
+            {
+                StructuralDemand = DMDemandFunction.Value() * StructuralFraction.Value();
+                StorageDemand = DMDemandFunction.Value() * (1 - StructuralFraction.Value());
+            }
+            else
+            {
                 foreach (LeafCohort L in Leaves)
                 {
-                    Retranslocation += L.LeafStartDMRetranslocationSupply;
-                    Reallocation += L.LeafStartDMReallocationSupply;
+                    StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency.Value();
+                    MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency.Value();
+                    StorageDemand += L.StorageDMDemand / DMConversionEfficiency.Value();
                 }
-
-
-                return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
             }
+            dryMatterDemand.Structural = StructuralDemand;
+            dryMatterDemand.Metabolic = MetabolicDemand;
+            dryMatterDemand.Storage = StorageDemand;
+            return dryMatterDemand;
         }
-        /// <summary>Sets the dm potential allocation.</summary>
-        [Units("g/m^2")]
-        public override BiomassPoolType DMPotentialAllocation
+
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        public override BiomassPoolType CalculateNitrogenDemand()
         {
-            set
+            double StructuralDemand = 0.0;
+            double MetabolicDemand = 0.0;
+            double StorageDemand = 0.0;
+            foreach (LeafCohort L in Leaves)
             {
-                //Allocate Potential Structural DM
-                if (DMDemand.Structural == 0)
-                    if (value.Structural < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of potential DM in" + Name);
+                StructuralDemand += L.StructuralNDemand;
+                MetabolicDemand += L.MetabolicNDemand;
+                StorageDemand += L.StorageNDemand;
+            }
+            nitrogenDemand.Structural = StructuralDemand;
+            nitrogenDemand.Metabolic = MetabolicDemand;
+            nitrogenDemand.Storage = StorageDemand;
+            return nitrogenDemand;
+        }
 
-                double[] CohortPotentialStructualDMAllocation = new double[Leaves.Count + 2];
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
+        {
+            //Allocate Potential Structural DM
+            if (DMDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
+                throw new Exception("Invalid allocation of potential DM in" + Name);
 
-                if (value.Structural == 0.0)
-                { }// do nothing
-                else
-                {
-                    double DMPotentialsupply = value.Structural * DMConversionEfficiency;
-                    double DMPotentialallocated = 0;
-                    double TotalPotentialDemand = 0;
-                    foreach (LeafCohort L in Leaves)
-                        TotalPotentialDemand += L.StructuralDMDemand;
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        i++;
-                        double fraction = L.StructuralDMDemand / TotalPotentialDemand;
-                        double PotentialAllocation = Math.Min(L.StructuralDMDemand, DMPotentialsupply * fraction);
-                        CohortPotentialStructualDMAllocation[i] = PotentialAllocation;
-                        DMPotentialallocated += PotentialAllocation;
-                    }
-                    if ((DMPotentialallocated - value.Structural) > 0.000000001)
-                        throw new Exception("the sum of poteitial DM allocation to leaf cohorts is more that that allocated to leaf organ");
-                }
+            double[] CohortPotentialStructualDMAllocation = new double[Leaves.Count + 2];
 
-                //Allocate Metabolic DM
-                if (DMDemand.Metabolic == 0)
-                    if (value.Metabolic < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of potential DM in" + Name);
-
-                double[] CohortPotentialMetabolicDMAllocation = new double[Leaves.Count + 2];
-
-                if (value.Metabolic == 0.0)
-                { }// do nothing
-                else
-                {
-                    double DMPotentialsupply = value.Metabolic * DMConversionEfficiency;
-                    double DMPotentialallocated = 0;
-                    double TotalPotentialDemand = 0;
-                    foreach (LeafCohort L in Leaves)
-                        TotalPotentialDemand += L.MetabolicDMDemand;
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        i++;
-                        double fraction = L.MetabolicDMDemand / TotalPotentialDemand;
-                        double PotentialAllocation = Math.Min(L.MetabolicDMDemand, DMPotentialsupply * fraction);
-                        CohortPotentialMetabolicDMAllocation[i] = PotentialAllocation;
-                        DMPotentialallocated += PotentialAllocation;
-                    }
-                    if ((DMPotentialallocated - value.Metabolic) > 0.000000001)
-                        throw new Exception("the sum of poteitial DM allocation to leaf cohorts is more that that allocated to leaf organ");
-                }
-
-                //Send allocations to cohorts
-                int a = 0;
+            if (dryMatter.Structural != 0.0)
+            {
+                double DMPotentialsupply = dryMatter.Structural * DMConversionEfficiency.Value();
+                double DMPotentialallocated = 0;
+                double TotalPotentialDemand = Leaves.Sum(l => l.StructuralDMDemand);
+                int i = 0;
                 foreach (LeafCohort L in Leaves)
                 {
-                    a++;
-                    L.DMPotentialAllocation = new BiomassPoolType
-                    {
-                        Structural = CohortPotentialStructualDMAllocation[a],
-                        Metabolic = CohortPotentialMetabolicDMAllocation[a],
-                    };
+                    i++;
+                    double PotentialAllocation = Math.Min(L.StructuralDMDemand,
+                        DMPotentialsupply * (L.StructuralDMDemand / TotalPotentialDemand));
+                    CohortPotentialStructualDMAllocation[i] = PotentialAllocation;
+                    DMPotentialallocated += PotentialAllocation;
                 }
+                if (DMPotentialallocated - dryMatter.Structural > 0.000000001)
+                    throw new Exception("the sum of poteitial DM allocation to leaf cohorts is more that that allocated to leaf organ");
             }
-        }
-        /// <summary>Sets the dm allocation.</summary>
-        [Units("g/m^2")]
-        public override BiomassAllocationType DMAllocation
-        {
-            set
+
+            //Allocate Metabolic DM
+            if (DMDemand.Metabolic == 0 && dryMatter.Metabolic > 0.000000000001)
+                throw new Exception("Invalid allocation of potential DM in" + Name);
+
+            double[] CohortPotentialMetabolicDMAllocation = new double[Leaves.Count + 2];
+
+            if (dryMatter.Metabolic != 0.0)
             {
-                GrowthRespiration = 0;
-
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
-                GrowthRespiration += value.Metabolic * (1 - DMConversionEfficiency);
-
-                double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
-                double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
-                double check = Live.StructuralWt;
-                //Structural DM allocation
-                if (DMDemand.Structural == 0)
-                    if (value.Structural < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of DM in Leaf");
-                if (value.Structural == 0.0)
-                { }// do nothing
-                else
-                {
-                    double DMsupply = value.Structural * DMConversionEfficiency;
-                    double DMallocated = 0;
-                    double TotalDemand = 0;
-                    foreach (LeafCohort L in Leaves)
-                        TotalDemand += L.StructuralDMDemand;
-                    double DemandFraction = (value.Structural * DMConversionEfficiency) / TotalDemand;//
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        i++;
-                        double Allocation = Math.Min(L.StructuralDMDemand * DemandFraction, DMsupply);
-                        StructuralDMAllocationCohort[i] = Allocation;
-                        DMallocated += Allocation;
-                        DMsupply -= Allocation;
-                    }
-                    if (DMsupply > 0.0000000001)
-                        throw new Exception("DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Structural * DMConversionEfficiency) > 0.000000001)
-                        throw new Exception("the sum of DM allocation to leaf cohorts is more that that allocated to leaf organ");
-                }
-
-                //Metabolic DM allocation
-                double[] MetabolicDMAllocationCohort = new double[Leaves.Count + 2];
-
-                if (DMDemand.Metabolic == 0)
-                    if (value.Metabolic < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of DM in Leaf");
-                if (value.Metabolic == 0.0)
-                { }// do nothing
-                else
-                {
-                    double DMsupply = value.Metabolic * DMConversionEfficiency;
-                    double DMallocated = 0;
-                    double TotalDemand = 0;
-                    foreach (LeafCohort L in Leaves)
-                        TotalDemand += L.MetabolicDMDemand;
-                    double DemandFraction = (value.Metabolic * DMConversionEfficiency) / TotalDemand;//
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        i++;
-                        double Allocation = Math.Min(L.MetabolicDMDemand * DemandFraction, DMsupply);
-                        MetabolicDMAllocationCohort[i] = Allocation;
-                        DMallocated += Allocation;
-                        DMsupply -= Allocation;
-                    }
-                    if (DMsupply > 0.0000000001)
-                        throw new Exception("Metabolic DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Metabolic * DMConversionEfficiency) > 0.000000001)
-                        throw new Exception("the sum of Metabolic DM allocation to leaf cohorts is more that that allocated to leaf organ");
-                }
-
-                // excess allocation
-                double[] NonStructuralDMAllocationCohort = new double[Leaves.Count + 2];
-                double TotalSinkCapacity = 0;
-                foreach (LeafCohort L in Leaves)
-                    TotalSinkCapacity += L.NonStructuralDMDemand;
-                if ((value.NonStructural * DMConversionEfficiency) > TotalSinkCapacity)
-                //Fixme, this exception needs to be turned on again
-                { }
-                    //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
-                if (TotalSinkCapacity > 0.0)
-                {
-                    double SinkFraction = (value.NonStructural * DMConversionEfficiency )/ TotalSinkCapacity;
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        i++;
-                        double Allocation = Math.Min(L.NonStructuralDMDemand * SinkFraction, value.NonStructural * DMConversionEfficiency);
-                        NonStructuralDMAllocationCohort[i] = Allocation;
-                    }
-                }
-
-                // retranslocation
-                double[] DMRetranslocationCohort = new double[Leaves.Count + 2];
-
-                if (value.Retranslocation - DMSupply.Retranslocation > 0.0000000001)
-                    throw new Exception(Name + " cannot supply that amount for DM retranslocation");
-                if (value.Retranslocation > 0)
-                {
-                    double remainder = value.Retranslocation;
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        i++;
-                        double Supply = Math.Min(remainder, L.DMRetranslocationSupply);
-                        DMRetranslocationCohort[i] = Supply;
-                        remainder -= Supply;
-                    }
-                    if (remainder > 0.0000000001)
-                        throw new Exception(Name + " DM Retranslocation demand left over after processing.");
-                }
-
-                // Reallocation
-                double[] DMReAllocationCohort = new double[Leaves.Count + 2];
-                if (value.Reallocation - DMSupply.Reallocation > 0.000000001)
-                    throw new Exception(Name + " cannot supply that amount for DM Reallocation");
-                if (value.Reallocation < -0.000000001)
-                    throw new Exception(Name + " recieved -ve DM reallocation");
-                if (value.Reallocation > 0)
-                {
-                    double remainder = value.Reallocation;
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        i++;
-                        double ReAlloc = Math.Min(remainder, L.LeafStartDMReallocationSupply);
-                        remainder = Math.Max(0.0, remainder - ReAlloc);
-                        DMReAllocationCohort[i] = ReAlloc;
-                    }
-                    if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
-                        throw new Exception(Name + " DM Reallocation demand left over after processing.");
-                }
-
-                //Send allocations to cohorts
-                int a = 0;
+                double DMPotentialsupply = dryMatter.Metabolic * DMConversionEfficiency.Value();
+                double DMPotentialallocated = 0;
+                double TotalPotentialDemand = Leaves.Sum(l => l.MetabolicDMDemand);
+                int i = 0;
                 foreach (LeafCohort L in Leaves)
                 {
-                    a++;
-                    L.DMAllocation = new BiomassAllocationType
-                    {
-                        Structural = StructuralDMAllocationCohort[a],
-                        Metabolic = MetabolicDMAllocationCohort[a],
-                        NonStructural = NonStructuralDMAllocationCohort[a],
-                        Retranslocation = DMRetranslocationCohort[a],
-                        Reallocation = DMReAllocationCohort[a],
-                    };
+                    i++;
+                    double PotentialAllocation = Math.Min(L.MetabolicDMDemand,
+                        DMPotentialsupply * L.MetabolicDMDemand / TotalPotentialDemand);
+                    CohortPotentialMetabolicDMAllocation[i] = PotentialAllocation;
+                    DMPotentialallocated += PotentialAllocation;
                 }
+                if (DMPotentialallocated - dryMatter.Metabolic > 0.000000001)
+                    throw new Exception(
+                        "the sum of poteitial DM allocation to leaf cohorts is more that that allocated to leaf organ");
+            }
 
-                double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
-                double CheckValue = StartWt + value.Structural*DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.NonStructural * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
-                double ExtentOfCockUp = Math.Abs(EndWt - CheckValue);
-                double FloatingPointError = 0.00000001;
-                if (ExtentOfCockUp > FloatingPointError)
-                    throw new Exception(Name + "Leaf DM allocation has gone squiffy");
+            //Send allocations to cohorts
+            int a = 0;
+            foreach (LeafCohort L in Leaves)
+            {
+                a++;
+                L.DMPotentialAllocation = new BiomassPoolType
+                {
+                    Structural = CohortPotentialStructualDMAllocation[a],
+                    Metabolic = CohortPotentialMetabolicDMAllocation[a],
+                };
             }
         }
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public override double WaterDemand
-        {
-           get
-            {
-                return PotentialEP * FudgeToGetETDemandRight;
-            }
-        }
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        public override double WaterAllocation { get; set;}
 
-        /// <summary>Gets or sets the n demand.</summary>
-        [Units("g/m^2")]
-        public override BiomassPoolType NDemand
+        /// <summary>Sets the dry matter allocation.</summary>
+        public override void SetDryMatterAllocation(BiomassAllocationType value)
         {
-            get
+            // get DM lost by respiration (growth respiration)
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1 * CarbonConcentration.Value()) * 44.0 / 12.0;
+            GrowthRespiration = (value.Structural + value.Storage + value.Metabolic) * growthRespFactor;
+            
+            double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
+            double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
+            //Structural DM allocation
+            if (DMDemand.Structural <= 0 && value.Structural > 0.000000000001)
+                throw new Exception("Invalid allocation of DM in Leaf");
+            if (value.Structural > 0.0)
             {
-                double StructuralDemand = 0.0;
-                double MetabolicDemand = 0.0;
-                double NonStructuralDemand = 0.0;
+                double DMsupply = value.Structural * DMConversionEfficiency.Value();
+                double DMallocated = 0;
+                double TotalDemand = Leaves.Sum(l => l.StructuralDMDemand);
+                double DemandFraction = value.Structural * DMConversionEfficiency.Value() / TotalDemand;
+                int i = 0;
                 foreach (LeafCohort L in Leaves)
                 {
-                    StructuralDemand += L.StructuralNDemand;
-                    MetabolicDemand += L.MetabolicNDemand;
-                    NonStructuralDemand += L.NonStructuralNDemand;
+                    i++;
+                    double Allocation = Math.Min(L.StructuralDMDemand * DemandFraction, DMsupply);
+                    StructuralDMAllocationCohort[i] = Allocation;
+                    DMallocated += Allocation;
+                    Allocated.StructuralWt += Allocation;
+                    DMsupply -= Allocation;
                 }
-                return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
+                if (DMsupply > 0.0000000001)
+                    throw new Exception("DM allocated to Leaf left over after allocation to leaf cohorts");
+                if (DMallocated - value.Structural * DMConversionEfficiency.Value() > 0.000000001)
+                    throw new Exception("the sum of DM allocation to leaf cohorts is more than that available to leaf organ");
             }
+
+            //Metabolic DM allocation
+            double[] MetabolicDMAllocationCohort = new double[Leaves.Count + 2];
+
+            if (DMDemand.Metabolic <= 0 && value.Metabolic > 0.000000000001)
+                throw new Exception("Invalid allocation of DM in Leaf");
+            if (value.Metabolic > 0.0)
+            {
+                double DMsupply = value.Metabolic * DMConversionEfficiency.Value();
+                double DMallocated = 0;
+                double TotalDemand = Leaves.Sum(l => l.MetabolicDMDemand);
+                double DemandFraction = value.Metabolic * DMConversionEfficiency.Value() / TotalDemand;
+                int i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    i++;
+                    double Allocation = Math.Min(L.MetabolicDMDemand * DemandFraction, DMsupply);
+                    MetabolicDMAllocationCohort[i] = Allocation;
+                    DMallocated += Allocation;
+                    Allocated.MetabolicWt += Allocation;
+                    DMsupply -= Allocation;
+                }
+                if (DMsupply > 0.0000000001)
+                    throw new Exception("Metabolic DM allocated to Leaf left over after allocation to leaf cohorts");
+                if (DMallocated - value.Metabolic * DMConversionEfficiency.Value() > 0.000000001)
+                    throw new Exception("the sum of Metabolic DM allocation to leaf cohorts is more that that allocated to leaf organ");
+            }
+
+            // excess allocation
+            double[] StorageDMAllocationCohort = new double[Leaves.Count + 2];
+            double TotalSinkCapacity = 0;
+            foreach (LeafCohort L in Leaves)
+                TotalSinkCapacity += L.StorageDMDemand;
+            if (value.Storage * DMConversionEfficiency.Value() > TotalSinkCapacity)
+            //Fixme, this exception needs to be turned on again
+            { }
+            //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
+            if (TotalSinkCapacity > 0.0)
+            {
+                double SinkFraction = (value.Storage * DMConversionEfficiency.Value()) / TotalSinkCapacity;
+                int i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    i++;
+                    double allocation = Math.Min(L.StorageDMDemand * SinkFraction, value.Storage * DMConversionEfficiency.Value());
+                    StorageDMAllocationCohort[i] = allocation;
+                }
+            }
+
+            // retranslocation
+            double[] DMRetranslocationCohort = new double[Leaves.Count + 2];
+
+            if (value.Retranslocation - DMSupply.Retranslocation > 0.0000000001)
+                throw new Exception(Name + " cannot supply that amount for DM retranslocation");
+            if (value.Retranslocation > 0)
+            {
+                double remainder = value.Retranslocation;
+                int i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    i++;
+                    double Supply = Math.Min(remainder, L.LeafStartDMRetranslocationSupply);
+                    DMRetranslocationCohort[i] = Supply;
+                    remainder -= Supply;
+                }
+                if (remainder > 0.0000000001)
+                    throw new Exception(Name + " DM Retranslocation demand left over after processing.");
+            }
+
+            // Reallocation
+            double[] DMReAllocationCohort = new double[Leaves.Count + 2];
+            if (value.Reallocation - DMSupply.Reallocation > 0.000000001)
+                throw new Exception(Name + " cannot supply that amount for DM Reallocation");
+            if (value.Reallocation < -0.000000001)
+                throw new Exception(Name + " recieved -ve DM reallocation");
+            if (value.Reallocation > 0)
+            {
+                double remainder = value.Reallocation;
+                int i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    i++;
+                    double ReAlloc = Math.Min(remainder, L.LeafStartDMReallocationSupply);
+                    remainder = Math.Max(0.0, remainder - ReAlloc);
+                    DMReAllocationCohort[i] = ReAlloc;
+                }
+                if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
+                   throw new Exception(Name + " DM Reallocation demand left over after processing.");
+
+            }
+
+            //Send allocations to cohorts
+            int a = 0;
+            foreach (LeafCohort L in Leaves)
+            {
+                a++;
+                L.DMAllocation = new BiomassAllocationType
+                {
+                    Structural = StructuralDMAllocationCohort[a],
+                    Metabolic = MetabolicDMAllocationCohort[a],
+                    Storage = StorageDMAllocationCohort[a],
+                    Retranslocation = DMRetranslocationCohort[a],
+                    Reallocation = DMReAllocationCohort[a],
+                };
+                needToRecalculateLiveDead = true;
+            }
+
+            double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
+            double CheckValue = StartWt + value.Structural * DMConversionEfficiency.Value() + value.Metabolic * DMConversionEfficiency.Value() + value.Storage * DMConversionEfficiency.Value() - value.Reallocation - value.Retranslocation - value.Respired;
+            double ExtentOfError = Math.Abs(EndWt - CheckValue);
+            double FloatingPointError = 0.00000001;
+            if (ExtentOfError > FloatingPointError)
+                throw new Exception(Name + "Not all leaf DM allocation was used");
         }
+
         /// <summary>Sets the n allocation.</summary>
-        [Units("g/m^2")]
-        public override BiomassAllocationType NAllocation
+        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            set
+            if (NDemand.Structural == 0 && nitrogen.Structural > 0) //FIXME this needs to be seperated into compoents
+                throw new Exception("Invalid allocation of N");
+
+            double StartN = Live.StructuralN + Live.MetabolicN + Live.StorageN;
+
+            double[] StructuralNAllocationCohort = new double[Leaves.Count + 2];
+            double[] MetabolicNAllocationCohort = new double[Leaves.Count + 2];
+            double[] StorageNAllocationCohort = new double[Leaves.Count + 2];
+            double[] NReallocationCohort = new double[Leaves.Count + 2];
+            double[] NRetranslocationCohort = new double[Leaves.Count + 2];
+
+            if (nitrogen.Structural + nitrogen.Metabolic + nitrogen.Storage > 0.0)
             {
+                //setup allocation variables
+                double[] CohortNAllocation = new double[Leaves.Count + 2];
+                double[] StructuralNDemand = new double[Leaves.Count + 2];
+                double[] MetabolicNDemand = new double[Leaves.Count + 2];
+                double[] StorageNDemand = new double[Leaves.Count + 2];
+                double TotalStructuralNDemand = 0;
+                double TotalMetabolicNDemand = 0;
+                double TotalStorageNDemand = 0;
 
-                if (NDemand.Structural == 0)
-                    if (value.Structural == 0) { }//All OK  FIXME this needs to be seperated into compoents
-                    else
-                        throw new Exception("Invalid allocation of N");
-
-                double StartN = Live.StructuralN + Live.MetabolicN + Live.NonStructuralN;
-
-                double[] StructuralNAllocationCohort = new double[Leaves.Count + 2];
-                double[] MetabolicNAllocationCohort = new double[Leaves.Count + 2];
-                double[] NonStructuralNAllocationCohort = new double[Leaves.Count + 2];
-                double[] NReallocationCohort = new double[Leaves.Count + 2];
-                double[] NRetranslocationCohort = new double[Leaves.Count + 2];
-                if ((value.Structural + value.Metabolic + value.NonStructural) == 0.0)
-                { }// do nothing
-                else
+                int i = 0;
+                foreach (LeafCohort L in Leaves)
                 {
-                    
-                    //setup allocation variables
-                    double[] CohortNAllocation = new double[Leaves.Count + 2];
-                    double[] StructuralNDemand = new double[Leaves.Count + 2];
-                    double[] MetabolicNDemand = new double[Leaves.Count + 2];
-                    double[] NonStructuralNDemand = new double[Leaves.Count + 2];
-                    double TotalStructuralNDemand = 0;
-                    double TotalMetabolicNDemand = 0;
-                    double TotalNonStructuralNDemand = 0;
-
-                    int i = 0;
-                    foreach (LeafCohort L in Leaves)
-                    {
-                        {
-                            i++;
-                            CohortNAllocation[i] = 0;
-                            StructuralNDemand[i] = L.StructuralNDemand;
-                            TotalStructuralNDemand += L.StructuralNDemand;
-                            MetabolicNDemand[i] = L.MetabolicNDemand;
-                            TotalMetabolicNDemand += L.MetabolicNDemand;
-                            NonStructuralNDemand[i] = L.NonStructuralNDemand;
-                            TotalNonStructuralNDemand += L.NonStructuralNDemand;
-                        }
-                    }
-                    double NSupplyValue = value.Structural;
-                    
-                    // first make sure each cohort gets the structural N requirement for growth (includes MinNconc for structural growth and MinNconc for nonstructural growth)
-                    if ((NSupplyValue > 0) & (TotalStructuralNDemand > 0))
-                    {
-                        i = 0;
-                        foreach (LeafCohort L in Leaves)
-                        {
-                            i++;
-                            StructuralNAllocationCohort[i] = Math.Min(StructuralNDemand[i], NSupplyValue * (StructuralNDemand[i] / TotalStructuralNDemand));
-                        }
-
-                    }
-                    // then allocate additional N relative to leaves metabolic demands
-                    NSupplyValue = value.Metabolic;
-                    if ((NSupplyValue > 0) & (TotalMetabolicNDemand > 0))
-                    {
-                        i = 0;
-                        foreach (LeafCohort L in Leaves)
-                        {
-                            i++;
-                            MetabolicNAllocationCohort[i] = Math.Min(MetabolicNDemand[i], NSupplyValue * (MetabolicNDemand[i] / TotalMetabolicNDemand));
-                        }
-                    }
-                    // then allocate excess N relative to leaves N sink capacity
-                    NSupplyValue = value.NonStructural;
-                    if ((NSupplyValue > 0) & (TotalNonStructuralNDemand > 0))
-                    {
-                        i = 0;
-                        foreach (LeafCohort L in Leaves)
-                        {
-                            i++;
-                            NonStructuralNAllocationCohort[i] += Math.Min(NonStructuralNDemand[i], NSupplyValue * (NonStructuralNDemand[i] / TotalNonStructuralNDemand));
-                        }
-                    }
+                    i++;
+                    CohortNAllocation[i] = 0;
+                    StructuralNDemand[i] = L.StructuralNDemand;
+                    TotalStructuralNDemand += L.StructuralNDemand;
+                    MetabolicNDemand[i] = L.MetabolicNDemand;
+                    TotalMetabolicNDemand += L.MetabolicNDemand;
+                    StorageNDemand[i] = L.StorageNDemand;
+                    TotalStorageNDemand += L.StorageNDemand;
                 }
+                double NSupplyValue = nitrogen.Structural;
 
-                // Retranslocation
-                if (value.Retranslocation - NSupply.Retranslocation > 0.000000001)
-                    throw new Exception(Name + " cannot supply that amount for N retranslocation");
-                if (value.Retranslocation < -0.000000001)
-                    throw new Exception(Name + " recieved -ve N retranslocation");
-                if (value.Retranslocation > 0)
+                // first make sure each cohort gets the structural N requirement for growth (includes MinNconc for structural growth and MinNconc for Storage growth)
+                if (NSupplyValue > 0 && TotalStructuralNDemand > 0)
                 {
-                    int i = 0;
-                    double remainder = value.Retranslocation;
+                    i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Retrans = Math.Min(remainder, L.LeafStartNRetranslocationSupply);
-                        NRetranslocationCohort[i] = Retrans;
-                        remainder = Math.Max(0.0, remainder - Retrans);
+                        StructuralNAllocationCohort[i] = Math.Min(StructuralNDemand[i], NSupplyValue * (StructuralNDemand[i] / TotalStructuralNDemand));
                     }
-                    if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
-                        throw new Exception(Name + " N Retranslocation demand left over after processing.");
-                }
 
-                // Reallocation
-                if (value.Reallocation - NSupply.Reallocation > 0.000000001)
-                    throw new Exception(Name + " cannot supply that amount for N Reallocation");
-                if (value.Reallocation < -0.000000001)
-                    throw new Exception(Name + " recieved -ve N reallocation");
-                if (value.Reallocation > 0)
+                }
+                // then allocate additional N relative to leaves metabolic demands
+                NSupplyValue = nitrogen.Metabolic;
+                if (NSupplyValue > 0 && TotalMetabolicNDemand > 0)
                 {
-                    int i = 0;
-                    double remainder = value.Reallocation;
+                    i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double ReAlloc = Math.Min(remainder, L.LeafStartNReallocationSupply);
-                        NReallocationCohort[i] = ReAlloc;
-                        remainder = Math.Max(0.0, remainder - ReAlloc);
+                        MetabolicNAllocationCohort[i] = Math.Min(MetabolicNDemand[i],
+                            NSupplyValue * (MetabolicNDemand[i] / TotalMetabolicNDemand));
                     }
-                    if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
-                        throw new Exception(Name + " N Reallocation demand left over after processing.");
                 }
-
-                //Send allocations to cohorts
-                int a = 0;
-                foreach (LeafCohort L in Leaves)
+                // then allocate excess N relative to leaves N sink capacity
+                NSupplyValue = nitrogen.Storage;
+                if (NSupplyValue > 0 && TotalStorageNDemand > 0)
                 {
-                    a++;
-                    L.NAllocation = new BiomassAllocationType
+                    i = 0;
+                    foreach (LeafCohort L in Leaves)
                     {
-                        Structural = StructuralNAllocationCohort[a],
-                        Metabolic = MetabolicNAllocationCohort[a],
-                        NonStructural = NonStructuralNAllocationCohort[a],
-                        Retranslocation = NRetranslocationCohort[a],
-                        Reallocation = NReallocationCohort[a],
-                    };
+                        i++;
+                        StorageNAllocationCohort[i] += Math.Min(StorageNDemand[i], NSupplyValue * (StorageNDemand[i] / TotalStorageNDemand));
+                    }
                 }
-
-                double EndN = Live.StructuralN + Live.MetabolicN + Live.NonStructuralN;
-                double CheckValue = StartN + value.Structural + value.Metabolic + value.NonStructural - value.Reallocation - value.Retranslocation - value.Respired;
-                double ExtentOfCockUp = Math.Abs(EndN - CheckValue);
-                double FloatingPointError = 0.00000001;
-                if (ExtentOfCockUp > FloatingPointError)
-                    throw new Exception(Name + "Leaf N allocation has gone squiffy");
             }
-        }
-        /// <summary>Gets or sets the n supply.</summary>
-        [Units("g/m^2")]
-        public override BiomassSupplyType NSupply
-        {
-            get
+
+            // Retranslocation
+            if (nitrogen.Retranslocation - NSupply.Retranslocation > 0.000000001)
+                throw new Exception(Name + " cannot supply that amount for N retranslocation");
+            if (nitrogen.Retranslocation < -0.000000001)
+                throw new Exception(Name + " recieved -ve N retranslocation");
+            if (nitrogen.Retranslocation > 0)
             {
-                double RetransSupply = 0;
-                double ReallocationSupply = 0;
+                int i = 0;
+                double remainder = nitrogen.Retranslocation;
                 foreach (LeafCohort L in Leaves)
                 {
-                    RetransSupply += Math.Max(0, L.LeafStartNRetranslocationSupply);
-                    ReallocationSupply += L.LeafStartNReallocationSupply;
+                    i++;
+                    double Retrans = Math.Min(remainder, L.LeafStartNRetranslocationSupply);
+                    NRetranslocationCohort[i] = Retrans;
+                    remainder = Math.Max(0.0, remainder - Retrans);
                 }
-
-                return new BiomassSupplyType { Retranslocation = RetransSupply, Reallocation = ReallocationSupply };
+                if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
+                    throw new Exception(Name + " N Retranslocation demand left over after processing.");
             }
-        }
 
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        public double MaxNconc
-        {
-            get
+            // Reallocation
+            if (nitrogen.Reallocation - NSupply.Reallocation > 0.000000001)
+                throw new Exception(Name + " cannot supply that amount for N Reallocation");
+            if (nitrogen.Reallocation < -0.000000001)
+                throw new Exception(Name + " recieved -ve N reallocation");
+            if (nitrogen.Reallocation > 0)
             {
-                return CohortParameters.MaximumNConc.Value;
+                int i = 0;
+                double remainder = nitrogen.Reallocation;
+                foreach (LeafCohort L in Leaves)
+                {
+                    i++;
+                    double ReAlloc = Math.Min(remainder, L.LeafStartNReallocationSupply);
+                    NReallocationCohort[i] = ReAlloc;
+                    remainder = Math.Max(0.0, remainder - ReAlloc);
+                }
+                if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
+                    throw new Exception(Name + " N Reallocation demand left over after processing.");
             }
+
+            //Send allocations to cohorts
+            int a = 0;
+            foreach (LeafCohort L in Leaves)
+            {
+                a++;
+                L.NAllocation = new BiomassAllocationType
+                {
+                    Structural = StructuralNAllocationCohort[a],
+                    Metabolic = MetabolicNAllocationCohort[a],
+                    Storage = StorageNAllocationCohort[a],
+                    Retranslocation = NRetranslocationCohort[a],
+                    Reallocation = NReallocationCohort[a],
+                };
+            }
+            needToRecalculateLiveDead = true;
+
+            double endN = Live.StructuralN + Live.MetabolicN + Live.StorageN;
+            double checkValue = StartN + nitrogen.Structural + nitrogen.Metabolic + nitrogen.Storage -
+                                nitrogen.Reallocation - nitrogen.Retranslocation - nitrogen.Respired;
+            double extentOfError = Math.Abs(endN - checkValue);
+            if (extentOfError > 0.00000001)
+                throw new Exception(Name + "Some Leaf N was not allocated.");
         }
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         public override double MinNconc
         {
             get
             {
-                return CohortParameters.CriticalNConc.Value;
+                return CohortParameters.CriticalNConc.Value();
             }
         }
+
+        /// <summary>Gets the total biomass</summary>
+        public Biomass Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the total grain weight</summary>
+        [Units("g/m2")]
+        public double Wt { get { return Total.Wt; } }
+
+        /// <summary>Gets the total grain N</summary>
+        [Units("g/m2")]
+        public double N { get { return Total.N; } }
+
         #endregion
 
-        #region Event handlers and publishers
+        #region Event handlers
 
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
-
-        /// <summary>Called when [prune].</summary>
-        /// <param name="Prune">The prune.</param>
-        [EventSubscribe("Prune")]
-        private void OnPrune(PruneType Prune)
-        {
-            Structure.PrimaryBudNo = Prune.BudNumber;
-            ZeroLeaves();
-        }
 
         /// <summary>Called when [remove lowest leaf].</summary>
         [EventSubscribe("RemoveLowestLeaf")]
@@ -1541,8 +1795,9 @@ namespace Models.PMF.Organs
         {
             Summary.WriteMessage(this, "Removing lowest Leaf");
             Leaves.RemoveAt(0);
+            needToRecalculateLiveDead = true;
         }
-        
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1551,11 +1806,11 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                Clear();
+                MicroClimatePresent = false;
+                Reset();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
-                FudgeToGetETDemandRight = 1.0;
             }
         }
 
@@ -1565,37 +1820,44 @@ namespace Models.PMF.Organs
         private void OnKillLeaf(KillLeafType KillLeaf)
         {
             Summary.WriteMessage(this, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
-
             foreach (LeafCohort L in Leaves)
+            {
                 L.DoKill(KillLeaf.KillFraction);
-
+                needToRecalculateLiveDead = true;
+            }
         }
 
-        /// <summary>Called when crop is being cut.</summary>
+
+        /// <summary>Called when crop is being prunned.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, EventArgs e)
+        [EventSubscribe("Pruning")]
+        private void OnPruning(object sender, EventArgs e)
         {
-            if (sender == Plant)
-            {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+            Structure.PotLeafTipsAppeared = 0;
+            Structure.CohortToInitialise = 0;
+            Structure.TipToAppear =  0;
+            Structure.Emerged = false;
+            Structure.Clear();
+            Structure.ResetStemPopn();
+            Structure.LeafTipsAppeared = 0;
+            Structure.NextLeafProportion = 1.0;
 
-                if (Wt > 0)
-                    SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-                Live.Clear();
-                Dead.Clear();
-                Leaves.Clear();
-                CohortsAtInitialisation = 0;
-            }
+            Leaves.Clear();
+            needToRecalculateLiveDead = true;
+            CohortsAtInitialisation = 0;
+            TipsAtEmergence = 0;
+            Structure.Germinated = false;            
+
         }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
+            base.OnSimulationCommencing(sender, e);
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
@@ -1608,6 +1870,15 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
+            Biomass total = Live + Dead;
+            if (total.Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
+            }
+
+            Reset();
             CohortsAtInitialisation = 0;
         }
 
@@ -1620,5 +1891,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
+
     }
 }

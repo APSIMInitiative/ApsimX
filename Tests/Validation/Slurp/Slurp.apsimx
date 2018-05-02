@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="18">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>TitlePage</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <MemoText><![CDATA[# SLURP: the Sound of a crop using water
+
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  
+
+SLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  
+   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  
+   2. Root which extracts water and nitrogen from the soil for plant growth  
+ 
+
+##Inclusion in APSIM simulations
+A Slurp crop is included in a simulation the same as any other APSIM crop  
+ * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
+ * It is then planted with a sowing rule  
+<pre><code class='language-cs'>
+Slurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  
+</code></pre>
+  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
+  * depth in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation
+
+##Altering Slurp properties during runs
+In some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.
+
+<pre><code class='language-cs'>
+object LAIResetValue = leaflai;  
+zone.Set("Slurp.Leaf.LAIFunction.Value()", LAIResetValue);  
+object HeightResetValue = CoverToday * MaximumHeight;  
+zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);]]></MemoText>
+  </Memo>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>ProfileSWC</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>ProfileSWC</string>
@@ -12,6 +44,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>LayerSWC</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\SoilWaterContent.xlsx</FileName>
       <SheetNames>
         <string>LayerSWC</string>
@@ -19,6 +52,7 @@
     </ExcelInput>
     <ExcelInput>
       <Name>Cover</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverDataObs.xlsx</FileName>
       <SheetNames>
         <string>Cover</string>
@@ -26,6 +60,7 @@
     </ExcelInput>
     <Input>
       <Name>Input</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <ErrorMessage>Specified cast is not valid.</ErrorMessage>
       <FileName>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</FileName>
     </Input>
@@ -33,25 +68,27 @@
       <Name>ProfileWater</Name>
       <Tests>
         <Name>Tests</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>PSWC</Name>
             <n>448</n>
-            <Slope>0.7433261264647274</Slope>
-            <Intercept>47.537470959176346</Intercept>
-            <SEslope>0.03277526941183221</SEslope>
-            <SEintercept>7.3535171699026964</SEintercept>
-            <R2>0.53559028585105173</R2>
-            <RMSE>35.532319544018662</RMSE>
-            <NSE>0.41946951656353215</NSE>
-            <ME>-8.7925834333041433</ME>
-            <MAE>27.354327596053118</MAE>
-            <RSR>0.76107467206872115</RSR>
+            <Slope>0.75529467401224393</Slope>
+            <Intercept>46.641922387743136</Intercept>
+            <SEslope>0.032635564267904586</SEslope>
+            <SEintercept>7.3221726777587319</SEintercept>
+            <R2>0.54564549406362484</R2>
+            <RMSE>34.830827822681485</RMSE>
+            <NSE>0.44216532820903054</NSE>
+            <ME>-7.0614956234619486</ME>
+            <MAE>26.92381385501173</MAE>
+            <RSR>0.74604926453476561</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>ProfileWater</POName>
       </Tests>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ProfileSWC</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -60,6 +97,7 @@
       <Name>CanopyCover</Name>
       <Tests>
         <Name>Tests</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>Slurp.Leaf.CoverTotal</Name>
@@ -79,33 +117,38 @@
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>CanopyCover</POName>
       </Tests>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Cover</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </DataStore>
   <Simulation>
     <Name>SlurpTestBase</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <MemoText><![CDATA[This is a simple test that plants SLURP, changes its leaf area index and potential biomass production on one occasion and presents some graphs of Plant, N and Water balance components to show things are working.]]></MemoText>
     </Memo>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <StartDate>1998-10-14T00:00:00</StartDate>
       <EndDate>1999-05-01T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Summary>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
@@ -113,6 +156,7 @@
         <Name>Soil</Name>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -134,6 +178,7 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
@@ -142,6 +187,7 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>SlurpSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -169,6 +215,7 @@
           </SoilCrop>
           <SoilCrop>
             <Name>PotatoSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -194,6 +241,7 @@
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -245,6 +293,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -289,6 +338,7 @@
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -321,25 +371,10 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-          <oc>
-            <double>1.8356606676098439</double>
-            <double>1.4633385968844384</double>
-            <double>1.1988393325681357</double>
-            <double>1.0301002994895852</double>
-            <double>0.4703383219429832</double>
-            <double>0.47013790451920212</double>
-          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <RootCN>30</RootCN>
           <RootWt>3000</RootWt>
           <SoilCN>11.5</SoilCN>
@@ -389,6 +424,7 @@
         </SoilOrganicMatter>
         <Sample>
           <Name>Initial nitrogen</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -419,6 +455,11 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType />
         <LocalName />
@@ -428,41 +469,40 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>Slurp</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <ResourceName>Slurp</ResourceName>
         <CropType>Slurp</CropType>
-        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Fertiliser>
       <Manager>
         <Name>SlurpSowingRule</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Script>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
@@ -511,6 +551,7 @@ namespace Models
       </Manager>
       <Manager>
         <Name>ExtraVariables</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Script />
         <Code><![CDATA[using System;
 using Models.Core;
@@ -642,7 +683,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -650,15 +691,18 @@ namespace Models
       </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypesList</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <TillageType />
         </TillageTypes>
         <Pools>
@@ -692,6 +736,7 @@ namespace Models
       </SurfaceOrganicMatter>
       <Operations>
         <Name>operations</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Operation>
           <Date>1998-10-02T00:00:00</Date>
           <Action>[Irrigation].Apply(40);</Action>
@@ -739,6 +784,7 @@ namespace Models
       </Operations>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -785,11 +831,11 @@ namespace Models
           <string>[Slurp].Leaf.CoverDead</string>
           <string>[Slurp].Leaf.LAI</string>
           <string>[Slurp].Leaf.Height</string>
-          <string>[Slurp].Leaf.PotentialBiomass.Value</string>
+          <string>[Slurp].Leaf.PotentialBiomass.Value()</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[Slurp].Arbitrator.NDemand</string>
+          <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -807,8 +853,9 @@ namespace Models
       </Report>
       <Manager>
         <Name>ResetProduction</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Script>
-          <OverRidePath>Slurp.Leaf.Photosynthesis.Value</OverRidePath>
+          <OverRidePath>Slurp.Leaf.Photosynthesis.FixedValue</OverRidePath>
           <OverRideInterger>2</OverRideInterger>
           <ChangeDate>1998-11-14</ChangeDate>
         </Script>
@@ -852,8 +899,9 @@ namespace Models
       </Manager>
       <Manager>
         <Name>ResetLAI</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Script>
-          <OverRidePath>Slurp.Leaf.LAIFunction.Value</OverRidePath>
+          <OverRidePath>Slurp.Leaf.LAIFunction.FixedValue</OverRidePath>
           <OverRideInterger>3</OverRideInterger>
           <ChangeDate>1999-01-01</ChangeDate>
         </Script>
@@ -895,13 +943,19 @@ namespace Models
 }
 	   ]]></Code>
       </Manager>
-      <Area>0</Area>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
       <Name>N balance components</Name>
       <Series>
         <Name>AccumPlantN</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -923,6 +977,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumMineralisation</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -944,6 +999,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumDenit</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -965,6 +1021,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumFert</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -986,6 +1043,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumLeach</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1007,6 +1065,7 @@ namespace Models
       </Series>
       <Series>
         <Name>DeltaSoilOMN</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1028,6 +1087,7 @@ namespace Models
       </Series>
       <Series>
         <Name>DeltaSurfaceOMN</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1049,6 +1109,7 @@ namespace Models
       </Series>
       <Series>
         <Name>DeltaSoilMineralN</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1068,6 +1129,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
@@ -1086,12 +1148,12 @@ namespace Models
       </Axis>
       <LegendPosition>BottomLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
       <Series>
         <Name>AccumEO</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1113,6 +1175,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumEP</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1134,6 +1197,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumES</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1155,6 +1219,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumDrainage</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1176,6 +1241,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumRunoff</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1197,6 +1263,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumRainfall</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1218,6 +1285,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumIrrigation</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1239,6 +1307,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AccumLatOutFlow</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1260,6 +1329,7 @@ namespace Models
       </Series>
       <Series>
         <Name>SoilWaterDeficit</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1279,6 +1349,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Accumulated Water Changes (mm)</Title>
@@ -1296,12 +1367,12 @@ namespace Models
       </Axis>
       <LegendPosition>BottomLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Biomass components</Name>
       <Series>
         <Name>Leaf</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1323,6 +1394,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Root</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1342,6 +1414,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Crop Biomass (g/m2)</Title>
@@ -1359,12 +1432,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
       <Series>
         <Name>Leaf</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1386,6 +1459,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Root</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1405,6 +1479,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Crop Nitrogen (g/m2)</Title>
@@ -1422,12 +1497,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
       <Series>
         <Name>Supply</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1449,6 +1524,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Uptake</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1470,6 +1546,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Demand</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1491,6 +1568,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Transpiration</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1512,6 +1590,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Potential</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1533,6 +1612,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Root Depth</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
@@ -1554,6 +1634,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Canopy Height</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
@@ -1573,6 +1654,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Water (mm)</Title>
@@ -1598,12 +1680,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Crop structure</Name>
       <Series>
         <Name>Cover Total</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1625,6 +1707,7 @@ namespace Models
       </Series>
       <Series>
         <Name>LAI</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1646,6 +1729,7 @@ namespace Models
       </Series>
       <Series>
         <Name>RootDepth</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
@@ -1665,6 +1749,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Cover and LAI</Title>
@@ -1689,12 +1774,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N supply and demand</Name>
       <Series>
         <Name>Series 0</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1708,7 +1793,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Slurp.Arbitrator.NDemand</YFieldName>
+        <YFieldName>Slurp.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1716,6 +1801,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Series2</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1735,6 +1821,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Nitrogen (g/m2)</Title>
@@ -1752,12 +1839,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Stress Factors</Name>
       <Series>
         <Name>FW</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1779,6 +1866,7 @@ namespace Models
       </Series>
       <Series>
         <Name>FN</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1798,6 +1886,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Water (mm)</Title>
@@ -1815,15 +1904,14 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Simulation>
   <Experiment>
     <Name>Tests</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText><![CDATA[This test has combinations of different Soils and Climate with Slurp run over 10 years and an automatic irrigation rule included.  This demonstrats that simulations including Slurp can generate sensible patterns in irrgation, drainage, runoff and potential water stress index]]></MemoText>
     </Memo>
     <Factors>
@@ -1832,6 +1920,7 @@ namespace Models
         <Name>Climate</Name>
         <Factor>
           <Name>P087073</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P087073.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
@@ -1839,6 +1928,7 @@ namespace Models
         </Factor>
         <Factor>
           <Name>P108081</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P108081.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
@@ -1846,11 +1936,13 @@ namespace Models
         </Factor>
         <Factor>
           <Name>P128077</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P128077.met</string>
             <string>[Clock].StartDate = 1980-03-01</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications />
       </Factor>
       <Factor>
@@ -1861,6 +1953,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>SLURPSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.033</double>
                 <double>0.027</double>
@@ -1886,6 +1979,7 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -1945,6 +2039,7 @@ namespace Models
           </Water>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -1964,6 +2059,7 @@ namespace Models
           </Analysis>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Oct</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -1998,6 +2094,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -2030,17 +2127,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>11</SoilCN>
@@ -2085,12 +2175,14 @@ namespace Models
           </SoilOrganicMatter>
           <InitialWater>
             <Name>InitialWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -2115,6 +2207,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType>NZ_sedementary</SoilType>
           <Site>-</Site>
@@ -2124,7 +2221,6 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
@@ -2134,6 +2230,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>SLURPSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.154</double>
                 <double>0.152</double>
@@ -2159,6 +2256,7 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>200</double>
               <double>150</double>
@@ -2218,6 +2316,7 @@ namespace Models
           </Water>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>200</double>
               <double>150</double>
@@ -2239,6 +2338,7 @@ namespace Models
           </Analysis>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Oct</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -2275,6 +2375,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -2307,17 +2408,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>11</SoilCN>
@@ -2367,12 +2461,14 @@ namespace Models
           </SoilOrganicMatter>
           <InitialWater>
             <Name>InitialWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -2397,6 +2493,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType>NZ_sedementary</SoilType>
           <Site>-</Site>
@@ -2406,7 +2507,6 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
@@ -2414,6 +2514,7 @@ namespace Models
           <Name>M </Name>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>11</SoilCN>
@@ -2460,6 +2561,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>SLURPSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.1535</double>
                 <double>0.201</double>
@@ -2482,6 +2584,7 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>250</double>
               <double>350</double>
@@ -2534,6 +2637,7 @@ namespace Models
           </Water>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>250</double>
               <double>300</double>
@@ -2553,6 +2657,7 @@ namespace Models
           </Analysis>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Oct</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -2587,6 +2692,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -2619,17 +2725,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>11</SoilCN>
@@ -2674,12 +2773,14 @@ namespace Models
           </SoilOrganicMatter>
           <InitialWater>
             <Name>InitialWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -2704,6 +2805,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType>NZ_sedementary</SoilType>
           <Site>-</Site>
@@ -2713,51 +2819,59 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
           <string>[Soil]</string>
         </Specifications>
       </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
     <Simulation>
       <Name>SoilXClimateBase</Name>
       <Weather>
         <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FileName>%root%\Tests\Validation\Slurp\Weather\P087073.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>1980-03-01T00:00:00</StartDate>
         <EndDate>1990-03-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoilArbitrator>
       <Zone>
         <Name>Field</Name>
         <Plant>
           <Name>Slurp</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Slurp</ResourceName>
           <CropType>Slurp</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PondActive>no</PondActive>
           <ReportAdditions>no</ReportAdditions>
           <ReportRemovals>no</ReportRemovals>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
           <TillageTypes>
             <Name>TillageTypesList</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <TillageType />
           </TillageTypes>
           <Pools>
@@ -2791,31 +2905,31 @@ namespace Models
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Fertiliser>
         <Manager>
           <Name>SowPasture</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <CultivarName>Pasture</CultivarName>
             <InitialRootDepth>10</InitialRootDepth>
@@ -2869,6 +2983,7 @@ namespace Models
         </Manager>
         <Manager>
           <Name>ExtraVariables</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script />
           <Code><![CDATA[using System;
 using Models.Core;
@@ -2981,7 +3096,7 @@ namespace Models
 			MeanFW = AccumFW / AccumDays;
 			
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			DUL = MathUtilities.Sum(Soil.DULmm);
 		}
 	}
 }
@@ -2989,6 +3104,7 @@ namespace Models
         </Manager>
         <Manager>
           <Name>GrowAndGrazeCanopy</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <MaxLAI>5</MaxLAI>
             <LAIRate>0.012</LAIRate>
@@ -3048,9 +3164,9 @@ namespace Models
 				Summary.WriteMessage(this, "Defoliation today reduced LAI to " + LAI);
 			}
 			object LeafLAI = LAI;
-			zone.Set("Slurp.Leaf.LAIFunction.Value", LeafLAI);
+			zone.Set("Slurp.Leaf.LAIFunction.FixedValue", LeafLAI);
 			object Height = MaximumHeight * (LAI / MaxLAI);
-			zone.Set("Slurp.Leaf.HeightFunction.Value", Height);  
+			zone.Set("Slurp.Leaf.HeightFunction.FixedValue", Height);  
 		}
 	}
 }
@@ -3058,6 +3174,7 @@ namespace Models
         </Manager>
         <Manager>
           <Name>IrrigationControl</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <Irrigation_Yes_No>yes</Irrigation_Yes_No>
             <Season_Start>1-Oct</Season_Start>
@@ -3150,10 +3267,10 @@ namespace Models
 			Accumulated_depth = 0;
 			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 			{
-				Top_LL += Soil.SoilWater.LL15mm[layer];
-				Top_DUL += Soil.SoilWater.DULmm[layer];
-				Top_PAWC += (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				Top_LL += Soil.LL15mm[layer];
+				Top_DUL += Soil.DULmm[layer];
+				Top_PAWC += (Soil.DULmm[layer] - Soil.LL15mm[layer]);
+				Accumulated_depth += Soil.Thickness[layer];
 			}
 			Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
 		}
@@ -3216,7 +3333,7 @@ namespace Models
 			for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
 			{
 				Top_SW += Soil.SoilWater.SWmm[layer];
-				Accumulated_depth += Soil.SoilWater.Thickness[layer];
+				Accumulated_depth += Soil.Thickness[layer];
 			}
 			double Top_SWThisAfternoon = Top_SW - Soil.SoilWater.Eo;
 			if (Top_SWThisAfternoon <= Top_Trigger)
@@ -3252,6 +3369,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>SLURPSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.033</double>
                 <double>0.027</double>
@@ -3274,6 +3392,7 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -3326,6 +3445,7 @@ namespace Models
           </Water>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -3345,6 +3465,7 @@ namespace Models
           </Analysis>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Oct</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -3379,6 +3500,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -3411,17 +3533,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>11</SoilCN>
@@ -3466,12 +3581,14 @@ namespace Models
           </SoilOrganicMatter>
           <InitialWater>
             <Name>InitialWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>80</double>
               <double>50</double>
@@ -3496,6 +3613,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType>NZ_sedementary</SoilType>
           <Site>-</Site>
@@ -3505,12 +3627,12 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
         <Report>
           <Name>AnnualSummary</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -3531,13 +3653,19 @@ namespace Models
             <string>[Slurp].Harvesting</string>
           </EventNames>
         </Report>
-        <Area>0</Area>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Graph>
         <Name>WaterBalanceComponents</Name>
         <Series>
           <Name>AccumEO</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3559,6 +3687,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumEP</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3580,6 +3709,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumES</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3601,6 +3731,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumDrainage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3622,6 +3753,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumRunoff</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3643,6 +3775,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumRainfall</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3664,6 +3797,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumIrrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3685,6 +3819,7 @@ namespace Models
         </Series>
         <Series>
           <Name>SoilWaterDeficit</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3704,6 +3839,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Accumulated Water Changes (mm)</Title>
@@ -3721,12 +3857,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>CanopyAndRoots</Name>
         <Series>
           <Name>Cover</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3748,6 +3884,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Height</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3769,6 +3906,7 @@ namespace Models
         </Series>
         <Series>
           <Name>RootDepth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -3788,6 +3926,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Water (mm)</Title>
@@ -3812,12 +3951,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Irrigation</Name>
         <Series>
           <Name>DUL</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3839,6 +3978,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Refill</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3860,6 +4000,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Trigger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3881,6 +4022,7 @@ namespace Models
         </Series>
         <Series>
           <Name>SWC</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3902,6 +4044,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3923,6 +4066,7 @@ namespace Models
         </Series>
         <Series>
           <Name>IrrigationApplied</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3944,6 +4088,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LL</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3963,6 +4108,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Water (mm)</Title>
@@ -3980,12 +4126,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stress</Name>
         <Series>
           <Name>StressIndex</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4005,6 +4151,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Water (mm)</Title>
@@ -4022,12 +4169,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Annual WaterBalanceComponents</Name>
         <Series>
           <Name>AccumEO</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4049,6 +4196,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumEP</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4070,6 +4218,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumES</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4091,6 +4240,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumDrainage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4112,6 +4262,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumRunoff</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4133,6 +4284,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumRainfall</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4154,6 +4306,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumIrrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4173,6 +4326,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Accumulated Water Changes (mm)</Title>
@@ -4190,19 +4344,18 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
     <Graph>
       <Name>Rainfall</Name>
       <Series>
         <Name>Rain</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -4218,6 +4371,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Rainfall (mm)</Title>
@@ -4235,16 +4389,16 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>PAWC</Name>
       <Series>
         <Name>Runoff</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -4260,6 +4414,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>fresh Yield (g/m2)</Title>
@@ -4277,16 +4432,16 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Irrigation</Name>
       <Series>
         <Name>Irrigation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -4302,6 +4457,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Irrigation (mm)</Title>
@@ -4319,16 +4475,16 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Drainage</Name>
       <Series>
         <Name>Drain</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -4344,6 +4500,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Drainage (mm)</Title>
@@ -4361,16 +4518,16 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Runoff</Name>
       <Series>
         <Name>Runoff</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -4386,6 +4543,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>RunOff (mm)</Title>
@@ -4403,16 +4561,16 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>IrrigationVsRainfall</Name>
       <Series>
         <Name>Irrigation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4428,6 +4586,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Irrigation (mm)</Title>
@@ -4445,16 +4604,16 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DrainageVsRainfall</Name>
       <Series>
         <Name>Drainage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4470,6 +4629,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Drainage (mm)</Title>
@@ -4487,16 +4647,16 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>StressIndex</Name>
       <Series>
         <Name>Runoff</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -4512,6 +4672,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Left</Type>
         <Title>Stress Index (0-1)</Title>
@@ -4529,13 +4690,14 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <Experiment>
     <Name>LandP</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText><![CDATA[In this test we run Slurp against a dataset of Soil water content measured over 3 years under lucerne with different irrigation treatments applied.  Slurp was able to reproduce the tempeoral patterns of the 4 different irrigation treatments with adequate accuracy.]]></MemoText>
     </Memo>
     <Factors>
@@ -4546,6 +4708,7 @@ namespace Models
           <Name>TwoPerWeek</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>2011-11-07T00:00:00</Date>
               <Action>[Irrigation].Apply(30);</Action>
@@ -4907,6 +5070,7 @@ namespace Models
               <Action>[Irrigation].Apply(10);</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[IrrigationEvents]</string>
             <string>[SetCropVariables].Script.Irrigation = High</string>
@@ -4916,6 +5080,7 @@ namespace Models
           <Name>OnePerWeek</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>2011-11-07T00:00:00</Date>
               <Action>[Irrigation].Apply(30);</Action>
@@ -5073,6 +5238,7 @@ namespace Models
               <Action>[Irrigation].Apply(32);</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[IrrigationEvents]</string>
             <string>[SetCropVariables].Script.Irrigation = Med</string>
@@ -5082,6 +5248,7 @@ namespace Models
           <Name>ThreeWeekly</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>2011-11-07T00:00:00</Date>
               <Action>[Irrigation].Apply(30);</Action>
@@ -5187,6 +5354,7 @@ namespace Models
               <Action>[Irrigation].Apply(32);</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[IrrigationEvents]</string>
             <string>[SetCropVariables].Script.Irrigation = Low</string>
@@ -5196,22 +5364,26 @@ namespace Models
           <Name>None</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
               <Date>2013-02-28T00:00:00</Date>
               <Action>[Irrigation].Apply(20);</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[IrrigationEvents]</string>
             <string>[SetCropVariables].Script.Irrigation = Rain</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications />
       </Factor>
       <Factor>
         <Name>CoverType</Name>
         <Factor>
           <Name>Lucerne</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[SlurpSowingRule].Script.SowingDate=2011-03-10</string>
             <string>[SlurpSowingRule].Script.CultivarName=Lucerne</string>
@@ -5221,6 +5393,7 @@ namespace Models
         </Factor>
         <Factor>
           <Name>Pasture</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[SlurpSowingRule].Script.SowingDate=2011-03-24</string>
             <string>[SlurpSowingRule].Script.CultivarName=Pasture</string>
@@ -5228,25 +5401,31 @@ namespace Models
             <string>[SetCropVariables].Script.Cover = Ryegrass</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications />
       </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
     <Simulation>
       <Name>LandPBase</Name>
       <Weather>
         <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>2011-03-01T00:00:00</StartDate>
         <EndDate>2014-05-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoilArbitrator>
       <Zone>
         <Name>Field</Name>
@@ -5254,6 +5433,7 @@ namespace Models
           <Name>Soil</Name>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -5275,6 +5455,7 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -5283,6 +5464,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>SlurpSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -5329,6 +5511,7 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -5422,6 +5605,7 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -5487,6 +5671,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -5519,25 +5704,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
-            <oc>
-              <double>1.8356606676098439</double>
-              <double>1.4633385968844384</double>
-              <double>1.1988393325681357</double>
-              <double>1.0301002994895852</double>
-              <double>0.4703383219429832</double>
-              <double>0.47013790451920212</double>
-            </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>30</RootCN>
             <RootWt>3000</RootWt>
             <SoilCN>11.5</SoilCN>
@@ -5587,6 +5757,7 @@ namespace Models
           </SoilOrganicMatter>
           <Sample>
             <Name>Initial nitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -5617,6 +5788,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -5626,50 +5802,51 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>Slurp</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Slurp</ResourceName>
           <CropType>Slurp</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PondActive>no</PondActive>
           <ReportAdditions>no</ReportAdditions>
           <ReportRemovals>no</ReportRemovals>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
           <TillageTypes>
             <Name>TillageTypesList</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <TillageType />
           </TillageTypes>
           <Pools>
@@ -5703,6 +5880,7 @@ namespace Models
         </SurfaceOrganicMatter>
         <Operations>
           <Name>IrrigationEvents</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1998-10-02T00:00:00</Date>
             <Action>[Irrigation].Apply(40);</Action>
@@ -5762,6 +5940,7 @@ namespace Models
         </Operations>
         <Manager>
           <Name>ExtraVariables</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script />
           <Code><![CDATA[using System;
 using Models.Core;
@@ -5835,6 +6014,7 @@ namespace Models
         </Manager>
         <Manager>
           <Name>SlurpSowingRule</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <CultivarName>Lucerne</CultivarName>
             <InitialRootDepth>15</InitialRootDepth>
@@ -5883,6 +6063,7 @@ namespace Models
         </Manager>
         <Report>
           <Name>Report</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -5918,9 +6099,9 @@ namespace Models
             <string>[MicroClimate].petr</string>
             <string>[SetLAIofCrop].Script.leaflai</string>
             <string>sum([Soil].SoilWater.SWmm[1:9]) as PSWC</string>
-            <string>SetCropVariables.Script.Treatment</string>
-            <string>SetCropVariables.Script.CoverRead</string>
-            <string>SetCropVariables.Script.Cover as Cover</string>
+            <string>[SetCropVariables].Script.Treatment</string>
+            <string>[SetCropVariables].Script.CoverRead</string>
+            <string>[SetCropVariables].Script.Cover as Cover</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -5928,14 +6109,15 @@ namespace Models
         </Report>
         <Manager>
           <Name>SetCropVariables</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
-            <Ext_coef>0.8</Ext_coef>
+            <Irrigation>
+            </Irrigation>
             <MaximumHeight>600</MaximumHeight>
             <Cover>
             </Cover>
-            <Irrigation>
-            </Irrigation>
+            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+            <Ext_coef>0.8</Ext_coef>
             <Treatment>
             </Treatment>
             <leaflai>0</leaflai>
@@ -6018,22 +6200,28 @@ namespace Models
 				}
 				//Summary.WriteMessage(this, "LAI " + leaflai);
 				object LAIResetValue = leaflai;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+				zone.Set("Slurp.Leaf.LAIFunction.FixedValue", LAIResetValue);  
 				object HeightResetValue = CoverRead * MaximumHeight;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
+				zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);  
 			}
 		}
 	}
 }
 				]]></Code>
         </Manager>
-        <Area>0</Area>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Graph>
         <Name>N balance components</Name>
         <Series>
           <Name>AccumPlantN</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6055,6 +6243,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumMineralisation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6076,6 +6265,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumDenit</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6097,6 +6287,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumFert</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6118,6 +6309,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumLeach</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6139,6 +6331,7 @@ namespace Models
         </Series>
         <Series>
           <Name>DeltaSoilOMN</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6160,6 +6353,7 @@ namespace Models
         </Series>
         <Series>
           <Name>DeltaSurfaceOMN</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6181,6 +6375,7 @@ namespace Models
         </Series>
         <Series>
           <Name>DeltaSoilMineralN</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6200,6 +6395,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
@@ -6218,12 +6414,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>WaterBalanceComponents</Name>
         <Series>
           <Name>Pond</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6245,6 +6441,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumEO</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6266,6 +6463,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumEP</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6287,6 +6485,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumES</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6308,6 +6507,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumDrainage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6329,6 +6529,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumRunoff</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6350,6 +6551,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumRainfall</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6371,6 +6573,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumIrrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6392,6 +6595,7 @@ namespace Models
         </Series>
         <Series>
           <Name>AccumLatOutFlow</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6413,6 +6617,7 @@ namespace Models
         </Series>
         <Series>
           <Name>SoilWaterDeficit</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6432,6 +6637,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Accumulated Water Changes (mm)</Title>
@@ -6449,12 +6655,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Plant Biomass components</Name>
         <Series>
           <Name>Leaf</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6476,6 +6682,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Stem</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6497,6 +6704,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Tuber</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6518,6 +6726,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Root</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6539,6 +6748,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Dead Leaf</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6560,6 +6770,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Dead Step</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6581,6 +6792,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Dead Tuber</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6602,6 +6814,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Root Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6623,6 +6836,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Above Ground Wt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6644,6 +6858,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Below Ground Wt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6665,6 +6880,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Total Wt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6684,6 +6900,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Crop Biomass (g/m2)</Title>
@@ -6701,12 +6918,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Plant Nitrogen components</Name>
         <Series>
           <Name>Leaf</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6728,6 +6945,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Stem</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6749,6 +6967,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Tuber</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6770,6 +6989,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Root</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6791,6 +7011,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Dead Leaf</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6812,6 +7033,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Dead Step</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6833,6 +7055,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Dead Tuber</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6854,6 +7077,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Root Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6875,6 +7099,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Above Ground Wt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6896,6 +7121,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Below Ground Wt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6917,6 +7143,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Total Wt</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6938,6 +7165,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Total Live N</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6957,6 +7185,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Crop Nitrogen (g/m2)</Title>
@@ -6974,12 +7203,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Water supply and demand</Name>
         <Series>
           <Name>Supply</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7001,6 +7230,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Uptake</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7022,6 +7252,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Demand</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7043,6 +7274,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Transpiration</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7064,6 +7296,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Potential</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7085,6 +7318,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Root Depth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -7106,6 +7340,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Canopy Height</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -7125,6 +7360,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Water (mm)</Title>
@@ -7150,12 +7386,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Crop structure</Name>
         <Series>
           <Name>Cover Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7177,6 +7413,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Cover Green</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7198,6 +7435,7 @@ namespace Models
         </Series>
         <Series>
           <Name>CoverTotal</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7219,6 +7457,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LAI</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7240,6 +7479,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LAI Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7261,6 +7501,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Root depth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -7280,6 +7521,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Cover </Title>
@@ -7304,12 +7546,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>N supply and demand</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7323,7 +7565,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Arbitrator.NDemand</YFieldName>
+          <YFieldName>Slurp.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7331,6 +7573,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7350,6 +7593,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Water (mm)</Title>
@@ -7375,12 +7619,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stress Factors</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7402,6 +7646,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -7421,6 +7666,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
           <Title>Water (mm)</Title>
@@ -7446,19 +7692,18 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
     <Graph>
       <Name>Cover</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -7477,10 +7722,11 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7497,6 +7743,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
         <Filter>[Cover] = 'TypeLucerne'</Filter>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7514,16 +7761,16 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>ProfileSoilWaterContent</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -7542,10 +7789,11 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7562,6 +7810,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
         <Filter>[Cover] = 'TypeLucerne'</Filter>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7579,12 +7828,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>0_150mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7606,6 +7855,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7625,6 +7875,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7642,12 +7893,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>150_300mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7669,6 +7920,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7688,6 +7940,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7705,12 +7958,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>300_400mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7732,6 +7985,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7751,6 +8005,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7768,12 +8023,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>400_600mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7795,6 +8050,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7814,6 +8070,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7831,12 +8088,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>600_800mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7858,6 +8115,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7877,6 +8135,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7894,12 +8153,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>800_1000mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7921,6 +8180,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7940,6 +8200,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7957,12 +8218,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>1000_1200mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7984,6 +8245,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8003,6 +8265,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8020,12 +8283,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>1200_1400mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8047,6 +8310,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8066,6 +8330,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8083,12 +8348,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>1400_1600mm</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8110,6 +8375,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8129,6 +8395,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8146,12 +8413,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>RootDepth</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8171,6 +8438,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8188,12 +8456,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Height</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8213,6 +8481,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8230,8 +8499,9 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
-  <ExplorerWidth>229</ExplorerWidth>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Models.Core
 {
+    using PMF.Functions;
     using System;
     using System.Collections.Generic;
 
@@ -105,6 +106,17 @@ namespace Models.Core
         /// Gets a description of the property or null if not found.
         /// </summary>
         public override string Description
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// </summary>
+        public override string Caption
         {
             get
             {

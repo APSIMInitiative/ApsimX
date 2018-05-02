@@ -1,6 +1,8 @@
 ﻿using Models;
 using Models.Core;
+using Models.Core.Interfaces;
 using Models.PMF.Functions;
+using Models.Storage;
 using NUnit.Framework;
 using System;
 
@@ -28,12 +30,9 @@ namespace UnitTests
     {
         public double value;
 
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return value;
-            }
+            return value;
         }
     }
 
@@ -84,6 +83,29 @@ namespace UnitTests
         public Simulation sim = null;
     }
 
+    [Serializable]
+    class ModelWithLinkByPath : Model
+    {
+        [LinkByPath(Path = "[zone2].irrig1")]
+        public IIrrigation irrigation1 = null;
+
+        [LinkByPath(Path = ".Simulations.Simulation.zone2.irrig2")]
+        public IIrrigation irrigation2 = null;
+    }
+
+    [Serializable]
+    class ModelWithServices : Model
+    {
+        [Link]
+        public IStorageReader storage = null;
+
+        [Link]
+        public ILocator locator = null;
+
+        [Link]
+        public IEvent events = null;
+    }
+
     [TestFixture]
     class LinksTests
     {
@@ -96,9 +118,11 @@ namespace UnitTests
             ModelWrapper models = new ModelWrapper();
 
             // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
 
-            ModelWrapper simulation = simulations.Add(new Simulation());
+            Simulation simulationModel = new Simulation();
+            Simulations simulationsModel = Simulations.Create(new Model[] { simulationModel });
+            ModelWrapper simulations = models.Add(simulationsModel);
+            ModelWrapper simulation = simulations.Add(simulationModel);
 
             Clock clock = new Clock();
             clock.StartDate = new DateTime(2015, 1, 1);
@@ -129,9 +153,10 @@ namespace UnitTests
             ModelWrapper models = new ModelWrapper();
 
             // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
-
-            ModelWrapper simulation = simulations.Add(new Simulation());
+            Simulation simulationModel = new Simulation();
+            Simulations simulationsModel = Simulations.Create(new Model[] { simulationModel });
+            ModelWrapper simulations = models.Add(simulationsModel);
+            ModelWrapper simulation = simulations.Add(simulationModel);
 
             Clock clock = new Clock();
             clock.StartDate = new DateTime(2015, 1, 1);
@@ -153,7 +178,7 @@ namespace UnitTests
             Links linksAlgorithm = new Links();
             linksAlgorithm.Resolve(simulations);
 
-            Assert.AreEqual((links.Model as ModelWithIFunctions).model2.Value, 2);
+            Assert.AreEqual((links.Model as ModelWithIFunctions).model2.Value(), 2);
         }
 
         /// <summary>Ensure a [ScopedLinkByName] works.</summary>
@@ -196,7 +221,6 @@ namespace UnitTests
             // Should find the closest match.
             Assert.AreEqual(modelWithScopedLink.zone2.Name, "zone1");
         }
-
 
         /// <summary>Ensure a [ChildLink] finds works</summary>
         [Test]
@@ -267,6 +291,49 @@ namespace UnitTests
             Assert.AreEqual(modelWithParentLink.sim.Name, "Simulation");
         }
 
+        /// <summary>Ensure a [LinkByPath] works</summary>
+        [Test]
+        public void Links_EnsureLinkByPathWorks()
+        {
+            ModelWithLinkByPath modelWithLinkByPath = new UnitTests.ModelWithLinkByPath();
+
+            // Create a simulation
+            Simulation simulation = new Simulation();
+            simulation.Children.Add(new Clock());
+            simulation.Children.Add(new MockSummary());
+            simulation.Children.Add(new Zone() { Name = "zone1" });
+            simulation.Children.Add(new Zone() { Name = "zone2" });
+            simulation.Children[2].Children.Add(modelWithLinkByPath); // added to zone1
+            MockIrrigation irrig1 = new MockIrrigation() { Name = "irrig1" };
+            MockIrrigation irrig2 = new MockIrrigation() { Name = "irrig2" };
+            simulation.Children[3].Children.Add(irrig1); // added to zone2
+            simulation.Children[3].Children.Add(irrig2); // added to zone2
+
+            Simulations engine = Simulations.Create(new Model[] { simulation, new DataStore() });
+            engine.Links.Resolve(simulation);
+
+            Assert.AreEqual(modelWithLinkByPath.irrigation1, irrig1);
+            Assert.AreEqual(modelWithLinkByPath.irrigation2, irrig2);
+        }
+
+        /// <summary>Ensure link can resolve services</summary>
+        [Test]
+        public void Links_EnsureServicesResolve()
+        {
+            ModelWithServices modelWithServices = new ModelWithServices();
+            Simulation simulation = new Simulation();
+            simulation.Children.Add(new Clock());
+            simulation.Children.Add(new MockSummary());
+            simulation.Children.Add(modelWithServices);
+
+            Simulations engine = Simulations.Create(new Model[] { simulation, new DataStore() });
+
+            engine.Links.Resolve(simulation);
+
+            Assert.IsNotNull(modelWithServices.storage);
+            Assert.IsNotNull(modelWithServices.locator);
+            Assert.IsNotNull(modelWithServices.events);
+        }
 
     }
 }

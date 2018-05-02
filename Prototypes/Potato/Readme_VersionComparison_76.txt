@@ -1,1 +1,0 @@
-The file Cultivar_Burbank_76.csv is from APSIM 7.6.  This can be compared with the csv output from the cultivar burbank simulation to compare apsim x with the version it was ported from

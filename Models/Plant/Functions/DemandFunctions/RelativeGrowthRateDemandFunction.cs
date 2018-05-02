@@ -5,6 +5,7 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
+    /// # [Name]
     /// Relative growth rate demand function
     /// </summary>
     [Serializable]
@@ -38,16 +39,13 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (Phenology.OnDayOf(InitialStageName) && StartWt == 0)
-                    StartWt = InitialWt;                                   //This is to initiate mass so relative growth rate can kick in
-                double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.Value);
-                double OrganDemand = CurrentOrganWt * RelativeGrowthRate.Value;
-                return OrganDemand * OrganNumber.Value;
-            }
+            if (Phenology.OnDayOf(InitialStageName) && StartWt == 0)
+                StartWt = InitialWt;                                   //This is to initiate mass so relative growth rate can kick in
+            double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.Value(arrayIndex));
+            double OrganDemand = CurrentOrganWt * RelativeGrowthRate.Value(arrayIndex);
+            return OrganDemand * OrganNumber.Value(arrayIndex);
         }
 
     }

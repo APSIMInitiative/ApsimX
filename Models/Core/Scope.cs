@@ -42,6 +42,7 @@ namespace Models.Core
             while (parentZone.Parent != null)
             {
                 parentZone = parentZone.Parent;
+                modelsInScope.Add(parentZone);
                 foreach (IModel child in parentZone.Children)
                 {
                     if (!modelsInScope.Contains(child))
@@ -91,5 +92,12 @@ namespace Models.Core
             return relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
         }
 
+        /// <summary>
+        /// Clear the current cache
+        /// </summary>
+        public void Clear()
+        {
+            this.cache.Clear();
+        }
     }
 }

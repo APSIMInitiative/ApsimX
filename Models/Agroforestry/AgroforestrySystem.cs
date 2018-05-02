@@ -23,7 +23,7 @@ namespace Models.Agroforestry
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class AgroforestrySystem : Zone
+    public class AgroforestrySystem : Zone, ICustomDocumentation
     {
 
         /// <summary>
@@ -145,17 +145,16 @@ namespace Models.Agroforestry
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // need to put something here
-            // add a heading.
-            //tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // write description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-            // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
-
-            tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
-            tree.Document(tags, headingLevel, indent);
+                tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
+                AutoDocumentation.DocumentModel(tree, tags, headingLevel, indent);
+            }
         }
     }
 }

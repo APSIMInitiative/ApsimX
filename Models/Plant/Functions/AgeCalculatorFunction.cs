@@ -4,6 +4,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// An age calculator function
     /// </summary>
     [Serializable]
@@ -22,13 +23,9 @@ namespace Models.PMF.Functions
         }
 
         /// <summary>Gets the value.</summary>
-        [Units("y")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Age / 365.25;
-            }
+           return _Age / 365.25;
         }
     }
 }

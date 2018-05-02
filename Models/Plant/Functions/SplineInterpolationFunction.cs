@@ -11,6 +11,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// A value is returned via Akima spline interpolation of a given set of XY pairs
     /// </summary>
     [Serializable]
@@ -42,30 +43,31 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            double XValue = 0;
+            try
             {
-                double XValue = 0;
-                try
-                {
-                    object v = Apsim.Get(this, XProperty);
-                    if (v == null)
-                        throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-                    XValue = Convert.ToDouble(v);
-                }
-                catch (IndexOutOfRangeException)
-                {
-                }
-
-                if (spline == null)
-                {
-                    spline = CubicSpline.InterpolateBoundaries(XYPairs.X, XYPairs.Y, SplineBoundaryCondition.FirstDerivative, 0, SplineBoundaryCondition.FirstDerivative, 0);
-                    
-                }
-
-                return Interpolate(XValue);
+                object v = Apsim.Get(this, XProperty);
+                if (v == null)
+                    throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
+                if (v is Array && arrayIndex > -1)
+                    XValue = Convert.ToDouble((v as Array).GetValue(arrayIndex), 
+                                              System.Globalization.CultureInfo.InvariantCulture);
+                else
+                    XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
             }
+            catch (IndexOutOfRangeException)
+            {
+            }
+
+            if (spline == null)
+            {
+                spline = CubicSpline.InterpolateBoundaries(XYPairs.X, XYPairs.Y, SplineBoundaryCondition.FirstDerivative, 0, SplineBoundaryCondition.FirstDerivative, 0);
+                    
+            }
+
+            return Interpolate(XValue);
         }
 
         /// <summary>Interpolates the specified x.</summary>

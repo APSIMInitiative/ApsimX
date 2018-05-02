@@ -42,6 +42,7 @@ namespace Models.Soils
             /// <summary>
             /// kilograms per hectare
             /// </summary>
+            [Description("kg/ha")]
             kgha
         }
 
@@ -74,12 +75,14 @@ namespace Models.Soils
             /// <summary>
             /// Organic carbon as total percent
             /// </summary>
+            [Description("Total %")]
             Total,
 
             /// <summary>
             /// Organic carbon as walkley black percent
             /// </summary>
             [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+            [Description("Walkley Black %")]
             WalkleyBlack
         }
 
@@ -91,11 +94,13 @@ namespace Models.Soils
             /// <summary>
             /// PH as water method
             /// </summary>
+            [Description("1:5 water")]
             Water,
 
             /// <summary>
             /// PH as Calcium chloride method
             /// </summary>
+            [Description("CaCl2")]
             CaCl2
         }
         #endregion
@@ -311,7 +316,7 @@ namespace Models.Soils
                         double[] bd = Soil.BDMapped(this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
-                            if (values[i] != double.NaN)
+                            if (!Double.IsNaN(values[i]))
                             {
                                 values[i] = values[i] * 100 / (bd[i] * this.Thickness[i]);
                             }
@@ -342,7 +347,7 @@ namespace Models.Soils
                         double[] bd = Soil.BDMapped(this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
-                            if (values[i] != double.NaN)
+                            if (!Double.IsNaN(values[i]))
                             {
                                 values[i] = values[i] / 100 * (bd[i] * this.Thickness[i]);
                             }
@@ -371,7 +376,7 @@ namespace Models.Soils
                         double[] bd = Soil.BDMapped(this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
-                            if (values[i] != double.NaN)
+                            if (!Double.IsNaN(values[i]))
                             {
                                 values[i] = values[i] * 100 / (bd[i] * this.Thickness[i]);
                             }
@@ -402,7 +407,7 @@ namespace Models.Soils
                         double[] bd = Soil.BDMapped(this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
-                            if (values[i] != double.NaN)
+                            if (!Double.IsNaN(values[i]))
                             {
                                 values[i] = values[i] / 100 * (bd[i] * this.Thickness[i]);
                             }

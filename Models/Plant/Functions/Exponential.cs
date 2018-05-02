@@ -7,6 +7,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// An exponential function
     /// </summary>
     [Serializable]
@@ -38,23 +39,20 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Sigmoid function must have only one argument</exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+
+            if (ChildFunctions.Count == 1)
             {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                IFunction F = ChildFunctions[0] as IFunction;
 
-                if (ChildFunctions.Count == 1)
-                {
-                    IFunction F = ChildFunctions[0] as IFunction;
-
-                    return A + B * Math.Exp(C * F.Value);
-                }
-                else
-                {
-                    throw new Exception("Exponential function must have only one argument");
-                }
+                return A + B * Math.Exp(C * F.Value(arrayIndex));
+            }
+            else
+            {
+                throw new Exception("Exponential function must have only one argument");
             }
         }
 

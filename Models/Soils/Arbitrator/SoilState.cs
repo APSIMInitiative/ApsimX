@@ -27,15 +27,14 @@ namespace Models.Soils.Arbitrator
         }
 
         /// <summary>Initialises this instance.</summary>
-        public void Initialise()
+        public void Initialise(List<IModel> zones)
         {
-            foreach (Zone Z in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
+            foreach (Zone Z in zones)
             {
                 Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
                 if (soil != null)
                 {
-                    ZoneWaterAndN NewZ = new ZoneWaterAndN();
-                    NewZ.Name = Z.Name;
+                    ZoneWaterAndN NewZ = new ZoneWaterAndN(Z);
                     NewZ.Water = soil.Water;
                     NewZ.NO3N = soil.NO3N;
                     NewZ.NH4N = soil.NH4N;
@@ -56,8 +55,7 @@ namespace Models.Soils.Arbitrator
             SoilState NewState = new SoilState(state.Parent);
             foreach (ZoneWaterAndN Z in state.Zones)
             {
-                ZoneWaterAndN NewZ = new ZoneWaterAndN();
-                NewZ.Name = Z.Name;
+                ZoneWaterAndN NewZ = new ZoneWaterAndN(Z.Zone);
                 NewZ.Water = Z.Water;
                 NewZ.NO3N = Z.NO3N;
                 NewZ.NH4N = Z.NH4N;
@@ -67,13 +65,24 @@ namespace Models.Soils.Arbitrator
             foreach (CropUptakes C in estimate.Values)
                 foreach (ZoneWaterAndN Z in C.Zones)
                     foreach (ZoneWaterAndN NewZ in NewState.Zones)
-                        if (Z.Name == NewZ.Name)
+                        if (Z.Zone.Name == NewZ.Zone.Name)
                         {
                             NewZ.Water = MathUtilities.Subtract(NewZ.Water, Z.Water);
                             NewZ.NO3N = MathUtilities.Subtract(NewZ.NO3N, Z.NO3N);
                             NewZ.NH4N = MathUtilities.Subtract(NewZ.NH4N, Z.NH4N);
+
+                            for (int i = 0; i < NewZ.Water.Length; i++)
+                            {
+                                if (NewZ.Water[i] < 0)
+                                    NewZ.Water[i] = 0;
+                                if (NewZ.NO3N[i] < 0)
+                                    NewZ.NO3N[i] = 0;
+                                if (NewZ.NH4N[i] < 0)
+                                    NewZ.NH4N[i] = 0;
+                            }
                         }
             return NewState;
         }
+
     }
 }

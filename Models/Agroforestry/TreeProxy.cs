@@ -15,6 +15,7 @@ using Models.Zones;
 namespace Models.Agroforestry
 {
     /// <summary>
+    /// # [Name]
     /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree development (e.g. tree canopy structure under specific pruning regimes).
     /// 
     /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
@@ -298,10 +299,11 @@ namespace Models.Agroforestry
 
             for (int i = 2; i < Table.Count; i++)
             {
-                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0]));
+                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0], 
+                                                             System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
-                    getRLDs.Add(Convert.ToDouble(Table[i][j]));
+                    getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
         }
@@ -436,20 +438,19 @@ namespace Models.Agroforestry
             {
                 foreach (Zone ZI in ZoneList)
                 {
-                    if (Z.Name == ZI.Name)
+                    if (Z.Zone.Name == ZI.Name)
                     {
-                        ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
                         foreach (Zone SearchZ in forestryZones)
-                            if (SearchZ.Name == Z.Name)
+                            if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                                 break;
                             }
 
-                        Uptake.Name = Z.Name;
                         double[] SW = Z.Water;
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
@@ -509,20 +510,19 @@ namespace Models.Agroforestry
             {
                 foreach (Zone ZI in ZoneList)
                 {
-                    if (Z.Name == ZI.Name)
+                    if (Z.Zone.Name == ZI.Name)
                     {
-                        ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
                         foreach (Zone SearchZ in forestryZones)
-                            if (SearchZ.Name == Z.Name)
+                            if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                                 break;
                             }
 
-                        Uptake.Name = Z.Name;
                         double[] SW = Z.Water;
                         
                         Uptake.NO3N = new double[SW.Length];
@@ -600,7 +600,7 @@ namespace Models.Agroforestry
                 foreach (ZoneWaterAndN ZI in info)
                 {
                     Soils.Soil ThisSoil = null;
-                    if (SearchZ.Name == ZI.Name)
+                    if (SearchZ.Name == ZI.Zone.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
@@ -625,32 +625,18 @@ namespace Models.Agroforestry
                 foreach (Zone SearchZ in forestryZones)
                 {
                     Soils.Soil ThisSoil = null;
-                    if (SearchZ.Name == ZI.Name)
+                    if (SearchZ.Name == ZI.Zone.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
-                            NewNO3[i] = ThisSoil.SoilNitrogen.NO3[i] - ZI.NO3N[i];
-                        ThisSoil.SoilNitrogen.NO3 = NewNO3;
+                            NewNO3[i] = ThisSoil.NO3N[i] - ZI.NO3N[i];
+                        ThisSoil.NO3N = NewNO3;
                     }
                 }
             }
         }
-        /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // need to put something here
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
-
-            
-        }
     }
 
     /// <summary>

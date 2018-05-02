@@ -6,7 +6,8 @@ using Models.Core;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
-    /// the Partition Fraction Demand Function which returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs
+    /// # [Name]
+    /// This is the Partition Fraction Demand Function which returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs
     /// </summary>
     [Serializable]
     [Description("Demand is calculated as a fraction of the total plant supply term.")]
@@ -22,12 +23,12 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Arbitrator.DMSupply * PartitionFraction.Value;
-            }
+            if (Arbitrator.DM != null)
+                return Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
+            else
+                return 0;
         }
 
     }

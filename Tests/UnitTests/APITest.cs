@@ -59,7 +59,7 @@ namespace UnitTests
             w.Close();
             this.simulations = Simulations.Read("Test.apsimx");
             
-            string sqliteSourceFileName = this.FindSqlite3DLL();
+            string sqliteSourceFileName = TestDataStore.FindSqlite3DLL();
 
             string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
             if (!File.Exists(sqliteFileName))
@@ -68,7 +68,6 @@ namespace UnitTests
             }
 
             this.simulation = this.simulations.Children[0] as Simulation;
-            this.simulation.StartRun();
         }
 
         /// <summary>
@@ -114,7 +113,7 @@ namespace UnitTests
             Assert.AreEqual(this.simulation.Children[4].Name, "Field2");
 
             Zone zone = this.simulation.Children[3] as Zone;
-            Assert.AreEqual(zone.Children.Count, 1);
+            Assert.AreEqual(zone.Children.Count, 2);
             Assert.AreEqual(zone.Children[0].Name, "Field1Report");
         }
         
@@ -209,19 +208,6 @@ namespace UnitTests
             clock = Apsim.Child(simulation, "Clock");
             Assert.NotNull(clock);
         }        
-        
-        /// <summary>
-        /// Tests for the various recursive Children methods
-        /// </summary>
-        [Test]
-        public void ChildrenRecursivelyTest()
-        {
-            List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 20);
-
-            List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
-            Assert.AreEqual(childZones.Count, 3);
-        }
 
         /// <summary>
         /// Tests for siblings method
@@ -258,15 +244,10 @@ namespace UnitTests
         [Test]
         public void MoveUpDown()
         {
-            IExplorerView explorerView = new ExplorerView();
-            ExplorerPresenter explorerPresenter = new ExplorerPresenter(null);
             CommandHistory commandHistory = new CommandHistory();
-
-            explorerPresenter.Attach(simulations, explorerView, null);
-
             Model modelToMove = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
 
-            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, explorerView);
+            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, null);
             moveCommand.Do(commandHistory);
 
             Model modelToMove2 = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
@@ -275,30 +256,6 @@ namespace UnitTests
             Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children.Count, 4);
         }
 
-
-        /// <summary>
-        /// Find an return the database file name.
-        /// </summary>
-        /// <returns>The filename</returns>
-        private string FindSqlite3DLL()
-        {
-            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            while (directory != null) 
-            {
-                string[] directories = Directory.GetDirectories(directory, "Bin");
-                if (directories.Length == 1) 
-                {
-                    string[] files = Directory.GetFiles(directories[0], "sqlite3.dll");
-                    if (files.Length == 1)
-                    {
-                        return files[0];
-                    }
-                }
-                
-                directory = Path.GetDirectoryName(directory); // parent directory
-            }
-            
-            throw new Exception("Cannot find apsimx bin directory");
-        }        
+       
     }
 }

@@ -16,14 +16,19 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
-    public class LinearInterpolationFunction : Model, IFunction, IFunctionArray
+    public class LinearInterpolationFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
+
         /// <summary>Gets the xy pairs.</summary>
-        /// <value>The xy pairs.</value>
         [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        private XYPairs XYPairs = null;
+
+        [Link]
+        private ILocator locator = null;
+
+        private Dictionary<double, double> cache = new Dictionary<double, double>();
 
         /// <summary>The x property</summary>
         [Description("XProperty")]
@@ -46,7 +51,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             if (XYPairs != null)
             {
@@ -65,21 +70,25 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                // Shortcut exit when the Y values are all the same. Runs quicker.
-                if (YsAreAllTheSame)
-                    return XYPairs.Y[0];
+            // Shortcut exit when the Y values are all the same. Runs quicker.
+            if (YsAreAllTheSame)
+                return XYPairs.Y[0];
 
-                string PropertyName = XProperty;
-                object v = Apsim.Get(this, PropertyName);
-                if (v == null)
-                    throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-                double XValue = (double) v;
-                return XYPairs.ValueIndexed(XValue);
-            }
+            
+            string PropertyName = XProperty;
+            object v = locator.Get(PropertyName);
+            if (v == null)
+                throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
+            double XValue;
+            if (v is Array)
+                XValue = (double)(v as Array).GetValue(arrayIndex);
+            else if (v is IFunction)
+                XValue = (v as IFunction).Value(arrayIndex);
+            else
+                XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
+            return XYPairs.ValueIndexed(XValue);
         }
 
         /// <summary>Values for x.</summary>
@@ -90,57 +99,33 @@ namespace Models.PMF.Functions
             return XYPairs.ValueIndexed(XValue);
         }
 
-        /// <summary>Gets the values.</summary>
-        /// <value>The values.</value>
-        /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public double[] Values
-        {
-            get
-            {
-                string PropertyName = XProperty;
-
-                double[] v = (double[])Apsim.Get(this, XProperty);
-                if (v == null)
-                    throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-                if (v is Array)
-                {
-                    double[] ReturnValues = new double[v.Length];
-                    for (int i = 0; i < v.Length; i++)
-                        ReturnValues[i] = XYPairs.ValueIndexed(v[i]);
-                    return ReturnValues;
-                }
-                else
-                {
-                    double XValue = Convert.ToDouble(v);
-                    return new double[1] { XYPairs.ValueIndexed(XValue) };
-                }
-            }
-        }
-
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            // add graph and table.
-            if (XYPairs != null)
+            if (IncludeInDocumentation)
             {
-                IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
-                string xName = XProperty;
-                if (xProperty != null && xProperty.UnitsLabel != string.Empty)
-                    xName += " " + xProperty.UnitsLabel;
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value") + "</i>", indent));
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel+1, indent);
 
-                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
+                // add graph and table.
+                if (XYPairs != null)
+                {
+                    IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
+                    string xName = XProperty;
+                    if (xProperty != null && xProperty.UnitsLabel != string.Empty)
+                        xName += " " + xProperty.UnitsLabel;
+
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
+
+                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
+                }
             }
         }
 

@@ -46,7 +46,7 @@ namespace Models.PMF.Phen
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Phenology))]
-    abstract public class Phase : Model
+    abstract public class Phase : Model, ICustomDocumentation
     {
         /// <summary>The start</summary>
         [Models.Core.Description("Start")]
@@ -85,7 +85,7 @@ namespace Models.PMF.Phen
             {
                 if (ThermalTime == null)
                     return 0;
-                return ThermalTime.Value;
+                return ThermalTime.Value();
             }
         }
         
@@ -105,13 +105,15 @@ namespace Models.PMF.Phen
         virtual public double DoTimeStep(double PropOfDayToUse)
         {
             // Calculate the TT for today and Accumulate.      
-            _TTForToday = ThermalTime.Value * PropOfDayToUse;
-            if (Stress != null)
+            if (ThermalTime != null)
             {
-                _TTForToday *= Stress.Value;
+                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
+                if (Stress != null)
+                {
+                    _TTForToday *= Stress.Value();
+                }
+                TTinPhase += _TTForToday;
             }
-            TTinPhase += _TTForToday;
-
             return PropOfDayUnused;
         }
 
@@ -121,7 +123,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         virtual public double AddTT(double PropOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
             return 0;
         }
         /// <summary>Adds the specified DLT_TT.</summary>
@@ -158,24 +160,27 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
-            
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            // get description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
-                        
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // get description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
         }
     }
 }

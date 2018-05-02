@@ -165,11 +165,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0933\lib\net45\OxyPlot.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0960\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OxyPlot.WindowsForms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.WindowsForms.2.0.0-unstable0933\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.WindowsForms.2.0.0-unstable0960\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PdfSharp-gdi">
@@ -231,8 +231,11 @@
     <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
+    <Compile Include="Presenters\WFFileCropPresenter.cs" />
+    <Compile Include="Presenters\WFFileGRASPPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
+    <Compile Include="Presenters\WFMasterPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -305,6 +308,12 @@
     <Compile Include="Views\ColourDropDownView.Designer.cs">
       <DependentUpon>ColourDropDownView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\WFFileView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\WFFileView.Designer.cs">
+      <DependentUpon>WFFileView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\ListBoxView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -346,6 +355,12 @@
     </Compile>
     <Compile Include="Views\TreeProxyView.Designer.cs">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WFMasterView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\WFMasterView.Designer.cs">
+      <DependentUpon>WFMasterView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\XYPairsView.cs">
       <SubType>UserControl</SubType>
@@ -503,6 +518,9 @@
     <EmbeddedResource Include="Views\ColourDropDownView.resx">
       <DependentUpon>ColourDropDownView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\WFFileView.resx">
+      <DependentUpon>WFFileView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\ListBoxView.resx">
       <DependentUpon>ListBoxView.cs</DependentUpon>
     </EmbeddedResource>
@@ -523,6 +541,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TreeProxyView.resx">
       <DependentUpon>TreeProxyView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\WFMasterView.resx">
+      <DependentUpon>WFMasterView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\XYPairsView.resx">
       <DependentUpon>XYPairsView.cs</DependentUpon>
@@ -765,6 +786,91 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\ProductStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityManageProduct.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityFee.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerCropHarvest.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityTask.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CropActivityManageCrop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Relationship.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FileCrop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FileGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PastureActivityManage.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivitySellDryBreeders.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityTrade.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityPredictiveStocking.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityPredictiveStockingENSO.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityMilking.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityMuster.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AnimalPriceEntry.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AnimalPricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityWean.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityBuySell.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TruckingSettings.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityHerdCost.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ReportRuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SummariseRuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityManage.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourFilterGroupSpecified.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourFilter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourFilterGroupUnit.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ResourceActivitySell.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GrazeFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GrazeFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GreenhouseGases.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GreenhouseGasesType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HumanFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HumanFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Labour.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LabourType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Land.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LandType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OtherAnimals.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OtherAnimalsType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProductStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityCollectManureAll.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityCollectManurePaddock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProductStoreTypeManure.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityFee.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerDateRange.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerInterval.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityTimerMonthRange.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinanceActivityCalculateInterest.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinanceActivityPayExpense.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityBreed.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFeedGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantFilter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityGrow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TransmutationCost.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Transmutation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantActivityFeed.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantInitialCohorts.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantTypeCohort.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantHerd.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RuminantType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AnimalFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AnimalFoodStore.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivityFolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WholeFarm.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Finance.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ActivitiesHolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinanceType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ResourcesHolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CarbonFlow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Solute.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NFlow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LinearAfterThresholdFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Evapotranspiration.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LayerStructure.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MRSpline.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OutputLayers.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WEIRDO.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CERESSoilTemperature.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoluteManager.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Flow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NutrientPool.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Nutrient.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageReproductionProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Lifecycle.png" />

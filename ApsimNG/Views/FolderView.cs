@@ -32,8 +32,18 @@ namespace UserInterface.Views
             scroller = new ScrolledWindow();
             scroller.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
             table = new Table(1, 1, false);
-            scroller.AddWithViewport(table);
+            Viewport vport = new Viewport();
+            vport.Add(table);
+            vport.ShadowType = ShadowType.None;
+            scroller.Add(vport);
             _mainWidget = scroller;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Sets the controls to show.</summary>
@@ -61,12 +71,11 @@ namespace UserInterface.Views
                 {
                     if (gview != null)
                     {
-                        gview.FontSize = 10;
                         gview.ShowControls(false);
                         gview.Refresh();
                         gview.SingleClick += OnGraphClick;
                         gview.IsLegendVisible = false;
-                        gview.MainWidget.SetSizeRequest(200, 200);
+                        gview.MainWidget.SetSizeRequest(400, 400);
                         gview.ShowControls(false);
                         table.Attach(gview.MainWidget, col, col + 1, row, row + 1);
                         gview.MainWidget.ShowAll();

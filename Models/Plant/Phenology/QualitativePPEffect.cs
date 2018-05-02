@@ -10,6 +10,7 @@ namespace Models.PMF.Phen
 {
 
     ///<summary>
+    /// # [Name]
     /// Qualitative Photoperiod effect on developmental rate
     ///</summary>
     [Serializable]
@@ -41,7 +42,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            PhotoperiodEffect = Effect(Photoperiod.Value, OptimumPhotoperiod);
+            PhotoperiodEffect = Effect(Photoperiod.Value(), OptimumPhotoperiod);
         }
 
         /// <summary>Initialise everything</summary>

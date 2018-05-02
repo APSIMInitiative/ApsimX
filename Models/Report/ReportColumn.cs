@@ -5,16 +5,13 @@
 //-----------------------------------------------------------------------
 namespace Models.Report
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using PMF.Functions;
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using PMF.Functions;
 
     /// <summary>
     /// A class for looking after a column of output. A column will store a value 
@@ -30,8 +27,23 @@ namespace Models.Report
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
     [Serializable]
-    public class ReportColumn
+    public class ReportColumn : IReportColumn
     {
+        /// <summary>The column heading.</summary>
+        public string Name { get; set; }
+
+        /// <summary>The values for each report event (e.g. daily)</summary>
+        public List<object> Values { get; set; }
+
+        /// <summary>An instance of a storage service.</summary>
+        private IStorageWriter storage;
+
+        /// <summary>An instance of a locator service.</summary>
+        private ILocator locator;
+
+        /// <summary>An instance of an events service.</summary>
+        private IEvent events;
+
         /// <summary>
         /// The from field converted to a date.
         /// </summary>
@@ -51,51 +63,22 @@ namespace Models.Report
         /// The to field has no year specified
         /// </summary>
         private bool toHasNoYear;
-
-        /// <summary>
-        /// The parent model. Needed so that we can get values of variables.
-        /// </summary>
-        private IModel parentModel;
-
+        
         /// <summary>
         /// Reference to the clock model.
         /// </summary>
-        private Clock clock;
+        private IClock clock;
 
         /// <summary>
         /// The full name of the variable we are retrieving from APSIM.
         /// </summary>
         private string variableName;
 
-        /// <summary>
-        /// The column heading.
-        /// </summary>
-        private string heading;
-
-        /// <summary>
-        /// The values for each report event (e.g. daily)
-        /// </summary>
-        protected List<object> values = new List<object>();
 
         /// <summary>
         /// The values for each report event (e.g. daily)
         /// </summary>
         private List<object> valuesToAggregate = new List<object>();
-
-        /// <summary>
-        /// For array variables, this will be the number of array elements to write to the data table.
-        /// </summary>
-        private int maximumNumberArrayElements;
-
-        /// <summary>
-        /// For jagged array variables, this will be the number of array elements in the second dimension to write to the data table.
-        /// </summary>
-        private int maximumNumberJaggedElements;
-
-        /// <summary>
-        /// The data type of this column
-        /// </summary>
-        private Type valueType;
 
         /// <summary>
         /// True when the simulation is within the capture window for this variable
@@ -107,20 +90,18 @@ namespace Models.Report
         /// </summary>
         private string aggregationFunction;
 
-        ///// <summary>
-        ///// Units as specified in the descriptor.
-        ///// </summary>
-        //private string units;
+        /// <summary>
+        /// Units as specified in the descriptor.
+        /// </summary>
+        public string Units { get; private set; }
 
         /// <summary>
         /// The date when an aggregation value was last stored
         /// </summary>
         private DateTime lastStoreDate;
 
-        /// <summary>
-        /// The report model frequencies
-        /// </summary>
-        private List<string> reportingFrequencies = new List<string>();
+        /// <summary>Have we tried to get units yet?</summary>
+        private bool haveGotUnits = false;
 
         /// <summary>
         /// Constructor for an aggregated column.
@@ -130,34 +111,48 @@ namespace Models.Report
         /// <param name="columnName">The column name to write to the output</param>
         /// <param name="from">The beginning of the capture window</param>
         /// <param name="to">The end of the capture window</param>
-        /// <param name="frequenciesFromReport">Reporting frequencies</param>
-        /// <param name="parentModel">The parent model</param>
+        /// <param name="clock">An instance of a clock model</param>
+        /// <param name="storage">An instance of a storage service</param>
+        /// <param name="locator">An instance of a locator service</param>
+        /// <param name="events">An instance of an events service</param>
         /// <returns>The newly created ReportColumn</returns>
-        private ReportColumn(string aggregationFunction, string variableName, string columnName, string from, string to, string[] frequenciesFromReport, IModel parentModel)
+        private ReportColumn(string aggregationFunction, string variableName, string columnName, string from, string to, 
+                             IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
+            Values = new List<object>();
+
             this.aggregationFunction = aggregationFunction;
             this.variableName = variableName;
-            this.heading = columnName;
-            this.parentModel = parentModel;
+            this.Name = columnName;
             this.inCaptureWindow = false;
-            this.reportingFrequencies.AddRange(frequenciesFromReport);
-            this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
+            this.storage = storage;
+            this.locator = locator;
+            this.events = events;
+            this.clock = clock;
+            try
+            {
+                IVariable var = locator.GetObject(variableName);
+                if (var != null)
+                {
+                    Units = var.UnitsLabel;
+                    if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                        Units = Units.Substring(1, Units.Length - 2);
+                }
+            }
+            catch (Exception) { }
 
-            Apsim.Subscribe(parentModel, "[Clock].StartOfDay", this.OnStartOfDay);
-            Apsim.Subscribe(parentModel, "[Clock].DoReportCalculations", this.OnEndOfDay);
+            events.Subscribe("[Clock].StartOfDay", this.OnStartOfDay);
+            events.Subscribe("[Clock].DoReportCalculations", this.OnEndOfDay);
 
             if (DateTime.TryParse(from, out this.fromDate))
                 this.fromHasNoYear = !from.Contains(this.fromDate.Year.ToString());
             else
-                Apsim.Subscribe(parentModel, from, this.OnBeginCapture);
+                events.Subscribe(from, this.OnBeginCapture);
 
             if (DateTime.TryParse(to, out this.toDate))
                 this.toHasNoYear = !to.Contains(this.toDate.Year.ToString());
             else
-                Apsim.Subscribe(parentModel, to, this.OnEndCapture);
-
-            foreach (string frequency in this.reportingFrequencies)
-                Apsim.Subscribe(parentModel, frequency, this.OnReportFrequency);
+                events.Subscribe(to, this.OnEndCapture);
         }
 
         /// <summary>
@@ -165,18 +160,20 @@ namespace Models.Report
         /// </summary>
         /// <param name="variableName">The name of the APSIM variable to retrieve</param>
         /// <param name="columnName">The column name to write to the output</param>
-        /// <param name="frequenciesFromReport">Reporting frequencies</param>
-        /// <param name="parentModel">The parent model</param>
-        protected ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
+        /// <param name="clock">An instance of a clock model</param>
+        /// <param name="storage">An instance of a storage service</param>
+        /// <param name="locator">An instance of a locator service</param>
+        /// <param name="events">An instance of an events service</param>
+        private ReportColumn(string variableName, string columnName, 
+                             IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
+            Values = new List<object>();
             this.variableName = variableName;
-            this.heading = columnName;
-            this.parentModel = parentModel;
-            this.reportingFrequencies.AddRange(frequenciesFromReport);
-            this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
-
-            foreach (string frequency in this.reportingFrequencies)
-                Apsim.Subscribe(parentModel, frequency, this.OnReportFrequency);
+            this.Name = columnName;
+            this.storage = storage;
+            this.locator = locator;
+            this.events = events;
+            this.clock = clock;
         }
 
         /// <summary>
@@ -216,11 +213,13 @@ namespace Models.Report
         /// -    This is optional.  If omitted then the units will appear are ‘()’
         /// </remarks>
         /// <param name="descriptor">A column descriptor</param>
-        /// <param name="report">The parent report model</param>
-        /// <param name="frequenciesFromReport">Reporting frequencies</param>
+        /// <param name="clock">An instance of a clock model</param>
+        /// <param name="storage">An instance of a storage service</param>
+        /// <param name="locator">An instance of a locator service</param>
+        /// <param name="events">An instance of an event service</param>
         /// <returns>The newly created ReportColumn</returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        public static ReportColumn Create(string descriptor, IModel report, string[] frequenciesFromReport)
+        public static ReportColumn Create(string descriptor, IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             string columnName = RemoveWordAfter(ref descriptor, "as");
             string to = RemoveWordAfter(ref descriptor, "to");
@@ -234,9 +233,9 @@ namespace Models.Report
                 columnName = variableName.Replace("[", string.Empty).Replace("]", string.Empty);
 
             if (aggregationFunction != null)
-                return new ReportColumn(aggregationFunction, variableName, columnName, from, to, frequenciesFromReport, report);
+                return new ReportColumn(aggregationFunction, variableName, columnName, from, to, clock, storage, locator, events);
             else
-                return new ReportColumn(variableName, columnName, frequenciesFromReport, report);
+                return new ReportColumn(variableName, columnName, clock, storage, locator, events);
         }
 
         /// <summary>Remove the end of a string following word and return it.</summary>
@@ -281,13 +280,10 @@ namespace Models.Report
         public void OnSimulationCompleted()
         {
             if (this.fromDate != DateTime.MinValue)
-                Apsim.Unsubscribe(this.parentModel, "[Clock].StartOfDay", this.OnStartOfDay);
+                events.Unsubscribe("[Clock].StartOfDay", this.OnStartOfDay);
 
             if (this.toDate != DateTime.MinValue)
-                Apsim.Unsubscribe(this.parentModel, "[Clock].EndOfDay", this.OnEndOfDay);
-
-            foreach (string frequency in this.reportingFrequencies)
-                Apsim.Unsubscribe(this.parentModel, frequency, this.OnReportFrequency);
+                events.Unsubscribe("[Clock].EndOfDay", this.OnEndOfDay);
         }
 
         #region Capture methods
@@ -380,56 +376,59 @@ namespace Models.Report
             }
         }
 
-        /// <summary>
-        /// Event handler for report frequencies
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnReportFrequency(object sender, EventArgs e)
+        /// <summary>Retrieve the current value and store it in our array of values.</summary>
+        public virtual object GetValue()
         {
-            // If we're at the end of the capture window then apply the aggregation.
+            object value = null;
+
+            // If we're at the end of the capture window, apply the aggregation.
             if (this.aggregationFunction != null)
             {
                 if (!this.inCaptureWindow)
-                    this.ApplyAggregation();
-                else
-                    this.values.Add(null);
+                    value = ApplyAggregation();
             }
-            else
-                this.StoreValue();
-        }
-
-        /// <summary>
-        /// Retrieve the current value and store it in our array of values.
-        /// </summary>
-        public virtual void StoreValue()
-        {
-            object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
-
-            if (value == null)
-                this.values.Add(null);
             else
             {
-                if (value != null && value is IFunction)
-                {
-                    value = (value as IFunction).Value;
-                }
-                else if (value.GetType().IsArray || value.GetType().IsClass)
-                {
-                    try
-                    {
-                        value = ReflectionUtilities.Clone(value);
-                    }
-                    catch (Exception)
-                    {
-                        throw new ApsimXException(this.parentModel, "Cannot report variable " + this.variableName +
-                                                                    ". Variable is not of a reportable type. Perhaps " +
-                                                                    " it is a PMF Function that needs a .Value appended to the name.");
-                    }
-                }
+                value = locator.Get(variableName);
 
-                this.values.Add(value);
+                if (value == null)
+                    Values.Add(null);
+                else
+                {
+                    if (value != null && value is IFunction)
+                    {
+                        value = (value as IFunction).Value();
+                    }
+                    else if (value.GetType().IsArray || value.GetType().IsClass)
+                    {
+                        try
+                        {
+                            value = ReflectionUtilities.Clone(value);
+                        }
+                        catch (Exception)
+                        {
+                            throw new Exception("Cannot report variable " + this.variableName +
+                                                ". Variable is not of a reportable type. Perhaps " +
+                                                " it is a PMF Function that needs a .Value appended to the name.");
+                        }
+                    }
+
+                    if (!haveGotUnits)
+                    {
+                        IVariable var = locator.GetObject(variableName);
+                        if (var != null)
+                        {
+                            Units = var.UnitsLabel;
+                            if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                                Units = Units.Substring(1, Units.Length - 2);
+                        }
+                        haveGotUnits = true;
+                    }
+
+                    Values.Add(value);
+                }
             }
+            return value;
         }
 
         /// <summary>
@@ -439,7 +438,7 @@ namespace Models.Report
         {
             if (this.clock.Today != this.lastStoreDate)
             {
-                object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
+                object value = locator.Get(variableName);
 
                 if (value == null)
                     this.valuesToAggregate.Add(null);
@@ -458,7 +457,7 @@ namespace Models.Report
         /// Apply the aggregation function if necessary to the list of values we
         /// have stored.
         /// </summary>
-        private void ApplyAggregation()
+        private object ApplyAggregation()
         {
             double result = double.NaN;
             if (this.valuesToAggregate.Count > 0 && this.aggregationFunction != null)
@@ -472,177 +471,19 @@ namespace Models.Report
                 else if (this.aggregationFunction.Equals("max", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Max(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("first", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.First());
+                    result = Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
                 else if (this.aggregationFunction.Equals("last", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last());
+                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture);
                 else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last()) - Convert.ToDouble(this.valuesToAggregate.First());
+                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) - 
+                                    Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
 
                 if (!double.IsNaN(result))
-                {
                     this.valuesToAggregate.Clear();
-                    this.values.Add(result);
-                }
             }
+            return result;
         }
 
-        #endregion
-
-        #region Output methods
-
-        /// <summary>
-        /// Add the required columns to the specified data table.
-        /// </summary>
-        /// <param name="table">The data table to add columns to</param>
-        public void AddColumnsToTable(DataTable table)
-        {
-            object firstValue = this.FirstNonBlankValue();
-            this.valueType = null;
-            if (firstValue != null)
-            {
-                this.valueType = firstValue.GetType();
-                if (this.valueType.IsArray)
-                    this.maximumNumberArrayElements = this.GetMaximumNumberArrayElements();
-            }
-            List<FlattenedValue> flattenedValues = this.FlattenValue(firstValue, this.heading, this.valueType);
-
-            foreach (FlattenedValue column in flattenedValues)
-                table.Columns.Add(column.Name, column.Type);
-        }
-
-        /// <summary>
-        /// Add the required number of rows to the table.
-        /// </summary>
-        /// <param name="table">The data table to add rows to</param>
-        public void AddRowsToTable(DataTable table)
-        {
-            // Ensure there are enough data rows in the table.
-            while (table.Rows.Count < this.values.Count)
-                table.Rows.Add(table.NewRow());
-
-            for (int rowIndex = 0; rowIndex < this.values.Count; rowIndex++)
-            {
-                List<FlattenedValue> flattenedValues = this.FlattenValue(this.values[rowIndex], this.heading, this.valueType);
-
-                foreach (FlattenedValue column in flattenedValues)
-                {
-                    if (column.Value != null)
-                        table.Rows[rowIndex][column.Name] = column.Value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Go through values and return the first non blank one. 
-        /// </summary>
-        /// <returns>Returns first non blank value or null if all are missing</returns>
-        private object FirstNonBlankValue()
-        {
-            foreach (object value in this.values)
-                if (value != null)
-                    return value;
-            return null;
-        }
-
-        /// <summary>
-        /// 'Flatten' then object passed in, into a list of columns ready to be added
-        /// to a data table.
-        /// </summary>
-        /// <param name="value">The object to be analyzed and flattened</param>
-        /// <param name="name">The name of the object</param>
-        /// <param name="type">Type type of the object</param>
-        /// <returns>The list of values that can be written to a data table</returns>
-        private List<FlattenedValue> FlattenValue(object value, string name, Type type)
-        {
-            List<FlattenedValue> flattenedValues = new List<FlattenedValue>();
-
-            if (type == null)
-            {
-                // Whole column is null.
-                flattenedValues.Add(new FlattenedValue() { Name = name, Type = typeof(double) });
-            }
-            else if (type.IsArray)
-            {
-                // Array
-                Array array = value as Array;
-                double numElements = 0;
-
-                // if name contains a '(' then we're in a jagged array
-                if (name.Count(x => x == '(') == 1)
-                    numElements = this.maximumNumberJaggedElements;
-                else
-                    numElements = this.maximumNumberArrayElements;
-
-                for (int columnIndex = 0; columnIndex < numElements; columnIndex++)
-                {
-                    string heading = name;
-                    heading += "(" + (columnIndex + 1).ToString() + ")";
-                    if (array == null || columnIndex >= array.Length)
-                        flattenedValues.Add(new FlattenedValue() { Name = heading, Type = type });
-                    else
-                    {
-                        object arrayElement = array.GetValue(columnIndex);
-                        Array innerArray = arrayElement as Array;
-                        if (innerArray != null)
-                            this.maximumNumberJaggedElements = innerArray.Length;
-                        flattenedValues.AddRange(this.FlattenValue(arrayElement, heading, array.GetType().GetElementType()));
-                    }
-                }
-            }
-            else if (type == typeof(DateTime) || type == typeof(string) || !type.IsClass)
-            {
-                // Scalar
-                flattenedValues.Add(new FlattenedValue() { Name = name, Type = type, Value = value });
-            }
-            else
-            {
-                // A struct or class
-                foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(type, BindingFlags.Instance | BindingFlags.Public))
-                {
-                    string heading = name + "." + property.Name;
-                    object classElement = property.GetValue(value, null);
-                    flattenedValues.AddRange(this.FlattenValue(classElement, heading, classElement.GetType().GetElementType()));
-                }
-            }
-
-            return flattenedValues;
-        }
-
-        /// <summary>
-        /// Calculate the maximum number of array elements.
-        /// </summary>
-        /// <returns>The maximum number of array elements</returns>
-        private int GetMaximumNumberArrayElements()
-        {
-            int maxNumValues = 0;
-            foreach (object value in this.values)
-            {
-                if (value != null)
-                    maxNumValues = Math.Max(maxNumValues, (value as Array).Length);
-            }
-            return maxNumValues;
-        }
-
-        /// <summary>
-        /// A structure to hold a name, type and value. Used in the flattening process.
-        /// </summary>
-        private struct FlattenedValue
-        {
-            /// <summary>
-            /// The name of a column
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The type of a column
-            /// </summary>
-            public Type Type;
-
-            /// <summary>
-            /// The value of a column
-            /// </summary>
-            public object Value;
-        }
         #endregion
     }
 }

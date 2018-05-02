@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class PhaseLookupValue : Model, IFunction
+    public class PhaseLookupValue : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -39,26 +39,23 @@ namespace Models.PMF.Functions
         /// or
         /// Phase end name not set: + Name
         /// </exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+
+            if (Start == "")
+                throw new Exception("Phase start name not set:" + Name);
+            if (End == "")
+                throw new Exception("Phase end name not set:" + Name);
+
+            if (Phenology != null && Phenology.Between(Start, End) && ChildFunctions.Count > 0)
             {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-                if (Start == "")
-                    throw new Exception("Phase start name not set:" + Name);
-                if (End == "")
-                    throw new Exception("Phase end name not set:" + Name);
-
-                if (Phenology.Between(Start, End) && ChildFunctions.Count > 0)
-                {
-                    IFunction Lookup = ChildFunctions[0] as IFunction;
-                    return Lookup.Value;
-                }
-                else
-                    return 0.0;
+                IFunction Lookup = ChildFunctions[0] as IFunction;
+                return Lookup.Value(arrayIndex);
             }
+            else
+                return 0.0;
         }
 
         /// <summary>Gets a value indicating whether [in phase].</summary>
@@ -75,28 +72,30 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            if (Parent.GetType() == typeof(PhaseLookup))
+            if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
-                // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    child.Document(tags, -1, indent + 1);
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph(this.Value + " between " +Start + " and " + End + " and a value of zero outside of this period", indent));
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
+
+                if (Parent.GetType() == typeof(PhaseLookup))
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
+                    // write children.
+                    foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph(this.Value() + " between " + Start + " and " + End + " and a value of zero outside of this period", indent));
+                }
             }
         }
-
 
     }
 

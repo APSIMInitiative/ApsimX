@@ -21,11 +21,11 @@ namespace Models.Interfaces
         /// <summary>
         /// 
         /// </summary>
-        double InitialisedCohortNo { get;}
+        int InitialisedCohortNo { get; }
         /// <summary>
         /// 
         /// </summary>
-        double AppearedCohortNo { get; }
+        int AppearedCohortNo { get; }
 
         /// <summary>
         /// 
@@ -41,6 +41,24 @@ namespace Models.Interfaces
         /// </summary>
         /// <param name="ProportionRemoved"></param>
         void DoThin(double ProportionRemoved);
+
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        double ApexNumByAge(double age);
+
+        /// <summary>
+        /// Method to remove 
+        /// </summary>
+       void RemoveHighestLeaf();
+        
+        /// <summary>
+        /// Method to zero leaf numbembers
+        /// </summary>
+       void Reset();
+
+        /// <summary>
+        /// Then number of cohorts on the apex that are yet to expand
+        /// </summary>
+        int ApicalCohortNo { get; }
     }
 }
-

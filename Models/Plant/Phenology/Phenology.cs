@@ -7,8 +7,8 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
-using Models.PMF.OldPlant;
 using APSIM.Shared.Utilities;
+using System.Data;
 
 namespace Models.PMF.Phen
 {
@@ -26,7 +26,7 @@ namespace Models.PMF.Phen
         public String EventStageName = "";
     }
     /// <summary>
-    /// This model simulates the development of the crop through successive developmental <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.
+    /// This model simulates the development of the crop through successive developmental <i>phases</i>. Each phase is bound by distinct growth <i>stages</i>. Phases often require a target to be reached to signal movement to the next phase. Differences between cultivars are specified by changing the values of the default parameters shown below.
     /// </summary>
     /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
     /// should be included as the last child of 
@@ -106,15 +106,11 @@ namespace Models.PMF.Phen
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    [ValidParent(ParentType = typeof(Plant15))]
-    public class Phenology : Model
+    public class Phenology : Model, ICustomDocumentation
     {
         #region Links
-        [Link(IsOptional = true)]
+        [Link]
         private Plant Plant = null;
-
-        [Link(IsOptional = true)]
-        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
 
         /// <summary>The clock</summary>
         [Link]
@@ -270,7 +266,7 @@ namespace Models.PMF.Phen
         public Phenology() { }
         /// <summary>Initialize the phase list of phenology.</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             Phases = new List<Phase>();
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
@@ -297,17 +293,7 @@ namespace Models.PMF.Phen
         {
             if (data.Plant == Plant)
                 Clear();
-            bool hasEmergencePhase = false;
-            for (int P = 0; P < Phases.Count; P++)
-            {//if the plant has an emerging phase, set emerged to false so it become true when emerged otherwise leave true so perenial crops with no emergance phase start of emmerged 
-                if (Phases[P] is EmergingPhase)
-                    hasEmergencePhase = true;
             }
-            if (hasEmergencePhase == false)
-            {
-                Emerged = true;
-            }
-        }
 
         /// <summary>Called when crop is being harvested.</summary>
         /// <param name="sender">The sender.</param>
@@ -322,6 +308,18 @@ namespace Models.PMF.Phen
                 CurrentPhaseName = Phases[EndPhase - 1].Name;
             }
         }
+
+        /// <summary>Called when crop is being prunned.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPruning(object sender, EventArgs e)
+        {
+            Germinated = false;
+            Emerged = false;
+            
+        }
+
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -355,7 +353,7 @@ namespace Models.PMF.Phen
         public int IndexOfPhase(string Name)
         {
             for (int P = 0; P < Phases.Count; P++)
-                if (Phases[P].Name.ToLower() == Name.ToLower())
+                if (String.Equals(Phases[P].Name, Name, StringComparison.OrdinalIgnoreCase))
                     return P;
             return -1;
         }
@@ -369,8 +367,6 @@ namespace Models.PMF.Phen
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return true;
-                if (Plant15 != null && Plant15.IsAlive)
                     return true;
                 return false;
             }
@@ -390,7 +386,7 @@ namespace Models.PMF.Phen
         {
             if (PlantIsAlive)
             {
-                if(ThermalTime.Value <0)
+                if(ThermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
                 // If this is the first time through here then setup some variables.
                 if (Phases == null || Phases.Count == 0)
@@ -415,8 +411,11 @@ namespace Models.PMF.Phen
                         if (Stage >= 1)
                             Germinated = true;
 
-                        if (CurrentPhase is EmergingPhase)
+                        if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
+                        {
+                            Plant.SendEmergingEvent();
                             Emerged = true;
+                        }
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
                         if (GrowthStage != null)
@@ -459,7 +458,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (CurrentPhaseIndex >= Phases.Count)
+                if (Phases == null || CurrentPhaseIndex >= Phases.Count)
                     return null;
                 else
                     return Phases[CurrentPhaseIndex];
@@ -472,6 +471,9 @@ namespace Models.PMF.Phen
                 //double TTRewound;
                 double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
+                bool HarvestCall = false;
+                if (CurrentPhaseIndex == Phases.Count - 1)
+                    HarvestCall = true;
                 PhaseIndexOffset = 0;
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
@@ -481,7 +483,7 @@ namespace Models.PMF.Phen
 
                 // If the new phase is a rewind or going ahead more that one phase(comming from a GoToPhase or PhaseSet Function), then reinitialise 
                 // all phases that are being wound back over.
-                if ((CurrentPhaseIndex < OldPhaseINdex)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
+                if (((CurrentPhaseIndex <= OldPhaseINdex)&&HarvestCall==false)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
                 {
                     foreach (Phase P in Phases)
                     {
@@ -540,6 +542,7 @@ namespace Models.PMF.Phen
             Phase Current = Phases[CurrentPhaseIndex];
             double proportionOfPhase = NewStage - CurrentPhaseIndex - 1;
             Current.FractionComplete = proportionOfPhase;
+            if(PhaseRewind != null)
             PhaseRewind.Invoke(this, new EventArgs());
         }
 
@@ -569,7 +572,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool InPhase(String PhaseName)
         {
-            return CurrentPhase.Name.ToLower() == PhaseName.ToLower();
+            return String.Equals(CurrentPhase.Name, PhaseName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -588,30 +591,31 @@ namespace Models.PMF.Phen
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
-                StartFraction = Convert.ToDouble(StartFractionSt);
+                StartFraction = Convert.ToDouble(StartFractionSt, 
+                                                 System.Globalization.CultureInfo.InvariantCulture);
 
-            string EndFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
-            double EndFraction = 0;
-            if (EndFractionSt != "")
-                EndFraction = Convert.ToDouble(EndFractionSt);
-
-            int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
-            int EndPhaseIndex = Phases.IndexOf(PhaseEndingWith(End));
-            int CurrentPhaseIndex = 0;
-            //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
-            if (CurrentPhase.PhaseParallel == null)
-                CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
-            else CurrentPhaseIndex = IndexOfPhase(CurrentPhase.PhaseParallel);
+            int StartPhaseIndex = -1;
+            int EndPhaseIndex = -1;
+            for (int i = 0; i < Phases.Count; i++)
+            {
+                if (Phases[i].Start == Start)
+                    StartPhaseIndex = i;
+                if (Phases[i].End == End)
+                    EndPhaseIndex = i;
+            }
+            if (StartPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + Start);
+            if (EndPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + End);
+            if (StartPhaseIndex > EndPhaseIndex)
+                throw new Exception("Start phase " + Start + " is after phase " + End);
 
             if (StartPhaseIndex == -1 || EndPhaseIndex == -1)
                 throw new Exception("Cannot test between stages " + Start + " " + End);
-
-            if (CurrentPhaseIndex == StartPhaseIndex)
-                return CurrentPhase.FractionComplete >= StartFraction;
-
-            else if (CurrentPhaseIndex == EndPhaseIndex)
-                return CurrentPhase.FractionComplete <= EndPhaseIndex;
-
+            
+            if (CurrentPhaseIndex == StartPhaseIndex && StartFraction > 0)
+                return Stage >= Math.Truncate(Stage) + StartFraction;
+  
             else
                 return CurrentPhaseIndex >= StartPhaseIndex && CurrentPhaseIndex <= EndPhaseIndex;
         }
@@ -628,8 +632,8 @@ namespace Models.PMF.Phen
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
-                StartFraction = Convert.ToDouble(StartFractionSt);
-
+                StartFraction = double.Parse(StartFractionSt.ToString(), 
+                                             System.Globalization.CultureInfo.InvariantCulture);
             int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
             //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
             if (CurrentPhase.PhaseParallel == null)
@@ -713,7 +717,7 @@ namespace Models.PMF.Phen
                 FractionBiomassRemoved = removeBiomPheno; // The RewindDueToBiomassRemoved function will use this.
 
                 double ttCritical = TTInAboveGroundPhase;
-                double removeFractPheno = RewindDueToBiomassRemoved.Value;
+                double removeFractPheno = RewindDueToBiomassRemoved.Value();
                 double removeTTPheno = ttCritical * removeFractPheno;
 
                 string msg;
@@ -784,11 +788,73 @@ namespace Models.PMF.Phen
                 double TTInPhase = 0.0;
                 for (CurrentPhaseIndex = 0; CurrentPhaseIndex < Phases.Count; CurrentPhaseIndex++)
                 {
-                    if (AboveGroundPeriod.Value == 1)
+                    if (AboveGroundPeriod.Value() == 1)
                         TTInPhase += Phases[CurrentPhaseIndex].TTinPhase;
                 }
                 CurrentPhaseIndex = SavedCurrentPhaseIndex;
                 return TTInPhase;
+            }
+        }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // write description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+
+                // Write Phase Table
+                tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
+
+                DataTable tableData = new DataTable();
+                tableData.Columns.Add("Stage Number", typeof(int));
+                tableData.Columns.Add("Stage Name", typeof(string));
+                tableData.Columns.Add("Phase Name", typeof(string));
+
+                int N = 0;
+                foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                {
+                    DataRow row;
+                    if (N == 0)
+                    {
+                        N++;
+                        row = tableData.NewRow();
+                        row[0] = N;
+                        row[1] = (child as Phase).Start;
+                        tableData.Rows.Add(row);
+                    }
+                    row = tableData.NewRow();
+                    row[2] = child.Name;
+                    tableData.Rows.Add(row);
+                    N++;
+                    row = tableData.NewRow();
+                    row[0] = N;
+                    row[1] = (child as Phase).End;
+                    tableData.Rows.Add(row);
+                }
+                tags.Add(new AutoDocumentation.Table(tableData, indent));
+                tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
+
+
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
+                foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    if (child.GetType() != typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
+                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

@@ -12,6 +12,9 @@ namespace UserInterface.Interfaces
     /// </summary>
     public interface ISeriesView
     {
+        /// <summary>Checkpoint</summary>
+        IDropDownView Checkpoint { get; }
+
         /// <summary>Data source</summary>
         IDropDownView DataSource { get; }
 
@@ -73,5 +76,9 @@ namespace UserInterface.Interfaces
         /// <param name="show"></param>
         void ShowX2Y2(bool show);
 
+        /// <summary>
+        /// If editing is in progress, stop it and store the current value
+        /// </summary>
+        void EndEdit();
     }
 }

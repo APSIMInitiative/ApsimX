@@ -1,10 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using CMPServices;
+// -----------------------------------------------------------------------
+// <copyright file="stock_padd.cs" company="CSIRO">
+// CSIRO Agriculture & Food
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CMPServices;
+
     /*
      GRAZPLAN animal biology model for AusFarm - TPaddockList & TForageList classes                                                                   
                                                                                
@@ -23,7 +29,8 @@ namespace Models.GrazPlan
     /// <summary>
     /// Chemistry data for the forage
     /// </summary>
-    public struct TChemData
+    [Serializable]
+    public struct ChemData
     {
         /// <summary>
         /// Mass in kg/ha 
@@ -51,12 +58,12 @@ namespace Models.GrazPlan
     /// Up to 12 classes with separate digestible and indigestible pools
     /// </summary>
     [Serializable]
-    public class TForageInfo
+    public class ForageInfo
     {
         /// <summary>
         /// Chemistry of the forage
         /// </summary>
-        protected enum TForageChemistry
+        protected enum ForageChemistry
         {
             /// <summary>
             /// 
@@ -80,6 +87,7 @@ namespace Models.GrazPlan
             fcVarDMDClasses
         };
 #pragma warning disable 1591 //missing xml comment
+        protected const double MISSING_POINT = 99999.9;
         protected const double CLASSWIDTH = 0.10;
         protected const double HIGHEST_DMD = 0.85;
         protected const double EPSILON = 1.0E-6;
@@ -104,8 +112,8 @@ namespace Models.GrazPlan
 
         private double getBottom()
         {
-            if (this.FBottom_MM == +99999.9)
-                return 0;
+            if (this.FBottom_MM == MISSING_POINT)
+                return 0.0;
             else
                 return this.FBottom_MM;
         }
@@ -155,7 +163,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Chemistry type
         /// </summary>
-        protected TForageChemistry FChemistryType;
+        protected ForageChemistry FChemistryType;
         /// <summary>
         /// Is this "forage" green or dead?
         /// </summary>
@@ -183,7 +191,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Chemistry details for each chem class
         /// </summary>
-        protected TChemData[] FChemData = new TChemData[MAX_CHEM_CLASSES - 1];
+        protected ChemData[] FChemData = new ChemData[MAX_CHEM_CLASSES - 1];
 
         /// <summary>
         /// 
@@ -270,7 +278,7 @@ namespace Models.GrazPlan
         /// * The providing forage component is specifying a quantity of forage with
         ///   a single digestibility, as part of a distribution of digestibilities
         ///   *provided by the source component*.
-        /// * We therefore calculate the DMD and then place all foage mass in the
+        /// * We therefore calculate the DMD and then place all forage mass in the
         ///   TAnimalGroup DMD class that contains that DMD value
         /// </summary>
         /// <param name="dAvailPropn"></param>
@@ -322,6 +330,14 @@ namespace Models.GrazPlan
             else if (((FSeedType == GrazType.UNRIPE) || (FSeedType == GrazType.RIPE)) && (dTotalDM > 0.0))
             {
                 populateSeedRecord(ref Result, dAvailPropn, DDM, IDM);
+
+                // The relative intake calculations for seed use dmd's from the herbage array. If this is a
+                // seed only forage then the herbage dmd should be set
+                dMeanDMD= Result.Seeds[1, FSeedType].Digestibility;
+                iDMD= Convert.ToInt32(Math.Min(1, Math.Max(1 + Math.Truncate((HIGHEST_DMD - dMeanDMD) / CLASSWIDTH), GrazType.DigClassNo)));
+                Result.SeedClass[1, FSeedType] = iDMD;                          // will then use the [iDMD] digestibility class from the herbage array
+                Result.Herbage[iDMD].Digestibility = dMeanDMD;
+
                 this.dSeedRipeFract[FSeedType] = Result.Seeds[1, FSeedType].Biomass; // for later division by the total for the seed ripeness class
             }
             return Result;
@@ -417,7 +433,7 @@ namespace Models.GrazPlan
             // Leaf & stem pools
             if (FSeedType == NOT_SEED)
             {
-                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)TForageChemistry.fcDMDClasses6] - 1; iChem++)
+                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)ForageChemistry.fcDMDClasses6] - 1; iChem++)
                 {
                     iDMD = iChem + 1;
 
@@ -731,7 +747,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The paddock of this forage
         /// </summary>
-        public TPaddockInfo InPaddock;
+        public PaddockInfo InPaddock;
         /// <summary>
         /// The herbage info
         /// </summary>
@@ -744,9 +760,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// Construct a forage info
         /// </summary>
-        public TForageInfo()
+        public ForageInfo()
         {
-            FChemistryType = TForageChemistry.fcUnknown;
+            FChemistryType = ForageChemistry.fcUnknown;
+            FBottom_MM = 0;
+            FTop_MM = 0;
         }
         /// <summary>
         /// Initialise a forage
@@ -755,11 +773,11 @@ namespace Models.GrazPlan
         {
             int iChem;
 
-            this.FBottom_MM = +99999.9;  // Missing value marker
+            this.FBottom_MM = MISSING_POINT;  // Missing value marker
             FTop_MM = 0.0;
             for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
             {
-                FChemData[iChem] = new TChemData();
+                FChemData[iChem] = new ChemData();
             }
         }
 
@@ -790,7 +808,7 @@ namespace Models.GrazPlan
             bool bMatched;
             int iChem;
 
-            sCohort = sCohort.ToLower();
+            sCohort = sCohort.ToLower();    // composite name
             sOrgan = sOrgan.ToLower();
             sAgeClass = sAgeClass.ToLower();
             sChem = sChem.ToLower();
@@ -812,7 +830,7 @@ namespace Models.GrazPlan
                 int i = 0;
                 while ((i < ages.Length) && (!bAddingGreen))
                 {
-                    bAddingGreen = (sCohort == ages[i]);
+                    bAddingGreen = (sAgeClass == ages[i]);
                     i++;
                 }
             }
@@ -824,12 +842,12 @@ namespace Models.GrazPlan
             }
 
             // The very first piece of forage information, so set the chemistry translation type
-            if (FChemistryType == TForageChemistry.fcUnknown)
+            if (FChemistryType == ForageChemistry.fcUnknown)
             {
-                FChemistryType = TForageChemistry.fcVarDMDClasses;
+                FChemistryType = ForageChemistry.fcVarDMDClasses;
                 iChem = 0;
                 bMatched = false;
-                while (!bMatched && (FChemistryType != TForageChemistry.fcUnknown))
+                while (!bMatched && (FChemistryType != ForageChemistry.fcUnknown))
                 {
                     bMatched = (sChem == this.CHEMISTRY_CLASSES[(int)FChemistryType, iChem]);
                     if (!bMatched && (iChem < this.CHEM_COUNT[(int)FChemistryType] - 1))
@@ -842,7 +860,7 @@ namespace Models.GrazPlan
                 }
             }
 
-            if (FChemistryType == TForageChemistry.fcUnknown)
+            if (FChemistryType == ForageChemistry.fcUnknown)
                 throw new Exception("Chemistry class \"" + sChem + "\" in AvailableToAnimal not recognised");
 
             // Which chemistry class within the cohort does this piece of forage belong to?
@@ -946,16 +964,16 @@ namespace Models.GrazPlan
                 dBulkDensity = this.dHerbageBulkDensity();
                 switch (FChemistryType)
                 {
-                    case TForageChemistry.fcDigInDig:
+                    case ForageChemistry.fcDigInDig:
                         fractionData = this.convertChemistry_DigInDig(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
                         break;
-                    case TForageChemistry.fcMeanDMD:
+                    case ForageChemistry.fcMeanDMD:
                         fractionData = this.convertChemistry_MeanDMD(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
                         break;
-                    case TForageChemistry.fcDMDClasses6:
+                    case ForageChemistry.fcDMDClasses6:
                         fractionData = this.convertChemistry_DMDClasses6(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
                         break;
-                    case TForageChemistry.fcVarDMDClasses:
+                    case ForageChemistry.fcVarDMDClasses:
                         fractionData = this.convertChemistry_VarDMDClasses(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
                         break;
                     default:
@@ -971,9 +989,14 @@ namespace Models.GrazPlan
                 {
                     if (Result.Herbage[iDMD].Biomass > 0.0)
                         this.dHerbageDMDFract[iDMD] = this.dHerbageDMDFract[iDMD] / Result.Herbage[iDMD].Biomass;
+                    // where not all digestible classes are used ensure that all the .digestibilty dmd's are set anyway
+                    if ((iDMD > 1) && (Result.Herbage[iDMD - 1].Digestibility > 0))
+                        Result.Herbage[iDMD].Digestibility = Result.Herbage[iDMD - 1].Digestibility - CLASSWIDTH;
                     for (iRipe = GrazType.UNRIPE; iRipe <= GrazType.RIPE; iRipe++)
+                    {
                         if (Result.Seeds[1, iRipe].Biomass > 0.0)
                             this.dSeedRipeFract[iRipe] = this.dSeedRipeFract[iRipe] / Result.Seeds[1, iRipe].Biomass;
+                    }
                 }
             }
             return Result;
@@ -1003,10 +1026,10 @@ namespace Models.GrazPlan
             sChemType = this.CHEMISTRY_CLASSES[(int)FChemistryType, Idx];
             dChemRemovalKgHa = 0.0;
 
-            if (FSeedType == 0)  // herbage
+            if (FSeedType == NOT_SEED)  // herbage
             {
                 dTotalMass = 0.0;
-                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType]; iChem++)
+                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
                     dTotalMass = dTotalMass + FChemData[iChem].dMass_KgHa;
 
                 dTotalRemoval = 0.0;
@@ -1018,7 +1041,22 @@ namespace Models.GrazPlan
                 if (dTotalMass > 0.0)
                     dChemRemovalKgHa = Math.Min(1.0, dTotalRemoval / dTotalMass) * FChemData[Idx].dMass_KgHa;
             }
-            // TODO: handle seed
+            else
+            {
+                // seed removal
+                dTotalMass = 0.0;
+                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
+                    dTotalMass = dTotalMass + FChemData[iChem].dMass_KgHa;
+
+                if (dTotalMass > 0.0)  //if there was some available to remove
+                {
+                    dTotalRemoval = RemovalKG.Seed[1, FSeedType];
+                    if ((InPaddock != null) && (dTotalRemoval > 0.0))
+                        dTotalRemoval = dTotalRemoval / InPaddock.fArea;
+
+                    dChemRemovalKgHa = Math.Min(1.0, dTotalRemoval / dTotalMass) * FChemData[Idx].dMass_KgHa;
+                }
+            }
         }
 
         /// <summary>
@@ -1075,18 +1113,18 @@ namespace Models.GrazPlan
     /// List of forages
     /// </summary>
     [Serializable]
-    public class TForageList
+    public class ForageList
     {
-        private TForageInfo[] FList;
+        private ForageInfo[] FList;
         bool FOwnsList;
 
         /// <summary>
         /// Construct the forage list
         /// </summary>
-        /// <param name="bOwnsForages"></param>
-        public TForageList(bool bOwnsForages)
+        /// <param name="ownsForages"></param>
+        public ForageList(bool ownsForages)
         {
-            FOwnsList = bOwnsForages;
+            FOwnsList = ownsForages;
             Array.Resize(ref FList, 0);
         }
         /// <summary>
@@ -1101,7 +1139,7 @@ namespace Models.GrazPlan
         /// Add a forage item
         /// </summary>
         /// <param name="Info"></param>
-        public void Add(TForageInfo Info)
+        public void Add(ForageInfo Info)
         {
             int Idx;
 
@@ -1114,11 +1152,11 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sName"></param>
         /// <returns></returns>
-        public TForageInfo Add(string sName)
+        public ForageInfo Add(string sName)
         {
-            TForageInfo newInfo;
+            ForageInfo newInfo;
 
-            newInfo = new TForageInfo();
+            newInfo = new ForageInfo();
             newInfo.sName = sName.ToLower();
             this.Add(newInfo);
             return newInfo;
@@ -1142,9 +1180,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TForageInfo byIndex(int Idx)
+        public ForageInfo byIndex(int Idx)
         {
-            TForageInfo result = null;
+            ForageInfo result = null;
             if ((Idx >= 0) && (Idx < FList.Length))
                 result = FList[Idx];
 
@@ -1155,7 +1193,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sName"></param>
         /// <returns></returns>
-        public TForageInfo byName(string sName)
+        public ForageInfo byName(string sName)
         {
             int Idx;
 
@@ -1189,23 +1227,23 @@ namespace Models.GrazPlan
     /// with the cohortid string.
     /// </summary>
     [Serializable]
-    public class TForageProvider
+    public class ForageProvider
     {
         bool FUseCohorts;                       // uses new cohorts array type
-        private TForageList FForages;
+        private ForageList FForages;
         private string FForageHostName;         // host crop, pasture component name
-        private Object FForageObj;               // the forage object (crop, pasture)
+        private Object FForageObj;              // the forage object (crop, pasture)
         private int FHostID;                    // plant/pasture comp
         private string FPaddockOwnerName;       // owning paddock FQN
         private int FSetterID;                  // setting property ID (or published event ID)
         private int FDriverID;                  // driving property ID
-        private TPaddockInfo FOwningPaddock;    // ptr to the paddock object in the model
+        private PaddockInfo FOwningPaddock;     // ptr to the paddock object in the model
         /// <summary>
         /// Construct the forage provider
         /// </summary>
-        public TForageProvider()
+        public ForageProvider()
         {
-            FForages = new TForageList(true);
+            FForages = new ForageList(true);
             OwningPaddock = null;
             FUseCohorts = false;
         }
@@ -1217,7 +1255,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The owning paddock
         /// </summary>
-        public TPaddockInfo OwningPaddock { get { return FOwningPaddock; } set { FOwningPaddock = value; } }
+        public PaddockInfo OwningPaddock { get { return FOwningPaddock; } set { FOwningPaddock = value; } }
         /// <summary>
         /// The paddock owner name
         /// </summary>
@@ -1248,27 +1286,28 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="availableForage"></param>
         /// <returns></returns>
-        public void UpdateForages(TAvailableToAnimal[] availableForage)
+        public void UpdateForages(AvailableToAnimal[] availableForage)
         {
             int i;
-            TAvailableToAnimal cohortItem;
+            AvailableToAnimal cohortItem;
             string sCohort;
             string sOrgan;
             string sAge;
             string sCohortName;
-            TForageInfo forage;
+            ForageInfo forage;
 
+            // only Plant components
             if (FUseCohorts) 
             {
                 // Need to clear the forage data for all the forages in this provider
-                for (i = 0; i <= FForages.Count() - 1; i++) // for each forage
+                for (i = 0; i <= FForages.Count() - 1; i++)             // for each forage
                     FForages.byIndex(i).clearForageData();
 
                 for (i = 1; i <= availableForage.Length; i++)
                 {
-                    cohortItem = availableForage[i-1];
-                    sCohort = cohortItem.CohortID;     // wheat, sorghum
-                    if (sCohort.Length > 0)                            // must have a cohort name
+                    cohortItem = availableForage[i - 1];
+                    sCohort = cohortItem.CohortID;                      // wheat, sorghum
+                    if (sCohort.Length > 0)                             // must have a cohort name
                     {
                         sOrgan = cohortItem.Organ;
                         sAge = cohortItem.AgeID;
@@ -1278,35 +1317,35 @@ namespace Models.GrazPlan
                         // This combination of cohort x organ x age has not been provided previously; allocate storage
                         if (forage == null)
                         {
-                            forage = new TForageInfo();
+                            forage = new ForageInfo();
                             forage.sName = sCohortName;
+                            forage.sCohortID = sCohort;
                             forage.sOrgan = sOrgan;
                             forage.sAgeClass = sAge;
-                            FOwningPaddock.AssignForage(forage);              // the paddock in the model can access this forage
-                            FForages.Add(forage);                             // create a new forage for this cohort
+                            FOwningPaddock.AssignForage(forage);              //the paddock in the model can access this forage
+                            FForages.Add(forage);                             //create a new forage for this cohort
                         }
 
-                        forage.addForageData(sCohort, sOrgan, sAge,      // Accessible when availForage() is called by the model
+                        forage.addForageData(sCohortName, sOrgan, sAge,    // Accessible when availForage() is called by the model
                                               cohortItem.Chem,
-                                              cohortItem.Bottom,
-                                              cohortItem.Top,
-                                              cohortItem.Weight,
-                                              cohortItem.N,
-                                              cohortItem.P,
-                                              cohortItem.S,
-                                              cohortItem.AshAlk);
+                                                  cohortItem.Bottom,
+                                                  cohortItem.Top,
+                                                  cohortItem.Weight,
+                                                  cohortItem.N,
+                                                  cohortItem.P,
+                                                  cohortItem.S,
+                                                  cohortItem.AshAlk);
                     }
                 }
             }
         }
-
 
         /// <summary>
         /// The forage name is the name of the cohort.
         /// </summary>
         /// <param name="forageName"></param>
         /// <returns></returns>
-        public TForageInfo ForageByName(string forageName)
+        public ForageInfo ForageByName(string forageName)
         {
             return FForages.byName(forageName);
         }
@@ -1316,7 +1355,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="idx">idx = 0..n</param>
         /// <returns></returns>
-        public TForageInfo ForageByIndex(int idx)
+        public ForageInfo ForageByIndex(int idx)
         {
             return FForages.byIndex(idx);
         }
@@ -1327,7 +1366,7 @@ namespace Models.GrazPlan
         /// <param name="forage"></param>
         /// <param name="Grazing"></param>
         /// <param name="sUnit"></param>
-        public void passGrazingInputs(TForageInfo forage,
+        public void passGrazingInputs(ForageInfo forage,
                                       GrazType.TGrazingInputs Grazing,
                                       string sUnit)
         {
@@ -1402,7 +1441,7 @@ namespace Models.GrazPlan
         /// <param name="forage"></param>
         /// <param name="sUnit"></param>
         /// <returns></returns>
-        public GrazType.TGrazingOutputs ReturnRemoval(TForageInfo forage, string sUnit)
+        public GrazType.TGrazingOutputs ReturnRemoval(ForageInfo forage, string sUnit)
         {
             double fArea;
             double fScale;
@@ -1453,7 +1492,7 @@ namespace Models.GrazPlan
         public bool somethingRemoved()
         {
             int forageIdx;
-            TForageInfo aForage;
+            ForageInfo aForage;
 
             bool result = false;
 
@@ -1477,13 +1516,13 @@ namespace Models.GrazPlan
     [Serializable]
     public class TForageProviders
     {
-        private List<TForageProvider> FForageProviderList;
+        private List<ForageProvider> FForageProviderList;
         /// <summary>
         /// Construct a forage provider
         /// </summary>
         public TForageProviders()
         {
-            FForageProviderList = new List<TForageProvider>();
+            FForageProviderList = new List<ForageProvider>();
         }
         /// <summary>
         /// Count of forage providers
@@ -1504,13 +1543,13 @@ namespace Models.GrazPlan
         /// <param name="driverID"></param>
         /// <param name="forageObj"></param>
         /// <param name="usePlantCohorts"></param>
-        public void AddProvider(TPaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, Object forageObj, bool usePlantCohorts)
+        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, Object forageObj, bool usePlantCohorts)
         {
-            TForageProvider forageProvider;
+            ForageProvider forageProvider;
 
             //this is a forage provider
             // this provider can host a number of forages/species
-            forageProvider = new TForageProvider();
+            forageProvider = new ForageProvider();
             forageProvider.PaddockOwnerName = paddName;    // owning paddock
             forageProvider.ForageHostName = forageName;    // host pasture/plant component name
             forageProvider.HostID = hostID;                // plant/pasture comp
@@ -1528,9 +1567,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="providerName"></param>
         /// <returns></returns>
-        public TForageProvider FindProvider(string providerName)
+        public ForageProvider FindProvider(string providerName)
         {
-            TForageProvider provider;
+            ForageProvider provider;
             int i;
 
             provider = null;
@@ -1551,9 +1590,9 @@ namespace Models.GrazPlan
         /// <param name="hostID"></param>
         /// <param name="driverID"></param>
         /// <returns></returns>
-        public TForageProvider FindProvider(int hostID, int driverID)
+        public ForageProvider FindProvider(int hostID, int driverID)
         {
-            TForageProvider provider;
+            ForageProvider provider;
             int i;
 
             provider = null;
@@ -1573,9 +1612,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="hostID"></param>
         /// <returns></returns>
-        public TForageProvider FindProvider(int hostID)
+        public ForageProvider FindProvider(int hostID)
         {
-            TForageProvider provider;
+            ForageProvider provider;
             int i;
 
             provider = null;
@@ -1595,7 +1634,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public TForageProvider ForageProvider(int idx)
+        public ForageProvider ForageProvider(int idx)
         {
             if ((idx >= 0) && (idx < FForageProviderList.Count))
                 return FForageProviderList[idx];
@@ -1608,7 +1647,7 @@ namespace Models.GrazPlan
     /// Paddock details
     /// </summary>
     [Serializable]
-    public class TPaddockInfo
+    public class PaddockInfo
     {
         /// <summary>
         /// Missing item
@@ -1626,7 +1665,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// CAREFUL - FForages does not own its members
         /// </summary>
-        private TForageList FForages;                                       
+        private ForageList FForages;                                       
         private TSupplementRation FSuppInPadd;                                                  
         private bool FUseHerbageAmt;
 
@@ -1678,16 +1717,16 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the forage list
         /// </summary>
-        public TForageList Forages
+        public ForageList Forages
         {
             get { return FForages; }
         }
         /// <summary>
-        /// Create the TPaddockInfo
+        /// Create the PaddockInfo
         /// </summary>
-        public TPaddockInfo()
+        public PaddockInfo()
         {
-            FForages = new TForageList(false);
+            FForages = new ForageList(false);
             FSuppInPadd = new TSupplementRation();
             this.fArea = 1.0;
             FSlope = 0.0;
@@ -1699,7 +1738,7 @@ namespace Models.GrazPlan
         /// Assign a forage to this paddock
         /// </summary>
         /// <param name="Forage"></param>
-        public void AssignForage(TForageInfo Forage)
+        public void AssignForage(ForageInfo Forage)
         {
             FForages.Add(Forage);
             Forage.InPaddock = this;
@@ -1788,7 +1827,7 @@ namespace Models.GrazPlan
     [Serializable]
     public class TPaddockList
     {
-        private TPaddockInfo[] FList;
+        private PaddockInfo[] FList;
         /// <summary>
         /// Create the TPaddockList
         /// </summary>
@@ -1808,7 +1847,7 @@ namespace Models.GrazPlan
         /// Add a paddock
         /// </summary>
         /// <param name="Info"></param>
-        public void Add(TPaddockInfo Info)
+        public void Add(PaddockInfo Info)
         {
             int Idx;
 
@@ -1823,9 +1862,9 @@ namespace Models.GrazPlan
         /// <param name="sName"></param>
         public void Add(int ID, string sName)
         {
-            TPaddockInfo NewPadd;
+            PaddockInfo NewPadd;
 
-            NewPadd = new TPaddockInfo();
+            NewPadd = new PaddockInfo();
             NewPadd.iPaddID = ID;
             NewPadd.sName = sName.ToLower();
             this.Add(NewPadd);
@@ -1837,9 +1876,9 @@ namespace Models.GrazPlan
         /// <param name="sName"></param>
         public void Add(Object paddObj, string sName)
         {
-            TPaddockInfo NewPadd;
+            PaddockInfo NewPadd;
 
-            NewPadd = new TPaddockInfo();
+            NewPadd = new PaddockInfo();
             NewPadd.iPaddID = this.Count() + 1; //???????? ID is 1 based here
             NewPadd.paddObj = paddObj;
             NewPadd.sName = sName.ToLower();
@@ -1863,7 +1902,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="iValue">0-n</param>
         /// <returns></returns>
-        public TPaddockInfo byIndex(int iValue)
+        public PaddockInfo byIndex(int iValue)
         {
             return FList[iValue];
         }
@@ -1872,11 +1911,11 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="iValue"></param>
         /// <returns></returns>
-        public TPaddockInfo byID(int iValue)
+        public PaddockInfo byID(int iValue)
         {
             int Idx;
 
-            TPaddockInfo Result = null;
+            PaddockInfo Result = null;
             Idx = 0;
             while ((Idx < this.Count()) && (Result == null))
             {
@@ -1892,11 +1931,11 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="paddObj">The paddock object</param>
         /// <returns>The paddock info</returns>
-        public TPaddockInfo byObj(Object paddObj)
+        public PaddockInfo byObj(Object paddObj)
         {
             int Idx;
 
-            TPaddockInfo Result = null;
+            PaddockInfo Result = null;
             Idx = 0;
             while ((Idx < this.Count()) && (Result == null))
             {
@@ -1912,7 +1951,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sName"></param>
         /// <returns></returns>
-        public TPaddockInfo byName(string sName)
+        public PaddockInfo byName(string sName)
         {
             int Idx;
 

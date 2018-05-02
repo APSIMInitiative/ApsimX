@@ -35,6 +35,11 @@ namespace Models.Core
         public abstract string Description { get; }
 
         /// <summary>
+        /// Gets the text to use as a label for the property.
+        /// </summary>
+        public abstract string Caption { get; }
+
+        /// <summary>
         /// Gets or sets the units of the property or null if not found.
         /// </summary>
         public abstract string Units { get; set;  }

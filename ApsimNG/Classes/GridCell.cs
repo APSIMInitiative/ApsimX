@@ -6,12 +6,9 @@
 namespace UserInterface.Classes
 {
     using System;
-    using System.Collections.Generic;
-    //using System.Windows.Forms;
     using Interfaces;
     using Gtk;
     using Views;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Represents a grid cell.
@@ -19,7 +16,7 @@ namespace UserInterface.Classes
     public class GridCell : IGridCell
     {
         /// <summary>
-        /// The parent grid that this column belongs to
+        /// The parent grid that this column belongs to.
         /// </summary>
         private GridView gridView;
 
@@ -72,12 +69,14 @@ namespace UserInterface.Classes
                 {
                     return EditorTypeEnum.DateTime;
                 }
-                else if (this.gridView.Grid[this.ColumnIndex, this.RowIndex] is DataGridViewButtonCell)
+                */
+                Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
+                if (gridView.ButtonList.Contains(key))
                 {
                     return EditorTypeEnum.Button;
                 }
-                */
-                else if (gridView.comboLookup.ContainsKey(new Tuple<int, int>(this.RowIndex, this.ColumnIndex)))
+                
+                else if (gridView.ComboLookup.ContainsKey(key))
                     return EditorTypeEnum.DropDown;
                 else
                     return EditorTypeEnum.TextBox;
@@ -115,17 +114,21 @@ namespace UserInterface.Classes
 
                     case EditorTypeEnum.Button:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewButtonCell();
+                            Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
+                            if (!gridView.ButtonList.Contains(key))
+                            {
+                                gridView.ButtonList.Add(key);
+                            }
                             break;
                         }
 
                     case EditorTypeEnum.DropDown:
                         {
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
-                            if (!gridView.comboLookup.ContainsKey(key))
+                            if (!gridView.ComboLookup.ContainsKey(key))
                             {
                                 ListStore store = new ListStore(typeof(string));
-                                gridView.comboLookup.Add(key, store);
+                                gridView.ComboLookup.Add(key, store);
                             }
                             break;
                         }
@@ -143,7 +146,7 @@ namespace UserInterface.Classes
             get
             {
                 ListStore store;
-                if (gridView.comboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
+                if (gridView.ComboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
                 {
                     int nNames = store.IterNChildren();
                     string[] result = new string[nNames];
@@ -161,7 +164,7 @@ namespace UserInterface.Classes
             set
             {
                 ListStore store;
-                if (gridView.comboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
+                if (gridView.ComboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
                 {
                     store.Clear();
                     foreach (string st in value)

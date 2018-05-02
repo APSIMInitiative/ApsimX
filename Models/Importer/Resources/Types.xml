@@ -1348,7 +1348,7 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="MainStemFinalNodeNumberFunction">
+  <Type name="FinalLeafNumberFunction">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
@@ -1571,6 +1571,11 @@
     </MetaData>
   </Type>
   <Type name="LinearInterpolationFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="LinearAboveThresholdFunction">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>

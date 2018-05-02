@@ -31,68 +31,35 @@ namespace Models.PMF.Interfaces
     /// </remarks>
     public interface IArbitration
     {
-        /// <summary>
-        /// Name of this Organ
-        /// </summary>
-        string Name { get;}
+        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        BiomassPoolType CalculateDryMatterDemand();
 
-        /// <summary>Sets the dm potential allocation.</summary>
-        BiomassPoolType DMPotentialAllocation { set; }
+        /// <summary>Calculate and return dry matter supply (g/m2)</summary>
+        BiomassSupplyType CalculateDryMatterSupply();
 
-        /// <summary>Gets or sets the dm demand.</summary>
-        BiomassPoolType DMDemand { get; set; }
+        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
+        BiomassPoolType CalculateNitrogenDemand();
 
-        /// <summary>Gets or sets the dm supply.</summary>
-        BiomassSupplyType DMSupply { get; set; }
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        BiomassSupplyType CalculateNitrogenSupply();
 
-        /// <summary>Sets the dm allocation.</summary>
-        BiomassAllocationType DMAllocation { set; }
+        /// <summary>Sets the dry matter potential allocation.</summary>
+        void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter);
 
-        /// <summary>Gets or sets the n demand.</summary>
-        BiomassPoolType NDemand { get; set; }
-
-        /// <summary>Gets or sets the n supply.</summary>
-        BiomassSupplyType NSupply { get; set; }
+        /// <summary>Sets the dry matter allocation.</summary>
+        void SetDryMatterAllocation(BiomassAllocationType dryMatter);
 
         /// <summary>Sets the n allocation.</summary>
-        BiomassAllocationType NAllocation { set; }
+        void SetNitrogenAllocation(BiomassAllocationType nitrogen);
 
         /// <summary>Gets or sets the minimum nconc.</summary>
         double MinNconc { get; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
-        double NFixationCost { get; set; }
+        double NFixationCost { get; }
 
-        /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
-        double Wt { get; }
-
-        /// <summary>Gets the total (live + dead) n (g/m2).</summary>
-        double N { get; }
-
-        /// <summary>Gets or sets the water demand.</summary>
-        double WaterDemand { get; set; }
-
-        /// <summary>Gets or sets the water supply.</summary>
-        /// <param name="zone">The zone.</param>
-        double[] WaterSupply(ZoneWaterAndN zone);
-
-        /// <summary>Gets or sets the water allocation.</summary>
-        double WaterAllocation { get; set; }
-
-        /// <summary>Does the water uptake.</summary>
-        /// <param name="Amount">The amount.</param>
-        /// <param name="zoneName">Zone name to do water uptake in</param>
-        void DoWaterUptake(double[] Amount, string zoneName);
-
-        /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator);
-
-        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
-        /// <param name="zone">The zone.</param>
-        /// <param name="NO3Supply">The returned NO3 supply</param>
-        /// <param name="NH4Supply">The returned NH4 supply</param>
-        void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply);
+        /// <summary>Gets the total biomass</summary>
+        Biomass Total { get; }
     }
 
 
@@ -108,10 +75,17 @@ namespace Models.PMF.Interfaces
         public double Structural { get; set; }
         /// <summary>Gets or sets the non structural.</summary>
         /// <value>The non structural.</value>
-        public double NonStructural { get; set; }
+        public double Storage { get; set; }
         /// <summary>Gets or sets the metabolic.</summary>
         /// <value>The metabolic.</value>
         public double Metabolic { get; set; }
+
+        internal void Clear()
+        {
+            Structural = 0;
+            Storage = 0; 
+            Metabolic = 0;
+        }
     }
     /// <summary>
     /// 
@@ -131,6 +105,14 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the retranslocation.</summary>
         /// <value>The retranslocation.</value>
         public double Retranslocation { get; set; }
+
+        internal void Clear()
+        {
+            Fixation = 0;
+            Reallocation = 0;
+            Uptake = 0;
+            Retranslocation = 0;
+        }
     }
     /// <summary>
     /// 
@@ -143,7 +125,7 @@ namespace Models.PMF.Interfaces
         public double Structural { get; set; }
         /// <summary>Gets or sets the non structural.</summary>
         /// <value>The non structural.</value>
-        public double NonStructural { get; set; }
+        public double Storage { get; set; }
         /// <summary>Gets or sets the metabolic.</summary>
         /// <value>The metabolic.</value>
         public double Metabolic { get; set; }

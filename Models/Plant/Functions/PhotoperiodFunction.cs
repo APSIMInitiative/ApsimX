@@ -8,7 +8,10 @@ using Models.Interfaces;
 
 namespace Models.PMF.Functions
 {
-    /// <summary>Returns the value of today's photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead.</summary>
+    /// <summary>
+    /// # [Name]
+    /// Returns the value of today's photoperiod calculated using the specified latitude and twilight sun angle threshold.  If a variable called ClimateControl.PhotoPeriod is found in the simulation, it will be used instead.
+    /// </summary>
     /// <remarks>The day length is calculated with \ref MathUtilities.DayLength.</remarks>
     /// \pre A \ref Models.WeatherFile function has to exist.
     /// \pre A \ref Models.Clock function has to be existed to retrieve day of year
@@ -17,7 +20,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PhotoperiodFunction : Model, IFunction
+    public class PhotoperiodFunction : Model, IFunction, ICustomDocumentation
     {
 
         /// <summary>The met data</summary>
@@ -40,12 +43,9 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return DayLength;                    
-            }
+            return DayLength;
         }
 
         [EventSubscribe("DoWeather")]
@@ -57,25 +57,27 @@ namespace Models.PMF.Functions
                 DayLength = 0;
         }
 
-        
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-            // get description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+                // get description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>Twilight = " + Twilight.ToString() + " (degrees)</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>Twilight = " + Twilight.ToString() + " (degrees)</i>", indent));
+            }
         }
-
     }
 }

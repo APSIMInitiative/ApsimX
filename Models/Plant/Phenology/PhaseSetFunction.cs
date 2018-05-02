@@ -9,6 +9,7 @@ using Models.Interfaces;
 namespace Models.PMF.Phen
 {
     ///<summary>
+    /// # [Name]
     /// The switches phenology to a nominated stage on a nominated event
     ///</summary>
     [Serializable]

@@ -1,9 +1,11 @@
 using System;
 using Models.Core;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)
     /// </summary>
     [Serializable]
@@ -21,16 +23,12 @@ namespace Models.PMF.Functions
         [Link] Structure Structure = null;
 
         /// <summary>Gets the value.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                double LeafNo = Structure.LeafTipsAppeared;
+            double LeafNo = Structure.LeafTipsAppeared;
 
-                return AreaMax.Value * Math.Exp(Breadth.Value * Math.Pow(LeafNo - LargestLeafPosition.Value, 2.0)
-                                  + Skewness.Value * (Math.Pow(LeafNo - LargestLeafPosition.Value, 3.0)));
-
-            }
+            return AreaMax.Value(arrayIndex) * Math.Exp(Breadth.Value(arrayIndex) * Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 2.0)
+                                + Skewness.Value(arrayIndex) * (Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 3.0)));
         }
     }
 }

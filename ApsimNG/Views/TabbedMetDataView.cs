@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using UserInterface.Interfaces;
 using Gtk;
-using Glade;
 
 // This is the view used by the WeatherFile component
 namespace UserInterface.Views
@@ -89,6 +88,10 @@ namespace UserInterface.Views
         /// <param name="sheetNames"></param>
         void PopulateDropDownData(List<string> sheetNames);
 
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get; set; }
     }
 
     /// <summary>
@@ -112,55 +115,54 @@ namespace UserInterface.Views
 
         public event ExcelSheetDelegate ExcelSheetChangeClicked;
 
-        [Widget]
         private Label labelFileName = null;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private Notebook notebook1 = null;
-        [Widget]
         private TextView textview1 = null;
-        [Widget]
         private Alignment alignSummary = null;
-        [Widget]
         private Alignment alignData = null;
-        [Widget]
         private Alignment alignRainChart = null;
-        [Widget]
         private Alignment alignRainMonthly = null;
-        [Widget]
         private Alignment alignTemp = null;
-        [Widget]
         private Alignment alignRadn = null;
-        [Widget]
         private VBox vboxRainChart = null;
-        [Widget]
         private VBox vboxRainMonthly = null;
-        [Widget]
         private VBox vboxTemp = null;
-        [Widget]
         private VBox vboxRadn = null;
-        [Widget]
         private HBox hboxOptions = null;
-        [Widget]
         private SpinButton spinStartYear = null;
-        [Widget]
         private SpinButton spinNYears = null;
-        [Widget]
         private Button button1 = null;
-        [Widget]
         private VPaned vpaned1 = null;
-        [Widget]
         private HBox hbox2 = null;
-        [Widget]
         private Alignment alignment10 = null;
         private DropDownView worksheetCombo;
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.TabbedMetDataView.glade", "vbox1");
-            gxml.Autoconnect(this);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
+            labelFileName = (Label)builder.GetObject("labelFileName");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            notebook1 = (Notebook)builder.GetObject("notebook1");
+            textview1 = (TextView)builder.GetObject("textview1");
+            alignSummary = (Alignment)builder.GetObject("alignSummary");
+            alignData = (Alignment)builder.GetObject("alignData");
+            alignRainChart = (Alignment)builder.GetObject("alignRainChart");
+            alignRainMonthly = (Alignment)builder.GetObject("alignRainMonthly");
+            alignTemp = (Alignment)builder.GetObject("alignTemp");
+            alignRadn = (Alignment)builder.GetObject("alignRadn");
+            vboxRainChart = (VBox)builder.GetObject("vboxRainChart");
+            vboxRainMonthly = (VBox)builder.GetObject("vboxRainMonthly");
+            vboxTemp = (VBox)builder.GetObject("vboxTemp");
+            vboxRadn = (VBox)builder.GetObject("vboxRadn");
+            hboxOptions = (HBox)builder.GetObject("hboxOptions");
+            spinStartYear = (SpinButton)builder.GetObject("spinStartYear");
+            spinNYears = (SpinButton)builder.GetObject("spinNYears");
+            button1 = (Button)builder.GetObject("button1");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            hbox2 = (HBox)builder.GetObject("hbox2");
+            alignment10 = (Alignment)builder.GetObject("alignment10");
             _mainWidget = vbox1;
             graphViewSummary = new GraphView(this);
             alignSummary.Add(graphViewSummary.MainWidget);
@@ -197,6 +199,8 @@ namespace UserInterface.Views
             spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
             notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
             worksheetCombo.Changed -= WorksheetCombo_Changed;
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>Gets or sets the filename.</summary>
@@ -246,6 +250,15 @@ namespace UserInterface.Views
         /// <value>The Radiation Graph</value>
         public IGraphView GraphRadiation { get { return graphViewRadiation; } }
 
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        public int TabIndex
+        {
+            get { return notebook1.CurrentPage; }
+            set { notebook1.CurrentPage = value; }
+        }
+
         /// <summary>Sets the Graph Year</summary>
         public int GraphStartYearValue
         {
@@ -262,6 +275,7 @@ namespace UserInterface.Views
                 spinStartYear.GetRange(out min, out max);
                 return (int)(min + 0.5);
             }
+
             set
             {
                 double min, max;
@@ -279,6 +293,7 @@ namespace UserInterface.Views
                 spinStartYear.GetRange(out min, out max);
                 return (int)(max + 0.5);
             }
+
             set
             {
                 double min, max;
@@ -336,38 +351,16 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            FileChooserDialog fileChooser = new FileChooserDialog("Choose a weather file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-
-            FileFilter fileFilter = new FileFilter();
-            fileFilter.Name = "APSIM Weather file (*.met)";
-            fileFilter.AddPattern("*.met");
-            fileChooser.AddFilter(fileFilter);
-
-            FileFilter excelFilter = new FileFilter();
-            excelFilter.Name = "Excel file (*.xlsx)";
-            excelFilter.AddPattern("*.xlsx");
-            fileChooser.AddFilter(excelFilter);
-
-            FileFilter allFilter = new FileFilter();
-            allFilter.Name = "All files";
-            allFilter.AddPattern("*");
-            fileChooser.AddFilter(allFilter);
-
-            fileChooser.SetFilename(labelFileName.Text);
-
-            if (fileChooser.Run() == (int)ResponseType.Accept)
+            string fileName = AskUserForFileName("Choose a weather file to open", "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", FileChooserAction.Open, labelFileName.Text);
+            if (!String.IsNullOrEmpty(fileName))
             {
-                Filename = fileChooser.Filename;
-                fileChooser.Destroy();
+                Filename = fileName;
                 if (BrowseClicked != null)
                 {
                     BrowseClicked.Invoke(Filename);    //reload the grid with data
                     notebook1.CurrentPage = 0;
                 }
-
-             }
-             else
-                fileChooser.Destroy();
+            }
         }
 
         /// <summary>Handles the change event for the GraphStartYear NumericUpDown </summary>

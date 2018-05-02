@@ -14,7 +14,7 @@ namespace Models.PMF.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunction : Model, IFunction
+    public class AccumulateFunction : Model, IFunction, ICustomDocumentation
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -39,8 +39,21 @@ namespace Models.PMF.Functions
         [Description("(optional) Stage name to reset accumulation")]
         public string ResetStageName { get; set; }
 
-        /// <summary>The fraction removed on cut</summary>
-        private double FractionRemovedOnCut = 0; //FIXME: This should be passed from the manager when "cut event" is called. Must be made general to other events.
+        /// <summary>The fraction removed on Cut event</summary>
+        [Description("(optional) Fraction to remove on Cut")]
+        public double FractionRemovedOnCut { get; set; }
+
+        /// <summary>The fraction removed on Harvest event</summary>
+        [Description("(optional) Fraction to remove on Harvest")]
+        public double FractionRemovedOnHarvest { get; set; }
+
+        /// <summary>The fraction removed on Graze event</summary>
+        [Description("(optional) Fraction to remove on Graze")]
+        public double FractionRemovedOnGraze { get; set; }
+
+        /// <summary>The fraction removed on Prun event</summary>
+        [Description("(optional) Fraction to remove on Prun")]
+        public double FractionRemovedOnPrune { get; set; }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -65,7 +78,7 @@ namespace Models.PMF.Functions
                 double DailyIncrement = 0.0;
                 foreach (IFunction function in ChildFunctions)
                 {
-                    DailyIncrement += function.Value;
+                    DailyIncrement += function.Value();
                 }
 
                 AccumulatedValue += DailyIncrement;
@@ -84,12 +97,9 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return AccumulatedValue;
-            }
+            return AccumulatedValue;
         }
 
         /// <summary>Called when [cut].</summary>
@@ -99,6 +109,32 @@ namespace Models.PMF.Functions
         private void OnCut(object sender, EventArgs e)
         {
             AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
+        }
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvest(object sender, EventArgs e)
+        {
+            AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
+        }
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Grazing")]
+        private void OnGraze(object sender, EventArgs e)
+        {
+            AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
+        }
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPrune(object sender, EventArgs e)
+        {
+            AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
         }
 
         /// <summary>Called when [EndCrop].</summary>
@@ -114,18 +150,18 @@ namespace Models.PMF.Functions
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            Name = this.Name;
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-            tags.Add(new AutoDocumentation.Paragraph("**"+this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
-                                                        + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            if (IncludeInDocumentation)
             {
-                child.Document(tags, headingLevel + 1, indent + 1);
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                tags.Add(new AutoDocumentation.Paragraph("**" + this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
+                                                            + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
     }

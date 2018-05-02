@@ -12,44 +12,42 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("From the value of the first child function, subtract the values of the subsequent children functions")]
-    public class SubtractFunction : Model, IFunction
+    public class SubtractFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+
+            double returnValue = 0.0;
+            if (ChildFunctions.Count > 0)
             {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                IFunction F = ChildFunctions[0] as IFunction;
+                returnValue = F.Value(arrayIndex);
 
-                double returnValue = 0.0;
-                if (ChildFunctions.Count > 0)
-                {
-                    IFunction F = ChildFunctions[0] as IFunction;
-                    returnValue = F.Value;
+                if (ChildFunctions.Count > 1)
+                    for (int i = 1; i < ChildFunctions.Count; i++)
+                    {
+                        F = ChildFunctions[i] as IFunction;
+                        returnValue = returnValue - F.Value(arrayIndex);
+                    }
 
-                    if (ChildFunctions.Count > 1)
-                        for (int i = 1; i < ChildFunctions.Count; i++)
-                        {
-                            F = ChildFunctions[i] as IFunction;
-                            returnValue = returnValue - F.Value;
-                        }
-
-                }
-                return returnValue;
             }
+            return returnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            DocumentMathFunction(this, '-', tags, headingLevel, indent);
+            if (IncludeInDocumentation)
+                DocumentMathFunction(this, '-', tags, headingLevel, indent);
         }
 
         /// <summary>
@@ -68,7 +66,7 @@ namespace Models.PMF.Functions
 
             // write memos.
             foreach (IModel memo in Apsim.Children(function, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
@@ -90,7 +88,7 @@ namespace Models.PMF.Functions
 
                 // write children.
                 foreach (IModel child in childrenToDocument)
-                    child.Document(tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
 
@@ -106,7 +104,7 @@ namespace Models.PMF.Functions
         {
             if (child is Constant)
             {
-                double doubleValue = (child as Constant).Value;
+                double doubleValue = (child as Constant).FixedValue;
                 if (Math.IEEERemainder(doubleValue, doubleValue) == 0)
                 {
                     int intValue = Convert.ToInt32(doubleValue);
@@ -121,7 +119,7 @@ namespace Models.PMF.Functions
             }
             else if (child is VariableReference)
             {
-                msg += StringUtilities.RemoveTrailingString((child as VariableReference).VariableName, ".Value");
+                msg += StringUtilities.RemoveTrailingString((child as VariableReference).VariableName, ".Value()");
                 return true;
             }
 

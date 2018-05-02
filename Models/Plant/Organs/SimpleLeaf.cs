@@ -4,7 +4,9 @@ using Models.Interfaces;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using Models.PMF.Struct;
 using System;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -22,16 +24,19 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Demands**
     /// 
-    /// The daily structural N demand of this organ is the product of Total DM demand and a maximum Nitrogen concentration.  The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
+    /// The daily Storage N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
+    /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
+    /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
     /// 
     /// **Nitrogen Supplies**
     /// 
-    /// N is not reallocated from  this organ.  Nonstructural N is not available for retranslocation to other organs.
+    /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
+    /// A fraction of Storage N is made available to the arbitrator as NRetranslocationSupply
     /// 
     /// **Biomass Senescence and Detachment**
     /// 
-    /// No senescence occurs from this organ.  
-    /// No detachment occurs from this organ.
+    /// Senescence is calculated as a proportion of the live dry matter.
+    /// Detachment of biomass into the surface organic matter pool is calculated daily as a proportion of the dead DM.
     /// 
     /// **Canopy**
     /// 
@@ -44,13 +49,29 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
+    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf, IHasWaterDemand
     {
+        /// <summary>The plant</summary>
+        [Link]
+        private Plant Plant = null;
+
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
 
         #region Leaf Interface
+        /// <summary>
+        /// Number of initiated cohorts that have not appeared yet
+        /// </summary>
+        public int ApicalCohortNo { get; set; }
+        /// <summary>
+        /// reset leaf numbers
+        /// </summary>
+        public void Reset() { }
+        /// <summary></summary>
+        public int InitialisedCohortNo { get; set; }
+        /// <summary></summary>
+        public void RemoveHighestLeaf() { }
         /// <summary>
         /// 
         /// </summary>
@@ -65,12 +86,8 @@ namespace Models.PMF.Organs
         public int CohortsAtInitialisation { get; set; }
         /// <summary>
         /// 
-        /// </summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AppearedCohortNo { get; set; }
+        ///</summary>
+        public int AppearedCohortNo { get; set; }
 
         /// <summary>
         /// 
@@ -81,6 +98,10 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="proprtionRemoved"></param>
         public void DoThin(double proprtionRemoved) { }
+
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        public double ApexNumByAge(double age) { return 0; }
         #endregion
 
         #region Canopy interface
@@ -117,9 +138,9 @@ namespace Models.PMF.Organs
                 {
                     double greenCover = 0.0;
                     if (CoverFunction == null)
-                        greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value * LAI);
+                        greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI);
                     else
-                        greenCover = CoverFunction.Value;
+                        greenCover = CoverFunction.Value();
                     return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
@@ -146,8 +167,22 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double FRGR { get; set; }
 
+        private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
-        public double PotentialEP { get; set; }
+        [Units("mm")]
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -157,9 +192,7 @@ namespace Models.PMF.Organs
         /// <summary>The FRGR function</summary>
         [Link]
         IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
-        /// <summary>The dm demand function</summary>
-        [Link]
-        IFunction DMDemandFunction = null;
+
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
         IFunction CoverFunction = null;
@@ -179,9 +212,6 @@ namespace Models.PMF.Organs
         /// <summary>The lai dead function</summary>
         [Link]
         IFunction LaiDeadFunction = null;
-        /// <summary>The structural fraction</summary>
-        [Link]
-        IFunction StructuralFraction = null;
 
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
@@ -200,26 +230,32 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
-        /// <summary>Gets or sets the water demand.</summary>
-        [Units("mm")]
-        public override double WaterDemand
+        /// <summary>Calculates the water demand.</summary>
+        public double CalculateWaterDemand()
         {
-            get
+            if (WaterDemandFunction != null)
+                return WaterDemandFunction.Value();
+            else
             {
-                if (WaterDemandFunction != null)
-                    return WaterDemandFunction.Value;
-                else
-                    return PotentialEP;
+                return PotentialEP;
             }
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
-        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
+        public double Fn
+        {
+            get
+            {
+                if (Live != null)
+                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                return 0;
+            }
+        }
 
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
@@ -231,53 +267,52 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
+        public double RadIntTot
+        {
+            get
+            {
+                if (MicroClimatePresent)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;
+                }
+                else
+                    return CoverGreen * MetData.Radn;
+            }
+        }
 
         #endregion
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        public override double WaterAllocation { get; set; }
-        
-        /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                StructuralDMDemand = DMDemandFunction.Value;
-                NonStructuralDMDemand = 0;
-                return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
-            }
-        }
+        [XmlIgnore]
+        public double WaterAllocation { get; set; }
 
-        /// <summary>Gets or sets the dm supply.</summary>
-        public override BiomassSupplyType DMSupply
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public override BiomassSupplyType CalculateDryMatterSupply()
         {
-            get
-            {
-                return new BiomassSupplyType
-                {
-                    Fixation = Photosynthesis.Value,
-                    Retranslocation = AvailableDMRetranslocation(),
-                    Reallocation = 0.0
-                };
-            }
-        }
-
-        /// <summary>Gets or sets the n demand.</summary>
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
-                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
-                return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
-            }
+            base.CalculateDryMatterSupply();   // get our base GenericOrgan to fill a supply structure first.
+            DMSupply.Fixation = Photosynthesis.Value();
+            return DMSupply;
         }
 
         #endregion
 
         #region Events
+        /// <summary>Called when crop is sown</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == Plant)
+            {
+                MicroClimatePresent = false;
+                Clear();
+            }
+        }
         #endregion
 
         #region Component Process Functions
@@ -301,18 +336,20 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
+                if (MicroClimatePresent == false)
+                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
-                FRGR = FRGRFunction.Value;
+                FRGR = FRGRFunction.Value();
                 if (CoverFunction == null && ExtinctionCoefficientFunction == null)
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 if (CoverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
+                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1));
                 if (LAIFunction != null)
-                    LAI = LAIFunction.Value;
+                    LAI = LAIFunction.Value();
 
-                Height = HeightFunction.Value;
+                Height = HeightFunction.Value();
 
-                LAIDead = LaiDeadFunction.Value;
+                LAIDead = LaiDeadFunction.Value();
 
             }
         }

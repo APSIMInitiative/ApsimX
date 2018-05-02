@@ -7,6 +7,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
+    /// # [Name]
     /// Raises the value of the child to the power of the exponent specified
     /// </summary>
     [Serializable]
@@ -29,29 +30,26 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Power function must have only one argument</exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+
+            if (ChildFunctions.Count == 1)
             {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                IFunction F = ChildFunctions[0] as IFunction;
+                return Math.Pow(F.Value(arrayIndex), Exponent);
+            }
+            else if (ChildFunctions.Count == 2)
+            {
 
-                if (ChildFunctions.Count == 1)
-                {
-                    IFunction F = ChildFunctions[0] as IFunction;
-                    return Math.Pow(F.Value, Exponent);
-                }
-                else if (ChildFunctions.Count == 2)
-                {
+                IFunction F = ChildFunctions[0] as IFunction;
+                IFunction P = ChildFunctions[1] as IFunction;
+                return Math.Pow(F.Value(arrayIndex), P.Value(arrayIndex));
+            }
+            else {
 
-                    IFunction F = ChildFunctions[0] as IFunction;
-                    IFunction P = ChildFunctions[1] as IFunction;
-                    return Math.Pow(F.Value, P.Value);
-                }
-                else {
-
-                    throw new Exception("Invalid number of arguments for Power function");
-                }
+                throw new Exception("Invalid number of arguments for Power function");
             }
         }
 

@@ -128,6 +128,10 @@ namespace Models.Soils
         [Link]
         private ISummary summary = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
+
         #endregion
 
         #region Constants
@@ -1577,10 +1581,6 @@ namespace Models.Soils
         /// CohortWaterSupply event
         /// </summary>
         public event CohortWaterSupplyDelegate CohortWaterSupply;
-        /// <summary>
-        /// NewProfile event
-        /// </summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
 
         //private bool initDone;
 
@@ -2115,30 +2115,6 @@ namespace Models.Soils
                     NumberOfCrops += 1;
                 }
 
-                List<IModel> models2 = Apsim.FindAll(paddock, typeof(ICrop2));
-
-                foreach (Model m in models2)
-                {
-                    Array.Resize(ref cover_green, NumberOfCrops + 1);
-                    Array.Resize(ref cover_tot, NumberOfCrops + 1);
-                    Array.Resize(ref canopy_height, NumberOfCrops + 1);
-
-                    ICrop2 Crop2 = m as ICrop2;
-                    if (Crop2.CanopyProperties != null)
-                    {
-                        cover_green[NumberOfCrops] = Crop2.CanopyProperties.CoverGreen;
-                        cover_tot[NumberOfCrops] = Crop2.CanopyProperties.CoverTot;
-                        canopy_height[NumberOfCrops] = Crop2.CanopyProperties.CanopyHeight;
-                    }
-                    else
-                    {
-                        cover_green[NumberOfCrops] = 0;
-                        cover_tot[NumberOfCrops] = 0;
-                        canopy_height[NumberOfCrops] = 0;
-                    }
-                    NumberOfCrops += 1;
-                }
-
                 /////                foreach (Component Comp in paddock.Crops)
                 /////                {
                 ////                    Double coverGreen;
@@ -2232,14 +2208,13 @@ namespace Models.Soils
             //   RCichota - 26/01/2010 - Add test to make sure SWIM will not send a -ve value
             //   RCichota - 12/Jul/2010 - add simple test for -ve solution concentration
 
-            NitrogenChangedType ndata = new NitrogenChangedType();
             double[] solute_n = new double[n + 1];     // solute concn in layers(kg/ha)
             double[] dlt_solute_s = new double[n + 1]; // solute concn in layers(kg/ha)
 
             // initialise the NitrogenChanged data to zero
-            ndata.DeltaUrea = new double[n + 1];
-            ndata.DeltaNH4 = new double[n + 1];
-            ndata.DeltaNO3 = new double[n + 1];
+            double[] DeltaUrea = new double[n + 1];
+            double[] DeltaNH4 = new double[n + 1];
+            double[] DeltaNO3 = new double[n + 1];
 
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
@@ -2299,11 +2274,11 @@ namespace Models.Soils
 
                 // Added by RCichota - using NitrogenChanged event to modify dlt_N's
                 if (solute_names[solnum] == "urea")
-                    Array.Copy(dlt_solute_s, ndata.DeltaUrea, n + 1);
+                    Array.Copy(dlt_solute_s, DeltaUrea, n + 1);
                 else if (solute_names[solnum] == "nh4")
-                    Array.Copy(dlt_solute_s, ndata.DeltaNH4, n + 1);
+                    Array.Copy(dlt_solute_s, DeltaNH4, n + 1);
                 else if (solute_names[solnum] == "no3")
-                    Array.Copy(dlt_solute_s, ndata.DeltaNO3, n + 1);
+                    Array.Copy(dlt_solute_s, DeltaNO3, n + 1);
                 else
                 {
                     ///// TODO:
@@ -2313,9 +2288,9 @@ namespace Models.Soils
             }
 
             // Send a NitrogenChanged event to the system
-            ndata.Sender = "SWIM";
-            ndata.SenderType = "WaterModule";
-            NitrogenChanged.Invoke(ndata);
+            solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, DeltaNO3);
+            solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, DeltaNH4);
+            solutes.Add("Urea", SoluteManager.SoluteSetterType.Soil, DeltaUrea);
         }
 
         /// <summary>

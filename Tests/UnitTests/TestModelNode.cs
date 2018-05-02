@@ -24,9 +24,10 @@ namespace UnitTests
             ModelWrapper models = new ModelWrapper();
 
             // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
-
-            ModelWrapper simulation = simulations.Add(new Simulation());
+            Simulation simulationModel = new Simulation();
+            Simulations simulationsModel = Simulations.Create(new Model[] { simulationModel });
+            ModelWrapper simulations = models.Add(simulationsModel);
+            ModelWrapper simulation = simulations.Add(simulationModel);
 
             Clock clock = new Clock();
             clock.StartDate = new DateTime(2015, 1, 1);
@@ -54,9 +55,10 @@ namespace UnitTests
             ModelWrapper models = new ModelWrapper();
 
             // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
-
-            ModelWrapper simulation = simulations.Add(new Simulation());
+            Simulation simulationModel = new Simulation();
+            Simulations simulationsModel = Simulations.Create(new Model[] { simulationModel });
+            ModelWrapper simulations = models.Add(simulationsModel);
+            ModelWrapper simulation = simulations.Add(simulationModel);
 
             Clock clock = new Clock();
             clock.StartDate = new DateTime(2015, 1, 1);

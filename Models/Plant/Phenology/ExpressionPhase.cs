@@ -15,7 +15,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExpressionPhase : GenericPhase
+    public class ExpressionPhase : GenericPhase, ICustomDocumentation
     {
         /// <summary>The structure</summary>
         [Link]
@@ -32,7 +32,7 @@ namespace Models.PMF.Phen
         {
             base.DoTimeStep(PropOfDayToUse);
 
-            if (Expression.Value >= ExpressionTarget.Value)
+            if (Expression.Value() >= ExpressionTarget.Value())
                     return 0.00001;
                 else
                     return 0;
@@ -54,7 +54,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return Expression.Value / ExpressionTarget.Value;
+                return Expression.Value() / ExpressionTarget.Value();
             }
             set
             {
@@ -65,20 +65,23 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-            // get description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+                // get description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            }
         }
 
     }

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
-using Models.PMF.OldPlant;
 
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model assumes that germination will be complete on any day after sowing if the extractable soil water is greater than zero.
+    /// This model assumes that germination will be completed on any day after sowing if the extractable soil water is greater than zero.
     /// </summary>
     /// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
     /// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 
@@ -26,16 +25,23 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         Soils.Soil Soil = null;
 
-        [Link(IsOptional = true)]
-        private Plant Plant = null;
+        [Link]
+        ISummary summary = null;
 
-        [Link(IsOptional = true)]
-        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
+        [Link]
+        Phenology phenology = null;
+
+        [Link]
+        private Plant Plant = null;
 
         /// <summary>
         /// The soil layer in which the seed is sown
         /// </summary>
         private int SowLayer = 0;
+
+        /// <summary>Number of days from sowing to end of this phase.</summary>
+        [XmlIgnore]
+        public int DaysFromSowingToEndPhase { get; set; }
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -47,8 +53,6 @@ namespace Models.PMF.Phen
             double accumDepth = 0;
             if (Plant != null)
                 SowDepth = Plant.SowingData.Depth;  
-            if (Plant15 != null)
-                SowDepth = Plant15.SowingData.Depth;
             bool layerfound = false;
             for (int layer = 0; layerfound; layer++)
             {
@@ -59,6 +63,8 @@ namespace Models.PMF.Phen
                     layerfound = true;
                 }
             }
+            if (DaysFromSowingToEndPhase > 0)
+                summary.WriteMessage(this, "FIXED number of days from sowing to " + Name + " = " + DaysFromSowingToEndPhase);
         }
         /// <summary>
         /// Do our timestep development
@@ -68,13 +74,18 @@ namespace Models.PMF.Phen
             bool CanGerminate = true;
             if (Soil != null)
             {
-                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.Water[SowLayer] > Soil.SoilWater.LL15mm[SowLayer];
+                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer];
             }
 
-            if (CanGerminate)
+            if (DaysFromSowingToEndPhase > 0)
+            {
+                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
+                    return 0.999;
+            }
+            else if (CanGerminate)
                 return 0.999;
-            else
-                return 0;
+
+            return 0;
         }
 
         /// <summary>

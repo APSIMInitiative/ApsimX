@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Runners;
     using Presenters;
     using System;
     using System.Collections.Generic;
@@ -12,14 +13,14 @@
 
     class RunCommand : ICommand
     {
-        /// <summary>The job to run</summary>
-        private List<JobManager.IRunnable> jobs = null;
-
         /// <summary>The name of the job</summary>
         private string jobName;
 
-        /// <summary>The job manager running the simulations.</summary>
-        private JobManager jobManager;
+        /// <summary>The collection of jobs to run</summary>
+        private RunOrganiser jobManager;
+
+        /// <summary>The runner to use to run the jobs</summary>
+        private IJobRunner jobRunner;
 
         /// <summary>The explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -30,35 +31,34 @@
         /// <summary>The stop watch we can use to time the runs.</summary>
         private Stopwatch stopwatch = new Stopwatch();
 
+        /// <summary>List of all errors encountered</summary>
+        private List<Exception> errors = new List<Exception>();
+
+        /// <summary>Number of simulations that have run</summary>
+        private int numSimulationsRun = 0;
+
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
 
 
         /// <summary>Constructor</summary>
-        /// <param name="job">The job to run.</param>
-        /// <param name="name">The name of the job</param>
+        /// <param name="model">The model the user has selected to run</param>
         /// <param name="presenter">The explorer presenter.</param>
-        public RunCommand(JobManager.IRunnable job, string name, ExplorerPresenter presenter)
+        /// <param name="multiProcess">Use the multi-process runner?</param>
+        /// <param name="storage">A storage writer where all data should be stored</param>
+        public RunCommand(IModel model, ExplorerPresenter presenter, bool multiProcess, IStorageWriter storage)
         {
-            jobs = new List<JobManager.IRunnable>();
-            this.jobs.Add(job);
-            this.jobName = name;
+            this.jobName = model.Name;
             this.explorerPresenter = presenter;
+            this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
+            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
 
-            jobManager = new JobManager();
-        }
-
-        /// <summary>Constructor</summary>
-        /// <param name="job">The job to run.</param>
-        /// <param name="name">The name of the job</param>
-        /// <param name="presenter">The explorer presenter.</param>
-        public RunCommand(List<JobManager.IRunnable> jobs, string name, ExplorerPresenter presenter)
-        {
-            this.jobs = jobs;
-            this.jobName = name;
-            this.explorerPresenter = presenter;
-
-            jobManager = new JobManager();
+            if (multiProcess)
+                jobRunner = new JobRunnerMultiProcess(storage);
+            else
+                jobRunner = new JobRunnerAsync();
+            jobRunner.JobCompleted += OnJobCompleded;
+            jobRunner.AllJobsCompleted += OnAllJobsCompleted;
         }
 
         /// <summary>Perform the command</summary>
@@ -68,8 +68,7 @@
 
             stopwatch.Start();
                 
-            jobs.ForEach(job => jobManager.AddJob(job));
-            jobManager.Start(waitUntilFinished: false);
+            jobRunner.Run(jobManager, wait: false);
 
             timer = new Timer();
             timer.Interval = 1000;
@@ -78,27 +77,78 @@
             timer.Start();
         }
 
-        /// <summary>
-        /// Undo the command
-        /// </summary>
+        /// <summary>Undo the command</summary>
         public void Undo(CommandHistory CommandHistory)
         {
         }
 
-        /// <summary>
-        /// This gets called everytime a simulation completes. When all are done then
-        /// invoke each model's OnAllCompleted method.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private string GetErrorsFromSimulations()
+        /// <summary>Job has completed</summary>
+        private void OnJobCompleded(object sender, JobCompleteArgs e)
         {
-            string errorMessage = null;
-            foreach (JobManager.IRunnable job in jobs)
-                foreach (Exception error in jobManager.Errors(job))
-                    errorMessage += error.ToString() + Environment.NewLine;
+            lock (this)
+            {
+                numSimulationsRun++;
+                if (e.exceptionThrowByJob != null)
+                    errors.Add(e.exceptionThrowByJob);
+            }
+        }
 
-            return errorMessage;
+        /// <summary>All jobs have completed</summary>
+        private void OnAllJobsCompleted(object sender, AllCompletedArgs e)
+        {
+            if (e.exceptionThrown != null)
+                errors.Add(e.exceptionThrown);
+
+            Stop();
+            if (errors.Count == 0)
+                explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
+                        + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.MessageType.Information);
+            else
+            {
+                string errorMessage = null;
+                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine
+                                                     +  "----------------------------------------------" + Environment.NewLine);
+                explorerPresenter.MainPresenter.ShowError(errors);
+            }
+
+            SoundPlayer player = new SoundPlayer();
+            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
+                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
+            else
+                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
+            player.Play();
+        }
+
+        /// <summary>
+        /// Handles a signal that we want to abort the set of simulations.
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">Event arguments. Shouldn't be anything of interest</param>
+        private void OnStopSimulation(object sender, EventArgs e)
+        {
+            Stop();
+            string msg = jobName + " aborted";
+            if (errors.Count == 0)
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.MessageType.Information);
+            else
+            {
+                explorerPresenter.MainPresenter.ShowError(errors);
+            }
+        }
+
+        /// <summary>
+        /// Clean up at the end of a set of runs. Stops the job manager, timers, etc.
+        /// </summary>
+        private void Stop()
+        {
+            this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
+            timer.Stop();
+            stopwatch.Stop();
+            jobRunner.Stop();
+
+            IsRunning = false;
+            jobManager = null;
+            jobRunner = null;
         }
 
         /// <summary>
@@ -108,35 +158,18 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            int numSimulations = jobManager.CountJobTypeInQueue<Simulation>();
-            double percentComplete = jobManager.PercentComplete;
+            int numSimulations = 0;
+            if (jobManager.SimulationNamesBeingRun != null)
+                numSimulations = jobManager.SimulationNamesBeingRun.Count;
+            double percentComplete = (numSimulationsRun * 1.0 / numSimulations) * 100.0;
 
             if (numSimulations > 0)
             {
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" + 
-                         (numSimulations) + ")", Models.DataStore.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
+                         numSimulationsRun + " of " +
+                         (numSimulations) + " completed)", Simulation.MessageType.Information);
 
                 explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
-                if (percentComplete == 100)
-                {
-                    timer.Stop();
-                    stopwatch.Stop();
-
-                    string errorMessage = GetErrorsFromSimulations();
-                    if (errorMessage == null)
-                        explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                                + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
-                    else
-                        explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
-
-                    SoundPlayer player = new SoundPlayer();
-                    if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
-                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
-                    else
-                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
-                    player.Play();
-                    IsRunning = false;
-                }
             }
         }
     }

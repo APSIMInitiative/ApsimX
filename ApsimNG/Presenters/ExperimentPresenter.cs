@@ -1,63 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Factorial;
-using UserInterface.Views;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Core.Runners;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ExperimentPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Linq;
+    using Models.Core;
+    using Models.Factorial;
+    using Views;
+
     /// <summary>
     /// Connects a Experiment model with an readonly memo view.
     /// </summary>
     public class ExperimentPresenter : IPresenter
     {
-        private Experiment Experiment;
-        private IMemoView ListView;
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// Link to the storage
+        /// </summary>
+        [Link]
+        private IStorageWriter storageWriter = null;
 
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <summary>
+        /// The experiment object
+        /// </summary>
+        private Experiment experiment;
+
+        /// <summary>
+        /// The listview view
+        /// </summary>
+        private IMemoView listView;
+
+        /// <summary>
+        /// The explorer presenter
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// Attach the model and view
+        /// </summary>
+        /// <param name="model">The model</param>
+        /// <param name="view">The view</param>
+        /// <param name="explorerPresenter">The explorer presenter</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Experiment = Model as Experiment;
-            ListView = View as IMemoView;
-            ExplorerPresenter = explorerPresenter;
+            experiment = model as Experiment;
+            listView = view as IMemoView;
+            this.explorerPresenter = explorerPresenter;
 
-            ListView.MemoLines = Experiment.Names();
-            ListView.LabelText = "Listed below are names of the " + ListView.MemoLines.Length.ToString() + " simulations that this experiment will create";
-            ListView.ReadOnly = true;
-            ListView.AddContextAction("Run APSIM", OnRunApsimClick);
+            string[] allNames = experiment.GetSimulationNames().ToArray();
+            listView.MemoLines = allNames;
+            listView.LabelText = "Listed below are names of the " + allNames.Length.ToString() + " simulations that this experiment will create";
+            listView.ReadOnly = true;
+            listView.AddContextAction("Run APSIM", OnRunApsimClick);
         }
 
+        /// <summary>
+        /// Detach method
+        /// </summary>
         public void Detach()
         {
-
         }
 
         /// <summary>
         /// User has clicked RunAPSIM
         /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="e">The event arguments</param>
         private void OnRunApsimClick(object sender, EventArgs e)
         {
             try
             {
-                List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
-                Simulation simulation = Experiment.CreateSpecificSimulation(ListView.MemoLines[ListView.CurrentPosition.Y]);
-                jobs.Add(simulation);
-                jobs.Add(new RunAllCompletedEvent(ExplorerPresenter.ApsimXFile));
-
-                Commands.RunCommand run = new Commands.RunCommand(jobs, 
-                                                                  simulation.Name,
-                                                                  ExplorerPresenter);
+                Simulation simulation = experiment.CreateSpecificSimulation(listView.MemoLines[listView.CurrentPosition.Y]);
+                Commands.RunCommand run = new Commands.RunCommand(
+                                                                  simulation,
+                                                                  explorerPresenter,
+                                                                  false,
+                                                                  storageWriter);
                 run.Do(null);
             }
             catch (Exception err)
             {
-                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, Models.DataStore.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
     }
 }

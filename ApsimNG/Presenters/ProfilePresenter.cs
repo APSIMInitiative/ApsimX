@@ -11,13 +11,13 @@ namespace UserInterface.Presenters
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
+    using APSIM.Shared.Utilities;
     using EventArguments;
     using Interfaces;
     using Models.Core;
     using Models.Graph;
     using Models.Soils;
     using Views;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// <para>
@@ -95,9 +95,15 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.view = view as IProfileView;
+            this.view.ProfileGrid.FormatColumns += (sender, e) =>
+            {
+                FormatGrid((view as IProfileView).ProfileGrid.DataSource);
+            };
+
             this.explorerPresenter = explorerPresenter;
 
             this.view.ShowView(false);
+
             // Setup the property presenter and view. Hide the view if there are no properties to show.
             this.propertyPresenter = new PropertyPresenter();
             this.propertyPresenter.Attach(this.model, this.view.PropertyGrid, this.explorerPresenter);
@@ -111,13 +117,14 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
+
             if (this.graph == null)
             {
                 this.view.ShowGraph(false);
             }
             else
             {
-                parentForGraph = this.model.Parent as IModel;
+                this.parentForGraph = this.model.Parent as IModel;
                 if (this.parentForGraph != null)
                 {
                     this.parentForGraph.Children.Add(this.graph);
@@ -126,6 +133,31 @@ namespace UserInterface.Presenters
                     int padding = (this.view as ProfileView).MainWidget.Allocation.Width / 2 / 2;
                     this.view.Graph.LeftRightPadding = padding;
                     this.graphPresenter = new GraphPresenter();
+                    for (int col = 0; col < this.propertiesInGrid.Count; col++)
+                    {
+                        VariableProperty property = this.propertiesInGrid[col];
+                        string columnName = property.Description;
+
+                        // crop colours
+                        if (property.CropName != null && columnName.Contains("LL"))
+                        {
+                            Series cropLLSeries = new Series();
+                            cropLLSeries.Name = columnName;
+                            cropLLSeries.Colour = ColourUtilities.ChooseColour(this.graph.Children.Count);
+                            cropLLSeries.Line = LineType.Solid;
+                            cropLLSeries.Marker = MarkerType.None;
+                            cropLLSeries.Type = SeriesType.Scatter;
+                            cropLLSeries.ShowInLegend = true;
+                            cropLLSeries.XAxis = Axis.AxisType.Top;
+                            cropLLSeries.YAxis = Axis.AxisType.Left;
+                            cropLLSeries.YFieldName = "[Soil].DepthMidPoints";
+                            cropLLSeries.XFieldName = "[" + (property.Object as Model).Name + "]." + property.Name;
+                            cropLLSeries.Parent = this.graph;
+
+                            this.graph.Children.Add(cropLLSeries);
+                        }
+                    }
+
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                 }
             }
@@ -158,7 +190,10 @@ namespace UserInterface.Presenters
 
             this.propertyPresenter.Detach();
             if (this.graphPresenter != null)
+            {
                 this.graphPresenter.Detach();
+            }
+
             if (this.parentForGraph != null && this.graph != null)
             {
                 this.parentForGraph.Children.Remove(this.graph);
@@ -324,9 +359,11 @@ namespace UserInterface.Presenters
             foreach (VariableProperty property in this.propertiesInGrid)
             {
                 string columnName = property.Description;
+                string columnCaption = property.Caption;
                 if (property.UnitsLabel != null)
                 {
                     columnName += "\r\n" + property.UnitsLabel;
+                    columnCaption += "\r\n" + property.UnitsLabel;
                 }
 
                 // add a total to the column header if necessary.
@@ -334,6 +371,7 @@ namespace UserInterface.Presenters
                 if (!double.IsNaN(total))
                 {
                     columnName = columnName + "\r\n" + total.ToString("N1");
+                    columnCaption = columnCaption + "\r\n" + total.ToString("N1");
                 }
 
                 Array values = null;
@@ -347,11 +385,12 @@ namespace UserInterface.Presenters
 
                 if (table.Columns.IndexOf(columnName) == -1)
                 {
-                    table.Columns.Add(columnName, property.DataType.GetElementType());
+                    DataColumn newCol = table.Columns.Add(columnName, property.DataType.GetElementType());
+                    newCol.Caption = columnCaption;
                 }
                 else
                 {
-
+                    // empty
                 }
 
                 DataTableUtilities.AddColumnOfObjects(table, columnName, values);
@@ -407,9 +446,13 @@ namespace UserInterface.Presenters
                         {
                             values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
                             if (!MathUtilities.ValuesInArray((double[])values))
+                            {
                                 values = null;
+                            }
                             else
+                            {
                                 values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
+                            }
                         }
                         else
                         {
@@ -452,8 +495,11 @@ namespace UserInterface.Presenters
             catch (Exception e)
             {
                 if (e is System.Reflection.TargetInvocationException)
+                {
                     e = (e as System.Reflection.TargetInvocationException).InnerException;
-                this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Models.DataStore.ErrorLevel.Error);
+                }
+
+                this.explorerPresenter.MainPresenter.ShowError(e);
             }
         }
 
@@ -508,8 +554,11 @@ namespace UserInterface.Presenters
                     catch (Exception e)
                     {
                         if (e is System.Reflection.TargetInvocationException)
+                        {
                             e = (e as System.Reflection.TargetInvocationException).InnerException;
-                        this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Models.DataStore.ErrorLevel.Error);
+                        }
+
+                        this.explorerPresenter.MainPresenter.ShowError(e);
                     }
                 }
             }
@@ -544,8 +593,10 @@ namespace UserInterface.Presenters
                 if (property.AllowableUnits.Length > 0)
                 {
                     this.view.ProfileGrid.AddContextSeparator();
-                    foreach (string unit in property.AllowableUnits)
-                        this.view.ProfileGrid.AddContextOption(unit, this.OnUnitClick, unit == property.Units);
+                    foreach (VariableProperty.NameLabelPair unit in property.AllowableUnits)
+                    {
+                        this.view.ProfileGrid.AddContextOption(unit.Name, unit.Label, this.OnUnitClick, unit.Name == property.Units);
+                    }
                 }
             }
         }
@@ -560,7 +611,7 @@ namespace UserInterface.Presenters
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
             if (sender is Gtk.MenuItem)
             {
-                property.Units = ((sender as Gtk.MenuItem).Child as Gtk.AccelLabel).Text;
+                property.Units = (sender as Gtk.MenuItem).Name;
                 this.OnModelChanged(this.model);
             }
         }

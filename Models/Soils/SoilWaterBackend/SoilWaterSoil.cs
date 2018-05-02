@@ -99,7 +99,7 @@ namespace Models.Soils.SoilWaterBackend
     [Serializable]
     public class Layer : IComparable
         {
-
+        SoilWaterSoil parentSoil;
 
         //Default Comparer for a Layer (used by the Soil's List of Layers to do a List.Sort()) 
             /// <summary>
@@ -122,9 +122,10 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// Initializes a new instance of the <see cref="Layer"/> class.
         /// </summary>
-        public Layer()
+        public Layer(SoilWaterSoil soil)
             {
             solutes = new List<SoluteInLayer>();
+            parentSoil = soil;
             }
 
 
@@ -245,10 +246,24 @@ namespace Models.Soils.SoilWaterBackend
         //VARIABLES
 
 
+        private double swmm;
+
         /// <summary>
         /// The sw_dep
         /// </summary>
-        public double sw_dep;    // sw * dlayer //see soilwat2_init() for initialisation
+        public double sw_dep
+        {
+            get
+            {
+                return swmm;
+            }
+            set
+            {
+                swmm = value;
+                parentSoil.OnSWChange();
+            }
+        }
+        // sw * dlayer //see soilwat2_init() for initialisation
 
         /// <summary>
         /// Gets or sets the sw.
@@ -259,7 +274,7 @@ namespace Models.Soils.SoilWaterBackend
         public double sw        //! soil water content of layer
             {
             get { return MM2Frac(sw_dep); }
-            set { sw_dep = Frac2MM(value); }
+            set { sw_dep = Frac2MM(value); parentSoil.OnSWChange(); }
             }
 
         /// <summary>
@@ -502,7 +517,7 @@ namespace Models.Soils.SoilWaterBackend
             SoluteInLayer foundSolute;
             foundSolute = solutes.Find(delegate(SoluteInLayer sol)
             {
-                return sol.name == SoluteName;
+                return sol.name.Equals(SoluteName, StringComparison.InvariantCultureIgnoreCase);
             }
                                         );
             return foundSolute;
@@ -589,11 +604,13 @@ namespace Models.Soils.SoilWaterBackend
     [Serializable]
     public class SoilWaterSoil : IEnumerable
         {
+        private bool needToCalculateSW = true;
+        private double[] swVolumetric;
+        private double[] swMM;
 
-
-            /// <summary>
-            /// The constants
-            /// </summary>
+        /// <summary>
+        /// The constants
+        /// </summary>
         public Constants Constants;
 
         /// <summary>
@@ -759,94 +776,32 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
-        /// <summary>
-        /// Gets the esw.
-        /// </summary>
-        /// <value>
-        /// The esw.
-        /// </value>
-        public double esw
-            {
-            get
-                {
-                //sum esw over the profile and give single total value
-                double result = 0.0;
-                foreach (Layer lyr in this)
-                    {
-                    result =  result + lyr.esw;
-                    }
-                return result;
-                }
-            }
 
         #endregion
 
 
         #region Output as an Array
 
-
-
         /// <summary>
-        /// Gets the dlayer.
+        /// Gets the esw.
         /// </summary>
         /// <value>
-        /// The dlayer.
+        /// The esw.
         /// </value>
-        public double[] dlayer
-            {
+        public double[] esw
+        {
             get
-                {
+            {
                 double[] result = new double[num_layers];
                 foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.dlayer;
-                    }
-                return result;
+                {
+                    result[lyr.number - 1] = lyr.esw;
                 }
+                return result;
             }
-
-
+        }
 
         //ARRAYS IN MILLIMETERS
-
-        /// <summary>
-        /// Gets the sat_dep.
-        /// </summary>
-        /// <value>
-        /// The sat_dep.
-        /// </value>
-        public double[] sat_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sat_dep;
-                    }
-                return result;
-                }
-            }
-
-        /// <summary>
-        /// Gets the dul_dep.
-        /// </summary>
-        /// <value>
-        /// The dul_dep.
-        /// </value>
-        public double[] dul_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.dul_dep;
-                    }
-                return result;
-                }
-            }
-
 
         /// <summary>
         /// Gets the sw_dep.
@@ -858,100 +813,12 @@ namespace Models.Soils.SoilWaterBackend
             {
             get
                 {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sw_dep;
-                    }
-                return result;
-                }
+                CalculateSW();
+                return swMM;
             }
-
-
-
-        /// <summary>
-        /// Gets the ll15_dep.
-        /// </summary>
-        /// <value>
-        /// The ll15_dep.
-        /// </value>
-        public double[] ll15_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.ll15_dep;
-                    }
-                return result;
-                }
-
             }
-
-        /// <summary>
-        /// Gets the air_dry_dep.
-        /// </summary>
-        /// <value>
-        /// The air_dry_dep.
-        /// </value>
-        public double[] air_dry_dep
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.air_dry_dep;
-                    }
-                return result;
-                }
-            }
-
-
-
 
         //ARRAYS AS FRACTIONS
-
-
-        /// <summary>
-        /// Gets the sat.
-        /// </summary>
-        /// <value>
-        /// The sat.
-        /// </value>
-        public double[] sat
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sat;
-                    }
-                return result;
-                }
-            }
-
-        /// <summary>
-        /// Gets the dul.
-        /// </summary>
-        /// <value>
-        /// The dul.
-        /// </value>
-        public double[] dul
-            {
-            get
-                {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.dul;
-                    }
-                return result;
-                }
-            }
-
 
         /// <summary>
         /// Gets the sw.
@@ -963,61 +830,32 @@ namespace Models.Soils.SoilWaterBackend
             {
             get
                 {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.sw;
-                    }
-                return result;
+                CalculateSW();
+                return swVolumetric;
                 }
             }
 
-
-
-        /// <summary>
-        /// Gets the LL15.
-        /// </summary>
-        /// <value>
-        /// The LL15.
-        /// </value>
-        public double[] ll15
+        /// <summary>Calculate the SW variables if needed.</summary>
+        private void CalculateSW()
+        {
+            if (needToCalculateSW)
             {
-            get
-                {
-                double[] result = new double[num_layers];
+                Array.Resize(ref swVolumetric, num_layers);
+                Array.Resize(ref swMM, num_layers);
                 foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.ll15;
-                    }
-                return result;
-                }
-
-            }
-
-        /// <summary>
-        /// Gets the air_dry.
-        /// </summary>
-        /// <value>
-        /// The air_dry.
-        /// </value>
-        public double[] air_dry
-            {
-            get
                 {
-                double[] result = new double[num_layers];
-                foreach (Layer lyr in this)
-                    {
-                    result[lyr.number - 1] = lyr.air_dry;
-                    }
-                return result;
+                    swMM[lyr.number - 1] = lyr.sw_dep;
+                    swVolumetric[lyr.number - 1] = lyr.sw;
                 }
+                needToCalculateSW = false;
             }
+        }
 
-
-
-
-
-
+        /// <summary>Callled to indicate that the SW variables need to be recalculated.</summary>
+        public void OnSWChange()
+        {
+            needToCalculateSW = true;
+        }
 
         /// <summary>
         /// Gets the flow.
@@ -1761,7 +1599,7 @@ namespace Models.Soils.SoilWaterBackend
                 layers = new List<Layer>();
                 for (int i = 0; i < Soil.Thickness.Count(); i++)
                     {
-                    Layer lyr = new Layer();
+                    Layer lyr = new Layer(this);
                     layers.Add(lyr);
                     }
                 }

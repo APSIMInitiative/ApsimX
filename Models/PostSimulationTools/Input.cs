@@ -7,12 +7,14 @@ using System.IO;
 using System.Data;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using Models.Storage;
 
 namespace Models.PostSimulationTools
 {
 
 
     /// <summary>
+    /// # [Name]
     /// Reads the contents of a file (in apsim format) and stores into the DataStore. 
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
@@ -24,7 +26,7 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IPostSimulationTool
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -53,19 +55,29 @@ namespace Models.PostSimulationTools
             }
         }
 
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FileName };
+        }
+
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(DataStore dataStore)
+        public void Run(IStorageReader dataStore)
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
-                dataStore.DeleteTable(Name);
+                dataStore.DeleteDataInTable(Name);
                 DataTable data = GetTable();
-                dataStore.WriteTable(null, this.Name, data);
+                if (data != null)
+                {
+                    data.TableName = this.Name;
+                    dataStore.WriteTable(data);
+                }
             }
         }
 

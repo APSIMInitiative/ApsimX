@@ -6,12 +6,13 @@
 namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Drawing;
     using System.IO;
     using Gtk;
-    using Glade;
+    using System.Reflection;
+    using Models.Core;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -50,10 +51,15 @@ namespace UserInterface.Views
         /// <summary>Turn split window on/off</summary>
         bool SplitWindowOn { get; set; }
 
+        /// <summary>Height of the status panel</summary>
+        int StatusPanelHeight { get; set; }
+
         /// <summary>
         /// Returns true if the object is a control on the left side
         /// </summary>
         bool IsControlOnLeft(object control);
+
+        string GetMenuItemFileName(object obj);
 
         /// <summary>Ask user for a filename to open.</summary>
         /// <param name="fileSpec">The file specification to use to filter the files.</param>
@@ -75,9 +81,19 @@ namespace UserInterface.Views
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
-        /// <param name="Message"></param>
-        void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel);
-
+        /// <param name="Message">Message to be displayed.</param>
+        /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
+        /// <param name="overwrite">
+        /// If true, all existing messages will be overridden.
+        /// If false, message will be appended to the status window.
+        /// </param>
+        /// <param name="addSeparator">If true, a 'separator' (several dashes) will also be written to the status window.</param>
+        /// <param name="withButton">
+        /// Whether or not a 'more info' button should be drawn under the message. 
+        /// If the message is not an error, this parameter has no effect.
+        /// </param>
+        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
+        
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
@@ -87,7 +103,7 @@ namespace UserInterface.Views
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent"></param>
-        void ShowProgress(int percent);
+        void ShowProgress(int percent, bool showStopButton = true);
 
         /// <summary>Set the wait cursor (or not)/</summary>
         /// <param name="wait">Shows wait cursor if true, normal cursor if false.</param>
@@ -106,11 +122,22 @@ namespace UserInterface.Views
         /// <param name="o">A widget appearing on the tab</param>
         void CloseTabContaining(object o);
 
+        /// <summary>
+        /// Select a tab.
+        /// </summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        void SelectTabContaining(object o);
+
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<AllowCloseArgs> AllowClose;
 
         /// <summary>Invoked when a tab is closing.</summary>
         event EventHandler<TabClosingEventArgs> TabClosing;
+
+        /// <summary>Invoked when application tries to close</summary>
+        event EventHandler<EventArgs> StopSimulation;
+
+        event EventHandler ShowDetailedError;
     }
 
     /// <summary>
@@ -133,33 +160,57 @@ namespace UserInterface.Views
         /// <summary>Invoked when a tab is closing.</summary>
         public event EventHandler<TabClosingEventArgs> TabClosing;
 
+        /// <summary>Invoked when application tries to close</summary>
+        public event EventHandler<EventArgs> StopSimulation;
+                
+        public event EventHandler ShowDetailedError;    
+
+        public int StatusPanelHeight
+        {
+            get
+            {
+                return hbox1.Allocation.Height;
+            }
+            set
+            {
+                hbox1.HeightRequest = value;                
+            }
+        }
+        private int numberOfButtons;
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
-        [Widget]
         private Window window1 = null;
-        [Widget]
         private ProgressBar progressBar = null;
-        [Widget]
         private TextView StatusWindow = null;
-        [Widget]
+        private Button stopButton = null;
         private Notebook notebook1 = null;
-        [Widget]
         private Notebook notebook2 = null;
-        [Widget]
         private VBox vbox1 = null;
-        [Widget]
         private VBox vbox2 = null;
-        [Widget]
         private HPaned hpaned1 = null;
-        [Widget]
         private HBox hbox1 = null;
 
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
-            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MainView.glade", "window1");
-            gxml.Autoconnect(this);
+            numberOfButtons = 0;
+            if ((uint)Environment.OSVersion.Platform <= 3)
+            {
+                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                      ".gtkrc"));
+            }
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
+            window1 = (Window)builder.GetObject("window1");
+            progressBar = (ProgressBar)builder.GetObject("progressBar");
+            StatusWindow = (TextView)builder.GetObject("StatusWindow");
+            stopButton = (Button)builder.GetObject("stopButton");
+            notebook1 = (Notebook)builder.GetObject("notebook1");
+            notebook2 = (Notebook)builder.GetObject("notebook2");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox2 = (VBox)builder.GetObject("vbox2");
+            hpaned1 = (HPaned)builder.GetObject("hpaned1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -174,6 +225,7 @@ namespace UserInterface.Views
             notebook1.SetMenuLabel(vbox1, new Label(indexTabText));
             notebook2.SetMenuLabel(vbox2, new Label(indexTabText));
             hbox1.HeightRequest = 20;
+            
 
             TextTag tag = new TextTag("error");
             tag.Foreground = "red";
@@ -185,8 +237,14 @@ namespace UserInterface.Views
             tag.Foreground = "blue";
             StatusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
             StatusWindow.Visible = false;
+            stopButton.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Delete.png", 12, 12));
+            stopButton.ImagePosition = PositionType.Right;
+            stopButton.Image.Visible = true;
+            stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
             //window1.ShowAll();
+            if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
+                InitMac();
         }
 
         /// <summary>
@@ -234,6 +292,26 @@ namespace UserInterface.Views
             notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, new Label(tabLabel.Text));
         }
 
+        /// <summary>
+        /// Inits code to allow us to use AppKit on Mac OSX
+        /// This lets us use the native browser and native file open/save dialogs
+        /// Thia initialisation must be done once and only once
+        /// Keeping this in a separate function allows the Microsoft .Net Frameworks
+        /// to run even when MonoDoc.dll is not present (that is, with Microsoft,
+        /// checking for referenced DLLs seems to occur on a "method", rather than "class" basis.
+        /// The Mono runtime works differently.
+        /// </summary>
+        private void InitMac()
+        {
+            MonoMac.AppKit.NSApplication.Init();
+        }
+
+        /// <summary>
+        /// Handles button press event on the "tab" part of a tabbed page.
+        /// Currently responds by closing the tab if the middle button was pressed
+        /// </summary>
+        /// <param name="o">The object issuing the event</param>
+        /// <param name="e">Button press event arguments</param>
         public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
         {
             if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
@@ -268,14 +346,38 @@ namespace UserInterface.Views
         public void ShowWaitCursor(bool wait)
         {
             WaitCursor = wait;
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         /// <summary>Close the application.</summary>
         /// <param name="askToSave">Flag to turn on the request to save</param>
         public void Close(bool askToSave)
         {
+            if (askToSave && AllowClose != null)
+            {
+                AllowCloseArgs args = new AllowCloseArgs();
+                AllowClose.Invoke(this, args);
+                if (!args.AllowClose)
+                    return;
+            }
             _mainWidget.Destroy();
-            Application.Quit();
+
+            // Let all the destruction stuff be carried out, just in 
+            // case we've got any unmanaged resources that should be 
+            // cleaned up.
+            while (GLib.MainContext.Iteration())
+                ;
+
+            // If we're running a script passed as a command line argument, 
+            // we've never called Application.Run, so we don't want to call
+            // Application.Quit. We test this by seeing whether the event 
+            // loop is active. If we're not running the Application loop,
+            // call Exit instead.
+            if (Application.CurrentEvent != null)
+                Application.Quit();
+            else
+                Environment.Exit(0);
         }
 
         /// <summary>
@@ -313,6 +415,11 @@ namespace UserInterface.Views
             return -1;
         }
 
+        /// <summary>
+        /// Responds to presses of the "Close" button by closing the associated tab
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="e"></param>
         public void OnCloseBtnClick(object o, EventArgs e)
         {
             CloseTabContaining(o);
@@ -336,6 +443,19 @@ namespace UserInterface.Views
                     TabClosing.Invoke(this, args);
                 }
             }
+        }
+
+        /// <summary>
+        /// Looks for the tab holding the specified user interface object, and makes that the active tab
+        /// </summary>
+        /// <param name="o">The interface object being sought; normally will be a Gtk Widget</param>
+        public void SelectTabContaining(object o)
+        {
+            Notebook notebook = null;
+            string tabText = null;
+            int tabPage = GetTabOfWidget(o, ref notebook, ref tabText);
+            if (tabPage >= 0 && notebook != null)
+                notebook.CurrentPage = tabPage;
         }
 
         /// <summary>Gets or set the main window position.</summary>
@@ -419,10 +539,34 @@ namespace UserInterface.Views
         {
             if (control is Widget)
             {
+                if (control is MenuItem && (control as MenuItem).Parent is Menu)
+                {
+                    Widget menuOwner = ((control as MenuItem).Parent as Menu).AttachWidget;
+                    if (menuOwner != null)
+                        return menuOwner.IsAncestor(notebook1);
+                }
                 return (control as Widget).IsAncestor(notebook1);
             }
-            else
-                return false;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the file name associated with the currently selected object, given
+        /// a menu item from the popup menu for the more-recently-used file list
+        /// </summary>
+        /// <param name="obj">A menu item</param>
+        /// <returns></returns>
+        public string GetMenuItemFileName(object obj)
+        {
+            if (obj is MenuItem && (obj as MenuItem).Parent is Menu)
+            {
+                Widget menuOwner = ((obj as MenuItem).Parent as Menu).AttachWidget;
+                if (menuOwner.IsAncestor(notebook1))
+                    return StartPage1.List.SelectedValue;
+                else if (menuOwner.IsAncestor(notebook2))
+                    return StartPage2.List.SelectedValue;
+            }
+            return null;
         }
 
         /// <summary>Ask user for a filename to open.</summary>
@@ -430,39 +574,13 @@ namespace UserInterface.Views
         /// <param name="initialDirectory">Optional Initial starting directory</param>
         public string AskUserForOpenFileName(string fileSpec, string initialDirectory = "")
         {
-            string fileName = null;
-
-            FileChooserDialog fileChooser = new FileChooserDialog("Choose a file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-
-            if (!String.IsNullOrEmpty(fileSpec))
-            {
-                string[] specParts = fileSpec.Split(new Char[] { '|' });
-                for (int i = 0; i < specParts.Length; i += 2)
-                {
-                    FileFilter fileFilter = new FileFilter();
-                    fileFilter.Name = specParts[i];
-                    fileFilter.AddPattern(specParts[i + 1]);
-                    fileChooser.AddFilter(fileFilter);
-                }
-            }
-
-            FileFilter allFilter = new FileFilter();
-            allFilter.AddPattern("*");
-            allFilter.Name = "All files";
-            fileChooser.AddFilter(allFilter);
-
-            if (initialDirectory.Length > 0)
-                fileChooser.SetCurrentFolder(initialDirectory);
-            else
-                fileChooser.SetCurrentFolder(Utility.Configuration.Settings.PreviousFolder);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-            {
-                fileName = fileChooser.Filename;
+            string fileName = AskUserForFileName("Choose a file to open", fileSpec, FileChooserAction.Open, initialDirectory);
+            if (!String.IsNullOrEmpty(fileName))
+            { 
                 string dir = Path.GetDirectoryName(fileName);
                 if (!dir.Contains(@"ApsimX\Examples"))
                     Utility.Configuration.Settings.PreviousFolder = dir;
             }
-            fileChooser.Destroy();
             return fileName;
         }
 
@@ -474,36 +592,13 @@ namespace UserInterface.Views
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
         public string AskUserForSaveFileName(string fileSpec, string OldFilename)
         {
-            string result = null;
-            FileChooserDialog fileChooser = new FileChooserDialog("Choose a file name for saving", null, FileChooserAction.Save, "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept);
-
-            if (!String.IsNullOrEmpty(fileSpec))
+            string result = AskUserForFileName("Choose a file name for saving", fileSpec, FileChooserAction.Save, OldFilename);
+            if (!String.IsNullOrEmpty(result))
             {
-                string[] specParts = fileSpec.Split(new Char[] { '|' });
-                for (int i = 0; i < specParts.Length; i += 2)
-                {
-                    FileFilter fileFilter = new FileFilter();
-                    fileFilter.Name = specParts[i];
-                    fileFilter.AddPattern(specParts[i + 1]);
-                    fileChooser.AddFilter(fileFilter);
-                }
-            }
-
-            fileChooser.CurrentName = Path.GetFileName(OldFilename);
-            fileChooser.SetCurrentFolder(Utility.Configuration.Settings.PreviousFolder);
-
-            FileFilter allFilter = new FileFilter();
-            allFilter.AddPattern("*");
-            allFilter.Name = "All files";
-            fileChooser.AddFilter(allFilter);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-            {
-                string dir = Path.GetDirectoryName(fileChooser.Filename);
+                string dir = Path.GetDirectoryName(result);
                 if (!dir.Contains(@"ApsimX\Examples"))
                     Utility.Configuration.Settings.PreviousFolder = dir;
-                result = fileChooser.Filename;
             }
-            fileChooser.Destroy();
             return result;
         }
 
@@ -526,36 +621,78 @@ namespace UserInterface.Views
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
         {
             Gtk.Application.Invoke(delegate
             {
                 StatusWindow.Visible = message != null;
-                StatusWindow.Buffer.Clear();
+                if (overwrite || message == null)
+                {
+                    numberOfButtons = 0;
+                    StatusWindow.Buffer.Clear();
+                }
 
-                string tagName;
-                // Output the message
-                if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                if (message != null)
                 {
-                    tagName = "error";
+                    string tagName;
+                    // Output the message
+                    if (errorLevel == Simulation.ErrorLevel.Error)
+                    {
+                        tagName = "error";
+                    }
+                    else if (errorLevel == Simulation.ErrorLevel.Warning)
+                    {
+                        tagName = "warning";
+                    }
+                    else
+                    {
+                        tagName = "normal";
+                    }
+                    message = message.TrimEnd(Environment.NewLine.ToCharArray());
+                    //message = message.Replace("\n", "\n                      ");
+                    message += Environment.NewLine;
+                    TextIter insertIter;
+                    if (overwrite)
+                        insertIter = StatusWindow.Buffer.StartIter;
+                    else
+                        insertIter = StatusWindow.Buffer.EndIter;
+
+                    StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
+                    if (errorLevel == Simulation.ErrorLevel.Error && withButton)
+                        AddButtonToStatusWindow("More Information", numberOfButtons++);
+                    if (addSeparator)
+                    {
+                        insertIter = StatusWindow.Buffer.EndIter;
+                        StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, Environment.NewLine + "----------------------------------------------" + Environment.NewLine, tagName);
+                    }
                 }
-                else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
-                {
-                    tagName = "warning";
-                }
-                else
-                {
-                    tagName = "normal";
-                }
-                message = message.TrimEnd("\n".ToCharArray());
-                message = message.Replace("\n", "\n                      ");
-                message += "\n";
-                TextIter insertIter = StatusWindow.Buffer.StartIter;
-                StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressBar.Visible = false;
+                stopButton.Visible = false;
             });
+            while (GLib.MainContext.Iteration()) ;
+        }
+
+        private void AddButtonToStatusWindow(string buttonName, int buttonID)
+        {
+            TextIter iter = StatusWindow.Buffer.EndIter;
+            TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref iter);
+            EventBox box = new EventBox();
+            ApsimNG.Classes.CustomButton moreInfo = new ApsimNG.Classes.CustomButton(buttonName, buttonID);
+            moreInfo.Clicked += ShowDetailedErrorMessage;
+            box.Add(moreInfo);
+            StatusWindow.AddChildAtAnchor(box, anchor);
+            box.ShowAll();
+            box.Realize();
+            box.ShowAll();
+            moreInfo.ParentWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Arrow);
+        }
+
+        [GLib.ConnectBefore]
+        private void ShowDetailedErrorMessage(object sender, EventArgs args)
+        {
+            ShowDetailedError?.Invoke(sender, args);
         }
 
         /// <summary>Show a message in a dialog box</summary>
@@ -575,7 +712,7 @@ namespace UserInterface.Views
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent"></param>
-        public void ShowProgress(int percent)
+        public void ShowProgress(int percent, bool showStopButton = true)
         {
             // We need to use "Invoke" if the timer is running in a
             // different thread. That means we can use either
@@ -585,6 +722,8 @@ namespace UserInterface.Views
             {
                 progressBar.Visible = true;
                 progressBar.Fraction = percent / 100.0;
+                if (showStopButton)
+                    stopButton.Visible = true;
             });
         }
 
@@ -605,6 +744,18 @@ namespace UserInterface.Views
                 Close(false);
             }
         }
+
+        /// <summary>User is trying to stop all currently executing simulations.
+        /// <param name="e">Event arguments.</param>
+        protected void OnStopClicked(object o, EventArgs e)
+        {
+            if (StopSimulation != null)
+            {
+                EventArgs args = new EventArgs();
+                StopSimulation.Invoke(this, args);
+            }
+        }
+
     }
 
     /// <summary>An event argument structure with a string.</summary>

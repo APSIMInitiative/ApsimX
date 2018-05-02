@@ -1,21 +1,21 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterPresenter.cs" company="APSIM Initiative">
+// <copyright file="XYPairsPresenter.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
     using System;
-    using System.Data;
     using System.Collections.Generic;
+    using System.Data;
     using System.Reflection;
+    using APSIM.Shared.Utilities;
     using EventArguments;
     using Interfaces;
-    using Models.PMF.Functions;
     using Models.Core;
     using Models.Graph;
+    using Models.PMF.Functions;
     using Views;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
@@ -25,12 +25,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The XYPairs model.
         /// </summary>
-        private XYPairs xyPairs;
+        private XYPairs xYPairs;
 
         /// <summary>
         /// The initial XYPairs view;
         /// </summary>
-        private XYPairsView xyPairsView;
+        private XYPairsView xYPairsView;
 
         /// <summary>
         /// The parent explorer presenter.
@@ -60,13 +60,13 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.xyPairs = model as XYPairs;
-            this.xyPairsView = view as XYPairsView;
+            this.xYPairs = model as XYPairs;
+            this.xYPairsView = view as XYPairsView;
             this.explorerPresenter = explorerPresenter as ExplorerPresenter;
 
             // Create a list of profile (array) properties. PpoulateView wil create a table from them and 
             // hand the table to the variables grid.
-            this.FindAllProperties(this.xyPairs);
+            this.FindAllProperties(this.xYPairs);
 
             this.PopulateView();
 
@@ -74,21 +74,25 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
-            this.xyPairs.Children.Add(this.graph);
-            this.graph.Parent = this.xyPairs;
-            (this.graph.Series[0] as Series).XFieldName = "[" + graph.Parent.Name + "].X";
-            (this.graph.Series[0] as Series).YFieldName = "[" + graph.Parent.Name + "].Y";
+            this.xYPairs.Children.Add(this.graph);
+            this.graph.Parent = this.xYPairs;
+            (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
+            (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
             this.graphPresenter = new GraphPresenter();
-            this.graphPresenter.Attach(this.graph, this.xyPairsView.Graph, this.explorerPresenter);
+            this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.explorerPresenter);
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
-                xyPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN);
+            {
+                xYPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN);
+            }
 
             string yAxisTitle = LookForYAxisTitle();
             if (yAxisTitle != null)
-                xyPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN);
+            {
+                xYPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN);
+            }
 
-            xyPairsView.Graph.FormatTitle(xyPairs.Parent.Name);
+            xYPairsView.Graph.FormatTitle(xYPairs.Parent.Name);
         }
 
         /// <summary>
@@ -98,7 +102,7 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.DisconnectViewEvents();
-            this.xyPairs.Children.Remove(this.graph);
+            this.xYPairs.Children.Remove(this.graph);
         }
 
         /// <summary>
@@ -125,45 +129,59 @@ namespace UserInterface.Presenters
         private string LookForXAxisTitle()
         {
             // See if parent has an XProperty property
-            PropertyInfo xProperty = xyPairs.Parent.GetType().GetProperty("XProperty");
+            PropertyInfo xProperty = xYPairs.Parent.GetType().GetProperty("XProperty");
             if (xProperty != null)
             {
-                string propertyName = xProperty.GetValue(xyPairs.Parent, null).ToString();
-                IVariable variable = Apsim.GetVariableObject(xyPairs, propertyName);
+                string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
+                IVariable variable = Apsim.GetVariableObject(xYPairs, propertyName);
                 if (variable != null && variable.UnitsLabel != null)
+                {
                     return propertyName + " " + variable.UnitsLabel;
+                }
+
                 return propertyName;
             }
-            else if (xyPairs.Parent is AirTemperatureFunction)
+            else if (xYPairs.Parent is AirTemperatureFunction)
+            {
                 return "Mean air temperature (oC)";
-            else if (xyPairs.Parent is SoilTemperatureFunction)
+            }
+            else if (xYPairs.Parent is SoilTemperatureFunction)
+            {
                 return "Mean soil temperature (oC)";
-            else if (xyPairs.Parent is SoilTemperatureWeightedFunction)
+            }
+            else if (xYPairs.Parent is SoilTemperatureWeightedFunction)
+            {
                 return "Weighted soil temperature (oC)";
-            else if (xyPairs.Parent is WeightedTemperatureFunction)
+            }
+            else if (xYPairs.Parent is WeightedTemperatureFunction)
+            {
                 return "Weighted air temperature (oC)";
+            }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
         /// Return the y axis title.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The axis title</returns>
         private string LookForYAxisTitle()
         {
-            IModel modelContainingLinkField = xyPairs.Parent.Parent;
-            FieldInfo linkField = modelContainingLinkField.GetType().GetField(xyPairs.Parent.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+            IModel modelContainingLinkField = xYPairs.Parent.Parent;
+            FieldInfo linkField = modelContainingLinkField.GetType().GetField(xYPairs.Parent.Name, BindingFlags.NonPublic | BindingFlags.Instance);
             if (linkField != null)
             {
                 UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
                 if (units != null)
-                    return xyPairs.Parent.Name + " (" + units.ToString() + ")";
+                {
+                    return xYPairs.Parent.Name + " (" + units.ToString() + ")";
+                }
             }
-            return xyPairs.Parent.Name;
+
+            return xYPairs.Parent.Name;
         }
-
-
 
         /// <summary>
         /// Populate the grid with data and formatting.
@@ -171,12 +189,12 @@ namespace UserInterface.Presenters
         private void PopulateGrid()
         {
             DataTable table = this.CreateTable();
-            this.xyPairsView.VariablesGrid.DataSource = table;
-            this.xyPairsView.VariablesGrid.RowCount = 100;
+            this.xYPairsView.VariablesGrid.DataSource = table;
+            this.xYPairsView.VariablesGrid.RowCount = 100;
             for (int i = 0; i < table.Columns.Count; i++)
             {
-                this.xyPairsView.VariablesGrid.GetColumn(i).Width = 100;
-                this.xyPairsView.VariablesGrid.GetColumn(i).Width = 100;
+                this.xYPairsView.VariablesGrid.GetColumn(i).Width = 100;
+                this.xYPairsView.VariablesGrid.GetColumn(i).Width = 100;
             }
         }
 
@@ -201,6 +219,7 @@ namespace UserInterface.Presenters
                 }
             }
         }        
+
         /// <summary>
         /// Setup the profile grid based on the properties in the model.
         /// The column index of the cell that has changed.
@@ -226,7 +245,6 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-
                 }
 
                 DataTableUtilities.AddColumnOfObjects(table, columnName, values);
@@ -242,18 +260,18 @@ namespace UserInterface.Presenters
         {
             // Trap the invoking of the ProfileGrid 'CellValueChanged' event so that
             // we can save the contents.
-            this.xyPairsView.VariablesGrid.CellsChanged += this.OnVariablesGridCellValueChanged;
+            this.xYPairsView.VariablesGrid.CellsChanged += this.OnVariablesGridCellValueChanged;
 
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
-            this.xyPairsView.VariablesGrid.ResizeControls();
+            this.xYPairsView.VariablesGrid.ResizeControls();
 
-            //this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
-            //this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
-            //this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
-            //this.initialWaterView.OnPercentFullChanged += this.OnPercentFullChanged;
-            //this.initialWaterView.OnRelativeToChanged += this.OnRelativeToChanged;
+            // this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
+            // this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
+            // this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
+            // this.initialWaterView.OnPercentFullChanged += this.OnPercentFullChanged;
+            // this.initialWaterView.OnRelativeToChanged += this.OnRelativeToChanged;
         }
 
         /// <summary>
@@ -261,7 +279,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void DisconnectViewEvents()
         {
-            this.xyPairsView.VariablesGrid.CellsChanged -= this.OnVariablesGridCellValueChanged;
+            this.xYPairsView.VariablesGrid.CellsChanged -= this.OnVariablesGridCellValueChanged;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
@@ -292,13 +310,13 @@ namespace UserInterface.Presenters
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             // Get the data source of the profile grid.
-            DataTable data = this.xyPairsView.VariablesGrid.DataSource;
+            DataTable data = this.xYPairsView.VariablesGrid.DataSource;
 
             // Maintain a list of all property changes that we need to make.
             List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
 
-            //add missing data as 0 otherwise it will throw an exception
-            //could make this work as an entire row, but will stick to X & Y columns for now
+            // add missing data as 0 otherwise it will throw an exception
+            // could make this work as an entire row, but will stick to X & Y columns for now
             /*
             for (int Row = 0; Row != data.Rows.Count; Row++)
             {
@@ -310,8 +328,8 @@ namespace UserInterface.Presenters
                     break;
             }
             */
-            // Loop through all non-readonly properties, get an array of values from the data table
-            // for the property and then set the property value.
+            //// Loop through all non-readonly properties, get an array of values from the data table
+            //// for the property and then set the property value.
             for (int i = 0; i < this.propertiesInGrid.Count; i++)
             {
                 // If this property is NOT readonly then set its value.
@@ -323,9 +341,13 @@ namespace UserInterface.Presenters
                     {
                         values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
                         if (!MathUtilities.ValuesInArray((double[])values))
+                        {
                             values = null;
+                        }
                         else
+                        {
                             values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
+                        }
                     }
                     else
                     {
@@ -390,7 +412,7 @@ namespace UserInterface.Presenters
                             valueForCell = null;
                         }
 
-                        IGridCell cell = this.xyPairsView.VariablesGrid.GetCell(col, row);
+                        IGridCell cell = this.xYPairsView.VariablesGrid.GetCell(col, row);
                         cell.Value = valueForCell;
 
                         row++;
@@ -408,7 +430,7 @@ namespace UserInterface.Presenters
 
                         columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
 
-                        IGridColumn column = this.xyPairsView.VariablesGrid.GetColumn(col);
+                        IGridColumn column = this.xYPairsView.VariablesGrid.GetColumn(col);
                         column.HeaderText = columnName;
                     }
                 }
@@ -419,10 +441,12 @@ namespace UserInterface.Presenters
         /// The model has changed. Update the view.
         /// </summary>
         /// <param name="changedModel">The model that has changed.</param>
-        void OnModelChanged(object changedModel)
+        private void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.xyPairs)
+            if (changedModel == this.xYPairs)
+            {
                 this.PopulateView();
+            }
         }
     }
 }

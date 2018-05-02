@@ -5,6 +5,7 @@ using Models.Core;
 namespace Models.Lifecycle
 {
     /// <summary>
+    /// # [Name]
     /// A generic cohort item that exists in a Lifestage within a Lifecycle
     /// </summary>
     [Serializable]
@@ -39,6 +40,11 @@ namespace Models.Lifecycle
         /// The fecundity for the timestep.
         /// </summary>
         public double Fecundity = -1.0;
+
+        /// <summary>
+        /// Mortality for the timestep.
+        /// </summary>
+        public double Mortality { get; set; }
 
         /// <summary>
         /// The Lifestage that owns this cohort.

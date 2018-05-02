@@ -7,6 +7,8 @@ using System.Xml.Schema;
 using System.Runtime.Serialization;
 using System.IO;
 using APSIM.Shared.Utilities;
+using System.Collections.Generic;
+
 namespace Models
 {
     /// <summary>
@@ -33,19 +35,19 @@ namespace Models
         private string assemblyName = null;
 
         /// <summary>The _ script</summary>
-        [NonSerialized] private Model _Script;
+        private Model _Script;
         /// <summary>The _elements</summary>
         [NonSerialized] private XmlElement[] _elements;
 
         /// <summary>The compiled code</summary>
-        [NonSerialized] private string CompiledCode = "";
+        private string CompiledCode = "";
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>
-        [XmlAnyElement]
+        [XmlAnyElement(Name = "Script")]
         public XmlElement[] elements 
         { 
-            get 
+            get
             {
                 // Capture the current values of all parameters.
                 EnsureParametersAreCurrent();
@@ -54,9 +56,15 @@ namespace Models
             } 
             
             set 
-            { 
-                _elements = value; 
-            } 
+            {
+                if (value != null && value.Length > 1)
+                {
+                    _elements = new XmlElement[1];
+                    _elements[0] = value[value.Length - 1];
+                }
+                else
+                    _elements = value;
+            }
         }
 
         /// <summary>Gets or sets the code c data.</summary>
@@ -88,6 +96,20 @@ namespace Models
             set { _Script = value; } 
         }
 
+        /// <summary>
+        /// Stores column and line of caret, and scrolling position when editing in GUI
+        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
+        /// way to store both the caret position and scrolling information.
+        /// </summary>
+        [XmlIgnore] public System.Drawing.Rectangle Location = new System.Drawing.Rectangle(1, 1, 0, 0);
+
+        /// <summary>
+        /// Stores whether we are currently on the tab displaying the script.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
+
+
         /// <summary>The code for the Manager script</summary>
         [Summary]
         [Description("Script code")]
@@ -101,17 +123,20 @@ namespace Models
             set
             {
                 _Code = value;
-                RebuildScriptModel();
+                List<Exception> errors = new List<Exception>();
+                RebuildScriptModel(errors);
+                if (errors.Count > 0)
+                    throw errors[0];  // throw first error
             }
         }
 
         /// <summary>The model has been loaded.</summary>
         [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        private void OnLoaded(object sender, LoadedEventArgs args)
         {
             HasLoaded = true;
             if (Script == null && Code != string.Empty)
-                RebuildScriptModel();
+                RebuildScriptModel(args.errors);
         }
 
         /// <summary>
@@ -123,8 +148,7 @@ namespace Models
         [EventSubscribe("Serialising")]
         private void OnSerialising(bool xmlSerialisation)
         {
-            if (Script != null)
-                 Children.Remove(Script);
+            Children.RemoveAll(x => x.GetType().Name == "Script");
         }
 
         /// <summary>Serialisation has completed. Read our 'Script' model if necessary.</summary>
@@ -142,7 +166,10 @@ namespace Models
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            RebuildScriptModel();
+            List<Exception> errors = new List<Exception>();
+            RebuildScriptModel(errors);
+            if (errors.Count > 0)
+                throw errors[0];  // throw first error
         }
 
         private bool lastCompileFailed = false;
@@ -151,7 +178,7 @@ namespace Models
         /// <exception cref="ApsimXException">
         /// Cannot find a public class called 'Script'
         /// </exception>
-        public void RebuildScriptModel()
+        public void RebuildScriptModel(List<Exception> errors)
         {
             if (HasLoaded)
             {
@@ -188,35 +215,35 @@ namespace Models
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
+
+                            assemblyName = compiledAssembly.FullName;
+                            CompiledCode = _Code;
+                            lastCompileFailed = false;
+
+                            // Create a new script model.
+                            Script = compiledAssembly.CreateInstance("Models.Script") as Model;
+                            Script.Children = new System.Collections.Generic.List<Model>();
+                            Script.Name = "Script";
+                            Script.IsHidden = true;
+                            XmlElement parameters;
+
+                            XmlDocument doc = new XmlDocument();
+                            doc.LoadXml(elementsAsXml);
+                            parameters = doc.DocumentElement;
+
+                            SetParametersInObject(Script, parameters);
+
+                            // Add the new script model to our models collection.
+                            Children.Clear();
+                            Children.Add(Script);
+                            Script.Parent = this;
                         }
                         catch (Exception err)
                         {
                             lastCompileFailed = true;
-                            throw new ApsimXException(this, err.Message);
+                            errors.Add(new Exception("Unable to compile \"" + Name + "\"", err));
                         }
                     }
-
-                    assemblyName = compiledAssembly.FullName;
-                    CompiledCode = _Code;
-                    lastCompileFailed = false;
-
-                    // Create a new script model.
-                    Script = compiledAssembly.CreateInstance("Models.Script") as Model;
-                    Script.Children = new System.Collections.Generic.List<Model>();
-                    Script.Name = "Script";
-                    Script.IsHidden = true;
-                    XmlElement parameters;
-
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(elementsAsXml);
-                    parameters = doc.DocumentElement;
-                    
-                    SetParametersInObject(Script, parameters);
-
-                    // Add the new script model to our models collection.
-                    Children.Clear();
-                    Children.Add(Script);
-                    Script.Parent = this;
                 }
             }
         }
@@ -239,9 +266,15 @@ namespace Models
         /// <returns></returns>
         public static Assembly ResolveManagerAssembliesEventHandler(object sender, ResolveEventArgs args)
         {
-            foreach (string fileName in Directory.GetFiles(Path.GetTempPath(), "*.dll"))
-                if (args.Name == Path.GetFileNameWithoutExtension(fileName))
-                    return Assembly.LoadFrom(fileName);
+            string tempDLLPath = Path.GetTempPath();
+            if (!Path.GetTempPath().Contains("ApsimX"))
+                tempDLLPath = Path.Combine(tempDLLPath, "ApsimX");
+            if (Directory.Exists(tempDLLPath))
+            {
+                foreach (string fileName in Directory.GetFiles(tempDLLPath, "*.dll"))
+                    if (args.Name.Split(',')[0] == Path.GetFileNameWithoutExtension(fileName))
+                        return Assembly.LoadFrom(fileName);
+            }
             return null;
         }
 

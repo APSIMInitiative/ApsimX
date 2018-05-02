@@ -42,6 +42,13 @@ namespace UserInterface.Views
             vbox.PackStart(buttonPanel, false, true, 0);
             vbox.PackStart(scrolledwindow1, true, true, 0);
             _mainWidget.ShowAll();
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _owner = null;
         }
 
         /// <summary>The list.</summary>
@@ -68,14 +75,9 @@ namespace UserInterface.Views
                 ToolButton button = new ToolButton(image, null);
                 button.Homogeneous = false;
                 Label btnLabel = new Label(text);
-                Pango.FontDescription font = new Pango.FontDescription();
-                font.Size = (int)(8 * Pango.Scale.PangoScale);
-                btnLabel.ModifyFont(font);
                 btnLabel.LineWrap = true;
                 btnLabel.LineWrapMode = Pango.WrapMode.Word;
                 btnLabel.Justify = Justification.Center;
-                btnLabel.HeightRequest = 38;
-                btnLabel.WidthRequest = 80;
                 btnLabel.Realized += BtnLabel_Realized;
                 button.LabelWidget = btnLabel;
                 if (handler != null)

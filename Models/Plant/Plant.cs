@@ -16,8 +16,11 @@ namespace Models.PMF
     using Models.PMF.Phen;
     using Models.Soils.Arbitrator;
     using APSIM.Shared.Utilities;
+    using Struct;
+    using System.Data;
 
     ///<summary>
+    /// # [Name]
     /// The generic plant model
     /// </summary>
     /// \pre Summary A Summary model has to exist to write summary message.
@@ -57,12 +60,17 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, ICrop
+    public class Plant : ModelCollectionFromResource, ICrop, ICustomDocumentation
     {
         #region Class links
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
+
+        /// <summary> The plant's zone</summary>
+        [Link]
+        public Zone Zone = null;
+
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
@@ -72,6 +80,9 @@ namespace Models.PMF
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
+        /// <summary>The Canopy</summary>
+        [Link(IsOptional = true)]
+        public ICanopy Canopy = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
         public Leaf Leaf = null;
@@ -146,8 +157,8 @@ namespace Models.PMF
             {
                 double F;
 
-                if (Leaf != null && Leaf.WaterDemand > 0)
-                    F = Root.WaterUptake / Leaf.WaterDemand;
+                if (Canopy != null && Canopy.PotentialEP > 0)
+                    F = Root.WaterUptake / Canopy.PotentialEP;
                 else
                     F = 1;
                 return F;
@@ -160,6 +171,7 @@ namespace Models.PMF
         /// <summary>
         /// Holds the date of sowing
         /// </summary>
+        [XmlIgnore]
         public DateTime SowingDate { get; set; }
 
         /// <summary>Gets or sets the plant population.</summary>
@@ -172,11 +184,8 @@ namespace Models.PMF
             set
             {
                 double InitialPopn = plantPopulation;
-                if (IsAlive && value <= 0.1)
-                {
-                    // the plant is dying due to population decline
-                    EndCrop();
-                }
+                if (IsAlive && value <= 0.01)                    
+                    EndCrop();  // the plant is dying due to population decline
                 else
                 {
                     plantPopulation = value;
@@ -220,7 +229,16 @@ namespace Models.PMF
             }
         }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
-        public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
+        public bool IsReadyForHarvesting
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.CurrentPhaseName == "ReadyForHarvesting";
+                else
+                    return false;
+            }
+        }
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
@@ -236,12 +254,20 @@ namespace Models.PMF
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowPlant2Type> PlantSowing;
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler PlantEmerging;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when a plant is sown.</summary>
-        public event EventHandler<RemovingBiomassArgs> RemovingBiomass;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Pruning;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Cutting;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Grazing;
+        /// <summary>Occurs when a plant is about to flower</summary>
+        public event EventHandler Flowering;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -261,6 +287,7 @@ namespace Models.PMF
             Organs = organs.ToArray();
 
             Clear();
+
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -269,15 +296,17 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Phenology != null && Leaf != null && AboveGround != null)
+            if (sender == this && Phenology != null && Canopy != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
-                if (Leaf != null)
+                if (Canopy != null)
                 {
-                    message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
+                    message += "  LAI = " + Canopy.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
                 Summary.WriteMessage(this, message);
+                if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
+                    Flowering.Invoke(this, null);
             }
         }
 
@@ -290,12 +319,12 @@ namespace Models.PMF
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
             {
-                double DeltaPopulation = Population * MortalityRate.Value;
+                double DeltaPopulation = Population * MortalityRate.Value();
                 Population -= DeltaPopulation;
                 if (Structure != null)
                 {
                     Structure.DeltaPlantPopulation = DeltaPopulation;
-                    Structure.ProportionPlantMortality = MortalityRate.Value;
+                    Structure.ProportionPlantMortality = MortalityRate.Value();
                 }
             }
         }
@@ -324,7 +353,8 @@ namespace Models.PMF
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
-            
+
+
             // Invoke an AboutToSow event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
@@ -333,8 +363,19 @@ namespace Models.PMF
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            
+            if (Phenology == null)
+                SendEmergingEvent();
+
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+        }
+
+        /// <summary>
+        /// Send out an emerging event
+        /// </summary>
+        public void SendEmergingEvent()
+        {
+            if (PlantEmerging != null)
+                PlantEmerging.Invoke(this, null);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -346,61 +387,29 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+
+            // Invoke specific defoliation events.
+            if (biomassRemoveType == "Harvest" && Harvesting != null)
+                Harvesting.Invoke(this, new EventArgs());
+            
+            if (biomassRemoveType == "Prune" && Pruning != null)
+                Pruning.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "Cut" && Cutting != null)
+                Cutting.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "Graze" && Grazing != null)
+                Grazing.Invoke(this, new EventArgs());
+
             // Set up the default BiomassRemovalData values
-            RemovingBiomassArgs allData = new RemovingBiomassArgs();
-            allData.biomassRemoveType = biomassRemoveType;
             foreach (IOrgan organ in Organs)
             {
                 // Get the default removal fractions
-                OrganBiomassRemovalType biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
-                if (biomassRemoval == null)
-                    throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
-
-                // Override the defaults if values were supplied as arguments
+                OrganBiomassRemovalType biomassRemoval = null;
                 if (removalData != null)
-                {
-                    OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan(organ.Name);
-                    if (userFractions != null)
-                    {
-                        if(!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToRemove, biomassRemoval.FractionLiveToRemove, 1E-9))
-                            biomassRemoval.FractionLiveToRemove = userFractions.FractionLiveToRemove;
-                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToRemove, biomassRemoval.FractionDeadToRemove, 1E-9))
-                            biomassRemoval.FractionDeadToRemove = userFractions.FractionDeadToRemove;
-                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToResidue, biomassRemoval.FractionLiveToResidue, 1E-9))
-                            biomassRemoval.FractionLiveToResidue = userFractions.FractionLiveToResidue;
-                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToResidue, biomassRemoval.FractionDeadToResidue, 1E-9))
-                            biomassRemoval.FractionDeadToResidue = userFractions.FractionDeadToResidue;
-                    }
-                }
-                allData.removalData.Add(organ.Name, biomassRemoval);
-            }
-
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
-
-            // Invoke an event.
-            if (biomassRemoveType == "Harvest" && Harvesting != null)
-                Harvesting.Invoke(this, new EventArgs());
-            else if (RemovingBiomass != null)
-                RemovingBiomass.Invoke(this, allData);
-            
-            // Remove the biomass
-            foreach (IOrgan organ in Organs)
-            {
-                OrganBiomassRemovalType amountToRemove = allData.removalData[organ.Name];
-                double totalLiveFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue;
-                double totalDeadFractionToRemove = amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
-
-                if (amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue > 1.0)
-                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                        + organ.Name
-                                        + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                        + Name + " than there is to remove");
-                if (amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue > 1.0)
-                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                        + organ.Name
-                                        + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                        + Name + " than there is to remove");
-                organ.DoRemoveBiomass(amountToRemove);
+                    biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);
+                organ.DoRemoveBiomass(biomassRemoveType, biomassRemoval);
             }
 
             // Reset the phenology if SetPhenologyStage specified.
@@ -408,24 +417,31 @@ namespace Models.PMF
                 Phenology.ReSetToStage(removalData.SetPhenologyStage);
 
             // Reduce plant and stem population if thinning proportion specified
-            if (removalData != null && removalData.SetThinningProportion != 0)
+            if (removalData != null && removalData.SetThinningProportion != 0 && Structure != null)
                 Structure.doThin(removalData.SetThinningProportion);
+
+            // Remove nodes from the main-stem
+            if (removalData != null && removalData.NodesToRemove > 0)
+                Structure.doNodeRemoval(removalData.NodesToRemove);
+
+
+
         }
-        
+
         /// <summary>End the crop.</summary>
         public void EndCrop()
         {
+            if (IsAlive == false)
+                throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
             Summary.WriteMessage(this, "Crop ending");
-
-            foreach (IOrgan O in Organs)
-                O.DoPlantEnding();
 
             // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
-            cultivarDefinition.Unapply();
+            if (cultivarDefinition != null)
+                cultivarDefinition.Unapply();
         }
         #endregion
 
@@ -442,10 +458,32 @@ namespace Models.PMF
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent);
+            if (IncludeInDocumentation)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
+                // Write Plant Model Table
+                tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
+                DataTable tableData = new DataTable();
+                tableData.Columns.Add("Component Name", typeof(string));
+                tableData.Columns.Add("Component Type", typeof(string));
+
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder))
+                    {
+                        DataRow row = tableData.NewRow();
+                        row[0] = child.Name;
+                        row[1] = child.GetType().ToString();
+                        tableData.Rows.Add(row);
+                    }
+                }
+                tags.Add(new AutoDocumentation.Table(tableData, indent));
+
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
+            }
         }
     }
 }

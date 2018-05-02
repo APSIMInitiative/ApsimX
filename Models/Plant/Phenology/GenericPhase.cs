@@ -9,7 +9,7 @@ namespace Models.PMF.Phen
 {
     /// <summary>
     /// It uses a <i>ThermalTime Target</i> to determine the duration between development <i>Stages</i>.
-    /// <i>ThermalTime</i> is accumulated until the <i>Target</i> is met and remaining <i>ThermalTime</i> is forwarded to the next phase.
+    ///   <i>ThermalTime</i> is accumulated until the <i>Target</i> is met and remaining <i>ThermalTime</i> is forwarded to the next phase.
     /// 
     /// </summary>
     /// \param Target The thermal time target in this phase.
@@ -23,10 +23,20 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class GenericPhase : Phase
+    public class GenericPhase : Phase, ICustomDocumentation
     {
         [Link(IsOptional=true)]
         private IFunction Target = null;
+
+        [Link]
+        ISummary summary = null;
+
+        [Link]
+        Phenology phenology = null;
+
+        /// <summary>Number of days from sowing to end of this phase.</summary>
+        [XmlIgnore]
+        public int DaysFromSowingToEndPhase { get; set; }
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
@@ -42,13 +52,19 @@ namespace Models.PMF.Phen
             // Get the Target TT
             double Target = CalcTarget();
 
-
-            if (TTinPhase > Target)
+            if (DaysFromSowingToEndPhase > 0)
+            {
+                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
+                    PropOfDayUnused = 1.0;
+                else
+                    PropOfDayUnused = 0.0;
+            }
+            else if (TTinPhase > Target)
             {
                 double LeftOverValue = TTinPhase - Target;
                 if (_TTForToday > 0.0)
                 {
-                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value;
+                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
                     PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
                 }
                 else
@@ -69,7 +85,7 @@ namespace Models.PMF.Phen
             {
                 if (Target == null)
                     throw new Exception("Cannot find target for phase: " + Name);
-                retVAL = Target.Value;
+                retVAL = Target.Value();
             }
             return retVAL;
         }
@@ -78,10 +94,10 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public override double AddTT(double PropOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
             double AmountUnusedTT = TTinPhase - CalcTarget();
             if (AmountUnusedTT > 0)
-                return AmountUnusedTT / ThermalTime.Value;
+                return AmountUnusedTT / ThermalTime.Value();
             return 0;
         }
         /// <summary>
@@ -112,33 +128,47 @@ namespace Models.PMF.Phen
         {
             base.WriteSummary(writer);
             if (Target != null)
-                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value));
+                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
         }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            if (DaysFromSowingToEndPhase > 0)
+                summary.WriteMessage(this, "FIXED number of days from sowing to " + Name + " = " + DaysFromSowingToEndPhase);
+        }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            // get description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+                // get description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-            if (Stress != null)
-                tags.Add(new AutoDocumentation.Paragraph("Development is slowed in this phase by multiplying <i>ThermalTime</i> by the value of the <i>Stress</i> function.", indent));
+                if (Stress != null)
+                    tags.Add(new AutoDocumentation.Paragraph("Development is slowed in this phase by multiplying <i>ThermalTime</i> by the value of the <i>Stress</i> function.", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent);
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
         }
     }
 

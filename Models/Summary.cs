@@ -15,6 +15,8 @@ namespace Models
     using MigraDoc.DocumentObjectModel.Tables;
     using MigraDoc.RtfRendering;
     using Models.Core;
+    using Report;
+    using Storage;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -26,16 +28,30 @@ namespace Models
     [ValidParent(ParentType=typeof(Simulation))]
     public class Summary : Model, ISummary
     {
-        /// <summary>
-        /// The messages data table.
-        /// </summary>
-        private DataTable messagesTable;
+        /// <summary>A link to a storage service</summary>
+        [Link]
+        private IStorageWriter storage = null;
 
-        /// <summary>
-        /// A link to the clock in the simulation.
-        /// </summary>
+        /// <summary>A link to the clock in the simulation</summary>
         [Link]
         private Clock clock = null;
+
+        /// <summary>A link to the parent simulation</summary>
+        [Link]
+        private Simulation simulation = null;
+
+        /// <summary>The column names for the summary table this model will write</summary>
+        private static string[] summaryTableColumnNames = new string[] { "ComponentName",
+                                                                         "Date", "Message", "MessageType" };
+
+        private static string[] initialConditionsColumnNames = new string[] {"ModelPath",
+                                                                             "Name",
+                                                                             "Description",
+                                                                             "DataType",
+                                                                             "Units",
+                                                                             "DisplayFormat",
+                                                                             "Total",
+                                                                             "Value" };
 
         /// <summary>
         /// Enumeration used to indicate the format of the output string
@@ -58,40 +74,120 @@ namespace Models
             rtf
         }
 
-        /// <summary>
-        /// Gets a link to the simulation.
-        /// </summary>
-        public Simulation Simulation
+        /// <summary>Event handler to create initialise</summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            get
-            {
-                return Apsim.Parent(this, typeof(Simulation)) as Simulation;
-            }
+            CreateInitialConditionsTable();
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Summary()
+        /// <summary>Write a message to the summary</summary>
+        /// <param name="model">The model writing the message</param>
+        /// <param name="message">The message to write</param>
+        public void WriteMessage(IModel model, string message)
         {
-            // Create our Messages table.
-            messagesTable = new DataTable("Messages");
-            this.messagesTable.Columns.Add("ComponentName", typeof(string));
-            this.messagesTable.Columns.Add("Date", typeof(DateTime));
-            this.messagesTable.Columns.Add("Message", typeof(string));
-            this.messagesTable.Columns.Add("MessageType", typeof(int));
+            if (storage == null)
+                throw new ApsimXException(model, "No datastore is available!");
+            string modelPath = Apsim.FullPath(model);
+            string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+
+            object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Information) };
+            storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+        }
+
+        /// <summary>Write a warning message to the summary</summary>
+        /// <param name="model">The model writing the message</param>
+        /// <param name="message">The warning message to write</param>
+        public void WriteWarning(IModel model, string message)
+        {
+            if (storage == null)
+                throw new ApsimXException(model, "No datastore is available!");
+            string modelPath = Apsim.FullPath(model);
+            string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+
+            object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Warning) };
+            storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+        }
+        
+        /// <summary>
+        /// Create an initial conditions table in the DataStore.
+        /// </summary>
+        private void CreateInitialConditionsTable()
+        {
+            string simulationPath = Apsim.FullPath(simulation);
+            object[] values = new object[] { simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
+            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+
+            values = new object[] { simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+
+            values = new object[] { simulationPath, "Run on", "Run on", "String", string.Empty, string.Empty, 0, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") };
+            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+
+            // Get all model properties and store in 'initialConditionsTable'
+            foreach (Model model in Apsim.FindAll(simulation))
+            {
+                string thisRelativeModelPath = Apsim.FullPath(model).Replace(simulationPath + ".", string.Empty);
+
+                List<VariableProperty> properties = new List<VariableProperty>();
+                FindAllProperties(model, properties);
+                foreach (VariableProperty property in properties)
+                {
+                    string propertyValue = property.ValueAsString();
+                    if (propertyValue != string.Empty)
+                    {
+                        if (propertyValue != null && property.DataType == typeof(DateTime))
+                            propertyValue = ((DateTime)property.Value).ToString("yyyy-MM-dd HH:mm:ss");
+
+                        int total;
+                        if (double.IsNaN(property.Total))
+                            total = 0;
+                        else
+                            total = 1;
+
+                        if (property.Units == null)
+                            property.Units = string.Empty;
+                       
+                        values = new object[] { thisRelativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
+                        storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+                    }
+                }
+            }
+        }
+        
+        #region Static summary report generation
+
+        /// <summary>
+        /// Write a single sumary file for all simulations.
+        /// </summary>
+        /// <param name="storage">The storage where the summary data is stored</param>
+        /// <param name="fileName">The file name to write</param>
+        public static void WriteSummaryToTextFiles(IStorageReader storage, string fileName)
+        {
+            using (StreamWriter report = new StreamWriter(fileName))
+            {
+                foreach (string simulationName in storage.SimulationNames)
+                {
+                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html);
+                    report.WriteLine();
+                    report.WriteLine();
+                    report.WriteLine("############################################################################");
+                }
+            }
         }
 
         /// <summary>
         /// Write the summary report to the specified writer.
         /// </summary>
-        /// <param name="dataStore">The data store to write a summary report from</param>
+        /// <param name="storage">The data store to query</param>
         /// <param name="simulationName">The simulation name to produce a summary report for</param>
         /// <param name="writer">Text writer to write to</param>
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
         /// <param name="outtype">Indicates the format to be produced</param>
         public static void WriteReport(
-            DataStore dataStore,
+            IStorageReader storage,
             string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
@@ -159,10 +255,10 @@ namespace Models
             }
 
             // Get the initial conditions table.            
-            DataTable initialConditionsTable = dataStore.GetData(simulationName, "InitialConditions");
+            DataTable initialConditionsTable = storage.GetData(simulationName: simulationName, tableName:"_InitialConditions");
             if (initialConditionsTable != null)
             {
-                // Convert the 'InitialConditions' table in the DataStore to a series of
+                // Convert the '_InitialConditions' table in the DataStore to a series of
                 // DataTables for each model.
                 List<DataTable> tables = new List<DataTable>();
                 ConvertInitialConditionsToTables(initialConditionsTable, tables);
@@ -204,7 +300,7 @@ namespace Models
 
             // Write out all messages.
             WriteHeading(writer, "Simulation log:", outtype, document);
-            DataTable messageTable = GetMessageTable(dataStore, simulationName);
+            DataTable messageTable = GetMessageTable(storage, simulationName);
             WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document);
 
             if (outtype == OutputType.html)
@@ -220,67 +316,15 @@ namespace Models
         }
 
         /// <summary>
-        /// All simulations have been completed. 
-        /// </summary>
-        /// <param name="sender">The sending Object</param>
-        /// <param name="e">Arguments associated with the event</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            DataStore dataStore = new DataStore(this);
-            dataStore.DeleteOldContentInTable(this.Simulation.Name, "Messages");
-            dataStore.WriteTable(this.Simulation.Name, "Messages", this.messagesTable);
-            dataStore.Disconnect();
-        }
-
-        /// <summary>
-        /// Write a message to the summary
-        /// </summary>
-        /// <param name="model">The model writing the message</param>
-        /// <param name="message">The message to write</param>
-        public void WriteMessage(IModel model, string message)
-        {
-            string modelFullPath = Apsim.FullPath(model);
-            string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty).TrimStart(".".ToCharArray());
-
-            DataRow newRow = this.messagesTable.NewRow();
-            newRow["ComponentName"] = relativeModelPath;
-            newRow["Date"] = this.clock.Today;
-            newRow["Message"] = message;
-            newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Information);
-            this.messagesTable.Rows.Add(newRow);
-        }
-
-        /// <summary>
-        /// Write a warning message to the summary
-        /// </summary>
-        /// <param name="model">The model writing the message</param>
-        /// <param name="message">The warning message to write</param>
-        public void WriteWarning(IModel model, string message)
-        {
-            if (this.messagesTable != null)
-            {
-                DataRow newRow = this.messagesTable.NewRow();
-                newRow["ComponentName"] = Apsim.FullPath(model);
-                newRow["Date"] = this.clock.Today;
-                newRow["Message"] = message;
-                newRow["MessageType"] = Convert.ToInt32(DataStore.ErrorLevel.Warning);
-                this.messagesTable.Rows.Add(newRow);
-            }
-        }
-
-        #region Private static summary report generation
-
-        /// <summary>
         /// Create a message table ready for writing.
         /// </summary>
-        /// <param name="dataStore">The data store to read the message table from</param>
+        /// <param name="storage">The data store</param>
         /// <param name="simulationName">The simulation name to get messages for</param>
         /// <returns>The filled message table</returns>
-        private static DataTable GetMessageTable(DataStore dataStore, string simulationName)
+        private static DataTable GetMessageTable(IStorageReader storage, string simulationName)
         {
             DataTable messageTable = new DataTable();
-            DataTable messages = dataStore.GetData(simulationName, "Messages");
+            DataTable messages = storage.GetData(simulationName: simulationName, tableName: "_Messages");
             if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));
@@ -290,16 +334,16 @@ namespace Models
                 foreach (DataRow row in messages.Rows)
                 {
                     // Work out the column 1 text.
-                    string modelName = (string)row[1];
+                    string modelName = (string)row["ComponentName"];
 
                     string col1Text;
-                    if (row[2].GetType() == typeof(DateTime))
+                    if (row["Date"].GetType() == typeof(DateTime))
                     {
-                        DateTime date = (DateTime)row[2];
+                        DateTime date = (DateTime)row["Date"];
                         col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
                     }
                     else
-                        col1Text = row[2].ToString();
+                        col1Text = row["Date"].ToString();
 
                     // If the date and model name have changed then write a row.
                     if (col1Text != previousCol1Text)
@@ -317,14 +361,14 @@ namespace Models
                         col1Text = null;
                     }
 
-                    string message = (string)row[3];
-                    Models.DataStore.ErrorLevel errorLevel = (Models.DataStore.ErrorLevel)Enum.Parse(typeof(Models.DataStore.ErrorLevel), row[4].ToString());
+                    string message = (string)row["Message"];
+                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row["MessageType"].ToString());
 
-                    if (errorLevel == DataStore.ErrorLevel.Error)
+                    if (errorLevel == Simulation.ErrorLevel.Error)
                     {
                         previousMessage += "FATAL ERROR: " + message;
                     }
-                    else if (errorLevel == DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == Simulation.ErrorLevel.Warning)
                     {
                         previousMessage += "WARNING: " + message;
                     }
@@ -456,7 +500,7 @@ namespace Models
             }
             else if (outtype == OutputType.rtf)
             {
-                Table tabl = new Table();
+                MigraDoc.DocumentObjectModel.Tables.Table tabl = new MigraDoc.DocumentObjectModel.Tables.Table();
                 tabl.Borders.Width = 0.75;
 
                 foreach (DataColumn col in table.Columns)
@@ -466,7 +510,7 @@ namespace Models
 
                 if (showHeadings)
                 {
-                    Row row = tabl.AddRow();
+                    MigraDoc.DocumentObjectModel.Tables.Row row = tabl.AddRow();
                     row.Shading.Color = Colors.PaleGoldenrod;
                     tabl.Shading.Color = new Color(245, 245, 255);
                     for (int i = 0; i < table.Columns.Count; i++)
@@ -485,7 +529,7 @@ namespace Models
                 {
                     bool titleRow = Convert.IsDBNull(row[0]);
                     string st;
-                    Row newRow = tabl.AddRow();
+                    MigraDoc.DocumentObjectModel.Tables.Row newRow = tabl.AddRow();
 
                     for (int i = 0; i < table.Columns.Count; i++)
                     {
@@ -581,72 +625,6 @@ namespace Models
                     writer.WriteLine(st);
                 }
             }
-        }
-
-        /// <summary>
-        /// Create an initial conditions table in the DataStore.
-        /// </summary>
-        /// <param name="simulation">The simulation to create an table for</param>
-        private static void CreateInitialConditionsTable(Simulation simulation)
-        {
-            // Create our initial conditions table.
-            DataTable initialConditionsTable = new DataTable("InitialConditions");
-            initialConditionsTable.Columns.Add("ModelPath", typeof(string));
-            initialConditionsTable.Columns.Add("Name", typeof(string));
-            initialConditionsTable.Columns.Add("Description", typeof(string));
-            initialConditionsTable.Columns.Add("DataType", typeof(string));
-            initialConditionsTable.Columns.Add("Units", typeof(string));
-            initialConditionsTable.Columns.Add("DisplayFormat", typeof(string));
-            initialConditionsTable.Columns.Add("Total", typeof(int));
-            initialConditionsTable.Columns.Add("Value", typeof(string));
-
-            initialConditionsTable.Rows.Add(
-                new object[] { Apsim.FullPath(simulation), "Simulation name", "Simulation name", "String", string.Empty, string.Empty, false, simulation.Name });
-            initialConditionsTable.Rows.Add(
-                new object[] { Apsim.FullPath(simulation), "APSIM version", "APSIM version", "String", string.Empty, string.Empty, false, simulation.ApsimVersion });
-            initialConditionsTable.Rows.Add(
-                new object[] { Apsim.FullPath(simulation), "Run on", "Run on", "String", string.Empty, string.Empty, false, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") });
-
-            // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in Apsim.FindAll(simulation))
-            {
-                string relativeModelPath = Apsim.FullPath(model).Replace(Apsim.FullPath(simulation) + ".", string.Empty);
-                List<VariableProperty> properties = new List<VariableProperty>();
-
-                FindAllProperties(model, properties);
-
-                foreach (VariableProperty property in properties)
-                {
-                    string value = property.ValueWithArrayHandling.ToString();
-                    if (value != string.Empty)
-                    {
-                        if (value != null && property.DataType == typeof(DateTime))
-                        {
-                            value = ((DateTime)property.Value).ToString("yyyy-MM-dd HH:mm:ss");
-                        }
-
-                        bool showTotal = !double.IsNaN(property.Total);
-
-                        initialConditionsTable.Rows.Add(new object[]
-                          {
-                              relativeModelPath,
-                              property.Name,
-                              property.Description,
-                              property.DataType.Name,
-                              property.Units,
-                              property.Format,
-                              showTotal,
-                              value
-                          });
-                    }
-                }
-            }
-
-            // Write to data store.
-            DataStore dataStore = new DataStore(simulation);
-            dataStore.DeleteOldContentInTable(simulation.Name, "InitialConditions");
-            dataStore.WriteTable(simulation.Name, "InitialConditions", initialConditionsTable);
-            dataStore.Disconnect();
         }
 
         /// <summary>
@@ -799,7 +777,7 @@ namespace Models
 
             if (dataTypeName == "Double" || dataTypeName == "Single")
             {
-                double doubleValue = Convert.ToDouble(value);
+                double doubleValue = Convert.ToDouble(value, System.Globalization.CultureInfo.InvariantCulture);
                 if (format == null || format == string.Empty)
                 {
                     return string.Format("{0:F3}", doubleValue);
@@ -822,16 +800,5 @@ namespace Models
 
         #endregion
 
-        /// <summary>
-        /// Simulation is commencing.
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("DoInitialSummary")]
-        private void OnDoInitialSummary(object sender, EventArgs e)
-        {
-            // Create an initial conditions table in the DataStore.
-            CreateInitialConditionsTable(Simulation);
-        }
     }
 }

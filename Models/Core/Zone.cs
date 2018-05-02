@@ -9,13 +9,14 @@ using Models;
 
 namespace Models.Core
 {
-
-
-    //=========================================================================
-    /// <summary>A generic system that can have children</summary>
+    /// <summary>
+    /// # [Name]
+    /// A generic system that can have children
+    /// </summary>
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
+    [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ScopedModel]
@@ -32,21 +33,14 @@ namespace Models.Core
         public double Slope { get; set; }
 
 
-        /// <summary>Gets an array of plant models that are in scope.</summary>
-        /// <value>The plants.</value>
-        [XmlIgnore]
-        public List<ICrop2> Plants
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            get
-            {
-                var plants = new List<ICrop2>();
-                foreach (var plant in Apsim.FindAll(this, typeof(ICrop2)))
-                {
-                    plants.Add(plant as ICrop2);
-                }
-
-                return plants;
-            }
+            if (Area <= 0)
+                throw new Exception("Zone area must be greater than zero.  See Zone: " + Name);
         }
 
         /// <summary>Gets the value of a variable or model.</summary>

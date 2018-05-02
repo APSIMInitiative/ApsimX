@@ -7,44 +7,37 @@ namespace Models.Report
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using PMF.Functions;
 
     /// <summary>A class for outputting a constant value in a report column.</summary>
     [Serializable]
-    public class ReportColumnConstantValue : ReportColumn
+    public class ReportColumnConstantValue : IReportColumn
     {
+        /// <summary>The column name for the constant</summary>
+        public string Name { get; private set; }
+
+        /// <summary>The column name for the constant</summary>
+        public string Units { get; private set; }
+
         /// <summary>The constant value</summary>
-        private object constantValue;
+        private object value;
 
         /// <summary>
         /// Constructor for a plain report variable.
         /// </summary>
-        /// <param name="variableName">The name of the APSIM variable to retrieve</param>
         /// <param name="columnName">The column name to write to the output</param>
-        /// <param name="frequenciesFromReport">Reporting frequencies</param>
-        /// <param name="parentModel">The parent model</param>
-        /// <param name="value">The constant value</param>
-        public ReportColumnConstantValue(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel, object value)
-            : base(variableName, columnName, frequenciesFromReport, parentModel)
+        /// <param name="units">Units of measurement</param>
+        /// <param name="constantValue">The constant value</param>
+        public ReportColumnConstantValue(string columnName, object constantValue, string units = null)
         {
-            constantValue = value;
+            Name = columnName;
+            Units = units;
+            value = constantValue;
         }
 
-
-        /// <summary>
-        /// Retrieve the current value and store it in our array of values.
-        /// </summary>
-        public override void StoreValue()
+        /// <summary>Retrieve the current value</summary>
+        public object GetValue()
         {
-            values.Add(constantValue);
+            return value;
         }
-
     }
 }

@@ -24,7 +24,7 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Factorial.Experiment))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Graph : Model, AutoDocumentation.ITag
+    public class Graph : Model, AutoDocumentation.ITag, ICustomDocumentation
     {
         /// <summary>The data tables on the graph.</summary>
         [NonSerialized]
@@ -83,20 +83,16 @@ namespace Models.Graph
         /// </summary>
         public List<string> DisabledSeries { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
-        /// </summary>
-        public bool IncludeInDocumentation { get; set; }
-
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
-        public List<SeriesDefinition> GetDefinitionsToGraph()
+        /// <param name="storage">Storage service</param>
+        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage)
         {
             EnsureAllAxesExist();
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetSeriesToPutOnGraph(definitions);
+                series.GetSeriesToPutOnGraph(storage, definitions);
 
             return definitions;
         }
@@ -118,7 +114,7 @@ namespace Models.Graph
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
                 tags.Add(this);
@@ -173,4 +169,5 @@ namespace Models.Graph
                 Axes = allAxes;
         }
     }
+
 }

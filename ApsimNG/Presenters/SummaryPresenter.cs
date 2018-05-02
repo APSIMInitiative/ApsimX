@@ -7,10 +7,11 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.IO;
+    using System.Linq;
     using Models;
     using Models.Core;
-    using Views;
     using Models.Factorial;
+    using Views;
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
@@ -21,11 +22,9 @@ namespace UserInterface.Presenters
         /// <summary>The view model to work with.</summary>
         private ISummaryView view;
 
-        /// <summary>The parent explorer presenter</summary>
-        private ExplorerPresenter explorerPresenter;
-
         /// <summary>Our data store</summary>
-        private DataStore dataStore;
+        [Link]
+        private IStorageReader dataStore = null;
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
@@ -35,7 +34,6 @@ namespace UserInterface.Presenters
         {
             this.summary = model as Summary;
             this.view = view as ISummaryView;
-            this.explorerPresenter = explorerPresenter;
 
             // populate the simulation names in the view.
             Simulation simulation = Apsim.Parent(this.summary, typeof(Simulation)) as Simulation;
@@ -44,10 +42,12 @@ namespace UserInterface.Presenters
                 if (simulation.Parent is Experiment)
                 {
                     Experiment experiment = simulation.Parent as Experiment;
-                    string[] simulationNames = experiment.Names();
+                    string[] simulationNames = experiment.GetSimulationNames().ToArray();
                     this.view.SimulationNames = simulationNames;
                     if (simulationNames.Length > 0)
+                    {
                         this.view.SimulationName = simulationNames[0];
+                    }
                 }
                 else
                 {
@@ -55,30 +55,25 @@ namespace UserInterface.Presenters
                     this.view.SimulationName = simulation.Name;
                 }
 
-                // create a data store - we'll need it later
-                dataStore = new DataStore(simulation, false);
-
                 // populate the view
                 this.SetHtmlInView();
 
                 // subscribe to the simulation name changed event.
-                this.view.SimulationNameChanged += OnSimulationNameChanged;
+                this.view.SimulationNameChanged += this.OnSimulationNameChanged;
             }
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            if (dataStore != null)
-                dataStore.Disconnect();
-            this.view.SimulationNameChanged -= OnSimulationNameChanged;
+            this.view.SimulationNameChanged -= this.OnSimulationNameChanged;
         }
 
         /// <summary>Populate the summary view.</summary>
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype:Summary.OutputType.html);
+            Summary.WriteReport(this.dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
             this.view.SetSummaryContent(writer.ToString());
             writer.Close();
         }
@@ -86,10 +81,9 @@ namespace UserInterface.Presenters
         /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        void OnSimulationNameChanged(object sender, EventArgs e)
+        private void OnSimulationNameChanged(object sender, EventArgs e)
         {
-            SetHtmlInView();
+            this.SetHtmlInView();
         }
-
     }
 }

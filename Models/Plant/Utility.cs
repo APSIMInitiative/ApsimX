@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using APSIM.Shared.Utilities;
+using System;
 using System.Diagnostics;
-
-using System.Collections;
-using System.Reflection;
-using Models.Core;
-using Models.PMF.OldPlant;
-using APSIM.Shared.Utilities;
+using System.IO;
 
 namespace Models.PMF
 {
     class Util
     {
         public static StreamWriter Dbg = null;
-        
+
+        /// <summary>Tolerance for biomass comparisons</summary>
+        public static double BiomassToleranceValue = 0.0000000001;   // 10E-10
+
         [Conditional("DEBUGOUTPUT")]
         public static void Debug(string format, object value)
         {
@@ -180,38 +175,6 @@ namespace Models.PMF
             }
             else
                 NDemand = NMax = 0.0;
-        }
-
-        public static AvailableToAnimalelementType[] AvailableToAnimal(string PlantName, string OrganName, double PlantHeight,
-                                                                       Biomass Live, Biomass Dead)
-        {
-            AvailableToAnimalelementType[] Available = new AvailableToAnimalelementType[2];
-            Available[0] = new AvailableToAnimalelementType();
-            Available[0].CohortID = PlantName;
-            Available[0].Organ = OrganName;
-            Available[0].AgeID = "live";
-            Available[0].Bottom = 0.0;
-            Available[0].Top = PlantHeight;
-            Available[0].Chem = "digestible";
-            Available[0].Weight = Live.Wt * Conversions.gm2kg / Conversions.sm2ha;
-            Available[0].N = Live.N * Conversions.gm2kg / Conversions.sm2ha;
-            Available[0].P = 0.0; //Live.P * Conversions.gm2kg / Conversions.sm2ha;
-            Available[0].S = 0.0;
-            Available[0].AshAlk = 0.0;
-
-            Available[1] = new AvailableToAnimalelementType();
-            Available[1].CohortID = PlantName;
-            Available[1].Organ = OrganName;
-            Available[1].AgeID = "dead";
-            Available[1].Bottom = 0.0;
-            Available[1].Top = PlantHeight;
-            Available[1].Chem = "digestible";
-            Available[1].Weight = Dead.Wt * Conversions.gm2kg / Conversions.sm2ha;
-            Available[1].N = Dead.N * Conversions.gm2kg / Conversions.sm2ha;
-            Available[1].P = 0.0; //Dead.P * Conversions.gm2kg / Conversions.sm2ha;
-            Available[1].S = 0.0;
-            Available[1].AshAlk = 0.0;
-            return Available;
         }
 
         /// <summary>
