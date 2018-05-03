@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Reflection.Emit;
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml;
@@ -153,12 +152,7 @@
             }
 
         }
-        /*
-        /// <summary>
-        /// Enum listing valid residue types.
-        /// </summary>
-        private Type residueTypeEnum;
-        */
+
         /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM;
         /// <summary>The met data</summary>
@@ -875,33 +869,6 @@
                 }
                 ResidueTypes.FillAllDerived();
             }
-            //GenerateResidueTypeEnum();
-            //this.residueTypeEnum = GetResidueTypeEnum();
-        }
-
-        /// <summary>
-        /// Generates an enum containing the possible residue types.
-        /// </summary>
-        private void GenerateResidueTypeEnum()
-        {
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            AssemblyName name = new AssemblyName("ResidueTypeEnum");
-            AssemblyBuilder aBuilder = currentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.RunAndSave);
-            ModuleBuilder mBuilder = aBuilder.DefineDynamicModule(name.Name, name.Name + ".dll");
-
-            EnumBuilder eBuilder = mBuilder.DefineEnum("EnumeratedTypes.ResidueType", TypeAttributes.Public, typeof(int));
-
-            for (int i = 0; i < ResidueTypes.residues.Count; i++)
-            {
-                eBuilder.DefineLiteral(ResidueTypes.residues[i].fom_type, i);
-            }
-            eBuilder.CreateType();
-            aBuilder.Save(name.Name + ".dll");
-        }
-
-        private Type GetResidueTypeEnum()
-        {
-            return Assembly.LoadFrom("ResidueTypeEnum.dll").GetType("EnumeratedTypes.ResidueType");
         }
 
         /// <summary>The saved residues</summary>
