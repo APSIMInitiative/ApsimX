@@ -188,6 +188,10 @@ namespace UserInterface.Presenters
                     }
                     else
                     {
+                        // Need to hide the right hand panel because some views may not save
+                        // their contents until they get a 'Detach' call.
+                        this.HideRightHandPanel();
+
                         // need to test is ApsimXFile has changed and only prompt when changes have occured.
                         // serialise ApsimXFile to buffer
                         StringWriter o = new StringWriter();
@@ -206,15 +210,12 @@ namespace UserInterface.Presenters
 
                     if (choice == QuestionResponseEnum.Cancel)
                     {   // cancel
+                        this.ShowRightHandPanel();
                         result = false;
                     }
                     else if (choice == QuestionResponseEnum.Yes)
                     {
                         // save
-                        // Need to hide the right hand panel because some views may not have saved
-                        // their contents until they get a 'Detach' call.
-                        this.HideRightHandPanel();
-
                         this.WriteSimulation();
                         result = true;
                     }
