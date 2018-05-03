@@ -152,7 +152,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                return FForageData.TotalGreen;
+                return this.FForageData.TotalGreen;
             }
         }
 
@@ -163,7 +163,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                return FForageData.TotalDead;
+                return this.FForageData.TotalDead;
             }
         }
 
@@ -402,9 +402,9 @@ namespace Models.GrazPlan
             {
                 dMeanDMD = FChemData[DDM_MEAN].dMass_KgHa / dTotalDM;
                 if (FIsGreen)
-                    dDMDPropns = this.calcDMDDistribution(dMeanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
+                    dDMDPropns = ForageInfo.calcDMDDistribution(dMeanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
                 else
-                    dDMDPropns = this.calcDMDDistribution(dMeanDMD, 0.70, 0.30);
+                    dDMDPropns = ForageInfo.calcDMDDistribution(dMeanDMD, 0.70, 0.30);
 
                 for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
                 {
@@ -494,13 +494,13 @@ namespace Models.GrazPlan
 
 
         /// <summary>
-        /// 
+        /// Calculate the proportions in a DMD distribution
         /// </summary>
-        /// <param name="fDMD"></param>
-        /// <param name="fMaxDMD"></param>
-        /// <param name="fMinDMD"></param>
+        /// <param name="fDMD">The mean DMD</param>
+        /// <param name="fMaxDMD">Upper range</param>
+        /// <param name="fMinDMD">Lower range</param>
         /// <returns></returns>
-        public double[] calcDMDDistribution(double fDMD, double fMaxDMD, double fMinDMD)
+        static public double[] calcDMDDistribution(double fDMD, double fMaxDMD, double fMinDMD)
         {
             int iHighClass;
             int iLowClass;
@@ -988,7 +988,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Use the GrazingInputs to initialise the forage object
         /// </summary>
         /// <param name="forage"></param>
         /// <param name="Grazing"></param>
@@ -1014,84 +1014,75 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Copies a Plant/AgPasture object biomass organs into TGrazingInputs object
+        /// This object may then get scaled to kg/ha
         /// </summary>
-        /// <param name="forageObj">The forage object</param>
+        /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
         /// <returns>The grazing inputs</returns>
         private GrazType.TGrazingInputs Crop2GrazingInputs(Object forageObj)
         {
             GrazType.TGrazingInputs result = new GrazType.TGrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
-           
-//            for (int idx = 1; idx <= Math.Min(GrazType.DigClassNo, 6); idx++)
-                //Value2IntakeRecord(aValue.item(1).item((uint)Idx), ref Result.Herbage[Idx]);
             
             result.TotalGreen = 0;
             result.TotalDead = 0;
 
-            
-            // test code *** do not keep ***
-            foreach (IRemovableBiomass organ in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
+            double totalDMD = 0;
+            double totalN = 0;
+            double meanDMD = 0;
+            double dmd;
+
+            // calculate the total live and dead biomass
+            foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
             {
-                if (organ is Leaf)
+                if (biomass.IsAboveGround)
                 {
-                    Leaf leaf = (Leaf)organ;
-                    if (leaf.Live.Wt > 0 || leaf.Dead.Wt > 0)
+                    if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
                     {
-                        result.TotalGreen += leaf.Live.Wt;
-                        result.TotalDead += leaf.Dead.Wt;
-                    }
-                }
-                if (organ is ReproductiveOrgan)
-                {
-                    ReproductiveOrgan grain = (ReproductiveOrgan)organ;
-                    if (grain.Live.Wt > 0 || grain.Dead.Wt > 0)
-                    {
-                        result.TotalGreen +=grain.Live.Wt;
-                        result.TotalDead += grain.Dead.Wt;
-                    }
-                }
-                if (organ is GenericOrgan)
-                {
-                    GenericOrgan genorgan = (GenericOrgan)organ;
-                    if (genorgan.Live.Wt > 0 || genorgan.Dead.Wt > 0)
-                    {
-                        result.TotalGreen += genorgan.Live.Wt;
-                    result.TotalDead += genorgan.Dead.Wt;
+                        result.TotalGreen += biomass.Live.Wt;   // g/m^2
+                        result.TotalDead += biomass.Dead.Wt;
+
+                        dmd = ((biomass.Live.DMDOfStructural * biomass.Live.StructuralWt) + (1 * biomass.Live.StorageWt) + (1 * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
+                        dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
+                        totalDMD += dmd;
+                        totalN += biomass.Live.N + biomass.Dead.N;
                     }
                 }
             }
 
-            // store the total kg of the forage so the % removed can be calc'd later
+            double totalDM = result.TotalGreen + result.TotalDead;
 
+            // TODO: Improve this routine
 
-            // test code *** do not keep ***
-            for (int idx = 1; idx <= Math.Min(GrazType.DigClassNo, 6); idx++)
+            if (totalDM > 0)
             {
-                result.Herbage[idx].Biomass = (result.TotalGreen + result.TotalDead) / 6.0;
-                result.Herbage[idx].CrudeProtein = 10.0;
-                result.Herbage[idx].Digestibility = 0.3 + (idx-1) * ((0.8 - 0.3)/6.0);
-                result.Herbage[idx].Degradability = 0.75;
-                result.Herbage[idx].HeightRatio = 1;
-                result.Herbage[idx].PhosContent = 0;
-                result.Herbage[idx].SulfContent = 0;
-                result.Herbage[idx].AshAlkalinity = 0.13;
-            }
-            
-            result.LegumePropn = 0.0;
-            result.SelectFactor = 0;               
+                meanDMD = totalDMD / totalDM; //calc the average dmd for the plant
 
-            /*
-            for (Idx = 1; Idx <= Math.Min(2, aValue.item(5).count()); Idx++)                        // Item[5]="seed"                        
-            {
-                Value2IntakeRecord(aValue.item(5).item((uint)Idx), ref Result.Seeds[1, Idx]);
-                Result.SeedClass[1, Idx] = aValue.item(6).item((uint)Idx).asInteger();              // Item[6]="seed_class"                  
+                //get the dmd distribution
+                double[] dDMDPropns = new double[GrazType.DigClassNo + 1];
+
+                //green 0.85-0.45, dead 0.70-0.30
+                dDMDPropns = ForageInfo.calcDMDDistribution(meanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
+
+                for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
+                {
+                    result.Herbage[idx].Biomass = dDMDPropns[idx] * totalDM;
+                    result.Herbage[idx].CrudeProtein = dDMDPropns[idx] * totalN * GrazType.N2Protein;
+                    result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
+                    result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
+                    result.Herbage[idx].HeightRatio = 1;
+                    result.Herbage[idx].PhosContent = 0;    //N * 0.05?
+                    result.Herbage[idx].SulfContent = 0;    //N * 0.07?
+                    result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
+                }
+
+                result.LegumePropn = 0.0;   // TODO: set from Plant model value
+                result.SelectFactor = 0;    // TODO: set from Plant model value
+
+                // TODO: Store the seed pools
             }
 
-            */
             return result;
-
         }
-
 
         /// <summary>
         /// Return the removal
@@ -1168,17 +1159,17 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// TForageProviders is a collection of forage/cmp components that each in turn
+    /// ForageProviders is a collection of forage/cmp components that each in turn
     /// supply 1..n forage plants/species
     /// </summary>
     [Serializable]
-    public class TForageProviders
+    public class ForageProviders
     {
         private List<ForageProvider> FForageProviderList;
         /// <summary>
         /// Construct a forage provider
         /// </summary>
-        public TForageProviders()
+        public ForageProviders()
         {
             FForageProviderList = new List<ForageProvider>();
         }
@@ -1634,7 +1625,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Initialise at the first timestep
         /// </summary>
         public void beginTimeStep()
         {
