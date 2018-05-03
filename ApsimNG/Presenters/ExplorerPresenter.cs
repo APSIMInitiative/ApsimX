@@ -224,6 +224,7 @@ namespace UserInterface.Presenters
             catch (Exception err)
             {
                 MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
+                this.ShowRightHandPanel();
                 result = false;
             }
 
