@@ -426,7 +426,12 @@ namespace UserInterface.Views
                 }
 
                 if (!bFound)
-                    throw new Exception("Error allocating new breed");
+                {
+                    MessageDialog msgError = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, "Error adding more genotypes");
+                    msgError.Title = "Error";
+                    msgError.Run();
+                    msgError.Destroy();
+                }
                 else
                 {
                     Array.Resize(ref genotypeInits, genotypeInits.Length + 1);
@@ -711,8 +716,6 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void btnDelGeno_Clicked(object sender, EventArgs e)
         {
-            //int idx = SelectedGenoIndex;
-
             if (FCurrGenotype >= 0)
             {
                 //TODO when animals tab is working: deleteGroupsWithGenotype(FCurrGenotype);
@@ -721,8 +724,10 @@ namespace UserInterface.Views
                         genotypeInits[idx - 1] = genotypeInits[idx];
                 Array.Resize(ref genotypeInits, genotypeInits.Length - 1);
 
+                int current = SelectedGenoIndex;
                 // repopulate the view
                 SetValues();
+                SelectedGenoIndex = Math.Min(current, genotypeInits.Length - 1);
                 EnableButtons();
             }
         }
