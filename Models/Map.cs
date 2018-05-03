@@ -32,9 +32,11 @@ namespace Models
         }
 
         /// <summary>List of coordinates to show on map</summary>
-        public List<Coordinate> GetCoordinates()
+        public List<Coordinate> GetCoordinates(List<string> filenames = null)
         {
             List<Coordinate> coordinates = new List<Coordinate>();
+            if (filenames != null)
+                filenames.Clear();
 
             foreach (Weather weather in Apsim.FindAll(this, typeof(Weather)))
             {
@@ -48,6 +50,8 @@ namespace Models
                     coordinate.Latitude = latitude;
                     coordinate.Longitude = longitude;
                     coordinates.Add(coordinate);
+                    if (filenames != null)
+                        filenames.Add(System.IO.Path.GetFileName(weather.FileName));
                 }
             }
 
