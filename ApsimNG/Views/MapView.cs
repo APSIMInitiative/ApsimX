@@ -23,7 +23,7 @@ namespace UserInterface.Views
         event EventHandler ViewChanged;
 
         /// <summary>Show the map</summary>
-        void ShowMap(List<Models.Map.Coordinate> coordinates);
+        void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
 
         /// <summary>Export the map to an image.</summary>
         Image Export();
@@ -70,135 +70,84 @@ namespace UserInterface.Views
         }
 
         /// <summary>Show the map</summary>
-        public void ShowMap(List<Models.Map.Coordinate> coordinates)
+        public void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center)
         {
             string html =
-@"<html>
+@"<!DOCTYPE html>
+<html>
+<meta charset=""UTF-8"">
 <head>
-<script src='http://maps.googleapis.com/maps/api/js?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw'>
-</script>";
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                html +=
-@"<script>
-if (!window.JSON) {
-  window.JSON = {
-    parse: function(sJSON) { return eval('(' + sJSON + ')'); },
-    stringify: (function () {
-      var toString = Object.prototype.toString;
-      var isArray = Array.isArray || function (a) { return toString.call(a) === '[object Array]'; };
-      var escMap = {'""': '\\""', '\\': '\\\\', '\b': '\\b', '\f': '\\f', '\n': '\\n', '\r': '\\r', '\t': '\\t'};
-      var escFunc = function (m) { return escMap[m] || '\\u' + (m.charCodeAt(0) + 0x10000).toString(16).substr(1); };
-      var escRE = /[\\""\u0000-\u001F\u2028\u2029]/g;
-      return function stringify(value) {
-        if (value == null) {
-          return 'null';
-        } else if (typeof value === 'number') {
-          return isFinite(value) ? value.toString() : 'null';
-        } else if (typeof value === 'boolean') {
-          return value.toString();
-        } else if (typeof value === 'object') {
-          if (typeof value.toJSON === 'function') {
-            return stringify(value.toJSON());
-          } else if (isArray(value)) {
-            var res = '[';
-            for (var i = 0; i < value.length; i++)
-              res += (i ? ', ' : '') + stringify(value[i]);
-            return res + ']';
-          } else if (toString.call(value) === '[object Object]') {
-            var tmp = [];
-            for (var k in value) {
-              if (value.hasOwnProperty(k))
-                tmp.push(stringify(k) + ': ' + stringify(value[k]));
-            }
-            return '{' + tmp.join(', ') + '}';
-          }
-        }
-        return '""' + value.toString().replace(escRE, escFunc) + '""';
-      };
-    })()
-  };
-};
-</script>";
-            }
+  <link rel=""stylesheet"" href=""https://unpkg.com/leaflet@1.3.1/dist/leaflet.css""
+            integrity=""sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==""
+            crossorigin=""""/>
+  <script type=""text/javascript"" src=""https://unpkg.com/leaflet@1.3.1/dist/leaflet.js""
+         integrity=""sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==""
+         crossorigin=""""></script>
+</head>
+<body>
+  < !--Make sure you put this AFTER Leaflet's CSS -->
 
-            html += 
-@"<script>
-var locations = [";
+  <div id='mapid' style='position:fixed; top:0; bottom:0; left:0; right:0;' ></div>";
+
+            html += @"
+  <script>
+    var locations = [";
 
             for (int i = 0; i < coordinates.Count; i++)
             {
-                html += "[" + coordinates[i].Latitude.ToString() + ", " + coordinates[i].Longitude.ToString() + "]";
+                html += "[" + coordinates[i].Latitude.ToString() + ", " + coordinates[i].Longitude.ToString() + ", '" + locNames[i] + "']";
                 if (i < coordinates.Count - 1)
                     html += ',';
             }
-            html += @"
-  ];
-  
-  var myCenter;
-  if (locations.length > 0)
-    myCenter = new google.maps.LatLng(locations[0][0], locations[0][1]);
-  else
-    myCenter = new google.maps.LatLng(0.0, 0.0);
-  var map = null;
-  function SetTitle()
-  {
-     window.document.title = map.getZoom().toString() + ',' + map.getCenter().toString();
-  }
-  function SetZoom(newZoom)
-  {
-     map.setZoom(newZoom);
-  }
-  function SetCenter(lat, long)
-  {
-     var center = new google.maps.LatLng(lat, long);
-     map.setCenter(center);
-  }
-  function initialize()
-  {
-     var mapProp = {
-       center:myCenter,
-       fullscreenControl:false,
-       scaleControl:true,
-       zoom: 1,
-";
-            if (popupWin != null) // When exporting into a report, leave off the controls
-            {
-                html += "zoomControl: false,";
-                html += "mapTypeControl: false,";
-                // html += "scaleControl: false,";
-                html += "streetViewControl: false,";
-            }
-            html += @"
+            html += "];" + Environment.NewLine;
 
-       mapTypeId: google.maps.MapTypeId.TERRAIN
-     };
+            html += "    var mymap = L.map('mapid', {";
+            html += "center: new L.LatLng(" + center.Latitude.ToString() + ", " + center.Longitude.ToString() + ")";
+            html += ", zoom: " + zoom.ToString();
+            if (popupWin != null) // Exporting to a report, so leave off the zoom control
+                html += ", zoomControl: false";
+            html += "});";
 
-     var infowindow = new google.maps.InfoWindow({maxWidth: 120});
-     
-     map = new google.maps.Map(document.getElementById('googleMap'), mapProp);
-     map.addListener('zoom_changed', SetTitle);
-     map.addListener('center_changed', SetTitle);
 
-     var marker, i;
-     for (i = 0; i < locations.length; i++)
-     {
-        marker = new google.maps.Marker({position: new google.maps.LatLng(locations[i][0], locations[i][1])});
-        marker.setMap(map);
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-         return function(event) {
-             infowindow.setContent('Latitude: ' + locations[i][0] + '<br>Longitude: ' + locations[i][1]);
-             infowindow.open(map, marker);
-         }
-        })(marker, i));
-     }
-   }
-      
-google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-</head>
-<body>
-<div id='googleMap' style='width: 100%; height: 100%;'></div>
+           html += @"
+
+    mymap.zoomDelta = 0.1;
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZXJpY3p1cmNoZXIiLCJhIjoiY2pmYzFxcnJ5MXZidjN1bXprdXRtZjd2aCJ9.BSxI0r_GNzUAZnbvmuHpHA', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href=""http://openstreetmap.org"">OpenStreetMap</a> contributors, ' +
+        '<a href=""http://creativecommons.org/licenses/by-sa/2.0/"">CC-BY-SA</a>, ' +
+        'Imagery © <a href=""http://mapbox.com"">Mapbox</a>',
+        id: 'mapbox.emerald'
+    }).addTo(mymap);
+
+    L.control.scale({metric: true, imperial: false, updateWhenIdle: true}).addTo(mymap);
+
+    var marker, i;
+    for (i = 0; i<locations.length; i++)
+    {
+        L.marker(locations[i]).addTo(mymap).bindPopup('<b>' + locations[i][2] + '</b><br>Latitude: ' + locations[i][0] + '<br>Longitude: ' + locations[i][1]);
+    }
+
+    function SetTitle()
+    {
+        window.document.title = mymap.getZoom().toString() + ', (' + mymap.getCenter().lat.toString() + ', ' + mymap.getCenter().lng.toString() + ')';
+    }
+    function SetZoom(newZoom)
+    {
+        mymap.setZoom(newZoom);
+    }
+    function SetCenter(lat, long)
+    {
+        var center = new L.LatLng(lat, long);
+        mymap.panTo(center);
+    }
+
+    mymap.on('zoomend', SetTitle);
+    mymap.on('moveend', SetTitle);
+	
+    var popup = L.popup();
+  </script>
+
 </body>
 </html>";
             SetContents(html, false);

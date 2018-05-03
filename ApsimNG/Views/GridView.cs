@@ -645,8 +645,11 @@ namespace UserInterface.Views
             {
                 // Initiate cell editing when user starts typing.
                 Gridview.SetCursor(new TreePath(new int[1] { rowIdx }), Gridview.GetColumn(colIdx), true);
-                Gdk.EventHelper.Put(args.Event);
-                userEditingCell = true;
+                if (new GridCell(this, colIdx, rowIdx).EditorType == EditorTypeEnum.TextBox)
+                {
+                    Gdk.EventHelper.Put(args.Event);
+                    userEditingCell = true;
+                }
                 args.RetVal = true;
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
