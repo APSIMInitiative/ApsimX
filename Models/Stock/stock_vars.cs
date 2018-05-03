@@ -354,69 +354,7 @@ namespace Models.GrazPlan
         /// </summary>
         public double S { get; set; }
     }
-    /*
-    /// <summary>
-    /// Forage available to the animal from a crop component
-    /// </summary>
-    [Serializable]
-    public class AvailableToAnimal
-    {
-        /// <summary>
-        /// Gets or sets the cohort name e.g. seedling, established, senescing, dead, litter
-        /// </summary>
-        public string CohortID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the organ name e.g. leaf, stem, head
-        /// </summary>
-        public string Organ { get; set; }
-
-        /// <summary>
-        /// Gets or sets the age or digestibility of the cohort e.g. DMD80-85, DMD75-80...
-        /// </summary>
-        public string AgeID { get; set; }    
-        
-        /// <summary>
-        /// Gets or sets the bottom heigth in mm
-        /// </summary>
-        public double Bottom { get; set; }
-
-        /// <summary>
-        /// Gets or sets the top height in mm
-        /// </summary>
-        public double Top { get; set; }
-
-        /// <summary>
-        /// Gets or sets the chemistry type e.g. "DDM"/"IDM"
-        /// </summary>
-        public string Chem { get; set; }
-
-        /// <summary>
-        /// Gets or sets the weight of the cohort in kg
-        /// </summary>
-        public double Weight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the nitrogen amount in kg
-        /// </summary>
-        public double N { get; set; }
-
-        /// <summary>
-        /// Gets or sets the phosphorous weight
-        /// </summary>
-        public double P { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sulphur weight
-        /// </summary>
-        public double S { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ash alkalinity
-        /// </summary>
-        public double AshAlk { get; set; }
-    }*/
-
+    
     /// <summary>
     /// Definitions of many property constants in the Stock component
     /// </summary>

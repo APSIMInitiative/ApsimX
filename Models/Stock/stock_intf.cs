@@ -520,7 +520,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// List of forage providers/components
         /// </summary>
-        private TForageProviders forageProviders;
+        private ForageProviders forageProviders;
 
         /// <summary>
         /// Gets or sets the ref to the hosts random number generator
@@ -568,7 +568,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets all the forage providers
         /// </summary>
-        public TForageProviders ForagesAll
+        public ForageProviders ForagesAll
         {
             get { return this.forageProviders; }
         }
@@ -1423,7 +1423,7 @@ namespace Models.GrazPlan
             this.paddockList = new TPaddockList();
             this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
-            this.forageProviders = new TForageProviders();
+            this.forageProviders = new ForageProviders();
             this.enterpriseList = new EnterpriseList();
             this.grazingList = new GrazingList();
         }
@@ -2918,9 +2918,9 @@ namespace Models.GrazPlan
 
             TAnimalGroup srcGroup;
             double splitSD;                                                         // Position of the threshold on the live wt   
-            //   distribution of the group, in S.D. units 
+                                                                                    //   distribution of the group, in S.D. units 
             double removePropn;                                                     // Proportion of animals lighter than SplitWt 
-            int numToRemove;                                                         // Number to transfer to TempAnimals          
+            int numToRemove;                                                        // Number to transfer to TempAnimals          
             int numAnimals;
             double liveWt;
             TDifferenceRecord diffs;
@@ -2937,7 +2937,7 @@ namespace Models.GrazPlan
             {
                 numAnimals = srcGroup.NoAnimals;
                 liveWt = srcGroup.LiveWeight;
-                splitSD = (splitWt - liveWt) / (varRatio * liveWt);               // NB SplitWt is a live weight value     
+                splitSD = (splitWt - liveWt) / (varRatio * liveWt);                 // NB SplitWt is a live weight value     
 
                 removePropn = StdMath.CumNormal(splitSD);                           // Normal distribution of weights assumed
                 numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn));
@@ -2968,11 +2968,11 @@ namespace Models.GrazPlan
                         diffs.BaseWeight = diffRatio * srcGroup.BaseWeight;
                         diffs.StdRefWt = diffRatio * srcGroup.StdReferenceWt;               // Weight diffs within a group are       
                         diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;              // assumed genetic!                    
-                    } // _ if (NoToRemove < NoAnimals) _
+                    }                       
 
                     this.Add(srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
                          this.GetPaddInfo(groupIdx), this.GetTag(groupIdx), this.GetPriority(groupIdx));   // up the animals                      
-                } // _ if (NoToRemove > 0) _
+                } 
             }
         }
 
@@ -3592,7 +3592,7 @@ namespace Models.GrazPlan
         private string[] CRITERIA = new string[MAX_CRITERIA] { "draft" };   // used in radiogroup on dialog
 
         /// <summary>
-        /// Initialises a TGenotypeInits so that most parameters revert to their         
+        /// Initialises a SingleGenotypeInits so that most parameters revert to their         
         /// defaults.  Can't be done as a constant because MISSING is a typed value      
         /// </summary>
         /// <param name="genotype">Returns the empty genotype</param>
