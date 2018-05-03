@@ -9,10 +9,9 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using Models.Core;
+    using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.SurfaceOM;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
     using StdUnits;
 
     /// <summary>
@@ -4118,7 +4117,7 @@ namespace Models.GrazPlan
                     // if there is forage removed from this forage object/crop/pasture
                     if (forageProvider.somethingRemoved())
                     {
-                        RemoveHerbageFromPlant(forageProvider);
+                        this.RemoveHerbageFromPlant(forageProvider);
                     }
                 }
                 else
@@ -4164,6 +4163,7 @@ namespace Models.GrazPlan
             {
                 double area = forage.InPaddock.fArea;
                 GrazType.TGrazingOutputs removed = forage.RemovalKG;
+                
                 // total the amount removed kg/ha
                 double totalRemoved = 0.0;
                 for (int i = 0; i < removed.Herbage.Length; i++)
@@ -4174,16 +4174,11 @@ namespace Models.GrazPlan
                 {
                     if (organ.IsAboveGround)
                     {
-                        if (organ is Leaf)
-                        {
-                            Leaf leaf = (Leaf)organ;
-                            if (leaf.Live.Wt > 0 || leaf.Dead.Wt > 0)
-                            {
-                            }
-                        }
+                        organ.Live.Multiply(1.0 - propnRemoved);
+                        organ.Dead.Multiply(1.0 - propnRemoved);
                     }
                 }
-                //forage.sName
+
                 forageIdx++;
                 forage = forageProvider.ForageByIndex(forageIdx);
             }
@@ -4511,10 +4506,10 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the parameters for this genotype
         /// </summary>
-        /// <param name="mainParams"></param>
-        /// <param name="genoInits"></param>
-        /// <param name="genoIdx"></param>
-        /// <returns></returns>
+        /// <param name="mainParams">The base parameter set</param>
+        /// <param name="genoInits">The list of genotypes</param>
+        /// <param name="genoIdx">The index of the item in the list to use</param>
+        /// <returns>The animal parameter set for this genotype</returns>
         public TAnimalParamSet ParamsFromGenotypeInits(TAnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
         {
             SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
