@@ -1,22 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using Gtk;
+﻿// -----------------------------------------------------------------------
+// <copyright file="DropDownView.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Views
 {
+    using System;
+    using System.Collections.Generic;
+    using Gtk;
+
     /// <summary>An interface for a drop down</summary>
     public interface IDropDownView
     {
         /// <summary>Invoked when the user changes the selection</summary>
         event EventHandler Changed;
 
-        /// <summary>Get or sets the list of valid values.</summary>
+        /// <summary>Gets or sets the list of valid values.</summary>
         string[] Values { get; set; }
 
         /// <summary>Gets or sets the selected value.</summary>
         string SelectedValue { get; set; }
 
-        /// <summary>Return true if dropdown is visible.</summary>
+        /// <summary>Gets or sets a value indicating if the dropdown is visible.</summary>
         bool IsVisible { get; set; }
 
         /// <summary>Gets or sets whether the control should be editable.</summary>
@@ -26,11 +32,19 @@ namespace UserInterface.Views
     /// <summary>A drop down view.</summary>
     public class DropDownView : ViewBase, IDropDownView
     {
-        /// <summary>Invoked when the user changes the selection</summary>
-        public event EventHandler Changed;
-
+        /// <summary>
+        /// The combobox that this class wraps
+        /// </summary>
         private ComboBox combobox1;
+
+        /// <summary>
+        /// The list model for the combobox
+        /// </summary>
         private ListStore comboModel = new ListStore(typeof(string));
+
+        /// <summary>
+        /// The renderer
+        /// </summary>
         private CellRendererText comboRender = new CellRendererText();
 
         /// <summary>Constructor which also creates a ComboBox</summary>
@@ -43,14 +57,17 @@ namespace UserInterface.Views
         /// <summary>
         /// Construct a DropDownView with an existing ComboBox object
         /// </summary>
-        /// <param name="owner"></param>
-        /// <param name="combo"></param>
+        /// <param name="owner">The owning view</param>
+        /// <param name="combo">The combobox to wrap</param>
         public DropDownView(ViewBase owner, ComboBox combo) : base(owner)
         {
             combobox1 = combo;
             combobox1.Model = comboModel;
             SetupCombo();
         }
+
+        /// <summary>Invoked when the user changes the selection</summary>
+        public event EventHandler Changed;
 
         /// <summary>
         /// Configuration at construction time
@@ -64,6 +81,11 @@ namespace UserInterface.Views
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// Cleanup the events
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             combobox1.Changed -= OnSelectionChanged;
@@ -73,21 +95,22 @@ namespace UserInterface.Views
             _owner = null;
         }
 
-        /// <summary>Get or sets the list of valid values.</summary>
+        /// <summary>Gets or sets the list of valid values.</summary>
         public string[] Values
         {
             get
             {
-                int nNames = comboModel.IterNChildren();
-                string[] result = new string[nNames];
+                int numNames = comboModel.IterNChildren();
+                string[] result = new string[numNames];
                 TreeIter iter;
                 int i = 0;
                 if (combobox1.GetActiveIter(out iter))
                     do
                         result[i++] = (string)comboModel.GetValue(iter, 0);
-                    while (comboModel.IterNext(ref iter) && i < nNames);
+                    while (comboModel.IterNext(ref iter) && i < numNames);
                 return result;
             }
+
             set
             {
                 // Avoid possible recursion
@@ -97,6 +120,7 @@ namespace UserInterface.Views
                     comboModel.Clear();
                     foreach (string text in value)
                         comboModel.AppendValues(text);
+
                     // if (comboModel.IterNChildren() > 0)
                     //     combobox1.Active = 0;
                     // else
@@ -153,20 +177,30 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Return true if dropdown is visible.</summary>
+        /// <summary>
+        /// Gets or sets a value indicating whether the combobox is visible.
+        /// </summary>
         public bool IsVisible
         {
-            get { return combobox1.Visible; }
-            set { combobox1.Visible = value; }
+            get
+            {
+                return combobox1.Visible;
+            }
+
+            set
+            {
+                combobox1.Visible = value;
+            }
         }
 
-        /// <summary>Gets or sets whether the control should be editable.</summary>
+        /// <summary>Gets or sets a value indicating whether the control should be editable.</summary>
         public bool IsEditable
         { 
             get
             {
                 return comboRender.Editable;
             }
+
             set
             {
                 comboRender.Editable = value;
@@ -174,8 +208,8 @@ namespace UserInterface.Views
         }
 
         /// <summary>User has changed the selection.</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void OnSelectionChanged(object sender, EventArgs e)
         {
             if (Changed != null)
