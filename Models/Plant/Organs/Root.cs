@@ -14,7 +14,7 @@ namespace Models.PMF.Organs
 
     ///<summary>
     /// # [Name]
-    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each sol layer. 
+    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
     /// 
     /// **Root Growth**
     /// 
@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     /// **Nitrogen Demands**
     /// 
     /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage 
-    /// and can be used for retranslocation and/or reallocation is the respective factors are set to values other then zero.  
+    /// and can be used for retranslocation and/or reallocation as the respective factors are set to values other then zero.  
     /// 
     /// **Nitrogen Uptake**
     /// 
@@ -40,9 +40,9 @@ namespace Models.PMF.Organs
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
     /// 
-    ///     _NO3 uptake = NO3<sub>i</sub> x KNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NO3 uptake = NO3<sub>i</sub> x kNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
     ///     
-    ///     _NH4 uptake = NH4<sub>i</sub> x KNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NH4 uptake = NH4<sub>i</sub> x kNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
     /// 
     /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
     /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand

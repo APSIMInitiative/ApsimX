@@ -259,7 +259,7 @@ namespace UserInterface.Commands
             // Calls CaseInsensitiveComparer.Compare with the parameters reversed.
             public int Compare(Citation x, Citation y)
             {
-                return x.Name.CompareTo(y.Name);
+                return x.BibliographyText.CompareTo(y.BibliographyText);
             }
         }
     }
