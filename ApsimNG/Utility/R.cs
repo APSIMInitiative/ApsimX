@@ -5,6 +5,9 @@ using Microsoft.Win32;
 using System.IO;
 using APSIM.Shared.Utilities;
 using System.Data;
+using System.Net;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Utility
 {
@@ -14,6 +17,11 @@ namespace Utility
     public class R
     {
         /// <summary>
+        /// Stable link which always points to the latest Windows release.
+        /// </summary>
+        private const string windowsDownloadUrl = "https://cran.r-project.org/bin/windows/base/release.htm";
+
+        /// <summary>
         /// Path to a temporary working directory for the script.
         /// </summary>
         private string workingDirectory;
@@ -22,6 +30,11 @@ namespace Utility
         /// Takes care of initialising and starting the process, reading output, etc.
         /// </summary>
         private ProcessUtilities.ProcessWithRedirectedOutput proc;
+
+        /// <summary>
+        /// Used to keep track of whether R is being installed.
+        /// </summary>
+        private bool installationInProgress = false;
 
         /// <summary>
         /// Default constructor. Checks if R is installed, and prompts user to install it if not.
@@ -40,6 +53,17 @@ namespace Utility
         /// Invoked when the R script is finished.
         /// </summary>
         public EventHandler Finished;
+
+        /// <summary>
+        /// Method to be run before downloading R and installing R.
+        /// R will not be downloaded if this returns false.
+        /// </summary>
+        public Func<bool> OnDownload;
+
+        /// <summary>
+        /// Method to run once R has finished downloading.
+        /// </summary>
+        public Action OnDownloadCompleted;
 
         /// <summary>
         /// Directory containing R executable.
@@ -90,6 +114,7 @@ namespace Utility
                 proc.Exited += OnExited;
                 proc.Start(rScript, fileName + " ", workingDirectory, true);
             }
+            var test = new NullReferenceException();
         }
 
         /// <summary>
@@ -169,11 +194,15 @@ namespace Utility
         /// <summary>
         /// Gets the directory that the latest version of R is installed to.
         /// </summary>
-        /// <param name="registryKey"></param>
         private string GetRInstallDirectoryFromRegistry()
         {
-            string registryKey = @"SOFTWARE\R-core";
+            string registryKey = @"SOFTWARE\R-coasdfsadfre";
             List<string> subKeyNames = GetSubKeys(registryKey);
+            if (subKeyNames == null)
+            {
+                DownloadR();
+                subKeyNames = GetSubKeys(registryKey);
+            }
 
             string rKey;
             if (subKeyNames.Contains("R64"))
@@ -181,16 +210,21 @@ namespace Utility
             else if (subKeyNames.Contains("R"))
                 rKey = registryKey + @"\R";
             else
-                throw new Exception("R is not installed.");
+                throw new Exception("Unable to find R entry in Registry.");
 
             List<string> versions = GetSubKeys(rKey);
-
-            // Ignore Microsoft R client. 
-            string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
-            using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
+            if (versions == null)
+                throw new Exception("Unable to find R entry in Registry.");
+            else
             {
-                return Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
+                // Ignore Microsoft R client. 
+                string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
+                using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
+                {
+                    return Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
+                }
             }
+            
         }
 
         /// <summary>
@@ -200,10 +234,99 @@ namespace Utility
         /// <returns></returns>
         private List<string> GetSubKeys(string keyName)
         {
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(keyName))
+            try
             {
-                return key.GetSubKeyNames().ToList();
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(keyName))
+                {
+                    return key?.GetSubKeyNames().ToList();
+                }
             }
+            catch
+            {
+                return null;
+            }
+            
+        }
+
+        /// <summary>
+        /// Downloads R to the user's machine.
+        /// </summary>
+        /// <exception cref="ArgumentException" />
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="DirectoryNotFoundException" />
+        /// <exception cref="IOException" />
+        /// <exception cref="NotSupportedException" />
+        /// <exception cref="PathTooLongException" />
+        /// <exception cref="UnauthorizedAccessException" />
+        /// <exception cref="WebException" />
+        /// <exception cref="InvalidOperationException" />
+        /// <exception cref="Exception" />
+        private void DownloadR()
+        {
+            if (OnDownload != null && !OnDownload())
+                return;
+            if (ProcessUtilities.CurrentOS.IsWindows)
+            {
+                string fileName = Path.Combine(Path.GetTempPath(), "RSetup.exe");
+
+                // Delete the installer if it already exists.
+                if (File.Exists(fileName))
+                    File.Delete(fileName);
+                WebClient web = new WebClient();
+                web.DownloadFileCompleted += (_, __) =>
+                {
+                    OnDownloadCompleted?.Invoke();
+                    InstallR(fileName);
+                };
+                web.DownloadFileAsync(new Uri(windowsDownloadUrl), fileName);
+            }
+            else if (ProcessUtilities.CurrentOS.IsMac)
+            {
+                throw new NotImplementedException("R auto download not yet available on macOS.");
+            }
+            else if (ProcessUtilities.CurrentOS.IsLinux)
+            {
+                throw new NotImplementedException("R auto download not yet available on Linux.");
+            }
+            else
+            {
+                throw new Exception("Target running unknown OS.");
+            }
+        }
+
+        /// <summary>
+        /// Runs the R installer.
+        /// </summary>
+        /// <param name="installerPath">Path to the installer.</param>
+        private void InstallR(string installerPath)
+        {
+            if (installerPath == null)
+                return;
+
+            // Setup a working directory.
+            string workingDirectory = Path.Combine(Path.GetTempPath(), "RSetup");
+            if (!Directory.Exists(workingDirectory))
+                Directory.CreateDirectory(workingDirectory);
+
+            // Copy installer to working directory.
+            try
+            {
+                string newInstallerPath = Path.Combine(workingDirectory, Path.GetFileNameWithoutExtension(installerPath));
+                File.Copy(installerPath, newInstallerPath);
+                installerPath = newInstallerPath;
+            }
+            catch
+            {
+            }
+            // Check to see if installer is already running for whatever reason.
+            // Kill them if found.
+            foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(installerPath)))
+                process.Kill();
+
+            // Run the installer.
+            var installer = new ProcessUtilities.ProcessWithRedirectedOutput();
+            installer.Start(installerPath, "", workingDirectory, false);
+            installer.WaitForExit();
         }
     }
 }
