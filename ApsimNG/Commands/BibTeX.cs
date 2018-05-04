@@ -121,8 +121,19 @@ namespace UserInterface.Commands
                 }
             }
 
+            /// <summary>
+            /// Gets the last name of the first author.
+            /// </summary>
+            public string FirstAuthor
+            {
+                get
+                {
+                    return LastName(Authors[0]);
+                }
+            }
+
             /// <summary>Gets the year of publication</summary>
-            private int Year
+            public int Year
             {
                 get
                 {
@@ -259,7 +270,8 @@ namespace UserInterface.Commands
             // Calls CaseInsensitiveComparer.Compare with the parameters reversed.
             public int Compare(Citation x, Citation y)
             {
-                return x.BibliographyText.CompareTo(y.BibliographyText);
+                int result = x.FirstAuthor.CompareTo(y.FirstAuthor);
+                return result == 0 ? x.Year.CompareTo(y.Year) : result;
             }
         }
     }
