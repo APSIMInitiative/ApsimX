@@ -307,7 +307,7 @@ namespace UserInterface.Commands
 
                           "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
                           "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
-                          "are to be made publicly available. For more information visit <a href=\"http://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
+                          "are to be made publicly available. For more information visit <a href=\"https://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
 
             tags.Add(new AutoDocumentation.Heading("APSIM Description", 1));
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
@@ -679,7 +679,7 @@ namespace UserInterface.Commands
                             if (view is MapView)
                             {
                                 popupWin = (view as MapView).GetPopupWin();
-                                popupWin.SetSizeRequest(500, 500);
+                                popupWin.SetSizeRequest(515, 500);
                             }
                             else
                             {
