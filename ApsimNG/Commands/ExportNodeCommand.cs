@@ -679,7 +679,7 @@ namespace UserInterface.Commands
                             if (view is MapView)
                             {
                                 popupWin = (view as MapView).GetPopupWin();
-                                popupWin.SetSizeRequest(500, 500);
+                                popupWin.SetSizeRequest(515, 500);
                             }
                             else
                             {

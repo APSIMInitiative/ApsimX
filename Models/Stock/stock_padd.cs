@@ -9,6 +9,9 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Models.PMF.Interfaces;
+    using Models.PMF.Organs;
+    using Models.Core;
     using CMPServices;
 
     /*
@@ -141,6 +144,29 @@ namespace Models.GrazPlan
                 return false;
             }
         }
+
+        /// <summary>
+        /// The total live herbage used as input in TGrazingInputs
+        /// </summary>
+        public double TotalLive
+        {
+            get
+            {
+                return this.FForageData.TotalGreen;
+            }
+        }
+
+        /// <summary>
+        /// The total dead herbage used as input in TGrazingInputs
+        /// </summary>
+        public double TotalDead
+        {
+            get
+            {
+                return this.FForageData.TotalDead;
+            }
+        }
+
         // The computed attributes of this "forage", in the form used by TAnimalGroup
         /// <summary>
         /// Use the forage data
@@ -376,9 +402,9 @@ namespace Models.GrazPlan
             {
                 dMeanDMD = FChemData[DDM_MEAN].dMass_KgHa / dTotalDM;
                 if (FIsGreen)
-                    dDMDPropns = this.calcDMDDistribution(dMeanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
+                    dDMDPropns = ForageInfo.calcDMDDistribution(dMeanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
                 else
-                    dDMDPropns = this.calcDMDDistribution(dMeanDMD, 0.70, 0.30);
+                    dDMDPropns = ForageInfo.calcDMDDistribution(dMeanDMD, 0.70, 0.30);
 
                 for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
                 {
@@ -439,7 +465,7 @@ namespace Models.GrazPlan
 
                     Result.Herbage[iDMD].Biomass = dAvailPropn * FChemData[iChem].dMass_KgHa;
                     Result.Herbage[iDMD].Digestibility = GrazType.ClassDig[iDMD];
-                    Result.Herbage[iDMD].Degradability = Math.Min(0.90, Result.Herbage[iDMD].Digestibility + 0.10);
+                    Result.Herbage[iDMD].Degradability = Math.Min(0.90, Result.Herbage[iDMD].Digestibility + 0.10); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                     if (Result.Herbage[iDMD].Biomass > 0.0)
                     {
                         Result.Herbage[iDMD].CrudeProtein = FChemData[iChem].dNitrogen_KgHa / FChemData[iChem].dMass_KgHa * GrazType.N2Protein;
@@ -466,105 +492,15 @@ namespace Models.GrazPlan
             return Result;
         }
 
-        /// <summary>
-        /// * The providing forage component is specifying a list of quantities of
-        ///   forage, each of which has a known mean DMD (denoted by passing DDM and IDM
-        ///   sub-pools). That is, the providing module is taking responsibility for
-        ///   providing a DMD distribution for each cohort, organ and age class
-        /// * The Stock component will place each quantity of forage into (usually 2)
-        ///   adjacent DMD classes, so as to preserve the provided mean DMD
-        /// </summary>
-        /// <param name="dAvailPropn"></param>
-        /// <param name="dBulkDensity"></param>
-        /// <returns></returns>
-        public GrazType.TGrazingInputs convertChemistry_VarDMDClasses(double dAvailPropn, double dBulkDensity)
-        {
-
-            double dPoolDM;     // Mass of each sub-pool of forage
-            double dPoolDMD;    // Digestibility of sub-pool of forage
-            int iDMDClass;
-            double dClassPropn;
-
-            int iDMD;           // DMD classes (regularly spaced) in TGrazingInputs
-            int iPool;          // DMD classes (irregularly spaced) in the chemistry type
-            int iChemDDM;
-            int iChemIDM;
-
-
-            GrazType.TGrazingInputs Result = new GrazType.TGrazingInputs();
-            for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
-                Result.Herbage[iDMD].HeightRatio = 1.0;
-
-            this.dHerbageDMDFract = new double[GrazType.DigClassNo + 1];
-            this.dSeedRipeFract = new double[3];
-
-            // Leaf & stem pools
-            if (FSeedType == NOT_SEED)
-            {
-                for (iPool = 1; iPool <= MAX_DDM_CLASSES; iPool++)
-                {
-                    iChemDDM = 2 * iPool;
-                    iChemIDM = 2 * iPool + 1;
-
-                    dPoolDM = FChemData[iChemDDM].dMass_KgHa + FChemData[iChemIDM].dMass_KgHa;
-
-                    if (dPoolDM > 0.0)
-                    {
-                        dPoolDMD = FChemData[iChemDDM].dMass_KgHa / dPoolDM;
-
-                        if (dPoolDMD >= GrazType.ClassDig[1])
-                        {
-                            iDMDClass = 1;
-                            dClassPropn = 1.0;
-                        }
-                        else if (dPoolDMD <= GrazType.ClassDig[GrazType.DigClassNo])
-                        {
-                            iDMDClass = GrazType.DigClassNo;
-                            dClassPropn = 1.0;
-                        }
-                        else
-                        {
-                            iDMDClass = Convert.ToInt32(Math.Max(1, Math.Min(1 + Math.Truncate((GrazType.ClassDig[1] - dPoolDMD) / CLASSWIDTH), GrazType.DigClassNo - 1)));
-                            dClassPropn = Math.Max(0.0, Math.Min((dPoolDMD - GrazType.ClassDig[iDMDClass + 1]) / CLASSWIDTH, 1.0));
-                        }
-
-                        if (dClassPropn > 0.0)
-                            populateIntakeRecord(ref Result.Herbage[iDMDClass], iDMDClass, (dClassPropn == 1.0),
-                                                  dPoolDM, dPoolDMD, dAvailPropn * dClassPropn,
-                                                  FChemData[iChemDDM].dNitrogen_KgHa, FChemData[iChemIDM].dNitrogen_KgHa,
-                                                  FChemData[iChemDDM].dPhosphorus_KgHa, FChemData[iChemIDM].dPhosphorus_KgHa,
-                                                  FChemData[iChemDDM].dSulphur_KgHa, FChemData[iChemIDM].dSulphur_KgHa,
-                                                  FChemData[iChemDDM].dAshAlk_MolHa, FChemData[iChemIDM].dAshAlk_MolHa,
-                                                  dBulkDensity);
-                        if (dClassPropn < 1.0)
-                            populateIntakeRecord(ref Result.Herbage[iDMDClass + 1], iDMDClass + 1, false,
-                                                  dPoolDM, dPoolDMD, dAvailPropn * (1.0 - dClassPropn),
-                                                  FChemData[iChemDDM].dNitrogen_KgHa, FChemData[iChemIDM].dNitrogen_KgHa,
-                                                  FChemData[iChemDDM].dPhosphorus_KgHa, FChemData[iChemIDM].dPhosphorus_KgHa,
-                                                  FChemData[iChemDDM].dSulphur_KgHa, FChemData[iChemIDM].dSulphur_KgHa,
-                                                  FChemData[iChemDDM].dAshAlk_MolHa, FChemData[iChemIDM].dAshAlk_MolHa,
-                                                  dBulkDensity);
-                    }
-                }
-
-                populateHerbageType(ref Result);
-            }
-
-            // Seed pools: not permitted
-            else if ((FSeedType == GrazType.UNRIPE) || (FSeedType == GrazType.RIPE))
-                throw new Exception("Chemistry \"DDMnn\"/\"IDMnn\" may not be used when the organ is seeds, heads or ears");
-
-            return Result;
-        }
 
         /// <summary>
-        /// 
+        /// Calculate the proportions in a DMD distribution
         /// </summary>
-        /// <param name="fDMD"></param>
-        /// <param name="fMaxDMD"></param>
-        /// <param name="fMinDMD"></param>
+        /// <param name="fDMD">The mean DMD</param>
+        /// <param name="fMaxDMD">Upper range</param>
+        /// <param name="fMinDMD">Lower range</param>
         /// <returns></returns>
-        public double[] calcDMDDistribution(double fDMD, double fMaxDMD, double fMinDMD)
+        static public double[] calcDMDDistribution(double fDMD, double fMaxDMD, double fMinDMD)
         {
             int iHighClass;
             int iLowClass;
@@ -728,7 +664,7 @@ namespace Models.GrazPlan
         }
         
         /// <summary>
-        /// Full identifier for this forage e.g. cohortID + Organ + ... OR Comp name (for PI components)
+        /// Full identifier for this forage e.g. Crop or pasture component full path name
         /// </summary>
         public string sName;             
         /// <summary>
@@ -762,162 +698,8 @@ namespace Models.GrazPlan
         /// </summary>
         public ForageInfo()
         {
-            FChemistryType = ForageChemistry.fcUnknown;
-            FBottom_MM = 0;
-            FTop_MM = 0;
-        }
-        /// <summary>
-        /// Initialise a forage
-        /// </summary>
-        public void clearForageData()
-        {
-            int iChem;
-
-            this.FBottom_MM = MISSING_POINT;  // Missing value marker
-            FTop_MM = 0.0;
-            for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
-            {
-                FChemData[iChem] = new ChemData();
-            }
         }
 
-        /// <summary>
-        /// This method populates the TForageInfo with the data about the various herbage
-        /// fractions that the animals can eat
-        /// </summary>
-        /// <param name="sCohort"></param>
-        /// <param name="sOrgan"></param>
-        /// <param name="sAgeClass"></param>
-        /// <param name="sChem"></param>
-        /// <param name="dBottom"></param>
-        /// <param name="dTop"></param>
-        /// <param name="dMass"></param>
-        /// <param name="dNitrogen"></param>
-        /// <param name="dPhosphorus"></param>
-        /// <param name="dSulphur"></param>
-        /// <param name="dAshAlk"></param>
-        public void addForageData(string sCohort, string sOrgan, string sAgeClass, string sChem,
-                                  double dBottom, double dTop,
-                                  double dMass, double dNitrogen, double dPhosphorus, double dSulphur,
-                                  double dAshAlk)
-        {
-            int iAddingSeedType;
-            bool bAddingLegume;
-            bool bAddingC4Grass;
-            bool bAddingGreen = false;
-            bool bMatched;
-            int iChem;
-
-            sCohort = sCohort.ToLower();    // composite name
-            sOrgan = sOrgan.ToLower();
-            sAgeClass = sAgeClass.ToLower();
-            sChem = sChem.ToLower();
-
-            if ((sOrgan == "seed_unripe") || (sOrgan == "head_unripe") || (sOrgan == "ear_unripe"))
-                iAddingSeedType = GrazType.UNRIPE;
-            else if ((sOrgan == "seed_ripe") || (sOrgan == "head_ripe") || (sOrgan == "ear_ripe"))
-                iAddingSeedType = GrazType.RIPE;
-            else if ((sOrgan == "ripe") || (sOrgan == "head") || (sOrgan == "ear"))
-                iAddingSeedType = GrazType.RIPE;
-            else
-                iAddingSeedType = NOT_SEED;
-
-            if (iAddingSeedType == NOT_SEED)
-            {
-                bAddingLegume = FindPostFix(ref sChem, postfix_LEGUME);
-                bAddingC4Grass = FindPostFix(ref sChem, postfix_C4GRASS);
-                string[] ages = { "green", "live", "seedling", "established", "senescing" };
-                int i = 0;
-                while ((i < ages.Length) && (!bAddingGreen))
-                {
-                    bAddingGreen = (sAgeClass == ages[i]);
-                    i++;
-                }
-            }
-            else
-            {
-                bAddingLegume = false;
-                bAddingC4Grass = false;
-                bAddingGreen = false;
-            }
-
-            // The very first piece of forage information, so set the chemistry translation type
-            if (FChemistryType == ForageChemistry.fcUnknown)
-            {
-                FChemistryType = ForageChemistry.fcVarDMDClasses;
-                iChem = 0;
-                bMatched = false;
-                while (!bMatched && (FChemistryType != ForageChemistry.fcUnknown))
-                {
-                    bMatched = (sChem == this.CHEMISTRY_CLASSES[(int)FChemistryType, iChem]);
-                    if (!bMatched && (iChem < this.CHEM_COUNT[(int)FChemistryType] - 1))
-                        iChem++;
-                    else if (!bMatched)
-                    {
-                        FChemistryType--;
-                        iChem = 0;
-                    }
-                }
-            }
-
-            if (FChemistryType == ForageChemistry.fcUnknown)
-                throw new Exception("Chemistry class \"" + sChem + "\" in AvailableToAnimal not recognised");
-
-            // Which chemistry class within the cohort does this piece of forage belong to?
-            iChem = this.CHEM_COUNT[(int)FChemistryType] - 1;
-            while ((iChem >= 0) && (sChem != this.CHEMISTRY_CLASSES[(int)FChemistryType, iChem]))
-                iChem--;
-            if (iChem < 0)
-                throw new Exception("Chemistry class \"" + sChem + "\" in AvailableToAnimal incompatible with a previous chemistry class");
-
-            // Add the piece of forage into the data structure
-            if (dMass > 0)
-            {
-                this.FBottom_MM = Math.Min(this.FBottom_MM, dBottom);
-                FTop_MM = Math.Min(FTop_MM, dTop);
-
-                if (FChemData[iChem].dMass_KgHa == 0.0)
-                {
-                    FChemData[iChem].dMass_KgHa = dMass;
-                    FChemData[iChem].dNitrogen_KgHa = dNitrogen;
-                    FChemData[iChem].dPhosphorus_KgHa = dPhosphorus;
-                    FChemData[iChem].dSulphur_KgHa = dSulphur;
-                    FChemData[iChem].dAshAlk_MolHa = dAshAlk;
-
-                    FSeedType = iAddingSeedType;
-                    FIsGreen = bAddingGreen;
-                    if (bAddingLegume)
-                        FLegumeMass = dMass;
-                    else
-                        FLegumeMass = 0.0;
-                    if (bAddingC4Grass)
-                        this.FC4GrassMass = dMass;
-                    else
-                        this.FC4GrassMass = 0.0;
-                }
-                else if (FChemData[iChem].dMass_KgHa > 0.0)
-                {
-                    FChemData[iChem].dMass_KgHa = FChemData[iChem].dMass_KgHa + dMass;
-                    FChemData[iChem].dNitrogen_KgHa = FChemData[iChem].dNitrogen_KgHa + dNitrogen;
-                    FChemData[iChem].dPhosphorus_KgHa = FChemData[iChem].dPhosphorus_KgHa + dPhosphorus;
-                    FChemData[iChem].dSulphur_KgHa = FChemData[iChem].dSulphur_KgHa + dSulphur;
-                    FChemData[iChem].dAshAlk_MolHa = FChemData[iChem].dAshAlk_MolHa + dAshAlk;
-
-                    if (iAddingSeedType != FSeedType)
-                        throw new Exception("Cannot mix seed and non-seed");
-
-                    if (bAddingLegume != (FLegumeMass > 0))
-                        throw new Exception("Cannot mix legume and non-legume forages");
-                    else if (bAddingLegume)
-                        FLegumeMass = FLegumeMass + dMass;
-
-                    if (bAddingC4Grass != (this.FC4GrassMass > 0))
-                        throw new Exception("Cannot mix legume and non-legume forages");
-                    else if (bAddingC4Grass)
-                        this.FC4GrassMass = this.FC4GrassMass + dMass;
-                }
-            }
-        }
 
         /// <summary>
         /// 
@@ -932,131 +714,14 @@ namespace Models.GrazPlan
         /// <summary>
         /// Calculates the TGrazingInputs values from the values stored during addForageData() 
         /// </summary>
-        /// <param name="fMaxGH"></param>
-        /// <param name="fCurvature"></param>
-        /// <param name="fSlope"></param>
         /// <returns></returns>
-        public GrazType.TGrazingInputs availForage(double fMaxGH, double fCurvature, double fSlope)
+        public GrazType.TGrazingInputs availForage()
         {
             GrazType.TGrazingInputs Result = new GrazType.TGrazingInputs();
-
-            double fGreenHeight;
-            double[] fAvailPropn = new double[2];  // TRUE = green forage, FALSE = dry forage
-            double dBulkDensity;
-            GrazType.TGrazingInputs fractionData;
-            int iDMD;
-            int iRipe;
-
-            if (FUseForageData)
-                Result.CopyFrom(FForageData);
-            else
-            {
-                if (FGreenMass > 0.0)
-                {
-                    fGreenHeight = 1.0E-4 * InPaddock.FSummedGreenMass / FGreenBulkDensity;                                                 // Height is in metres here, FSummedGreenMass in kg/ha and BD in kg/m^3
-                    fAvailPropn[1] = Math.Max(0.0, 1.0 - GrazType.fGrazingHeight(fGreenHeight, fMaxGH, fCurvature, fSlope) / fGreenHeight); // green
-                }
-                else
-                    fAvailPropn[1] = 0.0;
-                fAvailPropn[0] = 1.0;      
-
-                GrazType.zeroGrazingInputs(ref Result);
-                dBulkDensity = this.dHerbageBulkDensity();
-                switch (FChemistryType)
-                {
-                    case ForageChemistry.fcDigInDig:
-                        fractionData = this.convertChemistry_DigInDig(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
-                        break;
-                    case ForageChemistry.fcMeanDMD:
-                        fractionData = this.convertChemistry_MeanDMD(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
-                        break;
-                    case ForageChemistry.fcDMDClasses6:
-                        fractionData = this.convertChemistry_DMDClasses6(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
-                        break;
-                    case ForageChemistry.fcVarDMDClasses:
-                        fractionData = this.convertChemistry_VarDMDClasses(fAvailPropn[(FIsGreen ? 1 : 0)], dBulkDensity);
-                        break;
-                    default:
-                        throw new Exception("Cannot translate the forage chemistry inputs");
-                }
-
-                GrazType.addGrazingInputs(1, fractionData, ref Result);
-
-                // Finish computing the proportion of DMD class that is contributed by each herbage fraction
-                // This is used to disaggregate the computed intakes back to the source forages
-
-                for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
-                {
-                    if (Result.Herbage[iDMD].Biomass > 0.0)
-                        this.dHerbageDMDFract[iDMD] = this.dHerbageDMDFract[iDMD] / Result.Herbage[iDMD].Biomass;
-                    // where not all digestible classes are used ensure that all the .digestibilty dmd's are set anyway
-                    if ((iDMD > 1) && (Result.Herbage[iDMD - 1].Digestibility > 0))
-                        Result.Herbage[iDMD].Digestibility = Result.Herbage[iDMD - 1].Digestibility - CLASSWIDTH;
-                    for (iRipe = GrazType.UNRIPE; iRipe <= GrazType.RIPE; iRipe++)
-                    {
-                        if (Result.Seeds[1, iRipe].Biomass > 0.0)
-                            this.dSeedRipeFract[iRipe] = this.dSeedRipeFract[iRipe] / Result.Seeds[1, iRipe].Biomass;
-                    }
-                }
-            }
+                        
+            Result.CopyFrom(FForageData);
+            
             return Result;
-        }
-        /// <summary>
-        /// Count of chem types
-        /// </summary>
-        /// <returns></returns>
-        public int iRemovalDataCount()
-        {
-            return this.CHEM_COUNT[(int)FChemistryType];
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Idx"></param>
-        /// <param name="sChemType"></param>
-        /// <param name="dChemRemovalKgHa"></param>
-        public void getRemovalData(int Idx, ref string sChemType, ref double dChemRemovalKgHa)
-        {
-            double dTotalMass;           // Total forage mass in kg/ha
-            double dTotalRemoval;           // Total forage removal in kg/ha
-            int iChem;
-            int iDMD;
-
-            sChemType = this.CHEMISTRY_CLASSES[(int)FChemistryType, Idx];
-            dChemRemovalKgHa = 0.0;
-
-            if (FSeedType == NOT_SEED)  // herbage
-            {
-                dTotalMass = 0.0;
-                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
-                    dTotalMass = dTotalMass + FChemData[iChem].dMass_KgHa;
-
-                dTotalRemoval = 0.0;
-                for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
-                    dTotalRemoval = dTotalRemoval + RemovalKG.Herbage[iDMD];
-                if ((InPaddock != null) && (dTotalRemoval > 0.0))
-                    dTotalRemoval = dTotalRemoval / InPaddock.fArea;
-
-                if (dTotalMass > 0.0)
-                    dChemRemovalKgHa = Math.Min(1.0, dTotalRemoval / dTotalMass) * FChemData[Idx].dMass_KgHa;
-            }
-            else
-            {
-                // seed removal
-                dTotalMass = 0.0;
-                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
-                    dTotalMass = dTotalMass + FChemData[iChem].dMass_KgHa;
-
-                if (dTotalMass > 0.0)  //if there was some available to remove
-                {
-                    dTotalRemoval = RemovalKG.Seed[1, FSeedType];
-                    if ((InPaddock != null) && (dTotalRemoval > 0.0))
-                        dTotalRemoval = dTotalRemoval / InPaddock.fArea;
-
-                    dChemRemovalKgHa = Math.Min(1.0, dTotalRemoval / dTotalMass) * FChemData[Idx].dMass_KgHa;
-                }
-            }
         }
 
         /// <summary>
@@ -1110,7 +775,7 @@ namespace Models.GrazPlan
 
     // ============================================================================
     /// <summary>
-    /// List of forages
+    /// List of ForageInfo forages 
     /// </summary>
     [Serializable]
     public class ForageList
@@ -1282,62 +947,24 @@ namespace Models.GrazPlan
         public Object ForageObj { get { return FForageObj; } set { FForageObj = value; } }
 
         /// <summary>
-        /// Update the forages for this provider
+        /// Update the forage data for this crop/agpasture object
         /// </summary>
-        /// <param name="availableForage"></param>
-        /// <returns></returns>
-        public void UpdateForages(AvailableToAnimal[] availableForage)
+        /// <param name="forageObj">The crop/pasture object</param>
+        public void UpdateForages(Object forageObj)
         {
-            int i;
-            AvailableToAnimal cohortItem;
-            string sCohort;
-            string sOrgan;
-            string sAge;
-            string sCohortName;
-            ForageInfo forage;
-
-            // only Plant components
-            if (FUseCohorts) 
+            //ensure this forage is in the list
+            //the forage key in this case is component name
+            ForageInfo forage = FForages.byName(ForageHostName);
+            if (forage == null)  //if this cohort doesn't exist in the forage list then
             {
-                // Need to clear the forage data for all the forages in this provider
-                for (i = 0; i <= FForages.Count() - 1; i++)             // for each forage
-                    FForages.byIndex(i).clearForageData();
-
-                for (i = 1; i <= availableForage.Length; i++)
-                {
-                    cohortItem = availableForage[i - 1];
-                    sCohort = cohortItem.CohortID;                      // wheat, sorghum
-                    if (sCohort.Length > 0)                             // must have a cohort name
-                    {
-                        sOrgan = cohortItem.Organ;
-                        sAge = cohortItem.AgeID;
-                        sCohortName = (sCohort + '_' + sOrgan + '_' + sAge).ToLower();
-                        forage = FForages.byName(sCohortName);
-
-                        // This combination of cohort x organ x age has not been provided previously; allocate storage
-                        if (forage == null)
-                        {
-                            forage = new ForageInfo();
-                            forage.sName = sCohortName;
-                            forage.sCohortID = sCohort;
-                            forage.sOrgan = sOrgan;
-                            forage.sAgeClass = sAge;
-                            FOwningPaddock.AssignForage(forage);              //the paddock in the model can access this forage
-                            FForages.Add(forage);                             //create a new forage for this cohort
-                        }
-
-                        forage.addForageData(sCohortName, sOrgan, sAge,    // Accessible when availForage() is called by the model
-                                              cohortItem.Chem,
-                                                  cohortItem.Bottom,
-                                                  cohortItem.Top,
-                                                  cohortItem.Weight,
-                                                  cohortItem.N,
-                                                  cohortItem.P,
-                                                  cohortItem.S,
-                                                  cohortItem.AshAlk);
-                    }
-                }
+                forage = new ForageInfo();
+                forage.sName = ForageHostName.ToLower();
+                FOwningPaddock.AssignForage(forage);              //the paddock in the model can access this forage
+                FForages.Add(forage); //create a new forage for this cohort
             }
+            
+            // TODO: just assuming one forage cohort in this component (expand here?)
+            passGrazingInputs(forage, Crop2GrazingInputs(forageObj), "g/m^2"); //then update it's value
         }
 
         /// <summary>
@@ -1361,7 +988,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Use the GrazingInputs to initialise the forage object
         /// </summary>
         /// <param name="forage"></param>
         /// <param name="Grazing"></param>
@@ -1386,53 +1013,75 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Copies a Plant/AgPasture object biomass organs into TGrazingInputs object
+        /// This object may then get scaled to kg/ha
         /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="Intake"></param>
-        private void Value2IntakeRecord(TTypedValue aValue, ref GrazType.IntakeRecord Intake)
+        /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
+        /// <returns>The grazing inputs</returns>
+        private GrazType.TGrazingInputs Crop2GrazingInputs(Object forageObj)
         {
-            Intake.Biomass = aValue.item(1).asDouble();                         // Item[1]="dm"                          
-            Intake.Digestibility = aValue.item(2).asDouble();                   // Item[2]="dmd"                         
-            Intake.CrudeProtein = aValue.item(3).asDouble();                    // Item[3]="cp_conc"                     
-            Intake.PhosContent = aValue.item(4).asDouble();                     // Item[4]="p_conc"                      
-            Intake.SulfContent = aValue.item(5).asDouble();                     // Item[5]="s_conc"                      
-            Intake.Degradability = aValue.item(6).asDouble();                   // Item[6]="prot_dg"                     
-            Intake.AshAlkalinity = aValue.item(7).asDouble();                   // Item[7]="ashalk"                      
-            Intake.HeightRatio = aValue.item(8).asDouble();                     // Item[8]="height_ratio"                
-        }
+            GrazType.TGrazingInputs result = new GrazType.TGrazingInputs();
+            GrazType.zeroGrazingInputs(ref result);
+            
+            result.TotalGreen = 0;
+            result.TotalDead = 0;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <returns></returns>
-        private GrazType.TGrazingInputs Value2GrazingInputs(TTypedValue aValue)
-        {
-            double fTotalDM;
-            int Idx;
+            double totalDMD = 0;
+            double totalN = 0;
+            double meanDMD = 0;
+            double dmd;
 
-            GrazType.TGrazingInputs Result = new GrazType.TGrazingInputs();
-            GrazType.zeroGrazingInputs(ref Result);
-
-            for (Idx = 1; Idx <= Math.Min(GrazType.DigClassNo, aValue.item(1).count()); Idx++)      // Item[1]="herbage"                     
-                Value2IntakeRecord(aValue.item(1).item((uint)Idx), ref Result.Herbage[Idx]);
-
-            fTotalDM = 0.0;
-            for (Idx = 1; Idx <= GrazType.DigClassNo; Idx++)
-                fTotalDM = fTotalDM + Result.Herbage[Idx].Biomass;
-            Result.TotalGreen = fTotalDM * aValue.item(2).asDouble();                               // Item[2]="propn_green"                 
-            Result.TotalDead = fTotalDM - Result.TotalGreen;
-
-            Result.LegumePropn = aValue.item(3).asDouble();                                         // Item[3]="legume"                      
-            Result.SelectFactor = aValue.item(4).asDouble();                                        // Item[4]="select_factor"               
-
-            for (Idx = 1; Idx <= Math.Min(2, aValue.item(5).count()); Idx++)                        // Item[5]="seed"                        
+            // calculate the total live and dead biomass
+            foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
             {
-                Value2IntakeRecord(aValue.item(5).item((uint)Idx), ref Result.Seeds[1, Idx]);
-                Result.SeedClass[1, Idx] = aValue.item(6).item((uint)Idx).asInteger();              // Item[6]="seed_class"                  
+                if (biomass.IsAboveGround)
+                {
+                    if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
+                    {
+                        result.TotalGreen += biomass.Live.Wt;   // g/m^2
+                        result.TotalDead += biomass.Dead.Wt;
+
+                        dmd = ((biomass.Live.DMDOfStructural * biomass.Live.StructuralWt) + (1 * biomass.Live.StorageWt) + (1 * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
+                        dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
+                        totalDMD += dmd;
+                        totalN += biomass.Live.N + biomass.Dead.N;
+                    }
+                }
             }
-            return Result;
+
+            double totalDM = result.TotalGreen + result.TotalDead;
+
+            // TODO: Improve this routine
+
+            if (totalDM > 0)
+            {
+                meanDMD = totalDMD / totalDM; //calc the average dmd for the plant
+
+                //get the dmd distribution
+                double[] dDMDPropns = new double[GrazType.DigClassNo + 1];
+
+                //green 0.85-0.45, dead 0.70-0.30
+                dDMDPropns = ForageInfo.calcDMDDistribution(meanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
+
+                for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
+                {
+                    result.Herbage[idx].Biomass = dDMDPropns[idx] * totalDM;
+                    result.Herbage[idx].CrudeProtein = dDMDPropns[idx] * totalN * GrazType.N2Protein;
+                    result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
+                    result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
+                    result.Herbage[idx].HeightRatio = 1;
+                    result.Herbage[idx].PhosContent = 0;    //N * 0.05?
+                    result.Herbage[idx].SulfContent = 0;    //N * 0.07?
+                    result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
+                }
+
+                result.LegumePropn = 0.0;   // TODO: set from Plant model value
+                result.SelectFactor = 0;    // TODO: set from Plant model value
+
+                // TODO: Store the seed pools
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -1510,17 +1159,17 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// TForageProviders is a collection of forage/cmp components that each in turn
+    /// ForageProviders is a collection of forage/cmp components that each in turn
     /// supply 1..n forage plants/species
     /// </summary>
     [Serializable]
-    public class TForageProviders
+    public class ForageProviders
     {
         private List<ForageProvider> FForageProviderList;
         /// <summary>
         /// Construct a forage provider
         /// </summary>
-        public TForageProviders()
+        public ForageProviders()
         {
             FForageProviderList = new List<ForageProvider>();
         }
@@ -1976,7 +1625,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Initialise at the first timestep
         /// </summary>
         public void beginTimeStep()
         {
@@ -1989,56 +1638,5 @@ namespace Models.GrazPlan
             }
         }
     }
-
-    /*
-    {==============================================================================}
-    { convertHerbage                                                               }
-    { Converts a TPopnHerbageData record into a TGrazingInputs record.             }
-    {==============================================================================}
-
-    procedure addToIntakeRecord( const Attr : TPopnHerbageAttr;
-                                 fPropn     : Single;
-                                 var Intake : IntakeRecord );
-    var
-      fAvailMass : Single;
-      fCrudeProt : Single;
-    begin
-      fAvailMass := fPropn * Attr.fMass_DM;
-      fCrudeProt := N2Protein * Attr.fNutrientConc[N];
-
-      if (fAvailMass > 0.0) then
-      begin
-        Intake.Biomass       := Intake.Biomass       + fAvailMass;
-        Intake.Digestibility := Intake.Digestibility + fAvailMass * Attr.fDM_Digestibility;
-        Intake.CrudeProtein  := Intake.CrudeProtein  + fAvailMass * fCrudeProt;
-        Intake.Degradability := Intake.Degradability + fAvailMass * fCrudeProt * Attr.fNDegradability;
-        Intake.PhosContent   := Intake.PhosContent   + fAvailMass * Attr.fNutrientConc[P];
-        Intake.SulfContent   := Intake.SulfContent   + fAvailMass * Attr.fNutrientConc[S];
-        if (Attr.fBulkDensity > 0.0) then
-          Intake.HeightRatio := Intake.HeightRatio   + fAvailMass * REF_HERBAGE_BD / Attr.fBulkDensity
-        else
-          Intake.HeightRatio := 1.0;
-        Intake.AshAlkalinity := Intake.AshAlkalinity + fAvailMass * Attr.fAshAlkalinity;
-      end;
-    end;
-
-    //==============================================================================
-    //==============================================================================
-    procedure averageIntakeRecord( var Intake : IntakeRecord );
-    begin
-      if (Intake.CrudeProtein > 0.0) then
-        Intake.Degradability := Intake.Degradability / Intake.CrudeProtein;
-      if (Intake.Biomass > 0.0) then
-      begin
-        Intake.Digestibility := Intake.Digestibility / Intake.Biomass;
-        Intake.CrudeProtein  := Intake.CrudeProtein  / Intake.Biomass;
-        Intake.PhosContent   := Intake.PhosContent   / Intake.Biomass;
-        Intake.SulfContent   := Intake.SulfContent   / Intake.Biomass;
-        Intake.HeightRatio   := Intake.HeightRatio   / Intake.Biomass;
-        Intake.AshAlkalinity := Intake.AshAlkalinity / Intake.Biomass;
-      end
-      else
-        Intake.HeightRatio   := 1.0;
-    end;
-*/
+    
 }
