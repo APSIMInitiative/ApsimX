@@ -215,6 +215,8 @@ namespace Models
                 writer.WriteLine("</style>");
                 writer.WriteLine("</head>");
                 writer.WriteLine("<body>");
+                writer.WriteLine("<a href=\"#log\">Simulation log</a>");
+
             }
             else if (outtype == OutputType.rtf)
             {
@@ -299,7 +301,7 @@ namespace Models
             }
 
             // Write out all messages.
-            WriteHeading(writer, "Simulation log:", outtype, document);
+            WriteHeading(writer, "Simulation log:", outtype, document, "log");
             DataTable messageTable = GetMessageTable(storage, simulationName);
             WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document);
 
@@ -395,11 +397,15 @@ namespace Models
         /// <param name="heading">The heading to write</param>
         /// <param name="outtype">Indicates the format to be produced</param>
         /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
-        private static void WriteHeading(TextWriter writer, string heading, OutputType outtype, Document document)
+        /// <param name="id">Provides an id tag for the heading (html only; optional)</param>
+        private static void WriteHeading(TextWriter writer, string heading, OutputType outtype, Document document, string id = null)
         {
             if (outtype == OutputType.html)
             {
-                writer.WriteLine("<h2>" + heading + "</h2>");
+                writer.Write("<h2");
+                if (!String.IsNullOrEmpty(id))
+                    writer.Write(" id='" + id + "'");
+                writer.WriteLine(">" + heading + "</h2>");
             }
             else if (outtype == OutputType.rtf)
             {
