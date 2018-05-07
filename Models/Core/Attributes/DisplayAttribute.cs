@@ -41,7 +41,12 @@ namespace Models.Core
             /// <summary>
             /// A field name editor.
             /// </summary>
-            FieldName
+            FieldName,
+
+            /// <summary>
+            /// Use a list of known residue types
+            /// </summary>
+            ResidueName
         }
 
         /// <summary>
