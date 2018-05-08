@@ -852,10 +852,6 @@ namespace Models
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </DataStore>
   <Simulation>
     <Name>GetCowsMilking</Name>
     <Clock>
@@ -3345,7 +3341,7 @@ namespace Models
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>2000-08-01T00:00:00</StartDate>
-      <EndDate>2000-08-20T00:00:00</EndDate>
+      <EndDate>2000-08-02T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
@@ -3380,16 +3376,20 @@ namespace Models
       <GrazingPeriods />
     </Stock>
     <Manager>
-      <Name>ManageSimpleRotation</Name>
+      <Name>Ex_TargetRotationLength</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Script>
+        <DoVerbose>False</DoVerbose>
+        <StockingRate>3</StockingRate>
+        <InitLocation>Paddock01</InitLocation>
+        <TargetRotationLength>2</TargetRotationLength>
+        <HarvestExcessHerbage>False</HarvestExcessHerbage>
         <NumCows>3</NumCows>
-        <InitLocation>Paddock00</InitLocation>
-        <TargetRotationLength>6</TargetRotationLength>
-        <TargetGrazingResidual>1800</TargetGrazingResidual>
-        <HarvestExcessHerbage>True</HarvestExcessHerbage>
         <CurrentLocation>
         </CurrentLocation>
+        <CurrentLocationNum>0</CurrentLocationNum>
+        <NumPaddocks>0</NumPaddocks>
+        <FarmArea>0</FarmArea>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -3414,100 +3414,102 @@ namespace Models
 		[Link] Stock Cows;
 		[Link] Supplement Feed;
 		[Link] Zone[] Paddocks;
-		   [Link] ISummary summary = null;
+		[Link] ISummary summary = null;
 
 		//List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
 
-		class PlantWeight
+		[Serializable]
+		public class PaddockInfo
 		{
 			public string paddockName;
-			public double totalWt;
-
+			public double harvestableBiomass;
+			public int paddockNum;
+			public double paddockArea;
 		}
 
+		[Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
 
-		[Description("Number of cows on the whole farm (head): ")] public int NumCows { get; set; }
+		[Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
 		[Description("Initial location of the cows (paddock name): ")] public string InitLocation { get; set; }
 		// move more cow stuff to the interface
 
-		[Description("Target rotation length (days): ")] public int TargetRotationLength { get; set; }
-		[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
+		[Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
+		//[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
 		[Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
 
 
-		private int group_count;
-		// how many groups are there in the simulation
-		private int g = 1;
-		// index to the groups of animals
-		[Description("junk: ")]  public string CurrentLocation { get; set; }
-		// name of the paddock that the cows are currently in
-		private int DaysPerPaddock;
+		public int NumCows { get; set; } // number of cows on the whole farm
+		public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
+		public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
+		public int NumPaddocks { get; set; }
+		public double FarmArea { get; set; }
+
+		private int group_count; // how many groups are there in the simulation
+		private int g = 1;		// index to the groups of animals
+
+		//private int DaysPerPaddock;
 		private int DaysInThisPaddock;
-		int NumPaddocks = 0;
 
 		public event BiomassRemovedDelegate BiomassRemoved;
+		List<PaddockInfo> listOfPaddockInfo = new List<PaddockInfo>();
 
 
 		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
-			SetInitialCowStuff();
-			Cows.Move(g, InitLocation);
-			CurrentLocation = InitLocation;
+			summary.WriteMessage(this, "Initialising the paddock information");
+			summary.WriteMessage(this, InitLocation);
+			summary.WriteMessage(this, "InitLocation");
+			//Debugger.Break();
 
-			foreach (Zone paddock in Paddocks)
-				NumPaddocks += 1;
-			DaysPerPaddock = (int) (Math.Round((float) TargetRotationLength / (float) NumPaddocks, 0));
-			DaysInThisPaddock = 0;
+			GetFarmAreaAndOtherInfo();
+
+			NumCows = (int) (Math.Round(StockingRate * FarmArea, 0));
+
+			SetInitialCowStuff();
+
+			Cows.Move(g, InitLocation);
+
+			summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
+			summary.WriteMessage(this, "     The animals will begin in " + CurrentLocation + " which is the " + CurrentLocationNum + " st/nd/th paddock in the simulation");
+			summary.WriteMessage(this, "The area of the whole farm is " + FarmArea + " ha");
+
+
+
+			DaysInThisPaddock = -1;
+
+
+
+
+
 		}
                                 
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 		    // how many days in this paddock?  Ready to move?
-
 		    DaysInThisPaddock += 1;
-			List<PlantWeight> plantWeights = new List<PlantWeight>();
-
-		    			// get a list of the paddocks and sort into order of decreasing Sward.HarvestableWt
-				foreach (Zone paddock in Paddocks)
-				{
-					PlantWeight weight = new PlantWeight();
-					weight.paddockName = paddock.Name;
-					foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-					{
-						weight.totalWt += plant.AboveGroundWt;
-						summary.WriteMessage(this, "In " + paddock.Name + " there is " + weight.totalWt + " kg DM /ha of " + plant.Name);
-					}
-					plantWeights.Add(weight);
+		    int newPaddockLocationNum = CurrentLocationNum + 1;
+		    if (newPaddockLocationNum >= NumPaddocks)
+		    	newPaddockLocationNum = 0;
+		    if (DaysInThisPaddock >= TargetRotationLength)
+		    {
+				Cows.Move(g, listOfPaddockInfo[newPaddockLocationNum].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
+				CurrentLocation = listOfPaddockInfo[newPaddockLocationNum].paddockName;
+				CurrentLocationNum = listOfPaddockInfo[newPaddockLocationNum].paddockNum;
+				if (DoVerbose)
+					summary.WriteMessage(this, "moving to " + listOfPaddockInfo[newPaddockLocationNum].paddockName);
+				DaysInThisPaddock = 0;
 		    }
 
-		    if (DaysInThisPaddock >= DaysPerPaddock)
-		    {
-				plantWeights.Sort((y, x) => x.totalWt.CompareTo(y.totalWt));
-				for (int ii = 0; ii < NumPaddocks; ii++)
-				{
-				   summary.WriteMessage(this, ii + " " + plantWeights[ii].paddockName + " " + plantWeights[ii].totalWt);
-				}
-
-				//Debugger.Break();
-				Cows.Move(g, plantWeights[0].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
-				CurrentLocation = plantWeights[0].paddockName;
-				summary.WriteMessage(this, "moving to " + plantWeights[0].paddockName);
-				//double CurrentTotalWt = plantWeights[0].totalWt;
-
-		       // move to the next paddock
-				DaysInThisPaddock = 0;
-		    				}
-
-                        /*
+                        
             // total harvested is equal total defoliated, for now
-            HarvestedWt = DefoliatedWt;
-            HarvestedN = DefoliatedN;  */
+            //HarvestedWt = DefoliatedWt;
+            //HarvestedN = DefoliatedN;  
 
         	     	     	     	 
-			// get the type of amount given
-			/*if (RemoveAmountType == removeAmountTypes.ResidualDM)
+			/*// get the type of amount given
+			if (RemoveAmountType == removeAmountTypes.ResidualDM)
                 amountType = "SetResidueAmount";
             else
                 amountType = "SetRemoveAmount"; */
@@ -3525,10 +3527,11 @@ namespace Models
 						foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
 						{
 							//Debugger.Break();
-							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.AboveGroundWt /  plantWeights[0].totalWt);
+							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.HarvestableWt /  listOfPaddockInfo[CurrentLocationNum].harvestableBiomass);
 							if (amountToRemove >= plant.HarvestableWt)
 							{
-								summary.WriteMessage(this, "not enough plant for the animal demand");
+								if (DoVerbose)
+									summary.WriteMessage(this, "not enough plant for the animal demand");
 								amountToRemove = plant.HarvestableWt;
 							}
 							else
@@ -3541,7 +3544,7 @@ namespace Models
 						}
 					}
 				}
-			}
+			} 
 		}
 
 
@@ -3562,7 +3565,41 @@ namespace Models
 			purchase.NumYoung = 2;
 			purchase.YoungWt = 45;
                 
-			Cows.Buy(purchase);
+			Cows.Buy(purchase);		
+		}
+
+		public void GetFarmAreaAndOtherInfo()
+		{
+					NumPaddocks = 0;
+			FarmArea = 0.0;
+			CurrentLocation = InitLocation;
+			CurrentLocationNum = 0;
+
+				foreach (Zone paddock in Paddocks)
+				{
+					NumPaddocks += 1;
+
+					PaddockInfo paddockInfo = new PaddockInfo();
+
+					paddockInfo.paddockName = paddock.Name;
+					paddockInfo.paddockNum = NumPaddocks - 1;
+					paddockInfo.paddockArea = paddock.Area;
+
+				foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+						paddockInfo.harvestableBiomass += plant.HarvestableWt;
+
+				listOfPaddockInfo.Add(paddockInfo);
+
+				FarmArea += paddock.Area;
+				if (paddock.Name == InitLocation)
+				{
+					summary.WriteMessage(this, "found it at " + paddock.Name + " " +  InitLocation);
+					CurrentLocationNum = paddockInfo.paddockNum;
+					}
+   				summary.WriteMessage(this, "     Paddock " + NumPaddocks + " is called " + paddock.Name + " and has an area of " + paddock.Area );
+
+		  	  }
+
 		}
 
 	}
@@ -3616,17 +3653,9 @@ namespace Models
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[ManageSimpleRotation].Script.CurrentLocation</string>
-        <string>[Stock].NumberAll</string>
-        <string>[Stock].WeightAll</string>
-        <string>[Stock].CondScoreAll</string>
-        <string>[Stock].IntakeAll.Weight</string>
-        <string>[Stock].IntakeAll.N</string>
-        <string>[Stock].UrineNAll</string>
-        <string>[Stock].FaecesAll.N</string>
-        <string>[Stock].MilkWtAll</string>
-        <string>[Supplement].stores[2].Name</string>
-        <string>[Supplement].stores[2].Stored</string>
+        <string>[Ex_TargetRotationLength].Script.CurrentLocation</string>
+        <string>[Ex_TargetRotationLength].Script.CurrentLocationNum</string>
+        <string>[Ex_TargetRotationLength].Script.InitLocation</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -4918,7 +4947,7 @@ namespace Models
         </EventNames>
       </Report>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
+      <Area>1.5</Area>
       <Slope>0</Slope>
     </Zone>
     <Zone>
@@ -7235,9 +7264,455 @@ namespace Models
       <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
       <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
     </PastureSpecies>
+    <Manager>
+      <Name>Ex_TargetRotationLength_store</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Script>
+        <DoVerbose>False</DoVerbose>
+        <StockingRate>4</StockingRate>
+        <InitLocation>Paddock00</InitLocation>
+        <TargetRotationLength>6</TargetRotationLength>
+        <HarvestExcessHerbage>True</HarvestExcessHerbage>
+        <NumCows>3</NumCows>
+        <CurrentLocation>
+        </CurrentLocation>
+        <CurrentLocationNum>0</CurrentLocationNum>
+        <NumPaddocks>0</NumPaddocks>
+        <FarmArea>0</FarmArea>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.Utilities;
+using Models.GrazPlan;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.PMF;
+using Models.Soils;
+using System.Collections;
+using System.Collections.Generic;
+using Models.AgPasture;
+using System.Diagnostics;
+
+namespace Models
+{
+
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Stock Cows;
+		[Link] Supplement Feed;
+		[Link] Zone[] Paddocks;
+		[Link] ISummary summary = null;
+
+		//List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
+
+		class PlantWeight
+		{
+			public string paddockName;
+			public double totalWt;
+		}
+
+		[Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
+
+		[Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
+		[Description("Initial location of the cows (paddock name): ")] public string InitLocation { get; set; }
+		// move more cow stuff to the interface
+
+		[Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
+		//[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
+		[Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
+
+
+		public int NumCows { get; set; } // number of cows on the whole farm
+		public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
+		public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
+		public int NumPaddocks { get; set; }
+		public double FarmArea { get; set; }
+
+		private int group_count; // how many groups are there in the simulation
+		private int g = 1;		// index to the groups of animals
+
+		//private int DaysPerPaddock;
+		private int DaysInThisPaddock;
+
+		public event BiomassRemovedDelegate BiomassRemoved;
+
+
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			SetInitialCowStuff();
+			Cows.Move(g, InitLocation);
+			CurrentLocation = InitLocation;
+
+			summary.WriteMessage(this, "Initialising the paddocks information");
+			NumPaddocks = 0;
+			FarmArea = 0.0;
+			foreach (Zone paddock in Paddocks)
+			{
+				NumPaddocks += 1;
+				FarmArea += paddock.Area;
+   				summary.WriteMessage(this, "     Paddock " + NumPaddocks + " has an area of " + paddock.Area);
+			}
+			//DaysPerPaddock = (int) (Math.Round((float) TargetRotationLength / (float) NumPaddocks, 0));
+			DaysInThisPaddock = -1;
+
+			NumCows = (int) (Math.Round((float) StockingRate * (float) FarmArea, 0));
+			summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
+			summary.WriteMessage(this, "The area of the whole farm is " + FarmArea);
+
+
+		}
+                                
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		    // how many days in this paddock?  Ready to move?
+
+		    DaysInThisPaddock += 1;
+			List<PlantWeight> plantWeights = new List<PlantWeight>();
+
+		    			// get a list of the paddocks and sort into order of decreasing Sward.HarvestableWt
+				foreach (Zone paddock in Paddocks)
+				{
+					PlantWeight weight = new PlantWeight();
+					weight.paddockName = paddock.Name;
+					foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+					{
+						weight.totalWt += plant.AboveGroundWt;
+						if (DoVerbose)
+							summary.WriteMessage(this, "In " + paddock.Name + " there is " + weight.totalWt + " kg DM /ha of " + plant.Name);
+					}
+					plantWeights.Add(weight);
+		    }
+
+		    if (DaysInThisPaddock >= TargetRotationLength)
+		    {
+				/*plantWeights.Sort((y, x) => x.totalWt.CompareTo(y.totalWt));
+				for (int ii = 0; ii < NumPaddocks; ii++)
+				{
+				   if (DoVerbose)
+				   	summary.WriteMessage(this, ii + " " + plantWeights[ii].paddockName + " " + plantWeights[ii].totalWt);
+				}*/
+
+				//Debugger.Break();
+				Cows.Move(g, plantWeights[0].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
+				CurrentLocation = plantWeights[0].paddockName;
+				summary.WriteMessage(this, "moving to " + plantWeights[0].paddockName);
+				//double CurrentTotalWt = plantWeights[0].totalWt;
+
+		       // move to the next paddock
+				DaysInThisPaddock = 0;
+		    				}
+
+                        /*
+            // total harvested is equal total defoliated, for now
+            HarvestedWt = DefoliatedWt;
+            HarvestedN = DefoliatedN;  */
+
+        	     	     	     	 
+			// get the type of amount given
+			/*if (RemoveAmountType == removeAmountTypes.ResidualDM)
+                amountType = "SetResidueAmount";
+            else
+                amountType = "SetRemoveAmount"; */
+
+
+			if (Cows.NumberAll > 0)
+			{
+				Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
+				// remove some biomass
+
+			    foreach (Zone paddock in Paddocks)
+	    		{
+		        	if (paddock.Name == CurrentLocation)
+					{
+						foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+						{
+							//Debugger.Break();
+							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.AboveGroundWt /  plantWeights[0].totalWt);
+							if (amountToRemove >= plant.HarvestableWt)
+							{
+								if (DoVerbose)
+									summary.WriteMessage(this, "not enough plant for the animal demand");
+								amountToRemove = plant.HarvestableWt;
+							}
+							else
+							{
+							//double propToRemove = plant.AboveGroundWt /  plantWeights[0].totalWt;
+							plant.Graze(amount: amountToRemove, type: "SetRemoveAmount");
+							//DefoliatedWt += species.HarvestedWt;
+							//DefoliatedN += species.HarvestedN;
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		public void SetInitialCowStuff()
+		{
+			g = Cows.NoGroups + 1;
+
+			StockBuy purchase = new StockBuy();
+			purchase.Genotype = "Friesian";
+			purchase.Number = NumCows;
+			purchase.Sex = "heifers"; 
+			purchase.Age = 24;       // age in months
+			purchase.Weight = 550.0;  // live weight in kg
+			purchase.UseTag = g + 1;
+			purchase.MatedTo = "Friesian";
+			purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
+			purchase.Lactating = 1;  // 0 for dry, 1 for lactating
+			purchase.NumYoung = 2;
+			purchase.YoungWt = 45;
+                
+			Cows.Buy(purchase);
+		}
+
+	}
+}
+]]></Code>
+    </Manager>
+    <Manager>
+      <Name>Ex_TargetRotationLength</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Script>
+        <DoVerbose>False</DoVerbose>
+        <StockingRate>4</StockingRate>
+        <InitLocation>Paddock00</InitLocation>
+        <TargetRotationLength>6</TargetRotationLength>
+        <HarvestExcessHerbage>True</HarvestExcessHerbage>
+        <NumCows>3</NumCows>
+        <CurrentLocation>
+        </CurrentLocation>
+        <CurrentLocationNum>0</CurrentLocationNum>
+        <NumPaddocks>0</NumPaddocks>
+        <FarmArea>0</FarmArea>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.Utilities;
+using Models.GrazPlan;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.PMF;
+using Models.Soils;
+using System.Collections;
+using System.Collections.Generic;
+using Models.AgPasture;
+using System.Diagnostics;
+
+namespace Models
+{
+
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Stock Cows;
+		[Link] Supplement Feed;
+		[Link] Zone[] Paddocks;
+		[Link] ISummary summary = null;
+
+		//List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
+
+		[Serializable]
+		public class PaddockInfo
+		{
+			public string paddockName;
+			public double totalWt;
+			public int paddockNum;
+		}
+
+		[Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
+
+		[Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
+		[Description("Initial location of the cows (paddock name): ")] public string InitLocation { get; set; }
+		// move more cow stuff to the interface
+
+		[Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
+		//[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
+		[Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
+
+
+		public int NumCows { get; set; } // number of cows on the whole farm
+		public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
+		public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
+		public int NumPaddocks { get; set; }
+		public double FarmArea { get; set; }
+
+		private int group_count; // how many groups are there in the simulation
+		private int g = 1;		// index to the groups of animals
+
+		//private int DaysPerPaddock;
+		private int DaysInThisPaddock;
+
+		public event BiomassRemovedDelegate BiomassRemoved;
+		List<PaddockInfo> listOfPaddockInfo = new List<PaddockInfo>();
+
+
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			//SetInitialCowStuff();
+			//Cows.Move(g, InitLocation);
+			//CurrentLocation = InitLocation;
+			//CurrentLocationNum = 0;
+
+			/*summary.WriteMessage(this, "Initialising the paddocks information");
+			NumPaddocks = 0;
+			FarmArea = 0.0;
+			foreach (Zone paddock in Paddocks)
+			{
+				NumPaddocks += 1;
+				FarmArea += paddock.Area;
+				if (paddock.Name == "InitLocation")
+					CurrentLocationNum = NumPaddocks;
+   				summary.WriteMessage(this, "     Paddock " + NumPaddocks + " has an area of " + paddock.Area);
+			}
+			DaysInThisPaddock = -1;
+
+			NumCows = (int) (Math.Round((float) StockingRate * (float) FarmArea, 0));
+			summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
+			summary.WriteMessage(this, "The area of the whole farm is " + FarmArea);
+
+			*/
+
+		    /*// get a list of information about the paddocks 
+				foreach (Zone paddock in Paddocks)
+				{
+					PaddockInfo paddockInfo = new PaddockInfo();
+					paddockInfo.paddockName = paddock.Name;
+					foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+					{
+						paddockInfo.totalWt += plant.AboveGroundWt;
+						if (DoVerbose)
+							summary.WriteMessage(this, "In " + paddock.Name + " there is " + paddockInfo.totalWt + " kg DM /ha of " + plant.Name);
+					}
+				listOfPaddockInfo.Add(paddockInfo);
+		    }*/
+
+
+		}
+                                
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		   /* // how many days in this paddock?  Ready to move?
+		    DaysInThisPaddock += 1;
+		    if (DaysInThisPaddock >= TargetRotationLength)
+		    {
+				Cows.Move(g, listOfPaddockInfo[0].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
+				CurrentLocation = listOfPaddockInfo[0].paddockName;
+				summary.WriteMessage(this, "moving to " + listOfPaddockInfo[0].paddockName);
+				DaysInThisPaddock = 0;
+		    }*/
+
+                        /*
+            // total harvested is equal total defoliated, for now
+            HarvestedWt = DefoliatedWt;
+            HarvestedN = DefoliatedN;  */
+
+        	     	     	     	 
+			// get the type of amount given
+			/*if (RemoveAmountType == removeAmountTypes.ResidualDM)
+                amountType = "SetResidueAmount";
+            else
+                amountType = "SetRemoveAmount"; */
+
+
+			/*if (Cows.NumberAll > 0)
+			{
+				Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
+				// remove some biomass
+
+			    foreach (Zone paddock in Paddocks)
+	    		{
+		        	if (paddock.Name == CurrentLocation)
+					{
+						foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+						{
+							//Debugger.Break();
+							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.AboveGroundWt /  plantWeights[0].totalWt);
+							if (amountToRemove >= plant.HarvestableWt)
+							{
+								if (DoVerbose)
+									summary.WriteMessage(this, "not enough plant for the animal demand");
+								amountToRemove = plant.HarvestableWt;
+							}
+							else
+							{
+							//double propToRemove = plant.AboveGroundWt /  plantWeights[0].totalWt;
+							plant.Graze(amount: amountToRemove, type: "SetRemoveAmount");
+							//DefoliatedWt += species.HarvestedWt;
+							//DefoliatedN += species.HarvestedN;
+							}
+						}
+					}
+				}
+			} */
+		}
+
+
+		public void SetInitialCowStuff()
+		{
+			/*g = Cows.NoGroups + 1;
+
+			StockBuy purchase = new StockBuy();
+			purchase.Genotype = "Friesian";
+			purchase.Number = NumCows;
+			purchase.Sex = "heifers"; 
+			purchase.Age = 24;       // age in months
+			purchase.Weight = 550.0;  // live weight in kg
+			purchase.UseTag = g + 1;
+			purchase.MatedTo = "Friesian";
+			purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
+			purchase.Lactating = 1;  // 0 for dry, 1 for lactating
+			purchase.NumYoung = 2;
+			purchase.YoungWt = 45;
+                
+			Cows.Buy(purchase); */
+		}
+
+	}
+}
+]]></Code>
+    </Manager>
+    <Report>
+      <Name>ReportTop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Ex_TargetRotationLength].Script.CurrentLocation</string>
+        <string>[Ex_TargetRotationLength].Script.CurrentLocation</string>
+        <string />
+        <string>//[Stock].NumberAll</string>
+        <string>[Stock].WeightAll</string>
+        <string>[Stock].CondScoreAll</string>
+        <string>[Stock].IntakeAll.Weight</string>
+        <string>[Stock].IntakeAll.N</string>
+        <string>[Stock].UrineNAll</string>
+        <string>[Stock].FaecesAll.N</string>
+        <string>[Stock].MilkWtAll</string>
+        <string>[Supplement].stores[2].Name</string>
+        <string>[Supplement].stores[2].Stored</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].EndOfDay</string>
+      </EventNames>
+    </Report>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
+  <DataStore>
+    <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </DataStore>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
