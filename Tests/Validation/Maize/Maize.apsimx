@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="27">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -19888,7 +19888,7 @@ namespace Models
         [Link] Irrigation Irrigation;
         [Link] Summary Summary;
         [Link] Soil Soil;
-        IPlant Crop;
+        ICrop Crop;
         
     
         [Description("Crop to be sown")]
@@ -19908,10 +19908,10 @@ namespace Models
         {
             SoilWaterDeficit = 0.0;
             
-            foreach (IModel crop in Apsim.FindAll(this, typeof(IPlant)))
+            foreach (IModel crop in Apsim.FindAll(this, typeof(ICrop)))
             {
                 if (crop.Name == CropName)
-                    Crop = crop as IPlant;
+                    Crop = crop as ICrop;
             }
             if (Crop == null)
                 throw new Exception("Could not find crop called " + CropName);
@@ -21461,7 +21461,7 @@ namespace Models
         [Link] Irrigation Irrigation;
         [Link] Summary Summary;
         [Link] Soil Soil;
-        IPlant Crop;
+        ICrop Crop;
         
     
         [Description("Crop to be sown")]
@@ -21481,10 +21481,10 @@ namespace Models
         {
             SoilWaterDeficit = 0.0;
             
-            foreach (IModel crop in Apsim.FindAll(this, typeof(IPlant)))
+            foreach (IModel crop in Apsim.FindAll(this, typeof(ICrop)))
             {
                 if (crop.Name == CropName)
-                    Crop = crop as IPlant;
+                    Crop = crop as ICrop;
             }
             if (Crop == null)
                 throw new Exception("Could not find crop called " + CropName);
@@ -22932,7 +22932,7 @@ namespace Models
         [Link] Irrigation Irrigation;
         [Link] Summary Summary;
         [Link] Soil Soil;
-        IPlant Crop;
+        ICrop Crop;
         
     
         [Description("Crop to be sown")]
@@ -22952,10 +22952,10 @@ namespace Models
         {
             SoilWaterDeficit = 0.0;
             
-            foreach (IModel crop in Apsim.FindAll(this, typeof(IPlant)))
+            foreach (IModel crop in Apsim.FindAll(this, typeof(ICrop)))
             {
                 if (crop.Name == CropName)
-                    Crop = crop as IPlant;
+                    Crop = crop as ICrop;
             }
             if (Crop == null)
                 throw new Exception("Could not find crop called " + CropName);
