@@ -1798,18 +1798,18 @@ namespace Models.AgPasture
 
         /// <summary>Holds info about state of leaves (DM and N).</summary>
         [ChildLinkByName]
-        private PastureAboveGroundOrgan leaves;
+        private PastureAboveGroundOrgan leaves = null;
 
         /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
         [ChildLinkByName]
-        private PastureAboveGroundOrgan stems;
+        private PastureAboveGroundOrgan stems = null;
 
 
         // TODO: Currently STOCK will graze all stolons that it can see even though
         // some will be on the ground and shouldn't be accessible to the animals.
         /// <summary>Holds info about state of stolons (DM and N).</summary>
         [ChildLinkByName]
-        private PastureAboveGroundOrgan stolons;
+        private PastureAboveGroundOrgan stolons = null;
 
         /// <summary>Holds a list of root organs, one for each zone where roots are growing.</summary>
         internal List<PastureBelowGroundOrgan> rootZones;

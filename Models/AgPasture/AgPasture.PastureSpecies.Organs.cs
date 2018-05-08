@@ -21,10 +21,6 @@ namespace Models.AgPasture
     [Serializable]
     public class PastureAboveGroundOrgan : Model, IRemovableBiomass
     {
-        /// <summary>Parent plant for this organ</summary>
-        [ParentLink]
-        private PastureSpecies parentPlant;
-
         /// <summary>The collection of tissues for this organ.</summary>
         [ChildLink]
         public GenericTissue[] Tissue;
