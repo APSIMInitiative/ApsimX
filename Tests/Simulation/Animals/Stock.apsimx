@@ -588,7 +588,7 @@ namespace Models
 				}
 
 	 			// Acquire young replacement stock immediately
-	 			Animals.Buy(genotype: "Merino", 
+	 			Animals.Buy(genotype: "Small Merino", 
 	 						number: stockRate * Farm.Area - Animals.NumberAll, 
 	 						sex: "wethers", 
 	 						age: 15.0, 
