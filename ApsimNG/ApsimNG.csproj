@@ -277,6 +277,7 @@
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\ActivityLedgerGridView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
+    <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
