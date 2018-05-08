@@ -321,6 +321,16 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
+                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.ResidueName &&
+                         this.model is Models.SurfaceOM.SurfaceOrganicMatter)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    string[] fieldNames = GetResidueNames();
+                    if (fieldNames != null)
+                    {
+                        cell.DropDownStrings = fieldNames;
+                    }
+                }
                 else
                 {
                     object cellValue = this.properties[i].ValueWithArrayHandling;
@@ -444,6 +454,21 @@ namespace UserInterface.Presenters
 
             // Not found so look for one in scope.
             return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
+        }
+
+        private string[] GetResidueNames()
+        {
+            if (this.model is Models.SurfaceOM.SurfaceOrganicMatter)
+            {
+                List<Models.SurfaceOM.SurfaceOrganicMatter.ResidueType> types = (this.model as Models.SurfaceOM.SurfaceOrganicMatter).ResidueTypes.residues;
+                string[] result = new string[types.Count];
+                for (int i = 0; i < types.Count; i++)
+                    result[i] = types[i].fom_type;
+                Array.Sort(result, StringComparer.InvariantCultureIgnoreCase);
+
+                return result;
+            }
+            return null;
         }
 
         /// <summary>
