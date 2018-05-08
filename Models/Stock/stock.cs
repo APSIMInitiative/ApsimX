@@ -15,7 +15,110 @@ namespace Models.GrazPlan
     using StdUnits;
 
     /// <summary>
-    /// The main GrazPlan stock class
+    /// The STOCK component encapsulates the GRAZPLAN animal biology model, as described in [FREER199777].
+    /// 
+    /// Animals may be of different genotypes. In particular, sheep and cattle may be represented within a single STOCK instance.
+    /// 
+    /// Usually a single STOCK module is added to an AusFarm simulation, at the top level in the
+    /// module hierarchy.
+    /// 
+    /// In a grazing system, however, there may be a variety of different classes of livestock. Animals
+    /// may be of different genotypes (including both sheep and cattle); may be males, females or
+    /// castrates; are likely to have a range of different ages; and females may be pregnant and/or
+    /// lactating. The set of classes of livestock can change over time as animals enter or leave the
+    /// system, are mated, give birth or are weaned. Further, animals that are otherwise similar may be
+    /// placed in different paddocks, where their growth rates may differ.
+    /// 
+    /// ![Alt Text](StockGroupsExample.png)
+    /// 
+    /// **Figure [FigureNumber]:**  The list of animal groups at a particular time during a hypothetical simulation containing a
+    /// STOCK module. Group 1 is distinct from the others because it has a different genotype and sex. Groups 2
+    /// and 3 are distinct because they are in different age classes (yearling vs mature). Groups 2 and 4 are
+    /// distinct because they are in different reproductive states (pregnant vs lactating). Note how the unweaned
+    /// lambs are associated with their mothers.
+    /// 
+    /// In the STOCK component, this complexity is handled by representing the set of animals in a
+    /// simulated system as a list of animal groups (Figure 2.1). The members of each animal group
+    /// have the same genotype and age class, but may have a range of ages (for example, an animal
+    /// group containing mature animals may include four-year-old, five-year-old and six-year-old
+    /// stock). The members of each animal group also have the same stage of pregnancy and/or
+    /// lactation; the same number of suckling offspring; and occupy the same paddock.
+    /// 
+    /// The set of animal groups changes as animals enter and leave the simulation, and as
+    /// physiological events such as maturation, mating, birth or weaning take place. Animal groups
+    /// that become sufficiently similar are merged into a single group. The state of any unweaned
+    /// lambs or calves is stored alongside that of their mothers; at weaning, the male and female
+    /// weaners are transferred into two new animal groups within the main list.
+    /// 
+    /// In addition to the biological state variables that describe the animals, each animal group has
+    /// four attributes that are of particular interest when writing management scripts.
+    /// 
+    /// **Index**
+    /// 
+    /// Each animal group has a unique, internally-assigned integer index, starting at 1.
+    /// Because the set of groups present in a component instance is dynamic, the index
+    /// number associated with a particular group of animals can – and usually does – change
+    /// over time. This dynamic numbering scheme has consequences for the way that animals
+    /// of a particular kind must be located when writing management scripts.
+    /// 
+    /// **Paddock**
+    /// 
+    /// Each animal group is also assigned a paddock. The forage and supplementary feed
+    /// available to a group of animals are determined by the paddock it occupies. Paddocks are
+    /// referred to by name in the STOCK component:
+    /// 
+    /// * To set the paddock occupied by an animal group, use the **move** event.
+    /// * To determine the paddock occupied by an animal group, use the **paddock** variable.
+    /// 
+    /// It is the user’s responsibility to ensure that paddock names correspond to PADDOCK
+    /// modules or other sources of necessary driving variables.
+    /// 
+    /// **Tag Value**
+    /// 
+    /// Each animal group also has a user-assigned tag value that takes an integer value. Tag
+    /// values have two purposes:
+    /// 
+    /// * They can be used to manage distinct groups of animals in a common fashion. For
+    /// example, all lactating ewes might be assigned the same tag value, and then all
+    /// animals with this tag value might undergo the same supplementary feeding regime.
+    /// * If tag values are assigned sequentially (starting at 1), they can be used to generate
+    /// summary variables. For example, **weight_tag[1]** gives the average live weight
+    /// of all animals in groups with a tag value of 1.
+    /// 
+    /// Note that animal groups with different tag values are never merged, even if they are
+    /// otherwise similar.
+    /// 
+    /// * To set the tag value of an animal group, use the **tag** method.
+    /// * To determine the tag value of an animal group, use the **tag_no** variable.
+    /// 
+    /// **Priority Score**
+    /// 
+    /// Finally, each animal group has a user-assigned *priority score* that takes an integer value.
+    /// Priority scores are used to control the operation of the **draft** method. Positive values for
+    /// the priority score denote the order in which animals should be moved to the available
+    /// paddocks (with a score of 1 denoting that the animals should be moved to the highest-
+    /// quality pasture). Animal groups with the same priority score are placed in the same
+    /// paddock by a draft event. Animals with a zero or negative priority score are not
+    /// drafted.
+    /// 
+    /// * To set the priority score of an animal group, use the prioritise event.
+    /// * To determine the priority score of an animal group, use the priority variable. 
+    /// 
+    /// ## Merging groups of similar animals
+    /// Animals are similar if all these are the same:
+    /// 
+    /// * Occupy the same paddock
+    /// * Reproduction status (Castrated, Male, Empty, Early Preg,  Late Preg)
+    /// * Number of foetuses
+    /// * Mating cycle (day in the mating cycle)
+    /// * Days to mating (Days left in joining period)
+    /// * Pregnancy (Days since conception)
+    /// * Lactation status (Days since parturition (if lactating)) – within 7 days
+    /// * Has (not) young
+    /// * If young exist, their reproductive status must be the same
+    /// * Implants (hormone implants)
+    /// * Mean age (if the animals are less than one year old )
+    /// 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.StockView")]
@@ -4210,6 +4313,27 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Buys animals (i.e. they enter the simulation). The purchased animals will form a new animal group that is placed at the end of the list of animal groups.
+        /// </summary>
+        /// <param name="genotype">The genotype</param>
+        /// <param name="number">The number of animals</param>
+        /// <param name="sex">The sex of animals</param>
+        /// <param name="age">The age of animals</param>
+        /// <param name="weight">The weight of animals (kg)</param>
+        /// <param name="fleeceWeight">The fleece weight of animals (kg)</param>
+        public void Buy(string genotype, double number, string sex, double age, double weight, double fleeceWeight)
+        {
+            StockBuy stock = new StockBuy();
+            stock.Genotype = genotype;
+            stock.Number = Convert.ToInt32(number);
+            stock.Sex = sex;
+            stock.Age = age;
+            stock.Weight = weight;
+            stock.FleeceWt = fleeceWeight;
+            this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
+        }
+
+        /// <summary>
         /// Assigns animals to paddocks. The process is as follows:
         /// (a) Animal groups with a positive priority score are removed from their current paddock; groups with a zero or negative priority score remain in their current paddock.
         /// (b) The set of unoccupied non-excluded paddocks is identified and then ranked according the quality of the pasture(the best paddock is that which would give highest DM intake).
@@ -4231,11 +4355,11 @@ namespace Models.GrazPlan
         /// <param name="group">Index number of the animal group from which animals are to be removed. 
         /// A value of zero denotes that each animal group should be processed in turn until the nominated number of animals has been removed.</param>
         /// <param name="number">Number of animals to sell.</param>
-        public void Sell(int group, int number)
+        public void Sell(int group, double number)
         {
             StockSell selling = new StockSell();
             selling.Group = group;
-            selling.Number = number;
+            selling.Number = Convert.ToInt32(number);
             this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
