@@ -562,6 +562,7 @@
     <EmbeddedResource Include="Resources\Jigsaw.jpg" />
     <EmbeddedResource Include="Resources\RunoffRainfallCurves.png" />
     <EmbeddedResource Include="Resources\RunoffResponseCurve.png" />
+    <EmbeddedResource Include="Resources\StockGroupsExample.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
