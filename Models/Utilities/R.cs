@@ -169,7 +169,6 @@ namespace Utility
         /// <summary>
         /// Gets the directory that the latest version of R is installed to.
         /// </summary>
-        /// <param name="registryKey"></param>
         private string GetRInstallDirectoryFromRegistry()
         {
             string registryKey = @"SOFTWARE\R-core";

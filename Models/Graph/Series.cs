@@ -293,15 +293,17 @@ namespace Models.Graph
         private List<SimulationZone> BuildListFromModel(IModel model)
         {
             List<SimulationZone> simulationZonePairs = new List<Models.Graph.Series.SimulationZone>();
-            if (model is Simulation || typeof(Zone).IsAssignableFrom(model.GetType()))
-                simulationZonePairs.AddRange(BuildListFromSimulation(model));
-            else if (model is Experiment)
-                simulationZonePairs.AddRange(BuildListFromExperiment(model));
+            //if (model is Simulation || typeof(Zone).IsAssignableFrom(model.GetType()))
+            //    simulationZonePairs.AddRange(BuildListFromSimulation(model));
+            //else if (model is Experiment)
+            //    simulationZonePairs.AddRange(BuildListFromExperiment(model));
+            if (model is ISimulationGenerator)
+                simulationZonePairs.AddRange(BuildListFromSimulationGenerator(model as ISimulationGenerator));
             else
             {
                 foreach (IModel child in model.Children)
                 {
-                    if (child is Simulation || child is Experiment || child is Folder)
+                    if (child is Simulation || child is ISimulationGenerator || child is Folder)
                         simulationZonePairs.AddRange(BuildListFromModel(child));
                 }
             }
@@ -325,37 +327,58 @@ namespace Models.Graph
             return simulationZonePairs;
         }
 
+        ///// <summary>
+        ///// Build a list of simulation / zone pairs from the specified experiment
+        ///// </summary>
+        ///// <param name="model"></param>
+        ///// <returns></returns>
+        //private List<SimulationZone> BuildListFromExperiment(IModel model)
+        //{
+        //    List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
+        //    foreach (SimulationZone simulationZonePair in BuildListFromSimulation((model as Experiment).BaseSimulation))
+        //    {
+        //        foreach (List<FactorValue> combination in (model as Experiment).AllCombinations())
+        //        {
+        //            string zoneName = simulationZonePair.factorNameValues.Find(factorValue => factorValue.Key == "Zone").Value;
+        //            SimulationZone simulationZone = new SimulationZone(null, zoneName);
+        //            string simulationName = model.Name;
+        //            foreach (FactorValue value in combination)
+        //            {
+        //                simulationName += value.Name;
+        //                string factorName = value.Factor.Name;
+        //                if (value.Factor.Parent is Factor)
+        //                {
+        //                    factorName = value.Factor.Parent.Name;
+        //                }
+        //                string factorValue = value.Name.Replace(factorName, "");
+        //                simulationZone.factorNameValues.Add(new KeyValuePair<string, string>(factorName, factorValue));
+        //            }
+        //            simulationZone.factorNameValues.Add(new KeyValuePair<string, string>("Experiment", (model as Experiment).Name));
+        //            simulationZone.simulationNames.Add(simulationName);
+        //            simulationZonePairs.Add(simulationZone);
+        //        }
+        //    }
+        //    return simulationZonePairs;
+        //}
+
         /// <summary>
         /// Build a list of simulation / zone pairs from the specified experiment
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="simGenerator">Simulation generator</param>
         /// <returns></returns>
-        private List<SimulationZone> BuildListFromExperiment(IModel model)
+        private List<SimulationZone> BuildListFromSimulationGenerator(ISimulationGenerator simGenerator)
         {
             List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
-            foreach (SimulationZone simulationZonePair in BuildListFromSimulation((model as Experiment).BaseSimulation))
-            {
-                foreach (List<FactorValue> combination in (model as Experiment).AllCombinations())
-                {
-                    string zoneName = simulationZonePair.factorNameValues.Find(factorValue => factorValue.Key == "Zone").Value;
-                    SimulationZone simulationZone = new SimulationZone(null, zoneName);
-                    string simulationName = model.Name;
-                    foreach (FactorValue value in combination)
-                    {
-                        simulationName += value.Name;
-                        string factorName = value.Factor.Name;
-                        if (value.Factor.Parent is Factor)
-                        {
-                            factorName = value.Factor.Parent.Name;
-                        }
-                        string factorValue = value.Name.Replace(factorName, "");
-                        simulationZone.factorNameValues.Add(new KeyValuePair<string, string>(factorName, factorValue));
-                    }
-                    simulationZone.factorNameValues.Add(new KeyValuePair<string, string>("Experiment", (model as Experiment).Name));
-                    simulationZone.simulationNames.Add(simulationName);
-                    simulationZonePairs.Add(simulationZone);
-                }
-            }
+
+            // Get a list of simulation names from generator.
+            IEnumerable simulationNames = simGenerator.GetSimulationNames();
+
+            // Get a list of factor names from generator.
+            List<KeyValuePair<string,string>> factors = simGenerator.GetFactors();
+
+            //foreach (string simulationName in simulationNames)
+                simulationZonePairs.Add(new SimulationZone(null, factors));
+
             return simulationZonePairs;
         }
 
@@ -637,18 +660,22 @@ namespace Models.Graph
         /// <param name="storage">Storage service</param>
         private DataTable GetBaseData(IStorageReader storage, List<SimulationZone> simulationZones)
         {
-            // Get a list of all simulation names in all simulationZones.
-            List<string> simulationNames = new List<string>();
-            simulationZones.ForEach(sim => simulationNames.AddRange(sim.simulationNames));
-
             string filter = null;
-            foreach (string simulationName in simulationNames.Distinct())
+
+            if (storage.ColumnNames(TableName).Contains("SimulationName"))
             {
-                if (filter != null)
-                    filter += ",";
-                filter += "'" + simulationName + "'";
+                // Get a list of all simulation names in all simulationZones.
+                List<string> simulationNames = new List<string>();
+                simulationZones.ForEach(sim => simulationNames.AddRange(sim.simulationNames));
+
+                foreach (string simulationName in simulationNames.Distinct())
+                {
+                    if (filter != null)
+                        filter += ",";
+                    filter += "'" + simulationName + "'";
+                }
+                filter = "SimulationName in (" + filter + ")";
             }
-            filter = "SimulationName in (" + filter + ")";
             if (Filter != string.Empty)
                 filter = AddToFilter(filter, Filter);
 
@@ -695,6 +722,15 @@ namespace Models.Graph
                 factorNameValues.Add(new KeyValuePair<string, string>("Zone", zoneName));
             }
 
+            /// <summary>Constructor</summary>
+            /// <param name="simulationName"></param>
+            /// <param name="factors">Factors</param>
+            internal SimulationZone(string simulationName, List<KeyValuePair<string, string>> factors)
+            {
+                simulationNames.Add(simulationName);
+                factorNameValues.AddRange(factors);
+            }
+
             /// <summary>Add a simulation name if it doesn't already exist.</summary>
             /// <param name="simulationName"></param>
             internal void AddSimulationName(string simulationName)
@@ -710,25 +746,28 @@ namespace Models.Graph
             /// <param name="series">The parent series.</param>
             internal void CreateDataView(DataTable baseData, Series series)
             {
-                string filter = null;
-                foreach (string simulationName in simulationNames)
-                {
-                    if (filter != null)
-                        filter += ",";
-                    filter += "'" + simulationName + "'";
-                }
-                filter = "SimulationName in (" + filter + ")";
-                string zoneName = GetValueOf("Zone");
-                if (zoneName != "?")
-                    filter = AddToFilter(filter, "Zone='" + zoneName + "'");
-
                 data = new DataView(baseData);
-                try
+                if (baseData.Columns.Contains("SimulationName"))
                 {
-                    data.RowFilter = filter;
-                }
-                catch (Exception)
-                {
+                    string filter = null;
+                    foreach (string simulationName in simulationNames)
+                    {
+                        if (filter != null)
+                            filter += ",";
+                        filter += "'" + simulationName + "'";
+                    }
+                    filter = "SimulationName in (" + filter + ")";
+                    string zoneName = GetValueOf("Zone");
+                    if (zoneName != "?")
+                        filter = AddToFilter(filter, "Zone='" + zoneName + "'");
+
+                    try
+                    {
+                        data.RowFilter = filter;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
 

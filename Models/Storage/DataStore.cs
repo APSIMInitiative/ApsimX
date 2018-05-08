@@ -173,9 +173,9 @@
         }
 
         /// <summary>Simulation runs are about to begin.</summary>
-        [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null,
-                                IEnumerable<string> simulationNamesBeingRun = null)
+        [EventSubscribe("RunCommencing")]
+        private void OnRunCommencing(IEnumerable<string> knownSimulationNames = null,
+                                     IEnumerable<string> simulationNamesBeingRun = null)
         {
             stoppingWriteToDB = false;
             if (knownSimulationNames != null)
@@ -233,14 +233,18 @@
             bool hasToday = false;
 
             // Write SELECT clause
-            sql.Append("SELECT C.Name AS CheckpointName, C.ID AS CheckpointID, S.Name AS SimulationName,S.ID AS SimulationID");
             List<string> fieldList = null;
             if (fieldNames == null)
                 fieldList = table.Columns.Select(col => col.Name).ToList();
             else
-            {
                 fieldList = fieldNames.ToList();
-            }
+
+            bool hasSimulationName = fieldList.Contains("SimulationID");
+
+            sql.Append("SELECT C.Name AS CheckpointName, C.ID AS CheckpointID");
+            if (hasSimulationName)
+                sql.Append(", S.Name AS SimulationName,S.ID AS SimulationID");
+
             fieldList.Remove("CheckpointID");
             fieldList.Remove("SimulationName");
             fieldList.Remove("SimulationID");
@@ -259,17 +263,23 @@
             }
 
             // Write FROM clause
-            sql.Append(" FROM _Checkpoints C, _Simulations S, ");
-            sql.Append(tableName);
+            sql.Append(" FROM _Checkpoints C");
+            if (hasSimulationName)
+                sql.Append(", _Simulations S");
+            sql.Append(", " + tableName);
             sql.Append(" T ");
 
             // Write WHERE clause
-            sql.Append("WHERE CheckpointID = C.ID AND SimulationID = S.ID");
-            if (simulationName != null)
+            sql.Append("WHERE CheckpointID = C.ID");
+            if (hasSimulationName)
             {
-                sql.Append(" AND S.Name = '");
-                sql.Append(simulationName);
-                sql.Append('\'');
+                sql.Append(" AND SimulationID = S.ID");
+                if (simulationName != null)
+                {
+                    sql.Append(" AND S.Name = '");
+                    sql.Append(simulationName);
+                    sql.Append('\'');
+                }
             }
 
             // Write checkpoint name
@@ -286,9 +296,12 @@
             }
 
             // Write ORDER BY clause
-            sql.Append(" ORDER BY S.ID");
-            if (hasToday)
-                sql.Append(", T.[Clock.Today]");
+            if (hasSimulationName)
+            {
+                sql.Append(" ORDER BY S.ID");
+                if (hasToday)
+                    sql.Append(", T.[Clock.Today]");
+            }
 
             // Write LIMIT/OFFSET clause
             if (count > 0)

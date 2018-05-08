@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Utility;
 
     /// <summary>
     /// # [Name]
@@ -21,14 +22,25 @@
     [ValidParent(ParentType = typeof(Simulations))]
     public class Morris : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
-        /// <summary>A list of factors that we are to run</summary>
-        private List<List<FactorValue>> allCombinations = new List<List<FactorValue>>();
-
         /// <summary>The numebr of paths to run</summary>
         private int numPaths = 200;
 
+        /// <summary>A list of factors that we are to run</summary>
+        private List<List<FactorValue>> allCombinations = new List<List<FactorValue>>();
+
         /// <summary>List of parameters</summary>
-        public List<Parameter> parameters;
+        public List<Parameter> parameters { get; set; }
+
+        /// <summary>List of simulation names from last run</summary>
+        public List<string> simulationNames { get; set; }
+
+        /// <summary>Constructor</summary>
+        public Morris()
+        {
+            parameters = new List<Parameter>();
+            allCombinations = new List<List<FactorValue>>();
+            simulationNames = new List<string>();
+        }
 
         /// <summary>Return a table of user editable values</summary>
         public DataTable GetTable()
@@ -79,7 +91,7 @@
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun()
         {
             Initialise();
         }
@@ -87,11 +99,8 @@
         /// <summary>Gets the next job to run</summary>
         public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
-            if (allCombinations == null || allCombinations.Count == 0)
+            if (allCombinations.Count == 0)
                 return null;
-
-            if (serialisedBase == null)
-                Initialise();
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -140,19 +149,16 @@
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
-            List<string> names = new List<string>();
-            CalculateFactors();
-            //allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
-            foreach (List<FactorValue> combination in allCombinations)
-            {
-                string newSimulationName = Name;
+            return simulationNames;
+        }
 
-                foreach (FactorValue value in combination)
-                    newSimulationName += value.Name + value.Values[0];
-
-                names.Add(newSimulationName);
-            }
-            return names;
+        /// <summary>Gets a list of factors</summary>
+        public List<KeyValuePair<string, string>> GetFactors()
+        {
+            List<KeyValuePair<string, string>> factors = new List<KeyValuePair<string, string>>();
+            //foreach (Parameter param in parameters)
+            //    factors.Add(new KeyValuePair<string, string>("Variable", param.Name));
+            return factors;
         }
 
         /// <summary>
@@ -163,6 +169,7 @@
             parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
             serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
+            allCombinations.Clear();
             CalculateFactors();
         }
 
@@ -171,18 +178,35 @@
         /// </summary>
         private void CalculateFactors()
         {
-            allCombinations.Clear();
-
-            DataTable parameterValues = CalculateMorrisParameterValues();
-            foreach (DataRow parameterRow in parameterValues.Rows)
+            if (allCombinations.Count == 0)
             {
-                List<FactorValue> factors = new List<FactorValue>();
-                foreach (Parameter param in parameters)
+                DataTable parameterValues = CalculateMorrisParameterValues();
+                if (parameterValues == null || parameterValues.Rows.Count == 0)
+                    throw new Exception("The morris function in R returned null");
+
+                foreach (DataRow parameterRow in parameterValues.Rows)
                 {
-                    FactorValue f = new FactorValue(null, param.Name, param.Path, parameterRow[param.Name]);
-                    factors.Add(f);
+                    List<FactorValue> factors = new List<FactorValue>();
+                    foreach (Parameter param in parameters)
+                    {
+                        FactorValue f = new FactorValue(null, param.Name, param.Path, parameterRow[param.Name]);
+                        factors.Add(f);
+                    }
+
+                    allCombinations.Add(factors);
                 }
-                allCombinations.Add(factors);
+
+                // Work out simulation names;
+                simulationNames.Clear();
+                foreach (List<FactorValue> combination in allCombinations)
+                {
+                    string newSimulationName = Name;
+
+                    foreach (FactorValue value in combination)
+                        newSimulationName += value.Name + value.Values[0];
+
+                    simulationNames.Add(newSimulationName);
+                }
             }
         }
 
@@ -200,27 +224,10 @@
             script = script.Replace("%PARAMNAMES%", StringUtilities.Build(parameters.Select(p => p.Name), ",", "\"", "\""));
             script = script.Replace("%PARAMLOWERS%", StringUtilities.Build(parameters.Select(p => p.LowerBound), ","));
             script = script.Replace("%PARAMUPPERS%", StringUtilities.Build(parameters.Select(p => p.UpperBound), ","));
-            //return R.Run(script);
-
-            DataTable data = new DataTable();
-            data.Columns.Add("CONA", typeof(double));
-            data.Columns.Add("CN2", typeof(double));
-
-            DataRow row = data.NewRow();
-            row["CONA"] = 3.2;
-            row["CN2"] = 43.5;
-            data.Rows.Add(row);
-
-            row = data.NewRow();
-            row["CONA"] = 3.6;
-            row["CN2"] = 44.0;
-            data.Rows.Add(row);
-
-            row = data.NewRow();
-            row["CONA"] = 8.6;
-            row["CN2"] = 67.2;
-            data.Rows.Add(row);
-            return data;
+            string rFileName = Path.GetTempFileName();
+            File.WriteAllText(rFileName, script);
+            R r = new R();
+            return r.RunToTable(rFileName);
         }
 
         /// <summary>
@@ -299,14 +306,12 @@
             DataTable predictedData = dataStore.GetData("Report");
             if (predictedData != null)
             {
-                int expectedNumSimulations = numPaths * (parameters.Count + 1);
-                if (predictedData.Rows.Count != expectedNumSimulations)
-                    throw new Exception("Expected " + expectedNumSimulations + " rows of simulation output in the report table but found " + predictedData.Rows.Count + " instead");
-
                 DataTable elementalEffects = CreateElementalEffectsTable(predictedData);
+                dataStore.DeleteDataInTable(elementalEffects.TableName);
                 dataStore.WriteTable(elementalEffects);
 
                 DataTable muStarByPath = CreateMuStarByPath(elementalEffects);
+                dataStore.DeleteDataInTable(muStarByPath.TableName);
                 dataStore.WriteTable(muStarByPath);
             }
         }
@@ -320,7 +325,7 @@
             // Add all the necessary columns to our data table.
             DataTable eeTable = new DataTable();
             eeTable.TableName = "ElementalEffects";
-            eeTable.Columns.Add("string", typeof(int));
+            eeTable.Columns.Add("Variable", typeof(string));
             eeTable.Columns.Add("Path", typeof(int));
             foreach (DataColumn column in predictedData.Columns)
             {
@@ -328,35 +333,43 @@
                     eeTable.Columns.Add(column.ColumnName, typeof(double));
             }
 
-            for (int path = 1; path <= numPaths; path++)
+            int path = 1;
+            for (int rowIndex = 1; rowIndex < predictedData.Rows.Count; rowIndex++)
             {
                 for (int parameterIndex = 0; parameterIndex < parameters.Count; parameterIndex++)
                 {
-                    int rowIndex = (path - 1) * parameters.Count + 1;
                     DataRow newRow = eeTable.NewRow();
-                    newRow["Name"] = parameters[parameterIndex].Name;
+                    newRow["Variable"] = parameters[parameterIndex].Name;
                     newRow["Path"] = path;
                     foreach (DataColumn column in predictedData.Columns)
                     {
-                        double thisValue = Convert.ToDouble(predictedData.Rows[rowIndex]);
-                        double previousValue = Convert.ToDouble(predictedData.Rows[rowIndex-1]);
-                        newRow[column.ColumnName] = Math.Abs(thisValue - previousValue);
+                        if (column.DataType == typeof(double))
+                        {
+                            double thisValue = Convert.ToDouble(predictedData.Rows[rowIndex][column.ColumnName]);
+                            double previousValue = Convert.ToDouble(predictedData.Rows[rowIndex - 1][column.ColumnName]);
+                            newRow[column.ColumnName] = Math.Abs(thisValue - previousValue);
+                        }
                     }
                     eeTable.Rows.Add(newRow);
+
+                    rowIndex++;
                 }
+
+                path++;
             }
             return eeTable;
         }
 
         /// <summary>
-        /// Create a MuStar by path number table 
+        /// Create a MuStar by path number table - running mean mustar
         /// </summary>
         private DataTable CreateMuStarByPath(DataTable eeTable)
         {
             // Add all the necessary columns to our data table.
             DataTable muStarTable = new DataTable();
             muStarTable.TableName = "MuStar";
-            muStarTable.Columns.Add("string", typeof(int));
+            muStarTable.Columns.Add("Variable", typeof(string));
+            muStarTable.Columns.Add("Path", typeof(int));
             foreach (DataColumn column in eeTable.Columns)
             {
                 if (column.DataType == typeof(double))
@@ -366,23 +379,28 @@
                 }
             }
 
-            for (int parameterIndex = 0; parameterIndex < parameters.Count; parameterIndex++)
+            int numPathsFound = eeTable.Rows.Count / parameters.Count;
+            DataView eeView = new DataView(eeTable);
+            for (int path = 1; path <= numPathsFound; path++)
             {
-                DataRow newRow = muStarTable.NewRow();
-                newRow["Name"] = parameters[parameterIndex].Name;
-
-                List<double> values = new List<double>();
-                foreach (DataColumn column in eeTable.Columns)
+                for (int parameterIndex = 0; parameterIndex < parameters.Count; parameterIndex++)
                 {
-                    for (int path = 1; path <= numPaths; path++)
+                    DataRow newRow = muStarTable.NewRow();
+                    newRow["Variable"] = parameters[parameterIndex].Name;
+                    newRow["Path"] = path;
+
+                    eeView.RowFilter = "Path <= " + path + " and Variable = '" + parameters[parameterIndex].Name + "'";
+                    foreach (DataColumn column in eeTable.Columns)
                     {
-                        int rowIndex = (path - 1) * parameters.Count + 1;
-                        values.Add(Convert.ToDouble(eeTable.Rows[rowIndex]));
+                        if (column.DataType == typeof(double))
+                        {
+                            double[] values = DataTableUtilities.GetColumnAsDoubles(eeView, column.ColumnName);
+                            newRow[column.ColumnName + ".MuStar"] = MathUtilities.Average(values);
+                            newRow[column.ColumnName + ".SigmaStar"] = MathUtilities.StandardDeviation(values);
+                        }
                     }
-                    newRow[column.ColumnName + ".MuStar"] = MathUtilities.Average(values);
-                    newRow[column.ColumnName + ".SigmaStar"] = MathUtilities.StandardDeviation(values);
+                    muStarTable.Rows.Add(newRow);
                 }
-                muStarTable.Rows.Add(newRow);
             }
             return muStarTable;
         }

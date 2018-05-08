@@ -141,7 +141,7 @@ namespace Models.Core
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun()
         {
             hasRun = false;
         }
@@ -171,6 +171,16 @@ namespace Models.Core
             if (Parent is ISimulationGenerator)
                 return new string[0];
             return new string[] { Name };
+        }
+
+        /// <summary>Gets a list of factors</summary>
+        public List<KeyValuePair<string, string>> GetFactors()
+        {
+            List<KeyValuePair<string, string>> factors = new List<KeyValuePair<string, string>>();
+            factors.Add(new KeyValuePair<string, string>("Simulation", Name));
+            foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+                factors.Add(new KeyValuePair<string, string>("Zone", zone.Name)); 
+            return factors;
         }
 
         /// <summary>

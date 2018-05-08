@@ -33,7 +33,7 @@
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun()
         {
             Initialise();
         }
@@ -94,6 +94,7 @@
                 sim = NextSimulationToRun();
             }
         }
+        
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
@@ -109,6 +110,27 @@
                 names.Add(newSimulationName);
             }
             return names;
+        }
+
+        /// <summary>Gets a list of factors</summary>
+        public List<KeyValuePair<string, string>> GetFactors()
+        {
+            if (serialisedBase == null)
+                Initialise(true);
+
+            List<KeyValuePair<string, string>> factors = new List<KeyValuePair<string, string>>();
+
+            var combination = allCombinations[0];
+            foreach (FactorValue value in combination)
+            {
+                string factorName = value.Factor.Name;
+                if (value.Factor.Parent is Factor)
+                    factorName = value.Factor.Parent.Name;
+                string factorValue = value.Name.Replace(factorName, "");
+                factors.Add(new KeyValuePair<string, string>(factorName, factorValue));
+            }
+            factors.Add(new KeyValuePair<string, string>("Experiment", Name));
+            return factors;
         }
 
         /// <summary>
