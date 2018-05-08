@@ -1797,13 +1797,19 @@ namespace Models.AgPasture
         ////- Plant parts and state >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Holds info about state of leaves (DM and N).</summary>
-        internal PastureAboveGroundOrgan leaves;
+        [ChildLinkByName]
+        private PastureAboveGroundOrgan leaves;
 
         /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
-        internal PastureAboveGroundOrgan stems;
+        [ChildLinkByName]
+        private PastureAboveGroundOrgan stems;
 
+
+        // TODO: Currently STOCK will graze all stolons that it can see even though
+        // some will be on the ground and shouldn't be accessible to the animals.
         /// <summary>Holds info about state of stolons (DM and N).</summary>
-        internal PastureAboveGroundOrgan stolons;
+        [ChildLinkByName]
+        private PastureAboveGroundOrgan stolons;
 
         /// <summary>Holds a list of root organs, one for each zone where roots are growing.</summary>
         internal List<PastureBelowGroundOrgan> rootZones;
@@ -3623,9 +3629,6 @@ namespace Models.AgPasture
             nLayers = mySoil.Thickness.Length;
 
             // set up the organs (use 4 or 2 tissues, the last is dead)
-            leaves = new PastureAboveGroundOrgan(this, 4);
-            stems = new PastureAboveGroundOrgan(this, 4);
-            stolons = new PastureAboveGroundOrgan(this, 4);
             rootZones = new List<PastureBelowGroundOrgan>();
             plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, 
                                                          myWaterAvailableMethod, myNitrogenAvailableMethod,
@@ -4785,9 +4788,9 @@ namespace Models.AgPasture
             // Update N remobilised in each organ
             if (senescedNRemobilised > Epsilon)
             {
-                leaves.Tissue[leaves.TissueCount - 1].DoRemobiliseN(fracRemobilised);
-                stems.Tissue[stems.TissueCount - 1].DoRemobiliseN(fracRemobilised);
-                stolons.Tissue[stolons.TissueCount - 1].DoRemobiliseN(fracRemobilised);
+                leaves.Tissue[leaves.Tissue.Length- 1].DoRemobiliseN(fracRemobilised);
+                stems.Tissue[stems.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
+                stolons.Tissue[stolons.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
                 plantZoneRoots.Tissue[plantZoneRoots.TissueCount - 1].DoRemobiliseN(fracRemobilised);
             }
         }
