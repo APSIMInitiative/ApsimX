@@ -25,27 +25,33 @@ namespace Models.AgPasture
         [ChildLink]
         public GenericTissue[] Tissue;
 
-        /// <summary>Return live biomass. Used by STOCK</summary>
+        /// <summary>Return live biomass. Used by STOCK. g/m^2</summary>
         public Biomass Live
         {
             get
             {
+                double availPropn = 1.0;
+                if (this.Name == "Stolons")
+                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
                 Biomass live = new Biomass();
-                live.StructuralWt = DMLive;
-                live.StructuralN = NLive;
+                live.StructuralWt = DMLive * 0.10 * availPropn;
+                live.StructuralN = NLive * 0.10 * availPropn;
                 live.DMDOfStructural = DigestibilityLive;
                 return live;
             }
         }
 
-        /// <summary>Return dead biomass. Used by STOCK</summary>
+        /// <summary>Return dead biomass. Used by STOCK. g/m^2</summary>
         public Biomass Dead
         {
             get
             {
+                double availPropn = 1.0;
+                if (this.Name == "Stolons")
+                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
                 Biomass dead = new Biomass();
-                dead.StructuralWt = DMDead;
-                dead.StructuralN = NDead;
+                dead.StructuralWt = DMDead * 0.10 * availPropn;
+                dead.StructuralN = NDead * 0.10 * availPropn;
                 dead.DMDOfStructural = DigestibilityDead;
                 return dead;
             }
@@ -63,17 +69,17 @@ namespace Models.AgPasture
         {
             // TODO: Work out what to do with biomassToRemove.FractionLiveToResidue
             // Live removal
-            for (int t = 0; t < Tissue.Length-1; t++)
+            for (int t = 0; t < Tissue.Length - 1; t++)
             {
-                Tissue[t].DM *= biomassToRemove.FractionLiveToRemove;
-                Tissue[t].Namount *= biomassToRemove.FractionLiveToRemove;
-                Tissue[t].NRemobilisable *= biomassToRemove.FractionLiveToRemove;
+                Tissue[t].DM *= (1.0 - biomassToRemove.FractionLiveToRemove);
+                Tissue[t].Namount *= (1.0 - biomassToRemove.FractionLiveToRemove);
+                Tissue[t].NRemobilisable *= (1.0 - biomassToRemove.FractionLiveToRemove);
             }
 
             // Dead removal
-            Tissue[Tissue.Length - 1].DM *= biomassToRemove.FractionDeadToRemove;
-            Tissue[Tissue.Length - 1].Namount *= biomassToRemove.FractionDeadToRemove;
-            Tissue[Tissue.Length - 1].NRemobilisable *= biomassToRemove.FractionDeadToRemove;
+            Tissue[Tissue.Length - 1].DM *= (1.0 - biomassToRemove.FractionDeadToRemove);
+            Tissue[Tissue.Length - 1].Namount *= (1.0 - biomassToRemove.FractionDeadToRemove);
+            Tissue[Tissue.Length - 1].NRemobilisable *= (1.0 - biomassToRemove.FractionDeadToRemove);
         }
 
         #region Organ specific characteristics  ----------------------------------------------------------------------------

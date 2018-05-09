@@ -4220,7 +4220,7 @@ namespace Models.GrazPlan
                     // if there is forage removed from this forage object/crop/pasture
                     if (forageProvider.somethingRemoved())
                     {
-                        this.RemoveHerbageFromPlant(forageProvider);
+                        forageProvider.RemoveHerbageFromPlant();
                     }
                 }
                 else
@@ -4252,42 +4252,6 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>
-        /// The herbage is removed from the plant/agpasture
-        /// </summary>
-        /// <param name="forageProvider">The provider component</param>
-        private void RemoveHerbageFromPlant(ForageProvider forageProvider)
-        {
-            string chemType = string.Empty;
-            int forageIdx = 0;
-
-            ForageInfo forage = forageProvider.ForageByIndex(forageIdx);
-            while (forage != null)
-            {
-                double area = forage.InPaddock.fArea;
-                GrazType.TGrazingOutputs removed = forage.RemovalKG;
-                
-                // total the amount removed kg/ha
-                double totalRemoved = 0.0;
-                for (int i = 0; i < removed.Herbage.Length; i++)
-                    totalRemoved += removed.Herbage[i];
-                double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead);
-
-                foreach (IRemovableBiomass organ in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IRemovableBiomass)))
-                {
-                    if (organ.IsAboveGround)
-                    {
-                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = propnRemoved;
-                        removal.FractionLiveToRemove = propnRemoved;
-                        organ.RemoveBiomass("Graze", removal);
-                    }
-                }
-
-                forageIdx++;
-                forage = forageProvider.ForageByIndex(forageIdx);
-            }
-        }
 
         // ............................................................................
         // Management methods                                                         
