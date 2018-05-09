@@ -147,6 +147,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// The total live herbage used as input in TGrazingInputs
+        /// Units: the same as the forage object
         /// </summary>
         public double TotalLive
         {
@@ -158,6 +159,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// The total dead herbage used as input in TGrazingInputs
+        /// Units: the same as the forage object
         /// </summary>
         public double TotalDead
         {
@@ -897,7 +899,6 @@ namespace Models.GrazPlan
         bool FUseCohorts;                       // uses new cohorts array type
         private ForageList FForages;
         private string FForageHostName;         // host crop, pasture component name
-        private Object FForageObj;              // the forage object (crop, pasture)
         private int FHostID;                    // plant/pasture comp
         private string FPaddockOwnerName;       // owning paddock FQN
         private int FSetterID;                  // setting property ID (or published event ID)
@@ -944,7 +945,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The crop, pasture component
         /// </summary>
-        public Object ForageObj { get { return FForageObj; } set { FForageObj = value; } }
+        public Object ForageObj { get; set; }
 
         /// <summary>
         /// Update the forage data for this crop/agpasture object
@@ -1082,6 +1083,42 @@ namespace Models.GrazPlan
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// The herbage is removed from the plant/agpasture
+        /// </summary>
+        public void RemoveHerbageFromPlant()
+        {
+            string chemType = string.Empty;
+            int forageIdx = 0;
+
+            ForageInfo forage = this.ForageByIndex(forageIdx);
+            while (forage != null)
+            {
+                double area = forage.InPaddock.fArea;
+                GrazType.TGrazingOutputs removed = forage.RemovalKG;
+
+                // total the amount removed kg/ha
+                double totalRemoved = 0.0;
+                for (int i = 0; i < removed.Herbage.Length; i++)
+                    totalRemoved += removed.Herbage[i];
+                double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead);
+
+                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                {
+                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    {
+                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
+                        removal.FractionDeadToRemove = propnRemoved;
+                        removal.FractionLiveToRemove = propnRemoved;
+                        organ.RemoveBiomass("Graze", removal);
+                    }
+                }
+
+                forageIdx++;
+                forage = this.ForageByIndex(forageIdx);
+            }
         }
 
         /// <summary>
