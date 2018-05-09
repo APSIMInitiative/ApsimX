@@ -1,357 +1,366 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// -----------------------------------------------------------------------
+// <copyright file="stock_vars.cs" company="CSIRO">
+// CSIRO Agriculture & Food
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Livestock metabolizable energy partition
     /// </summary>
-    public class TEnergyUse
+    [Serializable]
+    public class EnergyUse
     {
         /// <summary>
-        /// basal maintenance requirement       
+        /// Gets or sets the basal maintenance requirement       
         /// MJ
         /// </summary>
-        public double maint_base { get; set; }
+        public double MaintBase { get; set; }
+
         /// <summary>
-        /// E(graze) + E(move)                  
+        /// Gets or sets the E(graze) + E(move)                  
         /// MJ
         /// </summary>
-        public double maint_move_graze { get; set; }
+        public double MaintMoveGraze { get; set; }
+        
         /// <summary>
-        /// E(cold)         
+        /// Gets or sets the E(cold)         
         /// MJ
         /// </summary>
-        public double maint_cold { get; set; }
+        public double MaintCold { get; set; }
+        
         /// <summary>
-        /// ME(c)           
+        /// Gets or sets the ME(c)           
         /// MJ
         /// </summary>
-        public double conceptus { get; set; }
+        public double Conceptus { get; set; }
+        
         /// <summary>
-        /// ME(l) 
+        /// Gets or sets the ME(l) 
         /// MJ
         /// </summary>
-        public double lactation { get; set; }
+        public double Lactation { get; set; }
+        
         /// <summary>
-        /// ME(w) = NE(w) / k(w)           
+        /// Gets or sets the ME(w) = NE(w) / k(w)           
         /// MJ
         /// </summary>
-        public double fleece { get; set; }
+        public double Fleece { get; set; }
+        
         /// <summary>
-        /// ME(g)      
+        /// Gets or sets the ME(g)      
         /// MJ
         /// </summary>
-        public double gain { get; set; }
+        public double Gain { get; set; }
     } 
 
     /// <summary>
-    /// The stock genotype
+    /// The stock genotype. The initial values in the stock component.
     /// </summary>
-    public class TStockGeno
+    public class StockGeno
     {
         /// <summary>
-        /// 
+        /// Gets or sets the name of the genotype
         /// </summary>
-        public string name { get; set; }
+        public string Name { get; set; }
+
         /// <summary>
-        /// 
+        /// Gets or sets the mother breed
         /// </summary>
-        public string dam_breed { get; set; }
+        public string DamBreed { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the male parent
         /// </summary>
-        public string sire_breed { get; set; }
+        public string SireBreed { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the generation count
         /// </summary>
-        public int generation { get; set; }
+        public int Generation { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the standard Reference Weight kg
         /// </summary>
-        public double srw { get; set; }
+        public double SRW { get; set; }
+
         /// <summary>
-        /// 
+        /// Gets or sets the conception rates
         /// </summary>
-        public double[] conception;
+        public double[] Conception = new double[4];
+        
         /// <summary>
-        /// /y
+        /// Gets or sets the death rate /y
         /// </summary>
-        public double death_rate { get; set; }
+        public double DeathRate { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the reference fleece weight kg
         /// </summary>
-        public double ref_fleece_wt { get; set; }
+        public double RefFleeceWt { get; set; }
+        
         /// <summary>
-        /// um
+        /// Gets or sets the fibre diameter in um
         /// </summary>
-        public double max_fibre_diam { get; set; }
+        public double MaxFibreDiam { get; set; }
+        
         /// <summary>
-        /// kg/kg
+        /// Gets or sets the fleece yield kg/kg
         /// </summary>
-        public double fleece_yield { get; set; }
+        public double FleeceYield { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the peak milk production kg
         /// </summary>
-        public double peak_milk { get; set; }
+        public double PeakMilk { get; set; }
+        
         /// <summary>
-        /// /y
+        /// Gets or sets the weaner death rate /y
         /// </summary>
-        public double wnr_death_rate { get; set; }
+        public double WnrDeathRate { get; set; }
     }
 
     /// <summary>
     /// Parent class for the sheep and cattle init classes
     /// </summary>
-    public class TAnimalInit
+    public class AnimalInit
     {
         /// <summary>
-        /// 
+        /// Gets or sets the genotype name
         /// </summary>
-        public string genotype { get; set; }
+        public string Genotype { get; set; }
+
         /// <summary>
-        /// 
+        /// Gets or sets the count
         /// </summary>
-        public int number { get; set; }
+        public int Number { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the animal sex type
         /// </summary>
-        public string sex { get; set; }
+        public string Sex { get; set; }
+        
         /// <summary>
-        /// d
+        /// Gets or sets the in days
         /// </summary>
-        public double age { get; set; }
+        public double Age { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the weight in kg
         /// </summary>
-        public double weight { get; set; }
+        public double Weight { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the maximum previous weight kg
         /// </summary>
-        public double max_prev_wt { get; set; }
+        public double MaxPrevWt { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the mated to genotype
         /// </summary>
-        public string mated_to { get; set; }
+        public string MatedTo { get; set; }
+        
         /// <summary>
-        /// d
+        /// Gets or sets the number of days pregnant d
         /// </summary>
-        public int pregnant { get; set; }
+        public int Pregnant { get; set; }
+        
         /// <summary>
-        /// d
+        /// Gets or sets the days lactating d
         /// </summary>
-        public int lactating { get; set; }
+        public int Lactating { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the condition score at birth
         /// </summary>
-        public double birth_cs { get; set; }
+        public double BirthCS { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the occupied paddock name
         /// </summary>
-        public string paddock { get; set; }
+        public string Paddock { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the tag number
         /// </summary>
-        public int tag { get; set; }
+        public int Tag { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the priority number
         /// </summary>
-        public int priority { get; set; }
+        public int Priority { get; set; }
     }
 
     /// <summary>
     /// The sheep init type
     /// </summary>
-    public class TSheepInit : TAnimalInit
+    public class SheepInit : AnimalInit
     {
         /// <summary>
-        /// kg
+        /// Gets or sets the fleece weight in kg
         /// </summary>
-        public double fleece_wt { get; set; }
+        public double FleeceWt { get; set; }
+        
         /// <summary>
-        /// um
+        /// Gets or sets the fibre diameter in um
         /// </summary>
-        public double fibre_diam { get; set; }
+        public double FibreDiam { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the number of young
         /// </summary>
-        public int no_young { get; set; }
+        public int NumYoung { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the lamb weight kg
         /// </summary>
-        public double lamb_wt { get; set; }
+        public double LambWt { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the lamb fleece weight kg
         /// </summary>
-        public double lamb_fleece_wt { get; set; }
+        public double LambFleeceWt { get; set; }
     }
 
     /// <summary>
     /// The cattle init type
     /// </summary>
-    public class TCattleInit : TAnimalInit
+    public class CattleInit : AnimalInit
     {
         /// <summary>
-        /// 
+        /// Gets or sets the number of foetuses
         /// </summary>
-        public int no_foetuses { get; set; }
+        public int NumFoetuses { get; set; }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the number of suckling young
         /// </summary>
-        public int no_suckling { get; set; }
+        public int NumSuckling { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the calf weight in kg
         /// </summary>
-        public double calf_wt { get; set; }
-
+        public double CalfWt { get; set; }
     }
 
     /// <summary>
     /// The paddock init type
     /// </summary>
-    public class TPaddInit
+    public class PaddockInit
     {
         /// <summary>
-        /// 
+        /// Gets or sets the name of the paddock
         /// </summary>
-        public string name { get; set; }
+        public string Name { get; set; }
+        
         /// <summary>
-        /// ha
+        /// Gets or sets the paddock area in ha
         /// </summary>
-        public double area { get; set; }
+        public double Area { get; set; }
+        
         /// <summary>
-        /// deg
+        /// Gets or sets the paddock slope in deg
         /// </summary>
-        public double slope { get; set; }
+        public double Slope { get; set; }
+
         /// <summary>
-        /// 
+        /// Gets or sets the list of forages
         /// </summary>
-        public string[] forages;
+        public string[] Forages;
+        
         /// <summary>
-        /// dest for excret or faeces
+        /// Gets or sets the destination for excreta or faeces
         /// </summary>
-        public string excretion { get; set; }
+        public string Excretion { get; set; }
+        
         /// <summary>
-        /// dest for urine
+        /// Gets or sets the destination for urine
         /// </summary>
-        public string urine { get; set; }
+        public string Urine { get; set; }
     }
 
     /// <summary>
     /// Supplement eaten type
     /// </summary>
-    public class TSupplementEaten
+    [Serializable]
+    public class SupplementEaten
     {
         /// <summary>
-        /// Paddock name
+        /// Gets or sets the paddock name
         /// </summary>
-        public string paddock { get; set; }
+        public string Paddock { get; set; }
+        
         /// <summary>
-        /// kg
+        /// Gets or sets the supplement eaten in kg
         /// </summary>
-        public double eaten { get; set; }
+        public double Eaten { get; set; }
     }
 
     /// <summary>
     /// Dry matter pool
     /// </summary>
-    public class TDMPoolHead
+    [Serializable]
+    public class DMPoolHead
     {
         /// <summary>
-        /// kg/d
+        /// Gets or sets the dry matter pool weight in kg/d
         /// </summary>
-        public double weight { get; set; }
+        public double Weight { get; set; }
+        
         /// <summary>
-        /// kg/d
+        /// Gets or sets the dry matter pool N amount kg/d
         /// </summary>
-        public double n { get; set; }
+        public double N { get; set; }
+        
         /// <summary>
-        /// kg/d
+        /// Gets or sets the dry matter pool P amount kg/d
         /// </summary>
-        public double p { get; set; }
+        public double P { get; set; }
+        
         /// <summary>
-        /// mol/d
+        /// Gets or sets the dry matter pool S amount mol/d
         /// </summary>
-        public double s { get; set; }
+        public double S { get; set; }
+        
         /// <summary>
-        /// mol/d
+        /// Gets or sets the dry matter pool AshAlk amount mol/d
         /// </summary>
-        public double ash_alk { get; set; }
+        public double AshAlk { get; set; }
     }
 
     /// <summary>
     /// Inorganic faeces type
     /// </summary>
-    public class TInorgFaeces
+    [Serializable]
+    public class InorgFaeces
     {
         /// <summary>
-        /// kg/d
+        /// Gets or sets the N amount in kg/d
         /// </summary>
-        public double n { get; set; }
+        public double N { get; set; }
+        
         /// <summary>
-        /// kg/d
+        /// Gets or sets the P amount in kg/d
         /// </summary>
-        public double p { get; set; }
+        public double P { get; set; }
+        
         /// <summary>
-        /// mol/d
+        /// Gets or sets the S amount in mol/d
         /// </summary>
-        public double s { get; set; }
+        public double S { get; set; }
     }
-
-    /// <summary>
-    /// Forage available to the animal from a crop component
-    /// </summary>
-    public class TAvailableToAnimal
-    {
-        /// <summary>
-        /// e.g. seedling, established, senescing, dead, litter
-        /// </summary>
-        public string CohortID; 
-        /// <summary>
-        /// //e.g. leaf, stem, head
-        /// </summary>
-        public string Organ;    
-        /// <summary>
-        /// //e.g. DMD80-85, DMD75-80...
-        /// </summary>
-        public string AgeID;    
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Bottom;
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Top;
-        /// <summary>
-        /// e.g. "DDM"/"IDM"
-        /// </summary>
-        public string Chem;     
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Weight;
-        /// <summary>
-        /// 
-        /// </summary>
-        public double N;
-        /// <summary>
-        /// 
-        /// </summary>
-        public double P;
-        /// <summary>
-        /// 
-        /// </summary>
-        public double S;
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AshAlk;
-    }
-
+    
     /// <summary>
     /// Definitions of many property constants in the Stock component
     /// </summary>
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1303:ConstFieldNamesMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
     public static class StockProps
     {
 #pragma warning disable 1591 //missing xml comment
@@ -412,114 +421,113 @@ namespace Models.GrazPlan
         /// Convert to days
         /// </summary>
         public const double MONTH2DAY = 365.25 / 12;
-
         
         /// <summary>
         /// Copies the parameters into an array of genotype structures
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="aValue"></param>
-        public static void MakeGenotypesValue(TStockList Model, ref TStockGeno[] aValue)
+        /// <param name="model">The animal model</param>
+        /// <param name="genoValues">The genotypes returned</param>
+        public static void MakeGenotypesValue(StockList model, ref StockGeno[] genoValues)
         {
-            TAnimalParamSet Params;
-            string sDamBreed = "";
-            string sSireBreed = "";
-            int iGeneration = 0;
-            int Idx, Jdx;
+            TAnimalParamSet parameters;
+            string damBreed = string.Empty;
+            string sireBreed = string.Empty;
+            int generation = 0;
+            int idx, jdx;
 
-            Array.Resize(ref aValue, Model.iGenotypeCount());
-            for (Idx = 0; Idx <= Model.iGenotypeCount() - 1; Idx++)
+            Array.Resize(ref genoValues, model.GenotypeCount());
+            for (idx = 0; idx <= model.GenotypeCount() - 1; idx++)
             {
-                Params = Model.getGenotype(Idx);
+                parameters = model.GetGenotype(idx);
 
-                if (Params.iParentageCount() == 1)
+                if (parameters.iParentageCount() == 1)
                 {
-                    sDamBreed = Params.sParentageBreed(0);
-                    sSireBreed = sDamBreed;
-                    iGeneration = 0;
+                    damBreed = parameters.sParentageBreed(0);
+                    sireBreed = damBreed;
+                    generation = 0;
                 }
-                else if ((Params.iParentageCount() == 2) && (Params.fParentagePropn(0) > 0))
+                else if ((parameters.iParentageCount() == 2) && (parameters.fParentagePropn(0) > 0))
                 {
-                    sDamBreed = Params.sParentageBreed(0);
-                    sSireBreed = Params.sParentageBreed(1);
-                    iGeneration = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(Params.fParentagePropn(0)) / Math.Log(0.5))));    //TODO: may need checking
+                    damBreed = parameters.sParentageBreed(0);
+                    sireBreed = parameters.sParentageBreed(1);
+                    generation = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(parameters.fParentagePropn(0)) / Math.Log(0.5))));    // TODO: may need checking
                 }
-                else if (Params.iParentageCount() == 2)
+                else if (parameters.iParentageCount() == 2)
                 {
-                    sSireBreed = Params.sParentageBreed(1);
-                    sDamBreed = sSireBreed;
-                    iGeneration = 0;
+                    sireBreed = parameters.sParentageBreed(1);
+                    damBreed = sireBreed;
+                    generation = 0;
                 }
                 else
                 {
-                    sDamBreed = Params.sParentageBreed(0);
-                    sSireBreed = Params.sParentageBreed(1);
-                    iGeneration = 0;
+                    damBreed = parameters.sParentageBreed(0);
+                    sireBreed = parameters.sParentageBreed(1);
+                    generation = 0;
                 }
 
-                aValue[Idx].name = Params.sName;
-                aValue[Idx].dam_breed = sDamBreed;
-                aValue[Idx].sire_breed = sSireBreed;
-                aValue[Idx].generation = iGeneration;
+                genoValues[idx].Name = parameters.sName;
+                genoValues[idx].DamBreed = damBreed;
+                genoValues[idx].SireBreed = sireBreed;
+                genoValues[idx].Generation = generation;
 
-                aValue[Idx].srw = Params.BreedSRW;
-                aValue[Idx].death_rate = Params.AnnualDeaths(false);
-                aValue[Idx].wnr_death_rate = Params.AnnualDeaths(true);
-                aValue[Idx].ref_fleece_wt = Params.PotentialGFW;
-                aValue[Idx].max_fibre_diam = Params.MaxMicrons;
-                aValue[Idx].fleece_yield = Params.FleeceYield;
-                aValue[Idx].peak_milk = Params.PotMilkYield;
+                genoValues[idx].SRW = parameters.BreedSRW;
+                genoValues[idx].DeathRate = parameters.AnnualDeaths(false);
+                genoValues[idx].WnrDeathRate = parameters.AnnualDeaths(true);
+                genoValues[idx].RefFleeceWt = parameters.PotentialGFW;
+                genoValues[idx].MaxFibreDiam = parameters.MaxMicrons;
+                genoValues[idx].FleeceYield = parameters.FleeceYield;
+                genoValues[idx].PeakMilk = parameters.PotMilkYield;
 
-                if (Params.Animal == GrazType.AnimalType.Sheep)
-                    Array.Resize(ref aValue[Idx].conception, 3);
+                if (parameters.Animal == GrazType.AnimalType.Sheep)
+                    Array.Resize(ref genoValues[idx].Conception, 3);
                 else
-                    Array.Resize(ref aValue[Idx].conception, 2);
-                for (Jdx = 0; Jdx < aValue[Idx].conception.Length; Jdx++)
-                    aValue[Idx].conception[Jdx] = Params.Conceptions[Jdx];
+                    Array.Resize(ref genoValues[idx].Conception, 2);
+                for (jdx = 0; jdx < genoValues[idx].Conception.Length; jdx++)
+                    genoValues[idx].Conception[jdx] = parameters.Conceptions[jdx];
             }
         }
 
         /// <summary>
-        /// 
+        /// Fill a sheep init value
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="Animal"></param>
-        /// <param name="aValue"></param>
-        public static void MakeSheepValue(TStockList Model, GrazType.AnimalType Animal, ref TSheepInit[] aValue)
+        /// <param name="model">The animal model</param>
+        /// <param name="animal">The animal type</param>
+        /// <param name="initValue">The sheep data</param>
+        public static void MakeSheepValue(StockList model, GrazType.AnimalType animal, ref SheepInit[] initValue)
         {
-            TAnimalGroup aGroup;
-            int iCount;
-            int Idx, Jdx;
+            TAnimalGroup animalGroup;
+            int count;
+            int idx, jdx;
 
-            iCount = 0;
-            for (Idx = 1; Idx <= Model.Count(); Idx++)
-                if (Model.At(Idx).Genotype.Animal == Animal)
-                    iCount++;
-            Array.Resize(ref aValue, iCount);
+            count = 0;
+            for (idx = 1; idx <= model.Count(); idx++)
+                if (model.At(idx).Genotype.Animal == animal)
+                    count++;
+            Array.Resize(ref initValue, count);
 
-            Jdx = 0;
-            for (Idx = 1; Idx <= Model.Count(); Idx++)
+            jdx = 0;
+            for (idx = 1; idx <= model.Count(); idx++)
             {
-                if (Model.At(Idx).Genotype.Animal == Animal)
+                if (model.At(idx).Genotype.Animal == animal)
                 {
-                    aGroup = Model.At(Idx);
+                    animalGroup = model.At(idx);
 
-                    aValue[Jdx] = new TSheepInit();
+                    initValue[jdx] = new SheepInit();
 
-                    aValue[Jdx].genotype = aGroup.Genotype.sName;
-                    aValue[Jdx].number = aGroup.NoAnimals;
-                    aValue[Jdx].sex = Model.SexString(Idx, false);
-                    aValue[Jdx].age = aGroup.AgeDays;
-                    aValue[Jdx].weight = aGroup.LiveWeight;
-                    aValue[Jdx].max_prev_wt = aGroup.MaxPrevWeight;
-                    aValue[Jdx].pregnant = aGroup.Pregnancy;
-                    aValue[Jdx].lactating = aGroup.Lactation;
+                    initValue[jdx].Genotype = animalGroup.Genotype.sName;
+                    initValue[jdx].Number = animalGroup.NoAnimals;
+                    initValue[jdx].Sex = model.SexString(idx, false);
+                    initValue[jdx].Age = animalGroup.AgeDays;
+                    initValue[jdx].Weight = animalGroup.LiveWeight;
+                    initValue[jdx].MaxPrevWt = animalGroup.MaxPrevWeight;
+                    initValue[jdx].Pregnant = animalGroup.Pregnancy;
+                    initValue[jdx].Lactating = animalGroup.Lactation;
 
-                    if (Animal == GrazType.AnimalType.Sheep)
+                    if (animal == GrazType.AnimalType.Sheep)
                     {
-                        aValue[Jdx].fleece_wt = aGroup.FleeceCutWeight;
-                        aValue[Jdx].fibre_diam = aGroup.FibreDiam;
-                        aValue[Jdx].no_young = Math.Max(aGroup.NoFoetuses, aGroup.NoOffspring);
+                        initValue[jdx].FleeceWt = animalGroup.FleeceCutWeight;
+                        initValue[jdx].FibreDiam = animalGroup.FibreDiam;
+                        initValue[jdx].NumYoung = Math.Max(animalGroup.NoFoetuses, animalGroup.NoOffspring);
                     }
                     /*else if (Animal == GrazType.AnimalType.Cattle)
                     {
@@ -527,73 +535,73 @@ namespace Models.GrazPlan
                         aValue[Jdx].no_suckling = aGroup.NoOffspring;
                     }*/
 
-                    if (aGroup.Lactation > 0)
-                        aValue[Jdx].birth_cs = aGroup.BirthCondition;
+                    if (animalGroup.Lactation > 0)
+                        initValue[jdx].BirthCS = animalGroup.BirthCondition;
 
-                    if ((aGroup.Pregnancy > 0) || (aGroup.Young != null))
+                    if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
                     {
-                        if (aGroup.MatedTo != null)
-                            aValue[Jdx].mated_to = aGroup.MatedTo.sName;
+                        if (animalGroup.MatedTo != null)
+                            initValue[jdx].MatedTo = animalGroup.MatedTo.sName;
                         else
-                            aValue[Jdx].mated_to = "";
+                            initValue[jdx].MatedTo = string.Empty;
                     }
                     else
-                        aValue[Jdx].mated_to = "";
+                        initValue[jdx].MatedTo = string.Empty;
 
-                    if (aGroup.Young != null)
+                    if (animalGroup.Young != null)
                     {
-                        if (Animal == GrazType.AnimalType.Sheep)
+                        if (animal == GrazType.AnimalType.Sheep)
                         {
-                            aValue[Jdx].lamb_wt = aGroup.Young.LiveWeight;
-                            aValue[Jdx].lamb_fleece_wt = aGroup.Young.FleeceCutWeight;
+                            initValue[jdx].LambWt = animalGroup.Young.LiveWeight;
+                            initValue[jdx].LambFleeceWt = animalGroup.Young.FleeceCutWeight;
                         }
                         /*else if (Animal == GrazType.AnimalType.Cattle)
                             aValue[Jdx].calf_wt = aGroup.Young.LiveWeight;*/
 
-                        aValue[Jdx].paddock = Model.getInPadd(Idx);
-                        aValue[Jdx].tag = Model.getTag(Idx);
-                        aValue[Jdx].priority = Model.getPriority(Idx);
+                        initValue[jdx].Paddock = model.GetInPadd(idx);
+                        initValue[jdx].Tag = model.GetTag(idx);
+                        initValue[jdx].Priority = model.GetPriority(idx);
                     }
                 }
-                Jdx++;
+                jdx++;
             } // next animal
         }
 
         /// <summary>
-        /// 
+        /// Fill a cattle init value
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="Animal"></param>
-        /// <param name="aValue"></param>
-        public static void MakeCattleValue(TStockList Model, GrazType.AnimalType Animal, ref TCattleInit[] aValue)
+        /// <param name="model">The animal model</param>
+        /// <param name="animal">The animal type</param>
+        /// <param name="initValue">The cattle init value</param>
+        public static void MakeCattleValue(StockList model, GrazType.AnimalType animal, ref CattleInit[] initValue)
         {
-            TAnimalGroup aGroup;
-            int iCount;
-            int Idx, Jdx;
+            TAnimalGroup animalGroup;
+            int count;
+            int idx, jdx;
 
-            iCount = 0;
-            for (Idx = 1; Idx <= Model.Count(); Idx++)
-                if (Model.At(Idx).Genotype.Animal == Animal)
-                    iCount++;
-            Array.Resize(ref aValue, iCount);
+            count = 0;
+            for (idx = 1; idx <= model.Count(); idx++)
+                if (model.At(idx).Genotype.Animal == animal)
+                    count++;
+            Array.Resize(ref initValue, count);
 
-            Jdx = 0;
-            for (Idx = 1; Idx <= Model.Count(); Idx++)
+            jdx = 0;
+            for (idx = 1; idx <= model.Count(); idx++)
             {
-                if (Model.At(Idx).Genotype.Animal == Animal)
+                if (model.At(idx).Genotype.Animal == animal)
                 {
-                    aGroup = Model.At(Idx);
+                    animalGroup = model.At(idx);
 
-                    aValue[Jdx] = new TCattleInit();
+                    initValue[jdx] = new CattleInit();
 
-                    aValue[Jdx].genotype = aGroup.Genotype.sName;
-                    aValue[Jdx].number = aGroup.NoAnimals;
-                    aValue[Jdx].sex = Model.SexString(Idx, false);
-                    aValue[Jdx].age = aGroup.AgeDays;
-                    aValue[Jdx].weight = aGroup.LiveWeight;
-                    aValue[Jdx].max_prev_wt = aGroup.MaxPrevWeight;
-                    aValue[Jdx].pregnant = aGroup.Pregnancy;
-                    aValue[Jdx].lactating = aGroup.Lactation;
+                    initValue[jdx].Genotype = animalGroup.Genotype.sName;
+                    initValue[jdx].Number = animalGroup.NoAnimals;
+                    initValue[jdx].Sex = model.SexString(idx, false);
+                    initValue[jdx].Age = animalGroup.AgeDays;
+                    initValue[jdx].Weight = animalGroup.LiveWeight;
+                    initValue[jdx].MaxPrevWt = animalGroup.MaxPrevWeight;
+                    initValue[jdx].Pregnant = animalGroup.Pregnancy;
+                    initValue[jdx].Lactating = animalGroup.Lactation;
 
                     /*if (Animal == GrazType.AnimalType.Sheep)
                     {
@@ -602,26 +610,26 @@ namespace Models.GrazPlan
                         aValue[Jdx].no_young = Math.Max(aGroup.NoFoetuses, aGroup.NoOffspring);
                     }
                     else*/
-                    if (Animal == GrazType.AnimalType.Cattle)
+                    if (animal == GrazType.AnimalType.Cattle)
                     {
-                        aValue[Jdx].no_foetuses = aGroup.NoFoetuses;
-                        aValue[Jdx].no_suckling = aGroup.NoOffspring;
+                        initValue[jdx].NumFoetuses = animalGroup.NoFoetuses;
+                        initValue[jdx].NumSuckling = animalGroup.NoOffspring;
                     }
 
-                    if (aGroup.Lactation > 0)
-                        aValue[Jdx].birth_cs = aGroup.BirthCondition;
+                    if (animalGroup.Lactation > 0)
+                        initValue[jdx].BirthCS = animalGroup.BirthCondition;
 
-                    if ((aGroup.Pregnancy > 0) || (aGroup.Young != null))
+                    if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
                     {
-                        if (aGroup.MatedTo != null)
-                            aValue[Jdx].mated_to = aGroup.MatedTo.sName;
+                        if (animalGroup.MatedTo != null)
+                            initValue[jdx].MatedTo = animalGroup.MatedTo.sName;
                         else
-                            aValue[Jdx].mated_to = "";
+                            initValue[jdx].MatedTo = string.Empty;
                     }
                     else
-                        aValue[Jdx].mated_to = "";
+                        initValue[jdx].MatedTo = string.Empty;
 
-                    if (aGroup.Young != null)
+                    if (animalGroup.Young != null)
                     {
                         /*if (Animal == GrazType.AnimalType.Sheep)
                         {
@@ -629,55 +637,55 @@ namespace Models.GrazPlan
                             aValue[Jdx].lamb_fleece_wt = aGroup.Young.FleeceCutWeight;
                         }
                         else*/
-                        if (Animal == GrazType.AnimalType.Cattle)
-                            aValue[Jdx].calf_wt = aGroup.Young.LiveWeight;
+                        if (animal == GrazType.AnimalType.Cattle)
+                            initValue[jdx].CalfWt = animalGroup.Young.LiveWeight;
 
-                        aValue[Jdx].paddock = Model.getInPadd(Idx);
-                        aValue[Jdx].tag = Model.getTag(Idx);
-                        aValue[Jdx].priority = Model.getPriority(Idx);
+                        initValue[jdx].Paddock = model.GetInPadd(idx);
+                        initValue[jdx].Tag = model.GetTag(idx);
+                        initValue[jdx].Priority = model.GetPriority(idx);
                     }
                 }
-                Jdx++;
+                jdx++;
             } // next animal
         }
 
         /// <summary>
-        /// 
+        /// Fill the paddock init list
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="aValue"></param>
-        public static void MakePaddockList(TStockList Model, ref TPaddInit[] aValue)
+        /// <param name="model">The stock model</param>
+        /// <param name="initValue">The init value</param>
+        public static void MakePaddockList(StockList model, ref PaddockInit[] initValue)
         {
-            TPaddockInfo aPadd;
-            int Idx, Jdx;
+            PaddockInfo paddock;
+            int idx, jdx;
 
-            Array.Resize(ref aValue, Model.Paddocks.Count());
+            Array.Resize(ref initValue, model.Paddocks.Count());
 
-            for (Idx = 0; Idx < aValue.Length; Idx++)
+            for (idx = 0; idx < initValue.Length; idx++)
             {
-                aPadd = Model.Paddocks.byIndex(Idx);
-                aValue[Idx] = new TPaddInit();
-                aValue[Idx].name = aPadd.sName;                                       // "name"                                
-                aValue[Idx].area = aPadd.fArea;                                       // "area"                                
-                aValue[Idx].slope = aPadd.Slope;                                       // "slope"                               
-                Array.Resize(ref aValue[Idx].forages, aPadd.Forages.Count());
-                for (Jdx = 0; Jdx < aPadd.Forages.Count(); Jdx++)
-                    aValue[Idx].forages[Jdx] = aPadd.Forages.byIndex(Jdx).sName;
-                aValue[Idx].excretion = aPadd.sExcretionDest;                              // "excretion"                           
+                paddock = model.Paddocks.byIndex(idx);
+                initValue[idx] = new PaddockInit();
+                initValue[idx].Name = paddock.sName;                                       // "name"                                
+                initValue[idx].Area = paddock.fArea;                                       // "area"                                
+                initValue[idx].Slope = paddock.Slope;                                       // "slope"                               
+                Array.Resize(ref initValue[idx].Forages, paddock.Forages.Count());
+                for (jdx = 0; jdx < paddock.Forages.Count(); jdx++)
+                    initValue[idx].Forages[jdx] = paddock.Forages.byIndex(jdx).sName;
+                initValue[idx].Excretion = paddock.sExcretionDest;                              // "excretion"                           
             }
         }
 
         /// <summary>
         /// Rank the paddocks
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="aValue"></param>
-        public static void MakePaddockRank(TStockList Model, ref string[] aValue)
+        /// <param name="model">The animal model</param>
+        /// <param name="initValue">The paddock ranks</param>
+        public static void MakePaddockRank(StockList model, ref string[] initValue)
         {
-            List<string> sList = new List<string>();
+            List<string> rankingList = new List<string>();
 
-            Model.rankPaddocks(sList);
-            aValue = sList.ToArray();
+            model.RankPaddocks(rankingList);
+            initValue = rankingList.ToArray();
             /*Array.Resize(ref aValue, sList.Count);
             for (int Idx = 0; Idx < aValue.Length; Idx++)
                 aValue[Idx] = sList[Idx];*/
@@ -692,376 +700,409 @@ namespace Models.GrazPlan
             /// Both males and females
             /// </summary>
             eBoth,
+
             /// <summary>
             /// Female animals
             /// </summary>
             eFemale,
+            
             /// <summary>
             /// Male animals
             /// </summary>
             eMale,
+            
             /// <summary>
             /// Deaths of non suckling animals
             /// </summary>
             eDeaths
-        };
+        }
 
         /// <summary>
         /// Populate the numbers array for the type of output required
         /// </summary>
-        /// <param name="Model">The Stock list model</param>
+        /// <param name="model">The Stock list model</param>
         /// <param name="code">The count type</param>
-        /// <param name="bUseYoung">Report for young animals</param>
-        /// <param name="bUseAll">Combined value</param>
-        /// <param name="bUseTag">Use tag groups</param>
+        /// <param name="useYoung">Report for young animals</param>
+        /// <param name="useAll">Combined value</param>
+        /// <param name="useTag">Use tag groups</param>
         /// <param name="numbers">The populated array of numbers</param>
-        /// <returns></returns>
-        public static bool PopulateNumberValue(TStockList Model, CountType code, bool bUseYoung, bool bUseAll, bool bUseTag, ref int[] numbers)
+        /// <returns>True if the code type is valid</returns>
+        public static bool PopulateNumberValue(StockList model, CountType code, bool useYoung, bool useAll, bool useTag, ref int[] numbers)
         {
-            int iNoPasses;
-            TAnimalGroup aGroup;
-            int iValue;
-            int iTotal;
-            int iPass, Idx;
+            int numPasses;
+            TAnimalGroup animalGroup;
+            int value;
+            int total;
+            int p, idx;
 
-            bool Result = true;
+            bool result = true;
             Array.Clear(numbers, 0, numbers.Length);
 
-            if (bUseTag)
-                iNoPasses = numbers.Length;
+            if (useTag)
+                numPasses = numbers.Length;
             else
-                iNoPasses = 1;
+                numPasses = 1;
 
-            for (iPass = 1; iPass <= iNoPasses; iPass++)
+            for (p = 1; p <= numPasses; p++)
             {
-                iTotal = 0;
+                total = 0;
 
-                for (Idx = 1; Idx <= Model.Count(); Idx++)
-                    if (!bUseTag || (Model.getTag(Idx) == iPass))
+                for (idx = 1; idx <= model.Count(); idx++)
+                    if (!useTag || (model.GetTag(idx) == p))
                     {
-                        if (!bUseYoung)
-                            aGroup = Model.At(Idx);
+                        if (!useYoung)
+                            animalGroup = model.At(idx);
                         else
-                            aGroup = Model.At(Idx).Young;
+                            animalGroup = model.At(idx).Young;
 
-                        iValue = 0;
-                        if (aGroup != null)
+                        value = 0;
+                        if (animalGroup != null)
                         {
                             switch (code)
                             {
                                 case CountType.eBoth:
-                                    iValue = aGroup.NoAnimals;
+                                    value = animalGroup.NoAnimals;
                                     break;
                                 case CountType.eFemale:
-                                    iValue = aGroup.FemaleNo;
+                                    value = animalGroup.FemaleNo;
                                     break;
                                 case CountType.eMale:
-                                    iValue = aGroup.MaleNo;
+                                    value = animalGroup.MaleNo;
                                     break;
                                 case CountType.eDeaths:
-                                    iValue = aGroup.Deaths;
+                                    value = animalGroup.Deaths;
                                     break;
                                 default:
-                                    Result = false;
+                                    result = false;
                                     break;
                             }
                         }
-                        if (!bUseTag && !bUseAll)
-                            numbers[Idx - 1] = iValue;
+                        if (!useTag && !useAll)
+                            numbers[idx - 1] = value;
                         else
-                            iTotal = iTotal + iValue;
+                            total = total + value;
                     } // _ loop over animal groups 
 
-                if (bUseAll)
-                    numbers[0] = iTotal;
-                else if (bUseTag)
-                    numbers[iPass - 1] = iTotal;
-            } //_ loop over passes _
-            return Result;
+                if (useAll)
+                    numbers[0] = total;
+                else if (useTag)
+                    numbers[p - 1] = total;
+            } // _ loop over passes _
+            return result;
         }
 
         /// <summary>
         /// Fill the double[] with values from the model.
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="varCode"></param>
-        /// <param name="bUseYoung"></param>
-        /// <param name="bUseAll"></param>
-        /// <param name="bUseTag"></param>
-        /// <param name="aValue"></param>
-        /// <returns></returns>
-        public static bool PopulateRealValue(TStockList Model, int varCode, bool bUseYoung, bool bUseAll, bool bUseTag, ref double[] aValue)
+        /// <param name="model">The animal model</param>
+        /// <param name="varCode">The variable code</param>
+        /// <param name="useYoung">For young animals</param>
+        /// <param name="useAll">For all groups</param>
+        /// <param name="useTag">Use the tag number</param>
+        /// <param name="arrayValues">The returned double array</param>
+        /// <returns>True if the varCode is valid</returns>
+        public static bool PopulateRealValue(StockList model, int varCode, bool useYoung, bool useAll, bool useTag, ref double[] arrayValues)
         {
-            int iNoPasses;
-            TAnimalGroup aGroup;
-            double dValue;
-            double dTotal;
-            int iDenom;
-            int iPass, Idx;
+            int numPasses;
+            TAnimalGroup animalGroup;
+            double value;
+            double total;
+            int denom;
+            int passIdx, idx;
 
-            bool Result = true;
-            Array.Clear(aValue, 0, aValue.Length);
+            bool result = true;
+            Array.Clear(arrayValues, 0, arrayValues.Length);
 
-            if (bUseTag)
-                iNoPasses = aValue.Length;
+            if (useTag)
+                numPasses = arrayValues.Length;
             else
-                iNoPasses = 1;
+                numPasses = 1;
 
-            for (iPass = 1; iPass <= iNoPasses; iPass++)
+            for (passIdx = 1; passIdx <= numPasses; passIdx++)
             {
-                dTotal = 0.0;
-                iDenom = 0;
+                total = 0.0;
+                denom = 0;
 
-                for (Idx = 1; Idx <= Model.Count(); Idx++)
+                for (idx = 1; idx <= model.Count(); idx++)
                 {
-                    if (!bUseTag || (Model.getTag(Idx) == iPass))
+                    if (!useTag || (model.GetTag(idx) == passIdx))
                     {
-                        if (!bUseYoung)
-                            aGroup = Model.At(Idx);
+                        if (!useYoung)
+                            animalGroup = model.At(idx);
                         else
-                            aGroup = Model.At(Idx).Young;
+                            animalGroup = model.At(idx).Young;
 
-                        dValue = 0.0;
-                        if (aGroup != null)
+                        value = 0.0;
+                        if (animalGroup != null)
                         {
-                            int N = (int)GrazType.TOMElement.N;
-                            int P = (int)GrazType.TOMElement.P;
-                            int S = (int)GrazType.TOMElement.S;
+                            int n = (int)GrazType.TOMElement.n;
+                            int p = (int)GrazType.TOMElement.p;
+                            int s = (int)GrazType.TOMElement.s;
                             switch (varCode)
                             {
-                                case StockProps.prpAGE: dValue = aGroup.AgeDays; break;
-                                case StockProps.prpAGE_MONTHS: dValue = aGroup.AgeDays / MONTH2DAY; break;
-                                case StockProps.prpLIVE_WT: dValue = aGroup.LiveWeight; break;
-                                case StockProps.prpBASE_WT: dValue = aGroup.BaseWeight; break;
-                                case StockProps.prpCOND_SCORE: dValue = aGroup.fConditionScore(TAnimalParamSet.TCond_System.csSYSTEM1_5); break;
-                                case StockProps.prpMAX_PREV_WT: dValue = aGroup.MaxPrevWeight; break;
-                                case StockProps.prpFLEECE_WT: dValue = aGroup.FleeceCutWeight; break;
-                                case StockProps.prpCFLEECE_WT: dValue = aGroup.CleanFleeceWeight; break;
-                                case StockProps.prpFIBRE_DIAM: dValue = aGroup.FibreDiam; break;
-                                case StockProps.prpPREGNANT: dValue = aGroup.Pregnancy; break;
-                                case StockProps.prpLACTATING: dValue = aGroup.Lactation; break;
-                                case StockProps.prpNO_FOETUSES: dValue = aGroup.NoFoetuses; break;
-                                case StockProps.prpNO_SUCKLING: dValue = aGroup.NoOffspring; break;
-                                case StockProps.prpBIRTH_CS: dValue = aGroup.BirthCondition; break;
-                                case StockProps.prpDSE: dValue = aGroup.DrySheepEquivs; break;
-                                case StockProps.prpWT_CHANGE: dValue = aGroup.WeightChange; break;
-                                case StockProps.prpME_INTAKE: dValue = aGroup.AnimalState.ME_Intake.Total; break;
-                                case StockProps.prpCPI_INTAKE: dValue = aGroup.AnimalState.CP_Intake.Total; break;
-                                case StockProps.prpCFLEECE_GROWTH: dValue = aGroup.CleanFleeceGrowth; break;
-                                case StockProps.prpDAY_FIBRE_DIAM: dValue = aGroup.DayFibreDiam; break;
-                                case StockProps.prpMILK_WT: dValue = aGroup.MilkYield; break;
-                                case StockProps.prpMILK_ME: dValue = aGroup.MilkEnergy; break;
+                                case StockProps.prpAGE: value = animalGroup.AgeDays;
+                                    break;
+                                case StockProps.prpAGE_MONTHS: value = animalGroup.AgeDays / MONTH2DAY;
+                                    break;
+                                case StockProps.prpLIVE_WT: value = animalGroup.LiveWeight;
+                                    break;
+                                case StockProps.prpBASE_WT: value = animalGroup.BaseWeight;
+                                    break;
+                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(TAnimalParamSet.TCond_System.csSYSTEM1_5);
+                                    break;
+                                case StockProps.prpMAX_PREV_WT: value = animalGroup.MaxPrevWeight;
+                                    break;
+                                case StockProps.prpFLEECE_WT: value = animalGroup.FleeceCutWeight;
+                                    break;
+                                case StockProps.prpCFLEECE_WT: value = animalGroup.CleanFleeceWeight;
+                                    break;
+                                case StockProps.prpFIBRE_DIAM: value = animalGroup.FibreDiam;
+                                    break;
+                                case StockProps.prpPREGNANT: value = animalGroup.Pregnancy;
+                                    break;
+                                case StockProps.prpLACTATING: value = animalGroup.Lactation;
+                                    break;
+                                case StockProps.prpNO_FOETUSES: value = animalGroup.NoFoetuses;
+                                    break;
+                                case StockProps.prpNO_SUCKLING: value = animalGroup.NoOffspring;
+                                    break;
+                                case StockProps.prpBIRTH_CS: value = animalGroup.BirthCondition;
+                                    break;
+                                case StockProps.prpDSE: value = animalGroup.DrySheepEquivs;
+                                    break;
+                                case StockProps.prpWT_CHANGE: value = animalGroup.WeightChange;
+                                    break;
+                                case StockProps.prpME_INTAKE: value = animalGroup.AnimalState.ME_Intake.Total;
+                                    break;
+                                case StockProps.prpCPI_INTAKE: value = animalGroup.AnimalState.CP_Intake.Total;
+                                    break;
+                                case StockProps.prpCFLEECE_GROWTH: value = animalGroup.CleanFleeceGrowth;
+                                    break;
+                                case StockProps.prpDAY_FIBRE_DIAM: value = animalGroup.DayFibreDiam;
+                                    break;
+                                case StockProps.prpMILK_WT: value = animalGroup.MilkYield;
+                                    break;
+                                case StockProps.prpMILK_ME: value = animalGroup.MilkEnergy;
+                                    break;
                                 case StockProps.prpRETAINED_N:
-                                    dValue = aGroup.AnimalState.CP_Intake.Total / GrazType.N2Protein - (aGroup.AnimalState.InOrgFaeces.Nu[N] + aGroup.AnimalState.OrgFaeces.Nu[N] + aGroup.AnimalState.Urine.Nu[N]);
+                                    value = (animalGroup.AnimalState.CP_Intake.Total / GrazType.N2Protein) - (animalGroup.AnimalState.InOrgFaeces.Nu[n] + animalGroup.AnimalState.OrgFaeces.Nu[n] + animalGroup.AnimalState.Urine.Nu[n]);
                                     break;
                                 case StockProps.prpRETAINED_P:
-                                    dValue = aGroup.AnimalState.Phos_Intake.Total - (aGroup.AnimalState.InOrgFaeces.Nu[P] + aGroup.AnimalState.OrgFaeces.Nu[P] + aGroup.AnimalState.Urine.Nu[P]);
+                                    value = animalGroup.AnimalState.Phos_Intake.Total - (animalGroup.AnimalState.InOrgFaeces.Nu[p] + animalGroup.AnimalState.OrgFaeces.Nu[p] + animalGroup.AnimalState.Urine.Nu[p]);
                                     break;
                                 case StockProps.prpRETAINED_S:
-                                    dValue = aGroup.AnimalState.Sulf_Intake.Total - (aGroup.AnimalState.InOrgFaeces.Nu[S] + aGroup.AnimalState.OrgFaeces.Nu[S] + aGroup.AnimalState.Urine.Nu[S]);
+                                    value = animalGroup.AnimalState.Sulf_Intake.Total - (animalGroup.AnimalState.InOrgFaeces.Nu[s] + animalGroup.AnimalState.OrgFaeces.Nu[s] + animalGroup.AnimalState.Urine.Nu[s]);
                                     break;
-                                case StockProps.prpURINE_N: dValue = aGroup.AnimalState.Urine.Nu[N]; break;
-                                case StockProps.prpURINE_P: dValue = aGroup.AnimalState.Urine.Nu[P]; break;
-                                case StockProps.prpURINE_S: dValue = aGroup.AnimalState.Urine.Nu[S]; break;
+                                case StockProps.prpURINE_N: value = animalGroup.AnimalState.Urine.Nu[n];
+                                    break;
+                                case StockProps.prpURINE_P: value = animalGroup.AnimalState.Urine.Nu[p];
+                                    break;
+                                case StockProps.prpURINE_S: value = animalGroup.AnimalState.Urine.Nu[s];
+                                    break;
                                 case StockProps.prpCH4_OUTPUT:
-                                    dValue = 0.001 * aGroup.MethaneWeight;         // Convert g/d to kg/d                  
+                                    value = 0.001 * animalGroup.MethaneWeight;         // Convert g/d to kg/d                  
                                     break;
-                                case StockProps.prpRDPI: dValue = aGroup.AnimalState.RDP_Intake; break;
-                                case StockProps.prpRDPR: dValue = aGroup.AnimalState.RDP_Reqd; break;
-                                case StockProps.prpRDP_EFFECT: dValue = aGroup.AnimalState.RDP_IntakeEffect; break;
-                                case StockProps.prpINTAKE_MOD: dValue = aGroup.IntakeModifier; break;
-                                default: Result = false; break;
+                                case StockProps.prpRDPI: value = animalGroup.AnimalState.RDP_Intake;
+                                    break;
+                                case StockProps.prpRDPR: value = animalGroup.AnimalState.RDP_Reqd;
+                                    break;
+                                case StockProps.prpRDP_EFFECT: value = animalGroup.AnimalState.RDP_IntakeEffect;
+                                    break;
+                                case StockProps.prpINTAKE_MOD: value = animalGroup.IntakeModifier;
+                                    break;
+                                default: result = false;
+                                    break;
                             }
                         }
 
-                        if (!bUseTag && !bUseAll)
-                            aValue[Idx - 1] = dValue;
+                        if (!useTag && !useAll)
+                            arrayValues[idx - 1] = value;
                         else if (varCode == StockProps.prpDSE)                                     // Sum DSE's; take a weighted average of 
-                            dTotal = dTotal + dValue;                                              //   all other values                    
-                        else if (aGroup != null)
+                            total = total + value;                                                 // all other values                    
+                        else if (animalGroup != null)
                         {
-                            dTotal = dTotal + aGroup.NoAnimals * dValue;
-                            iDenom = iDenom + aGroup.NoAnimals;
+                            total = total + (animalGroup.NoAnimals * value);
+                            denom = denom + animalGroup.NoAnimals;
                         }
-                    } //_ loop over animal groups _
+                    } // _ loop over animal groups _
                 }
 
-                if ((varCode != StockProps.prpDSE) && (iDenom > 0))
-                    dTotal = dTotal / iDenom;
-                if (bUseAll)
-                    aValue[0] = dTotal;
-                else if (bUseTag)
-                    aValue[iPass - 1] = dTotal;
-            } //_ loop over passes _
-            return Result;
+                if ((varCode != StockProps.prpDSE) && (denom > 0))
+                    total = total / denom;
+                if (useAll)
+                    arrayValues[0] = total;
+                else if (useTag)
+                    arrayValues[passIdx - 1] = total;
+            } // _ loop over passes _
+            return result;
         }
 
         /// <summary>
         /// Convert the dry matter pool
         /// </summary>
-        /// <param name="Pool"></param>
-        /// <param name="aValue"></param>
-        /// <param name="bNPSVal"></param>
-        public static void DMPool2Value(GrazType.DM_Pool Pool, TDMPoolHead aValue, bool bNPSVal = false)
+        /// <param name="pool">The DM pool</param>
+        /// <param name="poolValue">The pool data</param>
+        /// <param name="onlyNPSVal">The NPS values only</param>
+        public static void DMPool2Value(GrazType.DM_Pool pool, ref DMPoolHead poolValue, bool onlyNPSVal = false)
         {
-            if (!bNPSVal)
+            if (!onlyNPSVal)
             {
-                aValue.weight = Pool.DM;                                          // Item[1] = "weight"   kg/head          
-                aValue.n = Pool.Nu[(int)GrazType.TOMElement.N];                   // Item[2] = "n"        kg/head          
-                aValue.p = Pool.Nu[(int)GrazType.TOMElement.P];                   // Item[3] = "p"        kg/head          
-                aValue.s = Pool.Nu[(int)GrazType.TOMElement.S];                   // Item[4] = "s"        kg/head          
-                aValue.ash_alk = Pool.AshAlk;                                     // Item[5] = "ash_alk"  mol/head         
+                poolValue.Weight = pool.DM;                                          // Item[1] = "weight"   kg/head          
+                poolValue.N = pool.Nu[(int)GrazType.TOMElement.n];                   // Item[2] = "n"        kg/head          
+                poolValue.P = pool.Nu[(int)GrazType.TOMElement.p];                   // Item[3] = "p"        kg/head          
+                poolValue.S = pool.Nu[(int)GrazType.TOMElement.s];                   // Item[4] = "s"        kg/head          
+                poolValue.AshAlk = pool.AshAlk;                                     // Item[5] = "ash_alk"  mol/head         
             }
             else
             {
-                aValue.n = Pool.Nu[(int)GrazType.TOMElement.N];                   // Item[1] = "n"        kg/head          
-                aValue.p = Pool.Nu[(int)GrazType.TOMElement.P];                   // Item[2] = "p"        kg/head          
-                aValue.s = Pool.Nu[(int)GrazType.TOMElement.S];                   // Item[3] = "s"        kg/head          
+                poolValue.N = pool.Nu[(int)GrazType.TOMElement.n];                   // Item[1] = "n"        kg/head          
+                poolValue.P = pool.Nu[(int)GrazType.TOMElement.p];                   // Item[2] = "p"        kg/head          
+                poolValue.S = pool.Nu[(int)GrazType.TOMElement.s];                   // Item[3] = "s"        kg/head          
             }
         }
 
         /// <summary>
         /// Populate the dry matter pool
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="iCode"></param>
-        /// <param name="bUseYoung"></param>
-        /// <param name="bUseAll"></param>
-        /// <param name="bUseTag"></param>
-        /// <param name="aValue"></param>
-        /// <returns></returns>
-        public static bool PopulateDMPoolValue(TStockList Model, int iCode, bool bUseYoung, bool bUseAll, bool bUseTag, ref TDMPoolHead[] aValue)
+        /// <param name="model">The stock model</param>
+        /// <param name="propCode">The property code</param>
+        /// <param name="useYoung">For young</param>
+        /// <param name="useAll">For all groups</param>
+        /// <param name="useTag">For tag number</param>
+        /// <param name="poolValues">The DM pool value returned</param>
+        /// <returns>True if the propCode is valid</returns>
+        public static bool PopulateDMPoolValue(StockList model, int propCode, bool useYoung, bool useAll, bool useTag, ref DMPoolHead[] poolValues)
         {
-            int iNoPasses;
-            TAnimalGroup aGroup;
-            GrazType.DM_Pool Pool = new GrazType.DM_Pool();
-            GrazType.DM_Pool TotalPool = new GrazType.DM_Pool();
-            int iDenom;
-            int iPass, Idx;
+            int numPasses;
+            TAnimalGroup animalGroup;
+            GrazType.DM_Pool pool = new GrazType.DM_Pool();
+            GrazType.DM_Pool totalPool = new GrazType.DM_Pool();
+            int denom;
+            int passIdx, idx;
 
-            bool Result = true;
-            for (int i = 0; i < aValue.Length; i++)
-                aValue[i] = new TDMPoolHead();
+            bool result = true;
+            for (int i = 0; i < poolValues.Length; i++)
+                poolValues[i] = new DMPoolHead();
 
-            if (bUseTag)
-                iNoPasses = aValue.Length;
+            if (useTag)
+                numPasses = poolValues.Length;
             else
-                iNoPasses = 1;
+                numPasses = 1;
 
-            for (iPass = 1; iPass <= iNoPasses; iPass++)
+            for (passIdx = 1; passIdx <= numPasses; passIdx++)
             {
-                GrazType.ZeroDMPool(ref TotalPool);
-                iDenom = 0;
+                GrazType.ZeroDMPool(ref totalPool);
+                denom = 0;
 
-                for (Idx = 1; Idx <= Model.Count(); Idx++)
+                for (idx = 1; idx <= model.Count(); idx++)
                 {
-                    if (!bUseTag || (Model.getTag(Idx) == iPass))
+                    if (!useTag || (model.GetTag(idx) == passIdx))
                     {
-                        if (!bUseYoung)
-                            aGroup = Model.At(Idx);
+                        if (!useYoung)
+                            animalGroup = model.At(idx);
                         else
-                            aGroup = Model.At(Idx).Young;
+                            animalGroup = model.At(idx).Young;
 
-                        GrazType.ZeroDMPool(ref Pool);
-                        if (aGroup != null)
+                        GrazType.ZeroDMPool(ref pool);
+                        if (animalGroup != null)
                         {
-                            int N = (int)GrazType.TOMElement.N;
-                            int P = (int)GrazType.TOMElement.P;
-                            int S = (int)GrazType.TOMElement.S;
+                            int n = (int)GrazType.TOMElement.n;
+                            int p = (int)GrazType.TOMElement.p;
+                            int s = (int)GrazType.TOMElement.s;
 
-                            switch (iCode)
+                            switch (propCode)
                             {
                                 case StockProps.prpINTAKE:
-                                    Pool.DM = aGroup.AnimalState.DM_Intake.Total;
-                                    Pool.Nu[N] = aGroup.AnimalState.CP_Intake.Total / GrazType.N2Protein;
-                                    Pool.Nu[P] = aGroup.AnimalState.Phos_Intake.Total;
-                                    Pool.Nu[S] = aGroup.AnimalState.Sulf_Intake.Total;
-                                    Pool.AshAlk = aGroup.AnimalState.PaddockIntake.AshAlkalinity * aGroup.AnimalState.PaddockIntake.Biomass
-                                                   + aGroup.AnimalState.SuppIntake.AshAlkalinity * aGroup.AnimalState.SuppIntake.Biomass;
+                                    pool.DM = animalGroup.AnimalState.DM_Intake.Total;
+                                    pool.Nu[n] = animalGroup.AnimalState.CP_Intake.Total / GrazType.N2Protein;
+                                    pool.Nu[p] = animalGroup.AnimalState.Phos_Intake.Total;
+                                    pool.Nu[s] = animalGroup.AnimalState.Sulf_Intake.Total;
+                                    pool.AshAlk = (animalGroup.AnimalState.PaddockIntake.AshAlkalinity * animalGroup.AnimalState.PaddockIntake.Biomass)
+                                                   + (animalGroup.AnimalState.SuppIntake.AshAlkalinity * animalGroup.AnimalState.SuppIntake.Biomass);
                                     break;
                                 case StockProps.prpINTAKE_PAST:
-                                    Pool.DM = aGroup.AnimalState.DM_Intake.Herbage;
-                                    Pool.Nu[N] = aGroup.AnimalState.CP_Intake.Herbage / GrazType.N2Protein;
-                                    Pool.Nu[P] = aGroup.AnimalState.Phos_Intake.Herbage;
-                                    Pool.Nu[S] = aGroup.AnimalState.Sulf_Intake.Herbage;
-                                    Pool.AshAlk = aGroup.AnimalState.PaddockIntake.AshAlkalinity * aGroup.AnimalState.PaddockIntake.Biomass;
+                                    pool.DM = animalGroup.AnimalState.DM_Intake.Herbage;
+                                    pool.Nu[n] = animalGroup.AnimalState.CP_Intake.Herbage / GrazType.N2Protein;
+                                    pool.Nu[p] = animalGroup.AnimalState.Phos_Intake.Herbage;
+                                    pool.Nu[s] = animalGroup.AnimalState.Sulf_Intake.Herbage;
+                                    pool.AshAlk = animalGroup.AnimalState.PaddockIntake.AshAlkalinity * animalGroup.AnimalState.PaddockIntake.Biomass;
                                     break;
                                 case StockProps.prpINTAKE_SUPP:
-                                    Pool.DM = aGroup.AnimalState.DM_Intake.Supp;
-                                    Pool.Nu[N] = aGroup.AnimalState.CP_Intake.Supp / GrazType.N2Protein;
-                                    Pool.Nu[P] = aGroup.AnimalState.Phos_Intake.Supp;
-                                    Pool.Nu[S] = aGroup.AnimalState.Sulf_Intake.Supp;
-                                    Pool.AshAlk = aGroup.AnimalState.SuppIntake.AshAlkalinity * aGroup.AnimalState.SuppIntake.Biomass;
+                                    pool.DM = animalGroup.AnimalState.DM_Intake.Supp;
+                                    pool.Nu[n] = animalGroup.AnimalState.CP_Intake.Supp / GrazType.N2Protein;
+                                    pool.Nu[p] = animalGroup.AnimalState.Phos_Intake.Supp;
+                                    pool.Nu[s] = animalGroup.AnimalState.Sulf_Intake.Supp;
+                                    pool.AshAlk = animalGroup.AnimalState.SuppIntake.AshAlkalinity * animalGroup.AnimalState.SuppIntake.Biomass;
                                     break;
                                 case StockProps.prpFAECES:
-                                    GrazType.AddDMPool(aGroup.AnimalState.OrgFaeces, Pool);
-                                    GrazType.AddDMPool(aGroup.AnimalState.InOrgFaeces, Pool);
+                                    GrazType.AddDMPool(animalGroup.AnimalState.OrgFaeces, pool);
+                                    GrazType.AddDMPool(animalGroup.AnimalState.InOrgFaeces, pool);
                                     break;
                                 case StockProps.prpINORG_FAECES:
-                                    GrazType.AddDMPool(aGroup.AnimalState.InOrgFaeces, Pool);
+                                    GrazType.AddDMPool(animalGroup.AnimalState.InOrgFaeces, pool);
                                     break;
                                 default:
-                                    Result = false;
+                                    result = false;
                                     break;
                             }
                         }
 
-                        if (!bUseTag && !bUseAll)
+                        if (!useTag && !useAll)
                         {
-                            DMPool2Value(Pool, aValue[Idx - 1], (iCode == StockProps.prpINORG_FAECES));
+                            DMPool2Value(pool, ref poolValues[idx - 1], (propCode == StockProps.prpINORG_FAECES));
                         }
-                        else if (aGroup != null)
+                        else if (animalGroup != null)
                         {
-                            GrazType.AddDMPool(GrazType.MultiplyDMPool(Pool, aGroup.NoAnimals), TotalPool);
-                            iDenom = iDenom + aGroup.NoAnimals;
+                            GrazType.AddDMPool(GrazType.MultiplyDMPool(pool, animalGroup.NoAnimals), totalPool);
+                            denom = denom + animalGroup.NoAnimals;
                         }
                     }
-                } //_ loop over animal groups _
+                } // _ loop over animal groups _
 
-                if (bUseTag || bUseAll)
+                if (useTag || useAll)
                 {
-                    if (iDenom > 0)
-                        TotalPool = GrazType.PoolFraction(TotalPool, 1.0 / iDenom);
-                    if (bUseAll)
+                    if (denom > 0)
+                        totalPool = GrazType.PoolFraction(totalPool, 1.0 / denom);
+                    if (useAll)
                     {
-                        DMPool2Value(TotalPool, aValue[0], (iCode == StockProps.prpINORG_FAECES));
+                        DMPool2Value(totalPool, ref poolValues[0], (propCode == StockProps.prpINORG_FAECES));
                     }
                     else
                     {
-                        DMPool2Value(TotalPool, aValue[iPass - 1], (iCode == StockProps.prpINORG_FAECES));
+                        DMPool2Value(totalPool, ref poolValues[passIdx - 1], (propCode == StockProps.prpINORG_FAECES));
                     }
                 }
             }
-            return Result;
+            return result;
         }
 
         /// <summary>
         /// Copy the supplement eaten into a TSupplementEaten[]
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="aValue"></param>
-        public static void MakeSuppEaten(TStockList Model, ref TSupplementEaten[] aValue)
+        /// <param name="model">The animal model</param>
+        /// <param name="suppValues">The supplement data returned</param>
+        public static void MakeSuppEaten(StockList model, ref SupplementEaten[] suppValues)
         {
-            int iCount;
-            int iPadd;
-            uint Idx;
+            int count;
+            int paddIdx;
+            uint idx;
 
-            iCount = 0;
-            for (iPadd = 0; iPadd <= Model.Paddocks.Count() - 1; iPadd++)
+            count = 0;
+            for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
             {
-                if (Model.Paddocks.byIndex(iPadd).SuppRemovalKG > 0.0)
-                    iCount++;
+                if (model.Paddocks.byIndex(paddIdx).SuppRemovalKG > 0.0)
+                    count++;
             }
             
-            aValue = new TSupplementEaten[iCount];
-            Idx = 0;
-            for (iPadd = 0; iPadd <= Model.Paddocks.Count() - 1; iPadd++)
-                if (Model.Paddocks.byIndex(iPadd).SuppRemovalKG > 0.0)
+            suppValues = new SupplementEaten[count];
+            idx = 0;
+            for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
+                if (model.Paddocks.byIndex(paddIdx).SuppRemovalKG > 0.0)
                 {
-                    aValue[Idx] = new TSupplementEaten();
-                    aValue[Idx].paddock = Model.Paddocks.byIndex(iPadd).sName;
-                    aValue[Idx].eaten = Model.Paddocks.byIndex(iPadd).SuppRemovalKG;
-                    Idx++;
+                    suppValues[idx] = new SupplementEaten();
+                    suppValues[idx].Paddock = model.Paddocks.byIndex(paddIdx).sName;
+                    suppValues[idx].Eaten = model.Paddocks.byIndex(paddIdx).SuppRemovalKG;
+                    idx++;
                 }
         }
 
@@ -1069,27 +1110,27 @@ namespace Models.GrazPlan
         /// Populate metabolizable energy use array 
         /// Note: these are an* ME* partition                                          
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="aValue"></param>
-        public static void MakeEnergyUse(TStockList Model, ref TEnergyUse[] aValue)
+        /// <param name="model">The animal model</param>
+        /// <param name="energyValues">The energy use returned</param>
+        public static void MakeEnergyUse(StockList model, ref EnergyUse[] energyValues)
         {
-            double dME_Metab;
-            double dME_MoveGraze;
-            int Idx;
+            double ME_Metab;
+            double ME_MoveGraze;
+            int idx;
 
-            for (Idx = 1; Idx <= Model.Count(); Idx++)
+            for (idx = 1; idx <= model.Count(); idx++)
             {
-                TAnimalGroup group = Model.At(Idx);
-                dME_Metab = group.AnimalState.EnergyUse.Metab / group.AnimalState.Efficiency.Maint;
-                dME_MoveGraze = group.AnimalState.EnergyUse.Maint - dME_Metab - group.AnimalState.EnergyUse.Cold;
+                TAnimalGroup group = model.At(idx);
+                ME_Metab = group.AnimalState.EnergyUse.Metab / group.AnimalState.Efficiency.Maint;
+                ME_MoveGraze = group.AnimalState.EnergyUse.Maint - ME_Metab - group.AnimalState.EnergyUse.Cold;
 
-                aValue[Idx].maint_base = dME_Metab;
-                aValue[Idx].maint_move_graze = dME_MoveGraze;  // Separating E(graze) and E(move) requires work in AnimGRP.pas...
-                aValue[Idx].maint_cold = group.AnimalState.EnergyUse.Cold;
-                aValue[Idx].conceptus = group.AnimalState.EnergyUse.Preg;
-                aValue[Idx].lactation = group.AnimalState.EnergyUse.Lact;
-                aValue[Idx].fleece  = group.AnimalState.EnergyUse.Wool / group.AnimalState.Efficiency.Gain;
-                aValue[Idx].gain = group.AnimalState.EnergyUse.Gain / group.AnimalState.Efficiency.Gain;
+                energyValues[idx].MaintBase = ME_Metab;
+                energyValues[idx].MaintMoveGraze = ME_MoveGraze;  // Separating E(graze) and E(move) requires work in AnimGRP.pas...
+                energyValues[idx].MaintCold = group.AnimalState.EnergyUse.Cold;
+                energyValues[idx].Conceptus = group.AnimalState.EnergyUse.Preg;
+                energyValues[idx].Lactation = group.AnimalState.EnergyUse.Lact;
+                energyValues[idx].Fleece  = group.AnimalState.EnergyUse.Wool / group.AnimalState.Efficiency.Gain;
+                energyValues[idx].Gain = group.AnimalState.EnergyUse.Gain / group.AnimalState.Efficiency.Gain;
             }
         }
     }

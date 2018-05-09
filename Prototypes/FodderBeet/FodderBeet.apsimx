@@ -5889,7 +5889,7 @@ namespace Models
           <Memo>
             <Name>Trial details</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This was an irrigation treatment trial conducted at Lincoln in 2012 ([Chakwizira_etal_2014b])
+            <MemoText><![CDATA[This was an irrigation treatment trial conducted at Lincoln in 2012 ([Chakwizira_etal_2014b]).
 
 
 
@@ -16646,7 +16646,7 @@ namespace Models
         <Memo>
           <Name>Trial details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[This is a nitrogen fertiliser by irrigation trial conducted at Ashley Dene in 2013. Details are fully described by [Chakwizira_etal_2016a]
+          <MemoText><![CDATA[This is a nitrogen fertiliser by irrigation trial conducted at Ashley Dene in 2013 ([Chakwizira_etal_2016a]).
 
 
 ]]></MemoText>
@@ -39397,7 +39397,7 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
                     <InitialRootDepth>2</InitialRootDepth>
-                    <CropToSow>Rivage</CropToSow>
+                    <CropToSow>Brigadier</CropToSow>
                     <SowingDate>2015-10-23</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
@@ -54502,11 +54502,6 @@ namespace Models
         </Experiment>
         <Experiment>
           <Name>FRNL_NCRS2015</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Currently doing double reporting - needs to be fixed.]]></MemoText>
-          </Memo>
           <Factors>
             <Name>Factors</Name>
             <Factor>
@@ -54592,9 +54587,7 @@ namespace Models
                 </Specifications>
               </Factor>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[FertiliserEvents]</string>
-              </Specifications>
+              <Specifications />
             </Factor>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Factors>
@@ -54603,7 +54596,7 @@ namespace Models
             <Clock>
               <Name>clock</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <StartDate>2015-09-08T00:00:00</StartDate>
+              <StartDate>2015-09-24T00:00:00</StartDate>
               <EndDate>2016-05-30T00:00:00</EndDate>
             </Clock>
             <Summary>
@@ -55458,9 +55451,7 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries>
-                <string>SepNit0</string>
-              </DisabledSeries>
+              <DisabledSeries />
             </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -55520,51 +55511,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
-          <Graph>
-            <Name>LAI</Name>
-            <Series>
-              <Name>Simulated</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FodderBeet.Leaf.LAI</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter />
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Left</Type>
-              <Title>LAI (m2/m2)</Title>
-              <Inverted>false</Inverted>
-              <Minimum>0</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>1</Interval>
-            </Axis>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <DisabledSimNames />
         </Experiment>

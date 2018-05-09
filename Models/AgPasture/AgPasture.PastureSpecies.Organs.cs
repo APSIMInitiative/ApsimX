@@ -13,26 +13,74 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
 using Models.Core;
+using Models.PMF.Interfaces;
 
 namespace Models.AgPasture
 {
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan
+    public class PastureAboveGroundOrgan : Model, IRemovableBiomass
     {
-        /// <summary>Constructor, initialise tissues.</summary>
-        /// <param name="numTissues">The number of tissues in the organ</param>
-        public PastureAboveGroundOrgan(int numTissues)
+        /// <summary>The collection of tissues for this organ.</summary>
+        [ChildLink]
+        public GenericTissue[] Tissue;
+
+        /// <summary>Return live biomass. Used by STOCK. g/m^2</summary>
+        public Biomass Live
         {
-            // Typically four tissues above ground, three live and one dead
-            TissueCount = numTissues;
-            Tissue = new GenericTissue[TissueCount];
-            for (int t = 0; t < TissueCount; t++)
-                Tissue[t] = new GenericTissue();
+            get
+            {
+                double availPropn = 1.0;
+                if (this.Name == "Stolons")
+                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
+                Biomass live = new Biomass();
+                live.StructuralWt = DMLive * 0.10 * availPropn;
+                live.StructuralN = NLive * 0.10 * availPropn;
+                live.DMDOfStructural = DigestibilityLive;
+                return live;
+            }
         }
 
-        /// <summary>The collection of tissues for this organ.</summary>
-        internal GenericTissue[] Tissue { get; set; }
+        /// <summary>Return dead biomass. Used by STOCK. g/m^2</summary>
+        public Biomass Dead
+        {
+            get
+            {
+                double availPropn = 1.0;
+                if (this.Name == "Stolons")
+                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
+                Biomass dead = new Biomass();
+                dead.StructuralWt = DMDead * 0.10 * availPropn;
+                dead.StructuralN = NDead * 0.10 * availPropn;
+                dead.DMDOfStructural = DigestibilityDead;
+                return dead;
+            }
+        }
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+
+        /// <summary>
+        /// Biomass removal logic for this organ.
+        /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            // TODO: Work out what to do with biomassToRemove.FractionLiveToResidue
+            // Live removal
+            for (int t = 0; t < Tissue.Length - 1; t++)
+            {
+                Tissue[t].DM *= (1.0 - biomassToRemove.FractionLiveToRemove);
+                Tissue[t].Namount *= (1.0 - biomassToRemove.FractionLiveToRemove);
+                Tissue[t].NRemobilisable *= (1.0 - biomassToRemove.FractionLiveToRemove);
+            }
+
+            // Dead removal
+            Tissue[Tissue.Length - 1].DM *= (1.0 - biomassToRemove.FractionDeadToRemove);
+            Tissue[Tissue.Length - 1].Namount *= (1.0 - biomassToRemove.FractionDeadToRemove);
+            Tissue[Tissue.Length - 1].NRemobilisable *= (1.0 - biomassToRemove.FractionDeadToRemove);
+        }
 
         #region Organ specific characteristics  ----------------------------------------------------------------------------
 
@@ -58,16 +106,13 @@ namespace Models.AgPasture
 
         #region Organ properties (summary of tissues)  ---------------------------------------------------------------------
 
-        /// <summary>The number of tissue pools in this organ.</summary>
-        internal int TissueCount;
-
         /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
         internal double DMTotal
         {
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount; t++)
+                for (int t = 0; t < Tissue.Length; t++)
                     result += Tissue[t].DM;
 
                 return result;
@@ -80,7 +125,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].DM;
 
                 return result;
@@ -91,7 +136,7 @@ namespace Models.AgPasture
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double DMDead
         {
-            get { return Tissue[TissueCount - 1].DM; }
+            get { return Tissue[Tissue.Length - 1].DM; }
         }
 
         /// <summary>The dry matter in the live (green) tissues available to harvest (kg/ha).</summary>
@@ -112,7 +157,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount; t++)
+                for (int t = 0; t < Tissue.Length; t++)
                     result += Tissue[t].Namount;
 
                 return result;
@@ -125,7 +170,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].Namount;
 
                 return result;
@@ -136,7 +181,7 @@ namespace Models.AgPasture
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double NDead
         {
-            get { return Tissue[TissueCount - 1].Namount; }
+            get { return Tissue[Tissue.Length - 1].Namount; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
@@ -160,13 +205,13 @@ namespace Models.AgPasture
         /// <summary>Gets the amount of senesced N available for remobilisation (kg/ha).</summary>
         internal double NSenescedRemobilisable
         {
-            get { return Tissue[TissueCount - 1].NRemobilisable; }
+            get { return Tissue[Tissue.Length - 1].NRemobilisable; }
         }
 
         /// <summary>Gets the amount of senesced N remobilised into new growth (kg/ha).</summary>
         internal double NSenescedRemobilised
         {
-            get { return Tissue[TissueCount - 1].NRemobilised; }
+            get { return Tissue[Tissue.Length - 1].NRemobilised; }
         }
 
         /// <summary>Gets the amount of luxury N available for remobilisation (kg/ha).</summary>
@@ -175,7 +220,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].NRemobilisable;
 
                 return result;
@@ -188,7 +233,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].NRemobilised;
 
                 return result;
@@ -210,25 +255,25 @@ namespace Models.AgPasture
         /// <summary>Gets the DM amount senescing from this organ (kg/ha).</summary>
         internal double DMSenesced
         {
-            get { return Tissue[TissueCount - 2].DMTransferedOut; }
+            get { return Tissue[Tissue.Length - 2].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N senescing from this organ (kg/ha).</summary>
         internal double NSenesced
         {
-            get { return Tissue[TissueCount - 2].NTransferedOut; }
+            get { return Tissue[Tissue.Length - 2].NTransferedOut; }
         }
 
         /// <summary>Gets the DM amount detached from this organ (kg/ha).</summary>
         internal double DMDetached
         {
-            get { return Tissue[TissueCount - 1].DMTransferedOut; }
+            get { return Tissue[Tissue.Length - 1].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N detached from this organ (kg/ha).</summary>
         internal double NDetached
         {
-            get { return Tissue[TissueCount - 1].NTransferedOut; }
+            get { return Tissue[Tissue.Length - 1].NTransferedOut; }
         }
 
         /// <summary>Gets the average digestibility of all biomass for this organ (kg/kg).</summary>
@@ -237,7 +282,7 @@ namespace Models.AgPasture
             get
             {
                 double digestableDM = 0.0;
-                for (int t = 0; t < TissueCount; t++)
+                for (int t = 0; t < Tissue.Length; t++)
                     digestableDM += Tissue[t].Digestibility * Tissue[t].DM;
 
                 return MathUtilities.Divide(digestableDM, DMTotal, 0.0);
@@ -250,7 +295,7 @@ namespace Models.AgPasture
             get
             {
                 double digestableDM = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     digestableDM += Tissue[t].Digestibility * Tissue[t].DM;
 
                 return MathUtilities.Divide(digestableDM, DMLive, 0.0);
@@ -261,7 +306,7 @@ namespace Models.AgPasture
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double DigestibilityDead
         {
-            get { return Tissue[TissueCount - 1].Digestibility; }
+            get { return Tissue[Tissue.Length - 1].Digestibility; }
         }
 
         #endregion ---------------------------------------------------------------------------------------------------------
@@ -271,7 +316,7 @@ namespace Models.AgPasture
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
         internal void DoResetOrgan()
         {
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].DM = 0.0;
                 Tissue[t].Namount = 0.0;
@@ -283,7 +328,7 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         internal void DoCleanTransferAmounts()
         {
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].DMTransferedIn = 0.0;
                 Tissue[t].DMTransferedOut = 0.0;
@@ -301,20 +346,20 @@ namespace Models.AgPasture
             if (1.0 - fraction > Epsilon)
             {
                 double fractionRemaining = 1.0 - fraction;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                 {
-                    Tissue[TissueCount - 1].DM += Tissue[t].DM * fraction;
-                    Tissue[TissueCount - 1].Namount += Tissue[t].Namount * fraction;
+                    Tissue[Tissue.Length - 1].DM += Tissue[t].DM * fraction;
+                    Tissue[Tissue.Length - 1].Namount += Tissue[t].Namount * fraction;
                     Tissue[t].DM *= fractionRemaining;
                     Tissue[t].Namount *= fractionRemaining;
                 }
             }
             else
             {
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                 {
-                    Tissue[TissueCount - 1].DM += Tissue[t].DM;
-                    Tissue[TissueCount - 1].Namount += Tissue[t].Namount;
+                    Tissue[Tissue.Length - 1].DM += Tissue[t].DM;
+                    Tissue[Tissue.Length - 1].Namount += Tissue[t].Namount;
                     Tissue[t].DM = 0.0;
                     Tissue[t].Namount = 0.0;
                 }
@@ -330,7 +375,7 @@ namespace Models.AgPasture
             double turnedoverN;
 
             // get amounts turned over
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
             {
                 if (turnoverRate[t] > 0.0)
                 {
@@ -339,7 +384,7 @@ namespace Models.AgPasture
                     Tissue[t].DMTransferedOut += turnedoverDM;
                     Tissue[t].NTransferedOut += turnedoverN;
 
-                    if (t < TissueCount - 1)
+                    if (t < Tissue.Length - 1)
                     {
                         // pass amounts turned over from this tissue to the next (except last one)
                         Tissue[t + 1].DMTransferedIn += turnedoverDM;
@@ -368,7 +413,7 @@ namespace Models.AgPasture
             double previousN = NTotal;
 
             // update all tissues
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
                 Tissue[t].DoUpdateTissue();
 
             // check mass balance
@@ -905,10 +950,8 @@ namespace Models.AgPasture
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
-                //mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
-                //mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
-                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer], SoilNitrogen.nh4_PlantAvailable[layer]) * layerFrac;
-                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer], SoilNitrogen.no3_PlantAvailable[layer]) * layerFrac;
+                mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
+                mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
             }
         }
 
@@ -1338,7 +1381,7 @@ namespace Models.AgPasture
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
-    public class GenericTissue
+    public class GenericTissue : Model
     {
         #region Basic properties  ------------------------------------------------------------------------------------------
 

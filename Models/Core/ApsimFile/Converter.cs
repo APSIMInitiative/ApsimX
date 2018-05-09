@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 27; } }
+        public static int LastestVersion { get { return 29; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -819,6 +819,65 @@ namespace Models.Core.ApsimFile
                     string pattern = @"\(double\)zone.Get\((?<variable>\"".+\.Leaf\." + variableName + @"\"")\)";
                     ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, replacePattern, null);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 28. Change ICrop to IPlant
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion28(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, " ICrop", " IPlant");
+                ConverterUtilities.SearchReplaceManagerCode(manager, "(ICrop)", "(IPlant)");
+            }
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 29. Change AgPasture to have leaves, stems, stolons included as child model nodes
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion29(XmlNode node, string fileName)
+        {
+            foreach (XmlNode pasture in XmlUtilities.FindAllRecursivelyByType(node, "PastureSpecies"))
+            {
+                XmlNode leaves = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(leaves, "Name", "Leaves");
+                XmlNode genericTissue1 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                XmlNode genericTissue2 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                XmlNode genericTissue3 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                XmlNode genericTissue4 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+
+                XmlNode stems = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(stems, "Name", "Stems");
+                genericTissue1 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                genericTissue2 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                genericTissue3 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                genericTissue4 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+
+                XmlNode stolons = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(stolons, "Name", "Stolons");
+                genericTissue1 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                genericTissue2 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                genericTissue3 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                genericTissue4 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
             }
         }
     }

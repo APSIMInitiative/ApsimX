@@ -352,7 +352,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class Sugarcane : Model, ICrop, ICanopy, IUptake
+    public class Sugarcane : Model, IPlant, ICanopy, IUptake
     {
 
         #region Canopy interface
@@ -463,7 +463,11 @@ namespace Models
 
         #endregion
 
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        public double Legumosity { get { return 0; } }
 
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        public bool IsC4 { get { return true; } }
 
         //CONSTANTS
 

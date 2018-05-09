@@ -218,7 +218,7 @@ namespace UserInterface.Forms
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             // version = new Version(0, 0, 0, 652);  
-            upgrades = WebUtilities.CallRESTService<Upgrade[]>("http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
+            upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in upgrades)
             {
                 string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
@@ -406,7 +406,7 @@ namespace UserInterface.Forms
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            string url = "http://www.apsim.info/APSIM.Registration.Service/Registration.svc/Add";
+            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/Add";
             url += "?firstName=" + firstNameBox.Text;
 
             url = addToURL(url, "lastName", lastNameBox.Text);
