@@ -1,6 +1,630 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="29">
   <Name>Simulations</Name>
+  <Folder>
+    <Name>DumpingArea</Name>
+    <PastureSpecies>
+      <Name>WhiteClover</Name>
+      <PastureAboveGroundOrgan>
+        <Name>Leaves</Name>
+        <GenericTissue>
+          <Name>LeafCohort1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>LeafCohort2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>LeafCohort3</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </PastureAboveGroundOrgan>
+      <PastureAboveGroundOrgan>
+        <Name>Stems</Name>
+        <GenericTissue>
+          <Name>LeafCohort1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>LeafCohort2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>LeafCohort3</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </PastureAboveGroundOrgan>
+      <PastureAboveGroundOrgan>
+        <Name>Stolons</Name>
+        <GenericTissue>
+          <Name>LeafCohort1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>LeafCohort2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>LeafCohort3</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <GenericTissue>
+          <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GenericTissue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </PastureAboveGroundOrgan>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MaximumNUptake>10</MaximumNUptake>
+      <Albedo>0.26</Albedo>
+      <Gsmax>0.011</Gsmax>
+      <R50>200</R50>
+      <SpeciesFamily>Legume</SpeciesFamily>
+      <PhotosyntheticPathway>C3</PhotosyntheticPathway>
+      <InitialShootDM>500</InitialShootDM>
+      <InitialRootDM>150</InitialRootDM>
+      <InitialRootDepth>350</InitialRootDepth>
+      <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
+      <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
+      <GrowthTminimum>2</GrowthTminimum>
+      <GrowthToptimum>22</GrowthToptimum>
+      <GrowthTEffectExponent>1.7</GrowthTEffectExponent>
+      <UseHeatStressFactor>yes</UseHeatStressFactor>
+      <HeatOnsetTemperature>30</HeatOnsetTemperature>
+      <HeatFullTemperature>36</HeatFullTemperature>
+      <HeatRecoverySumDD>20</HeatRecoverySumDD>
+      <HeatRecoveryTReference>25</HeatRecoveryTReference>
+      <UseColdStressFactor>yes</UseColdStressFactor>
+      <ColdOnsetTemperature>2</ColdOnsetTemperature>
+      <ColdFullTemperature>-5</ColdFullTemperature>
+      <ColdRecoverySumDD>30</ColdRecoverySumDD>
+      <ColdRecoveryTReference>0</ColdRecoveryTReference>
+      <MaintenanceRespirationCoefficient>0.04</MaintenanceRespirationCoefficient>
+      <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
+      <RespirationTReference>20</RespirationTReference>
+      <RespirationExponent>1.5</RespirationExponent>
+      <NThresholdsForLeaves>
+        <double>0.045</double>
+        <double>0.02</double>
+        <double>0.055</double>
+      </NThresholdsForLeaves>
+      <NThresholdsForStems>
+        <double>0.0225</double>
+        <double>0.01</double>
+        <double>0.0275</double>
+      </NThresholdsForStems>
+      <NThresholdsForStolons>
+        <double>0.0225</double>
+        <double>0.01</double>
+        <double>0.0275</double>
+      </NThresholdsForStolons>
+      <NThresholdsForRoots>
+        <double>0.0225</double>
+        <double>0.01</double>
+        <double>0.0275</double>
+      </NThresholdsForRoots>
+      <DegreesDayForGermination>125</DegreesDayForGermination>
+      <TargetShootRootRatio>4</TargetShootRootRatio>
+      <MaxRootAllocation>0.25</MaxRootAllocation>
+      <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
+      <UseReproSeasonFactor>yes</UseReproSeasonFactor>
+      <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
+      <ReproSeasonTimingCoeff>0.14</ReproSeasonTimingCoeff>
+      <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
+      <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+      <FractionLeafMaximum>0.56</FractionLeafMaximum>
+      <FractionLeafMinimum>0.28</FractionLeafMinimum>
+      <FractionLeafDMThreshold>500</FractionLeafDMThreshold>
+      <FractionLeafDMFactor>2000</FractionLeafDMFactor>
+      <FractionLeafExponent>3</FractionLeafExponent>
+      <FractionToStolon>0.2</FractionToStolon>
+      <SpecificLeafArea>30</SpecificLeafArea>
+      <SpecificRootLength>45</SpecificRootLength>
+      <StolonEffectOnLAI>0.3</StolonEffectOnLAI>
+      <ShootMaxEffectOnLAI>500</ShootMaxEffectOnLAI>
+      <MaxStemEffectOnLAI>0.5</MaxStemEffectOnLAI>
+      <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
+      <TissueTurnoverRateShoot>0.05</TissueTurnoverRateShoot>
+      <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
+      <DetachmentRateShoot>0.11</DetachmentRateShoot>
+      <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+      <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+      <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+      <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+      <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
+      <TurnoverDefoliationCoefficient>0.5</TurnoverDefoliationCoefficient>
+      <TurnoverDefoliationRootEffect>0.1</TurnoverDefoliationRootEffect>
+      <FractionNLuxuryRemobilisable>
+        <double>0.1</double>
+        <double>0.1</double>
+        <double>0.1</double>
+      </FractionNLuxuryRemobilisable>
+      <MinimumNFixation>0.2</MinimumNFixation>
+      <MaximumNFixation>0.6</MaximumNFixation>
+      <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
+      <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+      <SoilSaturationRecoveryFactor>0.25</SoilSaturationRecoveryFactor>
+      <NDillutionCoefficient>1</NDillutionCoefficient>
+      <GlfGeneric>1</GlfGeneric>
+      <GlfSoilFertility>1</GlfSoilFertility>
+      <PlantHeightMinimum>25</PlantHeightMinimum>
+      <PlantHeightMaximum>350</PlantHeightMaximum>
+      <PlantHeightMassForMax>7500</PlantHeightMassForMax>
+      <PlantHeightExponent>2.5</PlantHeightExponent>
+      <RootDepthMinimum>30</RootDepthMinimum>
+      <RootDepthMaximum>350</RootDepthMaximum>
+      <RootElongationRate>25</RootElongationRate>
+      <RootDistributionDepthParam>70</RootDistributionDepthParam>
+      <RootDistributionExponent>2.5</RootDistributionExponent>
+      <DigestibilitiesCellWall>
+        <double>0.6</double>
+        <double>0.6</double>
+        <double>0.6</double>
+        <double>0.2</double>
+      </DigestibilitiesCellWall>
+      <MinimumGreenWt>50</MinimumGreenWt>
+      <FractionStolonStanding>0</FractionStolonStanding>
+      <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
+      <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
+      <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+      <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
+    </PastureSpecies>
+    <Manager>
+      <Name>Ex_TargetRotationLength_store</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Script>
+        <DoVerbose>False</DoVerbose>
+        <StockingRate>4</StockingRate>
+        <InitLocation>Paddock00</InitLocation>
+        <TargetRotationLength>6</TargetRotationLength>
+        <HarvestExcessHerbage>True</HarvestExcessHerbage>
+        <NumCows>3</NumCows>
+        <CurrentLocation>
+        </CurrentLocation>
+        <CurrentLocationNum>0</CurrentLocationNum>
+        <NumPaddocks>0</NumPaddocks>
+        <FarmArea>0</FarmArea>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.Utilities;
+using Models.GrazPlan;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.PMF;
+using Models.Soils;
+using System.Collections;
+using System.Collections.Generic;
+using Models.AgPasture;
+using System.Diagnostics;
+
+namespace Models
+{
+
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Stock Cows;
+		[Link] Supplement Feed;
+		[Link] Zone[] Paddocks;
+		[Link] ISummary summary = null;
+
+		//List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
+
+		class PlantWeight
+		{
+			public string paddockName;
+			public double totalWt;
+		}
+
+		[Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
+
+		[Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
+		[Description("Initial location of the cows (paddock name): ")] public string InitLocation { get; set; }
+		// move more cow stuff to the interface
+
+		[Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
+		//[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
+		[Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
+
+
+		public int NumCows { get; set; } // number of cows on the whole farm
+		public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
+		public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
+		public int NumPaddocks { get; set; }
+		public double FarmArea { get; set; }
+
+		private int group_count; // how many groups are there in the simulation
+		private int g = 1;		// index to the groups of animals
+
+		//private int DaysPerPaddock;
+		private int DaysInThisPaddock;
+
+		public event BiomassRemovedDelegate BiomassRemoved;
+
+
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			SetInitialCowStuff();
+			Cows.Move(g, InitLocation);
+			CurrentLocation = InitLocation;
+
+			summary.WriteMessage(this, "Initialising the paddocks information");
+			NumPaddocks = 0;
+			FarmArea = 0.0;
+			foreach (Zone paddock in Paddocks)
+			{
+				NumPaddocks += 1;
+				FarmArea += paddock.Area;
+   				summary.WriteMessage(this, "     Paddock " + NumPaddocks + " has an area of " + paddock.Area);
+			}
+			//DaysPerPaddock = (int) (Math.Round((float) TargetRotationLength / (float) NumPaddocks, 0));
+			DaysInThisPaddock = -1;
+
+			NumCows = (int) (Math.Round((float) StockingRate * (float) FarmArea, 0));
+			summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
+			summary.WriteMessage(this, "The area of the whole farm is " + FarmArea);
+
+
+		}
+                                
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		    // how many days in this paddock?  Ready to move?
+
+		    DaysInThisPaddock += 1;
+			List<PlantWeight> plantWeights = new List<PlantWeight>();
+
+		    			// get a list of the paddocks and sort into order of decreasing Sward.HarvestableWt
+				foreach (Zone paddock in Paddocks)
+				{
+					PlantWeight weight = new PlantWeight();
+					weight.paddockName = paddock.Name;
+					foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+					{
+						weight.totalWt += plant.AboveGroundWt;
+						if (DoVerbose)
+							summary.WriteMessage(this, "In " + paddock.Name + " there is " + weight.totalWt + " kg DM /ha of " + plant.Name);
+					}
+					plantWeights.Add(weight);
+		    }
+
+		    if (DaysInThisPaddock >= TargetRotationLength)
+		    {
+				/*plantWeights.Sort((y, x) => x.totalWt.CompareTo(y.totalWt));
+				for (int ii = 0; ii < NumPaddocks; ii++)
+				{
+				   if (DoVerbose)
+				   	summary.WriteMessage(this, ii + " " + plantWeights[ii].paddockName + " " + plantWeights[ii].totalWt);
+				}*/
+
+				//Debugger.Break();
+				Cows.Move(g, plantWeights[0].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
+				CurrentLocation = plantWeights[0].paddockName;
+				summary.WriteMessage(this, "moving to " + plantWeights[0].paddockName);
+				//double CurrentTotalWt = plantWeights[0].totalWt;
+
+		       // move to the next paddock
+				DaysInThisPaddock = 0;
+		    				}
+
+                        /*
+            // total harvested is equal total defoliated, for now
+            HarvestedWt = DefoliatedWt;
+            HarvestedN = DefoliatedN;  */
+
+        	     	     	     	 
+			// get the type of amount given
+			/*if (RemoveAmountType == removeAmountTypes.ResidualDM)
+                amountType = "SetResidueAmount";
+            else
+                amountType = "SetRemoveAmount"; */
+
+
+			if (Cows.NumberAll > 0)
+			{
+				Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
+				// remove some biomass
+
+			    foreach (Zone paddock in Paddocks)
+	    		{
+		        	if (paddock.Name == CurrentLocation)
+					{
+						foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+						{
+							//Debugger.Break();
+							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.AboveGroundWt /  plantWeights[0].totalWt);
+							if (amountToRemove >= plant.HarvestableWt)
+							{
+								if (DoVerbose)
+									summary.WriteMessage(this, "not enough plant for the animal demand");
+								amountToRemove = plant.HarvestableWt;
+							}
+							else
+							{
+							//double propToRemove = plant.AboveGroundWt /  plantWeights[0].totalWt;
+							plant.Graze(amount: amountToRemove, type: "SetRemoveAmount");
+							//DefoliatedWt += species.HarvestedWt;
+							//DefoliatedN += species.HarvestedN;
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		public void SetInitialCowStuff()
+		{
+			g = Cows.NoGroups + 1;
+
+			StockBuy purchase = new StockBuy();
+			purchase.Genotype = "Friesian";
+			purchase.Number = NumCows;
+			purchase.Sex = "heifers"; 
+			purchase.Age = 24;       // age in months
+			purchase.Weight = 550.0;  // live weight in kg
+			purchase.UseTag = g + 1;
+			purchase.MatedTo = "Friesian";
+			purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
+			purchase.Lactating = 1;  // 0 for dry, 1 for lactating
+			purchase.NumYoung = 2;
+			purchase.YoungWt = 45;
+                
+			Cows.Buy(purchase);
+		}
+
+	}
+}
+]]></Code>
+    </Manager>
+    <Manager>
+      <Name>Ex_TargetRotationLength</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Script>
+        <DoVerbose>False</DoVerbose>
+        <StockingRate>4</StockingRate>
+        <InitLocation>Paddock00</InitLocation>
+        <TargetRotationLength>6</TargetRotationLength>
+        <HarvestExcessHerbage>True</HarvestExcessHerbage>
+        <NumCows>3</NumCows>
+        <CurrentLocation>
+        </CurrentLocation>
+        <CurrentLocationNum>0</CurrentLocationNum>
+        <NumPaddocks>0</NumPaddocks>
+        <FarmArea>0</FarmArea>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.Utilities;
+using Models.GrazPlan;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.PMF;
+using Models.Soils;
+using System.Collections;
+using System.Collections.Generic;
+using Models.AgPasture;
+using System.Diagnostics;
+
+namespace Models
+{
+
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Stock Cows;
+		[Link] Supplement Feed;
+		[Link] Zone[] Paddocks;
+		[Link] ISummary summary = null;
+
+		//List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
+
+		[Serializable]
+		public class PaddockInfo
+		{
+			public string paddockName;
+			public double totalWt;
+			public int paddockNum;
+		}
+
+		[Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
+
+		[Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
+		[Description("Initial location of the cows (paddock name): ")] public string InitLocation { get; set; }
+		// move more cow stuff to the interface
+
+		[Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
+		//[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
+		[Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
+
+
+		public int NumCows { get; set; } // number of cows on the whole farm
+		public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
+		public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
+		public int NumPaddocks { get; set; }
+		public double FarmArea { get; set; }
+
+		private int group_count; // how many groups are there in the simulation
+		private int g = 1;		// index to the groups of animals
+
+		//private int DaysPerPaddock;
+		private int DaysInThisPaddock;
+
+		public event BiomassRemovedDelegate BiomassRemoved;
+		List<PaddockInfo> listOfPaddockInfo = new List<PaddockInfo>();
+
+
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			//SetInitialCowStuff();
+			//Cows.Move(g, InitLocation);
+			//CurrentLocation = InitLocation;
+			//CurrentLocationNum = 0;
+
+			/*summary.WriteMessage(this, "Initialising the paddocks information");
+			NumPaddocks = 0;
+			FarmArea = 0.0;
+			foreach (Zone paddock in Paddocks)
+			{
+				NumPaddocks += 1;
+				FarmArea += paddock.Area;
+				if (paddock.Name == "InitLocation")
+					CurrentLocationNum = NumPaddocks;
+   				summary.WriteMessage(this, "     Paddock " + NumPaddocks + " has an area of " + paddock.Area);
+			}
+			DaysInThisPaddock = -1;
+
+			NumCows = (int) (Math.Round((float) StockingRate * (float) FarmArea, 0));
+			summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
+			summary.WriteMessage(this, "The area of the whole farm is " + FarmArea);
+
+			*/
+
+		    /*// get a list of information about the paddocks 
+				foreach (Zone paddock in Paddocks)
+				{
+					PaddockInfo paddockInfo = new PaddockInfo();
+					paddockInfo.paddockName = paddock.Name;
+					foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+					{
+						paddockInfo.totalWt += plant.AboveGroundWt;
+						if (DoVerbose)
+							summary.WriteMessage(this, "In " + paddock.Name + " there is " + paddockInfo.totalWt + " kg DM /ha of " + plant.Name);
+					}
+				listOfPaddockInfo.Add(paddockInfo);
+		    }*/
+
+
+		}
+                                
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+		   /* // how many days in this paddock?  Ready to move?
+		    DaysInThisPaddock += 1;
+		    if (DaysInThisPaddock >= TargetRotationLength)
+		    {
+				Cows.Move(g, listOfPaddockInfo[0].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
+				CurrentLocation = listOfPaddockInfo[0].paddockName;
+				summary.WriteMessage(this, "moving to " + listOfPaddockInfo[0].paddockName);
+				DaysInThisPaddock = 0;
+		    }*/
+
+                        /*
+            // total harvested is equal total defoliated, for now
+            HarvestedWt = DefoliatedWt;
+            HarvestedN = DefoliatedN;  */
+
+        	     	     	     	 
+			// get the type of amount given
+			/*if (RemoveAmountType == removeAmountTypes.ResidualDM)
+                amountType = "SetResidueAmount";
+            else
+                amountType = "SetRemoveAmount"; */
+
+
+			/*if (Cows.NumberAll > 0)
+			{
+				Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
+				// remove some biomass
+
+			    foreach (Zone paddock in Paddocks)
+	    		{
+		        	if (paddock.Name == CurrentLocation)
+					{
+						foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+						{
+							//Debugger.Break();
+							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.AboveGroundWt /  plantWeights[0].totalWt);
+							if (amountToRemove >= plant.HarvestableWt)
+							{
+								if (DoVerbose)
+									summary.WriteMessage(this, "not enough plant for the animal demand");
+								amountToRemove = plant.HarvestableWt;
+							}
+							else
+							{
+							//double propToRemove = plant.AboveGroundWt /  plantWeights[0].totalWt;
+							plant.Graze(amount: amountToRemove, type: "SetRemoveAmount");
+							//DefoliatedWt += species.HarvestedWt;
+							//DefoliatedN += species.HarvestedN;
+							}
+						}
+					}
+				}
+			} */
+		}
+
+
+		public void SetInitialCowStuff()
+		{
+			/*g = Cows.NoGroups + 1;
+
+			StockBuy purchase = new StockBuy();
+			purchase.Genotype = "Friesian";
+			purchase.Number = NumCows;
+			purchase.Sex = "heifers"; 
+			purchase.Age = 24;       // age in months
+			purchase.Weight = 550.0;  // live weight in kg
+			purchase.UseTag = g + 1;
+			purchase.MatedTo = "Friesian";
+			purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
+			purchase.Lactating = 1;  // 0 for dry, 1 for lactating
+			purchase.NumYoung = 2;
+			purchase.YoungWt = 45;
+                
+			Cows.Buy(purchase); */
+		}
+
+	}
+}
+]]></Code>
+    </Manager>
+    <Report>
+      <Name>ReportTop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Ex_TargetRotationLength].Script.CurrentLocation</string>
+        <string>[Ex_TargetRotationLength].Script.CurrentLocation</string>
+        <string />
+        <string>//[Stock].NumberAll</string>
+        <string>[Stock].WeightAll</string>
+        <string>[Stock].CondScoreAll</string>
+        <string>[Stock].IntakeAll.Weight</string>
+        <string>[Stock].IntakeAll.N</string>
+        <string>[Stock].UrineNAll</string>
+        <string>[Stock].FaecesAll.N</string>
+        <string>[Stock].MilkWtAll</string>
+        <string>[Supplement].stores[2].Name</string>
+        <string>[Supplement].stores[2].Stored</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].EndOfDay</string>
+      </EventNames>
+    </Report>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
+  </Folder>
   <Simulation>
     <Name>SinglePaddockForRV</Name>
     <Clock>
@@ -269,7 +893,7 @@ namespace Models
       <PaddockList />
     </Supplement>
     <Report>
-      <Name>Report</Name>
+      <Name>ReportRV</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
@@ -857,6 +1481,66 @@ namespace Models
       </SurfaceOrganicMatter>
       <PastureSpecies>
         <Name>Ryegrass</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -974,6 +1658,66 @@ namespace Models
       </PastureSpecies>
       <PastureSpecies>
         <Name>WhiteClover</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -3355,6 +4099,66 @@ namespace Models
         <Name>Sward</Name>
         <PastureSpecies>
           <Name>Ryegrass</Name>
+          <PastureAboveGroundOrgan>
+            <Name>Leaves</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stems</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stolons</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MaximumNUptake>10</MaximumNUptake>
           <Albedo>0.26</Albedo>
@@ -3472,6 +4276,66 @@ namespace Models
         </PastureSpecies>
         <PastureSpecies>
           <Name>WhiteClover</Name>
+          <PastureAboveGroundOrgan>
+            <Name>Leaves</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stems</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stolons</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MaximumNUptake>10</MaximumNUptake>
           <Albedo>0.26</Albedo>
@@ -4408,6 +5272,66 @@ namespace Models
         <Name>Sward</Name>
         <PastureSpecies>
           <Name>Ryegrass</Name>
+          <PastureAboveGroundOrgan>
+            <Name>Leaves</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stems</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stolons</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MaximumNUptake>10</MaximumNUptake>
           <Albedo>0.26</Albedo>
@@ -4525,6 +5449,66 @@ namespace Models
         </PastureSpecies>
         <PastureSpecies>
           <Name>WhiteClover</Name>
+          <PastureAboveGroundOrgan>
+            <Name>Leaves</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stems</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stolons</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </GenericTissue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PastureAboveGroundOrgan>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MaximumNUptake>10</MaximumNUptake>
           <Albedo>0.26</Albedo>
@@ -4956,16 +5940,15 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Script>
         <DoVerbose>False</DoVerbose>
-        <StockingRate>3</StockingRate>
+        <StockingRate>30</StockingRate>
         <InitLocation>Paddock01</InitLocation>
-        <TargetRotationLength>2</TargetRotationLength>
-        <HarvestExcessHerbage>False</HarvestExcessHerbage>
+        <TargetRotationLength>20</TargetRotationLength>
+        <HarvestExcessHerbage>True</HarvestExcessHerbage>
         <NumCows>3</NumCows>
         <CurrentLocation>
         </CurrentLocation>
         <CurrentLocationNum>0</CurrentLocationNum>
         <NumPaddocks>0</NumPaddocks>
-        <FarmArea>0</FarmArea>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -4991,6 +5974,7 @@ namespace Models
         [Link] Supplement Feed;
         [Link] Zone[] Paddocks;
         [Link] ISummary summary = null;
+		[Link] Simulation Farm;
 
         //List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
 
@@ -5018,7 +6002,7 @@ namespace Models
         public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
         public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
         public int NumPaddocks { get; set; }
-        public double FarmArea { get; set; }
+        //public double FarmArea { get; set; }
 
         private int group_count; // how many groups are there in the simulation
         private int g = 1;      // index to the groups of animals
@@ -5035,17 +6019,17 @@ namespace Models
         {
             summary.WriteMessage(this, "Initialising the paddock information");
 
-            GetFarmAreaAndOtherInfo();
+            GetPaddockInfo();
 
-            NumCows = (int)(Math.Round(StockingRate * FarmArea, 0));
+            NumCows = (int)(Math.Round(StockingRate * Farm.Area, 0));
 
             SetInitialCowStuff();
 
             Cows.Move(g, InitLocation);
 
-            summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
+            summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * Farm.Area));
             summary.WriteMessage(this, "     The animals will begin in " + CurrentLocation + " which is paddock number " + CurrentLocationNum + " in the simulation");
-            summary.WriteMessage(this, "     The area of the whole farm is " + FarmArea + " ha");
+            summary.WriteMessage(this, "     The area of the whole farm is " + Farm.Area + " ha");
 
             DaysInThisPaddock = -1;
         }
@@ -5081,9 +6065,9 @@ namespace Models
                 amountType = "SetRemoveAmount"; */
 
 
-            if (Cows.NumberAll > 0)
+            /*if (Cows.NumberAll > 0)
             {
-                Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
+                //Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
                 // remove some biomass
                 UpdatePaddockInfo();
 
@@ -5112,7 +6096,7 @@ namespace Models
                         }
                     }
                 }
-            }
+            } */
         }
 
 
@@ -5136,10 +6120,9 @@ namespace Models
             Cows.Buy(purchase);
         }
 
-        public void GetFarmAreaAndOtherInfo()
+        public void GetPaddockInfo()
         {
             NumPaddocks = 0;
-            FarmArea = 0.0;
             CurrentLocation = InitLocation;
             CurrentLocationNum = 0;
 
@@ -5158,7 +6141,6 @@ namespace Models
 
                 listOfPaddockInfo.Add(paddockInfo);
 
-                FarmArea += paddock.Area;
                 if (paddock.Name == InitLocation)
                     CurrentLocationNum = paddockInfo.paddockNum;
 
@@ -5212,18 +6194,18 @@ namespace Models
         <StoreType>
           <IsRoughage>true</IsRoughage>
           <DMContent>0.25</DMContent>
-          <DMD>0.75</DMD>
-          <MEContent>12</MEContent>
-          <CPConc>0.18</CPConc>
-          <ProtDg>0.8</ProtDg>
+          <DMD>0.70000000000000007</DMD>
+          <MEContent>11</MEContent>
+          <CPConc>0.16</CPConc>
+          <ProtDg>0.70000000000000007</ProtDg>
           <PConc>0.0032</PConc>
           <SConc>0.0024</SConc>
           <EEConc>0.02</EEConc>
           <ADIP2CP>0.06</ADIP2CP>
           <AshAlk>0.6</AshAlk>
           <MaxPassage>0</MaxPassage>
-          <Name>silage</Name>
-          <Stored>200000</Stored>
+          <Name>Silage_HighQuality</Name>
+          <Stored>0</Stored>
         </StoreType>
       </stores>
       <PaddockList />
@@ -5237,7 +6219,9 @@ namespace Models
         <string>[Clock].Today</string>
         <string>[Ex_TargetRotationLength].Script.CurrentLocation as CurrentLoc</string>
         <string>[Ex_TargetRotationLength].Script.CurrentLocationNum as CurrentLocNum</string>
-        <string>[Ex_TargetRotationLength].Script.InitLocation as InitLoc</string>
+        <string>[Stock].IntakeAll.Weight</string>
+        <string>[Stock].Paddock</string>
+        <string>[Stock].NumberAll</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -5814,6 +6798,66 @@ namespace Models
       </SurfaceOrganicMatter>
       <PastureSpecies>
         <Name>Ryegrass</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -5931,6 +6975,66 @@ namespace Models
       </PastureSpecies>
       <PastureSpecies>
         <Name>WhiteClover</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -6888,6 +7992,66 @@ namespace Models
       </SurfaceOrganicMatter>
       <PastureSpecies>
         <Name>Ryegrass</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -7005,6 +8169,66 @@ namespace Models
       </PastureSpecies>
       <PastureSpecies>
         <Name>WhiteClover</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -7962,6 +9186,66 @@ namespace Models
       </SurfaceOrganicMatter>
       <PastureSpecies>
         <Name>Ryegrass</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -8079,6 +9363,66 @@ namespace Models
       </PastureSpecies>
       <PastureSpecies>
         <Name>WhiteClover</Name>
+        <PastureAboveGroundOrgan>
+          <Name>Leaves</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stems</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
+        <PastureAboveGroundOrgan>
+          <Name>Stolons</Name>
+          <GenericTissue>
+            <Name>LeafCohort1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>LeafCohort3</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <GenericTissue>
+            <Name>Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </GenericTissue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PastureAboveGroundOrgan>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumNUptake>10</MaximumNUptake>
         <Albedo>0.26</Albedo>
@@ -8727,570 +10071,6 @@ namespace Models
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
-  <Folder>
-    <Name>Folder</Name>
-    <PastureSpecies>
-      <Name>WhiteClover</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MaximumNUptake>10</MaximumNUptake>
-      <Albedo>0.26</Albedo>
-      <Gsmax>0.011</Gsmax>
-      <R50>200</R50>
-      <SpeciesFamily>Legume</SpeciesFamily>
-      <PhotosyntheticPathway>C3</PhotosyntheticPathway>
-      <InitialShootDM>500</InitialShootDM>
-      <InitialRootDM>150</InitialRootDM>
-      <InitialRootDepth>350</InitialRootDepth>
-      <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
-      <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
-      <GrowthTminimum>2</GrowthTminimum>
-      <GrowthToptimum>22</GrowthToptimum>
-      <GrowthTEffectExponent>1.7</GrowthTEffectExponent>
-      <UseHeatStressFactor>yes</UseHeatStressFactor>
-      <HeatOnsetTemperature>30</HeatOnsetTemperature>
-      <HeatFullTemperature>36</HeatFullTemperature>
-      <HeatRecoverySumDD>20</HeatRecoverySumDD>
-      <HeatRecoveryTReference>25</HeatRecoveryTReference>
-      <UseColdStressFactor>yes</UseColdStressFactor>
-      <ColdOnsetTemperature>2</ColdOnsetTemperature>
-      <ColdFullTemperature>-5</ColdFullTemperature>
-      <ColdRecoverySumDD>30</ColdRecoverySumDD>
-      <ColdRecoveryTReference>0</ColdRecoveryTReference>
-      <MaintenanceRespirationCoefficient>0.04</MaintenanceRespirationCoefficient>
-      <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
-      <RespirationTReference>20</RespirationTReference>
-      <RespirationExponent>1.5</RespirationExponent>
-      <NThresholdsForLeaves>
-        <double>0.045</double>
-        <double>0.02</double>
-        <double>0.055</double>
-      </NThresholdsForLeaves>
-      <NThresholdsForStems>
-        <double>0.0225</double>
-        <double>0.01</double>
-        <double>0.0275</double>
-      </NThresholdsForStems>
-      <NThresholdsForStolons>
-        <double>0.0225</double>
-        <double>0.01</double>
-        <double>0.0275</double>
-      </NThresholdsForStolons>
-      <NThresholdsForRoots>
-        <double>0.0225</double>
-        <double>0.01</double>
-        <double>0.0275</double>
-      </NThresholdsForRoots>
-      <DegreesDayForGermination>125</DegreesDayForGermination>
-      <TargetShootRootRatio>4</TargetShootRootRatio>
-      <MaxRootAllocation>0.25</MaxRootAllocation>
-      <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
-      <UseReproSeasonFactor>yes</UseReproSeasonFactor>
-      <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
-      <ReproSeasonTimingCoeff>0.14</ReproSeasonTimingCoeff>
-      <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
-      <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
-      <FractionLeafMaximum>0.56</FractionLeafMaximum>
-      <FractionLeafMinimum>0.28</FractionLeafMinimum>
-      <FractionLeafDMThreshold>500</FractionLeafDMThreshold>
-      <FractionLeafDMFactor>2000</FractionLeafDMFactor>
-      <FractionLeafExponent>3</FractionLeafExponent>
-      <FractionToStolon>0.2</FractionToStolon>
-      <SpecificLeafArea>30</SpecificLeafArea>
-      <SpecificRootLength>45</SpecificRootLength>
-      <StolonEffectOnLAI>0.3</StolonEffectOnLAI>
-      <ShootMaxEffectOnLAI>500</ShootMaxEffectOnLAI>
-      <MaxStemEffectOnLAI>0.5</MaxStemEffectOnLAI>
-      <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
-      <TissueTurnoverRateShoot>0.05</TissueTurnoverRateShoot>
-      <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-      <DetachmentRateShoot>0.11</DetachmentRateShoot>
-      <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
-      <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
-      <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
-      <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
-      <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
-      <TurnoverDefoliationCoefficient>0.5</TurnoverDefoliationCoefficient>
-      <TurnoverDefoliationRootEffect>0.1</TurnoverDefoliationRootEffect>
-      <FractionNLuxuryRemobilisable>
-        <double>0.1</double>
-        <double>0.1</double>
-        <double>0.1</double>
-      </FractionNLuxuryRemobilisable>
-      <MinimumNFixation>0.2</MinimumNFixation>
-      <MaximumNFixation>0.6</MaximumNFixation>
-      <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
-      <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
-      <SoilSaturationRecoveryFactor>0.25</SoilSaturationRecoveryFactor>
-      <NDillutionCoefficient>1</NDillutionCoefficient>
-      <GlfGeneric>1</GlfGeneric>
-      <GlfSoilFertility>1</GlfSoilFertility>
-      <PlantHeightMinimum>25</PlantHeightMinimum>
-      <PlantHeightMaximum>350</PlantHeightMaximum>
-      <PlantHeightMassForMax>7500</PlantHeightMassForMax>
-      <PlantHeightExponent>2.5</PlantHeightExponent>
-      <RootDepthMinimum>30</RootDepthMinimum>
-      <RootDepthMaximum>350</RootDepthMaximum>
-      <RootElongationRate>25</RootElongationRate>
-      <RootDistributionDepthParam>70</RootDistributionDepthParam>
-      <RootDistributionExponent>2.5</RootDistributionExponent>
-      <DigestibilitiesCellWall>
-        <double>0.6</double>
-        <double>0.6</double>
-        <double>0.6</double>
-        <double>0.2</double>
-      </DigestibilitiesCellWall>
-      <MinimumGreenWt>50</MinimumGreenWt>
-      <FractionStolonStanding>0</FractionStolonStanding>
-      <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
-      <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-      <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
-      <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
-    </PastureSpecies>
-    <Manager>
-      <Name>Ex_TargetRotationLength_store</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Script>
-        <DoVerbose>False</DoVerbose>
-        <StockingRate>4</StockingRate>
-        <InitLocation>Paddock00</InitLocation>
-        <TargetRotationLength>6</TargetRotationLength>
-        <HarvestExcessHerbage>True</HarvestExcessHerbage>
-        <NumCows>3</NumCows>
-        <CurrentLocation>
-        </CurrentLocation>
-        <CurrentLocationNum>0</CurrentLocationNum>
-        <NumPaddocks>0</NumPaddocks>
-        <FarmArea>0</FarmArea>
-      </Script>
-      <Code><![CDATA[using System;
-using Models.Core;
-using Models.Utilities;
-using Models.GrazPlan;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
-using Models.PMF;
-using Models.Soils;
-using System.Collections;
-using System.Collections.Generic;
-using Models.AgPasture;
-using System.Diagnostics;
-
-namespace Models
-{
-
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Stock Cows;
-		[Link] Supplement Feed;
-		[Link] Zone[] Paddocks;
-		[Link] ISummary summary = null;
-
-		//List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
-
-		class PlantWeight
-		{
-			public string paddockName;
-			public double totalWt;
-		}
-
-		[Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
-
-		[Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
-		[Description("Initial location of the cows (paddock name): ")] public string InitLocation { get; set; }
-		// move more cow stuff to the interface
-
-		[Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
-		//[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
-		[Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
-
-
-		public int NumCows { get; set; } // number of cows on the whole farm
-		public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
-		public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
-		public int NumPaddocks { get; set; }
-		public double FarmArea { get; set; }
-
-		private int group_count; // how many groups are there in the simulation
-		private int g = 1;		// index to the groups of animals
-
-		//private int DaysPerPaddock;
-		private int DaysInThisPaddock;
-
-		public event BiomassRemovedDelegate BiomassRemoved;
-
-
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			SetInitialCowStuff();
-			Cows.Move(g, InitLocation);
-			CurrentLocation = InitLocation;
-
-			summary.WriteMessage(this, "Initialising the paddocks information");
-			NumPaddocks = 0;
-			FarmArea = 0.0;
-			foreach (Zone paddock in Paddocks)
-			{
-				NumPaddocks += 1;
-				FarmArea += paddock.Area;
-   				summary.WriteMessage(this, "     Paddock " + NumPaddocks + " has an area of " + paddock.Area);
-			}
-			//DaysPerPaddock = (int) (Math.Round((float) TargetRotationLength / (float) NumPaddocks, 0));
-			DaysInThisPaddock = -1;
-
-			NumCows = (int) (Math.Round((float) StockingRate * (float) FarmArea, 0));
-			summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
-			summary.WriteMessage(this, "The area of the whole farm is " + FarmArea);
-
-
-		}
-                                
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-		    // how many days in this paddock?  Ready to move?
-
-		    DaysInThisPaddock += 1;
-			List<PlantWeight> plantWeights = new List<PlantWeight>();
-
-		    			// get a list of the paddocks and sort into order of decreasing Sward.HarvestableWt
-				foreach (Zone paddock in Paddocks)
-				{
-					PlantWeight weight = new PlantWeight();
-					weight.paddockName = paddock.Name;
-					foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-					{
-						weight.totalWt += plant.AboveGroundWt;
-						if (DoVerbose)
-							summary.WriteMessage(this, "In " + paddock.Name + " there is " + weight.totalWt + " kg DM /ha of " + plant.Name);
-					}
-					plantWeights.Add(weight);
-		    }
-
-		    if (DaysInThisPaddock >= TargetRotationLength)
-		    {
-				/*plantWeights.Sort((y, x) => x.totalWt.CompareTo(y.totalWt));
-				for (int ii = 0; ii < NumPaddocks; ii++)
-				{
-				   if (DoVerbose)
-				   	summary.WriteMessage(this, ii + " " + plantWeights[ii].paddockName + " " + plantWeights[ii].totalWt);
-				}*/
-
-				//Debugger.Break();
-				Cows.Move(g, plantWeights[0].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
-				CurrentLocation = plantWeights[0].paddockName;
-				summary.WriteMessage(this, "moving to " + plantWeights[0].paddockName);
-				//double CurrentTotalWt = plantWeights[0].totalWt;
-
-		       // move to the next paddock
-				DaysInThisPaddock = 0;
-		    				}
-
-                        /*
-            // total harvested is equal total defoliated, for now
-            HarvestedWt = DefoliatedWt;
-            HarvestedN = DefoliatedN;  */
-
-        	     	     	     	 
-			// get the type of amount given
-			/*if (RemoveAmountType == removeAmountTypes.ResidualDM)
-                amountType = "SetResidueAmount";
-            else
-                amountType = "SetRemoveAmount"; */
-
-
-			if (Cows.NumberAll > 0)
-			{
-				Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
-				// remove some biomass
-
-			    foreach (Zone paddock in Paddocks)
-	    		{
-		        	if (paddock.Name == CurrentLocation)
-					{
-						foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-						{
-							//Debugger.Break();
-							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.AboveGroundWt /  plantWeights[0].totalWt);
-							if (amountToRemove >= plant.HarvestableWt)
-							{
-								if (DoVerbose)
-									summary.WriteMessage(this, "not enough plant for the animal demand");
-								amountToRemove = plant.HarvestableWt;
-							}
-							else
-							{
-							//double propToRemove = plant.AboveGroundWt /  plantWeights[0].totalWt;
-							plant.Graze(amount: amountToRemove, type: "SetRemoveAmount");
-							//DefoliatedWt += species.HarvestedWt;
-							//DefoliatedN += species.HarvestedN;
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-		public void SetInitialCowStuff()
-		{
-			g = Cows.NoGroups + 1;
-
-			StockBuy purchase = new StockBuy();
-			purchase.Genotype = "Friesian";
-			purchase.Number = NumCows;
-			purchase.Sex = "heifers"; 
-			purchase.Age = 24;       // age in months
-			purchase.Weight = 550.0;  // live weight in kg
-			purchase.UseTag = g + 1;
-			purchase.MatedTo = "Friesian";
-			purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
-			purchase.Lactating = 1;  // 0 for dry, 1 for lactating
-			purchase.NumYoung = 2;
-			purchase.YoungWt = 45;
-                
-			Cows.Buy(purchase);
-		}
-
-	}
-}
-]]></Code>
-    </Manager>
-    <Manager>
-      <Name>Ex_TargetRotationLength</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Script>
-        <DoVerbose>False</DoVerbose>
-        <StockingRate>4</StockingRate>
-        <InitLocation>Paddock00</InitLocation>
-        <TargetRotationLength>6</TargetRotationLength>
-        <HarvestExcessHerbage>True</HarvestExcessHerbage>
-        <NumCows>3</NumCows>
-        <CurrentLocation>
-        </CurrentLocation>
-        <CurrentLocationNum>0</CurrentLocationNum>
-        <NumPaddocks>0</NumPaddocks>
-        <FarmArea>0</FarmArea>
-      </Script>
-      <Code><![CDATA[using System;
-using Models.Core;
-using Models.Utilities;
-using Models.GrazPlan;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
-using Models.PMF;
-using Models.Soils;
-using System.Collections;
-using System.Collections.Generic;
-using Models.AgPasture;
-using System.Diagnostics;
-
-namespace Models
-{
-
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Stock Cows;
-		[Link] Supplement Feed;
-		[Link] Zone[] Paddocks;
-		[Link] ISummary summary = null;
-
-		//List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
-
-		[Serializable]
-		public class PaddockInfo
-		{
-			public string paddockName;
-			public double totalWt;
-			public int paddockNum;
-		}
-
-		[Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
-
-		[Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
-		[Description("Initial location of the cows (paddock name): ")] public string InitLocation { get; set; }
-		// move more cow stuff to the interface
-
-		[Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
-		//[Description("Target grazing residual (kgDM/ha): ")] public double TargetGrazingResidual { get; set; }
-		[Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
-
-
-		public int NumCows { get; set; } // number of cows on the whole farm
-		public string CurrentLocation { get; set; }  // name of the paddock that the cows are currently in
-		public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in
-		public int NumPaddocks { get; set; }
-		public double FarmArea { get; set; }
-
-		private int group_count; // how many groups are there in the simulation
-		private int g = 1;		// index to the groups of animals
-
-		//private int DaysPerPaddock;
-		private int DaysInThisPaddock;
-
-		public event BiomassRemovedDelegate BiomassRemoved;
-		List<PaddockInfo> listOfPaddockInfo = new List<PaddockInfo>();
-
-
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			//SetInitialCowStuff();
-			//Cows.Move(g, InitLocation);
-			//CurrentLocation = InitLocation;
-			//CurrentLocationNum = 0;
-
-			/*summary.WriteMessage(this, "Initialising the paddocks information");
-			NumPaddocks = 0;
-			FarmArea = 0.0;
-			foreach (Zone paddock in Paddocks)
-			{
-				NumPaddocks += 1;
-				FarmArea += paddock.Area;
-				if (paddock.Name == "InitLocation")
-					CurrentLocationNum = NumPaddocks;
-   				summary.WriteMessage(this, "     Paddock " + NumPaddocks + " has an area of " + paddock.Area);
-			}
-			DaysInThisPaddock = -1;
-
-			NumCows = (int) (Math.Round((float) StockingRate * (float) FarmArea, 0));
-			summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * FarmArea));
-			summary.WriteMessage(this, "The area of the whole farm is " + FarmArea);
-
-			*/
-
-		    /*// get a list of information about the paddocks 
-				foreach (Zone paddock in Paddocks)
-				{
-					PaddockInfo paddockInfo = new PaddockInfo();
-					paddockInfo.paddockName = paddock.Name;
-					foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-					{
-						paddockInfo.totalWt += plant.AboveGroundWt;
-						if (DoVerbose)
-							summary.WriteMessage(this, "In " + paddock.Name + " there is " + paddockInfo.totalWt + " kg DM /ha of " + plant.Name);
-					}
-				listOfPaddockInfo.Add(paddockInfo);
-		    }*/
-
-
-		}
-                                
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-		   /* // how many days in this paddock?  Ready to move?
-		    DaysInThisPaddock += 1;
-		    if (DaysInThisPaddock >= TargetRotationLength)
-		    {
-				Cows.Move(g, listOfPaddockInfo[0].paddockName);  // "0" is because the list is sorted in descending order (but don't ask me to explain why!)
-				CurrentLocation = listOfPaddockInfo[0].paddockName;
-				summary.WriteMessage(this, "moving to " + listOfPaddockInfo[0].paddockName);
-				DaysInThisPaddock = 0;
-		    }*/
-
-                        /*
-            // total harvested is equal total defoliated, for now
-            HarvestedWt = DefoliatedWt;
-            HarvestedN = DefoliatedN;  */
-
-        	     	     	     	 
-			// get the type of amount given
-			/*if (RemoveAmountType == removeAmountTypes.ResidualDM)
-                amountType = "SetResidueAmount";
-            else
-                amountType = "SetRemoveAmount"; */
-
-
-			/*if (Cows.NumberAll > 0)
-			{
-				Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
-				// remove some biomass
-
-			    foreach (Zone paddock in Paddocks)
-	    		{
-		        	if (paddock.Name == CurrentLocation)
-					{
-						foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-						{
-							//Debugger.Break();
-							double amountToRemove = (15.0 * Cows.NumberAll) * (plant.AboveGroundWt /  plantWeights[0].totalWt);
-							if (amountToRemove >= plant.HarvestableWt)
-							{
-								if (DoVerbose)
-									summary.WriteMessage(this, "not enough plant for the animal demand");
-								amountToRemove = plant.HarvestableWt;
-							}
-							else
-							{
-							//double propToRemove = plant.AboveGroundWt /  plantWeights[0].totalWt;
-							plant.Graze(amount: amountToRemove, type: "SetRemoveAmount");
-							//DefoliatedWt += species.HarvestedWt;
-							//DefoliatedN += species.HarvestedN;
-							}
-						}
-					}
-				}
-			} */
-		}
-
-
-		public void SetInitialCowStuff()
-		{
-			/*g = Cows.NoGroups + 1;
-
-			StockBuy purchase = new StockBuy();
-			purchase.Genotype = "Friesian";
-			purchase.Number = NumCows;
-			purchase.Sex = "heifers"; 
-			purchase.Age = 24;       // age in months
-			purchase.Weight = 550.0;  // live weight in kg
-			purchase.UseTag = g + 1;
-			purchase.MatedTo = "Friesian";
-			purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
-			purchase.Lactating = 1;  // 0 for dry, 1 for lactating
-			purchase.NumYoung = 2;
-			purchase.YoungWt = 45;
-                
-			Cows.Buy(purchase); */
-		}
-
-	}
-}
-]]></Code>
-    </Manager>
-    <Report>
-      <Name>ReportTop</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ExperimentFactorNames />
-      <ExperimentFactorValues />
-      <VariableNames>
-        <string>[Clock].Today</string>
-        <string>[Ex_TargetRotationLength].Script.CurrentLocation</string>
-        <string>[Ex_TargetRotationLength].Script.CurrentLocation</string>
-        <string />
-        <string>//[Stock].NumberAll</string>
-        <string>[Stock].WeightAll</string>
-        <string>[Stock].CondScoreAll</string>
-        <string>[Stock].IntakeAll.Weight</string>
-        <string>[Stock].IntakeAll.N</string>
-        <string>[Stock].UrineNAll</string>
-        <string>[Stock].FaecesAll.N</string>
-        <string>[Stock].MilkWtAll</string>
-        <string>[Supplement].stores[2].Name</string>
-        <string>[Supplement].stores[2].Stored</string>
-      </VariableNames>
-      <EventNames>
-        <string>[Clock].EndOfDay</string>
-      </EventNames>
-    </Report>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <ShowPageOfGraphs>true</ShowPageOfGraphs>
-  </Folder>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
