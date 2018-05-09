@@ -4277,8 +4277,10 @@ namespace Models.GrazPlan
                 {
                     if (organ.IsAboveGround)
                     {
-                        organ.Live.Multiply(1.0 - propnRemoved);
-                        organ.Dead.Multiply(1.0 - propnRemoved);
+                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
+                        removal.FractionDeadToRemove = propnRemoved;
+                        removal.FractionLiveToRemove = propnRemoved;
+                        organ.RemoveBiomass("Graze", removal);
                     }
                 }
 
