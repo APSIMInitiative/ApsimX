@@ -46,7 +46,12 @@ namespace Models.Core
             /// <summary>
             /// Use a list of known residue types
             /// </summary>
-            ResidueName
+            ResidueName,
+
+            /// <summary>
+            /// Category - visual separator
+            /// </summary>
+            Category,
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A list of all properties found in the Model.
         /// </summary>
-        private List<VariableProperty> properties = new List<VariableProperty>();
+        private List<IVariable> properties = new List<IVariable>();
 
         /// <summary>
         /// Gets a value indicating whether the grid is empty (i.e. no rows).
@@ -210,6 +210,34 @@ namespace UserInterface.Presenters
                         this.grid.DataSource = dt;
                     }
                 }
+
+                foreach (FieldInfo property in this.model.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+                {
+                    // Properties must have a [Description], not be called Name, and be read/write.
+                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
+                    bool includeProperty = hasDescription &&
+                                           property.Name != "Name";
+
+                    // Only allow lists that are double[], int[] or string[]
+                    if (includeProperty && property.FieldType.GetInterface("IList") != null)
+                    {
+                        includeProperty = property.FieldType == typeof(double[]) ||
+                                          property.FieldType == typeof(int[]) ||
+                                          property.FieldType == typeof(string[]);
+                    }
+
+                    if (includeProperty)
+                    {
+                        this.properties.Add(new VariableField(this.model, property));
+                    }
+
+                    if (property.FieldType == typeof(DataTable))
+                    {
+                        VariableField vp = new VariableField(this.model, property);
+                        DataTable dt = vp.Value as DataTable;
+                        this.grid.DataSource = dt;
+                    }
+                }
             }
         }
 
@@ -264,7 +292,7 @@ namespace UserInterface.Presenters
         /// <param name="table">The table that needs to be filled</param>
         private void FillTable(DataTable table)
         {
-            foreach (VariableProperty property in this.properties)
+            foreach (IVariable property in this.properties)
             {
                 table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
             }
@@ -311,6 +339,13 @@ namespace UserInterface.Presenters
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
+                }
+                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.Category)
+                {
+                    cell.EditorType = EditorTypeEnum.TextBox;
+                    IGridColumn col0 = grid.GetColumn(0);
+                    col0.ReadOnly = true;
+                    col0.ReadOnly = true;
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
                 {
@@ -379,6 +414,11 @@ namespace UserInterface.Presenters
             valueColumn.Width = -1;
         }
 
+        public void SetCellReadOnly(IGridCell cell)
+        {
+
+        }
+
         /// <summary>Get a list of cultivars for crop.</summary>
         /// <param name="crop">The crop.</param>
         /// <returns>A list of cultivars.</returns>
@@ -438,9 +478,9 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="properties">The list of properties to look through.</param>
         /// <returns>The found crop or null if none found.</returns>
-        private IPlant GetCrop(List<VariableProperty> properties)
+        private IPlant GetCrop(List<IVariable> properties)
         {
-            foreach (VariableProperty property in properties)
+            foreach (IVariable property in properties)
             {
                 if (property.DataType == typeof(IPlant))
                 {
@@ -504,7 +544,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="property">The property to set the value of</param>
         /// <param name="value">The value to set the property to</param>
-        private void SetPropertyValue(VariableProperty property, object value)
+        private void SetPropertyValue(IVariable property, object value)
         {
             if (property.DataType.IsArray && value != null)
             {

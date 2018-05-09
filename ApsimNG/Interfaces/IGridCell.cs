@@ -76,5 +76,15 @@ namespace UserInterface.Interfaces
         /// Gets or sets the cell value
         /// </summary>
         object Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the cell is readonly.
+        /// </summary>
+        bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cell background colour
+        /// </summary>
+        Gdk.Color BackgroundColour { get; set; }
     }
 }

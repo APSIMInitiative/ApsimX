@@ -333,7 +333,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the property
         /// </summary>
-        public Type DataType
+        public override Type DataType
         {
             get
             {
@@ -415,7 +415,6 @@ namespace Models.Core
             }
         }
 
-
         /// <summary>
         /// Special case where trying to get a property of an array(IList). In this case
         /// we want to return the property value for all items in the array.
@@ -470,7 +469,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private string AsString(object value)
+        internal static string AsString(object value)
         {
             if (value == null)
                 return string.Empty;
@@ -484,7 +483,7 @@ namespace Models.Core
         /// <summary>
         /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
         /// </summary>
-        public object ValueWithArrayHandling
+        public override object ValueWithArrayHandling
         {
             get
             {
@@ -532,17 +531,17 @@ namespace Models.Core
                 return value;
             }
 
-            set
-            {
-                if (value is string)
-                {
-                    this.SetFromString(value as string);
-                }
-                else
-                {
-                    this.Value = value;   
-                }
-            }
+            //set
+            //{
+            //    if (value is string)
+            //    {
+            //        this.SetFromString(value as string);
+            //    }
+            //    else
+            //    {
+            //        this.Value = value;   
+            //    }
+            //}
         }
 
         /// <summary>
@@ -619,7 +618,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the associated display type for the related property.
         /// </summary>
-        public DisplayAttribute.DisplayTypeEnum DisplayType
+        public override DisplayAttribute.DisplayTypeEnum DisplayType
         {
             get
             {

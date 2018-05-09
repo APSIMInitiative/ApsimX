@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="29">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -557,11 +557,17 @@ namespace Models
         [Link] Supplement Feed;
         [Link] Simulation Farm;
 
+        [Catgegory("Category 1")];
+        public int Category1;
+
         [Description("Number of young stock to purchase")]
         public string dateToBuySell = "15-Jan";
 
         [Description("Stocking rate (wethers/property ha)")]
         public double stockRate = 7.5;
+
+        [Catgegory("Category 2")];
+        public int Category2;
 
         [Description("Proportion of mature animals to sell")]
         public double sale_propn = 0.25;

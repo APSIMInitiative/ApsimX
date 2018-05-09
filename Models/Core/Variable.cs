@@ -55,6 +55,11 @@
         }
 
         /// <summary>
+        /// Gets the data type of the property
+        /// </summary>
+        public override Type DataType { get { return null; } }
+
+        /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
         public override string Description
@@ -64,7 +69,6 @@
                 return null;
             }
         }
-
 
         /// <summary>
         /// Gets the text to use as a label for the property.
@@ -103,6 +107,29 @@
                 return null;
             }
         }
+
+        /// <summary>
+        /// Gets the associated display type for the related property.
+        /// </summary>
+        public override DisplayAttribute.DisplayTypeEnum DisplayType 
+        {
+            get
+            {
+                return DisplayAttribute.DisplayTypeEnum.None;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
+        /// </summary>
+        public override object ValueWithArrayHandling
+        {
+            get
+            {
+                return Value;
+            }
+        }
+
     }
 
     /// <summary>
@@ -159,6 +186,69 @@
             set
             {
                 FieldInfo.SetValue(Object, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
+        /// </summary>
+        public override object ValueWithArrayHandling
+        {
+            get
+            {
+                object value = this.Value;
+                if (value == null)
+                {
+                    return string.Empty;
+                }
+
+                if (this.DataType.IsArray)
+                {
+                    string stringValue = string.Empty;
+                    Array arr = value as Array;
+                    if (arr == null)
+                    {
+                        return stringValue;
+                    }
+
+                    for (int j = 0; j < arr.Length; j++)
+                    {
+                        if (j > 0)
+                        {
+                            stringValue += ",";
+                        }
+
+                        Array arr2d = arr.GetValue(j) as Array;
+                        if (arr2d == null)
+                            stringValue += VariableProperty.AsString(arr.GetValue(j));
+                        else
+                        {
+                            for (int k = 0; k < arr2d.Length; k++)
+                            {
+                                if (k > 0)
+                                {
+                                    stringValue += " \r\n ";
+                                }
+                                stringValue += VariableProperty.AsString(arr2d.GetValue(k));
+                            }
+                        }
+                    }
+
+                    value = stringValue;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the data type of the property
+        /// </summary>
+        public override Type DataType
+        {
+            get
+            {
+                return FieldInfo.FieldType;
             }
         }
 
@@ -224,6 +314,25 @@
                 if (unitsAttribute != null)
                     return "(" + unitsAttribute.ToString() + ")";
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the associated display type for the related property.
+        /// </summary>
+        public override DisplayAttribute.DisplayTypeEnum DisplayType
+        {
+            get
+            {
+                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(DisplayAttribute), false) as DisplayAttribute;
+                if (displayAttribute != null)
+                {
+                    return displayAttribute.DisplayType;
+                }
+                else
+                {
+                    return DisplayAttribute.DisplayTypeEnum.None;
+                }
             }
         }
     }
