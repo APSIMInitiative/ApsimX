@@ -307,6 +307,8 @@ namespace Models
                     object value;
                     if (element.InnerText.StartsWith(".Simulations."))
                         value = Apsim.Get(this, element.InnerText);
+                    else if (property.PropertyType == typeof(IPlant))
+                        value = Apsim.Find(this, element.InnerText);
                     else
                         value = ReflectionUtilities.StringToObject(property.PropertyType, element.InnerText);
                     property.SetValue(script, value, null);
