@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="DescriptionAttribute.cs" company="APSIM Initiative">
+// <copyright file="SeparatorAttribute.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -12,8 +12,8 @@ namespace Models.Core
     /// Specifies that the related class should use the user interface view
     /// that has the specified name.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class)]
-    public class DescriptionAttribute : System.Attribute
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    public class SeparatorAttribute : System.Attribute
     {
         /// <summary>
         /// The name of the view class
@@ -21,14 +21,12 @@ namespace Models.Core
         private string description;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DescriptionAttribute" /> class.
+        /// Initializes a new instance of the <see cref="SeparatorAttribute" /> class.
         /// </summary>
         /// <param name="description">Description text</param>
-        /// <param name="lineNum">Line number of declaration - inserted by compiler magically. Useful for sorting</param>
-        public DescriptionAttribute(string description, [CallerLineNumber]int lineNum = 0)
+        public SeparatorAttribute(string description)
         {
             this.description = description;
-            LineNumber = lineNum;
         }
 
         /// <summary>
@@ -39,10 +37,5 @@ namespace Models.Core
         {
             return this.description;
         }
-
-        /// <summary>
-        /// Line number of declaration
-        /// </summary>
-        public int LineNumber { get; private set; }
     } 
 }

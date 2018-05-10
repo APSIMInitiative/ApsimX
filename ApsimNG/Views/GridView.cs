@@ -275,6 +275,25 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Marks the cell as readonly.
+        /// </summary>
+        /// <param name="gridCell">The grid cell to change</param>
+        internal void SetReadOnly(GridCell gridCell)
+        {
+            CellRendererText renderer = Gridview.Columns[gridCell.ColumnIndex].CellRenderers[gridCell.RowIndex] as CellRendererText;
+            if (renderer != null)
+                renderer.Editable = false;
+        }
+
+        /// <summary>
+        /// Changes the cell background colour
+        /// </summary>
+        /// <param name="gridCell">The grid cell to change</param>
+        internal void SetBackgroundColour(GridCell gridCell, Color colour)
+        {
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether "property" mode is enabled
         /// </summary>
         public bool PropertyMode
@@ -1986,7 +2005,9 @@ namespace UserInterface.Views
         {
             (e.Editable as ComboBox).Changed += (o, _) =>
             {
-                UpdateCellText(GetCurrentCell, (o as ComboBox).ActiveText);
+                IGridCell currentCell = GetCurrentCell;
+                if (currentCell != null)
+                    UpdateCellText(currentCell, (o as ComboBox).ActiveText);
             };
         }
 

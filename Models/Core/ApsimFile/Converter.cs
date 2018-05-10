@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 29; } }
+        public static int LastestVersion { get { return 30; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -880,5 +880,20 @@ namespace Models.Core.ApsimFile
                 XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
             }
         }
+
+        /// <summary>
+        /// Upgrades to version 30. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion30(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                string pattern = @"DisplayType *= *DisplayAttribute\.DisplayTypeEnum\.";
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, "Type=DisplayType.", null);
+            }
+        }
+
     }
 }
