@@ -14,7 +14,6 @@
     [Serializable]
     public class VariableObject : IVariable
     {
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -111,11 +110,11 @@
         /// <summary>
         /// Gets the associated display type for the related property.
         /// </summary>
-        public override DisplayAttribute.DisplayTypeEnum DisplayType 
+        public override DisplayAttribute Display
         {
             get
             {
-                return DisplayAttribute.DisplayTypeEnum.None;
+                return null;
             }
         }
 
@@ -130,6 +129,10 @@
             }
         }
 
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return true; } }
     }
 
     /// <summary>
@@ -320,20 +323,17 @@
         /// <summary>
         /// Gets the associated display type for the related property.
         /// </summary>
-        public override DisplayAttribute.DisplayTypeEnum DisplayType
+        public override DisplayAttribute Display
         {
             get
             {
-                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(DisplayAttribute), false) as DisplayAttribute;
-                if (displayAttribute != null)
-                {
-                    return displayAttribute.DisplayType;
-                }
-                else
-                {
-                    return DisplayAttribute.DisplayTypeEnum.None;
-                }
+                return ReflectionUtilities.GetAttribute(FieldInfo, typeof(DisplayAttribute), false) as DisplayAttribute;
             }
         }
+
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return true; } }
     }
 }

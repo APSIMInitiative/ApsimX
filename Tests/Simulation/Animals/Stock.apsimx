@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="29">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="30">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -540,12 +540,19 @@ This is the documenation for the stock model.]]></MemoText>
         <Manager>
           <Name>BuySell</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Script />
+          <Script>
+            <w>.Simulations.Management Examples.Stocking Rates.Farm.Feedlot.Soil</w>
+            <dateToBuySell>10</dateToBuySell>
+            <stockRate>11</stockRate>
+            <sale_propn>12</sale_propn>
+            <no_to_buy>13</no_to_buy>
+          </Script>
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.Utilities;
 using Models.GrazPlan;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models
 {
@@ -557,23 +564,26 @@ namespace Models
         [Link] Supplement Feed;
         [Link] Simulation Farm;
 
-        [Catgegory("Category 1")];
-        public int Category1;
+        [Separator("Category1")]
 
         [Description("Number of young stock to purchase")]
-        public string dateToBuySell = "15-Jan";
+        public string dateToBuySell { get; set;}
 
         [Description("Stocking rate (wethers/property ha)")]
-        public double stockRate = 7.5;
+        public double stockRate { get; set;}
 
-        [Catgegory("Category 2")];
-        public int Category2;
+        [Separator("Category2")]
 
         [Description("Proportion of mature animals to sell")]
-        public double sale_propn = 0.25;
+        public double sale_propn { get; set;}
 
         [Description("Number of young stock to purchase")]
-        public double no_to_buy = 0;
+        public double no_to_buy { get; set;}
+
+        [Description("Model name")]
+        [Display(Type=DisplayType.Model/*,
+                 ModelType=typeof(Weather)*/)]
+        public IModel w {get; set; }
 
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)

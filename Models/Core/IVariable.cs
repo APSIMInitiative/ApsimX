@@ -62,6 +62,11 @@ namespace Models.Core
         /// <summary>
         /// Gets the associated display type for the related property.
         /// </summary>
-        public abstract DisplayAttribute.DisplayTypeEnum DisplayType { get; }
+        public abstract DisplayAttribute Display { get; }
+
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public abstract bool Writable { get; }
     }
 } 

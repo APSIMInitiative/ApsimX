@@ -511,7 +511,7 @@ namespace Models.Core
 
                         Array arr2d = arr.GetValue(j) as Array;
                         if (arr2d == null)
-                           stringValue += AsString(arr.GetValue(j));
+                            stringValue += AsString(arr.GetValue(j));
                         else
                         {
                             for (int k = 0; k < arr2d.Length; k++)
@@ -530,20 +530,13 @@ namespace Models.Core
 
                 return value;
             }
-
-            //set
-            //{
-            //    if (value is string)
-            //    {
-            //        this.SetFromString(value as string);
-            //    }
-            //    else
-            //    {
-            //        this.Value = value;   
-            //    }
-            //}
         }
 
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return property.CanRead && property.CanWrite; } }
+    
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
         /// </summary>
@@ -618,19 +611,11 @@ namespace Models.Core
         /// <summary>
         /// Gets the associated display type for the related property.
         /// </summary>
-        public override DisplayAttribute.DisplayTypeEnum DisplayType
+        public override DisplayAttribute Display
         {
             get
             {
-                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                if (displayAttribute != null)
-                {
-                    return displayAttribute.DisplayType;
-                }
-                else
-                {
-                    return DisplayAttribute.DisplayTypeEnum.None;
-                }
+                return ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
             }
         }
 

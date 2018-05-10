@@ -211,25 +211,19 @@ namespace UserInterface.Classes
         }
 
         /// <summary>
-        /// Gets or sets whether the cell is readonly.
+        /// Sets whether the cell is readonly.
         /// </summary>
         public void SetReadOnly()
         {
-            
+            gridView.SetReadOnly(this);
         }
 
         /// <summary>
-        /// Gets or sets the cell background colour
+        /// Sets the cell background colour
         /// </summary>
-        public Gdk.Color BackgroundColour
+        public void SetBackgroundColour(System.Drawing.Color colour)
         {
-            get
-            {
-            }
-            set
-            {
-
-            }
+            gridView.SetBackgroundColour(this, colour);
         }
     }
 }

@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using System;
+using System.Drawing;
+
 namespace UserInterface.Interfaces
 {
     /// <summary>
@@ -78,13 +80,13 @@ namespace UserInterface.Interfaces
         object Value { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the cell is readonly.
+        /// Sets whether the cell is readonly.
         /// </summary>
-        bool ReadOnly { get; set; }
+        void SetReadOnly();
 
         /// <summary>
-        /// Gets or sets the cell background colour
+        /// Sets the cell background colour
         /// </summary>
-        Gdk.Color BackgroundColour { get; set; }
+        void SetBackgroundColour(Color colour);
     }
 }

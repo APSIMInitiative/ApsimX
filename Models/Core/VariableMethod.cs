@@ -110,15 +110,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the associated display type for the related property.
+        /// Gets the associated display type for the related method.
         /// </summary>
-        public override DisplayAttribute.DisplayTypeEnum DisplayType
-        {
-            get
-            {
-                return DisplayAttribute.DisplayTypeEnum.None;
-            }
-        }
+        public override DisplayAttribute Display { get { return null; } }
 
         /// <summary>
         /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
@@ -130,5 +124,10 @@ namespace Models.Core
                 return Object;
             }
         }
+
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return false; } }
     }
 }

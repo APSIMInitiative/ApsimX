@@ -181,61 +181,41 @@ namespace UserInterface.Presenters
             this.properties.Clear();
             if (this.model != null)
             {
-                foreach (PropertyInfo property in this.model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+                var members = from member in this.model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public)
+                                 where Attribute.IsDefined(member, typeof(DescriptionAttribute)) &&
+                                       (member is PropertyInfo || member is FieldInfo)
+                                 orderby ((DescriptionAttribute)member
+                                           .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                                           .Single()).LineNumber
+                                 select member;
+
+                foreach (MemberInfo member in members)
                 {
-                    // Properties must have a [Description], not be called Name, and be read/write.
-                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
-                    bool includeProperty = hasDescription &&
-                                           property.Name != "Name" &&
-                                           property.CanRead &&
-                                           property.CanWrite;
+                    IVariable property = null;
+                    if (member is PropertyInfo)
+                        property = new VariableProperty(this.model, member as PropertyInfo);
+                    else if (member is FieldInfo)
+                        property = new VariableField(this.model, member as FieldInfo);
 
-                    // Only allow lists that are double[], int[] or string[]
-                    if (includeProperty && property.PropertyType.GetInterface("IList") != null)
+                    if (property != null && property.Description != null && property.Writable)
                     {
-                        includeProperty = property.PropertyType == typeof(double[]) ||
-                                          property.PropertyType == typeof(int[]) ||
-                                          property.PropertyType == typeof(string[]);
-                    }
+                        // Only allow lists that are double[], int[] or string[]
+                        bool includeProperty = true;
+                        if (property.DataType.GetInterface("IList") != null)
+                        {
+                            includeProperty = property.DataType == typeof(double[]) ||
+                                              property.DataType == typeof(int[]) ||
+                                              property.DataType == typeof(string[]);
+                        }
 
-                    if (includeProperty)
-                    {
-                        this.properties.Add(new VariableProperty(this.model, property));
-                    }
+                        if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
+                            properties.Add(new VariableObject(property.Description));  // use a VariableObject for separators
 
-                    if (property.PropertyType == typeof(DataTable))
-                    {
-                        VariableProperty vp = new VariableProperty(this.model, property);
-                        DataTable dt = vp.Value as DataTable;
-                        this.grid.DataSource = dt;
-                    }
-                }
+                        if (includeProperty)
+                            this.properties.Add(property);
 
-                foreach (FieldInfo property in this.model.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
-                {
-                    // Properties must have a [Description], not be called Name, and be read/write.
-                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
-                    bool includeProperty = hasDescription &&
-                                           property.Name != "Name";
-
-                    // Only allow lists that are double[], int[] or string[]
-                    if (includeProperty && property.FieldType.GetInterface("IList") != null)
-                    {
-                        includeProperty = property.FieldType == typeof(double[]) ||
-                                          property.FieldType == typeof(int[]) ||
-                                          property.FieldType == typeof(string[]);
-                    }
-
-                    if (includeProperty)
-                    {
-                        this.properties.Add(new VariableField(this.model, property));
-                    }
-
-                    if (property.FieldType == typeof(DataTable))
-                    {
-                        VariableField vp = new VariableField(this.model, property);
-                        DataTable dt = vp.Value as DataTable;
-                        this.grid.DataSource = dt;
+                        if (property.DataType == typeof(DataTable))
+                            this.grid.DataSource = property.Value as DataTable;
                     }
                 }
             }
@@ -261,7 +241,8 @@ namespace UserInterface.Presenters
                         continue;
                     }
 
-                    if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
+                    if (this.properties[i].Display != null &&
+                        this.properties[i].Display.Type == DisplayType.CultivarName)
                     {
                         IPlant crop = this.GetCrop(this.properties);
                         if (crop != null)
@@ -269,7 +250,8 @@ namespace UserInterface.Presenters
                             cell.DropDownStrings = this.GetCultivarNames(crop);
                         }
                     }
-                    else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
+                    else if (this.properties[i].Display != null &&
+                             this.properties[i].Display.Type == DisplayType.FieldName)
                     {
                         string[] fieldNames = this.GetFieldNames();
                         if (fieldNames != null)
@@ -294,7 +276,12 @@ namespace UserInterface.Presenters
         {
             foreach (IVariable property in this.properties)
             {
-                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
+                if (property is VariableObject)
+                    table.Rows.Add(new object[] { "###### " + property.Value , "###############" });
+                else if (property.Value is IModel)
+                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel)});
+                else
+                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
             }
 
             this.grid.DataSource = table;
@@ -321,13 +308,27 @@ namespace UserInterface.Presenters
             for (int i = 0; i < this.properties.Count; i++)
             {
                 IGridCell cell = this.grid.GetCell(1, i);
-                        
-                if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
+                    
+                if (this.properties[i] is VariableObject)
+                {
+                    cell.EditorType = EditorTypeEnum.TextBox;
+
+                    //IGridCell cell1 = grid.GetCell(0, i);
+                    //cell1.SetBackgroundColour(System.Drawing.Color.LightGray);
+                    //cell1.SetReadOnly();
+
+                    //IGridCell cell2 = grid.GetCell(1, i);
+                    //cell2.SetBackgroundColour(System.Drawing.Color.LightGray);
+                    //cell2.SetReadOnly();
+                }
+                else if (this.properties[i].Display != null && 
+                         this.properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     cell.DropDownStrings = this.storage.TableNames.ToArray();
                 }
-                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
+                else if (this.properties[i].Display != null && 
+                         this.properties[i].Display.Type == DisplayType.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     IPlant crop = this.GetCrop(this.properties);
@@ -336,18 +337,13 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = this.GetCultivarNames(crop);
                     }
                 }
-                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FileName)
+                else if (this.properties[i].Display != null && 
+                         this.properties[i].Display.Type == DisplayType.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
                 }
-                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.Category)
-                {
-                    cell.EditorType = EditorTypeEnum.TextBox;
-                    IGridColumn col0 = grid.GetColumn(0);
-                    col0.ReadOnly = true;
-                    col0.ReadOnly = true;
-                }
-                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
+                else if (this.properties[i].Display != null && 
+                         this.properties[i].Display.Type == DisplayType.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     string[] fieldNames = this.GetFieldNames();
@@ -356,7 +352,8 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.ResidueName &&
+                else if (this.properties[i].Display != null && 
+                         this.properties[i].Display.Type == DisplayType.ResidueName &&
                          this.model is Models.SurfaceOM.SurfaceOrganicMatter)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
@@ -365,6 +362,15 @@ namespace UserInterface.Presenters
                     {
                         cell.DropDownStrings = fieldNames;
                     }
+                }
+                else if (this.properties[i].Display != null && 
+                         properties[i].Display.Type == DisplayType.Model)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+
+                    string[] modelNames = GetModelNames(properties[i].Display.ModelType);
+                    if (modelNames != null)
+                        cell.DropDownStrings = modelNames;
                 }
                 else
                 {
@@ -454,7 +460,7 @@ namespace UserInterface.Presenters
             string[] fieldNames = null;
             for (int i = 0; i < this.properties.Count; i++)
             {
-                if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
+                if (this.properties[i].Display.Type == DisplayType.TableName)
                 {
                     IGridCell cell = this.grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
@@ -509,6 +515,20 @@ namespace UserInterface.Presenters
                 return result;
             }
             return null;
+        }
+
+        private string[] GetModelNames(Type t)
+        {
+            List<IModel> models;
+            if (t == null)
+                models = Apsim.FindAll(this.model);
+            else
+                models = Apsim.FindAll(this.model, t);
+
+            List<string> modelNames = new List<string>();
+            foreach (IModel model in models)
+                modelNames.Add(Apsim.FullPath(model));
+            return modelNames.ToArray();
         }
 
         /// <summary>
@@ -577,6 +597,11 @@ namespace UserInterface.Presenters
             else if (property.DataType.IsEnum)
             {
                 value = Enum.Parse(property.DataType, value.ToString());
+            }
+            else if (property.Display != null &&
+                     property.Display.Type == DisplayType.Model)
+            {
+                value = Apsim.Get(this.model, value.ToString());
             }
 
             Commands.ChangeProperty cmd = new Commands.ChangeProperty(this.model, property.Name, value);
