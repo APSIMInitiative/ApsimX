@@ -1050,13 +1050,19 @@ namespace Models.GrazPlan
                 }
             }
 
-            double totalDM = result.TotalGreen + result.TotalDead;
+            // *temporary* code to estimate the Available amount
+            double availDM = Math.Max(0, result.TotalGreen + result.TotalDead - 40);
+            double availPropn = availDM / (result.TotalGreen + result.TotalDead);
+            totalN *= availPropn;
+            
 
             // TODO: Improve this routine
 
-            if (totalDM > 0)
+            if (availDM > 0)
             {
-                meanDMD = totalDMD / totalDM; //calc the average dmd for the plant
+                meanDMD = totalDMD / (result.TotalGreen + result.TotalDead); //calc the average dmd for the plant
+                result.TotalGreen *= availPropn;
+                result.TotalDead *= availPropn;
 
                 //get the dmd distribution
                 double[] dDMDPropns = new double[GrazType.DigClassNo + 1];
@@ -1066,7 +1072,7 @@ namespace Models.GrazPlan
 
                 for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
                 {
-                    result.Herbage[idx].Biomass = dDMDPropns[idx] * totalDM;
+                    result.Herbage[idx].Biomass = dDMDPropns[idx] * availDM;
                     result.Herbage[idx].CrudeProtein = dDMDPropns[idx] * totalN * GrazType.N2Protein;
                     result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
                     result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
@@ -1076,10 +1082,10 @@ namespace Models.GrazPlan
                     result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
                 }
 
-                result.LegumePropn = 0.0;   // TODO: set from Plant model value
+                result.LegumePropn = ((IPlant)forageObj).Legumosity;  
                 result.SelectFactor = 0;    // TODO: set from Plant model value
 
-                // TODO: Store the seed pools
+                // TODO: Store any seed pools
             }
 
             return result;
@@ -1103,7 +1109,7 @@ namespace Models.GrazPlan
                 double totalRemoved = 0.0;
                 for (int i = 0; i < removed.Herbage.Length; i++)
                     totalRemoved += removed.Herbage[i];
-                double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead);
+                double propnRemoved = Math.Min(1.0, totalRemoved / (forage.TotalLive + forage.TotalDead));
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
                 double totalDM = 0;
@@ -1120,7 +1126,7 @@ namespace Models.GrazPlan
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
                         double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
-                        double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
+                        double prpnToRemove = propnRemoved;// * propnOfPlantDM / (1.0 - propnOfPlantDM);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnToRemove;
                         removal.FractionLiveToRemove = prpnToRemove;
