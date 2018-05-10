@@ -277,7 +277,7 @@ namespace UserInterface.Presenters
             foreach (IVariable property in this.properties)
             {
                 if (property is VariableObject)
-                    table.Rows.Add(new object[] { "###### " + property.Value , "###############" });
+                    table.Rows.Add(new object[] { property.Value , null });
                 else if (property.Value is IModel)
                     table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel)});
                 else
