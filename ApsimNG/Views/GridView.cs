@@ -123,6 +123,35 @@ namespace UserInterface.Views
         private List<int> activeCol = new List<int>();
 
         /// <summary>
+        /// List of "category" row numbers - uneditable rows used as separators
+        /// </summary>
+        private List<int> categoryRows = new List<int>();
+
+        /// <summary>
+        /// Small data structure to hold information about how a column should be rendered
+        /// </summary>
+        private class ColRenderAttributes
+        {
+            /// <summary>
+            /// Whether the column data are read-only
+            /// </summary>
+            internal bool readOnly = false;
+            /// <summary>
+            /// Background colour for normal text rendering
+            /// </summary>
+            internal Gdk.Color backgroundColor;
+            /// <summary>
+            /// Foreground colour for normal text rendering
+            /// </summary>
+            internal Gdk.Color foregroundColor;
+        }
+
+        /// <summary>
+        /// Dictionary for looking up the rendering attributes for each column
+        /// </summary>
+        private Dictionary<int, ColRenderAttributes> colAttributes = new Dictionary<int, ColRenderAttributes>();
+
+        /// <summary>
         /// Is used as a property editor
         /// </summary>
         private bool isPropertyMode = false;
@@ -504,6 +533,7 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
+            colAttributes.Clear();
             while (Gridview.Columns.Length > 0)
             {
                 TreeViewColumn col = Gridview.GetColumn(0);
@@ -878,6 +908,10 @@ namespace UserInterface.Views
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
+                ColRenderAttributes attrib = new ColRenderAttributes();
+                attrib.foregroundColor = Gridview.Style.Foreground(StateType.Normal);
+                attrib.backgroundColor = Gridview.Style.Base(StateType.Normal);
+                colAttributes.Add(i, attrib);
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
@@ -1402,6 +1436,22 @@ namespace UserInterface.Views
             cell.Visible = true;
             CellRendererText textRenderer = cell as CellRendererText;
             textRenderer.Text = text;
+            if (!activeCol.Contains(colNo))
+            {
+                if (categoryRows.Contains(rowNo))
+                {
+                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                    Color bgColor = Color.LightSteelBlue;
+                    textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
+                    textRenderer.Editable = false;
+                }
+                else
+                {
+                    textRenderer.ForegroundGdk = ColForegroundColor(colNo);
+                    textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
+                }
+            }
         }
 
         /// <summary>
@@ -1441,6 +1491,105 @@ namespace UserInterface.Views
         {
             return new GridColumn(this, columnIndex);
         }
+
+        /// <summary>
+        /// Indicates that a row should be treated as a separator line
+        /// </summary>
+        /// <param name="row">the row number</param>
+        /// <param name="isSep">added as a separator if true; removed as a separator if false</param>
+        public void SetRowAsSeparator(int row, bool isSep = true)
+        {
+            bool present = categoryRows.Contains(row);
+            if (isSep && !present)
+                categoryRows.Add(row);
+            else if (!isSep && present)
+                categoryRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Sets whether a column is readonly
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="isReadonly">true if readonly</param>
+        public void SetColAsReadonly(int col, bool isReadonly)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.readOnly = isReadonly;
+            }
+        }
+
+        /// <summary>
+        /// Returns whether a column is set as readonly
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>true if readonly</returns>
+        public bool ColIsReadonly(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.readOnly;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Sets the normal foreground colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="color">Gdk.Color to be used</param>
+        public void SetColForegroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.foregroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal foreground colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>Gdk.Color to be used as the foreground colour</returns>
+        public Gdk.Color ColForegroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.foregroundColor;
+            else
+                return Gridview.Style.Foreground(StateType.Normal);
+        }
+
+        /// <summary>
+        /// Sets the normal background colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="color">Gdk.Color to be used</param>
+        public void SetColBackgroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.backgroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal background colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>Gdk.Color to be used as the background colour</returns>
+        public Gdk.Color ColBackgroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.backgroundColor;
+            else
+                return Gridview.Style.Base(StateType.Normal);
+        }
+
 
         /// <summary>
         /// Add a separator (on context menu) on the series grid.
