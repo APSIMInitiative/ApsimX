@@ -123,6 +123,35 @@ namespace UserInterface.Views
         private List<int> activeCol = new List<int>();
 
         /// <summary>
+        /// List of "category" row numbers - uneditable rows used as separators
+        /// </summary>
+        private List<int> categoryRows = new List<int>();
+
+        /// <summary>
+        /// Small data structure to hold information about how a column should be rendered
+        /// </summary>
+        private class ColRenderAttributes
+        {
+            /// <summary>
+            /// Whether the column data are read-only
+            /// </summary>
+            internal bool readOnly = false;
+            /// <summary>
+            /// Background colour for normal text rendering
+            /// </summary>
+            internal Gdk.Color backgroundColor;
+            /// <summary>
+            /// Foreground colour for normal text rendering
+            /// </summary>
+            internal Gdk.Color foregroundColor;
+        }
+
+        /// <summary>
+        /// Dictionary for looking up the rendering attributes for each column
+        /// </summary>
+        private Dictionary<int, ColRenderAttributes> colAttributes = new Dictionary<int, ColRenderAttributes>();
+
+        /// <summary>
         /// Is used as a property editor
         /// </summary>
         private bool isPropertyMode = false;
@@ -523,6 +552,7 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
+            colAttributes.Clear();
             while (Gridview.Columns.Length > 0)
             {
                 TreeViewColumn col = Gridview.GetColumn(0);
@@ -897,13 +927,17 @@ namespace UserInterface.Views
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
+                ColRenderAttributes attrib = new ColRenderAttributes();
+                attrib.foregroundColor = Gridview.Style.Foreground(StateType.Normal);
+                attrib.backgroundColor = Gridview.Style.Base(StateType.Normal);
+                colAttributes.Add(i, attrib);
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
                 toggleRender.Visible = false;
                 toggleRender.Toggled += ToggleRender_Toggled;
                 toggleRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 0.5f; // Left of center align, as appropriate
-                CellRendererCombo comboRender = new Gtk.CellRendererCombo();
+                CellRendererCombo comboRender = new CellRendererDropDown();
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
@@ -1346,7 +1380,7 @@ namespace UserInterface.Views
             TreePath path = model.GetPath(iter);
             TreeView view = col.TreeView as TreeView;
             int rowNo = path.Indices[0];
-            int colNo;
+            int colNo = -1;
             string text = string.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
@@ -1417,8 +1451,26 @@ namespace UserInterface.Views
                     text = AsString(dataVal);
                 }
             }
+            // We have a "text" cell. Set the text, and other properties for the cell
             cell.Visible = true;
-            (cell as CellRendererText).Text = text;
+            CellRendererText textRenderer = cell as CellRendererText;
+            textRenderer.Text = text;
+            if (!activeCol.Contains(colNo))
+            {
+                if (categoryRows.Contains(rowNo))
+                {
+                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                    Color bgColor = Color.LightSteelBlue;
+                    textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
+                    textRenderer.Editable = false;
+                }
+                else
+                {
+                    textRenderer.ForegroundGdk = ColForegroundColor(colNo);
+                    textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
+                }
+            }
         }
 
         /// <summary>
@@ -1458,6 +1510,105 @@ namespace UserInterface.Views
         {
             return new GridColumn(this, columnIndex);
         }
+
+        /// <summary>
+        /// Indicates that a row should be treated as a separator line
+        /// </summary>
+        /// <param name="row">the row number</param>
+        /// <param name="isSep">added as a separator if true; removed as a separator if false</param>
+        public void SetRowAsSeparator(int row, bool isSep = true)
+        {
+            bool present = categoryRows.Contains(row);
+            if (isSep && !present)
+                categoryRows.Add(row);
+            else if (!isSep && present)
+                categoryRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Sets whether a column is readonly
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="isReadonly">true if readonly</param>
+        public void SetColAsReadonly(int col, bool isReadonly)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.readOnly = isReadonly;
+            }
+        }
+
+        /// <summary>
+        /// Returns whether a column is set as readonly
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>true if readonly</returns>
+        public bool ColIsReadonly(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.readOnly;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Sets the normal foreground colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="color">Gdk.Color to be used</param>
+        public void SetColForegroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.foregroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal foreground colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>Gdk.Color to be used as the foreground colour</returns>
+        public Gdk.Color ColForegroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.foregroundColor;
+            else
+                return Gridview.Style.Foreground(StateType.Normal);
+        }
+
+        /// <summary>
+        /// Sets the normal background colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="color">Gdk.Color to be used</param>
+        public void SetColBackgroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.backgroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal background colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>Gdk.Color to be used as the background colour</returns>
+        public Gdk.Color ColBackgroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.backgroundColor;
+            else
+                return Gridview.Style.Base(StateType.Normal);
+        }
+
 
         /// <summary>
         /// Add a separator (on context menu) on the series grid.
@@ -2454,4 +2605,46 @@ namespace UserInterface.Views
             window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
         }
     }
+
+    /// <summary>
+    /// This is an attempt to extend the default CellRendererComob widget to allow
+    /// a drop-down arrow to be visible at all times, rather than just when editing.
+    /// </summary>
+    public class CellRendererDropDown : CellRendererCombo
+    {
+        /// <summary>
+        /// Render the cell in the window
+        /// </summary>
+        /// <param name="window">The owning window</param>
+        /// <param name="widget">The widget</param>
+        /// <param name="background_area">Background area</param>
+        /// <param name="cell_area">The cell area</param>
+        /// <param name="expose_area">Expose the area</param>
+        /// <param name="flags">Render flags</param>
+        protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
+        {
+            base.Render(window, widget, background_area, cell_area, expose_area, flags);
+            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, "", ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
+        }
+
+        protected override void OnEditingStarted(CellEditable editable, string path)
+        {
+            base.OnEditingStarted(editable, path);
+            editable.EditingDone += Editable_EditingDone;
+        }
+
+        private void Editable_EditingDone(object sender, EventArgs e)
+        {
+            if (sender is CellEditable)
+            {
+                (sender as CellEditable).EditingDone -= Editable_EditingDone;
+                if (sender is Widget && (sender as Widget).Parent is TreeView)
+                {
+                    TreeView view = (sender as Widget).Parent as TreeView;
+                    view.GrabFocus();
+                }
+            }
+        }
+    }
+
 }
