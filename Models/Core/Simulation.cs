@@ -10,6 +10,7 @@ using APSIM.Shared.Utilities;
 using Models.Factorial;
 using System.ComponentModel;
 using Models.Core.Runners;
+using System.Linq;
 
 namespace Models.Core
 {
@@ -28,6 +29,15 @@ namespace Models.Core
 
         /// <summary>Has this simulation been run?</summary>
         private bool hasRun;
+
+        /// <summary>Return total area.</summary>
+        public double Area
+        {
+            get
+            {
+                return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
+            }
+        }
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
