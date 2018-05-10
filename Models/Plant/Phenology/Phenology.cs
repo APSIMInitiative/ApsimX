@@ -711,7 +711,7 @@ namespace Models.PMF.Phen
         /// <param name="fractionRemoved">The fraction of biomass that was removed</param>
         public void BiomassRemoved(double fractionRemoved)
         {
-            string existingStage = CurrentStageName;
+            int existingPhaseIndex = CurrentPhaseIndex;
             if (RewindDueToBiomassRemoved != null)
             {
                 FractionBiomassRemoved = fractionRemoved; // The RewindDueToBiomassRemoved function will use this.
@@ -720,12 +720,12 @@ namespace Models.PMF.Phen
                 double removeFractPheno = RewindDueToBiomassRemoved.Value();
                 double removeTTPheno = ttCritical * removeFractPheno;
 
-                string msg;
-                msg = "Phenology change:-\r\n";
-                msg += "    Fraction DM removed  = " + fractionRemoved.ToString() + "\r\n";
-                msg += "    Fraction TT removed  = " + removeFractPheno.ToString() + "\r\n";
-                msg += "    Critical TT          = " + ttCritical.ToString() + "\r\n";
-                msg += "    Remove TT            = " + removeTTPheno.ToString() + "\r\n";
+                //string msg;
+                //msg = "Phenology change:-\r\n";
+                //msg += "    Fraction DM removed  = " + fractionRemoved.ToString() + "\r\n";
+                //msg += "    Fraction TT removed  = " + removeFractPheno.ToString() + "\r\n";
+                //msg += "    Critical TT          = " + ttCritical.ToString() + "\r\n";
+                //msg += "    Remove TT            = " + removeTTPheno.ToString() + "\r\n";
                 //Summary.WriteMessage(this, msg);
 
                 double ttRemaining = removeTTPheno;
@@ -764,11 +764,11 @@ namespace Models.PMF.Phen
                 }
                 Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete - PhaseIndexOffset;
 
-                if (existingStage != CurrentStageName)
+                if (existingPhaseIndex != CurrentPhaseIndex)
                 {
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                    PhaseChangedData.OldPhaseName = existingStage;
-                    PhaseChangedData.NewPhaseName = CurrentPhase.Name;
+                    PhaseChangedData.OldPhaseName = Phases[existingPhaseIndex].Name;
+                    PhaseChangedData.NewPhaseName = Phases[CurrentPhaseIndex].Name;
                     PhaseChanged.Invoke(Plant, PhaseChangedData);
                     //Fixme MyPaddock.Publish(CurrentPhase.Start);
                 }
