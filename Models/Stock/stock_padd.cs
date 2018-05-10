@@ -1105,13 +1105,25 @@ namespace Models.GrazPlan
                     totalRemoved += removed.Herbage[i];
                 double propnRemoved = totalRemoved / (forage.TotalLive + forage.TotalDead);
 
+                // calculations of proportions each organ of the total plant removed (in the native units)
+                double totalDM = 0;
                 foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
+                        totalDM += organ.Live.Wt + organ.Dead.Wt;
+                    }
+                }
+
+                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                {
+                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    {
+                        double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
+                        double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = propnRemoved;
-                        removal.FractionLiveToRemove = propnRemoved;
+                        removal.FractionDeadToRemove = prpnToRemove;
+                        removal.FractionLiveToRemove = prpnToRemove;
                         organ.RemoveBiomass("Graze", removal);
                     }
                 }
