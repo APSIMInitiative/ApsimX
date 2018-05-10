@@ -313,13 +313,7 @@ namespace UserInterface.Presenters
                 {
                     cell.EditorType = EditorTypeEnum.TextBox;
 
-                    //IGridCell cell1 = grid.GetCell(0, i);
-                    //cell1.SetBackgroundColour(System.Drawing.Color.LightGray);
-                    //cell1.SetReadOnly();
-
-                    //IGridCell cell2 = grid.GetCell(1, i);
-                    //cell2.SetBackgroundColour(System.Drawing.Color.LightGray);
-                    //cell2.SetReadOnly();
+                    grid.SetRowAsSeparator(i, true);
                 }
                 else if (this.properties[i].Display != null && 
                          this.properties[i].Display.Type == DisplayType.TableName)

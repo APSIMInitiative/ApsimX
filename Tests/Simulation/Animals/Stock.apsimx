@@ -541,11 +541,11 @@ This is the documenation for the stock model.]]></MemoText>
           <Name>BuySell</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Script>
-            <w>.Simulations.Management Examples.Stocking Rates.Farm.Feedlot.Soil</w>
             <dateToBuySell>10</dateToBuySell>
             <stockRate>11</stockRate>
             <sale_propn>12</sale_propn>
             <no_to_buy>13</no_to_buy>
+            <w>.Simulations.Management Examples.Stocking Rates.Farm.Feedlot.Soil</w>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
