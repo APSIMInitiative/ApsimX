@@ -884,7 +884,7 @@ namespace UserInterface.Views
                 toggleRender.Visible = false;
                 toggleRender.Toggled += ToggleRender_Toggled;
                 toggleRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 0.5f; // Left of center align, as appropriate
-                CellRendererCombo comboRender = new Gtk.CellRendererCombo();
+                CellRendererCombo comboRender = new CellRendererDropDown();
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
@@ -1327,7 +1327,7 @@ namespace UserInterface.Views
             TreePath path = model.GetPath(iter);
             TreeView view = col.TreeView as TreeView;
             int rowNo = path.Indices[0];
-            int colNo;
+            int colNo = -1;
             string text = string.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
@@ -1398,8 +1398,10 @@ namespace UserInterface.Views
                     text = AsString(dataVal);
                 }
             }
+            // We have a "text" cell. Set the text, and other properties for the cell
             cell.Visible = true;
-            (cell as CellRendererText).Text = text;
+            CellRendererText textRenderer = cell as CellRendererText;
+            textRenderer.Text = text;
         }
 
         /// <summary>
@@ -2433,4 +2435,46 @@ namespace UserInterface.Views
             window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
         }
     }
+
+    /// <summary>
+    /// This is an attempt to extend the default CellRendererComob widget to allow
+    /// a drop-down arrow to be visible at all times, rather than just when editing.
+    /// </summary>
+    public class CellRendererDropDown : CellRendererCombo
+    {
+        /// <summary>
+        /// Render the cell in the window
+        /// </summary>
+        /// <param name="window">The owning window</param>
+        /// <param name="widget">The widget</param>
+        /// <param name="background_area">Background area</param>
+        /// <param name="cell_area">The cell area</param>
+        /// <param name="expose_area">Expose the area</param>
+        /// <param name="flags">Render flags</param>
+        protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
+        {
+            base.Render(window, widget, background_area, cell_area, expose_area, flags);
+            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, "", ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
+        }
+
+        protected override void OnEditingStarted(CellEditable editable, string path)
+        {
+            base.OnEditingStarted(editable, path);
+            editable.EditingDone += Editable_EditingDone;
+        }
+
+        private void Editable_EditingDone(object sender, EventArgs e)
+        {
+            if (sender is CellEditable)
+            {
+                (sender as CellEditable).EditingDone -= Editable_EditingDone;
+                if (sender is Widget && (sender as Widget).Parent is TreeView)
+                {
+                    TreeView view = (sender as Widget).Parent as TreeView;
+                    view.GrabFocus();
+                }
+            }
+        }
+    }
+
 }
