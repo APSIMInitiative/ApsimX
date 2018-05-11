@@ -5516,6 +5516,15 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>
+        /// Biomass has been removed from the plant by animals
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+
+        }
+
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Auxiliary functions and processes  -------------------------------------------------------------------------

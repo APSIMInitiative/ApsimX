@@ -161,6 +161,7 @@
     <Compile Include="Core\ApsimFile\Reader.cs" />
     <Compile Include="Core\ApsimFile\Writer.cs" />
     <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
+    <Compile Include="Core\Attributes\Separator.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\HelpUriAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
