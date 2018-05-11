@@ -144,6 +144,22 @@
     <Compile Include="Classes\DirectedGraph\DGObject.cs" />
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\HtmlToMigraDoc.cs" />
+    <Compile Include="Classes\Intellisense\CodeCompletionResult.cs" />
+    <Compile Include="Classes\Intellisense\CompletionData.cs" />
+    <Compile Include="Classes\Intellisense\CompletionImage.cs" />
+    <Compile Include="Classes\Intellisense\CSharpCompletion.cs" />
+    <Compile Include="Classes\Intellisense\CSharpCompletionContext.cs" />
+    <Compile Include="Classes\Intellisense\CSharpCompletionDataFactory.cs" />
+    <Compile Include="Classes\Intellisense\CSharpInsightItem.cs" />
+    <Compile Include="Classes\Intellisense\CSharpOverloadProvier.cs" />
+    <Compile Include="Classes\Intellisense\EntityCompletionData.cs" />
+    <Compile Include="Classes\Intellisense\ImportCompletionData.cs" />
+    <Compile Include="Classes\Intellisense\IOverloadProvider.cs" />
+    <Compile Include="Classes\Intellisense\IScriptProvider.cs" />
+    <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
+    <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
+    <Compile Include="Classes\Intellisense\SegmentTrackingOutputFormatter.cs" />
+    <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
     <Compile Include="Cloud\APSIMJob.cs" />
     <Compile Include="Cloud\ApsimJobManagerExtension.cs" />
     <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
@@ -228,6 +244,7 @@
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\CLEMFileCropPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
+    <Compile Include="Presenters\IntellisensePresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
     <Compile Include="Presenters\MainPresenter.cs" />
@@ -561,6 +578,31 @@
     <EmbeddedResource Include="Resources\Jigsaw.jpg" />
     <EmbeddedResource Include="Resources\RunoffRainfallCurves.png" />
     <EmbeddedResource Include="Resources\RunoffResponseCurve.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Class.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Constructor.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Delegate.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Enum.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\EnumValue.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Event.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\ExtensionMethod.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Field.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\FieldReadOnly.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Indexer.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Interface.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Literal.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Method.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\NameSpace.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Operator.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\OverlayInternal.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\OverlayPrivate.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\OverlayProtected.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\OverlayProtectedInternal.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\OverlayStatic.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\PInvokeMethod.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Property.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\StaticClass.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\Struct.png" />
+    <EmbeddedResource Include="Resources\CompletionImages\VirtualMethod.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -760,6 +802,14 @@
       <HintPath>..\packages\HtmlAgilityPack.1.6.17\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.CodeCompletion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\ICSharpCode.CodeCompletion.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
       <Private>True</Private>
@@ -771,6 +821,10 @@
     <Reference Include="ICSharpCode.NRefactory.CSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Tests, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\ICSharpCode.NRefactory.Tests.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.Xml, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
@@ -889,6 +943,8 @@
       <HintPath>..\packages\PDFsharp-MigraDoc.1.50.4000-beta3b\lib\net20\PdfSharp.Charting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -916,6 +972,7 @@
     <Reference Include="System.Spatial, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.3\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">

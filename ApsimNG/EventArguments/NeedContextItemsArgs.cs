@@ -37,6 +37,8 @@ namespace UserInterface.EventArguments
         /// </summary>
         public List<string> Items;
 
+        public List<ICSharpCode.NRefactory.Completion.ICompletionData> CompletionData { get; set; }
+
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
@@ -45,7 +47,7 @@ namespace UserInterface.EventArguments
             List<ContextItem> allItems = new List<ContextItem>();
 
             // find the properties and methods
-            if (atype != null && !atype.IsPrimitive)
+            if (atype != null)
             {
                 if (properties)
                 {

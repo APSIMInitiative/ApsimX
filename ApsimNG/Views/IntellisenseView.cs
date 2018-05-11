@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using Gtk;
 using UserInterface.EventArguments;
+using System.Windows.Media;
+using System.Reflection;
+using System.IO;
+using UserInterface.Intellisense;
 
 namespace UserInterface.Views
 {
@@ -44,6 +48,9 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Fired when the intellisense window loses focus.
+        /// </summary>
         public event EventHandler LoseFocus
         {
             add
@@ -230,20 +237,80 @@ namespace UserInterface.Views
             if (allItems.Count < 1)
                 return false;
 
+            Populate(allItems);
+            return true;
+        }
+
+        public void Populate(List<ICSharpCode.NRefactory.Completion.ICompletionData> items)
+        {
+            completionModel.Clear();
+            string workingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            if (!Directory.Exists(workingDirectory))
+                Directory.CreateDirectory(workingDirectory);
+            else
+            {
+                // chances of this ever being run are astronomically low
+                Directory.Delete(workingDirectory, true);
+                Directory.CreateDirectory(workingDirectory);
+            }
+            
+            foreach (CompletionData item in items)
+            {
+                string imageName = item.Image.ToString();
+                UriBuilder builder = new UriBuilder(imageName);
+                imageName = imageName.Replace(";component", "");
+                imageName = imageName.Replace("pack://application:,,,/", "");
+                string uri = imageName.Replace('/', '.');
+                imageName = Path.GetFileName(imageName);
+                
+                string imageLocation = Path.Combine(workingDirectory, imageName);
+                if (!File.Exists(imageLocation))
+                {
+                    imageLocation = GetImagePath(imageName, workingDirectory, uri);
+                }
+
+                string resourceName = imageName.Replace('/', '.');
+
+                Gdk.Pixbuf image = new Gdk.Pixbuf(imageLocation);
+                completionModel.AppendValues(image, item.CompletionText, "(kg)", "type name", item.Description, "item.paramstring");
+            }
+        }
+
+        /// <summary>
+        /// Copies an image stored as an embdedded resource to a given directory and returns the path to the image.
+        /// </summary>
+        /// <param name="imageName">Name of the image (without the path).</param>
+        /// <param name="imageDirectory">Directory which the image should be copied to.</param>
+        /// <returns>Full path to the image.</returns>
+        private static string GetImagePath(string imageName, string imageDirectory, string uri)
+        {
+            string path = Path.Combine(imageDirectory, imageName);
+            using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                Stream imageStream = Assembly.GetAssembly(typeof(ICSharpCode.AvalonEdit.AvalonEditCommands)).GetManifestResourceStream(uri);
+                if (imageStream == null)
+                    imageStream = Assembly.GetAssembly(typeof(ICSharpCode.AvalonEdit.AvalonEditCommands)).GetManifestResourceStream("ICSharpCode.AvalonEdit.CodeCompletion.Images.Struct.png");
+                if (imageStream == null)
+                    return null;
+                imageStream.CopyTo(file);
+            }
+
+            return path;
+        }
+
+        public void Populate(List<NeedContextItemsArgs.ContextItem> items)
+        {
             completionModel.Clear();
 
             Gdk.Pixbuf functionPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
             Gdk.Pixbuf propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);
             Gdk.Pixbuf pixbufToBeUsed;
-            foreach (NeedContextItemsArgs.ContextItem item in allItems)
+
+            foreach (NeedContextItemsArgs.ContextItem item in items)
             {
-                if (item.IsEvent)
-                    pixbufToBeUsed = functionPixbuf;
-                else
-                    pixbufToBeUsed = propertyPixbuf;
+                pixbufToBeUsed = item.IsProperty ? propertyPixbuf : functionPixbuf;
                 completionModel.AppendValues(pixbufToBeUsed, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
             }
-            return true;
         }
 
         /// <summary>

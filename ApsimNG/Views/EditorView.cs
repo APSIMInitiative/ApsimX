@@ -3,6 +3,7 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using UserInterface.Presenters;
 
 namespace UserInterface.Views
 {
@@ -76,6 +77,11 @@ namespace UserInterface.Views
         /// <param name="onClick">The event handler to call when menu is selected</param>
         /// <param name="shortcut">Describes the key to use as the accelerator</param>
         MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut);
+
+        /// <summary>
+        /// Offset of the caret from the beginning of the text editor.
+        /// </summary>
+        int Offset { get; }
     }
 
     /// <summary>
@@ -91,7 +97,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The completion form.
         /// </summary>
-        private IntellisenseView intellisense;
+        private IntellisensePresenter intellisense;
 
         /// <summary>
         /// Scrolled window
@@ -244,6 +250,13 @@ namespace UserInterface.Views
             }
         }
 
+        public int Offset
+        {
+            get
+            {
+                return textEditor.Caret.Offset;
+            }
+        }
         /// <summary>
         /// Default constructor that configures the Completion form.
         /// </summary>
@@ -300,7 +313,7 @@ namespace UserInterface.Views
 
             IntelliSenseChars = ".";
 
-            intellisense = new IntellisenseView();
+            intellisense = new IntellisensePresenter();
             intellisense.ContextItemsNeeded += ContextItemsNeeded;
             intellisense.LoseFocus += HideCompletionWindow;
         }
@@ -394,7 +407,8 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+                char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+            bool controlSpace = IsControlSpace(e.Event);
             if (e.Event.Key == Gdk.Key.F3)
             {
                 if (string.IsNullOrEmpty(_findForm.LookFor))
@@ -403,18 +417,33 @@ namespace UserInterface.Views
                     _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
                 e.RetVal = true;
             }
-            else if (IntelliSenseChars.Contains(keyChar.ToString()) && ContextItemsNeeded != null)
+            else if ((IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) && ContextItemsNeeded != null)
             {
                 // If user one of the IntelliSenseChars, then display contextlist.
-                if (ShowCompletionWindow(keyChar))
+                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
+
+                // If the user entered a period, we need to take that into account when generating intellisense options.
+                // To do this, we insert a period manually and stop the Gtk signal from propagating further.
+                e.RetVal = true;
+                if (keyChar == '.')
                 {
-                    e.RetVal = false;
-                }                
+                    textEditor.InsertAtCaret(keyChar.ToString());
+
+                    // Process all events in the main loop, so that the period is inserted into the text editor.
+                    while (GLib.MainContext.Iteration()) ;
+                }
+
+                ShowCompletionWindow();
             }
             else
             {
                 e.RetVal = false;
             }
+        }
+
+        private bool IsControlSpace(Gdk.EventKey e)
+        {
+            return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && e.State == Gdk.ModifierType.ControlMask;
         }
 
         /// <summary>
@@ -438,16 +467,21 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="characterPressed">Character pressed</param>
         /// <returns>Completion form showing</returns>        
-        private bool ShowCompletionWindow(char characterPressed)
+        private bool ShowCompletionWindow()
         {
-            string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
+            //textEditor.TextArea.InsertAtCaret(characterPressed.ToString());
             intellisense.ContextItemsNeeded += ContextItemsNeeded;
-            if (!intellisense.GenerateAutoCompletionOptions(textBeforePeriod))
-                return false;
-            textEditor.TextArea.InsertAtCaret(characterPressed.ToString());
+            try
+            {
+                if (intellisense.GenerateCompletionOptions())
+                    // Turn readonly on so that the editing window doesn't process keystrokes.
+                    textEditor.Document.ReadOnly = true;
+            }
+            catch (Exception err)
+            {
+            }
+            
 
-            // Turn readonly on so that the editing window doesn't process keystrokes.
-            textEditor.Document.ReadOnly = true;
 
             // Work out where to put the completion window.            
             Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
@@ -460,7 +494,8 @@ namespace UserInterface.Views
 
             intellisense.ItemSelected += InsertCompletionItemIntoTextBox;
             intellisense.MainWindow = MainWidget.Toplevel as Window;
-            return intellisense.SmartShowAtCoordinates(frameX + x, frameY + y);
+            intellisense.Show(frameX + x, frameY + y);
+            return true; 
         }
 
         /// <summary>
