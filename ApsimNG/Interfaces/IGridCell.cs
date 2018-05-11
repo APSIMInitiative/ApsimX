@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using System;
+using System.Drawing;
+
 namespace UserInterface.Interfaces
 {
     /// <summary>
@@ -76,5 +78,15 @@ namespace UserInterface.Interfaces
         /// Gets or sets the cell value
         /// </summary>
         object Value { get; set; }
+
+        /// <summary>
+        /// Sets whether the cell is readonly.
+        /// </summary>
+        void SetReadOnly();
+
+        /// <summary>
+        /// Sets the cell background colour
+        /// </summary>
+        void SetBackgroundColour(Color colour);
     }
 }

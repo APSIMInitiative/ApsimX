@@ -41,5 +41,11 @@ namespace Models.Core
 
         /// <summary>End the crop</summary>
         void EndCrop();
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        void BiomassRemovalComplete(double fractionRemoved);
     }
 }
