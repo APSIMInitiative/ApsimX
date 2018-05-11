@@ -333,7 +333,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the property
         /// </summary>
-        public Type DataType
+        public override Type DataType
         {
             get
             {
@@ -415,7 +415,6 @@ namespace Models.Core
             }
         }
 
-
         /// <summary>
         /// Special case where trying to get a property of an array(IList). In this case
         /// we want to return the property value for all items in the array.
@@ -470,7 +469,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private string AsString(object value)
+        internal static string AsString(object value)
         {
             if (value == null)
                 return string.Empty;
@@ -484,7 +483,7 @@ namespace Models.Core
         /// <summary>
         /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
         /// </summary>
-        public object ValueWithArrayHandling
+        public override object ValueWithArrayHandling
         {
             get
             {
@@ -512,7 +511,7 @@ namespace Models.Core
 
                         Array arr2d = arr.GetValue(j) as Array;
                         if (arr2d == null)
-                           stringValue += AsString(arr.GetValue(j));
+                            stringValue += AsString(arr.GetValue(j));
                         else
                         {
                             for (int k = 0; k < arr2d.Length; k++)
@@ -531,20 +530,13 @@ namespace Models.Core
 
                 return value;
             }
-
-            set
-            {
-                if (value is string)
-                {
-                    this.SetFromString(value as string);
-                }
-                else
-                {
-                    this.Value = value;   
-                }
-            }
         }
 
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return property.CanRead && property.CanWrite; } }
+    
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
         /// </summary>
@@ -619,19 +611,11 @@ namespace Models.Core
         /// <summary>
         /// Gets the associated display type for the related property.
         /// </summary>
-        public DisplayAttribute.DisplayTypeEnum DisplayType
+        public override DisplayAttribute Display
         {
             get
             {
-                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                if (displayAttribute != null)
-                {
-                    return displayAttribute.DisplayType;
-                }
-                else
-                {
-                    return DisplayAttribute.DisplayTypeEnum.None;
-                }
+                return ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
             }
         }
 

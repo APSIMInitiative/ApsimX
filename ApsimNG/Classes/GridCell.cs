@@ -209,5 +209,21 @@ namespace UserInterface.Classes
                 this.gridView.DataSource.Rows[this.RowIndex][this.ColumnIndex] = value;
             }
         }
+
+        /// <summary>
+        /// Sets whether the cell is readonly.
+        /// </summary>
+        public void SetReadOnly()
+        {
+            gridView.SetReadOnly(this);
+        }
+
+        /// <summary>
+        /// Sets the cell background colour
+        /// </summary>
+        public void SetBackgroundColour(System.Drawing.Color colour)
+        {
+            gridView.SetBackgroundColour(this, colour);
+        }
     }
 }
