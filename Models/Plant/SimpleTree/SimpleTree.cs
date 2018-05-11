@@ -283,6 +283,16 @@ namespace Models.PMF
         {
 
         }
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+
+        }
+
         /// <summary>Roots the proportion.</summary>
         /// <param name="layer">The layer.</param>
         /// <param name="root_depth">The root_depth.</param>
