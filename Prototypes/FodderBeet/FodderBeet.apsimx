@@ -491,14 +491,33 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
           <Units>/d</Units>
         </Constant>
         <Constant>
-          <Name>MaximumNConc</Name>
+          <Name>KMaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.012</FixedValue>
         </Constant>
+        <LinearInterpolationFunction>
+          <Name>MaximumNConc</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>1</double>
+              <double>6</double>
+              <double>12</double>
+            </X>
+            <Y>
+              <double>0.024</double>
+              <double>0.018</double>
+              <double>0.012</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.005</FixedValue>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
@@ -540,8 +559,8 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
                   <X>
                     <double>1</double>
                     <double>6</double>
+                    <double>15</double>
                     <double>17</double>
-                    <double>20</double>
                     <double>25</double>
                   </X>
                   <Y>
@@ -697,7 +716,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <CompositeBiomass>
           <Name>Total</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <DMDOfStructural>0.6</DMDOfStructural>
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Leaf].Dead</string>
@@ -1135,10 +1153,29 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <FixedValue>0.025</FixedValue>
           </Constant>
           <Constant>
-            <Name>MaximumNConc</Name>
+            <Name>KMaximumNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.04</FixedValue>
           </Constant>
+          <LinearInterpolationFunction>
+            <Name>MaximumNConc</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>1</double>
+                <double>6</double>
+                <double>12</double>
+              </X>
+              <Y>
+                <double>0.06</double>
+                <double>0.05</double>
+                <double>0.04</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+          </LinearInterpolationFunction>
           <Constant>
             <Name>NReallocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1421,10 +1458,29 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
           <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
-          <Name>MaximumNConc</Name>
+          <Name>KMaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.02</FixedValue>
         </Constant>
+        <LinearInterpolationFunction>
+          <Name>MaximumNConc</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>1</double>
+              <double>6</double>
+              <double>17</double>
+            </X>
+            <Y>
+              <double>0.035</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1822,7 +1878,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1835,7 +1890,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>BelowGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
@@ -1844,7 +1898,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>Total</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1859,7 +1912,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>TotalLive</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Petiole].Live</string>
@@ -1870,7 +1922,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>TotalDead</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Petiole].Dead</string>
@@ -9125,10 +9176,10 @@ namespace Models
                   <Name>Sowing</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <InitialRootDepth>5</InitialRootDepth>
                     <Cultivar>
                     </Cultivar>
                     <SowingDate>2014-10-17</SowingDate>
-                    <InitialRootDepth>5</InitialRootDepth>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -11530,15 +11581,15 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Operation>
                     <Date>2016-10-29</Date>
-                    <Action>[Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);</Action>
+                    <Action>[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);</Action>
                   </Operation>
                   <Operation>
                     <Date>2017-01-18</Date>
-                    <Action>[Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);</Action>
+                    <Action>[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);</Action>
                   </Operation>
                   <Operation>
                     <Date>2017-02-25</Date>
-                    <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);</Action>
+                    <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
                   </Operation>
                 </Operations>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11554,15 +11605,15 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Operation>
                     <Date>2016-10-29</Date>
-                    <Action>[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);</Action>
+                    <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
                   </Operation>
                   <Operation>
                     <Date>2017-01-18</Date>
-                    <Action>[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);</Action>
+                    <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
                   </Operation>
                   <Operation>
                     <Date>2017-02-25</Date>
-                    <Action>[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);</Action>
+                    <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
                   </Operation>
                 </Operations>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11934,11 +11985,11 @@ namespace Models
             if (IrrFactor == true)
             {
                 if (NitFactor == 0)
-                    Fert.Apply(40, Models.Fertiliser.Types.NO3N, 10);
+                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);
                 if (NitFactor == 50)
-                    Fert.Apply(85, Models.Fertiliser.Types.NO3N, 10);
+                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);
                 if (NitFactor == 300)
-                    Fert.Apply(270, Models.Fertiliser.Types.NO3N, 10);
+                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);
                
             }
              
@@ -12412,7 +12463,7 @@ namespace Models
                   </Thickness>
                   <NO3>
                     <double>18</double>
-                    <double>3</double>
+                    <double>17</double>
                     <double>5</double>
                     <double>2</double>
                     <double>2</double>
@@ -12421,8 +12472,8 @@ namespace Models
                     <double>3</double>
                   </NO3>
                   <NH4>
-                    <double>32</double>
-                    <double>17</double>
+                    <double>2</double>
+                    <double>2</double>
                     <double>6</double>
                     <double>5</double>
                     <double>5</double>
@@ -15671,7 +15722,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>FodderBeet.StorageRoot.Live.N</YFieldName>
+                <YFieldName>FodderBeet.StorageRoot.Live.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15694,7 +15745,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>ObservedData</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>FodderBeet.StorageRoot.Live.N</YFieldName>
+                <YFieldName>FodderBeet.StorageRoot.Live.Nconc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15706,7 +15757,7 @@ namespace Models
                 <Title>Bulb_N (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
-                <Maximum>30</Maximum>
+                <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
               <Axis>
@@ -15843,7 +15894,7 @@ namespace Models
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
                 <Maximum>NaN</Maximum>
-                <Interval>2</Interval>
+                <Interval>NaN</Interval>
               </Axis>
               <Axis>
                 <Type>Bottom</Type>
@@ -20954,8 +21005,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -22594,8 +22645,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -24266,8 +24317,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -25355,8 +25406,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -26401,8 +26452,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -27442,8 +27493,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -28531,8 +28582,8 @@ namespace Models
                     <Name>NitTreatments</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Script>
-                      <NitAmount>0</NitAmount>
                       <SplitFactor>0</SplitFactor>
+                      <NitAmount>0</NitAmount>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -44728,10 +44779,10 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Population>9</Population>
                   <InitialRootDepth>2.5</InitialRootDepth>
                   <CropToSow>Brigadier</CropToSow>
                   <SowingDate>2010-12-28</SowingDate>
+                  <Population>9</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -45085,5 +45136,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>456</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
