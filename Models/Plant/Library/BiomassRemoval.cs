@@ -61,30 +61,32 @@ namespace Models.PMF.Library
                 Biomass removing;
                 Biomass detaching;
                 double totalBiomass = Live.Wt + Dead.Wt;
-                double remainingLiveFraction = RemoveBiomassFromLiveAndDead(amount, Live, Dead, out removing, out detaching);
-
-                // Add the detaching biomass to total removed and detached
-                Removed.Add(removing);
-                Detached.Add(detaching);
-
-                // Pass the detaching biomass to surface organic matter model.
-                //TODO: in reality, the dead material is different from the live, so it would be better to add them as separate pools to SurfaceOM
-                surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.CropType, Name);
-
-                if (writeToSummary)
+                if (totalBiomass > 0)
                 {
-                    double totalFractionToRemove = (Removed.Wt + detaching.Wt) * 100.0 / totalBiomass;
-                    double toResidue = detaching.Wt * 100.0 / (Removed.Wt + detaching.Wt);
-                    double removedOff = Removed.Wt * 100.0 / (Removed.Wt + detaching.Wt);
-                    summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
-                                             + "% of " + Parent.Name.ToLower() + " biomass from " + plant.Name
-                                             + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                             + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
-                    summary.WriteMessage(Parent, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
-                                             + Removed.N.ToString("0.0") + " g/m2 of N.");
-                }
+                    double remainingLiveFraction = RemoveBiomassFromLiveAndDead(amount, Live, Dead, out removing, out detaching);
 
-                return remainingLiveFraction;
+                    // Add the detaching biomass to total removed and detached
+                    Removed.Add(removing);
+                    Detached.Add(detaching);
+
+                    // Pass the detaching biomass to surface organic matter model.
+                    //TODO: in reality, the dead material is different from the live, so it would be better to add them as separate pools to SurfaceOM
+                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.CropType, Name);
+
+                    if (writeToSummary)
+                    {
+                        double totalFractionToRemove = (Removed.Wt + detaching.Wt) * 100.0 / totalBiomass;
+                        double toResidue = detaching.Wt * 100.0 / (Removed.Wt + detaching.Wt);
+                        double removedOff = Removed.Wt * 100.0 / (Removed.Wt + detaching.Wt);
+                        summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
+                                                 + "% of " + Parent.Name.ToLower() + " biomass from " + plant.Name
+                                                 + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                                                 + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
+                        summary.WriteMessage(Parent, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
+                                                 + Removed.N.ToString("0.0") + " g/m2 of N.");
+                    }
+                    return remainingLiveFraction;
+                }
             }
 
             return 1.0;

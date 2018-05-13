@@ -1031,7 +1031,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the zeroing of some varibles.</summary>
-        protected void DoDailyCleanup()
+        public void DoDailyCleanup()
         {
             Detached.Clear();
             Removed.Clear();
@@ -1189,15 +1189,6 @@ namespace Models.PMF.Organs
             return fracDetach;
         }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (Plant.IsAlive)
-                DoDailyCleanup();
-        }
         #endregion
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
