@@ -502,12 +502,12 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>1</double>
-              <double>6</double>
               <double>12</double>
+              <double>20</double>
             </X>
             <Y>
               <double>0.024</double>
-              <double>0.018</double>
+              <double>0.024</double>
               <double>0.012</double>
             </Y>
           </XYPairs>
@@ -559,12 +559,10 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
                   <X>
                     <double>1</double>
                     <double>6</double>
-                    <double>15</double>
-                    <double>17</double>
+                    <double>16</double>
                     <double>25</double>
                   </X>
                   <Y>
-                    <double>0</double>
                     <double>0</double>
                     <double>0</double>
                     <double>0.7</double>
@@ -1471,10 +1469,12 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <double>1</double>
               <double>6</double>
               <double>17</double>
+              <double>30</double>
             </X>
             <Y>
-              <double>0.035</double>
               <double>0.04</double>
+              <double>0.04</double>
+              <double>0.012</double>
               <double>0.02</double>
             </Y>
           </XYPairs>
@@ -1482,10 +1482,31 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
           <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <Constant>
-          <Name>MinimumNConc</Name>
+          <Name>kMinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.015</FixedValue>
+          <FixedValue>0.01</FixedValue>
         </Constant>
+        <LinearInterpolationFunction>
+          <Name>MinimumNConc</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>1</double>
+              <double>6</double>
+              <double>17</double>
+              <double>30</double>
+            </X>
+            <Y>
+              <double>0.015</double>
+              <double>0.015</double>
+              <double>0.012</double>
+              <double>0.015</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Structure].LeafTipsAppeared</XProperty>
+        </LinearInterpolationFunction>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1667,7 +1688,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <Constant>
           <Name>MaximumRootDepth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1500</FixedValue>
+          <FixedValue>1800</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -1780,7 +1801,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <double>1</double>
             </X>
             <Y>
-              <double>0</double>
+              <double>0.1</double>
               <double>1</double>
             </Y>
           </XYPairs>
@@ -2057,6 +2078,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <string>[SurfaceOrganicMatter].Wt</string>
         <string>[Weather].MeanT</string>
         <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen</string>
+        <string>sum([Soil].SoilNitrogen.NH4[1:6]+[Soil].SoilNitrogen.NO3[1:6]) as Soil.SoilNitrogen.ProfileMineralN </string>
         <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
         <string>sum([Soil].SoilNitrogen.mineral_n) as ProfileN</string>
         <string>[Soil].SoilWater.LeachNO3</string>
@@ -12440,8 +12462,8 @@ namespace Models
                     <double>0.01</double>
                   </FBiom>
                   <FInert>
-                    <double>0.437</double>
-                    <double>0.657</double>
+                    <double>0.2</double>
+                    <double>0.3</double>
                     <double>0.85</double>
                     <double>0.945</double>
                     <double>0.983</double>
@@ -12628,6 +12650,7 @@ namespace Models
                   <string>[FodderBeet].Total.Wt</string>
                   <string>[SurfaceOrganicMatter].Wt</string>
                   <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen</string>
+                  <string>(sum([Soil].SoilNitrogen.NH4[1:6]+sum([Soil].SoilNitrogen.NO3[1:6])) as Soil.SoilNitrogen.ProfileMineralN </string>
                   <string>[FodderBeet].Phenology.FlagLeafDAS</string>
                   <string>[FodderBeet].Phenology.FloweringDAS</string>
                   <string>[FodderBeet].Phenology.MaturityDAS</string>
@@ -12788,7 +12811,11 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>Nil0</string>
+                <string>Nil50</string>
+                <string>Nil300</string>
+              </DisabledSeries>
             </Graph>
             <Graph>
               <Name>StorageRootWt</Name>
@@ -13065,7 +13092,11 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>Full0</string>
+                <string>Full50</string>
+                <string>Full300</string>
+              </DisabledSeries>
             </Graph>
             <Graph>
               <Name>StorageRoot_N</Name>
@@ -14666,7 +14697,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>TotalSoilNitrogen</YFieldName>
+                <YFieldName>Soil.SoilNitrogen.ProfileMineralN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14711,7 +14742,14 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>Nil0: Pred</string>
+                <string>Nil50: Pred</string>
+                <string>Nil300: Pred</string>
+                <string>Nil0: Obs</string>
+                <string>Nil50: Obs</string>
+                <string>Nil300: Obs</string>
+              </DisabledSeries>
             </Graph>
             <Graph>
               <Name>NLeaching</Name>
@@ -45136,5 +45174,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>283</ExplorerWidth>
+  <ExplorerWidth>290</ExplorerWidth>
 </Simulations>
