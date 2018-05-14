@@ -714,6 +714,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <CompositeBiomass>
           <Name>Total</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <DMDOfStructural>0.6</DMDOfStructural>
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Leaf].Dead</string>
@@ -1899,6 +1900,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1911,6 +1913,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>BelowGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
@@ -1919,6 +1922,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>Total</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1933,6 +1937,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>TotalLive</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Petiole].Live</string>
@@ -1943,6 +1948,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       <CompositeBiomass>
         <Name>TotalDead</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Petiole].Dead</string>
@@ -29267,9 +29273,9 @@ namespace Models
                   <Name>SowDateCv</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>2015-11-15</SowingDate>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Brigadier</CropToSow>
+                    <SowingDate>2015-11-15</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -33701,9 +33707,9 @@ namespace Models
                   <Name>SowDateCv</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>2015-10-01</SowingDate>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Rivage</CropToSow>
+                    <SowingDate>2015-10-01</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -34821,9 +34827,9 @@ namespace Models
                   <Name>SowDateCv</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>2015-10-09</SowingDate>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Brigadier</CropToSow>
+                    <SowingDate>2015-10-09</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -37343,9 +37349,9 @@ namespace Models
                   <Name>SowDateCv</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>2015-11-02</SowingDate>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Brigadier</CropToSow>
+                    <SowingDate>2015-11-02</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -38869,9 +38875,9 @@ namespace Models
                   <Name>SowDateCv</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>2015-10-30</SowingDate>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Rivage</CropToSow>
+                    <SowingDate>2015-10-30</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -41374,10 +41380,21 @@ namespace Models
         <Memo>
           <Name>Trial details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[The data used here is from the FRNL trials managed by de Ruiter et al.]]></MemoText>
+          <MemoText><![CDATA[The data used here is from the FRNL trials managed by de Ruiter et al.
+
+]]></MemoText>
         </Memo>
         <Experiment>
           <Name>FRNL_NCRS2014</Name>
+          <Memo>
+            <Name>Trial details</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The data used here is from the FRNL trials managed by de Ruiter et al.
+
+The nitrogen treatment (0 & 100 kg N/ha)
+
+]]></MemoText>
+          </Memo>
           <Factors>
             <Name>Factors</Name>
             <Factor>
@@ -41431,7 +41448,7 @@ namespace Models
               <Name>clock</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <StartDate>2014-10-24T00:00:00</StartDate>
-              <EndDate>2015-05-30T00:00:00</EndDate>
+              <EndDate>2015-06-30T00:00:00</EndDate>
             </Clock>
             <Summary>
               <Name>summaryfile</Name>
@@ -42042,9 +42059,9 @@ namespace Models
                   <Name>SowDateCv</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>2014-10-25</SowingDate>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Jamon</CropToSow>
+                    <SowingDate>2014-10-25</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -42368,6 +42385,15 @@ namespace Models
         </Experiment>
         <Experiment>
           <Name>FRNL_NCRS2015</Name>
+          <Memo>
+            <Name>Trial details</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The data used here is from the FRNL trials managed by de Ruiter et al.
+
+The nitrogen treatment was evaluated in conjuction with potassium treatments (0, 100 kg of N or K per ha).
+
+It appears the 0 kg N/ha yielded more than the 100 kg N/ha due the effect of potassium.]]></MemoText>
+          </Memo>
           <Factors>
             <Name>Factors</Name>
             <Factor>
@@ -43074,9 +43100,9 @@ namespace Models
                   <Name>Sowing</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <SowingDate>2015-10-27</SowingDate>
                     <InitialRootDepth>2</InitialRootDepth>
                     <CropToSow>Jamon</CropToSow>
+                    <SowingDate>0001-01-01</SowingDate>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -43249,6 +43275,147 @@ namespace Models
             </Zone>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Simulation>
+          <Folder>
+            <Name>Graphs</Name>
+            <Graph>
+              <Name>TotalWt</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>ObservedData</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.AboveGround.Wt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Crop Biomass (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>500</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>TotalN</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.AboveGround.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16747854</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>ObservedData</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.AboveGround.N</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
+          </Folder>
           <Folder>
             <Name>TestStats</Name>
             <Graph>
