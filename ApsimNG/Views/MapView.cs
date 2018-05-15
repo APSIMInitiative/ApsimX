@@ -85,7 +85,7 @@ namespace UserInterface.Views
          crossorigin=""""></script>
 </head>
 <body>
-  < !--Make sure you put this AFTER Leaflet's CSS -->
+  <!--Make sure you put this AFTER Leaflet's CSS -->
 
   <div id='mapid' style='position:fixed; top:0; bottom:0; left:0; right:0;' ></div>";
 
