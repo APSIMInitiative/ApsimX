@@ -14,6 +14,9 @@ namespace Models.Lifecycle
     [ValidParent(ParentType = typeof(Zone))]
     public class Lifecycle : Model
     {
+        [Link]
+        private ISummary mySummary = null;
+
         /// <summary>
         /// 
         /// </summary>
@@ -74,10 +77,14 @@ namespace Models.Lifecycle
             //create new cohorts from the InitialPopulation[]
             foreach (Lifestage stage in ChildStages)
             {
-                if (InitialPopulation.Length > i)
+                if ((InitialPopulation != null) && (InitialPopulation.Length > i))
                 {
                     Cohort newCohort = stage.NewCohort();
                     newCohort.Count = InitialPopulation[i];
+                }
+                else
+                {
+                    mySummary.WriteWarning(this, "No initial population in " + stage.Name);
                 }
                 i++;
             }

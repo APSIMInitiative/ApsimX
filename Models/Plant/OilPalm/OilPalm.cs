@@ -25,7 +25,7 @@ namespace Models.PMF.OilPalm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class OilPalm : ModelCollectionFromResource, ICrop, ICanopy, IUptake
+    public class OilPalm : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
         #region Canopy interface
         /// <summary>Canopy type</summary>
@@ -98,6 +98,12 @@ namespace Models.PMF.OilPalm
         {
             get { return plant_status == "alive"; }
         }
+
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        public double Legumosity { get { return 0; } }
+
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        public bool IsC4 { get { return false; } }
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting { get { return false; } }
@@ -1769,6 +1775,15 @@ namespace Models.PMF.OilPalm
             double HS = Math.Acos(-Math.Tan(LATr) * Math.Tan(DECr));
 
             return 86400.0 * 1360.0 * (HS * Math.Sin(LATr) * Math.Sin(DECr) + Math.Cos(LATr) * Math.Cos(DECr) * Math.Sin(HS)) / 3.14159265 / 1000000.0;
+        }
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+
         }
     }
 }

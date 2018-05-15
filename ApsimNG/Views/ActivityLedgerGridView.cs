@@ -565,7 +565,7 @@ namespace UserInterface.Views
         private string AsString(object obj)
         {
             string result;
-            if (obj is ICrop)
+            if (obj is IPlant)
                 result = (obj as IModel).Name;
             else
                 result = obj.ToString();

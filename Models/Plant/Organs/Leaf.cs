@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IRemovableBiomass
     {
 
         /// <summary>The met data</summary>
@@ -437,6 +437,9 @@ namespace Models.PMF.Organs
         //Variables that represent the number of leaf cohorts (integer) in a particular state on an individual main-stem are cohort variables (CohortNo suffix)
         //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
         //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
+        
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [XmlIgnore]
@@ -1284,7 +1287,7 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The frations of biomass to remove</param>
-        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
@@ -1293,7 +1296,7 @@ namespace Models.PMF.Organs
                 {
                     double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
-                    writeToSummary = false; // only want it written once.
+                    //writeToSummary = false; // only want it written once.
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
                 }
@@ -1890,6 +1893,24 @@ namespace Models.PMF.Organs
         {
             CohortsAtInitialisation = 0;
         }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        override protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
+                foreach (LeafCohort leaf in Leaves)
+                    leaf.DoDailyCleanup();
+            }
+        }
+
         #endregion
 
     }

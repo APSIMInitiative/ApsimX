@@ -254,6 +254,7 @@ namespace UserInterface.Views
             textEditor = new TextEditor();
             scroller.Add(textEditor);
             _mainWidget = scroller;
+            Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
             Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
             options.ColorScheme = Utility.Configuration.Settings.EditorStyleName; 

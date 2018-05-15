@@ -9,6 +9,7 @@ using System.Xml;
 using System.IO;
 using APSIM.Shared.Utilities;
 using System.Data;
+using System.Linq;
 
 namespace Models.PMF.Phen
 {
@@ -115,12 +116,11 @@ namespace Models.PMF.Phen
         /// <summary>The clock</summary>
         [Link]
         private Clock Clock = null;
+
         /// <summary>The rewind due to biomass removed</summary>
-        [Link(IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         private IFunction RewindDueToBiomassRemoved = null;
-        /// <summary>The above ground period</summary>
-        [Link(IsOptional = true)]
-        private IFunction AboveGroundPeriod = null;
+
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
@@ -167,7 +167,7 @@ namespace Models.PMF.Phen
         /// <summary>The just initialised</summary>
         private bool JustInitialised = true;
         /// <summary>The fraction biomass removed</summary>
-        private double FractionBiomassRemoved = 0;
+        public double FractionBiomassRemoved { get; set; }
         /// <summary>The sow date</summary>
         private DateTime SowDate = DateTime.MinValue;
         /// <summary>The emerged</summary>
@@ -707,25 +707,26 @@ namespace Models.PMF.Phen
                 P.WriteSummary(writer);
         }
 
-        /// <summary>Respond to a remove biomass event.</summary>
-        /// <param name="removeBiomPheno">The remove biom pheno.</param>
-        internal void OnRemoveBiomass(double removeBiomPheno)
+        /// <summary>Biomass has been removed. Optionally rewind phenology.</summary>
+        /// <param name="fractionRemoved">The fraction of biomass that was removed</param>
+        public void BiomassRemoved(double fractionRemoved)
         {
-            string existingStage = CurrentStageName;
+            int existingPhaseIndex = CurrentPhaseIndex;
             if (RewindDueToBiomassRemoved != null)
             {
-                FractionBiomassRemoved = removeBiomPheno; // The RewindDueToBiomassRemoved function will use this.
+                FractionBiomassRemoved = fractionRemoved; // The RewindDueToBiomassRemoved function will use this.
 
                 double ttCritical = TTInAboveGroundPhase;
                 double removeFractPheno = RewindDueToBiomassRemoved.Value();
                 double removeTTPheno = ttCritical * removeFractPheno;
 
-                string msg;
-                msg = "Phenology change:-\r\n";
-                msg += "    Fraction DM removed  = " + removeBiomPheno.ToString() + "\r\n";
-                msg += "    Fraction TT removed  = " + removeFractPheno.ToString() + "\r\n";
-                msg += "    Critical TT          = " + ttCritical.ToString() + "\r\n";
-                msg += "    Remove TT            = " + removeTTPheno.ToString() + "\r\n";
+                //string msg;
+                //msg = "Phenology change:-\r\n";
+                //msg += "    Fraction DM removed  = " + fractionRemoved.ToString() + "\r\n";
+                //msg += "    Fraction TT removed  = " + removeFractPheno.ToString() + "\r\n";
+                //msg += "    Critical TT          = " + ttCritical.ToString() + "\r\n";
+                //msg += "    Remove TT            = " + removeTTPheno.ToString() + "\r\n";
+                //Summary.WriteMessage(this, msg);
 
                 double ttRemaining = removeTTPheno;
                 for (int i = Phases.Count - 1; i >= 0; i--)
@@ -750,7 +751,7 @@ namespace Models.PMF.Phen
                             Phase.Add(-ttRemaining);
                             // Return fraction of thermal time we are through the current
                             // phenological phase (0-1)
-                            //double frac = Phase.FractionComplete;
+                            double frac = Phase.FractionComplete;
                             //if (frac > 0.0 && frac < 1.0)  // Don't skip out of this stage - some have very low targets, eg 1.0 in "maturity"
                             //    currentStage = frac + floor(currentStage);
 
@@ -763,15 +764,28 @@ namespace Models.PMF.Phen
                 }
                 Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete - PhaseIndexOffset;
 
-                if (existingStage != CurrentStageName)
+                if (existingPhaseIndex != CurrentPhaseIndex)
                 {
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                    PhaseChangedData.OldPhaseName = existingStage;
-                    PhaseChangedData.NewPhaseName = CurrentPhase.Name;
+                    PhaseChangedData.OldPhaseName = Phases[existingPhaseIndex].Name;
+                    PhaseChangedData.NewPhaseName = Phases[CurrentPhaseIndex].Name;
                     PhaseChanged.Invoke(Plant, PhaseChangedData);
                     //Fixme MyPaddock.Publish(CurrentPhase.Start);
                 }
             }
+        }
+
+        /// <summary>
+        /// Find the first phase that is beyond germination i.e. plant is above ground.
+        /// </summary>
+        /// <returns></returns>
+        private int IndexOfFirstAboveGroundPhase()
+        {
+            int index = Phases.FindIndex(p => p.End == "Germination");
+            if (index == -1)
+                return 0;
+            else
+                return index + 1;
         }
 
         /// <summary>Gets the tt in above ground phase.</summary>
@@ -781,17 +795,9 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (AboveGroundPeriod == null)
-                    throw new Exception("Cannot find Phenology.AboveGroundPeriod function in xml file");
-
-                int SavedCurrentPhaseIndex = CurrentPhaseIndex;
                 double TTInPhase = 0.0;
-                for (CurrentPhaseIndex = 0; CurrentPhaseIndex < Phases.Count; CurrentPhaseIndex++)
-                {
-                    if (AboveGroundPeriod.Value() == 1)
-                        TTInPhase += Phases[CurrentPhaseIndex].TTinPhase;
-                }
-                CurrentPhaseIndex = SavedCurrentPhaseIndex;
+                for (int i = IndexOfFirstAboveGroundPhase(); i < Phases.Count; i++)
+                    TTInPhase += Phases[i].TTinPhase;
                 return TTInPhase;
             }
         }
