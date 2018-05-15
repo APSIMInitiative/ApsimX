@@ -651,7 +651,7 @@ namespace UserInterface.Views
                                 }
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                     }
                     else
                     {
@@ -678,7 +678,7 @@ namespace UserInterface.Views
                                 }
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                     }
 
                     EndEdit();
@@ -1037,7 +1037,7 @@ namespace UserInterface.Views
                 Gridview.Selection.UnselectAll();
                 int colNo = GetColNoFromButton(sender as Button);
 
-                if (e.Event.State == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
+                if ((e.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
                 {
                     int closestColumn = activeCol.Aggregate((a, b) => Math.Abs(a - colNo) < Math.Abs(b - colNo) ? a : b);
                     int lowerBound = Math.Min(colNo, closestColumn);
@@ -1048,7 +1048,7 @@ namespace UserInterface.Views
                             activeCol.Add(columnIndex);
                     }
                 }
-                else if (e.Event.State == Gdk.ModifierType.ControlMask)
+                else if ((e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
                 {
                     if (activeCol.Contains(colNo))
                         activeCol.Remove(colNo);
