@@ -36,7 +36,7 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>2010-10-20</Date>
-            <Action>[Plantain].Sow(population: 200, cultivar: "Choice", depth: 10, rowSpacing: 150)</Action>
+            <Action>[Plantain].Sow(population: 200, cultivar: "Tonic", depth: 10, rowSpacing: 150)</Action>
           </Operation>
           <Operation>
             <Date>2010-10-20</Date>
@@ -305,7 +305,7 @@ namespace Models
     {
         [Link] Zone zone;
         [Link] Clock Clock;
-        [Link] Plant Chicory;
+        [Link] Plant Plantain;
         [Link] Fertiliser fertiliser;
         [Link] ISummary summary = null;
 
@@ -437,7 +437,7 @@ namespace Models
             if ((Clock.Today >= cutPasture_StartDate) && (Clock.Today <= cutPasture_EndDate))
             {
                 // Check whether we should start cutting
-                if ((Chicory.IsEmerged) && (DaysAfterCut > 0) && (DaysAfterCut == interval2Cut))
+                if ((Plantain.IsEmerged) && (DaysAfterCut > 0) && (DaysAfterCut == interval2Cut))
                 {
                     Defoliate(defoliationType, herbageAmount * 0.1, amountType, durationOfCut);
                 }
@@ -472,12 +472,12 @@ namespace Models
 
             if (daysCutting == durationOfCut)
             {
-                PostHarvestDM = (double)zone.Get("Chicory.AboveGround.Wt");
+                PostHarvestDM = (double)zone.Get("Plantain.AboveGround.Wt");
                 RotationHarvestedDM = cumAmountHarvested;
                 aCutHasHappened = true;
                 isStillCutting = false;
                 daysCutting = -1;
-                Chicory.Population = Chicory.Population * (1.0 - fracPopDecline);
+                Plantain.Population = Plantain.Population * (1.0 - fracPopDecline);
             }
 
             if (aCutHasHappened && (daysCutting == 0))
@@ -521,7 +521,7 @@ namespace Models
         public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)
         {
             // get the existing plant amount
-            PreHarvestDM = (double)zone.Get("Chicory.AboveGround.Wt");
+            PreHarvestDM = (double)zone.Get("Plantain.AboveGround.Wt");
 
             // check duration
             if (duration <= 0)
@@ -558,18 +558,18 @@ namespace Models
         private void removeDM(double removeAmount, string removeType)
         {
             // get the existing biomass
-            double leafLiveWt = (double)zone.Get("Chicory.Leaf.Live.Wt");
-            double stemLiveWt = (double)zone.Get("Chicory.Stem.Live.Wt");
-            double flowerLiveWt = (double)zone.Get("Chicory.Inflorescence.Live.Wt");
-            double leafDeadWt = (double)zone.Get("Chicory.Leaf.Dead.Wt");
-            double stemDeadWt = (double)zone.Get("Chicory.Stem.Dead.Wt");
-            double flowerDeadWt = (double)zone.Get("Chicory.Inflorescence.Dead.Wt");
-            double leafLiveN = (double)zone.Get("Chicory.Leaf.Live.N");
-            double stemLiveN = (double)zone.Get("Chicory.Stem.Live.N");
-            double flowerLiveN = (double)zone.Get("Chicory.Inflorescence.Live.N");
-            double leafDeadN = (double)zone.Get("Chicory.Leaf.Dead.N");
-            double stemDeadN = (double)zone.Get("Chicory.Stem.Dead.N");
-            double flowerDeadN = (double)zone.Get("Chicory.Inflorescence.Dead.N");
+            double leafLiveWt = (double)zone.Get("Plantain.Leaf.Live.Wt");
+            double stemLiveWt = (double)zone.Get("Plantain.Stem.Live.Wt");
+            double flowerLiveWt = (double)zone.Get("Plantain.Inflorescence.Live.Wt");
+            double leafDeadWt = (double)zone.Get("Plantain.Leaf.Dead.Wt");
+            double stemDeadWt = (double)zone.Get("Plantain.Stem.Dead.Wt");
+            double flowerDeadWt = (double)zone.Get("Plantain.Inflorescence.Dead.Wt");
+            double leafLiveN = (double)zone.Get("Plantain.Leaf.Live.N");
+            double stemLiveN = (double)zone.Get("Plantain.Stem.Live.N");
+            double flowerLiveN = (double)zone.Get("Plantain.Inflorescence.Live.N");
+            double leafDeadN = (double)zone.Get("Plantain.Leaf.Dead.N");
+            double stemDeadN = (double)zone.Get("Plantain.Stem.Dead.N");
+            double flowerDeadN = (double)zone.Get("Plantain.Inflorescence.Dead.N");
 
             double existingWt = leafLiveWt + leafDeadWt + stemLiveWt + stemDeadWt + flowerLiveWt + flowerDeadWt;
             double existingN = leafLiveN + leafDeadN + stemLiveN + stemDeadN + flowerLiveN + flowerDeadN;
@@ -579,7 +579,7 @@ namespace Models
             if (removingWt > 0.0)
             {
                 // get the fractions to remove for each organ (will override the default values)
-                // the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent
+                // the default is [Plantain].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent
                 // >> double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;
                 double fracToRemove = removingWt / existingWt;
                 double leafFracToRemove = 0.0;
@@ -598,7 +598,7 @@ namespace Models
                 double flowerFracToRemove = ((flowerLiveWt + flowerDeadWt) > 0.0) ? fracToRemove : 0.0;
 
                 // get the fractions to residue (i.e. wastage - will override the default values)
-                // the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent
+                // the default is [Plantain].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent
                 double leafFracToResidue = leafResidueFrac * leafFracToRemove;
                 double stemFracToResidue = stemResidueFrac * stemFracToRemove;
                 double flowerFracToResidue = flowerResidueFrac * flowerFracToRemove;
@@ -628,23 +628,23 @@ namespace Models
                 removalFractions.SetFractionToResidue("Taproot", 0.0);
 
                 // Actually do the biomass removal
-                Chicory.RemoveBiomass(removeType, removalFractions);
+                Plantain.RemoveBiomass(removeType, removalFractions);
 
                 // get the new existing plant amount
-                double postHarvestWt = (double)zone.Get("Chicory.AboveGround.Wt");
-                double postHarvestN = (double)zone.Get("Chicory.AboveGround.N");
+                double postHarvestWt = (double)zone.Get("Plantain.AboveGround.Wt");
+                double postHarvestN = (double)zone.Get("Plantain.AboveGround.N");
 
                 // get total defoliation (total plant stuff lost)
                 DefoliatedDM = existingWt - postHarvestWt;
                 DefoliatedN = existingN - postHarvestN;
 
                 // get total harvested (plant stuff removed from plants)
-                HarvestedDM = (double)zone.Get("Chicory.Leaf.Removed.Wt")
-                + (double)zone.Get("Chicory.Stem.Removed.Wt")
-                + (double)zone.Get("Chicory.Inflorescence.Removed.Wt");
-                HarvestedN = (double)zone.Get("Chicory.Leaf.Removed.N")
-                + (double)zone.Get("Chicory.Stem.Removed.N")
-                + (double)zone.Get("Chicory.Inflorescence.Removed.N");
+                HarvestedDM = (double)zone.Get("Plantain.Leaf.Removed.Wt")
+                + (double)zone.Get("Plantain.Stem.Removed.Wt")
+                + (double)zone.Get("Plantain.Inflorescence.Removed.Wt");
+                HarvestedN = (double)zone.Get("Plantain.Leaf.Removed.N")
+                + (double)zone.Get("Plantain.Stem.Removed.N")
+                + (double)zone.Get("Plantain.Inflorescence.Removed.N");
 
                 // get amounts actually removed from field and that to be returned (residue or dung/urine)
                 RemovedDM = HarvestedDM * fracDM2Remove;
