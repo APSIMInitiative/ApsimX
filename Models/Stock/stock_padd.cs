@@ -1126,14 +1126,15 @@ namespace Models.GrazPlan
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
                         double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
-                        double prpnToRemove = propnRemoved;// * propnOfPlantDM / (1.0 - propnOfPlantDM);
+                        double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnToRemove;
                         removal.FractionLiveToRemove = prpnToRemove;
                         organ.RemoveBiomass("Graze", removal);
+                        ((IPlant)this.ForageObj).BiomassRemovalComplete(prpnToRemove);
                     }
                 }
-
+                
                 forageIdx++;
                 forage = this.ForageByIndex(forageIdx);
             }
