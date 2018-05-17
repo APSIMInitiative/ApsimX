@@ -395,6 +395,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportPasturePoolDetails.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
@@ -563,6 +564,7 @@
     <EmbeddedResource Include="Resources\RunoffRainfallCurves.png" />
     <EmbeddedResource Include="Resources\RunoffResponseCurve.png" />
     <EmbeddedResource Include="Resources\StockGroupsExample.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Plantain.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
