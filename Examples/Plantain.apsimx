@@ -1161,7 +1161,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.Total.Wt</YFieldName>
+        <YFieldName>Plantain.Total.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1184,7 +1184,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.AboveGround.Wt</YFieldName>
+        <YFieldName>Plantain.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1207,7 +1207,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.BelowGround.Wt</YFieldName>
+        <YFieldName>Plantain.BelowGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1252,7 +1252,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.Leaf.Live.Wt</YFieldName>
+        <YFieldName>Plantain.Leaf.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1275,7 +1275,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.Stem.Live.Wt</YFieldName>
+        <YFieldName>Plantain.Stem.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1298,7 +1298,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.Inflorescence.Live.Wt</YFieldName>
+        <YFieldName>Plantain.Inflorescence.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1321,7 +1321,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.Taproot.Live.Wt</YFieldName>
+        <YFieldName>Plantain.Taproot.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1344,7 +1344,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Chicory.Root.Live.Wt</YFieldName>
+        <YFieldName>Plantain.Root.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
