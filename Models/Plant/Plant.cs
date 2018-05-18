@@ -441,9 +441,16 @@ namespace Models.PMF
             // Remove nodes from the main-stem
             if (removalData != null && removalData.NodesToRemove > 0)
                 Structure.doNodeRemoval(removalData.NodesToRemove);
+        }
 
-
-
+        /// <summary>
+        /// Biomass has been removed from the plant by animals
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+            if (Phenology != null)
+                Phenology.BiomassRemoved(fractionRemoved);
         }
 
         /// <summary>End the crop.</summary>

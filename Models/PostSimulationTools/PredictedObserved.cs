@@ -28,27 +28,27 @@ namespace Models.PostSimulationTools
     {
         /// <summary>Gets or sets the name of the predicted table.</summary>
         [Description("Predicted table")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.TableName)]
+        [Display(Type = DisplayType.TableName)]
         public string PredictedTableName { get; set; }
 
         /// <summary>Gets or sets the name of the observed table.</summary>
         [Description("Observed table")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.TableName)]
+        [Display(Type = DisplayType.TableName)]
         public string ObservedTableName { get; set; }
 
         /// <summary>Gets or sets the field name used for match.</summary>
         [Description("Field name to use for matching predicted with observed data")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
+        [Display(Type = DisplayType.FieldName)]
         public string FieldNameUsedForMatch { get; set; }
 
         /// <summary>Gets or sets the second field name used for match.</summary>
         [Description("Second field name to use for matching predicted with observed data (optional)")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
+        [Display(Type = DisplayType.FieldName)]
         public string FieldName2UsedForMatch { get; set; }
 
         /// <summary>Gets or sets the third field name used for match.</summary>
         [Description("Third field name to use for matching predicted with observed data (optional)")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
+        [Display(Type = DisplayType.FieldName)]
         public string FieldName3UsedForMatch { get; set; }
 
         /// <summary>Main run method for performing our calculations and storing data.</summary>

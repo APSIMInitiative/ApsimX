@@ -1296,7 +1296,7 @@ namespace Models.PMF.Organs
                 {
                     double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
-                    writeToSummary = false; // only want it written once.
+                    //writeToSummary = false; // only want it written once.
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
                 }
@@ -1893,6 +1893,24 @@ namespace Models.PMF.Organs
         {
             CohortsAtInitialisation = 0;
         }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        override protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
+                foreach (LeafCohort leaf in Leaves)
+                    leaf.DoDailyCleanup();
+            }
+        }
+
         #endregion
 
     }

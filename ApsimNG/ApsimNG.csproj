@@ -294,6 +294,7 @@
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\ActivityLedgerGridView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
+    <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
@@ -411,6 +412,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportPasturePoolDetails.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
@@ -603,6 +605,8 @@
     <EmbeddedResource Include="Resources\CompletionImages\StaticClass.png" />
     <EmbeddedResource Include="Resources\CompletionImages\Struct.png" />
     <EmbeddedResource Include="Resources\CompletionImages\VirtualMethod.png" />
+    <EmbeddedResource Include="Resources\StockGroupsExample.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Plantain.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -972,8 +976,7 @@
     <Reference Include="System.Spatial, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.3\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

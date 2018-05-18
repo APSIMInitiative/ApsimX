@@ -44,6 +44,7 @@ namespace Models
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class Operations : Model
     {
         /// <summary>The clock</summary>

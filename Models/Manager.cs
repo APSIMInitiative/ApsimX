@@ -305,7 +305,9 @@ namespace Models
                 if (property != null)
                 {
                     object value;
-                    if (property.PropertyType.Name == "IPlant")
+                    if (element.InnerText.StartsWith(".Simulations."))
+                        value = Apsim.Get(this, element.InnerText);
+                    else if (property.PropertyType == typeof(IPlant))
                         value = Apsim.Find(this, element.InnerText);
                     else
                         value = ReflectionUtilities.StringToObject(property.PropertyType, element.InnerText);
@@ -329,8 +331,8 @@ namespace Models
                     object value = property.GetValue(script, null);
                     if (value == null)
                         value = "";
-                    else if (value is IPlant)
-                        value = (value as IModel).Name;
+                    else if (value is IModel)
+                        value = Apsim.FullPath(value as IModel);
                     XmlUtilities.SetValue(doc.DocumentElement, property.Name, 
                                          ReflectionUtilities.ObjectToString(value));
                 }

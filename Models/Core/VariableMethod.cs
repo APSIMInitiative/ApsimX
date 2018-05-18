@@ -92,7 +92,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the method
         /// </summary>
-        public Type DataType { get { return null; } }
+        public override Type DataType { get { return null; } }
 
         /// <summary>
         /// Gets the values of the method
@@ -109,6 +109,25 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Gets the associated display type for the related method.
+        /// </summary>
+        public override DisplayAttribute Display { get { return null; } }
 
+        /// <summary>
+        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
+        /// </summary>
+        public override object ValueWithArrayHandling
+        {
+            get
+            {
+                return Object;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return false; } }
     }
 }
