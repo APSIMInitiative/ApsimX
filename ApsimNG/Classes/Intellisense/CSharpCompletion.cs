@@ -13,103 +13,85 @@ using System.IO;
 
 namespace UserInterface.Intellisense
 {
+    /// <summary>
+    /// Generates completion options for a document.
+    /// </summary>
     public class CSharpCompletion
     {
         private IProjectContent projectContent;
 
+        /// <summary>
+        /// Default construtor. If null is passed in, the default assemblies list will be used.
+        /// </summary>
+        /// <param name="assemblies"></param>
         public CSharpCompletion(IReadOnlyList<Assembly> assemblies = null)
         {
             projectContent = new CSharpProjectContent();
             if (assemblies == null)
             {
+                // List of assemblies frequently used in manager scripts. 
+                // These assemblies get used by the CSharpCompletion object to look for intellisense options.
+                // Would be better to dynamically generate this list based on the user's script. The disadvantage of doing it that way
+                // is that loading these assemblies into the CSharpCompletion object is quite slow. 
                 assemblies = new List<Assembly>
                 {
                     typeof(object).Assembly, // mscorlib
-                    typeof(Uri).Assembly, // System.dll
-                    typeof(Enumerable).Assembly, // System.Core.dll
-                    //					typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
-                    //					typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
-                    //					typeof(Form).Assembly, // System.Windows.Forms.dll
-                    //					typeof(ICSharpCode.NRefactory.TypeSystem.IProjectContent).Assembly,
+		            typeof(Uri).Assembly, // System.dll
+		            typeof(System.Linq.Enumerable).Assembly, // System.Core.dll
+                    typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
+                    typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
+		            typeof(IProjectContent).Assembly,
+                    typeof(Models.Core.IModel).Assembly // Models.exe
                 };
             }
 
             assemblies = assemblies.Where(v => !v.IsDynamic).ToList();
 
             var unresolvedAssemblies = new IUnresolvedAssembly[assemblies.Count];
-            Stopwatch total = Stopwatch.StartNew();
             Parallel.For(
                 0, assemblies.Count,
                 delegate (int i)
                 {
                     var loader = new CecilLoader();
-                    var path = assemblies[i].Location;
                     loader.DocumentationProvider = GetXmlDocumentation(assemblies[i].Location);
                     unresolvedAssemblies[i] = loader.LoadAssemblyFile(assemblies[i].Location);
                 });
-            Debug.WriteLine("Init project content, loading base assemblies: " + total.Elapsed);
             projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
         }
 
-        public CSharpCompletion(ICSharpScriptProvider scriptProvider, IReadOnlyList<Assembly> assemblies = null)
-            : this(assemblies)
+        /// <summary>
+        /// Alternative constructor. Currently unused, but could come in handy.
+        /// </summary>
+        /// <param name="scriptProvider"></param>
+        /// <param name="assemblies"></param>
+        public CSharpCompletion(ICSharpScriptProvider scriptProvider, IReadOnlyList<Assembly> assemblies = null) : this(assemblies)
         {
             ScriptProvider = scriptProvider;
         }
 
+        /// <summary>
+        /// Default script provider.
+        /// </summary>
         public ICSharpScriptProvider ScriptProvider { get; set; }
 
-        private XmlDocumentationProvider GetXmlDocumentation(string dllPath)
-        {
-            if (string.IsNullOrEmpty(dllPath))
-                return null;
-
-            var xmlFileName = Path.GetFileNameWithoutExtension(dllPath) + ".xml";
-            var localPath = Path.Combine(Path.GetDirectoryName(dllPath), xmlFileName);
-            if (File.Exists(localPath))
-                return new XmlDocumentationProvider(localPath);
-
-            //if it's a .NET framework assembly it's in one of following folders
-            var netPath = Path.Combine(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0", xmlFileName);
-            if (File.Exists(netPath))
-                return new XmlDocumentationProvider(netPath);
-
-            return null;
-        }
-
-        public void AddAssembly(string file)
-        {
-            if (String.IsNullOrEmpty(file))
-                return;
-
-            var loader = new CecilLoader();
-            loader.DocumentationProvider = GetXmlDocumentation(file);
-            var unresolvedAssembly = loader.LoadAssemblyFile(file);
-            projectContent = projectContent.AddAssemblyReferences(unresolvedAssembly);
-        }
-
-        public void ProcessInput(string input, string sourceFile)
-        {
-            if (string.IsNullOrEmpty(sourceFile))
-                return;
-            //see if it contains the word class, enum or struct
-            //todo: this is buggy because if two classes are evaluated seperately, the original file will overwrite it
-            // if the file is a script we should try to extract the class name and use it as the file name. sciptname + class
-            // we can probably use the AST for that.
-            if (input.Contains("class ") || input.Contains("enum ") || input.Contains("struct "))
-            {
-                var syntaxTree = new CSharpParser().Parse(input, sourceFile);
-                syntaxTree.Freeze();
-                var unresolvedFile = syntaxTree.ToTypeSystem();
-                projectContent = projectContent.AddOrUpdateFiles(unresolvedFile);
-            }
-        }
-
+        /// <summary>
+        /// Gets the completion options at a given offset in a document.
+        /// </summary>
+        /// <param name="document">Document containing the source code.</param>
+        /// <param name="offset">Offset of the cursor in the document.</param>
+        /// <returns>The code completion result.</returns>
         public CodeCompletionResult GetCompletions(IDocument document, int offset)
         {
             return GetCompletions(document, offset, false);
         }
 
+        /// <summary>
+        /// Gets the completion options at a given offset in a document.
+        /// </summary>
+        /// <param name="document">Document containing the source code.</param>
+        /// <param name="offset">Offset of the cursor in the document.</param>
+        /// <param name="controlSpace">True if the user pressed control-space, false otherwise.</param>
+        /// <returns>The code completion result.</returns>
         public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace)
         {
             //get the using statements from the script provider
@@ -125,6 +107,16 @@ namespace UserInterface.Intellisense
             return GetCompletions(document, offset, controlSpace, usings, variables, @namespace);
         }
 
+        /// <summary>
+        /// Gets the completion options at a given offset in a document.
+        /// </summary>
+        /// <param name="document">Document containing the source code.</param>
+        /// <param name="offset">Offset of the cursor in the document.</param>
+        /// <param name="controlSpace">True if the user pressed control-space, false otherwise.</param>
+        /// <param name="usings">Using statements.</param>
+        /// <param name="variables">Variables.</param>
+        /// <param name="namespace">Namespace (of the script/document?).</param>
+        /// <returns>The code completion result.</returns>
         public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace, string usings, string variables, string @namespace)
         {
             var result = new CodeCompletionResult();
@@ -183,9 +175,8 @@ namespace UserInterface.Intellisense
 
             result.TriggerWordLength = triggerWordLength;
             result.TriggerWord = completionContext.Document.GetText(completionContext.Offset - triggerWordLength, triggerWordLength);
-            Debug.Print("Trigger word: '{0}'", result.TriggerWord);
 
-            //cast to AvalonEdit completion data and add to results
+            //cast to UserInterface.Intellisense completion data and add to results
             foreach (var completion in completionData)
             {
                 var cshellCompletionData = completion as CompletionData;
@@ -214,6 +205,29 @@ namespace UserInterface.Intellisense
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the XML documentation associated with a dll file.
+        /// </summary>
+        /// <param name="dllPath">Path to the binary file.</param>
+        /// <returns>XML documentation.</returns>
+        private XmlDocumentationProvider GetXmlDocumentation(string dllPath)
+        {
+            if (string.IsNullOrEmpty(dllPath))
+                return null;
+
+            var xmlFileName = Path.GetFileNameWithoutExtension(dllPath) + ".xml";
+            var localPath = Path.Combine(Path.GetDirectoryName(dllPath), xmlFileName);
+            if (File.Exists(localPath))
+                return new XmlDocumentationProvider(localPath);
+
+            //if it's a .NET framework assembly it's in one of following folders
+            var netPath = Path.Combine(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0", xmlFileName);
+            if (File.Exists(netPath))
+                return new XmlDocumentationProvider(netPath);
+
+            return null;
         }
     }
 }

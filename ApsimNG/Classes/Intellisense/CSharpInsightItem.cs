@@ -10,10 +10,14 @@ namespace UserInterface.Intellisense
 {
     sealed class ParameterHighlightingOutputFormatter : TextWriterTokenWriter
     {
-        StringBuilder b;
-        int highlightedParameterIndex;
-        int parameterIndex;
+        private StringBuilder b;
+
+        private int highlightedParameterIndex;
+
+        private int parameterIndex;
+
         internal int parameterStartOffset;
+
         internal int parameterLength;
 
         public ParameterHighlightingOutputFormatter(StringBuilder b, int highlightedParameterIndex)
@@ -46,14 +50,18 @@ namespace UserInterface.Intellisense
 
     public sealed class CSharpInsightItem
     {
-        public readonly IParameterizedMember Method;
+        private int highlightedParameterIndex = -1;
+
+        private string documentation;
+
+        private TextBlock header;
 
         public CSharpInsightItem(IParameterizedMember method)
         {
             this.Method = method;
         }
 
-        TextBlock header;
+        public IParameterizedMember Method { get; private set; }
 
         public object Header
         {
@@ -68,8 +76,6 @@ namespace UserInterface.Intellisense
             }
         }
 
-        int highlightedParameterIndex = -1;
-
         public void HighlightParameter(int parameterIndex)
         {
             if (highlightedParameterIndex == parameterIndex)
@@ -79,27 +85,11 @@ namespace UserInterface.Intellisense
                 GenerateHeader();
         }
 
-        void GenerateHeader()
-        {
-            CSharpAmbience ambience = new CSharpAmbience();
-            ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
-            var stringBuilder = new StringBuilder();
-            TokenWriter formatter = new ParameterHighlightingOutputFormatter(stringBuilder, highlightedParameterIndex);
-            ambience.ConvertSymbol(Method, formatter, FormattingOptionsFactory.CreateSharpDevelop());
-            var documentation = XmlDocumentationElement.Get(Method);
-            ambience.ConversionFlags = ConversionFlags.ShowTypeParameterList;
-
-            var inlineBuilder = new HighlightedInlineBuilder(stringBuilder.ToString());
-            header.Inlines.Clear();
-            header.Inlines.AddRange(inlineBuilder.CreateRuns());
-        }
-
         public object Content
         {
             get { return Documentation; }
         }
-
-        private string documentation;
+        
         public string Documentation
         {
             get
@@ -115,5 +105,19 @@ namespace UserInterface.Intellisense
             }
         }
 
+        private void GenerateHeader()
+        {
+            CSharpAmbience ambience = new CSharpAmbience();
+            ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
+            var stringBuilder = new StringBuilder();
+            TokenWriter formatter = new ParameterHighlightingOutputFormatter(stringBuilder, highlightedParameterIndex);
+            ambience.ConvertSymbol(Method, formatter, FormattingOptionsFactory.CreateSharpDevelop());
+            var documentation = XmlDocumentationElement.Get(Method);
+            ambience.ConversionFlags = ConversionFlags.ShowTypeParameterList;
+
+            var inlineBuilder = new HighlightedInlineBuilder(stringBuilder.ToString());
+            header.Inlines.Clear();
+            header.Inlines.AddRange(inlineBuilder.CreateRuns());
+        }
     }
 }

@@ -82,6 +82,8 @@ namespace UserInterface.Views
         /// Offset of the caret from the beginning of the text editor.
         /// </summary>
         int Offset { get; }
+
+        bool IntellisenseVisible { get; }
     }
 
     /// <summary>
@@ -132,7 +134,17 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded
+        {
+            add
+            {
+                intellisense.ContextItemsNeeded += value;
+            }
+            remove
+            {
+                intellisense.ContextItemsNeeded -= value;
+            }
+        }
 
         /// <summary>
         /// Invoked when the user changes the text in the editor.
@@ -257,6 +269,12 @@ namespace UserInterface.Views
                 return textEditor.Caret.Offset;
             }
         }
+
+        /// <summary>
+        /// Returns true if the intellisense is visible. False otherwise.
+        /// </summary>
+        public bool IntellisenseVisible { get { return intellisense.Visible; } }
+
         /// <summary>
         /// Default constructor that configures the Completion form.
         /// </summary>
@@ -314,7 +332,7 @@ namespace UserInterface.Views
             IntelliSenseChars = ".";
 
             intellisense = new IntellisensePresenter();
-            intellisense.ContextItemsNeeded += ContextItemsNeeded;
+            
             intellisense.LoseFocus += HideCompletionWindow;
         }
 
@@ -333,7 +351,6 @@ namespace UserInterface.Views
             scroller.Vadjustment.Changed -= Vadjustment_Changed;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
 
-            intellisense.ContextItemsNeeded -= ContextItemsNeeded;
             intellisense.ItemSelected -= InsertCompletionItemIntoTextBox;
             intellisense.LoseFocus -= HideCompletionWindow;
             intellisense.Cleanup();
@@ -407,7 +424,7 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-                char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+            char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
             bool controlSpace = IsControlSpace(e.Event);
             if (e.Event.Key == Gdk.Key.F3)
             {
@@ -417,7 +434,7 @@ namespace UserInterface.Views
                     _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
                 e.RetVal = true;
             }
-            else if ((IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) && ContextItemsNeeded != null)
+            else if (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace)
             {
                 // If user one of the IntelliSenseChars, then display contextlist.
                 string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
@@ -432,8 +449,7 @@ namespace UserInterface.Views
                     // Process all events in the main loop, so that the period is inserted into the text editor.
                     while (GLib.MainContext.Iteration()) ;
                 }
-
-                ShowCompletionWindow();
+                ShowCompletionWindow(controlSpace);
             }
             else
             {
@@ -466,19 +482,22 @@ namespace UserInterface.Views
         /// Show the context list. Return true if popup box shown
         /// </summary>
         /// <param name="characterPressed">Character pressed</param>
+        /// <param name="controlSpace">True if this command was generated via ctrl-space.</param>
         /// <returns>Completion form showing</returns>        
-        private bool ShowCompletionWindow()
+        private bool ShowCompletionWindow(bool controlSpace)
         {
             //textEditor.TextArea.InsertAtCaret(characterPressed.ToString());
-            intellisense.ContextItemsNeeded += ContextItemsNeeded;
             try
             {
-                if (intellisense.GenerateCompletionOptions())
-                    // Turn readonly on so that the editing window doesn't process keystrokes.
-                    textEditor.Document.ReadOnly = true;
+                if (intellisense.GenerateCompletionOptions(textEditor.Text, textEditor.Caret.Offset, controlSpace)) { }
+                    // Turn readonly on so that the editing window doesn't process keystrokes,
+                    // but only if the intellisense actually generated any completion options.
+                    //textEditor.Document.ReadOnly = true;
             }
             catch (Exception err)
             {
+                // TODO : remove variable err, as it is never used. I'm keeping it here while for testing purposes
+                // so I can see error messages here. If you're reading this, feel free to remove err.
             }
             
 
@@ -493,7 +512,8 @@ namespace UserInterface.Views
             textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
             intellisense.ItemSelected += InsertCompletionItemIntoTextBox;
-            intellisense.MainWindow = MainWidget.Toplevel as Window;
+            //intellisense.MainWindow = MainWidget.Toplevel as Window;
+            intellisense.Editor = this;
             intellisense.Show(frameX + x, frameY + y);
             return true; 
         }

@@ -7,19 +7,42 @@ using System.Xml;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Completion;
 using ICSharpCode.NRefactory.TypeSystem;
+using ICSharpCode.NRefactory.TypeSystem.Implementation;
 
 namespace UserInterface.Intellisense
 {
-    class EntityCompletionData : CompletionData, IEntityCompletionData
+    /// <summary>
+    /// A class to hold data for a completion option representing an entity.
+    /// </summary>
+    public class EntityCompletionData : CompletionData, IEntityCompletionData
     {
-        readonly IEntity entity;
-        static readonly CSharpAmbience csharpAmbience = new CSharpAmbience();
+        /// <summary>
+        /// The entity.
+        /// </summary>
+        private readonly IEntity entity;
 
+        /// <summary>
+        /// Description text of the entity.
+        /// </summary>
+        private string description;
+
+        /// <summary>
+        /// Generates tooltips using C# syntax.
+        /// </summary>
+        private static readonly CSharpAmbience csharpAmbience = new CSharpAmbience();
+
+        /// <summary>
+        /// Gets or sets the entity which this completion data represents.
+        /// </summary>
         public IEntity Entity
         {
             get { return entity; }
         }
 
+        /// <summary>
+        /// Public constructor.
+        /// </summary>
+        /// <param name="entity">The entity. Cannot be null.</param>
         public EntityCompletionData(IEntity entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
@@ -35,10 +58,13 @@ namespace UserInterface.Intellisense
                 ambience.ConversionFlags |= ConversionFlags.UseFullyQualifiedTypeNames;
             }
             Image = CompletionImage.GetImage(entity);
+            Units = entity.GetAttribute(new FullTypeName(typeof(Models.Core.UnitsAttribute).FullName))?.PositionalArguments?.First()?.ConstantValue.ToString();
+            ReturnType = GetReturnType();
         }
 
-        #region Description & Documentation
-        private string description;
+        /// <summary>
+        /// Gets or sets the entity's description.
+        /// </summary>
         public override string Description
         {
             get
@@ -61,30 +87,10 @@ namespace UserInterface.Intellisense
         }
 
         /// <summary>
-        /// Converts a member to text.
-        /// Returns the declaration of the member as C# or VB code, e.g.
-        /// "public void MemberName(string parameter)"
+        /// Generates an entity's description from its XML documentation.
         /// </summary>
-        static string GetText(IEntity entity)
-        {
-            IAmbience ambience = csharpAmbience;
-            ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
-            if (entity is ITypeDefinition)
-            {
-                // Show fully qualified Type name
-                ambience.ConversionFlags |= ConversionFlags.UseFullyQualifiedTypeNames;
-            }
-            if (entity is IMethod)
-            {
-                //if the method is an extension method we wanna see the whole method for the description
-                //the original method (not reduced) can be obtained by calling ReducedFrom
-                var reducedFromMethod = ((IMethod)entity).ReducedFrom;
-                if (reducedFromMethod != null)
-                    entity = reducedFromMethod;
-            }
-            return ambience.ConvertEntity(entity);
-        }
-
+        /// <param name="xmlDoc">XML documentation of the entity.</param>
+        /// <returns>String containing the entity's description.</returns>
         public static string XmlDocumentationToText(string xmlDoc)
         {
             //.Diagnostics.Debug.WriteLine(xmlDoc);
@@ -150,6 +156,61 @@ namespace UserInterface.Intellisense
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the return type of an entity.
+        /// </summary>
+        /// <param name="withNamespace">If true, the namespace of the type will be included.</param>
+        /// <returns>Type (and possibly namespace) of the return type, as a string.</returns>
+        public string GetReturnType(bool withNamespace = false)
+        {
+            // A few edge cases here, but as far as I can tell, the entity is only ever an AbstractResolvedMember or
+            // a DefaultResolvedTypeDefinition.
+            if (entity is AbstractResolvedMember)
+            {
+                AbstractResolvedMember resolvedMember = this.entity as AbstractResolvedMember;
+                return withNamespace ? resolvedMember?.ReturnType.ToString() ?? "" : resolvedMember.ReturnType.Name;
+            }
+            if (entity is DefaultResolvedTypeDefinition)
+            {
+                DefaultResolvedTypeDefinition resolvedMember = this.entity as DefaultResolvedTypeDefinition;
+                return withNamespace ? resolvedMember?.Kind.ToString() ?? "" : resolvedMember?.Kind.ToString() ?? "";
+            }
+            if (entity is AbstractUnresolvedMember)
+            {
+                AbstractUnresolvedMember resolvedMember = this.entity as AbstractUnresolvedMember;
+                //return withNamespace ? resolvedMember?.ReturnType.FullName ?? "void" : resolvedMember.ReturnType.Name;
+            }
+            if (entity is DefaultResolvedMethod)
+            {
+                DefaultResolvedMethod resolvedMember = this.entity as DefaultResolvedMethod;
+                return withNamespace ? resolvedMember?.ReturnType.ToString() ?? "" : resolvedMember?.ReturnType.Name;
+            }
+            return "Unknown";
+        }
+
+        /// <summary>
+        /// Converts a member to text.
+        /// Returns the declaration of the member as C# or VB code, e.g.
+        /// "public void MemberName(string parameter)"
+        /// </summary>
+        private static string GetText(IEntity entity)
+        {
+            IAmbience ambience = csharpAmbience;
+            ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
+            if (entity is ITypeDefinition)
+            {
+                // Show fully qualified Type name
+                ambience.ConversionFlags |= ConversionFlags.UseFullyQualifiedTypeNames;
+            }
+            if (entity is IMethod)
+            {
+                //if the method is an extension method we wanna see the whole method for the description
+                //the original method (not reduced) can be obtained by calling ReducedFrom
+                var reducedFromMethod = ((IMethod)entity).ReducedFrom;
+                if (reducedFromMethod != null)
+                    entity = reducedFromMethod;
+            }
+            return ambience.ConvertSymbol(entity);
+        }
     }
 }

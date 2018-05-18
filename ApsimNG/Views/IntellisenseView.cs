@@ -2,19 +2,127 @@
 using System.Collections.Generic;
 using Gtk;
 using UserInterface.EventArguments;
-using System.Windows.Media;
-using System.Reflection;
-using System.IO;
 using UserInterface.Intellisense;
+using System.Linq;
 
 namespace UserInterface.Views
 {
     class IntellisenseView
     {
         /// <summary>
-        /// Main/Parent window for the intellisense popup.
+        /// The popup window.
         /// </summary>
-        public Window MainWindow { get; set; }
+        private Window completionForm;
+
+        /// <summary>
+        /// The TreeView which displays the data.
+        /// </summary>
+        private TreeView completionView;
+
+        /// <summary>
+        /// The ListStore which holds the data (suggested completion options).
+        /// </summary>
+        private ListStore completionModel;
+
+        /// <summary>
+        /// Invoked when the user selects an item (via enter or double click).
+        /// </summary>
+        private event EventHandler<IntellisenseItemSelectedArgs> onItemSelected;
+
+        /// <summary>
+        /// Invoked when the editor needs context items (after user presses '.')
+        /// </summary>
+        private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when the intellisense popup loses focus.
+        /// </summary>
+        private event EventHandler onLoseFocus;
+
+        /// <summary>
+        /// Default constructor. Initialises intellisense popup, but doesn't display anything.
+        /// </summary>
+        public IntellisenseView()
+        {
+            completionForm = new Window(WindowType.Toplevel)
+            {
+                HeightRequest = 300,
+                WidthRequest = 750,
+                Decorated = false,
+                SkipPagerHint = true,
+                SkipTaskbarHint = true,
+            };
+
+            Frame completionFrame = new Frame();
+            completionForm.Add(completionFrame);
+
+            ScrolledWindow completionScroller = new ScrolledWindow();
+            completionFrame.Add(completionScroller);
+
+            completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+            completionView = new TreeView(completionModel);
+            completionScroller.Add(completionView);
+
+            TreeViewColumn column = new TreeViewColumn()
+            {
+                Title = "Item",
+                Resizable = true,
+            };
+            CellRendererPixbuf iconRender = new CellRendererPixbuf();
+            column.PackStart(iconRender, false);
+            CellRendererText textRender = new CellRendererText()
+            {
+                Editable = false,
+                WidthChars = 25,
+                Ellipsize = Pango.EllipsizeMode.End
+            };
+
+            column.PackStart(textRender, true);
+            column.SetAttributes(iconRender, "pixbuf", 0);
+            column.SetAttributes(textRender, "text", 1);
+            completionView.AppendColumn(column);
+
+            textRender = new CellRendererText()
+            {
+                Editable = false,
+                WidthChars = 10,
+                Ellipsize = Pango.EllipsizeMode.End
+            };
+            column = new TreeViewColumn("Units", textRender, "text", 2)
+            {
+                Resizable = true
+            };
+            completionView.AppendColumn(column);
+
+            textRender = new CellRendererText()
+            {
+                Editable = false,
+                WidthChars = 15,
+                Ellipsize = Pango.EllipsizeMode.End
+            };
+            column = new TreeViewColumn("Type", textRender, "text", 3)
+            {
+                Resizable = true
+            };
+            completionView.AppendColumn(column);
+
+            textRender = new CellRendererText()
+            {
+                Editable = false,
+            };
+            column = new TreeViewColumn("Descr", textRender, "text", 4)
+            {
+                Resizable = true
+            };
+            completionView.AppendColumn(column);
+
+            completionView.HasTooltip = true;
+            completionView.TooltipColumn = 5;
+            completionForm.FocusOutEvent += OnLeaveCompletion;
+            completionView.ButtonPressEvent += OnButtonPress;
+            completionView.KeyPressEvent += OnContextListKeyDown;
+            completionView.KeyReleaseEvent += OnKeyRelease;
+        }
 
         /// <summary>
         /// Invoked when the user selects an item (via enter or double click).
@@ -67,103 +175,23 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Invoked when the user selects an item (via enter or double click).
+        /// Returns true if the intellisense is visible. False otherwise.
         /// </summary>
-        private event EventHandler<IntellisenseItemSelectedArgs> onItemSelected;
+        public bool Visible { get { return completionForm.Visible; } }
 
         /// <summary>
-        /// Invoked when the editor needs context items (after user presses '.')
+        /// Editor being used. This is mainly needed to get a reference to the top level window.
         /// </summary>
-        private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+        public ViewBase Editor { get; set; }
+        
+        public Window MainWindow { get; set; }
 
         /// <summary>
-        /// Invoked when the intellisense popup loses focus.
+        /// Gets the Main/Parent window for the intellisense popup.
         /// </summary>
-        private event EventHandler onLoseFocus;
-
-        /// <summary>
-        /// The popup window.
-        /// </summary>
-        private Window completionForm;
-
-        /// <summary>
-        /// The TreeView which displays the data.
-        /// </summary>
-        private TreeView completionView;
-
-        /// <summary>
-        /// The ListStore which holds the data (suggested completion options).
-        /// </summary>
-        private ListStore completionModel;
-
-        /// <summary>
-        /// Default constructor. Initialises intellisense popup, but doesn't display anything.
-        /// </summary>
-        public IntellisenseView()
-        {            
-            completionForm = new Window(WindowType.Toplevel)
-            {
-                HeightRequest = 300,
-                WidthRequest = 750,
-                Decorated = false,
-                SkipPagerHint = true,
-                SkipTaskbarHint = true,
-            };
-
-            Frame completionFrame = new Frame();
-            completionForm.Add(completionFrame);
-
-            ScrolledWindow completionScroller = new ScrolledWindow();
-            completionFrame.Add(completionScroller);
-
-            completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
-            completionView = new TreeView(completionModel);
-            completionScroller.Add(completionView);
-
-            TreeViewColumn column = new TreeViewColumn()
-            {
-                Title = "Item",
-                Resizable = true
-            };
-            CellRendererPixbuf iconRender = new CellRendererPixbuf();
-            column.PackStart(iconRender, false);
-            CellRendererText textRender = new CellRendererText()
-            {
-                Editable = false
-            };
-
-            column.PackStart(textRender, true);
-            column.SetAttributes(iconRender, "pixbuf", 0);
-            column.SetAttributes(textRender, "text", 1);
-            completionView.AppendColumn(column);
-
-            textRender = new CellRendererText();
-            column = new TreeViewColumn("Units", textRender, "text", 2)
-            {
-                Resizable = true
-            };
-            completionView.AppendColumn(column);
-
-            textRender = new CellRendererText();
-            column = new TreeViewColumn("Type", textRender, "text", 3)
-            {
-                Resizable = true
-            };
-            completionView.AppendColumn(column);
-
-            textRender = new CellRendererText();
-            column = new TreeViewColumn("Descr", textRender, "text", 4)
-            {
-                Resizable = true
-            };
-            completionView.AppendColumn(column);
-
-            completionView.HasTooltip = true;
-            completionView.TooltipColumn = 5;
-            completionForm.FocusOutEvent += OnLeaveCompletion;
-            completionView.ButtonPressEvent += OnButtonPress;
-            completionView.KeyPressEvent += OnContextListKeyDown;
-            completionView.KeyReleaseEvent += OnKeyRelease;
+        private Window GetMainWindow()
+        {
+            return MainWindow ?? Editor?.MainWidget.Toplevel as Window;
         }
 
         /// <summary>
@@ -177,20 +205,28 @@ namespace UserInterface.Views
         {            
             // only display the list if there are options to display
             if (completionModel.IterNChildren() > 0)
-            {                
+            {
+                completionForm.TransientFor = GetMainWindow();
                 completionForm.ShowAll();
-                completionForm.TransientFor = MainWindow;
                 completionForm.Move(x, y);
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
                 completionView.SetCursor(new TreePath("0"), null, false);
-                if (completionForm.GdkWindow != null)
-                    completionForm.GdkWindow.Focus(0);
+                //if (completionForm.GdkWindow != null)
+                //    completionForm.GdkWindow.Focus(0);
+                completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
                 while (GLib.MainContext.Iteration()) ;
                 return true;
             }
             return false;
         }
 
+        public void SelectItem(int index)
+        {
+            TreeIter iter;
+            if (completionModel.GetIter(out iter, new TreePath(index.ToString())))
+                completionView.Selection.SelectIter(iter);
+            //completionView.SetCursor(new TreePath(index.ToString()), null, false);
+        }
         /// <summary>
         /// Tries to display the intellisense popup at the specified coordinates. If the coordinates are
         /// too close to the right or bottom of the screen, they will be adjusted appropriately.
@@ -208,8 +244,8 @@ namespace UserInterface.Views
             // the right hand side of the popup instead.
             // If the popup is too close to the bottom of the screen, we use the y-coordinate as
             // the bottom side of the popup instead.
-            int xres = MainWindow.Screen.Width;
-            int yres = MainWindow.Screen.Height;
+            int xres = GetMainWindow().Screen.Width;
+            int yres = GetMainWindow().Screen.Height;
 
             if ((x + completionForm.WidthRequest) > xres)            
                 // We are very close to the right-hand side of the screen
@@ -241,61 +277,13 @@ namespace UserInterface.Views
             return true;
         }
 
-        public void Populate(List<ICSharpCode.NRefactory.Completion.ICompletionData> items)
+        public void Populate(List<CompletionData> items)
         {
             completionModel.Clear();
-            string workingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            if (!Directory.Exists(workingDirectory))
-                Directory.CreateDirectory(workingDirectory);
-            else
-            {
-                // chances of this ever being run are astronomically low
-                Directory.Delete(workingDirectory, true);
-                Directory.CreateDirectory(workingDirectory);
-            }
-            
             foreach (CompletionData item in items)
             {
-                string imageName = item.Image.ToString();
-                UriBuilder builder = new UriBuilder(imageName);
-                imageName = imageName.Replace(";component", "");
-                imageName = imageName.Replace("pack://application:,,,/", "");
-                string uri = imageName.Replace('/', '.');
-                imageName = Path.GetFileName(imageName);
-                
-                string imageLocation = Path.Combine(workingDirectory, imageName);
-                if (!File.Exists(imageLocation))
-                {
-                    imageLocation = GetImagePath(imageName, workingDirectory, uri);
-                }
-
-                string resourceName = imageName.Replace('/', '.');
-
-                Gdk.Pixbuf image = new Gdk.Pixbuf(imageLocation);
-                completionModel.AppendValues(image, item.CompletionText, "(kg)", "type name", item.Description, "item.paramstring");
+                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, item.Description.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y), item.CompletionText);
             }
-        }
-
-        /// <summary>
-        /// Copies an image stored as an embdedded resource to a given directory and returns the path to the image.
-        /// </summary>
-        /// <param name="imageName">Name of the image (without the path).</param>
-        /// <param name="imageDirectory">Directory which the image should be copied to.</param>
-        /// <returns>Full path to the image.</returns>
-        private static string GetImagePath(string imageName, string imageDirectory, string uri)
-        {
-            string path = Path.Combine(imageDirectory, imageName);
-            using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                Stream imageStream = Assembly.GetAssembly(typeof(ICSharpCode.AvalonEdit.AvalonEditCommands)).GetManifestResourceStream(uri);
-                if (imageStream == null)
-                    imageStream = Assembly.GetAssembly(typeof(ICSharpCode.AvalonEdit.AvalonEditCommands)).GetManifestResourceStream("ICSharpCode.AvalonEdit.CodeCompletion.Images.Struct.png");
-                if (imageStream == null)
-                    return null;
-                imageStream.CopyTo(file);
-            }
-
-            return path;
         }
 
         public void Populate(List<NeedContextItemsArgs.ContextItem> items)
@@ -311,6 +299,23 @@ namespace UserInterface.Views
                 pixbufToBeUsed = item.IsProperty ? propertyPixbuf : functionPixbuf;
                 completionModel.AppendValues(pixbufToBeUsed, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
             }
+        }
+
+        /// <summary>
+        /// Safely disposes of several objects.
+        /// </summary>
+        public void Cleanup()
+        {
+            completionForm.FocusOutEvent -= OnLeaveCompletion;
+            completionView.ButtonPressEvent -= OnButtonPress;
+            completionView.KeyPressEvent -= OnContextListKeyDown;
+            completionView.KeyReleaseEvent -= OnKeyRelease;
+
+            if (completionForm.IsRealized)
+                completionForm.Destroy();
+            completionView.Dispose();
+            completionForm.Destroy();
+            completionForm = null;
         }
 
         /// <summary>
@@ -398,18 +403,6 @@ namespace UserInterface.Views
                 onItemSelected(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });
                 while (GLib.MainContext.Iteration()) ;
             }                
-        }
-
-        /// <summary>
-        /// Safely disposes of several objects.
-        /// </summary>
-        public void Cleanup()
-        {
-            if (completionForm.IsRealized)
-                completionForm.Destroy();
-            completionView.Dispose();
-            completionForm.Destroy();
-            completionForm = null;
         }
     }
 }

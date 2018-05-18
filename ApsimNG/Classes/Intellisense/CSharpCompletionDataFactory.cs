@@ -7,12 +7,11 @@ using ICSharpCode.NRefactory.TypeSystem;
 using ICompletionData = ICSharpCode.NRefactory.Completion.ICompletionData;
 using ICSharpCode.NRefactory.CSharp.Completion;
 using ICSharpCode.NRefactory.CSharp.TypeSystem;
-using ICSharpCode.CodeCompletion.DataItems;
 using ICSharpCode.NRefactory.CSharp;
 
 namespace UserInterface.Intellisense
 {
-    public sealed class CSharpCompletionDataFactory : ICompletionDataFactory, IParameterCompletionDataFactory
+    public class CSharpCompletionDataFactory : ICompletionDataFactory, IParameterCompletionDataFactory
     {
         readonly CSharpTypeResolveContext contextAtCaret;
         private readonly CSharpCompletionContext context;
@@ -75,7 +74,7 @@ namespace UserInterface.Intellisense
         {
             return new CompletionData(name.Name)
             {
-                Image = CompletionImage.NamespaceImage,
+                Image = CompletionImage.Namespace.BaseImage,
             };
         }
 

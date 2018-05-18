@@ -15,7 +15,6 @@ namespace UserInterface.Presenters
     using Commands;
     using EventArguments;
     using Importer;
-    using System.Linq;
     using Interfaces;
     using Models;
     using Models.Core;
@@ -722,8 +721,6 @@ namespace UserInterface.Presenters
         /// <param name="presenterName">The presenter name.</param>
         public void ShowInRightHandPanel(object model, string viewName, string presenterName)
         {
-            var test = Apsim.ChildrenRecursively(ApsimXFile).OfType<Models.PMF.Functions.LinearInterpolationFunction>().Select(n => GetPathToNode(n)).Where(x => !(x.ToUpper().Contains("PADDOCK.WHEAT") || x.ToUpper().Contains("FIELD.WHEAT"))).ToList();
-
             try
             {
                 object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);

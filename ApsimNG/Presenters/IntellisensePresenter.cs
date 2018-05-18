@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Globalization;
+using System.IO;
 using UserInterface.Views;
 using UserInterface.Intellisense;
-using ICSharpCode.NRefactory.Completion;
 using UserInterface.EventArguments;
-using System.Collections.ObjectModel;
+using ICSharpCode.NRefactory.Editor;
+using ICSharpCode.NRefactory.CSharp;
+using System.Reflection;
+using Models.Core;
+using System.Globalization;
 
 namespace UserInterface.Presenters
 {
@@ -22,6 +24,17 @@ namespace UserInterface.Presenters
         /// Fired when an item is selected in the intellisense window.
         /// </summary>
         private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+
+        /// <summary>
+        /// Responsible for generating the completion options.
+        /// </summary>
+        private CSharpCompletion completion = new CSharpCompletion();
+        
+        /// <summary>
+        /// List of intellisense options.
+        /// This list isn't really needed at the moment, but I have plans to use it in the future. - DH May 2018
+        /// </summary>
+        private CodeCompletionResult completionResult;
 
         /// <summary>
         /// Default constructor.
@@ -85,123 +98,127 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// List of intellisense options.
+        /// Returns true if the intellisense is visible. False otherwise.
         /// </summary>
-        public List<ICompletionData> CompletionOptions { get; private set; }
+        public bool Visible { get { return view.Visible; } }
 
-        // TODO : find a better solution.
-        public Gtk.Window MainWindow
+        /// <summary>
+        /// Editor being used. Mainly used so that the view has a reference to the top-level window,
+        /// which it needs in order to do coordinate-related calculations.
+        /// </summary>
+        public ViewBase Editor
         {
             get
             {
-                return view.MainWindow;
+                return view.Editor;
             }
             set
             {
-                view.MainWindow = value;
+                view.Editor = value;
             }
         }
+
         /// <summary>
         /// Generates the intellisense popup.
         /// </summary>
         /// <param name="node"></param>
         public bool GenerateCompletionOptions()
         {
-            // TODO : take a potential period into account   
             NeedContextItemsArgs args = new NeedContextItemsArgs
             {
                 ObjectName = "",
                 Items = new List<string>(),
                 AllItems = new List<NeedContextItemsArgs.ContextItem>(),
-                CompletionData = new List<ICompletionData>()
+                CompletionData = new List<CompletionData>()
             };
             onContextItemsNeeded?.Invoke(this, args);
-            CompletionOptions = args.CompletionData;
-            //FilterCompletionData(args.ObjectName);
-            //SelectItemFiltering(node);
-            view.Populate(CompletionOptions);
-            return CompletionOptions.Count > 0;
+            List<CompletionData> completionList = args.CompletionData.OrderBy(x => x.CompletionText).ToList();
+            view.Populate(completionList);
+            return completionList.Count > 0;
         }
 
+        /// <summary>
+        /// Generates the intellisense options.
+        /// After calling this, call <see cref="Show(int, int, int)"/> to show the intellisense popup.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public bool GenerateCompletionOptions(string code, int offset, bool controlSpace = false)
+        {
+            CSharpParser parser = new CSharpParser();
+            SyntaxTree syntaxTree = parser.Parse(code);
+            string fileName = Path.GetTempFileName();
+            if (!File.Exists(fileName))
+                File.Create(fileName).Close();
+            File.WriteAllText(fileName, code);
+            syntaxTree.FileName = fileName;
+            syntaxTree.Freeze();
+
+            // Should probably take into account which namespaces the user is using and load the needed assemblies into the CSharpCompletion object
+            // string usings = syntaxTree.Descendants.OfType<UsingDeclaration>().Select(x => x.ToString()).Aggregate((x, y) => x + /* Environment.NewLine + */ y);
+
+            IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
+            completionResult = completion.GetCompletions(document, offset, controlSpace);
+            
+            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
+            {
+                // Filter items.
+                completionResult.CompletionData = completionResult.CompletionData.Where(item => GetMatchQuality(item.CompletionText, completionResult.TriggerWord) > 0).ToList();
+            }
+            List<CompletionData> completionList = completionResult.CompletionData.Select(x => x as CompletionData).Where(x => x != null).OrderBy(x => x.CompletionText).ToList();
+            view.Populate(completionList);
+            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
+                view.SelectItem(completionList.Max(x => GetMatchQuality(x.CompletionText, completionResult.TriggerWord)));
+            return completionList.Any();
+        }
+
+        /// <summary>
+        /// Displays the intellisense popup at the given coordinates.
+        /// </summary>
+        /// <param name="x">x-coordinate at which the popup will be displayed.</param>
+        /// <param name="y">y-coordinate at which the popup will be displayed.</param>
+        /// <param name="lineHeight">Line height (in px?).</param>
         public void Show(int x, int y, int lineHeight = 17)
         {
             view.SmartShowAtCoordinates(x, y, lineHeight);
+            int index = completionResult.CompletionData.IndexOf(completionResult.SuggestedCompletionDataItem);
+            if (index >= 0)
+                view.SelectItem(index);
         }
 
+        /// <summary>
+        /// Unsubscribes events, releases unmanaged resources, all that fun stuff.
+        /// </summary>
         public void Cleanup()
         {
             view.Cleanup();
         }
 
         /// <summary>
-        /// Takes a list of completion data and filters out the records irrelevant to the word which the user has just typed.
+        /// Determines how well an item matches the completion word.
         /// </summary>
-        /// <param name="wordToMatch"></param>
-        /// <returns></returns>
-        private void FilterCompletionData(string wordToMatch)
-        {
-            CompletionOptions = CompletionOptions.Where(x => GetMatchQuality(x.CompletionText, wordToMatch) > 0).ToList();
-        }
-        /// <summary>
-        /// Filters CompletionList items to show only those matching given query, and selects the best match.
-        /// </summary>
-        void SelectItemFiltering(string query)
-        {
-            // if the user just typed one more character, don't filter all data but just filter what we are already displaying
-            var listToFilter = CompletionOptions;
-
-            var matchingItems =
-                from item in listToFilter
-                let quality = GetMatchQuality((item as CompletionData).Text, query)
-                where quality > 0
-                select new { Item = item, Quality = quality };
-
-            // e.g. "DateTimeKind k = (*cc here suggests DateTimeKind*)"
-            ICompletionData suggestedItem = null;
-
-            var listBoxItems = new ObservableCollection<ICompletionData>();
-            int bestIndex = -1;
-            int bestQuality = -1;
-            double bestPriority = 0;
-            int i = 0;
-            foreach (var matchingItem in matchingItems)
-            {
-                double priority = matchingItem.Item == suggestedItem ? double.PositiveInfinity : (matchingItem.Item as CompletionData).Priority;
-                int quality = matchingItem.Quality;
-                if (quality > bestQuality || (quality == bestQuality && (priority > bestPriority)))
-                {
-                    bestIndex = i;
-                    bestPriority = priority;
-                    bestQuality = quality;
-                }
-                listBoxItems.Add(matchingItem.Item);
-                i++;
-            }
-            CompletionOptions = listBoxItems.ToList();
-        }
-
-        /// <summary>
-        /// Evaluates how closely two strings match and returns an integer representing the quality of the match.
-        /// </summary>
-        /// <param name="itemText"></param>
-        /// <param name="query"></param>
+        /// <param name="itemText">Name of a completion option.</param>
+        /// <param name="query">The completion word.</param>
         /// <returns>
-        /// Qualities:
-        ///  	8 = full match case sensitive
-        /// 	7 = full match
-        /// 	6 = match start case sensitive
-        ///		5 = match start
-        ///		4 = match CamelCase when length of query is 1 or 2 characters
-        /// 	3 = match substring case sensitive
-        ///		2 = match substring
-        ///		1 = match CamelCase
-        ///	   -1 = no match
-        /// TODO : create an enum that represents these values?
+        /// Number representing the quality of the match. Higher numbers represent closer matches.
+        /// 8 represents an exact match, -1 represents no match.
         /// </returns>
-        private int GetMatchQuality(string itemText, string query)
+        int GetMatchQuality(string itemText, string query)
         {
             if (itemText == null)
                 throw new ArgumentNullException("itemText", "ICompletionData.Text returned null");
+
+            // Qualities:
+            //  	8 = full match case sensitive
+            // 		7 = full match
+            // 		6 = match start case sensitive
+            //		5 = match start
+            //		4 = match CamelCase when length of query is 1 or 2 characters
+            // 		3 = match substring case sensitive
+            //		2 = match substring
+            //		1 = match CamelCase
+            //		-1 = no match
+
             if (query == itemText)
                 return 8;
             if (string.Equals(itemText, query, StringComparison.InvariantCultureIgnoreCase))
@@ -218,13 +235,11 @@ namespace UserInterface.Presenters
                 camelCaseMatch = CamelCaseMatch(itemText, query);
                 if (camelCaseMatch == true) return 4;
             }
-
-            // search by substring
+            
             if (itemText.IndexOf(query, StringComparison.InvariantCulture) >= 0)
                 return 3;
             if (itemText.IndexOf(query, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 return 2;
-            
 
             if (!camelCaseMatch.HasValue)
                 camelCaseMatch = CamelCaseMatch(itemText, query);
@@ -235,12 +250,13 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// 
+        /// Checks if two strings match on the upper case letters.
+        /// e.g. "CodeQualityAnalysis" matches "CQ".
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        private bool CamelCaseMatch(string text, string query)
+        /// <param name="text">The camel case word.</param>
+        /// <param name="query">The acronym/abbreviated word to test.</param>
+        /// <returns>True if the upper case letters match, false otherwise.</returns>
+        static bool CamelCaseMatch(string text, string query)
         {
             int i = 0;
             foreach (char upper in text.Where(c => char.IsUpper(c)))

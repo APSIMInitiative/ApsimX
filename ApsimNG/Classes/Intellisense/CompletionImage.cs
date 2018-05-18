@@ -1,327 +1,249 @@
 ﻿using System;
 using System.Threading;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using ICSharpCode.NRefactory.TypeSystem;
 using System.IO;
 using System.Reflection;
+using Gdk;
 
 namespace UserInterface.Intellisense
 {
     /// <summary>
-	/// Provides icons for code-completion.
+	/// Provides icons for code completion.
 	/// </summary>
 	public class CompletionImage
     {
-        #region non-entity Images
-        static readonly BitmapImage namespaceImage = LoadBitmap("NameSpace");
+        /// <summary>
+        /// Name of the image with file extension.
+        /// </summary>
+        private readonly string imageName;
 
         /// <summary>
-        /// Gets the image for namespaces.
+        /// Path to the directory containing the completion images.
         /// </summary>
-        public static ImageSource NamespaceImage
-        {
-            get { return namespaceImage; }
-        }
+        private const string completionImagesPath = "ApsimNG.Resources.CompletionImages.";
 
         /// <summary>
-        /// Copies an image stored as an embedded resource inside the executing assembly to a file on disk and returns the path.
+        /// Whether or not the static overlay should be shown for static members.
         /// </summary>
-        /// <param name="imageName">Name of the image without file extension.</param>
-        /// <returns></returns>
-        public static string GetPathToImage(string imageName)
-        {
-            string imagesDirectory = Path.Combine(Path.GetTempPath(), "CompletionImages");
-            if (!Directory.Exists(imagesDirectory))
-                Directory.CreateDirectory(imagesDirectory);
+        private readonly bool showStaticOverlay;
 
-            string filePath = Path.Combine(imagesDirectory, imageName + ".png");
-            if (!File.Exists(filePath))
-            {
-                using (FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-                {
-                    Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.CompletionImages." + imageName).CopyTo(file);
-                }
-            }
-            return filePath;
-        }
+        /// <summary>
+        /// Number of available overlays.
+        /// </summary>
+        private const int accessibilityOverlaysLength = 5;
 
-        static BitmapImage LoadBitmap(string name)
+        /// <summary>
+        /// List of all possible overlay images.
+        /// There is an overlay for each combination of accessibility and 'staticness'.
+        /// e.g. private, private static, protected, protected static, etc.
+        /// 0..N-1  = base image + accessibility overlay.
+        /// N..2N-1 = base image + static overlay + accessibility overlay.
+        /// </summary>
+        private Pixbuf[] images = new Pixbuf[2 * accessibilityOverlaysLength];
+
+        /// <summary>
+        /// Accessibility overlays.
+        /// These are images which are superimposed on the completion image. 
+        /// e.g. a private method's image is a padlock on the corner of the normal method image.
+        /// </summary>
+        private static readonly Pixbuf[] accessibilityOverlays = new Pixbuf[accessibilityOverlaysLength]
         {
-            BitmapImage image = new BitmapImage(new Uri("pack://application:,,,/ICSharpCode.AvalonEdit;component/CodeCompletion/Images/" + name + ".png"));
-            image.Freeze();
-            return image;
+            null,
+            LoadPixbuf("OverlayPrivate"),
+            LoadPixbuf("OverlayProtected"),
+            LoadPixbuf("OverlayInternal"),
+            LoadPixbuf("OverlayProtectedInternal")
+        };
+
+        /// <summary>
+        /// Loads a pixbuf from the executing assembly.
+        /// </summary>
+        /// <param name="name">Name of the image with or without file extension.</param>
+        /// <returns>Pixbuf containing the image.</returns>
+        public static Pixbuf LoadPixbuf(string name)
+        {
+            if (!Path.HasExtension(name))
+                name = Path.ChangeExtension(name, ".png");
+            return new Pixbuf(Assembly.GetExecutingAssembly(), completionImagesPath + name);
         }
-        #endregion
 
         #region Entity Images
-        static readonly CompletionImage imageClass = new CompletionImage("Class", false);
-        static readonly CompletionImage imageStruct = new CompletionImage("Struct", false);
-        static readonly CompletionImage imageInterface = new CompletionImage("Interface", false);
-        static readonly CompletionImage imageDelegate = new CompletionImage("Delegate", false);
-        static readonly CompletionImage imageEnum = new CompletionImage("Enum", false);
-        static readonly CompletionImage imageStaticClass = new CompletionImage("StaticClass", false);
-        static readonly CompletionImage imageNamespace = new CompletionImage("NameSpace", false);
+
+        // These static properties take the place of a public constructor. They are a bit unsightly, but 
+        // they don't rely on the developer passing the image name as a string into the constructor.
 
         /// <summary>Gets the image used for namespaces.</summary>
-        public static CompletionImage Namespace { get { return imageNamespace; } }
+        public static CompletionImage Namespace { get { return new CompletionImage("NameSpace", false); } }
 
         /// <summary>Gets the image used for non-static classes.</summary>
-        public static CompletionImage Class { get { return imageClass; } }
+        public static CompletionImage Class { get { return new CompletionImage("Class", false); } }
 
         /// <summary>Gets the image used for structs.</summary>
-        public static CompletionImage Struct { get { return imageStruct; } }
+        public static CompletionImage Struct { get { return new CompletionImage("Struct", false); } }
 
         /// <summary>Gets the image used for interfaces.</summary>
-        public static CompletionImage Interface { get { return imageInterface; } }
+        public static CompletionImage Interface { get { return new CompletionImage("Interface", false); } }
 
         /// <summary>Gets the image used for delegates.</summary>
-        public static CompletionImage Delegate { get { return imageDelegate; } }
+        public static CompletionImage Delegate { get { return new CompletionImage("Delegate", false); } }
 
         /// <summary>Gets the image used for enums.</summary>
-        public static CompletionImage Enum { get { return imageEnum; } }
+        public static CompletionImage Enum { get { return new CompletionImage("Enum", false); } }
 
         /// <summary>Gets the image used for modules/static classes.</summary>
-        public static CompletionImage StaticClass { get { return imageStaticClass; } }
-
-        static readonly CompletionImage imageField = new CompletionImage("Field", true);
-        static readonly CompletionImage imageFieldReadOnly = new CompletionImage("FieldReadOnly", true);
-        static readonly CompletionImage imageLiteral = new CompletionImage("Literal", false);
-        static readonly CompletionImage imageEnumValue = new CompletionImage("EnumValue", false);
+        public static CompletionImage StaticClass { get { return new CompletionImage("StaticClass", false); } }
 
         /// <summary>Gets the image used for non-static classes.</summary>
-        public static CompletionImage Field { get { return imageField; } }
+        public static CompletionImage Field { get { return new CompletionImage("Field", true); } }
 
         /// <summary>Gets the image used for structs.</summary>
-        public static CompletionImage ReadOnlyField { get { return imageFieldReadOnly; } }
+        public static CompletionImage ReadOnlyField { get { return new CompletionImage("FieldReadOnly", true); } }
 
         /// <summary>Gets the image used for constants.</summary>
-        public static CompletionImage Literal { get { return imageLiteral; } }
+        public static CompletionImage Literal { get { return new CompletionImage("Literal", false); } }
 
         /// <summary>Gets the image used for enum values.</summary>
-        public static CompletionImage EnumValue { get { return imageEnumValue; } }
-
-        static readonly CompletionImage imageMethod = new CompletionImage("Method", true);
-        static readonly CompletionImage imageConstructor = new CompletionImage("Constructor", true);
-        static readonly CompletionImage imageVirtualMethod = new CompletionImage("VirtualMethod", true);
-        static readonly CompletionImage imageOperator = new CompletionImage("Operator", false);
-        static readonly CompletionImage imageExtensionMethod = new CompletionImage("ExtensionMethod", true);
-        static readonly CompletionImage imagePInvokeMethod = new CompletionImage("PInvokeMethod", true);
-        static readonly CompletionImage imageProperty = new CompletionImage("Property", true);
-        static readonly CompletionImage imageIndexer = new CompletionImage("Indexer", true);
-        static readonly CompletionImage imageEvent = new CompletionImage("Event", true);
+        public static CompletionImage EnumValue { get { return new CompletionImage("EnumValue", false); } }
 
         /// <summary>Gets the image used for methods.</summary>
-        public static CompletionImage Method { get { return imageMethod; } }
+        public static CompletionImage Method { get { return new CompletionImage("Method", true); } }
 
         /// <summary>Gets the image used for constructos.</summary>
-        public static CompletionImage Constructor { get { return imageConstructor; } }
+        public static CompletionImage Constructor { get { return new CompletionImage("Constructor", true); } }
 
         /// <summary>Gets the image used for virtual methods.</summary>
-        public static CompletionImage VirtualMethod { get { return imageVirtualMethod; } }
+        public static CompletionImage VirtualMethod { get { return new CompletionImage("VirtualMethod", true); } }
 
         /// <summary>Gets the image used for operators.</summary>
-        public static CompletionImage Operator { get { return imageOperator; } }
+        public static CompletionImage Operator { get { return new CompletionImage("Operator", false); } }
 
         /// <summary>Gets the image used for extension methods.</summary>
-        public static CompletionImage ExtensionMethod { get { return imageExtensionMethod; } }
+        public static CompletionImage ExtensionMethod { get { return new CompletionImage("ExtensionMethod", true); } }
 
         /// <summary>Gets the image used for P/Invoke methods.</summary>
-        public static CompletionImage PInvokeMethod { get { return imagePInvokeMethod; } }
+        public static CompletionImage PInvokeMethod { get { return new CompletionImage("PInvokeMethod", true); } }
 
         /// <summary>Gets the image used for properties.</summary>
-        public static CompletionImage Property { get { return imageProperty; } }
+        public static CompletionImage Property { get { return new CompletionImage("Property", true); } }
 
         /// <summary>Gets the image used for indexers.</summary>
-        public static CompletionImage Indexer { get { return imageIndexer; } }
+        public static CompletionImage Indexer { get { return new CompletionImage("Indexer", true); } }
 
         /// <summary>Gets the image used for events.</summary>
-        public static CompletionImage Event { get { return imageEvent; } }
+        public static CompletionImage Event { get { return new CompletionImage("Event", true); } }
+
+        #endregion
 
         /// <summary>
-        /// Gets the CompletionImage instance for the specified entity.
+        /// Gets the image for the specified entity.
         /// Returns null when no image is available for the entity type.
         /// </summary>
-        public static CompletionImage GetCompletionImage(IEntity entity)
+        public static Pixbuf GetImage(IEntity entity)
         {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-            switch (entity.EntityType)
+            CompletionImage image = getCompletionImage(entity);
+            if (image != null)
+                return image.getImage(entity.Accessibility, entity.IsStatic);
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Gets the image without any overlays.
+        /// </summary>
+        public Pixbuf BaseImage
+        {
+            get
             {
-                case EntityType.TypeDefinition:
-                    return GetCompletionImageForType(((ITypeDefinition)entity).Kind, entity.IsStatic);
-                case EntityType.Field:
-                    IField field = (IField)entity;
-                    if (field.IsConst)
-                    {
-                        if (field.DeclaringTypeDefinition != null && field.DeclaringTypeDefinition.Kind == TypeKind.Enum)
-                            return imageEnumValue;
-                        else
-                            return imageLiteral;
-                    }
-                    return field.IsReadOnly ? imageFieldReadOnly : imageField;
-                case EntityType.Method:
-                    IMethod method = (IMethod)entity;
-                    if (method.IsExtensionMethod)
-                        return imageExtensionMethod;
-                    else
-                        return method.IsOverridable ? imageVirtualMethod : imageMethod;
-                case EntityType.Property:
-                    return imageProperty;
-                case EntityType.Indexer:
-                    return imageIndexer;
-                case EntityType.Event:
-                    return imageEvent;
-                case EntityType.Operator:
-                case EntityType.Destructor:
-                    return imageOperator;
-                case EntityType.Constructor:
-                    return imageConstructor;
-                default:
-                    return null;
+                Pixbuf image = images[0];
+                if (image == null)
+                {
+                    image = LoadPixbuf(imageName);
+                    Thread.MemoryBarrier();
+                    images[0] = image;
+                }
+                return image;
             }
         }
 
         /// <summary>
-        /// Gets the CompletionImage instance for the specified entity.
-        /// Returns null when no image is available for the entity type.
+        /// Gets the completion image for the specified type of type.
+        /// Returns null if no image is available for the type.
         /// </summary>
-        public static CompletionImage GetCompletionImage(IUnresolvedEntity entity)
-        {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-            switch (entity.SymbolKind)
-            {
-                case SymbolKind.TypeDefinition:
-                    return GetCompletionImageForType(((IUnresolvedTypeDefinition)entity).Kind, entity.IsStatic);
-                case SymbolKind.Field:
-                    IUnresolvedField field = (IUnresolvedField)entity;
-                    if (field.IsConst)
-                    {
-                        if (field.DeclaringTypeDefinition != null && field.DeclaringTypeDefinition.Kind == TypeKind.Enum)
-                            return imageEnumValue;
-                        else
-                            return imageLiteral;
-                    }
-                    return field.IsReadOnly ? imageFieldReadOnly : imageField;
-                case SymbolKind.Method:
-                    IUnresolvedMethod method = (IUnresolvedMethod)entity;
-                    return method.IsOverridable ? imageVirtualMethod : imageMethod;
-                case SymbolKind.Property:
-                    return imageProperty;
-                case SymbolKind.Indexer:
-                    return imageIndexer;
-                case SymbolKind.Event:
-                    return imageEvent;
-                case SymbolKind.Operator:
-                case SymbolKind.Destructor:
-                    return imageOperator;
-                case SymbolKind.Constructor:
-                    return imageConstructor;
-                default:
-                    return null;
-            }
-        }
-
-        static CompletionImage GetCompletionImageForType(TypeKind typeKind, bool isStatic)
+        /// <param name="typeKind"></param>
+        /// <param name="isStatic"></param>
+        /// <returns></returns>
+        private static CompletionImage getCompletionImageForType(TypeKind typeKind, bool isStatic)
         {
             switch (typeKind)
             {
                 case TypeKind.Interface:
-                    return imageInterface;
+                    return Interface;
                 case TypeKind.Struct:
                 case TypeKind.Void:
-                    return imageStruct;
+                    return Struct;
                 case TypeKind.Delegate:
-                    return imageDelegate;
+                    return Delegate;
                 case TypeKind.Enum:
-                    return imageEnum;
+                    return Enum;
                 case TypeKind.Class:
-                    return isStatic ? imageStaticClass : imageClass;
+                    return isStatic ? StaticClass : Class;
                 case TypeKind.Module:
-                    return imageStaticClass;
+                    return StaticClass;
                 default:
                     return null;
             }
         }
 
         /// <summary>
-        /// Gets the name of the image for the specified entity.
+        /// Gets the CompletionImage instance for the specified entity.
         /// Returns null when no image is available for the entity type.
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static string GetImageName(IEntity entity)
+        private static CompletionImage getCompletionImage(IEntity entity)
         {
-            return GetCompletionImage(entity).ImageName;
+            if (entity == null)
+                throw new ArgumentNullException("entity cannot be null.");
+            switch (entity.SymbolKind)
+            {
+                case SymbolKind.TypeDefinition:
+                    return getCompletionImageForType(((ITypeDefinition)entity).Kind, entity.IsStatic);
+                case SymbolKind.Field:
+                    IField field = (IField)entity;
+                    if (field.IsConst)
+                    {
+                        if (field.DeclaringTypeDefinition != null && field.DeclaringTypeDefinition.Kind == TypeKind.Enum)
+                            return EnumValue;
+                        else
+                            return Literal;
+                    }
+                    return field.IsReadOnly ? ReadOnlyField : Field;
+                case SymbolKind.Method:
+                    IMethod method = (IMethod)entity;
+                    if (method.IsExtensionMethod)
+                        return ExtensionMethod;
+                    else
+                        return method.IsOverridable ? VirtualMethod : Method;
+                case SymbolKind.Property:
+                    return Property;
+                case SymbolKind.Indexer:
+                    return Indexer;
+                case SymbolKind.Event:
+                    return Event;
+                case SymbolKind.Operator:
+                case SymbolKind.Destructor:
+                    return Operator;
+                case SymbolKind.Constructor:
+                    return Constructor;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
-        /// Gets the image for the specified entity.
-        /// Returns null when no image is available for the entity type.
+        /// Gets the index of the overlay image to use for a member with a given accessibility.
         /// </summary>
-        public static ImageSource GetImage(IEntity entity)
-        {
-            CompletionImage image = GetCompletionImage(entity);
-            if (image != null)
-                return image.GetImage(entity.Accessibility, entity.IsStatic);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// TODO : This and <see cref="GetImageName(IEntity)"/> are not finished (I think).
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static string GetImageName(IUnresolvedEntity entity)
-        {
-            return GetCompletionImage(entity).ImageName;
-        }
-
-        /// <summary>
-        /// Gets the image for the specified entity.
-        /// Returns null when no image is available for the entity type.
-        /// </summary>
-        public static ImageSource GetImage(IUnresolvedEntity entity)
-        {
-            CompletionImage image = GetCompletionImage(entity);
-            if (image != null)
-                return image.GetImage(entity.Accessibility, entity.IsStatic);
-            else
-                return null;
-        }
-        #endregion
-
-        #region Overlays
-        static readonly BitmapImage overlayStatic = LoadBitmap("OverlayStatic");
-
-        /// <summary>
-        /// Gets the overlay image for the static modifier.
-        /// </summary>
-        public ImageSource StaticOverlay { get { return overlayStatic; } }
-
-        const int AccessibilityOverlaysLength = 5;
-
-        static readonly BitmapImage[] accessibilityOverlays = new BitmapImage[AccessibilityOverlaysLength] {
-            null,
-            LoadBitmap("OverlayPrivate"),
-            LoadBitmap("OverlayProtected"),
-            LoadBitmap("OverlayInternal"),
-            LoadBitmap("OverlayProtectedInternal")
-        };
-
-        /// <summary>
-        /// Gets an overlay image for the specified accessibility.
-        /// Returns null if no overlay exists (for example, public members don't use overlays).
-        /// </summary>
-        public static ImageSource GetAccessibilityOverlay(Accessibility accessibility)
-        {
-            return accessibilityOverlays[GetAccessibilityOverlayIndex(accessibility)];
-        }
-
-        static int GetAccessibilityOverlayIndex(Accessibility accessibility)
+        /// <param name="accessibility">Accessibility of the member.</param>
+        /// <returns>int in the range 0..<see cref="accessibilityOverlaysLength"/> - 1.</returns>
+        private static int getAccessibilityOverlayIndex(Accessibility accessibility)
         {
             switch (accessibility)
             {
@@ -338,87 +260,66 @@ namespace UserInterface.Intellisense
                     return 0;
             }
         }
-        #endregion
-
-        #region Instance Members (add overlay to entity image)
-        readonly string imageName;
-        readonly bool showStaticOverlay;
-
-        private CompletionImage(string imageName, bool showStaticOverlay)
-        {
-            this.imageName = imageName;
-            this.showStaticOverlay = showStaticOverlay;
-        }
-
-        ImageSource[] images = new ImageSource[2 * AccessibilityOverlaysLength];
-
-        public string ImageName
-        {
-            get
-            {
-                return this.imageName;
-            }
-        }
-
-        // 0..N-1  = base image + accessibility overlay
-        // N..2N-1 = base image + static overlay + accessibility overlay
-
-        /// <summary>
-        /// Gets the image without any overlays.
-        /// </summary>
-        public ImageSource BaseImage
-        {
-            get
-            {
-                ImageSource image = images[0];
-                if (image == null)
-                {
-                    image = LoadBitmap(imageName);
-                    Thread.MemoryBarrier();
-                    images[0] = image;
-                }
-                return image;
-            }
-        }
 
         /// <summary>
         /// Gets this image combined with the specified accessibility overlay.
         /// </summary>
-        public ImageSource GetImage(Accessibility accessibility, bool isStatic = false)
+        private Pixbuf getImage(Accessibility accessibility, bool isStatic = false)
         {
-            int accessibilityIndex = GetAccessibilityOverlayIndex(accessibility);
-            int index;
+            int accessibilityIndex = getAccessibilityOverlayIndex(accessibility);
+            int index = accessibilityIndex;
             if (isStatic && showStaticOverlay)
-                index = accessibilityOverlays.Length + accessibilityIndex;
-            else
-                index = accessibilityIndex;
+                index += accessibilityOverlaysLength;
 
             if (index == 0)
                 return this.BaseImage;
 
-            ImageSource image = images[index];
-            if (image == null)
+            if (images[index] == null)
             {
-                DrawingGroup g = new DrawingGroup();
-                Rect iconRect = new Rect(0, 0, 16, 16);
-                g.Children.Add(new ImageDrawing(this.BaseImage, iconRect));
+                // This icon/overlay combination has not been used previously, so we need to generate it.
+                Pixbuf icon = LoadPixbuf(imageName);
+                Pixbuf overlay = accessibilityOverlays[accessibilityIndex];
+                if (isStatic && showStaticOverlay)
+                    overlay = overlayImages(LoadPixbuf("OverlayStatic"), overlay);
 
-                if (accessibilityOverlays[accessibilityIndex] != null)
-                    g.Children.Add(new ImageDrawing(accessibilityOverlays[accessibilityIndex], iconRect));
+                // Create the composite image - the icon with the superimposed overlay
+                Pixbuf composite = overlayImages(icon, overlay);
 
-                image = new DrawingImage(g);
-                image.Freeze();
-                Thread.MemoryBarrier();
-                images[index] = image;
+                images[index] = composite;
             }
-            return image;
+
+            return images[index];
         }
 
-        /// <inheritdoc/>
-        public override string ToString()
+        /// <summary>
+        /// Superimposes an image on top of another image.
+        /// </summary>
+        /// <param name="icon1">Image to go on the bottom layer.</param>
+        /// <param name="icon2">Image to go on the top layer.</param>
+        /// <returns>icon2 superimposed on top of icon1.</returns>
+        private Pixbuf overlayImages(Pixbuf icon1, Pixbuf icon2)
         {
-            return "[CompletionImage " + imageName + "]";
+            if (icon1 == null)
+                return icon2;
+            if (icon2 == null)
+                return icon1;
+
+            Pixbuf composite = new Pixbuf(icon1.Colorspace, icon1.HasAlpha, icon1.BitsPerSample, 16, 16);
+            icon1.Composite(composite, 0, 0, 16, 16, 0, 0, 1, 1, InterpType.Hyper, 255);
+            icon2.Composite(composite, 0, 0, 16, 16, 0, 0, 1, 1, InterpType.Hyper, 255);
+
+            return composite;
         }
-        #endregion
+
+        /// <summary>
+        /// Cosntructor.
+        /// </summary>
+        /// <param name="imageName">Image name to use.</param>
+        /// <param name="showStaticOverlay">Whether or not the static overlay should be shown for static members.</param>
+        private CompletionImage(string imageName, bool showStaticOverlay)
+        {
+            this.imageName = imageName + ".png";
+            this.showStaticOverlay = showStaticOverlay;
+        }
     }
 }

@@ -10,20 +10,71 @@ using ICSharpCode.NRefactory.CSharp;
 
 namespace UserInterface.Intellisense
 {
+    /// <summary>
+    /// If the code is just a script it it will contain no namespace, class or method structure and so the code completion will not work properly.
+    /// This class surounds the code with the appropriate structure. 
+    /// </summary>
     public sealed class CSharpCompletionContext
     {
+        /// <summary>
+        /// Original document containing source code.
+        /// </summary>
         public readonly IDocument OriginalDocument;
+
+        /// <summary>
+        /// Original offset in the document.
+        /// </summary>
         public readonly int OriginalOffset;
+
+        /// <summary>
+        /// Original using statements in the document.
+        /// </summary>
         public readonly string OriginalUsings;
+
+        /// <summary>
+        /// Original variables declared in the document.
+        /// </summary>
         public readonly string OriginalVariables;
+
+        /// <summary>
+        /// Original namespace of the document.
+        /// </summary>
         public readonly string OriginalNamespace;
 
+        /// <summary>
+        /// Offset in the document.
+        /// </summary>
         public readonly int Offset;
+
+        /// <summary>
+        /// Parsed/modified document containing the source code surrounded by the appropriate structures.
+        /// If the was already a fully formatted file/script, this will be the same as <see cref="OriginalDocument"/>.
+        /// </summary>
         public readonly IDocument Document;
+
+        /// <summary>
+        /// Compiled source code.
+        /// </summary>
         public readonly ICompilation Compilation;
+
+        /// <summary>
+        /// Represents an assembly consisting of source code (parsed files).
+        /// </summary>
         public readonly IProjectContent ProjectContent;
+
+        /// <summary>
+        /// Contains the main resolver logic.
+        /// </summary>
         public readonly CSharpResolver Resolver;
+
+        /// <summary>
+        /// Context of the document at the caret location/offset.
+        /// </summary>
         public readonly CSharpTypeResolveContext TypeResolveContextAtCaret;
+
+        /// <summary>
+        /// Context of the document at the caret location/offset.
+        /// </summary>
         public readonly ICompletionContextProvider CompletionContextProvider;
 
         /// <summary>
@@ -60,7 +111,20 @@ namespace UserInterface.Intellisense
             CompletionContextProvider = new DefaultCompletionContextProvider(Document, unresolvedFile);
         }
 
+        /// <summary>
+        /// Matches any character that is not alphanumeric or an underscore.
+        /// </summary>
         private static Regex replaceRegex = new Regex("[^a-zA-Z0-9_]");
+
+        /// <summary>
+        /// Prepares a document by surrounding code with the appropriate structures, if necessary.
+        /// </summary>
+        /// <param name="document">Document to prepare.</param>
+        /// <param name="offset">Offset of the caret in the document</param>
+        /// <param name="usings">Using statements.</param>
+        /// <param name="variables">Variables used in the code.</param>
+        /// <param name="namespace">Namespace of the script's code.</param>
+        /// <returns></returns>
         private static IDocument PrepareCompletionDocument(IDocument document, ref int offset, string usings = null, string variables = null, string @namespace = null)
         {
             if (String.IsNullOrEmpty(document.FileName))

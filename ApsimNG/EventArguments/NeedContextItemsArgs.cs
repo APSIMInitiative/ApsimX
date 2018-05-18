@@ -3,6 +3,8 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using UserInterface.Intellisense;
+
 namespace UserInterface.EventArguments
 {
     using System;
@@ -37,7 +39,7 @@ namespace UserInterface.EventArguments
         /// </summary>
         public List<string> Items;
 
-        public List<ICSharpCode.NRefactory.Completion.ICompletionData> CompletionData { get; set; }
+        public List<CompletionData> CompletionData { get; set; }
 
         /// <summary>
         /// The view is asking for variable names for its intellisense.
