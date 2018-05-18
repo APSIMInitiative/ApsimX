@@ -331,7 +331,7 @@ namespace UserInterface.Views
 
             IntelliSenseChars = ".";
 
-            intellisense = new IntellisensePresenter();
+            intellisense = new IntellisensePresenter(this);
             
             intellisense.LoseFocus += HideCompletionWindow;
         }
@@ -486,35 +486,39 @@ namespace UserInterface.Views
         /// <returns>Completion form showing</returns>        
         private bool ShowCompletionWindow(bool controlSpace)
         {
+            intellisense.Editor = this;
             //textEditor.TextArea.InsertAtCaret(characterPressed.ToString());
             try
             {
-                if (intellisense.GenerateCompletionOptions(textEditor.Text, textEditor.Caret.Offset, controlSpace)) { }
+                // Might be better if this all took place in the presenter, so that we have a way of displaying the error message if something goes wrong.
+                if (intellisense.GenerateCompletionOptions(textEditor.Text, textEditor.Caret.Offset, controlSpace))
+                {
                     // Turn readonly on so that the editing window doesn't process keystrokes,
                     // but only if the intellisense actually generated any completion options.
                     //textEditor.Document.ReadOnly = true;
+
+                    // Work out where to put the completion window.            
+                    Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
+                    p.Y += (int)textEditor.LineHeight;
+
+                    // Need to convert to screen coordinates....
+                    int x, y, frameX, frameY;
+                    mainWindow.GetOrigin(out frameX, out frameY);
+                    textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
+
+                    intellisense.ItemSelected += InsertCompletionItemIntoTextBox;
+                    //intellisense.MainWindow = MainWidget.Toplevel as Window;
+
+                    intellisense.Show(frameX + x, frameY + y);
+                }
+                    
             }
             catch (Exception err)
             {
                 // TODO : remove variable err, as it is never used. I'm keeping it here while for testing purposes
                 // so I can see error messages here. If you're reading this, feel free to remove err.
             }
-            
 
-
-            // Work out where to put the completion window.            
-            Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
-            p.Y += (int)textEditor.LineHeight;
-
-            // Need to convert to screen coordinates....
-            int x, y, frameX, frameY;
-            mainWindow.GetOrigin(out frameX, out frameY);
-            textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
-
-            intellisense.ItemSelected += InsertCompletionItemIntoTextBox;
-            //intellisense.MainWindow = MainWidget.Toplevel as Window;
-            intellisense.Editor = this;
-            intellisense.Show(frameX + x, frameY + y);
             return true; 
         }
 

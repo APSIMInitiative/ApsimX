@@ -184,6 +184,9 @@ namespace UserInterface.Views
         /// </summary>
         public ViewBase Editor { get; set; }
         
+        /// <summary>
+        /// Main window reference.
+        /// </summary>
         public Window MainWindow { get; set; }
 
         /// <summary>
@@ -268,7 +271,7 @@ namespace UserInterface.Views
             // generate list of intellisense options
             List<string> items = new List<string>();
             List<NeedContextItemsArgs.ContextItem> allItems = new List<NeedContextItemsArgs.ContextItem>();
-            onContextItemsNeeded(this, new NeedContextItemsArgs() { ObjectName = node, Items = items, AllItems = allItems });
+            onContextItemsNeeded?.Invoke(this, new NeedContextItemsArgs() { ObjectName = node, Items = items, AllItems = allItems });
 
             if (allItems.Count < 1)
                 return false;
@@ -361,7 +364,7 @@ namespace UserInterface.Views
             if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
             {
                 completionForm.Hide();
-                onItemSelected(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });                
+                onItemSelected?.Invoke(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });                
             }
         }
 
@@ -379,7 +382,7 @@ namespace UserInterface.Views
             if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
             {
                 completionForm.Hide();
-                onItemSelected(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });
+                onItemSelected?.Invoke(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });
             }
 
             // If the user presses ESC and the context list is visible then close the list.
@@ -400,7 +403,7 @@ namespace UserInterface.Views
             if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
             {
                 completionForm.Hide();
-                onItemSelected(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });
+                onItemSelected?.Invoke(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });
                 while (GLib.MainContext.Iteration()) ;
             }                
         }

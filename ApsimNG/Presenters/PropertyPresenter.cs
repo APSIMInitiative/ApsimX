@@ -60,6 +60,11 @@ namespace UserInterface.Presenters
         private List<IVariable> properties = new List<IVariable>();
 
         /// <summary>
+        /// The completion form.
+        /// </summary>
+        private IntellisensePresenter intellisense;
+
+        /// <summary>
         /// Gets a value indicating whether the grid is empty (i.e. no rows).
         /// </summary>
         public bool IsEmpty
@@ -82,7 +87,8 @@ namespace UserInterface.Presenters
             this.grid.ContextItemsNeeded += GetContextItems;
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
-
+            this.intellisense = new IntellisensePresenter(grid as ViewBase);
+            intellisense.ItemSelected += (sender, e) => grid.InsertText(e.ItemSelected);
             // if the model is Testable, run the test method.
             ITestable testModel = model as ITestable;
             if (testModel != null)
@@ -125,6 +131,7 @@ namespace UserInterface.Presenters
             this.grid.CellsChanged -= this.OnCellValueChanged;
             this.grid.ButtonClick -= this.OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            intellisense.Cleanup();
         }
 
         /// <summary>
@@ -265,7 +272,8 @@ namespace UserInterface.Presenters
         
         private void GetContextItems(object o, NeedContextItemsArgs e)
         {
-            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(model, e.ObjectName, true, true, false));
+            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, e.ControlSpace))
+                intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
         }
 
         /// <summary>

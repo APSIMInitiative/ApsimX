@@ -111,12 +111,7 @@ namespace UserInterface.Views
         /// The cell at the popup locations
         /// </summary>
         private GridCell popupCell = null;
-
-        /// <summary>
-        /// The intellisense object
-        /// </summary>
-        private IntellisenseView intellisense;
-
+        
         /// <summary>
         /// List of active column indexes
         /// </summary>
@@ -439,10 +434,6 @@ namespace UserInterface.Views
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
-
-            intellisense = new IntellisenseView();
-            intellisense.ContextItemsNeeded += ContextItemsNeeded;
-            intellisense.ItemSelected += InsertCompletionText;
         }
 
         /// <summary>
@@ -462,18 +453,20 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Inserts the currently selected text in the intellisense popup into the active grid cell, puts the cell in edit mode, then hides the intellisense popup.
+        /// Inserts text into the current cell at the cursor position.
         /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void InsertCompletionText(object sender, IntellisenseItemSelectedArgs e)
+        /// <param name="text">Text to be inserted.</param>
+        public void InsertText(string text)
         {
             try
             {
+                if (GetCurrentCell == null)
+                    return;
+
                 string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation + 1);
                 string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation + 1);
 
-                GetCurrentCell.Value = beforeCaret + e.ItemSelected + afterCaret;
+                GetCurrentCell.Value = beforeCaret + text + afterCaret;
                 Gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
                 (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
                 while (GLib.MainContext.Iteration())
@@ -703,7 +696,40 @@ namespace UserInterface.Views
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
-                ShowCompletionWindow();
+                if (ContextItemsNeeded == null)
+                    return;
+
+                NeedContextItemsArgs e = new NeedContextItemsArgs
+                {
+                    Coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1)
+                };
+
+                if (editControl is Entry)
+                {
+                    e.Code = (editControl as Entry).Text;
+                    e.Offset = (editControl as Entry).Position;
+
+                    /*********************************************************\
+                    |/ FIXME : offset is not being used to insert text !!!!! /|
+                    \*********************************************************/
+
+                    // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
+                    // before the period is inserted by the Gtk event handler. Therefore, we insert it manually, and stop
+                    // this signal from propagating further.
+                    (editControl as Entry).Text += ".";
+                }
+                else
+                {
+                    // Last resort - if this code ever runs, something has gone wrong.
+                    e.Code = GetCurrentCell.Value.ToString();
+                    e.Offset = e.Code.Length;
+                }
+                
+                caretLocation = (editControl as Entry)?.Position ?? 0;
+                ContextItemsNeeded.Invoke(this, e);
+
+                // Stop the Gtk signal from propagating any further.
+                args.RetVal = true;
             }
         }
 
@@ -719,6 +745,7 @@ namespace UserInterface.Views
             return char.TryParse(keyName, out c) && !char.IsControl(c);
         }
 
+        /*
         /// <summary>
         /// Show the completion window
         /// </summary>
@@ -756,6 +783,16 @@ namespace UserInterface.Views
                 if (mainView != null)
                     mainView.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
             }
+        }
+        */
+
+        /// <summary>
+        /// Show the completion window
+        /// </summary>
+        /// <param name="context">Contents of the cell, which is used to generate the completion options.</param>
+        private void ShowCompletionWindow(string context)
+        {
+
         }
 
         /// <summary>
