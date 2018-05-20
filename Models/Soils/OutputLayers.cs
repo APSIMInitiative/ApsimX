@@ -111,7 +111,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         public double[] Urea
         {
-            get { return Soil.Map(Soil.SoilNitrogen.urea, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Soil.Map(Soil.UreaN, Soil.Thickness, Thickness, Soil.MapType.Mass); }
         }
 
         ///<summary>Gets the soil ammonium N content of each mapped layer.</summary>
@@ -119,7 +119,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         public double[] NH4
         {
-            get { return Soil.Map(Soil.SoilNitrogen.NH4, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Soil.Map(Soil.NH4N, Soil.Thickness, Thickness, Soil.MapType.Mass); }
         }
 
         ///<summary>Gets the soil nitrate N content of each mapped layer.</summary>
@@ -127,7 +127,15 @@ namespace Models.Soils
         [Units("kg/ha")]
         public double[] NO3
         {
-            get { return Soil.Map(Soil.SoilNitrogen.NO3, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Soil.Map(Soil.NO3N, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+        }
+
+        ///<summary>Gets the soil organic carbon content of each mapped layer.</summary>
+        [XmlIgnore]
+        [Units("%")]
+        public double[] OC
+        {
+            get { return Soil.Map(Soil.OC, Soil.Thickness, Thickness); }
         }
     }
 }
