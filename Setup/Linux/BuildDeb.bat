@@ -32,6 +32,7 @@ xcopy /S /I /Y /Q %APSIMX_BUILD_DIR%\Examples .\DebPackage\data\usr\local\lib\ap
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\Models.xml .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
@@ -52,7 +53,7 @@ echo Priority: optional
 echo Maintainer: APSIM Initiative ^<apsim@daf.qld.gov.au^>
 echo Homepage: www.apsim.info
 echo Installed-Size: %INSTALL_SIZE%
-echo Depends: gtk-sharp2 ^(^>=2.12^), libwebkit1.1-cil, mono-runtime ^(^>=4.0^), mono-devel ^(^>=4.0^), sqlite3
+echo Depends: gtk-sharp2 ^(^>=2.12^), libwebkitgtk-1.0-0, mono-runtime ^(^>=4.0^), mono-devel ^(^>=4.0^), sqlite3
 echo Description: The Agricultural Production Systems Simulator.
 echo ^ The Agricultural Production Systems sIMulator ^(APSIM^) is internationally recognised 
 echo ^ as a highly advanced simulator of agricultural systems. It contains a suite of modules 
