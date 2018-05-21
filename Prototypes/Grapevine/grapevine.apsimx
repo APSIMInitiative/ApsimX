@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="30">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="27">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -752,7 +752,6 @@ A function is used to capture the year of the current season as in the south hem
           <ReSetEvent>StartDormancy</ReSetEvent>
         </OnEventFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FractionBiomassRemoved>0</FractionBiomassRemoved>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
@@ -2093,7 +2092,6 @@ A function is used to capture the year of the current season as in the south hem
         <CompositeBiomass>
           <Name>Total</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <DMDOfStructural>0.6</DMDOfStructural>
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Leaf].Dead</string>
@@ -4313,12 +4311,10 @@ Pollination alone results in the development of small, hard green berries (live 
         <Live>
           <Name>Biomass</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <DMDOfStructural>0.6</DMDOfStructural>
         </Live>
         <Dead>
           <Name>Biomass</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <DMDOfStructural>0.6</DMDOfStructural>
         </Dead>
       </ReproductiveOrgan>
       <Root>
@@ -7883,8 +7879,8 @@ namespace Models
             <Name>ParameterTest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <BudBurstBase>0</BudBurstBase>
               <EndoTarget>0</EndoTarget>
+              <BudBurstBase>0</BudBurstBase>
             </Script>
             <Code><![CDATA[
 using System;
