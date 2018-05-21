@@ -343,7 +343,10 @@ namespace Models.PMF
                 DM.SetupSupplies(supplies, totalWt);
                 // Subtract maintenance respiration
                 double maintenanceRespiration = Organs.Sum(o => o.MaintenanceRespiration);
-                DM.SubtractMaintenanceRespiration(maintenanceRespiration);
+                if (maintenanceRespiration > 0)
+                {
+                    SubtractMaintenanceRespiration(maintenanceRespiration);
+                }
                 BiomassPoolType[] demands = Organs.Select(organ => organ.CalculateDryMatterDemand()).ToArray();
                 DM.SetupDemands(demands);
 
@@ -367,6 +370,31 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Subtract maintenance respiration from daily fixation</summary>
+        /// <param name="respiration">The toal maintenance respiration</param>
+        public void SubtractMaintenanceRespiration(double respiration)
+        {
+            double total = DM.TotalFixationSupply;
+            // First: from daily fixation 
+            double respirationFixation = respiration < total ? respiration : total;
+            double ratio = (total - respirationFixation) / total;
+            for (int i = 0; i < DM.FixationSupply.Length; i++)
+            {
+                DM.FixationSupply[i] *= ratio;
+            }
+
+            // Second: from live component if there are not enough fixation
+            if (respiration > total)
+            {
+                double remainRespiration = respiration - total;
+                for (int i = 0; i < Organs.ToArray().Length; i++)
+                {
+                    double organRespiration = remainRespiration * 
+                        Organs[i].MaintenanceRespiration / respiration;
+                    Organs[i].RemoveMaintenanceRespiration(organRespiration);
+                }
+            }
+        }
 
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>

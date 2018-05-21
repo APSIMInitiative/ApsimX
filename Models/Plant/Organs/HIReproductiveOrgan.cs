@@ -162,6 +162,15 @@ namespace Models.PMF.Organs
             return nitrogenDemand;
         }
 
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
+
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>

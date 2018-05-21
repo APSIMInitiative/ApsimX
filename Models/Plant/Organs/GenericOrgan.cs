@@ -417,6 +417,16 @@ namespace Models.PMF.Organs
             Allocated.StorageN -= nitrogen.Reallocation;
         }
 
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
+
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
