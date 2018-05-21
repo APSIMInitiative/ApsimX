@@ -1770,10 +1770,15 @@ namespace Models.PMF.Organs
         public virtual void RemoveMaintenanceRespiration(double respiration)
         {
             double totalResLeaf = MaintenanceRespiration;
+
             foreach (LeafCohort L in Leaves)
             {
                 double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
                 double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
+                if (resLeafCohort > totalBMLeafCohort)
+                {
+                    throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+                }
                 L.Live.MetabolicWt = L.Live.MetabolicWt - 
                     (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
                 L.Live.StorageWt = L.Live.StorageWt - 

@@ -703,6 +703,10 @@ namespace Models.PMF.Organs
         public virtual void RemoveMaintenanceRespiration(double respiration)
         {
             double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+            {
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            }
             Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
             Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
         }

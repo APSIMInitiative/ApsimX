@@ -376,7 +376,7 @@ namespace Models.PMF
         {
             double total = DM.TotalFixationSupply;
             // First: from daily fixation 
-            double respirationFixation = respiration < total ? respiration : total;
+            double respirationFixation = respiration <= total ? respiration : total;
             double ratio = (total - respirationFixation) / total;
             for (int i = 0; i < DM.FixationSupply.Length; i++)
             {
