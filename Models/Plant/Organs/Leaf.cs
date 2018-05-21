@@ -1179,9 +1179,13 @@ namespace Models.PMF.Organs
 
         private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
+            //TODO: This method needs documentation (tentative comments added by RCichota)
+
+            // update age of cohorts - this is only updated when a cohort is added (or removed), so maybe this is order of cohorts, not age?)
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
 
+            // add new apex group, if the ApexNum has been increased (Shouldn't the ApexNum be an integer??)
             while (apexGroupSize.Sum() < Structure.ApexNum)
             {
                 if (apexGroupSize.Count == 0)
@@ -1191,29 +1195,27 @@ namespace Models.PMF.Organs
                 apexGroupAge.Add(1);
             }
 
-            if (apexGroupSize.Count > 1)
+            // reduce values in the apex size, when ApexNum has been reduced in Structure 
+            while ((apexGroupSize.Count > 1) && (apexGroupSize.Sum() > Structure.ApexNum))
             {
-                while (apexGroupSize.Sum() > Structure.ApexNum)
+                double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                double remainingRemoveApex = removeApex;
+                // RCichota+RobZyskowski: changed the for loop into a while, and let the counter go down to zero (it was limited to one before)
+                int i = apexGroupSize.Count - 1;
+                while (i >= 0)
                 {
-                    double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
-                    double remainingRemoveApex = removeApex;
-                    for (int i = apexGroupSize.Count - 1; i > 0; i--)
-                    {
-                        double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
-                        apexGroupSize[i] -= remove;
-                        remainingRemoveApex -= remove;
-                        if (remainingRemoveApex <= 0)
-                            break;
-                    }
+                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                    apexGroupSize[i] -= remove;
+                    remainingRemoveApex -= remove;
+                    if (remainingRemoveApex <= 0)
+                        break;
+                    i--;
                 }
             }
-            else
-            {
-                // not sure what to do here as the while loop would not have exited.... ever!
-            }
-            
+
             NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
             NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
+            // why is this initialise every time???
         }
 
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
