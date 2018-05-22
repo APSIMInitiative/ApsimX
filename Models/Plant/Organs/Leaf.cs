@@ -1132,6 +1132,7 @@ namespace Models.PMF.Organs
             TipsAtEmergence = 0;
             Structure.TipToAppear = 0;
             apexGroupAge.Clear();
+            apexGroupSize.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
             nitrogenSupply.Clear();
