@@ -286,9 +286,7 @@ namespace Models.PMF.Organs
 
             {
                 MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
                 MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-                Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
             }
 
         }
@@ -365,6 +363,19 @@ namespace Models.PMF.Organs
         }
 
         #endregion
+        
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+            {
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            }
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
