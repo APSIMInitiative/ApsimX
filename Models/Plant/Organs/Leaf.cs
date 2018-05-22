@@ -1177,19 +1177,20 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
         }
 
+        /// <summary>
+        /// TODO: This method needs documentation
+        /// </summary>
+        /// <param name="NewLeaf"></param>
         private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
-            //TODO: This method needs documentation (tentative comments added by RCichota)
-
-            // update age of cohorts - this is only updated when a cohort is added (or removed), so maybe this is order of cohorts, not age?)
-            // apexGroupAge is used to store the age of an apex which is initialized as 1 at leaf initialization.
-            // apexGroupAge is added 1 when a new leaf cohort is appearing
+            // update age of cohorts
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
 
-            // Initialize new apex group with value 1, if the ApexNum has been increased 
+            // check for increase in apex size, add new group if needed
             // (ApexNum should be an integer, but need to check in case of flag leaf)
-            while (apexGroupSize.Sum() < Structure.ApexNum)
+            double deltaApex = apexGroupSize.Sum() - Structure.ApexNum;
+            if (deltaApex < -1E-12)
             {
                 if (apexGroupSize.Count == 0)
                     apexGroupSize.Add(Structure.ApexNum);
@@ -1198,36 +1199,25 @@ namespace Models.PMF.Organs
                 apexGroupAge.Add(1);
             }
 
-            // reduce values in the apex size, when ApexNum has been reduced in Structure 
-            double previousApexNumber = apexGroupSize.Sum();
-            if (previousApexNumber > Structure.ApexNum)
+            // check for reduction in the apex size
+            if ((apexGroupSize.Count > 0) && (deltaApex > 1E-12))
             {
-                if (apexGroupSize.Count == 1)
-                {
-                    throw new Exception("The main stem cannnot be reduced as stem mortality.");
-                }
-                double removeApex = previousApexNumber - Structure.ApexNum;
-                double remainingRemoveApex = removeApex;
-                // RCichota+RobZyskowski: changed the for loop into a while, and let the counter go down to zero (it was limited to one before)
-                int i = apexGroupSize.Count - 1;
-                while (i > 0)
+                double remainingRemoveApex = deltaApex;
+                for (int i = apexGroupSize.Count - 1; i > 0; i--)
                 {
                     double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
                     apexGroupSize[i] -= remove;
                     remainingRemoveApex -= remove;
-                    if (remainingRemoveApex <= 0)
+                    if (remainingRemoveApex <= 0.0)
                         break;
-                    i--;
                 }
-                if (remainingRemoveApex > 0)
-                {
+
+                if (remainingRemoveApex > 0.0)
                     throw new Exception("There are not enough apex to remove from plant.");
-                }
             }
-            // apexGroupAge and apexGroupSize are used to store in the Leaf class
-            // ApexGroupAge and ApexGroupSize should be initialize when a new leaf cohort initialize
+
             NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
-            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);           
+            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
 
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
