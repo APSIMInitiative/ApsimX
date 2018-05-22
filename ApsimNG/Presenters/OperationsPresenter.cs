@@ -33,6 +33,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        private IntellisensePresenter intellisense;
+
         /// <summary>
         /// Attach model to view.
         /// </summary>
@@ -44,7 +46,8 @@ namespace UserInterface.Presenters
             this.operations = model as Operations;
             this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
-
+            this.intellisense = new IntellisensePresenter(view as ViewBase);
+            intellisense.ItemSelected += (sender, e) => this.view.InsertAtCaret(e.ItemSelected);
             this.PopulateEditorView();
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser += this.OnTextHasChangedByUser;
@@ -59,6 +62,7 @@ namespace UserInterface.Presenters
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser -= this.OnTextHasChangedByUser;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            this.intellisense.Cleanup();
         }
 
         /// <summary>
@@ -109,7 +113,8 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(this.operations, e.ObjectName, true, true, false));
+            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, false, false, e.ControlSpace))
+                intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
         }
 
         /// <summary>

@@ -128,7 +128,7 @@ namespace UserInterface.Intellisense
             throw new NotImplementedException();
         }
 
-        ICompletionData ICompletionDataFactory.CreateXmlDocCompletionData(string tag, string description = null, string tagInsertionText = null)
+        ICompletionData ICompletionDataFactory.CreateXmlDocCompletionData(string tag, string description, string tagInsertionText)
         {
             throw new NotImplementedException();
         }

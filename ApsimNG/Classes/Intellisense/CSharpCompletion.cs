@@ -41,7 +41,8 @@ namespace UserInterface.Intellisense
                     typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
                     typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
 		            typeof(IProjectContent).Assembly,
-                    typeof(Models.Core.IModel).Assembly // Models.exe
+                    typeof(Models.Core.IModel).Assembly, // Models.exe
+                    typeof(APSIM.Shared.Utilities.StringUtilities).Assembly, // APSIM.Shared.dll
                 };
             }
 

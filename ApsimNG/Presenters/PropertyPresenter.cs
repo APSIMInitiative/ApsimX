@@ -272,7 +272,7 @@ namespace UserInterface.Presenters
         
         private void GetContextItems(object o, NeedContextItemsArgs e)
         {
-            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, e.ControlSpace))
+            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
                 intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
         }
 

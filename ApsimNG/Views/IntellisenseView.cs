@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Gtk;
-using UserInterface.EventArguments;
-using UserInterface.Intellisense;
-using System.Linq;
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using System;
+    using System.Collections.Generic;
+    using Gtk;
+    using EventArguments;
+    using Intellisense;
+    using System.Linq;
+
     class IntellisenseView
     {
         /// <summary>
@@ -131,8 +131,8 @@ namespace UserInterface.Views
         {
             add
             {
-                if (onItemSelected == null)
-                    onItemSelected += value;
+                DetachHandlers(ref onItemSelected);
+                onItemSelected += value;
             }
             remove
             {
@@ -227,8 +227,10 @@ namespace UserInterface.Views
         {
             TreeIter iter;
             if (completionModel.GetIter(out iter, new TreePath(index.ToString())))
+            {
                 completionView.Selection.SelectIter(iter);
-            //completionView.SetCursor(new TreePath(index.ToString()), null, false);
+                completionView.SetCursor(new TreePath(index.ToString()), null, false);
+            }
         }
         /// <summary>
         /// Tries to display the intellisense popup at the specified coordinates. If the coordinates are
@@ -283,9 +285,12 @@ namespace UserInterface.Views
         public void Populate(List<CompletionData> items)
         {
             completionModel.Clear();
+            int i = 0;
             foreach (CompletionData item in items)
             {
-                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, item.Description.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y), item.CompletionText);
+                System.Diagnostics.Debug.WriteLine(i);
+                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y), item.CompletionText);
+                i++;
             }
         }
 
@@ -319,6 +324,25 @@ namespace UserInterface.Views
             completionView.Dispose();
             completionForm.Destroy();
             completionForm = null;
+
+            // Detach event handlers so that this object may be safely garbage collected.
+            foreach (EventHandler<IntellisenseItemSelectedArgs> handler in onItemSelected?.GetInvocationList())
+            {
+                onItemSelected -= handler;
+            }
+        }
+
+        /// <summary>
+        /// Detaches all event handlers from an event.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="e"></param>
+        private static void DetachHandlers<T>(ref EventHandler<T> e)
+        {
+            if (e == null)
+                return;
+            foreach (EventHandler<T> handler in e?.GetInvocationList())
+                e -= handler;
         }
 
         /// <summary>

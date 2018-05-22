@@ -463,8 +463,8 @@ namespace UserInterface.Views
                 if (GetCurrentCell == null)
                     return;
 
-                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation + 1);
-                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation + 1);
+                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
+                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
 
                 GetCurrentCell.Value = beforeCaret + text + afterCaret;
                 Gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
@@ -706,26 +706,28 @@ namespace UserInterface.Views
 
                 if (editControl is Entry)
                 {
-                    e.Code = (editControl as Entry).Text;
-                    e.Offset = (editControl as Entry).Position;
+                    Entry editable = editControl as Entry;
+                    e.Code = editable.Text;
+                    e.Offset = editable.Position;
 
-                    /*********************************************************\
-                    |/ FIXME : offset is not being used to insert text !!!!! /|
-                    \*********************************************************/
+                    // The cursor position must be calculated before we insert the period.
+                    caretLocation = editable.Position;
 
                     // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
-                    // before the period is inserted by the Gtk event handler. Therefore, we insert it manually, and stop
+                    // before the period is inserted by the Gtk event handler. Therefore, we insert it manually now, and stop
                     // this signal from propagating further.
-                    (editControl as Entry).Text += ".";
+                    //editable.Text += ".";
+                    editable.InsertText(".", ref caretLocation);
+                    editable.Position = caretLocation;
                 }
                 else
                 {
                     // Last resort - if this code ever runs, something has gone wrong.
                     e.Code = GetCurrentCell.Value.ToString();
                     e.Offset = e.Code.Length;
+                    caretLocation = 0;
                 }
                 
-                caretLocation = (editControl as Entry)?.Position ?? 0;
                 ContextItemsNeeded.Invoke(this, e);
 
                 // Stop the Gtk signal from propagating any further.

@@ -3,7 +3,6 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
-using UserInterface.Intellisense;
 
 namespace UserInterface.Presenters
 {
@@ -48,6 +47,11 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>
+        /// Handles generation of completion options for the view.
+        /// </summary>
+        private IntellisensePresenter intellisense;
+
+        /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
         /// <param name="model">The model</param>
@@ -58,6 +62,8 @@ namespace UserInterface.Presenters
             this.manager = model as Manager;
             this.managerView = view as IManagerView;
             this.explorerPresenter = explorerPresenter;
+            this.intellisense = new IntellisensePresenter(managerView as ViewBase);
+            intellisense.ItemSelected += (sender, e) => managerView.Editor.InsertAtCaret(e.ItemSelected);
 
             this.propertyPresenter.Attach(this.manager.Script, this.managerView.GridView, this.explorerPresenter);
             this.managerView.Editor.ScriptMode = true;
@@ -83,6 +89,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
+            intellisense.Cleanup();
         }
 
         /// <summary>
@@ -92,7 +99,15 @@ namespace UserInterface.Presenters
         /// <param name="e">Context item arguments</param>
         public void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
         {
-            // This functionality is now handled by IntellisensePresenter.
+            try
+            {
+                if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -103,7 +118,7 @@ namespace UserInterface.Presenters
         public void OnEditorLeave(object sender, EventArgs e)
         {
             // this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
-            if (!managerView.Editor.IntellisenseVisible)
+            if (!intellisense.Visible)
                 this.BuildScript();
             if (this.manager.Script != null)
             {

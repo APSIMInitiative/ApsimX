@@ -3,9 +3,12 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+
 namespace UserInterface.Views
 {
+    using System;
     using Gtk;
+    using EventArguments;
 
     interface IReportView
     {

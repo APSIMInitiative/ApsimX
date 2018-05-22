@@ -3,7 +3,6 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
-using UserInterface.Presenters;
 
 namespace UserInterface.Views
 {
@@ -14,6 +13,8 @@ namespace UserInterface.Views
     using Gtk;
     using Mono.TextEditor;
     using Utility;
+    using Presenters;
+    using Cairo;
 
     /// <summary>
     /// This is IEditorView interface
@@ -83,7 +84,11 @@ namespace UserInterface.Views
         /// </summary>
         int Offset { get; }
 
-        bool IntellisenseVisible { get; }
+        /// <summary>
+        /// Inserts text at a given offset in the editor.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        void InsertAtCaret(string text);
     }
 
     /// <summary>
@@ -95,11 +100,6 @@ namespace UserInterface.Views
         /// The find-and-replace form
         /// </summary>
         private FindAndReplaceForm _findForm = new FindAndReplaceForm();
-        
-        /// <summary>
-        /// The completion form.
-        /// </summary>
-        private IntellisensePresenter intellisense;
 
         /// <summary>
         /// Scrolled window
@@ -134,17 +134,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded
-        {
-            add
-            {
-                intellisense.ContextItemsNeeded += value;
-            }
-            remove
-            {
-                intellisense.ContextItemsNeeded -= value;
-            }
-        }
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
         /// Invoked when the user changes the text in the editor.
@@ -271,11 +261,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Returns true if the intellisense is visible. False otherwise.
-        /// </summary>
-        public bool IntellisenseVisible { get { return intellisense.Visible; } }
-
-        /// <summary>
         /// Default constructor that configures the Completion form.
         /// </summary>
         /// <param name="owner">The owner view</param>
@@ -330,10 +315,6 @@ namespace UserInterface.Views
             StyleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
-
-            intellisense = new IntellisensePresenter(this);
-            
-            intellisense.LoseFocus += HideCompletionWindow;
         }
 
         /// <summary>
@@ -350,10 +331,6 @@ namespace UserInterface.Views
             scroller.Hadjustment.Changed -= Hadjustment_Changed;
             scroller.Vadjustment.Changed -= Vadjustment_Changed;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
-
-            intellisense.ItemSelected -= InsertCompletionItemIntoTextBox;
-            intellisense.LoseFocus -= HideCompletionWindow;
-            intellisense.Cleanup();
 
             // It's good practice to disconnect all event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -449,7 +426,17 @@ namespace UserInterface.Views
                     // Process all events in the main loop, so that the period is inserted into the text editor.
                     while (GLib.MainContext.Iteration()) ;
                 }
-                ShowCompletionWindow(controlSpace);
+                NeedContextItemsArgs args = new NeedContextItemsArgs
+                {
+                    Coordinates = GetPositionOfCursor(),
+                    Code = textEditor.Text,
+                    Offset = this.Offset,
+                    ControlSpace = controlSpace,
+                    LineNo = textEditor.Caret.Line,
+                    ColNo = textEditor.Caret.Column - 1
+                };
+
+                ContextItemsNeeded?.Invoke(this, args);
             }
             else
             {
@@ -479,47 +466,19 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Show the context list. Return true if popup box shown
+        /// Gets the location (in screen coordinates) of the cursor.
         /// </summary>
-        /// <param name="characterPressed">Character pressed</param>
-        /// <param name="controlSpace">True if this command was generated via ctrl-space.</param>
-        /// <returns>Completion form showing</returns>        
-        private bool ShowCompletionWindow(bool controlSpace)
+        /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
+        private Tuple<int, int> GetPositionOfCursor()
         {
-            intellisense.Editor = this;
-            //textEditor.TextArea.InsertAtCaret(characterPressed.ToString());
-            try
-            {
-                // Might be better if this all took place in the presenter, so that we have a way of displaying the error message if something goes wrong.
-                if (intellisense.GenerateCompletionOptions(textEditor.Text, textEditor.Caret.Offset, controlSpace))
-                {
-                    // Turn readonly on so that the editing window doesn't process keystrokes,
-                    // but only if the intellisense actually generated any completion options.
-                    //textEditor.Document.ReadOnly = true;
+            Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
+            p.Y += (int)textEditor.LineHeight;
+            // Need to convert to screen coordinates....
+            int x, y, frameX, frameY;
+            mainWindow.GetOrigin(out frameX, out frameY);
+            textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
-                    // Work out where to put the completion window.            
-                    Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
-                    p.Y += (int)textEditor.LineHeight;
-
-                    // Need to convert to screen coordinates....
-                    int x, y, frameX, frameY;
-                    mainWindow.GetOrigin(out frameX, out frameY);
-                    textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
-
-                    intellisense.ItemSelected += InsertCompletionItemIntoTextBox;
-                    //intellisense.MainWindow = MainWidget.Toplevel as Window;
-
-                    intellisense.Show(frameX + x, frameY + y);
-                }
-                    
-            }
-            catch (Exception err)
-            {
-                // TODO : remove variable err, as it is never used. I'm keeping it here while for testing purposes
-                // so I can see error messages here. If you're reading this, feel free to remove err.
-            }
-
-            return true; 
+            return new Tuple<int, int>(x + frameX, y + frameY);
         }
 
         /// <summary>
@@ -538,14 +497,18 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void InsertCompletionItemIntoTextBox(object sender, IntellisenseItemSelectedArgs e)
-        {            
-            if (!string.IsNullOrEmpty(e.ItemSelected))
-            {
-                textEditor.Document.ReadOnly = false;
-                textEditor.InsertAtCaret(e.ItemSelected);
-            }
+        public void InsertAtCaret(string text)
+        {
             textEditor.Document.ReadOnly = false;
+            string textToCaret = textEditor.Text.Substring(0, Offset);
+            if (textToCaret.LastIndexOf('.') != Offset)
+            {
+                string textBeforeCaret = textEditor.Text.Substring(0, Offset);
+                // TODO : insert text at the correct location
+                // Currently, if we half-type a word, then hit control-space, the word will be inserted at the caret.
+                textEditor.Text = textEditor.Text.Substring(0, textEditor.Text.LastIndexOf('.')) + textEditor.Text.Substring(Offset);
+            }
+            textEditor.InsertAtCaret(text);
             textEditor.GrabFocus();
         }
 
