@@ -454,9 +454,14 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Checks whether a keypress is a control+space event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        /// <returns>True iff the event represents a control+space click.</returns>
         private bool IsControlSpace(Gdk.EventKey e)
         {
-            return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && e.State == Gdk.ModifierType.ControlMask;
+            return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && (e.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask;
         }
 
         /// <summary>
