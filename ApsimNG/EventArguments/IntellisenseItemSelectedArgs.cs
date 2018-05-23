@@ -11,5 +11,10 @@ namespace UserInterface.EventArguments
         /// Text which is to be inserted.
         /// </summary>
         public string ItemSelected { get; set; }
+
+        /// <summary>
+        /// The word for which we have generated completion options.
+        /// </summary>
+        public string TriggerWord { get; set; }
     }
 }

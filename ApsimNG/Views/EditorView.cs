@@ -89,6 +89,16 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="text">Text to be inserted.</param>
         void InsertAtCaret(string text);
+
+        /// <summary>
+        /// Inserts a new completion option at the caret, potentially overwriting a partially-completed word.
+        /// </summary>
+        /// <param name="triggerWord">
+        /// Word to be overwritten. May be empty.
+        /// This function will overwrite the last occurrence of this word before the caret.
+        /// </param>
+        /// <param name="completionOption">Completion option to be inserted.</param>
+        void InsertCompletionOption(string completionOption, string triggerWord);
     }
 
     /// <summary>
@@ -492,6 +502,24 @@ namespace UserInterface.Views
             textEditor.GrabFocus();
         }
 
+        /// <summary>
+        /// Inserts a new completion option at the caret, potentially overwriting a partially-completed word.
+        /// </summary>
+        /// <param name="triggerWord">
+        /// Word to be overwritten. May be empty.
+        /// This function will overwrite the last occurrence of this word before the caret.
+        /// </param>
+        /// <param name="completionOption">Completion option to be inserted.</param>
+        public void InsertCompletionOption(string completionOption, string triggerWord)
+        {
+            if (string.IsNullOrEmpty(completionOption))
+                return;
+            if (string.IsNullOrEmpty(triggerWord))
+                textEditor.InsertAtCaret(completionOption);
+            else
+                textEditor.Replace(Text.Substring(0, Offset).LastIndexOf(triggerWord), triggerWord.Length, completionOption);
+        }
+        
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>

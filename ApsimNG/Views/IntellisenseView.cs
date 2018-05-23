@@ -282,6 +282,10 @@
             return true;
         }
 
+        /// <summary>
+        /// Populates the completion window with data.
+        /// </summary>
+        /// <param name="items">List of completion data.</param>
         public void Populate(List<CompletionData> items)
         {
             completionModel.Clear();
@@ -294,6 +298,10 @@
             }
         }
 
+        /// <summary>
+        /// Populates the completion window with data.
+        /// </summary>
+        /// <param name="items">List of completion data.</param>
         public void Populate(List<NeedContextItemsArgs.ContextItem> items)
         {
             completionModel.Clear();

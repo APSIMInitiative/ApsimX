@@ -33,6 +33,9 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        /// <summary>
+        /// The intellisense object.
+        /// </summary>
         private IntellisensePresenter intellisense;
 
         /// <summary>
@@ -47,7 +50,17 @@ namespace UserInterface.Presenters
             this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
-            intellisense.ItemSelected += (sender, e) => this.view.InsertAtCaret(e.ItemSelected);
+            intellisense.ItemSelected += (sender, e) =>
+            {
+                if (e.TriggerWord == string.Empty)
+                    this.view.InsertAtCaret(e.ItemSelected);
+                else
+                {
+                    int position = this.view.Text.Substring(0, this.view.Offset).LastIndexOf(e.TriggerWord);
+                    this.view.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
+                }
+            };
+
             this.PopulateEditorView();
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser += this.OnTextHasChangedByUser;

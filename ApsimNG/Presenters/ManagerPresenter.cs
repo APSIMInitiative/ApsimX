@@ -63,7 +63,7 @@ namespace UserInterface.Presenters
             this.managerView = view as IManagerView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(managerView as ViewBase);
-            intellisense.ItemSelected += (sender, e) => managerView.Editor.InsertAtCaret(e.ItemSelected);
+            intellisense.ItemSelected += (sender, e) => managerView.Editor.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
 
             this.propertyPresenter.Attach(this.manager.Script, this.managerView.GridView, this.explorerPresenter);
             this.managerView.Editor.ScriptMode = true;

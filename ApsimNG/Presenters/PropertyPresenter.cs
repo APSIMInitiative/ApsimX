@@ -88,6 +88,8 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(grid as ViewBase);
+
+            // The grid does not have control-space intellisense (for now).
             intellisense.ItemSelected += (sender, e) => grid.InsertText(e.ItemSelected);
             // if the model is Testable, run the test method.
             ITestable testModel = model as ITestable;

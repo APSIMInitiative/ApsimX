@@ -148,7 +148,13 @@ namespace UserInterface.Presenters
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
-                intellisense.ItemSelected += (o, args) => (sender as EditorView).InsertAtCaret(args.ItemSelected);
+                intellisense.ItemSelected += (o, args) => 
+                {
+                    if (args.ItemSelected == string.Empty)
+                        (sender as IEditorView).InsertAtCaret(args.ItemSelected);
+                    else
+                        (sender as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                };
             }
             catch (Exception err)
             {

@@ -25,9 +25,14 @@
         private IntellisenseView view = new IntellisenseView();
 
         /// <summary>
-        /// Fired when an item is selected in the intellisense window.
+        /// Fired when the we need to generate intellisense suggestions.
         /// </summary>
         private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+
+        /// <summary>
+        /// Fired when an item is selected in the intellisense window.
+        /// </summary>
+        private event EventHandler<IntellisenseItemSelectedArgs> onItemSelected;
 
         /// <summary>
         /// Responsible for generating the completion options.
@@ -41,11 +46,28 @@
         private CodeCompletionResult completionResult;
 
         /// <summary>
+        /// The partially-finished word for which the user wants completion options. May be empty string.
+        /// </summary>
+        private string triggerWord = string.Empty;
+
+        /// <summary>
         /// Constructor. Requires a reference to the view holding the text editor.
         /// </summary>
+        /// <param name="textEditor">Reference to the view holding the text editor. Cannot be null.</param>
         public IntellisensePresenter(ViewBase textEditor)
         {
             Editor = textEditor ?? throw new ArgumentException("textEditor cannot be null.");
+
+            // The way that the ItemSelected event handler works is a little complicated. If the user has half-typed 
+            // a word and needs completion options for it, we can't just insert the selected completion at the caret 
+            // - half of the word will be duplicated. Instead, we need to intercept the event, add the trigger word 
+            // to the event args, and call the event handler provided to us. The view is then responsible for 
+            // inserting the completion option at the appropriate point and removing the half-finished word.
+            view.ItemSelected += (sender, e) =>
+            {
+                e.TriggerWord = triggerWord;
+                onItemSelected?.Invoke(this, e);
+            };
         }
 
         /// <summary>
@@ -70,11 +92,12 @@
         {
             add
             {
-                view.ItemSelected += value;
+                DetachHandlers(ref onItemSelected);
+                onItemSelected += value;
             }
             remove
             {
-                view.ItemSelected -= value;
+                onItemSelected -= value;
             }
         }
 
@@ -124,6 +147,21 @@
         }
 
         /// <summary>
+        /// Detaches all handlers from an event.
+        /// </summary>
+        /// <typeparam name="T">Type of the event.</typeparam>
+        /// <param name="handler">Event for which handlers should be removed. Maybe handler is not such a good name.</param>
+        public void DetachHandlers<T>(ref EventHandler<T> handler)
+        {
+            if (handler == null)
+                return;
+            foreach (EventHandler<T> anonymousHandler in handler.GetInvocationList())
+            {
+                handler -= anonymousHandler;
+            }
+        }
+
+        /// <summary>
         /// Generates completion options for a report. This should also work for the property presenter.
         /// </summary>
         /// <param name="code">Source code.</param>
@@ -140,6 +178,9 @@
 
             // Ignore everything before the most recent comma.
             string objectName = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
+
+            // Set the trigger word for later use.
+            triggerWord = controlSpace ? GetTriggerWord(objectName) : string.Empty;
 
             // Ignore everything before most recent model name in square brackets.
             // I'm assuming that model/node names cannot start with a number.
@@ -178,6 +219,9 @@
 
             IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
             completionResult = completion.GetCompletions(document, offset, controlSpace);
+
+            // Set the trigger word for later use.
+            triggerWord = controlSpace ? completionResult.TriggerWord : string.Empty;
 
             if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
             {
@@ -230,6 +274,20 @@
         public void Cleanup()
         {
             view.Cleanup();
+        }
+
+        /// <summary>
+        /// Gets the trigger word - the partially completed word for which the user wants completion options.
+        /// </summary>
+        /// <param name="textBeforeCursor">Text before the cursor.</param>
+        /// <returns></returns>
+        private string GetTriggerWord(string textBeforeCursor)
+        {
+            if (!textBeforeCursor.Contains("."))
+                return textBeforeCursor;
+
+            // Return a substring starting just after the last period in the string.
+            return textBeforeCursor.Substring(textBeforeCursor.LastIndexOf('.') + 1);
         }
 
         /// <summary>

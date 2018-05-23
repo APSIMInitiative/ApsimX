@@ -163,27 +163,28 @@ namespace UserInterface.Intellisense
         /// <returns>Type (and possibly namespace) of the return type, as a string.</returns>
         public string GetReturnType(bool withNamespace = false)
         {
-            // A few edge cases here, but as far as I can tell, the entity is only ever an AbstractResolvedMember or
-            // a DefaultResolvedTypeDefinition.
-            if (entity is AbstractResolvedMember)
+            if (entity == null)
+                return null;
+
+            // The problem is that a lot - but not all - of the entity types defined by NRefactory (e.g. AbstractResolvedMember, 
+            // ReducedExtensionMethod, etc) contain a property called ReturnType. If it exists, this property is exactly what we want.
+            // This property is not inherited from a base class or interface, so the best way to check if it exists is via reflection.
+            try
             {
-                AbstractResolvedMember resolvedMember = this.entity as AbstractResolvedMember;
-                return withNamespace ? resolvedMember?.ReturnType.ToString() ?? "" : resolvedMember.ReturnType.Name;
+                System.Reflection.PropertyInfo returnType = entity.GetType().GetProperty("ReturnType");
+                if (returnType != null)
+                {
+                    IType returnTypeValue = returnType.GetValue(entity) as IType;
+                    if (returnTypeValue != null)
+                        return withNamespace ? returnTypeValue.FullName : returnTypeValue.Name;
+                }
             }
+            catch { }
+            
             if (entity is DefaultResolvedTypeDefinition)
             {
                 DefaultResolvedTypeDefinition resolvedMember = this.entity as DefaultResolvedTypeDefinition;
                 return withNamespace ? resolvedMember?.Kind.ToString() ?? "" : resolvedMember?.Kind.ToString() ?? "";
-            }
-            if (entity is AbstractUnresolvedMember)
-            {
-                AbstractUnresolvedMember resolvedMember = this.entity as AbstractUnresolvedMember;
-                //return withNamespace ? resolvedMember?.ReturnType.FullName ?? "void" : resolvedMember.ReturnType.Name;
-            }
-            if (entity is DefaultResolvedMethod)
-            {
-                DefaultResolvedMethod resolvedMember = this.entity as DefaultResolvedMethod;
-                return withNamespace ? resolvedMember?.ReturnType.ToString() ?? "" : resolvedMember?.ReturnType.Name;
             }
             return "Unknown";
         }

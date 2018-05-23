@@ -74,6 +74,11 @@ namespace UserInterface.EventArguments
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
+        /// <param name="atype">Data type for which we want completion options.</param>
+        /// <param name="properties">If true, property suggestions will be generated.</param>
+        /// <param name="methods">If true, method suggestions will be generated.</param>
+        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <returns>List of completion options.</returns>
         public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool events)
         {
             List<ContextItem> allItems = new List<ContextItem>();
@@ -160,6 +165,11 @@ namespace UserInterface.EventArguments
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
+        /// <param name="o">Fully- or partially-qualified object name for which we want completion options.</param>
+        /// <param name="properties">If true, property suggestions will be generated.</param>
+        /// <param name="methods">If true, method suggestions will be generated.</param>
+        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <returns>List of completion options.</returns>
         private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
         {
             List<ContextItem> allItems;
@@ -188,9 +198,19 @@ namespace UserInterface.EventArguments
             return allItems;
         }
 
-        /// <summary>The view is asking for variable names.</summary>
+        /// <summary>
+        /// The view is asking for variable names.
+        /// </summary>
+        /// <param name="relativeTo">Model in the simulations tree which owns the editor.</param>
+        /// <param name="objectName">Fully- or partially-qualified object name for which we want completion options.</param>
+        /// <param name="properties">If true, property suggestions will be generated.</param>
+        /// <param name="methods">If true, method suggestions will be generated.</param>
+        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <returns>List of completion options.</returns>
         public static List<ContextItem> ExamineModelForNames(IModel relativeTo, string objectName, bool properties, bool methods, bool events)
         {
+            // TODO : refactor cultivar and report activity ledger presenters so they use the intellisense presenter. 
+            // These are the only two presenters which still use this intellisense method.
             if (objectName == string.Empty)
                 objectName = ".";
 
