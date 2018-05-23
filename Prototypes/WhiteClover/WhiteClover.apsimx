@@ -97,16 +97,16 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The thermal time is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Crop development acelerates as temperature increases from minimum to optimum and slows down after that, stopping completely when maximum temperature is reached.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. For "chinese plantain" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC ([IshikawaEtAl_2007]), which gives an idea of potential variations for this parameter in plantain. Plantain is tolerant to high temperatures ([StewartPlantain_1996]; [NieEtAl_2008]) and outgrows ryegrass over summer in subtropical climate ([MoorheadPigot_2009]). The data for chinese plantain suggest similar growth, and thus the optimum and maximum temperature for it, 30 and 38oC respectively ([IshikawaEtAl_2007]), should give a good indication of the values for forage plantain.
+            <MemoText><![CDATA[The thermal time is used to control many of the phenologic changes in white clover.  It is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Plant development acelerates as temperature increases from minimum to optimum and slows down after that, ceasing completely at maximum temperature.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. For "chinese plantain" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC ([IshikawaEtAl_2007]), which gives an idea of potential variations for this parameter in plantain. Plantain is tolerant to high temperatures ([StewartPlantain_1996]; [NieEtAl_2008]) and outgrows ryegrass over summer in subtropical climate ([MoorheadPigot_2009]). The data for chinese plantain suggest similar growth, and thus the optimum and maximum temperature for it, 30 and 38oC respectively ([IshikawaEtAl_2007]), should give a good indication of the values for forage plantain.
 ]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
-              <double>9</double>
-              <double>30</double>
-              <double>38</double>
+              <double>3.5</double>
+              <double>27.5</double>
+              <double>38.5</double>
             </X>
             <Y>
               <double>0</double>
@@ -282,10 +282,15 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
         </Memo>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[It is assumed that approximately 1/3 of the seed biomass is allocated to shoot upon emergence.  The weight of white clover seeds varies between 0.5 and 0.8 g/1000 seeds ([]; []). ]]></MemoText>
+          </Memo>
           <Constant>
             <Name>InitialPlantWt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.001</FixedValue>
+            <FixedValue>0.0025</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -3388,27 +3393,45 @@ Published results suggest that reproductive parts represent a relatively small p
       <CultivarFolder>
         <Name>Cultivars</Name>
         <Cultivar>
-          <Name>Tonic</Name>
+          <Name>Huia</Name>
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[*Tonic* is the basic forage plantain cultivar. It was develop later than *Lancelot* and was developed from a northern Portugal germplasm. It has very erect and large leaves, produce less tillers than *Lancelot* and perhaps less seed heads.  *Tonic* cultivar is heat tolerante and also witnter active, typically with higher yields when compared to *Lancelot*.]]></MemoText>
+            <MemoText><![CDATA[*Huia* is the basic white clover cultivar in the model.  It is the oldest selected strain from New Zealand, develop from wild plants growing in Hawkes Bay and Canterbury (Caradus).  *Huia* is a medium-leaved cultivar, with generic perfomance - producing good yields and being reasonably persistent. It has been mostly superseeded by cultivars with more specific usage (e.g. for dairying or for hill country conditions).]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command />
         </Cultivar>
         <Cultivar>
-          <Name>Lancelot</Name>
+          <Name>Kopu</Name>
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[*Lancelot* is the first forage plantain cultivar released, it was selected from New Zealand pastures. It has a semi-erect growth habit, medium to large leaves, and produce many tillers.  This cultivar has good heat tolerance but growth is low over winter.  *Lancelot*  has been used for many years as grazing forage, in monoculture or in mixed swards, in several countries worldwide.  However, currently the most common cultivar is *Tonic*.  ]]></MemoText>
+            <MemoText><![CDATA[The *Kopu* cultivar was selected from crosses with north-american ladino cultivars for resitance to nematodes and high yield. It is intended for lowland pastures.  ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Leaf].Photosynthesis.FT.XYPairs.X = 5, 10, 15, 21, 27, 35</Command>
-          <Command>[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.04, 0.3, 1.0, 1.0, 0.0</Command>
-          <Command>[Leaf].HeightFunction.XYPairs.X = 10, 100, 500</Command>
-          <Command>[Leaf].HeightFunction.XYPairs.Y = 100, 300, 400</Command>
+          <Command />
+        </Cultivar>
+        <Cultivar>
+          <Name>Kotuku</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is a large-leaved cultivar with medium stolon density. *Kotuku* can produce high yields, with superior summer growth, and is quite persistent for a large-leaf cultivar.  It is aimed at dairying of finishing systems.   
+]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command />
+        </Cultivar>
+        <Cultivar>
+          <Name>Weka</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[*Weka* is a medium-leaved cultivar and with high stolon density.  It is considered high yielding and can be used in all grazing systems.  *Weka* also shows good persitence, being tollerant to dry condition and hard grazing, as well as having strong spreading habit.  ]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command />
         </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </CultivarFolder>
