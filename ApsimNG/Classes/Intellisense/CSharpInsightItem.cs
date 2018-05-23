@@ -63,7 +63,7 @@ namespace UserInterface.Intellisense
         {
             get
             {
-                throw new System.NotImplementedException();
+                return null;
             }
         }
 

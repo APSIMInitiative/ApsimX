@@ -158,7 +158,6 @@
     <Compile Include="Classes\Intellisense\IScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
-    <Compile Include="Classes\Intellisense\SegmentTrackingOutputFormatter.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
     <Compile Include="Cloud\APSIMJob.cs" />
     <Compile Include="Cloud\ApsimJobManagerExtension.cs" />

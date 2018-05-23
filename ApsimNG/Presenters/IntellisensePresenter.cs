@@ -41,7 +41,7 @@
         
         /// <summary>
         /// List of intellisense options.
-        /// This list isn't really needed at the moment, but I have plans to use it in the future. - DH May 2018
+        /// Probably doesn't need to be a class field, but I have plans to use it in the future. - DH May 2018
         /// </summary>
         private CodeCompletionResult completionResult;
 
