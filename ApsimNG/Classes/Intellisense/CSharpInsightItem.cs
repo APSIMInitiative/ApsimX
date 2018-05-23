@@ -1,7 +1,5 @@
 ﻿using System.IO;
 using System.Text;
-using System.Windows.Controls;
-using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Xml;
@@ -54,8 +52,6 @@ namespace UserInterface.Intellisense
 
         private string documentation;
 
-        private TextBlock header;
-
         public CSharpInsightItem(IParameterizedMember method)
         {
             this.Method = method;
@@ -67,12 +63,7 @@ namespace UserInterface.Intellisense
         {
             get
             {
-                if (header == null)
-                {
-                    header = new TextBlock();
-                    GenerateHeader();
-                }
-                return header;
+                throw new System.NotImplementedException();
             }
         }
 
@@ -81,7 +72,7 @@ namespace UserInterface.Intellisense
             if (highlightedParameterIndex == parameterIndex)
                 return;
             this.highlightedParameterIndex = parameterIndex;
-            if (header != null)
+            if (Header != null)
                 GenerateHeader();
         }
 
@@ -105,8 +96,16 @@ namespace UserInterface.Intellisense
             }
         }
 
+        /// <summary>
+        /// Not sure what this method is supposed to do, but it seems to be tied to AvalonEdit in some way.
+        /// There are one or two references to this method in varioud places, but I've never observed it
+        /// it actually being called. I'll leave it in for now, but it should probably be removed at some 
+        /// point - DH May 2018.
+        /// </summary>
         private void GenerateHeader()
         {
+            throw new System.NotImplementedException();
+            /*
             CSharpAmbience ambience = new CSharpAmbience();
             ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
             var stringBuilder = new StringBuilder();
@@ -116,8 +115,9 @@ namespace UserInterface.Intellisense
             ambience.ConversionFlags = ConversionFlags.ShowTypeParameterList;
 
             var inlineBuilder = new HighlightedInlineBuilder(stringBuilder.ToString());
-            header.Inlines.Clear();
-            header.Inlines.AddRange(inlineBuilder.CreateRuns());
+            Header.Inlines.Clear();
+            Header.Inlines.AddRange(inlineBuilder.CreateRuns());
+            */
         }
     }
 }
