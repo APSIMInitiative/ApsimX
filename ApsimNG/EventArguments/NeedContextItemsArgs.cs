@@ -334,7 +334,7 @@ namespace UserInterface.EventArguments
                         else
                             node = Activator.CreateInstance(property.PropertyType);
                     }
-                    catch (Exception err)
+                    catch
                     {
                         // Any 'real' errors should be displayed to the user, so they should be caught 
                         // in a presenter which can access the explorer presenter.

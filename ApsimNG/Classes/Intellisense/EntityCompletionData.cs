@@ -45,7 +45,8 @@ namespace UserInterface.Intellisense
         /// <param name="entity">The entity. Cannot be null.</param>
         public EntityCompletionData(IEntity entity)
         {
-            if (entity == null) throw new ArgumentNullException("entity");
+            if (entity == null)
+                throw new ArgumentNullException("entity");
             this.entity = entity;
             IAmbience ambience = new CSharpAmbience();
             ambience.ConversionFlags = entity is ITypeDefinition ? ConversionFlags.ShowTypeParameterList : ConversionFlags.None;
