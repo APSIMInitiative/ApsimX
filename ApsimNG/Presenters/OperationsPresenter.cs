@@ -126,8 +126,15 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, false, false, e.ControlSpace))
-                intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+            try
+            {
+                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
