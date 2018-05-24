@@ -34,6 +34,11 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>
+        /// The intellisense object.
+        /// </summary>
+        private IntellisensePresenter intellisense;
+
+        /// <summary>
         /// Attach model to view.
         /// </summary>
         /// <param name="model">The model object</param>
@@ -44,6 +49,17 @@ namespace UserInterface.Presenters
             this.operations = model as Operations;
             this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
+            this.intellisense = new IntellisensePresenter(view as ViewBase);
+            intellisense.ItemSelected += (sender, e) =>
+            {
+                if (e.TriggerWord == string.Empty)
+                    this.view.InsertAtCaret(e.ItemSelected);
+                else
+                {
+                    int position = this.view.Text.Substring(0, this.view.Offset).LastIndexOf(e.TriggerWord);
+                    this.view.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
+                }
+            };
 
             this.PopulateEditorView();
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -59,6 +75,7 @@ namespace UserInterface.Presenters
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser -= this.OnTextHasChangedByUser;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            this.intellisense.Cleanup();
         }
 
         /// <summary>
@@ -109,7 +126,15 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(this.operations, e.ObjectName, true, true, false));
+            try
+            {
+                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
