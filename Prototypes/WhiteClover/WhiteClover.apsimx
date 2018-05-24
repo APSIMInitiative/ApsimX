@@ -97,20 +97,20 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The thermal time is used to control many of the phenologic changes in white clover.  It is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Plant development acelerates as temperature increases from minimum to optimum and slows down after that, ceasing completely at maximum temperature.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. For "chinese plantain" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC ([IshikawaEtAl_2007]), which gives an idea of potential variations for this parameter in plantain. Plantain is tolerant to high temperatures ([StewartPlantain_1996]; [NieEtAl_2008]) and outgrows ryegrass over summer in subtropical climate ([MoorheadPigot_2009]). The data for chinese plantain suggest similar growth, and thus the optimum and maximum temperature for it, 30 and 38oC respectively ([IshikawaEtAl_2007]), should give a good indication of the values for forage plantain.
+            <MemoText><![CDATA[The thermal time is used to control many of the phenologic changes in white clover.  It is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Plant development acelerates as temperature increases from minimum to optimum and slows down after that, ceasing completely at maximum temperature.  There is little information about these thresholds for white clover. The minimum, or base, temperature is quite variable among cultivars, varying from -1.0 to 5oC ([BlackEtAl2006], [MonksEtAl2009], [MootEtAll2000]). Even less data is found forthe other parameters, and they are quite variable too; optimum temperature is around 28oC and 38oC for maximum temperature ([BlackEtAl2006], [MonksEtAl2009]).
 ]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
-              <double>3.5</double>
-              <double>27.5</double>
-              <double>38.5</double>
+              <double>2.5</double>
+              <double>25</double>
+              <double>37.5</double>
             </X>
             <Y>
               <double>0</double>
-              <double>25</double>
+              <double>22.5</double>
               <double>0</double>
             </Y>
           </XYPairs>
@@ -21902,5 +21902,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
