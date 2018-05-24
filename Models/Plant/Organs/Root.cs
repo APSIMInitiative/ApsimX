@@ -79,7 +79,7 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]
-        private IFunction DMDemandFunction = null;
+        private IFunction dmDemandFunction = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [ChildLinkByName]
@@ -925,7 +925,7 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                double demandedDM = DMDemandFunction.Value();
+                double demandedDM = dmDemandFunction.Value();
                 if (structuralFraction != null)
                     demandedDM *= structuralFraction.Value() / dmConversionEfficiency.Value();
                 else
