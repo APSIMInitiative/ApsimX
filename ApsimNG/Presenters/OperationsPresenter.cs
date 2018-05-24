@@ -88,7 +88,8 @@ namespace UserInterface.Presenters
             {
                 // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
                 string dateStr = DateUtilities.validateDateString(operation.Date);
-                st += dateStr + " " + operation.Action + Environment.NewLine;
+                string commentChar = operation.Enabled ? string.Empty : "// ";
+                st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
             }
 
             this.view.Text = st;
@@ -105,12 +106,22 @@ namespace UserInterface.Presenters
             List<Operation> operations = new List<Operation>();
             foreach (string line in this.view.Lines)
             {
-                int pos = line.IndexOf(' ');
+                string currentLine = line;
+                bool isComment = line.Trim().StartsWith("//");
+                if (isComment)
+                {
+                    int index = line.IndexOf("//");
+                    if (index >= 0)
+                        currentLine = currentLine.Remove(index, 2).Trim();
+                }
+                    
+                int pos = currentLine.IndexOf(' ');
                 if (pos != -1)
                 {
                     Operation operation = new Operation();
-                    operation.Date = DateUtilities.validateDateString(line.Substring(0, pos));
-                    operation.Action = line.Substring(pos + 1);
+                    operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
+                    operation.Action = currentLine.Substring(pos + 1);
+                    operation.Enabled = !isComment;
                     operations.Add(operation);
                 }
             }

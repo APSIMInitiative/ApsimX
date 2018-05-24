@@ -18,7 +18,13 @@ namespace Models
     [Serializable]
     public class Operation
     {
-        //public DateTime Date { get; set; }
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Operation()
+        {
+            Enabled = true;
+        }
 
         /// <summary>Gets or sets the date.</summary>
         public string Date { get; set; }
@@ -31,12 +37,17 @@ namespace Models
         /// <returns></returns>
         public string GetActionModel()
         {
-            int PosPeriod = Action.IndexOf('.');
-            if (PosPeriod >= 0)
-                return Action.Substring(0, PosPeriod);
+            int posPeriod = Action.IndexOf('.');
+            if (posPeriod >= 0)
+                return Action.Substring(0, posPeriod);
 
             return "";
         }
+
+        /// <summary>
+        /// Used to determine whether the operation is enabled or not.
+        /// </summary>
+        public bool Enabled { get; set; }
     }
 
     /// <summary>This class encapsulates an operations schedule.</summary>
@@ -77,9 +88,8 @@ namespace Models
                 if (operationDate == Clock.Today)
                 {
                     string st = operation.Action;
-                    int posComment = operation.Action.IndexOf("//");
-                    if (posComment != -1)
-                        operation.Action = operation.Action.Remove(posComment);
+                    if (!operation.Enabled)
+                        continue;
 
                     if (operation.Action.Contains("="))
                     {
