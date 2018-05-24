@@ -534,7 +534,7 @@ namespace UserInterface.Views
         {
             textEditor.Document.ReadOnly = false;
             string textToCaret = textEditor.Text.Substring(0, Offset);
-            if (textToCaret.LastIndexOf('.') != Offset)
+            if (textToCaret.LastIndexOf('.') != Offset - 1)
             {
                 string textBeforeCaret = textEditor.Text.Substring(0, Offset);
                 // TODO : insert text at the correct location

@@ -188,7 +188,9 @@
             var matches = System.Text.RegularExpressions.Regex.Matches(cellContents, modelNamePattern);
             if (matches.Count > 0)
             {
-                objectName = objectName.Substring(objectName.LastIndexOf(matches[matches.Count - 1].Value));
+                int modelNameIndex = objectName.LastIndexOf(matches[matches.Count - 1].Value);
+                if (modelNameIndex >= 0)
+                    objectName = objectName.Substring(modelNameIndex);
             }
             
             List<NeedContextItemsArgs.ContextItem> results = NeedContextItemsArgs.ExamineModelForContextItemsV2(model as Model, objectName, properties, methods, events);
