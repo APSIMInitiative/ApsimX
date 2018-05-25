@@ -82,23 +82,26 @@ namespace Models
         private void OnDoManagement(object sender, EventArgs e)
         {
             DateTime operationDate;
-            foreach (Operation operation in Schedule)
+            foreach (Operation operation in Schedule.Where(o => o.Enabled))
             {
                 operationDate = DateUtilities.validateDateString(operation.Date, Clock.Today.Year);
                 if (operationDate == Clock.Today)
                 {
                     string st = operation.Action;
-                    if (!operation.Enabled)
-                        continue;
 
-                    if (operation.Action.Contains("="))
+                    // If the action contains a comment anywhere, we ignore everything after (and including) the comment.
+                    int commentPosition = st.IndexOf("//");
+                    if (commentPosition >= 0)
+                        st = st.Substring(0, commentPosition);
+
+                    if (st.Contains("="))
                     {
                         string variableName = st;
                         string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
                         variableName = variableName.Trim();
                         Apsim.Set(this, variableName, value);
                     }
-                    else if (operation.Action.Trim() != string.Empty)
+                    else if (st.Trim() != string.Empty)
                     {
                         string argumentsString = StringUtilities.SplitOffBracketedValue(ref st, '(', ')');
                         string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
