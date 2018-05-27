@@ -127,7 +127,9 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.  Germination rates in plantain typically vary between 75 and 95% when sown close to the surface (<10mm), in moist warm soil ([ReedEtAl_2008]; [DouglasEtAl_2013]; [LeeEtAlYields_2015]).  The plantain model, following convention of PMF, assumes 100% germination, and therefore the user must correct sowing rate when variations between sown and germinated plant density is considered important. ]]></MemoText>
+            <MemoText><![CDATA[Germination in most clover species is very variable (e.g. [HamptonEtAl1987], [MurrayThesis2012]), with about 70-90% of seeds germinating for white clover. Temperatures between 5 and 20oC do not affect germination rate, but so slow it down ([HamptonEtAl1987]).  The model does not consider variable germination rate, thus the population should be adjusted by the user to account for less than 100% germination when sowing. Also, following default PMF behaviour, white clover germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.
+
+]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Sowing</Start>
@@ -138,7 +140,8 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm (Peri et al., 2000; Sanderson et al., 2000), deeper seed may stay dormant for years in the soil ([Blom_1978]; [RobertsBoddrell_1984]).  Variations in germination rate due to depth are not explicitly simulated by the plantain model in the current version, however the sowing depth does affect timing of emergence.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).
+            <MemoText><![CDATA[White clover has small seeds and these need to be placed near the soil surface to emergence sucessfully. Best emergence rate occur when seeds are sown at depth of 5mm ([Hyde1950], [MurrayAndClements1993]), and few plants will emerge from seeds deeper than 40mm.  Variations in germination rate due to depth are not currently simulated by the model, however the sowing depth does affect timing of emergence, in combination with temperature.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).  
+Emergence of white clover occur a few days after germination ([Hyde1950], [MootEtAll2000]), but this is quite variable (taking 5-20 days).  Both temperature and depth of seed are important factors.  Thermal time for the emergence of white clover (cv. Huia and Nomad) has been reported as being approximately 150oCd ([MootEtAll2000], [MurrayThesis2012]), and there seem to be no significant variations between NZ cultivars ([HamptonEtAl1987]).  
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -149,15 +152,130 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
           <End>Emergence</End>
-          <ShootLag>15</ShootLag>
-          <ShootRate>10</ShootRate>
+          <ShootLag>50</ShootLag>
+          <ShootRate>15</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase starts when plants emerge from the ground, but it is also triggered after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of days with long sunlight ([SussexPlantain_1956]; [Rowarth_Plantain_1990]; [CaseLaceyHopkins_1996]; [LaceyRoach_2003]; [GonzalezParrado_2015]).  Stalk development have been recorded to start in October in NZ and in May in the USA ([Rowarth_Plantain_1990]; [LaceyRoach_2003]; [SandersonEtAl_2003]), with data suggesting a minimum of 25-30 days (non consecutive) with long daylight periods ([SussexPlantain_1956]; [FajerEtAl_1991]; [CaseLaceyHopkins_1996]).  The literature does not provide an indication of how long the sunlight period should be to trigger the reproductive phase, but it is clear that daylight should be grater that the period in darkness (14-16 hours been used to induce flowering in growth chambers).  The base plantain model uses the accumulation of days greater than 12hrs to trigger the end of the vegetative phase.
+            <MemoText><![CDATA[During this phase, white clover plants partitions biomass to leaf+petiole, stolon, and root+taproot organs. Initially, this phase starts when plants emerge, but it is also triggered as phenology resets after the end of the reproductive phase.  The vegetative phase ends when the inductive phase starts.  
+White clover is typically described as either short day or short-long day species ([Thomas1961], [ChapterThomas1980]), which means induction is caused by exposure to short daylight lengths but reproductive growth may also be triggered by a period with long daylight.  Exposure to cold temperature can also lead to induction with subsequent initiation of inflorescence development when days become warmer and longer ([Thomas1981_SLD], [BeattyThesis1959]). The variability in response of induction to environmental condition is considerably large in white clover. In most stands at least some plants will show reproductive growth regardless of environmental conditions. The variations show some trend when contrasting large- to short-leaved cultivars or for cultivar from different origins (especially latitude), but the effect of genotypes within each group was not found to be significant (e.g. [ChapterThomas1980], [Thomas1982_Comparison], [Norris1984_daylength], [BeattyThesis1959]).  
+Inducing daylight length seem to be 12 hours or less, while temperatures need to be below about 10oC ([Thomas1979_Natural], [Thomas1981_SLD], [Thomas1982_Comparison], [Norris1984_daylength], [Norris1985_Temperature]). The base white clover model uses the accumulation of days under either low temperature or small daylight length to trigger the end of the vegetative phase.
+]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>15</FixedValue>
+            <Units>days</Units>
+          </Constant>
+          <AddFunction>
+            <Name>ThermalTime</Name>
+            <LinearInterpolationFunction>
+              <Name>ShortDays</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>6</double>
+                  <double>8</double>
+                  <double>10</double>
+                  <double>12</double>
+                  <double>14</double>
+                  <double>16</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.7</double>
+                  <double>0.1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>LowTemperatures</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>2</double>
+                  <double>5</double>
+                  <double>8</double>
+                  <double>11</double>
+                  <double>15</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Phenology].ThermalTime.Value()</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </AddFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>Emergence</Start>
+          <End>Induction</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Inductive</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[During this phase the white clover plants await for the environmental cue to start the reproductive growth. Physiologic and metabolic processes remain the same as for the vegetative phase; plants partition biomass to leaf+petiole, stolon, and root+taproot organs. The inductive phase starts when plants accumulated a given number of days under inductive conditions, i.e. low temperatures and/or short daylight lengths ([Thomas1979_Natural], [Norris1984_daylength], [Norris1985_Temperature]).  The phase ends when the plants start the reproduction growth, with the emergence of flower buds.  
+There is a large level of variation in white clover plants and their flowering response to environmental conditions, with some plants reaching reproductive growth in almost any stand ([Thomas1979_Natural], [BeattyThesis1959]). Nonetheless, in natural condition reproductive growth is typically triggered by long daylight lengths, with reported values around 14 hours ([ChapterThomas1980], [Thomas1981_SLD],[Norris1984_daylength]).  The accumulation of days under long daylight length is used by the model to trigger the end of the inductive phase.  
+]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>10</FixedValue>
+            <Units>days</Units>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>ThermalTime</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>10</double>
+                <double>11.5</double>
+                <double>14</double>
+                <double>15</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
+          </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>Induction</Start>
+          <End>Flowering</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Reproductive</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (peduncles, inflorescence, and seeds). The current model does not describe the flower and seeds development explicitly, only a generic organ refered to as *inflorescence* is defined. The main reason for this is the variability and complex phenology of reproduction of white clover; with seeds maturing while new flowers are still being initiated over summer and early autumn (e.g. [HydeEtAl1959], [Thomas1987Chapter], [MedeirosAndSteiner2000]). Also due to their similarities and the fact that a population is describe in the model (instead of single plants), peduncles and petioles are simulated as a single organ.  
+Flower emergence typically starts in spring, peaks at the beginning of summer and continues until autumn ([ChapterThomas1980], [MacfarlaneAndSheath1984], [MarshalEtAl1993_Production]). The actual periods vary for different cultivars, and some have flower nearly all year (albeit with low frequency over winter).  A drop in flower numbers in mid-summer and subsequent increase in early autumn has been show in some cultivars and has been linked to water deficit or inhibition due to long days ([ChapterThomas1980], [MacfarlaneAndSheath1984]).  Management practices, such as applying N fertiliser, irrigation and defoliations, have, in general, a positive impact on flower and seed production ([ChapterThomas1980], [MedeirosAndSteiner2000], [BissuelBelaygueEtAl2002_flower]), but there is large variation in the responses, depending on the cultivars as well as the extent and timing of the intervention. Currently, the model does not account for the effect of this practices explicitly, although it is expected that some effects are captured by changes in biomass allocation caused by actions such as irrigation of application of fertilisers.
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -174,47 +292,8 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
               <X>
                 <double>10</double>
                 <double>11.5</double>
-                <double>12</double>
-                <double>13</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
-          </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Flowering</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>Reproductive</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (stems, flowers, and seeds). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as _inflorescence_ is defined.  This was done partly due to lack of data and partly because of the variability and complex phenology of plantain.  There is a lot of variation among plantain plants regarding when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds, as well as stalks with ripen seed at the same time ([Rowarth_Plantain_1990]; [RumballKeog_1997]; [LaceyRoach_2003]; [GonzalezParrado_2015]).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range.  The available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC ([Rowarth_Plantain_1990]; [RumballKeog_1997]; [GonzalezParrado_2015]).  Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts ([Rowarth_Plantain_1990]) and/or short days ([SandersonEtAl_2003]).  In the plantain model the photoperiod is used to define the end of reproductive phase, following the same approach used to start it.  And correspondelly, the accumulation of days shorter than 12 hours is used as the trigger the end of the phase (this approach also ensures phenology reset even in warmer climates).  Note that the DM partition functions also use photoperiod to change priority allocation into reproductive organs, with maximum allocation only when daylight length is greater than 14hours.  This was done to limit the allocation to reproductive organs on the sason shoulders when only few plants are actively in the reproductive phase (e.g. [SandersonEtAl_2003]).
-]]></MemoText>
-          </Memo>
-          <Constant>
-            <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>30</FixedValue>
-            <Units>days</Units>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>10</double>
-                <double>11</double>
-                <double>12.5</double>
-                <double>13</double>
+                <double>14</double>
+                <double>15</double>
               </X>
               <Y>
                 <double>1</double>
@@ -285,7 +364,7 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[It is assumed that approximately 1/3 of the seed biomass is allocated to shoot upon emergence.  The weight of white clover seeds varies between 0.5 and 0.8 g/1000 seeds ([]; []). ]]></MemoText>
+            <MemoText><![CDATA[It is assumed that approximately 1/3 of the seed biomass is allocated to shoot upon emergence.  The weight of white clover seeds varies between 0.5 and 0.8 g/1000 seeds ([Thomas1987Chapter], [BissuelBelaygueEtAl2002_seed], [MurrayThesis2012]). ]]></MemoText>
           </Memo>
           <Constant>
             <Name>InitialPlantWt</Name>
@@ -4623,58 +4702,72 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <Operation>
                 <Date>2014-10-23</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-17</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-01-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-03-01</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-08</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -4683,58 +4776,72 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <Operation>
                 <Date>2014-10-23</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-17</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-01-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-03-01</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-08</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -4743,58 +4850,72 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <Operation>
                 <Date>2014-10-23</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-17</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-01-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-03-01</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-08</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -4803,58 +4924,72 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <Operation>
                 <Date>2014-10-23</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-17</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-01-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-03-01</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-08</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -4863,58 +4998,72 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <Operation>
                 <Date>2014-10-23</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-17</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-01-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-03-01</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-04-08</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4955,7 +5104,8 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2014-03-20</Date>
-                  <Action> [WhiteClover].Sow(population: 200, cultivar: "Tonic", depth: 10, rowSpacing: 150)</Action>
+                  <Action> [WhiteClover].Sow(population: 200, cultivar: "Kopu", depth: 10, rowSpacing: 150)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
               </Operations>
               <Operations>
@@ -4964,622 +5114,777 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
                 <Operation>
                   <Date>2014-10-31</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-03</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-05</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-07</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-10</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-11</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-12</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-17</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-18</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-19</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-24</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-25</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-27</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-01</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-02</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-04</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-08</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-09</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-12</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-15</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-17</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-19</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-20</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-21</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-22</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-25</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-26</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-27</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-28</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-29</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-30</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-02</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-05</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-08</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-09</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-12</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-13</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-16</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-19</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-20</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-21</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-26</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-27</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-01-29</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-02</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-04</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-05</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-09</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-11</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-12</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-16</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-17</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-18</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-24</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-26</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-27</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-02</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-03</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-05</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-10</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-12</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-13</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-16</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-19</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-20</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-23</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-24</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-26</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-30</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-04-02</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-04-03</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-04-06</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-04-08</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-04-17</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-05-20</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-06-09</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-09-09</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-09-30</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-02</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-06</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-09</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-12</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-13</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-16</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-20</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-21</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-23</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-26</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-27</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-02</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-03</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-04</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-06</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-09</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-11</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-16</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-18</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-20</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-23</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-24</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-25</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-27</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-30</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-01</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-04</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-07</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-09</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-10</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-22</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-26</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-29</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-31</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-01</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-07</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-09</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-11</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-12</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-13</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-15</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-21</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-25</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-30</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-02</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-03</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-05</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-08</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-11</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-12</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-15</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-16</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-22</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-23</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-25</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-26</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-01</Date>
                   <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-02</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-04</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-07</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-08</Date>
                   <Action>[Irrigation].Apply(amount: 4)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-10</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-14</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-15</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-18</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-21</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-22</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-23</Date>
                   <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-03-28</Date>
                   <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-04-02</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-04-08</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-05-04</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-08-31</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-10-05</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-10-18</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-10-26</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
               </Operations>
               <Operations>
@@ -5620,66 +5925,82 @@ namespace Models
                 <Operation>
                   <Date>2014-10-23</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-11-25</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-30</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-02-04</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-10</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-04-10</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-06-06</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-06</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-16</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-16</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-01-21</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-24</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-04-08</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-05-27</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-10-03</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-11-07</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
               </Operations>
               <Manager>
@@ -13481,54 +13802,67 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
               <Operation>
                 <Date>2014-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-01-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-04-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-09-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-02-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-05-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-07-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-09-14</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -13537,54 +13871,67 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
               <Operation>
                 <Date>2014-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-01-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-04-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-09-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-02-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-05-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-07-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-09-14</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -13593,54 +13940,67 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
               <Operation>
                 <Date>2014-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-01-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-04-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-09-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-02-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-05-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-07-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-09-14</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -13649,54 +14009,67 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
               <Operation>
                 <Date>2014-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-01-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-04-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-09-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-02-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-05-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-07-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-09-14</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Operations>
@@ -13705,54 +14078,67 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
               <Operation>
                 <Date>2014-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-01-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-04-21</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-10</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-09-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-11-19</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-22</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-02-03</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-05-06</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-07-12</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-09-14</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13793,7 +14179,8 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2014-10-24</Date>
-                  <Action> [WhiteClover].Sow(population: 200, cultivar: "Tonic", depth: 10, rowSpacing: 150)</Action>
+                  <Action> [WhiteClover].Sow(population: 200, cultivar: "Kopu", depth: 10, rowSpacing: 150)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
               </Operations>
               <Operations>
@@ -13806,10 +14193,12 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Operation>
                   <Date>2014-10-13</Date>
                   <Action>[Fertiliser].Apply(Amount: 26.4, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2014-12-23</Date>
                   <Action>[Fertiliser].Apply(Amount: 3.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
               </Operations>
               <Manager>
@@ -13846,50 +14235,62 @@ namespace Models
                 <Operation>
                   <Date>2015-01-14</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-03-02</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-04-20</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-06-08</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-09-03</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-10-14</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-11-17</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2015-12-21</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-02-02</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-05-02</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-07-11</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
                   <Date>2016-09-12</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
                 </Operation>
               </Operations>
               <Manager>
