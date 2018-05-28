@@ -173,6 +173,7 @@ namespace UserInterface.Views
                 {
                     textEditor.Document.MimeType = "text/x-csharp";
                     textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
+                    textEditor.Options.Zoom = Utility.Configuration.Settings.EditorZoom;
                     StyleSeparator.Visible = true;
                     StyleMenu.Visible = true;
                 }
@@ -283,11 +284,13 @@ namespace UserInterface.Views
             Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
             Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
-            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName; 
+            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
+            options.Zoom = Utility.Configuration.Settings.EditorZoom;
             options.HighlightCaretLine = true;
             options.EnableSyntaxHighlighting = true;
             options.HighlightMatchingBracket = true;
             textEditor.Options = options;
+            textEditor.Options.Changed += EditorOptionsChanged;
             textEditor.TextArea.DoPopupMenu = DoPopup;
             textEditor.Document.LineChanged += OnTextHasChanged;
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
@@ -340,6 +343,7 @@ namespace UserInterface.Views
             textEditor.TextArea.KeyPressEvent -= OnKeyPress;
             scroller.Hadjustment.Changed -= Hadjustment_Changed;
             scroller.Vadjustment.Changed -= Vadjustment_Changed;
+            textEditor.Options.Changed -= EditorOptionsChanged;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
 
             // It's good practice to disconnect all event handlers, as it makes memory leaks
@@ -447,6 +451,11 @@ namespace UserInterface.Views
                 };
 
                 ContextItemsNeeded?.Invoke(this, args);
+            }
+            else if (e.Event.Key == Gdk.Key.Key_0 && (e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
+            {
+                textEditor.Options.ZoomReset();
+                e.RetVal = true;
             }
             else
             {
@@ -759,6 +768,17 @@ namespace UserInterface.Views
             Utility.Configuration.Settings.EditorStyleName = caption;
             textEditor.Options.ColorScheme = caption;
             textEditor.QueueDraw();
+        }
+
+        /// <summary>
+        /// Handle other changes to editor options. All we're really interested in 
+        /// here at present is keeping track of the editor zoom level.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void EditorOptionsChanged(object sender, EventArgs e)
+        {
+            Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
         }
 
         // The following block comes from the example code provided at 
