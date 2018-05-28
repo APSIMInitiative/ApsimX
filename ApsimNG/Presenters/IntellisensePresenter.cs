@@ -278,7 +278,7 @@
         /// </summary>
         public void Cleanup()
         {
-            view.Cleanup();
+            view?.Cleanup();
         }
 
         /// <summary>
