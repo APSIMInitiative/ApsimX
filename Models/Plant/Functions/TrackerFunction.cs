@@ -119,6 +119,7 @@
         private void OnStartEvent(object sender, EventArgs e)
         {
             variableValues.Clear();
+            referenceValues.Clear();
             inTrackingWindow = true;
         }
 
