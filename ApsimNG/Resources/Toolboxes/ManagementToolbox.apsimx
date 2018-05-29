@@ -35,7 +35,7 @@ namespace Models
 		public IPlant Crop { get; set; }
 		[Description("Sowing date (d-mmm)")]
 		public string SowDate { get; set; }
-    [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+    [Display(Type = DisplayType.CultivarName)]
 		[Description("Cultivar to be sown")]
 		public string CultivarName { get; set; }
 		[Description("Sowing depth (mm)")]
@@ -109,7 +109,7 @@ namespace Models
 		public double MinRain { get; set; }
 		[Description("Duration of rainfall accumulation (d)")]
 		public int RainDays { get; set; }
-    [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+    [Display(Type = DisplayType.CultivarName)]
 		[Description("Cultivar to be sown")]
 		public string CultivarName { get; set; }
 		[Description("Sowing depth (mm)")]

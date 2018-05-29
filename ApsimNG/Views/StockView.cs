@@ -21,6 +21,10 @@ namespace UserInterface.Views
         private TAnimalParamSet genotypeSet;
         private bool FILLING = false;
 
+        private const double MINSHEEPSRW = 5.0;
+        private const double MAXSHEEPSRW = 100.0;
+        private const double MINCATTLESRW = 30.0;
+        private const double MAXCATTLESRW = 1200.0;
         
         /// <summary>
         /// The array of genotype specifications from the component inits
@@ -31,7 +35,6 @@ namespace UserInterface.Views
         // genotypes tab
         private Frame gbxGenotype = null;
         private Entry edtGenotypeName = null;
-        private Entry edtBreedSRW = null;
         private Gtk.TreeView lbxGenotypeList = null;
         private Button btnNewGeno = null;
         private Button btnDelGeno = null;
@@ -42,25 +45,25 @@ namespace UserInterface.Views
         private RadioButton rbtnCattle = null;
         private Label lblConception3 = null;
         private Label unitConception = null;
-        private Entry edtConception1 = null;
-        private Entry edtConception2 = null;
-        private Entry edtConception3 = null;
-        private Entry edtDeathRate = null;
-        private Entry edtWnrDeathRate = null;
-        private Entry edtBreedPFW_PeakMilk = null;
         private Label lblBreedPFW_PeakMilk = null;
         private Label unitBreedPFW_PeakMilk = null;
-        private Entry edtWoolYield = null;
         private Label untWoolYield = null;
         private Label lblWoolYield = null;
         private Label lblDamBreed = null;
         private Label lblSireBreed = null;
-        private Entry edtBreedMaxMu = null;
         private Label lblBreedMaxMu = null;
         private Label unitBreedMaxMu = null;
 
-        // TODO: write a small wrapper class for Entry controls so it contains the max,min,scale parameters. Has a
-        // validation function that can be called whe .Changed is handled.
+        // the wrappers for the edit controls that have floating points
+        private DoubleEditView deWnrDeath = null;
+        private DoubleEditView deDeath = null;
+        private DoubleEditView dePFW_Milk = null;
+        private DoubleEditView deBreedSRW = null;
+        private DoubleEditView deBreedMaxMu = null;
+        private DoubleEditView deWoolYield = null;
+        private DoubleEditView deConception1 = null;
+        private DoubleEditView deConception2 = null;
+        private DoubleEditView deConception3 = null;
 
         /// <summary>
         /// The list of genotypes in the treeview
@@ -80,27 +83,18 @@ namespace UserInterface.Views
 
             gbxGenotype = (Frame)builder.GetObject("gbxGenotype");
             edtGenotypeName = (Entry)builder.GetObject("edtGenotypeName");
-            edtBreedSRW = (Entry)builder.GetObject("edtBreedSRW");
             btnNewGeno = (Button)builder.GetObject("btnNewGeno");
             btnDelGeno = (Button)builder.GetObject("btnDelGeno");
             rbtnSheep = (Gtk.RadioButton)builder.GetObject("rbtnSheep");
             rbtnCattle = (Gtk.RadioButton)builder.GetObject("rbtnCattle");
             lblConception3 = (Label)builder.GetObject("lblConception3");
             unitConception = (Label)builder.GetObject("unitConception");
-            edtConception1 = (Entry)builder.GetObject("edtConception1");
-            edtConception2 = (Entry)builder.GetObject("edtConception2");
-            edtConception3 = (Entry)builder.GetObject("edtConception3");
-            edtDeathRate = (Entry)builder.GetObject("edtDeathRate");
-            edtWnrDeathRate = (Entry)builder.GetObject("edtWnrDeathRate");
-            edtBreedPFW_PeakMilk = (Entry)builder.GetObject("edtBreedPFW_PeakMilk");
             lblBreedPFW_PeakMilk = (Label)builder.GetObject("lblBreedPFW_PeakMilk");
             unitBreedPFW_PeakMilk = (Label)builder.GetObject("unitBreedPFW_PeakMilk");
-            edtWoolYield = (Entry)builder.GetObject("edtWoolYield");
             untWoolYield = (Label)builder.GetObject("untWoolYield");
             lblWoolYield = (Label)builder.GetObject("lblWoolYield");
             lblDamBreed = (Label)builder.GetObject("lblDamBreed");
             lblSireBreed = (Label)builder.GetObject("lblSireBreed");
-            edtBreedMaxMu = (Entry)builder.GetObject("edtBreedMaxMu");
             lblBreedMaxMu = (Label)builder.GetObject("lblBreedMaxMu");
             unitBreedMaxMu = (Label)builder.GetObject("unitBreedMaxMu");
 
@@ -108,6 +102,17 @@ namespace UserInterface.Views
             cbxSireBreed = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxSireBreed"));
             cbxGeneration = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxGeneration"));
             cbxGroupGenotype = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxGroupGenotype"));   // animals tab
+
+            deWnrDeath = new DoubleEditView(this, (Entry)builder.GetObject("edtWnrDeathRate"), 100, 0, 1);
+            deDeath = new DoubleEditView(this, (Entry)builder.GetObject("edtDeathRate"), 100, 0, 1);
+            dePFW_Milk = new DoubleEditView(this, (Entry)builder.GetObject("edtBreedPFW_PeakMilk"), 100, 0, 2);
+            deBreedSRW = new DoubleEditView(this, (Entry)builder.GetObject("edtBreedSRW"));
+            deBreedSRW.DecPlaces = 1;
+            deBreedMaxMu = new DoubleEditView(this, (Entry)builder.GetObject("edtBreedMaxMu"), 50, 5, 1);
+            deWoolYield = new DoubleEditView(this, (Entry)builder.GetObject("edtWoolYield"), 100, 50, 1);
+            deConception1 = new DoubleEditView(this, (Entry)builder.GetObject("edtConception1"), 100, 0, 0);
+            deConception2 = new DoubleEditView(this, (Entry)builder.GetObject("edtConception2"), 100, 0, 0);
+            deConception3 = new DoubleEditView(this, (Entry)builder.GetObject("edtConception3"), 100, 0, 0);
 
             cbxGeneration.Values = new string[] { "Purebred", "First cross", "Second cross", "Third cross", "Fourth cross", "Fifth cross", "Sixth cross" };
 
@@ -139,6 +144,8 @@ namespace UserInterface.Views
         {
             get
             {
+                if (FCurrGenotype >= 0)
+                    ParseCurrGenotype();
                 return genotypeInits;
             }
             set
@@ -222,13 +229,13 @@ namespace UserInterface.Views
 
                 if (theAnimal == GrazType.AnimalType.Sheep)
                 {
-                    ////edtBreedSRW.maxValue = MAXSHEEPSRW;
-                    ////edtBreedSRW.minValue = MINSHEEPSRW;
+                    deBreedSRW.MaxValue = MAXSHEEPSRW;
+                    deBreedSRW.MinValue = MINSHEEPSRW;
                 }
                 else if (theAnimal == GrazType.AnimalType.Cattle)
                 {
-                    ////edtBreedSRW.maxValue = MAXCATTLESRW;
-                    ////edtBreedSRW.minValue = MINCATTLESRW;
+                    deBreedSRW.MaxValue = MAXCATTLESRW;
+                    deBreedSRW.MinValue = MINCATTLESRW;
                 }
 
 
@@ -237,14 +244,8 @@ namespace UserInterface.Views
 
                 edtGenotypeName.Text = theGenoType.Name;
 
-                //rbtnSheep.Clicked -= ClickAnimal;
-                //rbtnCattle.Clicked -= ClickAnimal;
-
                 rbtnSheep.Active = (theAnimal == GrazType.AnimalType.Sheep);
                 rbtnCattle.Active = (theAnimal == GrazType.AnimalType.Cattle);
-
-                //rbtnSheep.Clicked += ClickAnimal;
-                //rbtnCattle.Clicked += ClickAnimal;
 
                 cbxGeneration.SelectedIndex = Math.Max(0, Math.Min(theGenoType.Generation, cbxGeneration.Values.Length - 1));
                 ChangeGeneration(null, null);
@@ -258,23 +259,26 @@ namespace UserInterface.Views
                 if (cbxSireBreed.SelectedIndex < 0)
                     cbxSireBreed.SelectedIndex = cbxDamBreed.SelectedIndex;
 
-                edtBreedSRW.Text = theGenoType.SRW.ToString();
-                edtDeathRate.Text = (100 * theGenoType.DeathRate).ToString();
-                edtWnrDeathRate.Text = (100 * theGenoType.WnrDeathRate).ToString();
-                edtConception1.Text = (100 * theGenoType.Conception[1]).ToString();
-                edtConception2.Text = (100 * theGenoType.Conception[2]).ToString();
+                deBreedSRW.Value = theGenoType.SRW;
+                deDeath.Value = 100 * theGenoType.DeathRate;
+                deWnrDeath.Value = 100 * theGenoType.WnrDeathRate;
+                deConception1.Value = 100 * theGenoType.Conception[1];
+                deConception2.Value = 100 * theGenoType.Conception[2];
 
                 if (theAnimal == GrazType.AnimalType.Sheep)
                 {
-                    edtConception3.Text = (100 * theGenoType.Conception[3]).ToString();
-                    edtBreedPFW_PeakMilk.Text = theGenoType.RefFleeceWt.ToString();
-                    edtBreedMaxMu.Text = theGenoType.MaxFibreDiam.ToString();
-                    edtWoolYield.Text = (100 * theGenoType.FleeceYield).ToString();
+                    deConception3.Value = 100 * theGenoType.Conception[3];
+                    dePFW_Milk.DecPlaces = 2;
+                    dePFW_Milk.MinValue = 0.0;
+                    dePFW_Milk.Value = theGenoType.RefFleeceWt;
+                    deBreedMaxMu.Value = theGenoType.MaxFibreDiam;
+                    deWoolYield.Value = 100 * theGenoType.FleeceYield;
                 }
                 else if (theAnimal == GrazType.AnimalType.Cattle)
                 {
-                    ////edtPeakMilk.minValue = Min(10.0, edtBreedSRW.Value * 0.01);
-                    edtBreedPFW_PeakMilk.Text = theGenoType.PeakMilk.ToString();
+                    dePFW_Milk.DecPlaces = 1;
+                    dePFW_Milk.MinValue = Math.Min(10.0, deBreedSRW.Value * 0.01);
+                    dePFW_Milk.Value = theGenoType.PeakMilk;
                 }
             }
             FILLING = false;
@@ -309,12 +313,12 @@ namespace UserInterface.Views
         {
             // Visibility of animal - specific parameters 
             lblConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            edtConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            deConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             //unitConception.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            edtWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            deWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             untWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             lblWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            edtBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            deBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             unitBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             lblBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             if (theAnimal == GrazType.AnimalType.Sheep)
@@ -327,7 +331,6 @@ namespace UserInterface.Views
                 //cattle
                 lblBreedPFW_PeakMilk.Text = "Peak milk production";
                 unitBreedPFW_PeakMilk.Text = "kg FCM";
-
             }
         }
 
@@ -361,23 +364,23 @@ namespace UserInterface.Views
                     theGenoType.SireBreed = string.Empty;
                 }
 
-                theGenoType.SRW = Convert.ToDouble(edtBreedSRW.Text);
-                theGenoType.DeathRate = Convert.ToDouble(edtDeathRate.Text) * 0.01;
-                theGenoType.WnrDeathRate = Convert.ToDouble(edtWnrDeathRate.Text) * 0.01;
-                theGenoType.Conception[1] = Convert.ToDouble(edtConception1.Text) * 0.01;
-                theGenoType.Conception[2] = Convert.ToDouble(edtConception2.Text) * 0.01;
+                theGenoType.SRW = deBreedSRW.Value;
+                theGenoType.DeathRate = deDeath.Value * 0.01;
+                theGenoType.WnrDeathRate = deWnrDeath.Value * 0.01;
+                theGenoType.Conception[1] = deConception1.Value * 0.01;
+                theGenoType.Conception[2] = deConception2.Value * 0.01;
 
                 if (FGenotypeAnimals[FCurrGenotype] == GrazType.AnimalType.Sheep)
                 {
-                    theGenoType.Conception[3] = Convert.ToDouble(edtConception3.Text) * 0.01;
-                    theGenoType.RefFleeceWt = Convert.ToDouble(edtBreedPFW_PeakMilk.Text);
-                    theGenoType.MaxFibreDiam = Convert.ToDouble(edtBreedMaxMu.Text);
-                    theGenoType.FleeceYield = Convert.ToDouble(edtWoolYield.Text) * 0.01;
+                    theGenoType.Conception[3] = deConception3.Value * 0.01;
+                    theGenoType.RefFleeceWt = dePFW_Milk.Value;
+                    theGenoType.MaxFibreDiam = deBreedMaxMu.Value;
+                    theGenoType.FleeceYield = deWoolYield.Value * 0.01;
                     theGenoType.PeakMilk = 0.0;
                 }
                 else if (FGenotypeAnimals[FCurrGenotype] == GrazType.AnimalType.Cattle)
                 {
-                    theGenoType.PeakMilk = Convert.ToDouble(edtBreedPFW_PeakMilk.Text);
+                    theGenoType.PeakMilk = dePFW_Milk.Value;
                     theGenoType.Conception[3] = 0.0;
                     theGenoType.RefFleeceWt = 0.0;
                     theGenoType.MaxFibreDiam = 0.0;
@@ -761,6 +764,4 @@ namespace UserInterface.Views
         }
     }
 }
-
-// myArray = new List<string>(myArray) { "add this" }.ToArray();
 

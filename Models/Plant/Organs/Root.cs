@@ -745,6 +745,19 @@ namespace Models.PMF.Organs
                 throw new Exception("Error in N Allocation: " + Name);
         }
 
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+            {
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            }
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
+
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
@@ -1058,9 +1071,9 @@ namespace Models.PMF.Organs
             // Do maintenance respiration
             MaintenanceRespiration = 0;
             MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-            Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
+            // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
             MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
-            Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
+            // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
             needToRecalculateLiveDead = true;
         }
 
