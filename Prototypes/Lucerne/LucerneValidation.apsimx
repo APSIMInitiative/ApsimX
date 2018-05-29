@@ -4319,7 +4319,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>C:\Program Files (x86)\APSIM2017.10.02.2025\Examples\WeatherFiles\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <SoilArbitrator>
@@ -8754,7 +8754,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
@@ -12585,7 +12585,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
@@ -16744,7 +16744,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
@@ -24790,7 +24790,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
@@ -89202,5 +89202,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>373</ExplorerWidth>
 </Simulations>
