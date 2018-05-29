@@ -100,17 +100,12 @@
                 WidthChars = 15,
                 Ellipsize = Pango.EllipsizeMode.End
             };
-            column = new TreeViewColumn("Type", textRender, "text", 3)
-            {
-                Resizable = true
-            };
-            completionView.AppendColumn(column);
 
             textRender = new CellRendererText()
             {
                 Editable = false,
             };
-            column = new TreeViewColumn("Descr", textRender, "text", 4)
+            column = new TreeViewColumn("Descr", textRender, "text", 3)
             {
                 Resizable = true
             };
@@ -293,7 +288,11 @@
             foreach (CompletionData item in items)
             {
                 System.Diagnostics.Debug.WriteLine(i);
-                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y), item.CompletionText);
+                // For now, we only display the first 2 lines of the item's description. It's not a great solution,
+                // but there are plenty of classes/methods with >10 line descriptions, and displaying a 10 line 
+                // description is not an option. Ultimately, the plan is to create a secondary popup which houses 
+                // the description, just like in visual studio.
+                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y));
                 i++;
             }
         }
@@ -313,7 +312,7 @@
             foreach (NeedContextItemsArgs.ContextItem item in items)
             {
                 pixbufToBeUsed = item.IsProperty ? propertyPixbuf : functionPixbuf;
-                completionModel.AppendValues(pixbufToBeUsed, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
+                completionModel.AppendValues(pixbufToBeUsed, item.Name, item.Units, item.Descr, item.ParamString);
             }
         }
 
