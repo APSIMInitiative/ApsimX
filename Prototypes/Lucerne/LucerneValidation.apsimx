@@ -973,1311 +973,6 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
-        <DeltaFunction>
-          <Name>DeltaPotentialLAI</Name>
-          <MaximumFunction>
-            <Name>Integral</Name>
-            <Constant>
-              <Name>InitialLAI</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.05</FixedValue>
-            </Constant>
-            <PhaseLookup>
-              <Name>LAI</Name>
-              <PhaseLookupValue>
-                <Name>Juvenile</Name>
-                <LinearInterpolationFunction>
-                  <Name>LAIPerNode</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Vegetative.Phyllochron.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Vegetative.Phyllochron.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR1.Vegetative.Phyllochron.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR1.Vegetative.Phyllochron.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LEAR.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LEAR.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LEAR.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Juvenile.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <X>
-                      <double>0</double>
-                      <double>8</double>
-                      <double>10.5</double>
-                      <double>11</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>1</double>
-                      <double>3</double>
-                      <double>3.5</double>
-                    </Y>
-                  </XYPairs>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <XProperty>[Leaf].NodeNumber</XProperty>
-                </LinearInterpolationFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Start>Emergence</Start>
-                <End>EndJuvenile</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>Vegetative</Name>
-                <LinearInterpolationFunction>
-                  <Name>LAIPerNode</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAI.DeltaLAI.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <Graph>
-                      <Name>Graph</Name>
-                      <Series>
-                        <Name>Series</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <Type>Scatter</Type>
-                        <XAxis>Bottom</XAxis>
-                        <YAxis>Left</YAxis>
-                        <ColourArgb>-65536</ColourArgb>
-                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                        <Marker>None</Marker>
-                        <MarkerSize>Normal</MarkerSize>
-                        <Line>Solid</Line>
-                        <LineThickness>Normal</LineThickness>
-                        <Checkpoint>Current</Checkpoint>
-                        <XFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAINode.Vegetative.LAIPerNode.XYPairs.X</XFieldName>
-                        <YFieldName>.Simulations.Replacements.Lucerne.Leaf.LAIFunction.LAINode.Vegetative.LAIPerNode.XYPairs.Y</YFieldName>
-                        <ShowInLegend>false</ShowInLegend>
-                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                        <Cumulative>false</Cumulative>
-                        <CumulativeX>false</CumulativeX>
-                      </Series>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Axis>
-                        <Type>Left</Type>
-                        <Title>Y</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <Axis>
-                        <Type>Bottom</Type>
-                        <Title>X</Title>
-                        <Inverted>false</Inverted>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <Interval>NaN</Interval>
-                      </Axis>
-                      <LegendPosition>BottomRight</LegendPosition>
-                      <DisabledSeries />
-                    </Graph>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <X>
-                      <double>0</double>
-                      <double>4</double>
-                      <double>7.8</double>
-                      <double>10</double>
-                      <double>11</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>1</double>
-                      <double>4</double>
-                      <double>6</double>
-                      <double>7.1</double>
-                    </Y>
-                  </XYPairs>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <XProperty>[Leaf].NodeNumber</XProperty>
-                </LinearInterpolationFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Start>EndJuvenile</Start>
-                <End>Maturity</End>
-              </PhaseLookupValue>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </PhaseLookup>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MaximumFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </DeltaFunction>
         <AccumulateFunction>
           <Name>NodeNumber</Name>
           <DivideFunction>
@@ -2811,7 +1506,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
         <AccumulateFunction>
           <Name>LAIFunction</Name>
           <MultiplyFunction>
-            <Name>MultiplyFunction</Name>
+            <Name>DeltaLAI</Name>
             <PhaseLookup>
               <Name>LAER</Name>
               <PhaseLookupValue>
@@ -3057,9 +1752,9 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
         <MultiplyFunction>
           <Name>DMDemandFunction</Name>
           <VariableReference>
-            <Name>DeltaPotentialLAI</Name>
+            <Name>DeltaLAI</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Leaf].DeltaPotentialLAI.Value()</VariableName>
+            <VariableName>[Leaf].LAIFunction.DeltaLAI.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>SLA</Name>
@@ -4744,7 +3439,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.1</FixedValue>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -4757,7 +3452,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <FixedValue>0.03</FixedValue>
         </Constant>
         <MultiplyFunction>
-          <Name>MaintenanceRespirationFunction</Name>
+          <Name>SenescenceRate</Name>
           <LinearInterpolationFunction>
             <Name>RespirationCoefficient</Name>
             <XYPairs>
@@ -4822,7 +3517,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <Constant>
             <Name>Constant</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1.8</FixedValue>
+            <FixedValue>0.18</FixedValue>
           </Constant>
           <ExponentialFunction>
             <Name>ExponentialFunction</Name>
@@ -4986,7 +3681,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
-          <Name>SenescenceRate</Name>
+          <Name>MaintenanceRespirationFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
@@ -5012,7 +3707,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>500</double>
+                <double>650</double>
               </X>
               <Y>
                 <double>0.6</double>
@@ -5258,7 +3953,8 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>[Lucerne].Grain.Live.N</string>
         <string>[Lucerne].Shell.Live.N</string>
         <string>[Lucerne].Leaf.Live.Wt *10 as LeafWt</string>
-        <string>[Lucerne].Root.Live.Wt *10 as RootWt</string>
+        <string>[Lucerne].Root.Live.Wt </string>
+        <string>[Lucerne].TapRoot.Live.Wt*10 as RootWt</string>
         <string>[Lucerne].Leaf.Live.N</string>
         <string>[Lucerne].Root.Live.N</string>
         <string>[Lucerne].Leaf.Live.NConc</string>
@@ -5917,11 +4613,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1996-11-02</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>450</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>1996-11-02</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -10631,11 +9327,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2000-10-24</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -14181,11 +12877,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2000-10-24</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -18340,11 +17036,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2000-10-24</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -22250,11 +20946,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2000-10-24</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -26386,11 +25082,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2014-10-08</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>2014-10-08</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -30187,11 +28883,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1995-06-01</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>1995-06-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -34045,11 +32741,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1999-08-01</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>1999-08-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -39082,11 +37778,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1994-05-05</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>1994-05-05</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -42484,11 +41180,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1998-06-09</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>1998-06-09</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -45581,11 +44277,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1979-04-30</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>1979-04-30</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -48825,11 +47521,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1998-08-17</SowingDate>
-              <CultivarName>Sceptre</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>300</SowingRate>
+              <CultivarName>Sceptre</CultivarName>
+              <SowingDate>1998-08-17</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -52375,11 +51071,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>0001-01-01</SowingDate>
-              <CultivarName>Sceptre</CultivarName>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>100</SowingRate>
+              <CultivarName>Sceptre</CultivarName>
+              <SowingDate>0001-01-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -63045,11 +61741,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1993-09-27</SowingDate>
-              <CultivarName>Sceptre</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>70</SowingRate>
+              <CultivarName>Sceptre</CultivarName>
+              <SowingDate>1993-09-27</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -66930,11 +65626,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1990-10-11</SowingDate>
-              <CultivarName>southern_special</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>southern_special</CultivarName>
+              <SowingDate>1990-10-11</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -75369,11 +74065,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1998-08-26</SowingDate>
-              <CultivarName>Sceptre</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>30</SowingRate>
+              <CultivarName>Sceptre</CultivarName>
+              <SowingDate>1998-08-26</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -78912,11 +77608,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2010-04-19</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>2010-04-19</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -81861,11 +80557,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2012-10-18</SowingDate>
-              <CultivarName>WL611</CultivarName>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
+              <CultivarName>WL611</CultivarName>
+              <SowingDate>2012-10-18</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -84843,11 +83539,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2010-03-29</SowingDate>
-              <CultivarName>Kaituna</CultivarName>
               <RowSpacing>175</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>250</SowingRate>
+              <CultivarName>Kaituna</CultivarName>
+              <SowingDate>2010-03-29</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -87829,11 +86525,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2010-05-15</SowingDate>
-              <CultivarName>Sceptre</CultivarName>
               <RowSpacing>175</RowSpacing>
               <SowingDepth>15</SowingDepth>
               <SowingRate>350</SowingRate>
+              <CultivarName>Sceptre</CultivarName>
+              <SowingDate>2010-05-15</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
