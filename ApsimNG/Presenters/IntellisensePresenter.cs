@@ -225,7 +225,11 @@
             // Set the trigger word for later use.
             triggerWord = controlSpace ? completionResult.TriggerWord : string.Empty;
 
-            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
+            // If the user pressed control space, we assume they are trying to generate completions for a partially typed word.
+            // In this situation we need to filter the results based on what they have already typed.
+            // The exception is if the most recent character is a period. 
+            // No idea why NRefactory can't do this for us.
+            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord) && code[offset - 1] != '.')
             {
                 // Filter items.
                 completionResult.CompletionData = completionResult.CompletionData.Where(item => GetMatchQuality(item.CompletionText, completionResult.TriggerWord) > 0).ToList();
@@ -275,7 +279,7 @@
         /// </summary>
         public void Cleanup()
         {
-            view.Cleanup();
+            view?.Cleanup();
         }
 
         /// <summary>
