@@ -97,7 +97,7 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The thermal time is used to control many of the phenologic changes in white clover.  It is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Plant development acelerates as temperature increases from minimum to optimum and slows down after that, ceasing completely at maximum temperature.  There is little information about these thresholds for white clover. The minimum, or base, temperature is quite variable among cultivars, varying from -1.0 to 5oC ([BlackEtAl2006], [MonksEtAl2009], [MootEtAll2000]). Even less data is found forthe other parameters, and they are quite variable too; optimum temperature is around 28oC and 38oC for maximum temperature ([BlackEtAl2006], [MonksEtAl2009]).
+            <MemoText><![CDATA[The thermal time is used to control many of the phenologic changes in white clover.  It is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Plant development acelerates as temperature increases from minimum to optimum and slows down after that, ceasing completely at maximum temperature.  There is little information about these thresholds for white clover. The minimum, or base, temperature is quite variable among cultivars, varying from -1.0 to 5oC ([BlackEtAl2006]; [MonksEtAl2009]; [MootEtAll2000]). Even less data is found forthe other parameters, and they are quite variable too; optimum temperature is around 28oC and 38oC for maximum temperature ([BlackEtAl2006]; [MonksEtAl2009]).
 ]]></MemoText>
           </Memo>
           <XYPairs>
@@ -127,7 +127,7 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Germination in most clover species is very variable (e.g. [HamptonEtAl1987], [MurrayThesis2012]), with about 70-90% of seeds germinating for white clover. Temperatures between 5 and 20oC do not affect germination rate, but so slow it down ([HamptonEtAl1987]).  The model does not consider variable germination rate, thus the population should be adjusted by the user to account for less than 100% germination when sowing. Also, following default PMF behaviour, white clover germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.
+            <MemoText><![CDATA[Germination in most clover species is very variable (e.g. [HamptonEtAl1987]; [MurrayThesis2012]), with about 70-90% of seeds germinating for white clover. Temperatures between 5 and 20oC do not affect germination rate, but so slow it down ([HamptonEtAl1987]).  The model does not consider variable germination rate, thus the population should be adjusted by the user to account for less than 100% germination when sowing. Also, following default PMF behaviour, white clover germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.
 
 ]]></MemoText>
           </Memo>
@@ -140,8 +140,8 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[White clover has small seeds and these need to be placed near the soil surface to emergence sucessfully. Best emergence rate occur when seeds are sown at depth of 5mm ([Hyde1950], [MurrayAndClements1993]), and few plants will emerge from seeds deeper than 40mm.  Variations in germination rate due to depth are not currently simulated by the model, however the sowing depth does affect timing of emergence, in combination with temperature.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).  
-Emergence of white clover occur a few days after germination ([Hyde1950], [MootEtAll2000]), but this is quite variable (taking 5-20 days).  Both temperature and depth of seed are important factors.  Thermal time for the emergence of white clover (cv. Huia and Nomad) has been reported as being approximately 150oCd ([MootEtAll2000], [MurrayThesis2012]), and there seem to be no significant variations between NZ cultivars ([HamptonEtAl1987]).  
+            <MemoText><![CDATA[White clover has small seeds and these need to be placed near the soil surface to emergence sucessfully. Best emergence rate occur when seeds are sown at depth of 5mm ([Hyde1950]; [MurrayAndClements1993]), and few plants will emerge from seeds deeper than 40mm.  Variations in germination rate due to depth are not currently simulated by the model, however the sowing depth does affect timing of emergence, in combination with temperature.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).  
+Emergence of white clover occur a few days after germination ([Hyde1950]; [MootEtAll2000]), but this is quite variable (taking 5-20 days).  Both temperature and depth of seed are important factors.  Thermal time for the emergence of white clover (cv. Huia and Nomad) has been reported as being approximately 150oCd ([MootEtAll2000]; [MurrayThesis2012]), and there seem to be no significant variations between NZ cultivars ([HamptonEtAl1987]).  
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -161,8 +161,8 @@ Emergence of white clover occur a few days after germination ([Hyde1950], [MootE
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[During this phase, white clover plants partitions biomass to leaf+petiole, stolon, and root+taproot organs. Initially, this phase starts when plants emerge, but it is also triggered as phenology resets after the end of the reproductive phase.  The vegetative phase ends when the inductive phase starts.  
-White clover is typically described as either short day or short-long day species ([Thomas1961], [ChapterThomas1980]), which means induction is caused by exposure to short daylight lengths but reproductive growth may also be triggered by a period with long daylight.  Exposure to cold temperature can also lead to induction with subsequent initiation of inflorescence development when days become warmer and longer ([Thomas1981_SLD], [BeattyThesis1959]). The variability in response of induction to environmental condition is considerably large in white clover. In most stands at least some plants will show reproductive growth regardless of environmental conditions. The variations show some trend when contrasting large- to short-leaved cultivars or for cultivar from different origins (especially latitude), but the effect of genotypes within each group was not found to be significant (e.g. [ChapterThomas1980], [Thomas1982_Comparison], [Norris1984_daylength], [BeattyThesis1959]).  
-Inducing daylight length seem to be 12 hours or less, while temperatures need to be below about 10oC ([Thomas1979_Natural], [Thomas1981_SLD], [Thomas1982_Comparison], [Norris1984_daylength], [Norris1985_Temperature]). The base white clover model uses the accumulation of days under either low temperature or small daylight length to trigger the end of the vegetative phase.
+White clover is typically described as either short day or short-long day species ([Thomas1961]; [ChapterThomas1980]), which means induction is caused by exposure to short daylight lengths but reproductive growth may also be triggered by a period with long daylight.  Exposure to cold temperature can also lead to induction with subsequent initiation of inflorescence development when days become warmer and longer ([Thomas1981_SLD]; [BeattyThesis1959]). The variability in response of induction to environmental condition is considerably large in white clover. In most stands at least some plants will show reproductive growth regardless of environmental conditions. The variations show some trend when contrasting large- to short-leaved cultivars or for cultivar from different origins (especially latitude), but the effect of genotypes within each group was not found to be significant (e.g. [ChapterThomas1980]; [Thomas1982_Comparison]; [Norris1984_daylength]; [BeattyThesis1959]).  
+Inducing daylight length seem to be 12 hours or less, while temperatures need to be below about 10oC ([Thomas1979_Natural]; [Thomas1981_SLD]; [Thomas1982_Comparison]; [Norris1984_daylength]; [Norris1985_Temperature]). The base white clover model uses the accumulation of days under either low temperature or small daylight length to trigger the end of the vegetative phase.
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -234,8 +234,8 @@ Inducing daylight length seem to be 12 hours or less, while temperatures need to
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[During this phase the white clover plants await for the environmental cue to start the reproductive growth. Physiologic and metabolic processes remain the same as for the vegetative phase; plants partition biomass to leaf+petiole, stolon, and root+taproot organs. The inductive phase starts when plants accumulated a given number of days under inductive conditions, i.e. low temperatures and/or short daylight lengths ([Thomas1979_Natural], [Norris1984_daylength], [Norris1985_Temperature]).  The phase ends when the plants start the reproduction growth, with the emergence of flower buds.  
-There is a large level of variation in white clover plants and their flowering response to environmental conditions, with some plants reaching reproductive growth in almost any stand ([Thomas1979_Natural], [BeattyThesis1959]). Nonetheless, in natural condition reproductive growth is typically triggered by long daylight lengths, with reported values around 14 hours ([ChapterThomas1980], [Thomas1981_SLD],[Norris1984_daylength]).  The accumulation of days under long daylight length is used by the model to trigger the end of the inductive phase.  
+            <MemoText><![CDATA[During this phase the white clover plants await for the environmental cue to start the reproductive growth. Physiologic and metabolic processes remain the same as for the vegetative phase; plants partition biomass to leaf+petiole, stolon, and root+taproot organs. The inductive phase starts when plants accumulated a given number of days under inductive conditions, i.e. low temperatures and/or short daylight lengths ([Thomas1979_Natural]; [Norris1984_daylength]; [Norris1985_Temperature]).  The phase ends when the plants start the reproduction growth, with the emergence of flower buds.  
+There is a large level of variation in white clover plants and their flowering response to environmental conditions, with some plants reaching reproductive growth in almost any stand ([Thomas1979_Natural]; [BeattyThesis1959]). Nonetheless, in natural condition reproductive growth is typically triggered by long daylight lengths, with reported values around 14 hours ([ChapterThomas1980]; [Thomas1981_SLD];[Norris1984_daylength]).  The accumulation of days under long daylight length is used by the model to trigger the end of the inductive phase.  
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -274,8 +274,8 @@ There is a large level of variation in white clover plants and their flowering r
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (peduncles, inflorescence, and seeds). The current model does not describe the flower and seeds development explicitly, only a generic organ refered to as *inflorescence* is defined. The main reason for this is the variability and complex phenology of reproduction of white clover; with seeds maturing while new flowers are still being initiated over summer and early autumn (e.g. [HydeEtAl1959], [Thomas1987Chapter], [MedeirosAndSteiner2000]). Also due to their similarities and the fact that a population is describe in the model (instead of single plants), peduncles and petioles are simulated as a single organ.  
-Flower emergence typically starts in spring, peaks at the beginning of summer and continues until autumn ([ChapterThomas1980], [MacfarlaneAndSheath1984], [MarshalEtAl1993_Production]). The actual periods vary for different cultivars, and some have flower nearly all year (albeit with low frequency over winter).  A drop in flower numbers in mid-summer and subsequent increase in early autumn has been show in some cultivars and has been linked to water deficit or inhibition due to long days ([ChapterThomas1980], [MacfarlaneAndSheath1984]).  Management practices, such as applying N fertiliser, irrigation and defoliations, have, in general, a positive impact on flower and seed production ([ChapterThomas1980], [MedeirosAndSteiner2000], [BissuelBelaygueEtAl2002_flower]), but there is large variation in the responses, depending on the cultivars as well as the extent and timing of the intervention. Currently, the model does not account for the effect of this practices explicitly, although it is expected that some effects are captured by changes in biomass allocation caused by actions such as irrigation of application of fertilisers.
+            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (peduncles, inflorescence, and seeds). The current model does not describe the flower and seeds development explicitly, only a generic organ refered to as *inflorescence* is defined. The main reason for this is the variability and complex phenology of reproduction of white clover; with seeds maturing while new flowers are still being initiated over summer and early autumn (e.g. [HydeEtAl1959]; [Thomas1987Chapter]; [MedeirosAndSteiner2000]). Also due to their similarities and the fact that a population is describe in the model (instead of single plants), peduncles and petioles are simulated as a single organ.  
+Flower emergence typically starts in spring, peaks at the beginning of summer and continues until autumn ([ChapterThomas1980]; [MacfarlaneAndSheath1984]; [MarshalEtAl1993_Production]). The actual periods vary for different cultivars, and some have flower nearly all year (albeit with low frequency over winter).  A drop in flower numbers in mid-summer and subsequent increase in early autumn has been show in some cultivars and has been linked to water deficit or inhibition due to long days ([ChapterThomas1980]; [MacfarlaneAndSheath1984]).  Management practices, such as applying N fertiliser, irrigation and defoliations, have, in general, a positive impact on flower and seed production ([ChapterThomas1980]; [MedeirosAndSteiner2000]; [BissuelBelaygueEtAl2002_flower]), but there is large variation in the responses, depending on the cultivars as well as the extent and timing of the intervention. Currently, the model does not account for the effect of this practices explicitly, although it is expected that some effects are captured by changes in biomass allocation caused by actions such as irrigation of application of fertilisers.
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -364,7 +364,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[It is assumed that approximately 1/3 of the seed biomass is allocated to shoot upon emergence.  The weight of white clover seeds varies between 0.5 and 0.8 g/1000 seeds ([Thomas1987Chapter], [BissuelBelaygueEtAl2002_seed], [MurrayThesis2012]). ]]></MemoText>
+            <MemoText><![CDATA[It is assumed that approximately 1/3 of the seed biomass is allocated to shoot upon emergence.  The weight of white clover seeds varies between 0.5 and 0.8 g/1000 seeds ([Thomas1987Chapter]; [BissuelBelaygueEtAl2002_seed]; [MurrayThesis2012]). ]]></MemoText>
           </Memo>
           <Constant>
             <Name>InitialPlantWt</Name>
@@ -381,30 +381,58 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </MultiplyFunction>
         <Constant>
           <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>CarbonConcentration</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.4</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the lowest N concentration that leaves can have and still be able to grow.  It represents the N content for structural tissues and is the concentration of dead material.  Specific values for white clover were not found, but typical values for dead clover leaves are around 1.5-3.0% ([Brougham1958_LeafDev]; [WilmanAndMehdi1984]; [WarembourgEtAl1997]). ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.015</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
-        <VariableReference>
+        <Constant>
           <Name>CriticalNConc</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the N concentration that the organ muast have to fully function, growth penalty incurr if N level fall below this threshold.  Values for this parameter have not been clearly identified for white clover, typical concentration values for non stressed plants can be used instead, these vary between 3.5 and 4.5% ([WilmanAndMehdi1984]; [CaradusEtAl1993_PEffect]; [HoghJensenEtAl2002]).  
+]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
-        </VariableReference>
+          <FixedValue>0.04</FixedValue>
+          <Units>gN/gDM</Units>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This represents the maximum limit for N concentration in leaves.  The N content above CriticalNConc is not essential for growth and can be remobilised for new growth when uptake is insuficient.  Literature data suggest that value for maximum N concentration for whit clover leaves is about 6.0-7.0% ([RysAndPhung1985]; [CaradusEtAl1993_PEffect]; [HoghJensenEtAl2002]).  
+]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.055</FixedValue>
+          <FixedValue>0.06</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -417,14 +445,13 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Data for photosynthesys in plantain is very sparse and so some of the data used here are from studies that employed wild varieties.  Values for CO2 assimilation rates are generally consistent ([PootDenBroek_1997]; [LabreveuxThesis_2002]; [vanDenBergeEtAl_2014]; [CranstonEtAl_2015]) and follow a classic relationhip with light intensity (directly proportional) as well with N concentration in the leaves (inversely proportional).  Reported values of photosynthetic rate indicate that these are similar or slightly higher in plantain when compared to Chicory ([LabreveuxThesis_2002]; [CranstonEtAl_2015]).  No reported values for RUE were found in the literature, but they can be infered as to be just under 2.0 g DM/MJ for wild vareties ([PootDenBroek_1997]).  
-The current model assumes generic responses to enviromental factors, such as temperature and water availability.  Wild plantain is ubiquitous in meadows in subtropical climates around the world, and it is generally assumed to be tollerant to high temperatures but not to cold ([SagarHarper_1964]; [StewartPlantain_1996]).  Forage plantain shows large differences between cultivars, but generally can grow more over winter compared to wild varieties and still outperform temperate grasses in summer ([StewartPlantain_1996]; [MoorheadPigot_2009], [DouglasEtAl_2013]), although survivability in harsh winters in the USA was found to be low ([SandersonEtAl_2003], [SkinnerPlantain_2005]).  Forage plantain is also often mentioned as a drought tollerant species ([StewartPlantain_1996]; [DouglasEtAl_2013]; [QuijadaThesis_2015]), although less so than deep rooted species such as chicory or lucerne.  The use of reserves from the taproots seem to be mechanism used to confer drought resistance in plantain as is the case for many herbs ([CranstonEtAl_2015]; [QuijadaThesis_2015]).
+            <MemoText><![CDATA[There has been a number of studies on the photosynthetesis rate of white clover (e.g. [McCreeTroughton1966]; [WoledgeEtAl1991_Photo]; [MalinowskiEtAl1998]; [HerautBronEtAl2000]; [HofmannEtAl2007]), including its variation due to water and N deficiency, shading and CO2 changes. The values and trends for CO2 assimilation rates are generally consistent across the various studies and these have been used to help defining the limiting factor for photoynthesis in the model. Reported values RUE for white clover are in general around 2.5-3.0 g DM/MJ ([FaurieEtAl1996]; [ManderscheidEtAl1997]; [NassiriThesis1998]).  
 ]]></MemoText>
           </Memo>
           <Constant>
             <Name>RUE</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>2</FixedValue>
+            <FixedValue>2.75</FixedValue>
             <Units>g/MJ</Units>
           </Constant>
           <RUECO2Function>
@@ -439,8 +466,8 @@ The current model assumes generic responses to enviromental factors, such as tem
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.4</double>
-                <double>0.8</double>
+                <double>0.5</double>
+                <double>1</double>
                 <double>1.5</double>
               </X>
               <Y>
@@ -507,12 +534,14 @@ The current model assumes generic responses to enviromental factors, such as tem
               <X>
                 <double>0</double>
                 <double>10</double>
-                <double>50</double>
+                <double>12.5</double>
+                <double>40</double>
               </X>
               <Y>
                 <double>1</double>
                 <double>1</double>
-                <double>1</double>
+                <double>0.95</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -704,22 +733,38 @@ The current model assumes generic responses to enviromental factors, such as tem
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>DMConversionEfficiency</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
           <Name>LAIFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The leaf area index (LAI) for green leaves is defined based on biomass and the specific leaf area (SLA). The value for SLA for white clover is assumed to be constant in the current model, although the data indicates that age and some environmental factors (shading and nutrient status) can affect this value.  Variation due to age are ignored because the model simulates a population as is intented to describe swards over long term, which would contain leaves of varing ages at the same time.  The nutritional effects are generally not linked to N, which currently is the only nutrient simulated in APSIM, thus can be ignored.  The effects of shading, as well as water deficiency, only occur when these conditions are mantained for some time, the model may have to be revised in the future to account for these factors, prefereably with some experimental data.  Available data suggest that SLA of white clover varies between 0.020 and 0.045 m2/g, with mean values for the cultivar Huia being around 0.030 m4/g ([Woledge1986_LeafAge]; [ChapmanAndRobson1992]; [KangAndBringk1995]; [HerautBronEtAl2000]; [CastleEtAl2002]; [NicholsEtAl2014_Drought]).  
+]]></MemoText>
+          </Memo>
           <Constant>
             <Name>SpecificLeafArea</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.022</FixedValue>
+            <FixedValue>0.03</FixedValue>
             <Units>m^2/g</Units>
           </Constant>
           <VariableReference>
@@ -731,6 +776,11 @@ The current model assumes generic responses to enviromental factors, such as tem
         </MultiplyFunction>
         <MultiplyFunction>
           <Name>LaiDeadFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[No specific data for LAI or SLA of dead leaves were found for chicory. The value of SLA is thus assumed to be the same as that of live leaves (this is consistent for the model as very little biomass reallocation of biomass occurs during senescence). ]]></MemoText>
+          </Memo>
           <VariableReference>
             <Name>SpecificLeafArea</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -745,8 +795,13 @@ The current model assumes generic responses to enviromental factors, such as tem
         </MultiplyFunction>
         <Constant>
           <Name>ExtinctionCoefficientFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Due to the near horizontal placement of its leaves, white clover has a high capacity for light interception. Values for the light extinction coefficient reported in the literature are quite variable, depending on what light fraction they are related to and whether plants are considered in mixed swards or as separated plants; these vary from 0.70 up to 1.0 ([LantingaEtAl1999]; [SonohatEtAl2002]; [denHollanderEtAl2007]). ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.6</FixedValue>
+          <FixedValue>0.9</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
@@ -760,7 +815,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The average height of plantain is assumed here as a simple function of above ground biomass. Sward population and competition with other plant can have an influence on this relationship, but this is not currently accounted for by PMF.  
+            <MemoText><![CDATA[The average height of white clover is assumed here as a simple function of leaf biomass; generically the petiole determines the height, but this are linked to leaf growth. Inflorescence are ignored as the height is mostly used for co puting light interception and transpiration.  The petiole length varies with cultivar, tipically between 5 and 15 cm ([Brougham1958_LeafDev]; [BissuelBelaygueEtAl2002_flower]; [denHollanderEtAl2007]).  The inflorescence is typically one third higher than the leaves. Sward population and competition with other plant may have an influence on the relationship between biomass and height, but this is not currently accounted for by the model.  
 ]]></MemoText>
           </Memo>
           <XYPairs>
@@ -768,17 +823,21 @@ The current model assumes generic responses to enviromental factors, such as tem
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>10</double>
-              <double>100</double>
-              <double>500</double>
-            </X>
-            <Y>
+              <double>50</double>
               <double>100</double>
               <double>350</double>
               <double>500</double>
+            </X>
+            <Y>
+              <double>20</double>
+              <double>75</double>
+              <double>110</double>
+              <double>140</double>
+              <double>150</double>
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[WhiteClover].AboveGround.Wt</XProperty>
+          <XProperty>[WhiteClover].Leaf.Live.Wt</XProperty>
         </LinearInterpolationFunction>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
@@ -802,9 +861,11 @@ The current model assumes generic responses to enviromental factors, such as tem
                 <double>3</double>
                 <double>4</double>
                 <double>5</double>
+                <double>6</double>
               </X>
               <Y>
                 <double>0.5</double>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -829,8 +890,8 @@ The current model assumes generic responses to enviromental factors, such as tem
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
-                <double>1.1</double>
-                <double>2</double>
+                <double>1.25</double>
+                <double>2.25</double>
                 <double>3</double>
               </Y>
             </XYPairs>
@@ -843,11 +904,11 @@ The current model assumes generic responses to enviromental factors, such as tem
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
-                <double>-15</double>
-                <double>-2</double>
-                <double>2</double>
-                <double>10</double>
-                <double>20</double>
+                <double>-20</double>
+                <double>-5</double>
+                <double>0</double>
+                <double>5</double>
+                <double>18</double>
                 <double>30</double>
               </X>
               <Y>
@@ -925,8 +986,13 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <Constant>
           <Name>DMReallocationFactor</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -936,12 +1002,22 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>RemobilisationCost</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
