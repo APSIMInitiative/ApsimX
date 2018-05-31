@@ -18,7 +18,13 @@ namespace Models
     [Serializable]
     public class Operation
     {
-        //public DateTime Date { get; set; }
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Operation()
+        {
+            Enabled = true;
+        }
 
         /// <summary>Gets or sets the date.</summary>
         public string Date { get; set; }
@@ -31,12 +37,17 @@ namespace Models
         /// <returns></returns>
         public string GetActionModel()
         {
-            int PosPeriod = Action.IndexOf('.');
-            if (PosPeriod >= 0)
-                return Action.Substring(0, PosPeriod);
+            int posPeriod = Action.IndexOf('.');
+            if (posPeriod >= 0)
+                return Action.Substring(0, posPeriod);
 
             return "";
         }
+
+        /// <summary>
+        /// Used to determine whether the operation is enabled or not.
+        /// </summary>
+        public bool Enabled { get; set; }
     }
 
     /// <summary>This class encapsulates an operations schedule.</summary>
@@ -44,6 +55,7 @@ namespace Models
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class Operations : Model
     {
         /// <summary>The clock</summary>
@@ -70,24 +82,26 @@ namespace Models
         private void OnDoManagement(object sender, EventArgs e)
         {
             DateTime operationDate;
-            foreach (Operation operation in Schedule)
+            foreach (Operation operation in Schedule.Where(o => o.Enabled))
             {
                 operationDate = DateUtilities.validateDateString(operation.Date, Clock.Today.Year);
                 if (operationDate == Clock.Today)
                 {
                     string st = operation.Action;
-                    int posComment = operation.Action.IndexOf("//");
-                    if (posComment != -1)
-                        operation.Action = operation.Action.Remove(posComment);
 
-                    if (operation.Action.Contains("="))
+                    // If the action contains a comment anywhere, we ignore everything after (and including) the comment.
+                    int commentPosition = st.IndexOf("//");
+                    if (commentPosition >= 0)
+                        st = st.Substring(0, commentPosition);
+
+                    if (st.Contains("="))
                     {
                         string variableName = st;
                         string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
                         variableName = variableName.Trim();
                         Apsim.Set(this, variableName, value);
                     }
-                    else if (operation.Action.Trim() != string.Empty)
+                    else if (st.Trim() != string.Empty)
                     {
                         string argumentsString = StringUtilities.SplitOffBracketedValue(ref st, '(', ')');
                         string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

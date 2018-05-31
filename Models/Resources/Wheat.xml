@@ -600,6 +600,29 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <SetEvent>Maturity</SetEvent>
       <ReSetEvent>never</ReSetEvent>
     </OnEventFunction>
+    <LinearInterpolationFunction>
+      <Name>RewindDueToBiomassRemoved</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <X>
+          <double>0</double>
+          <double>0.1</double>
+          <double>0.4</double>
+          <double>0.5</double>
+          <double>1.0</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>0.08</double>
+          <double>0.4</double>
+          <double>0.5</double>
+          <double>1.0</double>
+        </Y>
+      </XYPairs>
+      <XProperty>[Phenology].FractionBiomassRemoved</XProperty>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </LinearInterpolationFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <DaysAfterSowing>0</DaysAfterSowing>
   </Phenology>

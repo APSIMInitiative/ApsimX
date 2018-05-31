@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="29">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -72,401 +72,401 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		// - Links to APSIM models
-		[Link] Zone zone;
-		[Link] Clock Clock;
-		[Link] Fertiliser fertiliser;
-		[Link] SoluteManager mySolutes;
-		[Link] Soil mySoil;
-		[Link] ISummary summary = null;
-		[Link] AgPasture.Sward Pasture;
-		
-		// - Paramters for this manager
-		[Description("Allow this manager to control defoliation? ")]
-		public yesnoType AllowControl { get; set; }
-		[Description("Date to begin the rotation: ")]
-		public DateTime CutRotationStartDate { get; set; }
-		[Description("Date to finish the rotation: ")]
-		public DateTime CutRotationEndDate { get; set; }
-		[Description("How the interval is defined: ")]
-		public rotationIntervalTypes IntervalType { get; set; }
-		[Description("Rotation interval (days): ")]
-		public int CutInterval { get; set; }
-		[Description("Duration of each event (days): ")]
-		public int DurationOfCut { get; set; }
-		[Description("What amount is being defined: ")]
-		public removeAmountTypes RemoveAmountType { get; set; }
-		[Description("Amount to use (kg/ha): ")]
-		public double AmountGiven { get; set; }
-		[Description("How much of DM is removed from the field: ")]
-		public removeDMTypes DMRemoveType { get; set; }
-		[Description("Fraction of N that is removed from the field (0-1):")]
-		public double FractionN2Remove { get; set; }
-		[Description("How defoliated material is returned to the field? ")]
-		public returnTypes ReturnType { get; set; }
-		[Description("How the partition of N to dung and urine are defined:")]
-		public dungNContentTypes NDungType { get; set; }
-		[Description("Proportion of N returned in dung (0-1):")]
-		public double ProportionN2Dung { get; set; }
-		[Description("The C:N of dung (typically around 20): ")]
-		public double CNRatioDung { get; set; }
-		[Description("Depth down to which urine is applied (mm): ")]
-		public double UrineDepth { get; set; }
+    [Serializable]
+    public class Script : Model
+    {
+        // - Links to APSIM models
+        [Link] Zone zone;
+        [Link] Clock Clock;
+        [Link] Fertiliser fertiliser;
+        [Link] SoluteManager mySolutes;
+        [Link] Soil mySoil;
+        [Link] ISummary summary = null;
+        [Link] AgPasture.Sward Pasture;
+        
+        // - Paramters for this manager
+        [Description("Allow this manager to control defoliation? ")]
+        public yesnoType AllowControl { get; set; }
+        [Description("Date to begin the rotation: ")]
+        public DateTime CutRotationStartDate { get; set; }
+        [Description("Date to finish the rotation: ")]
+        public DateTime CutRotationEndDate { get; set; }
+        [Description("How the interval is defined: ")]
+        public rotationIntervalTypes IntervalType { get; set; }
+        [Description("Rotation interval (days): ")]
+        public int CutInterval { get; set; }
+        [Description("Duration of each event (days): ")]
+        public int DurationOfCut { get; set; }
+        [Description("What amount is being defined: ")]
+        public removeAmountTypes RemoveAmountType { get; set; }
+        [Description("Amount to use (kg/ha): ")]
+        public double AmountGiven { get; set; }
+        [Description("How much of DM is removed from the field: ")]
+        public removeDMTypes DMRemoveType { get; set; }
+        [Description("Fraction of N that is removed from the field (0-1):")]
+        public double FractionN2Remove { get; set; }
+        [Description("How defoliated material is returned to the field? ")]
+        public returnTypes ReturnType { get; set; }
+        [Description("How the partition of N to dung and urine are defined:")]
+        public dungNContentTypes NDungType { get; set; }
+        [Description("Proportion of N returned in dung (0-1):")]
+        public double ProportionN2Dung { get; set; }
+        [Description("The C:N of dung (typically around 20): ")]
+        public double CNRatioDung { get; set; }
+        [Description("Depth down to which urine is applied (mm): ")]
+        public double UrineDepth { get; set; }
 
-		// - Outputs from this manager
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM defoliated today
-		public double DefoliatedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N defoliate today
-		public double DefoliatedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM harvested today
-		public double HarvestedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N harvested today
-		public double HarvestedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM removed from the field
-		public double RemovedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N removed from the field
-		public double RemovedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Residue DM returned to the field
-		public double ReturnedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Residue N returned to the field
-		public double ReturnedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Harvested N returned as dung (SurfaceOM)
-		public double NReturnedInDung { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Harvested N returned as urine (urea)
-		public double NReturnedInUrine { get; set; }
-		[XmlIgnore][Units("day")]// Description: Number of days after last defoliation
-		public int DaysAfterCut { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut
-		public double PreHarvestDM { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut
-		public double PostHarvestDM { get; set; }
-		// fraction of urine that is applied to each layer
-		private double[] fractionUrine;
-		// number of layer in the soil
-		private int nLayers;
-		
-		// - Internal variables
-		// fraction of harvested Dm to actually remove from field
-		private double fractionDM2Remove = 1.0;
-		// flag whether defoliation is allowed
-		private bool rotationAllowed = true;
-		// number of days for each defoliation event
-		private int cuttingDuration = 0;
-		// counter for day within each defoliation
-		private int daysCutting = 0;
-		// total existing DM harvestable
-		private double existingDM;
-		// total herbage to remove in g/m2 per day
-		private double herbageToRemove;
-		// type of DM amount (ResidualDM or DMToRemove)
-		private string amountType;
-		// auxiliary flag for defoliation
-		private bool aCutHasHappened = false;
+        // - Outputs from this manager
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM defoliated today
+        public double DefoliatedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N defoliate today
+        public double DefoliatedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM harvested today
+        public double HarvestedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N harvested today
+        public double HarvestedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM removed from the field
+        public double RemovedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N removed from the field
+        public double RemovedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Residue DM returned to the field
+        public double ReturnedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Residue N returned to the field
+        public double ReturnedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Harvested N returned as dung (SurfaceOM)
+        public double NReturnedInDung { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Harvested N returned as urine (urea)
+        public double NReturnedInUrine { get; set; }
+        [XmlIgnore][Units("day")]// Description: Number of days after last defoliation
+        public int DaysAfterCut { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut
+        public double PreHarvestDM { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut
+        public double PostHarvestDM { get; set; }
+        // fraction of urine that is applied to each layer
+        private double[] fractionUrine;
+        // number of layer in the soil
+        private int nLayers;
+        
+        // - Internal variables
+        // fraction of harvested Dm to actually remove from field
+        private double fractionDM2Remove = 1.0;
+        // flag whether defoliation is allowed
+        private bool rotationAllowed = true;
+        // number of days for each defoliation event
+        private int cuttingDuration = 0;
+        // counter for day within each defoliation
+        private int daysCutting = 0;
+        // total existing DM harvestable
+        private double existingDM;
+        // total herbage to remove in g/m2 per day
+        private double herbageToRemove;
+        // type of DM amount (ResidualDM or DMToRemove)
+        private string amountType;
+        // auxiliary flag for defoliation
+        private bool aCutHasHappened = false;
 
-		// - Event to add residue or dung to surface OM
-		public event BiomassRemovedDelegate BiomassRemoved;
+        // - Event to add residue or dung to surface OM
+        public event BiomassRemovedDelegate BiomassRemoved;
 
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// reset variables
-			DaysAfterCut = 0;
-			resetVariables();
-			cuttingDuration = DurationOfCut;
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            // reset variables
+            DaysAfterCut = 0;
+            resetVariables();
+            cuttingDuration = DurationOfCut;
             
-			// get the type of amount given
-			if (RemoveAmountType == removeAmountTypes.ResidualDM)
-				amountType = "SetResidueAmount";
-			else
-				amountType = "SetRemoveAmount";
+            // get the type of amount given
+            if (RemoveAmountType == removeAmountTypes.ResidualDM)
+                amountType = "SetResidueAmount";
+            else
+                amountType = "SetRemoveAmount";
 
-			// make sure that rotation start when startDate < simulationStartDay
-			if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))
-				CutRotationStartDate = Clock.Today;
+            // make sure that rotation start when startDate < simulationStartDay
+            if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))
+                CutRotationStartDate = Clock.Today;
 
-			// set the fraction of urine for each layer
-			nLayers = mySoil.SoilWater.Thickness.Length;
-			fractionUrine = new double[nLayers];
-			double soilDepth = 0.0;
-			double distFactor = 1.5;
-			if (ReturnType == returnTypes.AsDungUrine)
-			{
-				double atZ0;
-				double atZ1;
-				double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);
-				
-				atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);
-				for (int z = 0; z < nLayers; z++)
-				{
-					atZ0 = atZ1;
-					soilDepth += mySoil.SoilWater.Thickness[z];
-					atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);
-					if (1.0 - (soilDepth / UrineDepth) < 0.0)
-						atZ1 = 0;
-					fractionUrine[z] = (atZ0 - atZ1) / totalProp;
-				}
-			}
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// Check whether defoliation is allowed at all
-			if (AllowControl == yesnoType.yes)
-			{
-				if (Clock.Today == CutRotationStartDate)
-					DaysAfterCut = CutInterval;
+            // set the fraction of urine for each layer
+            nLayers = mySoil.Thickness.Length;
+            fractionUrine = new double[nLayers];
+            double soilDepth = 0.0;
+            double distFactor = 1.5;
+            if (ReturnType == returnTypes.AsDungUrine)
+            {
+                double atZ0;
+                double atZ1;
+                double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);
+                
+                atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);
+                for (int z = 0; z < nLayers; z++)
+                {
+                    atZ0 = atZ1;
+                    soilDepth += mySoil.Thickness[z];
+                    atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);
+                    if (1.0 - (soilDepth / UrineDepth) < 0.0)
+                        atZ1 = 0;
+                    fractionUrine[z] = (atZ0 - atZ1) / totalProp;
+                }
+            }
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            // Check whether defoliation is allowed at all
+            if (AllowControl == yesnoType.yes)
+            {
+                if (Clock.Today == CutRotationStartDate)
+                    DaysAfterCut = CutInterval;
 
-				// Check whether we can defoliate
-				if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate))
-				{
-					// Check whether we should start a defoliation
-					if ((Pasture.IsAlive) && (DaysAfterCut >= (CutInterval - 1)))
-						StartDefoliation(AmountGiven, amountType, DurationOfCut);
-				}
-			}
+                // Check whether we can defoliate
+                if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate))
+                {
+                    // Check whether we should start a defoliation
+                    if ((Pasture.IsAlive) && (DaysAfterCut >= (CutInterval - 1)))
+                        StartDefoliation(AmountGiven, amountType, DurationOfCut);
+                }
+            }
 
-			// Check whether we need to continue cutting
-			if ((daysCutting > 0) && (daysCutting < cuttingDuration))
-			{
-				// reset outputs
-				resetVariables();
+            // Check whether we need to continue cutting
+            if ((daysCutting > 0) && (daysCutting < cuttingDuration))
+            {
+                // reset outputs
+                resetVariables();
 
-				removeDM(herbageToRemove);
-				if (ReturnType == returnTypes.AsResidue)
-					returnResidues();
-				else
-					returnExcreta();
-				daysCutting += 1;
-				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingHerbageWt;
-			}
+                removeDM(herbageToRemove);
+                if (ReturnType == returnTypes.AsResidue)
+                    returnResidues();
+                else
+                    returnExcreta();
+                daysCutting += 1;
+                if (daysCutting == cuttingDuration)
+                    PostHarvestDM = Pasture.StandingHerbageWt;
+            }
 
-			// reset outputs
-			if (daysCutting < 0)
-			{
-				resetVariables();
-				daysCutting = 0;
-			}
-		}
+            // reset outputs
+            if (daysCutting < 0)
+            {
+                resetVariables();
+                daysCutting = 0;
+            }
+        }
 
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			// Check whether a cutting has finished
-			if (daysCutting == cuttingDuration)
-			{
-				aCutHasHappened = true;
-				daysCutting = -1;
-			}
+        [EventSubscribe("DoManagementCalculations")]
+        private void OnDoManagementCalculations(object sender, EventArgs e)
+        {
+            // Check whether a cutting has finished
+            if (daysCutting == cuttingDuration)
+            {
+                aCutHasHappened = true;
+                daysCutting = -1;
+            }
 
-			// Increase the counter for days after cutting
-			if (aCutHasHappened && (daysCutting == 0))
-				DaysAfterCut += 1;
-		}
+            // Increase the counter for days after cutting
+            if (aCutHasHappened && (daysCutting == 0))
+                DaysAfterCut += 1;
+        }
 
-		// Resets the values of all outputs
-		private void resetVariables()
-		{
-			DefoliatedWt = 0.0;
-			DefoliatedN = 0.0;
-			HarvestedWt = 0.0;
-			HarvestedN = 0.0;
-			RemovedWt = 0.0;
-			RemovedN = 0.0;
-			ReturnedWt = 0.0;
-			ReturnedN = 0.0;
-			NReturnedInDung = 0.0;
-			NReturnedInUrine = 0.0;
-		}
+        // Resets the values of all outputs
+        private void resetVariables()
+        {
+            DefoliatedWt = 0.0;
+            DefoliatedN = 0.0;
+            HarvestedWt = 0.0;
+            HarvestedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
+            ReturnedWt = 0.0;
+            ReturnedN = 0.0;
+            NReturnedInDung = 0.0;
+            NReturnedInUrine = 0.0;
+        }
 
-		// Description: Perform the basic calculations for defoliation
-		public void StartDefoliation(double amountDM, string amountType, int duration)
-		{
-			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingHerbageWt;
-			existingDM = Pasture.HarvestableWt;
-			
-			// Check the amount to remove and print some info
-			if ((amountType == "SetRemoveAmount") && (existingDM >= amountDM / duration))
-			{
-				summary.WriteMessage(this, "   Defoliating " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-				herbageToRemove = amountDM / duration;
-			}
-			else if ((amountType == "SetResidueAmount") && (existingDM >= amountDM))
-			{
-				summary.WriteMessage(this, "   Defoliating down to approximately " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-				herbageToRemove = (PreHarvestDM - amountDM) / duration;
-			}
-			else
-			{
-				summary.WriteMessage(this, "   Defoliation will not happend because there is not enough plant material");
-				if (IntervalType == rotationIntervalTypes.FixedInterval)
-					DaysAfterCut = -duration;
-				return;
-			}
+        // Description: Perform the basic calculations for defoliation
+        public void StartDefoliation(double amountDM, string amountType, int duration)
+        {
+            // Get the existing plant amount
+            PreHarvestDM = Pasture.StandingHerbageWt;
+            existingDM = Pasture.HarvestableWt;
+            
+            // Check the amount to remove and print some info
+            if ((amountType == "SetRemoveAmount") && (existingDM >= amountDM / duration))
+            {
+                summary.WriteMessage(this, "   Defoliating " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
+                herbageToRemove = amountDM / duration;
+            }
+            else if ((amountType == "SetResidueAmount") && (existingDM >= amountDM))
+            {
+                summary.WriteMessage(this, "   Defoliating down to approximately " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
+                herbageToRemove = (PreHarvestDM - amountDM) / duration;
+            }
+            else
+            {
+                summary.WriteMessage(this, "   Defoliation will not happend because there is not enough plant material");
+                if (IntervalType == rotationIntervalTypes.FixedInterval)
+                    DaysAfterCut = -duration;
+                return;
+            }
 
-			cuttingDuration = duration;
-			// Preform first defoliation
-			removeDM(herbageToRemove);
-			if (ReturnType == returnTypes.AsResidue)
-				returnResidues();
-			else
-				returnExcreta();
-			daysCutting = 1;
-			DaysAfterCut = 0;
-			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingHerbageWt;
-		}
+            cuttingDuration = duration;
+            // Preform first defoliation
+            removeDM(herbageToRemove);
+            if (ReturnType == returnTypes.AsResidue)
+                returnResidues();
+            else
+                returnExcreta();
+            daysCutting = 1;
+            DaysAfterCut = 0;
+            if (daysCutting == cuttingDuration)
+                PostHarvestDM = Pasture.StandingHerbageWt;
+        }
 
-		// Do the DM removal
-		private void removeDM(double removeAmount)
-		{
-			Pasture.Graze(amount: removeAmount, type: "SetRemoveAmount");
-			
-			// get total harvested
-			DefoliatedWt = Pasture.HarvestedWt;
-			DefoliatedN = Pasture.HarvestedN;
-			HarvestedWt = DefoliatedWt;
-			HarvestedN = DefoliatedN;
+        // Do the DM removal
+        private void removeDM(double removeAmount)
+        {
+            Pasture.Graze(amount: removeAmount, type: "SetRemoveAmount");
+            
+            // get total harvested
+            DefoliatedWt = Pasture.HarvestedWt;
+            DefoliatedN = Pasture.HarvestedN;
+            HarvestedWt = DefoliatedWt;
+            HarvestedN = DefoliatedN;
 
-			// get amounts actually removed from field and that to be returned (dung/urine)
-			if (DMRemoveType == removeDMTypes.RemoveAll)
-				fractionDM2Remove = 1.0;
-			else if (DMRemoveType == removeDMTypes.RemoveNone)
-				fractionDM2Remove = 0.0;
-			else
-				fractionDM2Remove = Pasture.HarvestedDigestibility;
+            // get amounts actually removed from field and that to be returned (dung/urine)
+            if (DMRemoveType == removeDMTypes.RemoveAll)
+                fractionDM2Remove = 1.0;
+            else if (DMRemoveType == removeDMTypes.RemoveNone)
+                fractionDM2Remove = 0.0;
+            else
+                fractionDM2Remove = Pasture.HarvestedDigestibility;
 
-			RemovedWt = HarvestedWt * fractionDM2Remove;
-			RemovedN = HarvestedN * FractionN2Remove;
-			ReturnedWt = HarvestedWt - RemovedWt;
-			ReturnedN = HarvestedN - RemovedN;
-			
-			if (ReturnType == returnTypes.AsDungUrine)
-			{
-				if (NDungType == dungNContentTypes.DefineProportion)
-					NReturnedInDung = ReturnedN * ProportionN2Dung;
-				else
-					NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);
-				NReturnedInUrine = ReturnedN - NReturnedInDung;
-			}
-			else
-			{
-				NReturnedInDung = 0.0;
-				NReturnedInUrine = 0.0;
-			}
-		}
+            RemovedWt = HarvestedWt * fractionDM2Remove;
+            RemovedN = HarvestedN * FractionN2Remove;
+            ReturnedWt = HarvestedWt - RemovedWt;
+            ReturnedN = HarvestedN - RemovedN;
+            
+            if (ReturnType == returnTypes.AsDungUrine)
+            {
+                if (NDungType == dungNContentTypes.DefineProportion)
+                    NReturnedInDung = ReturnedN * ProportionN2Dung;
+                else
+                    NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);
+                NReturnedInUrine = ReturnedN - NReturnedInDung;
+            }
+            else
+            {
+                NReturnedInDung = 0.0;
+                NReturnedInUrine = 0.0;
+            }
+        }
 
-		// Return dung and urine
-		private void returnExcreta()
-		{
-			if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))
-			{
-				PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
-				string[] type = new string[] { "RuminantDung_PastureFed" };
-				float[] dltdm = new float[] { (Single)ReturnedWt };
-				float[] dltn = new float[] { (Single)NReturnedInDung };
-				float[] dltp = new float[] { 0 };
-				float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
+        // Return dung and urine
+        private void returnExcreta()
+        {
+            if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))
+            {
+                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
+                string[] type = new string[] { "RuminantDung_PastureFed" };
+                float[] dltdm = new float[] { (Single)ReturnedWt };
+                float[] dltn = new float[] { (Single)NReturnedInDung };
+                float[] dltp = new float[] { 0 };
+                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
 
-				BiomassDung.crop_type = "RuminantDung_PastureFed";
-				BiomassDung.dm_type = type;
-				BiomassDung.dlt_crop_dm = dltdm;
-				BiomassDung.dlt_dm_n = dltn;
-				BiomassDung.dlt_dm_p = dltp;
-				BiomassDung.fraction_to_residue = fraction;
-				BiomassRemoved.Invoke(BiomassDung);
-			}
+                BiomassDung.crop_type = "RuminantDung_PastureFed";
+                BiomassDung.dm_type = type;
+                BiomassDung.dlt_crop_dm = dltdm;
+                BiomassDung.dlt_dm_n = dltn;
+                BiomassDung.dlt_dm_p = dltp;
+                BiomassDung.fraction_to_residue = fraction;
+                BiomassRemoved.Invoke(BiomassDung);
+            }
 
-			if (NReturnedInUrine > 0.0)
-			{
-				double[] myUrineDeposition = new double[nLayers];
-				for (int z = 0; z < nLayers; z++)
-					myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];
+            if (NReturnedInUrine > 0.0)
+            {
+                double[] myUrineDeposition = new double[nLayers];
+                for (int z = 0; z < nLayers; z++)
+                    myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];
 
-				mySolutes.Add("NO3", myUrineDeposition);
-				//fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);
-			}
-		}
+                mySolutes.Add("NO3", SoluteManager.SoluteSetterType.Fertiliser, myUrineDeposition);
+                //fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);
+            }
+        }
 
-		// Return pasture residues
-		private void returnResidues()
-		{
-			if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))
-			{
-				PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
-				string[] type = new string[] { "Grass" };
-				float[] dltdm = new float[] { (Single)ReturnedWt };
-				float[] dltn = new float[] { (Single)ReturnedN };
-				float[] dltp = new float[] { 0 };
-				float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
+        // Return pasture residues
+        private void returnResidues()
+        {
+            if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))
+            {
+                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
+                string[] type = new string[] { "Grass" };
+                float[] dltdm = new float[] { (Single)ReturnedWt };
+                float[] dltn = new float[] { (Single)ReturnedN };
+                float[] dltp = new float[] { 0 };
+                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
 
-				BiomassDung.crop_type = "Grass";
-				BiomassDung.dm_type = type;
-				BiomassDung.dlt_crop_dm = dltdm;
-				BiomassDung.dlt_dm_n = dltn;
-				BiomassDung.dlt_dm_p = dltp;
-				BiomassDung.fraction_to_residue = fraction;
-				BiomassRemoved.Invoke(BiomassDung);
-			}
-		}
-		
-		// Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -  - -
+                BiomassDung.crop_type = "Grass";
+                BiomassDung.dm_type = type;
+                BiomassDung.dlt_crop_dm = dltdm;
+                BiomassDung.dlt_dm_n = dltn;
+                BiomassDung.dlt_dm_p = dltp;
+                BiomassDung.fraction_to_residue = fraction;
+                BiomassRemoved.Invoke(BiomassDung);
+            }
+        }
+        
+        // Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -  - -
 
-		public enum yesnoType
-		{
-			/// <summary>a positive answer</summary>
-			yes,
-			/// <summary>a negative answer</summary>
-			no
-		}
+        public enum yesnoType
+        {
+            /// <summary>a positive answer</summary>
+            yes,
+            /// <summary>a negative answer</summary>
+            no
+        }
 
-		public enum removeAmountTypes
-		{
-			/// <summary>Setting DM amount to remove</summary>
-			DMToRemove,
-			/// <summary>Setting residual DM amount</summary>
-			ResidualDM
-		}
+        public enum removeAmountTypes
+        {
+            /// <summary>Setting DM amount to remove</summary>
+            DMToRemove,
+            /// <summary>Setting residual DM amount</summary>
+            ResidualDM
+        }
 
-		public enum rotationIntervalTypes
-		{
-			/// <summary>Setting a fixed interval</summary>
-			FixedInterval,
-			/// <summary>Setting a target (minimum) inteval</summary>
-			TargetInterval
-		}
-		
-		public enum removeDMTypes
-		{
-			/// <summary>Remove all DM</summary>
-			RemoveAll,
-			/// <summary>Remove no DM</summary>
-			RemoveNone,
-			/// <summary>Remove a fraction based on digestibility</summary>
-			BasedOnDigestibility
-		}
+        public enum rotationIntervalTypes
+        {
+            /// <summary>Setting a fixed interval</summary>
+            FixedInterval,
+            /// <summary>Setting a target (minimum) inteval</summary>
+            TargetInterval
+        }
+        
+        public enum removeDMTypes
+        {
+            /// <summary>Remove all DM</summary>
+            RemoveAll,
+            /// <summary>Remove no DM</summary>
+            RemoveNone,
+            /// <summary>Remove a fraction based on digestibility</summary>
+            BasedOnDigestibility
+        }
 
-		public enum returnTypes
-		{
-			/// <summary>Return plant material as residue</summary>
-			AsResidue,
-			/// <summary>Return meterial as dung and urine</summary>
-			AsDungUrine
-		}
+        public enum returnTypes
+        {
+            /// <summary>Return plant material as residue</summary>
+            AsResidue,
+            /// <summary>Return meterial as dung and urine</summary>
+            AsDungUrine
+        }
 
-		public enum dungNContentTypes
-		{
-			/// <summary>Define the proportion of N returned as dung</summary>
-			DefineProportion,
-			/// <summary>Define the C:N of dung</summary>
-			DefineCNratio,
-		}
-	}
+        public enum dungNContentTypes
+        {
+            /// <summary>Define the proportion of N returned as dung</summary>
+            DefineProportion,
+            /// <summary>Define the C:N of dung</summary>
+            DefineCNratio,
+        }
+    }
 }
 ]]></Code>
             </Manager>
@@ -490,85 +490,85 @@ using System.Xml.Serialization;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser fertiliser;
-		[Link] ISummary summary = null;
-		[Link] Soil Soil;
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser fertiliser;
+        [Link] ISummary summary = null;
+        [Link] Soil Soil;
 
-		//User inputs from properties tab
-		[Description("Turn ferliser applications on? ")]
-		public yesnoType AllowFertiliser { get; set; }
-		
-		[Description("Depth to calculate available soil N (mm): ")]
-		public double Depth2SoilN { get; set; }
+        //User inputs from properties tab
+        [Description("Turn ferliser applications on? ")]
+        public yesnoType AllowFertiliser { get; set; }
+        
+        [Description("Depth to calculate available soil N (mm): ")]
+        public double Depth2SoilN { get; set; }
 
-		[Description("Minimum available N, triggers an application (kgN/ha): ")]
-		public double CriticalSoilN { get; set; }
+        [Description("Minimum available N, triggers an application (kgN/ha): ")]
+        public double CriticalSoilN { get; set; }
 
-		[Description("Amount of N fertiliser for each application (kgN/ha): ")]
-		public double FertNAmount { get; set; }
+        [Description("Amount of N fertiliser for each application (kgN/ha): ")]
+        public double FertNAmount { get; set; }
 
-		[Description("Type of N fertiliser to apply: ")]
-		public Fertiliser.Types FertType { get; set; }
+        [Description("Type of N fertiliser to apply: ")]
+        public Fertiliser.Types FertType { get; set; }
 
-		[Description("Depth at which to apply the fertiliser (mm): ")]
-		public double FertApplicationDepth { get; set; }
-	   
-		[Description("Minimum period between applications (days): ")]
-		public double FertMinimumDays { get; set; }
-	   
-		public enum yesnoType
-		{
-			/// <summary>a positive answer</summary>
-			yes,
-			/// <summary>a negative answer</summary>
-			no
-		}
+        [Description("Depth at which to apply the fertiliser (mm): ")]
+        public double FertApplicationDepth { get; set; }
+       
+        [Description("Minimum period between applications (days): ")]
+        public double FertMinimumDays { get; set; }
+       
+        public enum yesnoType
+        {
+            /// <summary>a positive answer</summary>
+            yes,
+            /// <summary>a negative answer</summary>
+            no
+        }
 
-		[XmlIgnore] public double TopMineralN { get; set; }
-		
-		private DateTime lastApplicationDate;
-		private bool fertiliserIsAllowed;
-		private int nLayers;
+        [XmlIgnore] public double TopMineralN { get; set; }
+        
+        private DateTime lastApplicationDate;
+        private bool fertiliserIsAllowed;
+        private int nLayers;
 
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			fertiliserIsAllowed = (AllowFertiliser == yesnoType.yes);
-			nLayers = Soil.SoilWater.Thickness.Length;
-		}
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            fertiliserIsAllowed = (AllowFertiliser == yesnoType.yes);
+            nLayers = Soil.Thickness.Length;
+        }
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			double daysSinceLastApplication = (Clock.Today - lastApplicationDate).TotalDays;
-			
-			// get the N stored in the soil
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			TopMineralN = 0.0;
-			for (int layer = 0; layer < nLayers; layer++)
-			{
-				fracLayer = Math.Min(1.0, (Depth2SoilN - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopMineralN += (Soil.SoilNitrogen.NO3[layer]
-				+ Soil.SoilNitrogen.NH4[layer]
-				+ Soil.SoilNitrogen.urea[layer])
-				* fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= Depth2SoilN)
-					layer = nLayers;
-			}
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            double daysSinceLastApplication = (Clock.Today - lastApplicationDate).TotalDays;
+            
+            // get the N stored in the soil
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            TopMineralN = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                fracLayer = Math.Min(1.0, (Depth2SoilN - depthFromSurface) / Soil.Thickness[layer]);
+                TopMineralN += (Soil.SoilNitrogen.NO3[layer]
+                + Soil.SoilNitrogen.NH4[layer]
+                + Soil.SoilNitrogen.urea[layer])
+                * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= Depth2SoilN)
+                    layer = nLayers;
+            }
 
-			if (fertiliserIsAllowed && (daysSinceLastApplication >= FertMinimumDays) && (TopMineralN <= CriticalSoilN))
-			{
-				fertiliser.Apply(FertNAmount, FertType, FertApplicationDepth);
-				lastApplicationDate = Clock.Today;
-			}
-		}
-	}
+            if (fertiliserIsAllowed && (daysSinceLastApplication >= FertMinimumDays) && (TopMineralN <= CriticalSoilN))
+            {
+                fertiliser.Apply(FertNAmount, FertType, FertApplicationDepth);
+                lastApplicationDate = Clock.Today;
+            }
+        }
+    }
 }
 ]]></Code>
             </Manager>
@@ -596,154 +596,154 @@ using APSIM.Shared.Utilities;
         
 namespace Models
 {
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		//Communication to other modules
-		[Link] ISummary summary = null;
-		[Link] Irrigation Irrigation;
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link(IsOptional = true)] ICrop existingCrop;
-	   
-		//User inputs from properties tab
-		[Description("Turn irrigation on?")]
-		public bool allowIrrigation { get; set; }
-		[Description("Start of irrigation season (dd-MMM)")]
-		public string seasonStart { get; set; }
-		[Description("End of irrigation season (dd-MMM)")]
-		public string seasonEnd { get; set; }
-		[Description("Season allocation (mm)")]
-		public double seasonsAllocation { get; set; }
-		[Description("Deficit to trigger irrigation (% PAWC)")]
-		public double triggerDeficit { get; set; }
-		[Description("Deficit to stop irrigaton (% PAWC)")]
-		public double targetDeficit { get; set; }
-		[Description("Minimum days for irrigation to return")]
-		public double returndays { get; set; }
-		[Description("Maximum irrigation application (mm/day)")]
-		public double maximumAmount { get; set; }
-		[Description("Depth to calculate PAWC (mm)")]
-		public double depthPAWC { get; set; }
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        //Communication to other modules
+        [Link] ISummary summary = null;
+        [Link] Irrigation Irrigation;
+        [Link] Clock Clock;
+        [Link] Soil Soil;
+        [Link(IsOptional = true)] IPlant existingCrop;
+       
+        //User inputs from properties tab
+        [Description("Turn irrigation on?")]
+        public bool allowIrrigation { get; set; }
+        [Description("Start of irrigation season (dd-MMM)")]
+        public string seasonStart { get; set; }
+        [Description("End of irrigation season (dd-MMM)")]
+        public string seasonEnd { get; set; }
+        [Description("Season allocation (mm)")]
+        public double seasonsAllocation { get; set; }
+        [Description("Deficit to trigger irrigation (% PAWC)")]
+        public double triggerDeficit { get; set; }
+        [Description("Deficit to stop irrigaton (% PAWC)")]
+        public double targetDeficit { get; set; }
+        [Description("Minimum days for irrigation to return")]
+        public double returndays { get; set; }
+        [Description("Maximum irrigation application (mm/day)")]
+        public double maximumAmount { get; set; }
+        [Description("Depth to calculate PAWC (mm)")]
+        public double depthPAWC { get; set; }
 
-		//Class members
-		[XmlIgnore] public double TopSWdeficit { get; set; }
-		[XmlIgnore] public double TopSWC { get; set; }
-		[XmlIgnore] public double DaysSinceIrrigation { get; set; }
-		[XmlIgnore] public double AmountToApply { get; set; }
-		[XmlIgnore] public double SeasonAppliedAmount { get; set; }
-		
-		private bool IrrigationIsAllowed { get; set; }
-		private bool SeasonIsOpen { get; set; }
-		private bool CropIsActive { get; set; }
-		private bool IrrigatorIsAvailable { get; set; }
-		private bool SoilIsDry { get; set; }
+        //Class members
+        [XmlIgnore] public double TopSWdeficit { get; set; }
+        [XmlIgnore] public double TopSWC { get; set; }
+        [XmlIgnore] public double DaysSinceIrrigation { get; set; }
+        [XmlIgnore] public double AmountToApply { get; set; }
+        [XmlIgnore] public double SeasonAppliedAmount { get; set; }
+        
+        private bool IrrigationIsAllowed { get; set; }
+        private bool SeasonIsOpen { get; set; }
+        private bool CropIsActive { get; set; }
+        private bool IrrigatorIsAvailable { get; set; }
+        private bool SoilIsDry { get; set; }
 
-		private DateTime StartDate;
-		private DateTime EndDate;
-		private double TopDUL;
-		private double TopLL;
-		private int nLayers;
-	
-		//Calculate static soil variables
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{   
-			//Set the season dates
-			StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
-			EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
-			
-			//Can we irrigate at all?
-			IrrigationIsAllowed = false; 
-			if (allowIrrigation)
-				IrrigationIsAllowed = true; 
+        private DateTime StartDate;
+        private DateTime EndDate;
+        private double TopDUL;
+        private double TopLL;
+        private int nLayers;
+    
+        //Calculate static soil variables
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {   
+            //Set the season dates
+            StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
+            EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
+            
+            //Can we irrigate at all?
+            IrrigationIsAllowed = false; 
+            if (allowIrrigation)
+                IrrigationIsAllowed = true; 
 
-			//Calculate soil water variables
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			nLayers = Soil.SoilWater.Thickness.Length;
-			for (int layer = 0; layer < nLayers; layer++)
-			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
-				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= depthPAWC)
-					layer = nLayers;
-			}
-		}
-	   	  
-		//Determine daily requirement for irrigation
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			//Can we irrigate today?		  
-			SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
+            //Calculate soil water variables
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            nLayers = Soil.Thickness.Length;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+                TopLL += Soil.LL15mm[layer] * fracLayer;
+                TopDUL += Soil.DULmm[layer] * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= depthPAWC)
+                    layer = nLayers;
+            }
+        }
+             
+        //Determine daily requirement for irrigation
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            //Can we irrigate today?          
+            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
 
-			//Is there a crop in the ground that needs irrigation?
-			CropIsActive = false;
-			if ((existingCrop != null) && (existingCrop.IsAlive))
-				CropIsActive = true;
-			//if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
-	      
-			//Is the irrigator available?
-			IrrigatorIsAvailable = false;
-			DaysSinceIrrigation += 1;
-			if (DaysSinceIrrigation >= returndays)
-				IrrigatorIsAvailable = true;
-	      
-			//Is the soil dry enough to require irrigation?
-			SoilIsDry = false;
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			TopSWC = 0.0;
-			for (int layer = 0; layer < nLayers; layer++)
-			//for (int layer = 0; depthFromSurface < depthPAWC + Soil.SoilWater.Thickness[layer]; layer++)
-			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= depthPAWC)
-					layer = nLayers;
-			}
-			
-			TopSWdeficit = TopSWC - TopDUL;
-			if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
-				SoilIsDry = true;
-	            
-			//Are all the conditions ratifying irrigation
-			if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
-			{
-				//Lets bloody well irrigate then!!!!
-				AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
-				AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
-				Irrigation.Apply(AmountToApply);
-				DaysSinceIrrigation = 0;
-				SeasonAppliedAmount += AmountToApply;
-			}
-		}
-		
-		///Checks whether theDate is between iniDate and endDate (non-year specific)
-		private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
-		{
-			bool result = false;
-			if (iniDate.DayOfYear < endDate.DayOfYear)
-			{
-				// period is within one year, ex: summer in the northern hemisphere
-				if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
-					result = true;
-			}
-			else
-			{
-				// period goes over the end of the year, ex: summer in the southern hemisphere
-				if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
-					result = true;
-			}
-			
-			return result;
-		}
-	}
+            //Is there a crop in the ground that needs irrigation?
+            CropIsActive = false;
+            if ((existingCrop != null) && (existingCrop.IsAlive))
+                CropIsActive = true;
+            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
+          
+            //Is the irrigator available?
+            IrrigatorIsAvailable = false;
+            DaysSinceIrrigation += 1;
+            if (DaysSinceIrrigation >= returndays)
+                IrrigatorIsAvailable = true;
+          
+            //Is the soil dry enough to require irrigation?
+            SoilIsDry = false;
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            TopSWC = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            //for (int layer = 0; depthFromSurface < depthPAWC + Soil.Thickness[layer]; layer++)
+            {
+                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+                TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= depthPAWC)
+                    layer = nLayers;
+            }
+            
+            TopSWdeficit = TopSWC - TopDUL;
+            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
+                SoilIsDry = true;
+                
+            //Are all the conditions ratifying irrigation
+            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
+            {
+                //Lets bloody well irrigate then!!!!
+                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
+                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
+                Irrigation.Apply(AmountToApply);
+                DaysSinceIrrigation = 0;
+                SeasonAppliedAmount += AmountToApply;
+            }
+        }
+        
+        ///Checks whether theDate is between iniDate and endDate (non-year specific)
+        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
+        {
+            bool result = false;
+            if (iniDate.DayOfYear < endDate.DayOfYear)
+            {
+                // period is within one year, ex: summer in the northern hemisphere
+                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
+                    result = true;
+            }
+            else
+            {
+                // period goes over the end of the year, ex: summer in the southern hemisphere
+                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
+                    result = true;
+            }
+            
+            return result;
+        }
+    }
 }
 ]]></Code>
             </Manager>
@@ -1363,6 +1363,51 @@ namespace Models
               <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
               <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
               <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
+              <PastureAboveGroundOrgan>
+                <Name>Leaves</Name>
+                <GenericTissue>
+                  <Name>LeafCohort1</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort2</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort3</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>Dead</Name>
+                </GenericTissue>
+              </PastureAboveGroundOrgan>
+              <PastureAboveGroundOrgan>
+                <Name>Stems</Name>
+                <GenericTissue>
+                  <Name>LeafCohort1</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort2</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort3</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>Dead</Name>
+                </GenericTissue>
+              </PastureAboveGroundOrgan>
+              <PastureAboveGroundOrgan>
+                <Name>Stolons</Name>
+                <GenericTissue>
+                  <Name>LeafCohort1</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort2</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort3</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>Dead</Name>
+                </GenericTissue>
+              </PastureAboveGroundOrgan>
             </PastureSpecies>
             <PastureSpecies>
               <Name>WhiteClover</Name>
@@ -1479,6 +1524,51 @@ namespace Models
               <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
               <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
               <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
+              <PastureAboveGroundOrgan>
+                <Name>Leaves</Name>
+                <GenericTissue>
+                  <Name>LeafCohort1</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort2</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort3</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>Dead</Name>
+                </GenericTissue>
+              </PastureAboveGroundOrgan>
+              <PastureAboveGroundOrgan>
+                <Name>Stems</Name>
+                <GenericTissue>
+                  <Name>LeafCohort1</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort2</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort3</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>Dead</Name>
+                </GenericTissue>
+              </PastureAboveGroundOrgan>
+              <PastureAboveGroundOrgan>
+                <Name>Stolons</Name>
+                <GenericTissue>
+                  <Name>LeafCohort1</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort2</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>LeafCohort3</Name>
+                </GenericTissue>
+                <GenericTissue>
+                  <Name>Dead</Name>
+                </GenericTissue>
+              </PastureAboveGroundOrgan>
             </PastureSpecies>
             <ControlledBySward>yes</ControlledBySward>
             <WaterUptakeSource>soilarbitrator</WaterUptakeSource>
@@ -3088,432 +3178,432 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		// - Links to APSIM models
-		[Link] Zone myZone;
-		[Link] Clock Clock;
-		[Link] Fertiliser fertiliser;
-		[Link] SoluteManager mySolutes;
-		[Link] Soil mySoil;
-		[Link] ISummary summary = null;
-		
-		List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
-		
-		// - Paramters for this manager
-		[Description("Allow this manager to control defoliation? ")]
-		public yesnoType AllowControl { get; set; }
-		[Description("Date to begin the rotation: ")]
-		public DateTime CutRotationStartDate { get; set; }
-		[Description("Date to finish the rotation: ")]
-		public DateTime CutRotationEndDate { get; set; }
-		[Description("How the interval is defined: ")]
-		public rotationIntervalTypes IntervalType { get; set; }
-		[Description("Rotation interval (days): ")]
-		public int CutInterval { get; set; }
-		[Description("Duration of each event (days): ")]
-		public int DurationOfCut { get; set; }
-		[Description("What amount is being defined: ")]
-		public removeAmountTypes RemoveAmountType { get; set; }
-		[Description("Amount to use (kg/ha): ")]
-		public double AmountGiven { get; set; }
-		[Description("How much of DM is removed from the field: ")]
-		public removeDMTypes DMRemoveType { get; set; }
-		[Description("Fraction of N that is removed from the field (0-1): ")]
-		public double FractionN2Remove { get; set; }
-		[Description("How defoliated material is returned to the field? ")]
-		public returnTypes ReturnType { get; set; }
-		[Description("How the partition of N to dung and urine are defined:")]
-		public dungNContentTypes NDungType { get; set; }
-		[Description("Proportion of returned N that goes to dung (0-1): ")]
-		public double ProportionN2Dung { get; set; }
-		[Description("The C:N of dung (typically around 20): ")]
-		public double CNRatioDung { get; set; }
-		[Description("Depth down to which urine is applied (mm): ")]
-		public double UrineDepth { get; set; }
+    [Serializable]
+    public class Script : Model
+    {
+        // - Links to APSIM models
+        [Link] Zone myZone;
+        [Link] Clock Clock;
+        [Link] Fertiliser fertiliser;
+        [Link] SoluteManager mySolutes;
+        [Link] Soil mySoil;
+        [Link] ISummary summary = null;
+        
+        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
+        
+        // - Paramters for this manager
+        [Description("Allow this manager to control defoliation? ")]
+        public yesnoType AllowControl { get; set; }
+        [Description("Date to begin the rotation: ")]
+        public DateTime CutRotationStartDate { get; set; }
+        [Description("Date to finish the rotation: ")]
+        public DateTime CutRotationEndDate { get; set; }
+        [Description("How the interval is defined: ")]
+        public rotationIntervalTypes IntervalType { get; set; }
+        [Description("Rotation interval (days): ")]
+        public int CutInterval { get; set; }
+        [Description("Duration of each event (days): ")]
+        public int DurationOfCut { get; set; }
+        [Description("What amount is being defined: ")]
+        public removeAmountTypes RemoveAmountType { get; set; }
+        [Description("Amount to use (kg/ha): ")]
+        public double AmountGiven { get; set; }
+        [Description("How much of DM is removed from the field: ")]
+        public removeDMTypes DMRemoveType { get; set; }
+        [Description("Fraction of N that is removed from the field (0-1): ")]
+        public double FractionN2Remove { get; set; }
+        [Description("How defoliated material is returned to the field? ")]
+        public returnTypes ReturnType { get; set; }
+        [Description("How the partition of N to dung and urine are defined:")]
+        public dungNContentTypes NDungType { get; set; }
+        [Description("Proportion of returned N that goes to dung (0-1): ")]
+        public double ProportionN2Dung { get; set; }
+        [Description("The C:N of dung (typically around 20): ")]
+        public double CNRatioDung { get; set; }
+        [Description("Depth down to which urine is applied (mm): ")]
+        public double UrineDepth { get; set; }
 
-		// - Outputs from this manager
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM defoliated today
-		public double DefoliatedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N defoliate today
-		public double DefoliatedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM harvested today
-		public double HarvestedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N harvested today
-		public double HarvestedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM removed from the field
-		public double RemovedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N removed from the field
-		public double RemovedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Residue DM returned to the field
-		public double ReturnedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Residue N returned to the field
-		public double ReturnedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Harvested N returned as dung (SurfaceOM)
-		public double NReturnedInDung { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Harvested N returned as urine (urea)
-		public double NReturnedInUrine { get; set; }
-		[XmlIgnore][Units("day")]// Description: Number of days after last defoliation
-		public int DaysAfterCut { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut
-		public double PreHarvestDM { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut
-		public double PostHarvestDM { get; set; }
-		
-		// - Internal variables
-		// fraction of harvested Dm to actually remove from field
-		private double fractionDM2Remove = 1.0;
-		// number of days for each defoliation event
-		private int cuttingDuration = 0;
-		// counter for day within each defoliation
-		private int daysCutting = 0;
-		// total existing DM harvestable
-		private double existingDM;
-		// total herbage to remove in g/m2 per day
-		private double herbageToRemove;
-		// type of DM amount (ResidualDM or DMToRemove)
-		private string amountType;
-		// auxiliary flag for defoliation
-		private bool aCutHasHappened = false;
-		// fraction of urine that is applied to each layer
-		private double[] fractionUrine;
-		// number of layer in the soil
-		private int nLayers;
+        // - Outputs from this manager
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM defoliated today
+        public double DefoliatedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N defoliate today
+        public double DefoliatedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM harvested today
+        public double HarvestedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N harvested today
+        public double HarvestedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM removed from the field
+        public double RemovedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N removed from the field
+        public double RemovedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Residue DM returned to the field
+        public double ReturnedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Residue N returned to the field
+        public double ReturnedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Harvested N returned as dung (SurfaceOM)
+        public double NReturnedInDung { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Harvested N returned as urine (urea)
+        public double NReturnedInUrine { get; set; }
+        [XmlIgnore][Units("day")]// Description: Number of days after last defoliation
+        public int DaysAfterCut { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut
+        public double PreHarvestDM { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut
+        public double PostHarvestDM { get; set; }
+        
+        // - Internal variables
+        // fraction of harvested Dm to actually remove from field
+        private double fractionDM2Remove = 1.0;
+        // number of days for each defoliation event
+        private int cuttingDuration = 0;
+        // counter for day within each defoliation
+        private int daysCutting = 0;
+        // total existing DM harvestable
+        private double existingDM;
+        // total herbage to remove in g/m2 per day
+        private double herbageToRemove;
+        // type of DM amount (ResidualDM or DMToRemove)
+        private string amountType;
+        // auxiliary flag for defoliation
+        private bool aCutHasHappened = false;
+        // fraction of urine that is applied to each layer
+        private double[] fractionUrine;
+        // number of layer in the soil
+        private int nLayers;
 
-		// - Event to add residue or dung to surface OM
-		public event BiomassRemovedDelegate BiomassRemoved;
+        // - Event to add residue or dung to surface OM
+        public event BiomassRemovedDelegate BiomassRemoved;
 
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			foreach (AgPasture.PastureSpecies species in Apsim.Children(myZone, typeof(AgPasture.PastureSpecies)))
-				Pasture.Add(species);
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            foreach (AgPasture.PastureSpecies species in Apsim.Children(myZone, typeof(AgPasture.PastureSpecies)))
+                Pasture.Add(species);
 
-			// reset variables
-			DaysAfterCut = 0;
-			resetVariables();
-			cuttingDuration = DurationOfCut;
-			
-			// get the type of amount given
-			if (RemoveAmountType == removeAmountTypes.ResidualDM)
-				amountType = "SetResidueAmount";
-			else
-				amountType = "SetRemoveAmount";
+            // reset variables
+            DaysAfterCut = 0;
+            resetVariables();
+            cuttingDuration = DurationOfCut;
+            
+            // get the type of amount given
+            if (RemoveAmountType == removeAmountTypes.ResidualDM)
+                amountType = "SetResidueAmount";
+            else
+                amountType = "SetRemoveAmount";
 
-			// make sure that rotation start when startDate < simulationStartDay
-			if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))
-				CutRotationStartDate = Clock.Today;
-				
-			// set the fraction of urine for each layer
-			nLayers = mySoil.SoilWater.Thickness.Length;
-			fractionUrine = new double[nLayers];
-			double soilDepth = 0.0;
-			double distFactor = 1.5;
-			if (ReturnType == returnTypes.AsDungUrine)
-			{
-				double atZ0;
-				double atZ1;
-				double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);
-				
-				atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);
-				for (int z = 0; z < nLayers; z++)
-				{
-					atZ0 = atZ1;
-					soilDepth += mySoil.SoilWater.Thickness[z];
-					atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);
-					if (1.0 - (soilDepth / UrineDepth) < 0.0)
-						atZ1 = 0;
-					fractionUrine[z] = (atZ0 - atZ1) / totalProp;
-				}
-			}
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// Check whether defoliation is allowed at all
-			if (AllowControl == yesnoType.yes)
-			{
-				// Check whether defoliation can start
-				if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate))
-				{
-					if (Clock.Today == CutRotationStartDate)
-						DaysAfterCut = CutInterval;
-	
-					// Check whether we should start a defoliation
-					if ((Pasture[0].IsAlive) && (DaysAfterCut >= (CutInterval - 1)))
-						StartDefoliation(AmountGiven, amountType, DurationOfCut);
-				}
-			}
-			//// Note: Only the code above should be limited by 'AllowControl'. So the rest of the code
-			////  can be used by being called from another manager or a schedulle thingy
+            // make sure that rotation start when startDate < simulationStartDay
+            if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))
+                CutRotationStartDate = Clock.Today;
+                
+            // set the fraction of urine for each layer
+            nLayers = mySoil.Thickness.Length;
+            fractionUrine = new double[nLayers];
+            double soilDepth = 0.0;
+            double distFactor = 1.5;
+            if (ReturnType == returnTypes.AsDungUrine)
+            {
+                double atZ0;
+                double atZ1;
+                double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);
+                
+                atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);
+                for (int z = 0; z < nLayers; z++)
+                {
+                    atZ0 = atZ1;
+                    soilDepth += mySoil.Thickness[z];
+                    atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);
+                    if (1.0 - (soilDepth / UrineDepth) < 0.0)
+                        atZ1 = 0;
+                    fractionUrine[z] = (atZ0 - atZ1) / totalProp;
+                }
+            }
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            // Check whether defoliation is allowed at all
+            if (AllowControl == yesnoType.yes)
+            {
+                // Check whether defoliation can start
+                if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate))
+                {
+                    if (Clock.Today == CutRotationStartDate)
+                        DaysAfterCut = CutInterval;
+    
+                    // Check whether we should start a defoliation
+                    if ((Pasture[0].IsAlive) && (DaysAfterCut >= (CutInterval - 1)))
+                        StartDefoliation(AmountGiven, amountType, DurationOfCut);
+                }
+            }
+            //// Note: Only the code above should be limited by 'AllowControl'. So the rest of the code
+            ////  can be used by being called from another manager or a schedulle thingy
 
 
-			// Check whether we need to continue cutting
-			if ((daysCutting > 0) && (daysCutting < cuttingDuration))
-			{
-				// reset outputs
-				resetVariables();
+            // Check whether we need to continue cutting
+            if ((daysCutting > 0) && (daysCutting < cuttingDuration))
+            {
+                // reset outputs
+                resetVariables();
 
-				defoliatePasture(herbageToRemove);
-				if (ReturnType == returnTypes.AsResidue)
-					returnResidues();
-				else
-					returnExcreta();
-				daysCutting += 1;
-				if (daysCutting == cuttingDuration)
-				{
-					PostHarvestDM = 0.0;
-					foreach (AgPasture.PastureSpecies species in Pasture)
-						PostHarvestDM += species.StandingHerbageWt;
-				}
-			}
+                defoliatePasture(herbageToRemove);
+                if (ReturnType == returnTypes.AsResidue)
+                    returnResidues();
+                else
+                    returnExcreta();
+                daysCutting += 1;
+                if (daysCutting == cuttingDuration)
+                {
+                    PostHarvestDM = 0.0;
+                    foreach (AgPasture.PastureSpecies species in Pasture)
+                        PostHarvestDM += species.StandingHerbageWt;
+                }
+            }
 
-			// reset outputs
-			if (daysCutting < 0)
-			{
-				resetVariables();
-				daysCutting = 0;
-			}
-		}
+            // reset outputs
+            if (daysCutting < 0)
+            {
+                resetVariables();
+                daysCutting = 0;
+            }
+        }
 
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			// Check whether a cutting has finished
-			if (daysCutting == cuttingDuration)
-			{
-				aCutHasHappened = true;
-				daysCutting = -1;
-			}
+        [EventSubscribe("DoManagementCalculations")]
+        private void OnDoManagementCalculations(object sender, EventArgs e)
+        {
+            // Check whether a cutting has finished
+            if (daysCutting == cuttingDuration)
+            {
+                aCutHasHappened = true;
+                daysCutting = -1;
+            }
 
-			// Increase the counter for days after cutting
-			if (aCutHasHappened && (daysCutting == 0))
-				DaysAfterCut += 1;
-		}
+            // Increase the counter for days after cutting
+            if (aCutHasHappened && (daysCutting == 0))
+                DaysAfterCut += 1;
+        }
 
-		// Resets the values of all outputs
-		private void resetVariables()
-		{
-			DefoliatedWt = 0.0;
-			DefoliatedN = 0.0;
-			HarvestedWt = 0.0;
-			HarvestedN = 0.0;
-			RemovedWt = 0.0;
-			RemovedN = 0.0;
-			ReturnedWt = 0.0;
-			ReturnedN = 0.0;
-			NReturnedInDung = 0.0;
-			NReturnedInUrine = 0.0;
-		}
+        // Resets the values of all outputs
+        private void resetVariables()
+        {
+            DefoliatedWt = 0.0;
+            DefoliatedN = 0.0;
+            HarvestedWt = 0.0;
+            HarvestedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
+            ReturnedWt = 0.0;
+            ReturnedN = 0.0;
+            NReturnedInDung = 0.0;
+            NReturnedInUrine = 0.0;
+        }
 
-		// Description: Perform the basic calculations for defoliation
-		public void StartDefoliation(double amountDM, string amountType, int duration)
-		{
-			// Get the existing plant amount
-			existingDM = 0.0;
-			PreHarvestDM = 0.0;
-			foreach (AgPasture.PastureSpecies species in Pasture)
-			{
-				PreHarvestDM += species.StandingHerbageWt;
-				existingDM += species.HarvestableWt;
-			}
-			
-			// Check the amount to remove and print some info
-			if ((amountType == "SetRemoveAmount") && (existingDM >= amountDM / duration))
-			{
-				summary.WriteMessage(this, "   Defoliating " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-				herbageToRemove = amountDM / duration;
-			}
-			else if ((amountType == "SetResidueAmount") && (existingDM >= amountDM))
-			{
-				summary.WriteMessage(this, "   Defoliating down to approximately " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-				herbageToRemove = (PreHarvestDM - amountDM) / duration;
-			}
-			else
-			{
-				summary.WriteMessage(this, "   Defoliation will not happend because there is not enough plant material");
-				if (IntervalType == rotationIntervalTypes.FixedInterval)
-					DaysAfterCut = -duration;
-				return;
-			}
+        // Description: Perform the basic calculations for defoliation
+        public void StartDefoliation(double amountDM, string amountType, int duration)
+        {
+            // Get the existing plant amount
+            existingDM = 0.0;
+            PreHarvestDM = 0.0;
+            foreach (AgPasture.PastureSpecies species in Pasture)
+            {
+                PreHarvestDM += species.StandingHerbageWt;
+                existingDM += species.HarvestableWt;
+            }
+            
+            // Check the amount to remove and print some info
+            if ((amountType == "SetRemoveAmount") && (existingDM >= amountDM / duration))
+            {
+                summary.WriteMessage(this, "   Defoliating " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
+                herbageToRemove = amountDM / duration;
+            }
+            else if ((amountType == "SetResidueAmount") && (existingDM >= amountDM))
+            {
+                summary.WriteMessage(this, "   Defoliating down to approximately " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
+                herbageToRemove = (PreHarvestDM - amountDM) / duration;
+            }
+            else
+            {
+                summary.WriteMessage(this, "   Defoliation will not happend because there is not enough plant material");
+                if (IntervalType == rotationIntervalTypes.FixedInterval)
+                    DaysAfterCut = -duration;
+                return;
+            }
 
-			// Start defoliation
-			cuttingDuration = duration;
-			defoliatePasture(herbageToRemove);
-			if (ReturnType == returnTypes.AsResidue)
-				returnResidues();
-			else
-				returnExcreta();
-				
-			daysCutting = 1;
-			DaysAfterCut = 0;
-			if (daysCutting == cuttingDuration)
-			{
-				PostHarvestDM = 0.0;
-				foreach (AgPasture.PastureSpecies species in Pasture)
-					PostHarvestDM += species.StandingHerbageWt;
-			}
-		}
+            // Start defoliation
+            cuttingDuration = duration;
+            defoliatePasture(herbageToRemove);
+            if (ReturnType == returnTypes.AsResidue)
+                returnResidues();
+            else
+                returnExcreta();
+                
+            daysCutting = 1;
+            DaysAfterCut = 0;
+            if (daysCutting == cuttingDuration)
+            {
+                PostHarvestDM = 0.0;
+                foreach (AgPasture.PastureSpecies species in Pasture)
+                    PostHarvestDM += species.StandingHerbageWt;
+            }
+        }
 
-		// Do the DM removal
-		private void defoliatePasture(double removeAmount)
-		{
-			// Remove a proportion of required DM from each species
-			DefoliatedWt = 0.0;
-			DefoliatedN = 0.0;
-			foreach (AgPasture.PastureSpecies species in Pasture)
-			{
-				double amountToRemove = removeAmount * species.HarvestableWt / existingDM;
-				species.Graze(amount: amountToRemove, type: "SetRemoveAmount");
-				DefoliatedWt += species.HarvestedWt;
-				DefoliatedN += species.HarvestedN;
-			}
-			
-			// total harvested is equal total defoliated, for now
-			HarvestedWt = DefoliatedWt;
-			HarvestedN = DefoliatedN;
+        // Do the DM removal
+        private void defoliatePasture(double removeAmount)
+        {
+            // Remove a proportion of required DM from each species
+            DefoliatedWt = 0.0;
+            DefoliatedN = 0.0;
+            foreach (AgPasture.PastureSpecies species in Pasture)
+            {
+                double amountToRemove = removeAmount * species.HarvestableWt / existingDM;
+                species.Graze(amount: amountToRemove, type: "SetRemoveAmount");
+                DefoliatedWt += species.HarvestedWt;
+                DefoliatedN += species.HarvestedN;
+            }
+            
+            // total harvested is equal total defoliated, for now
+            HarvestedWt = DefoliatedWt;
+            HarvestedN = DefoliatedN;
 
-			// get amounts actually removed from field and that to be returned (dung/urine)
-			if (DMRemoveType == removeDMTypes.RemoveAll)
-				fractionDM2Remove = 1.0;
-			else if (DMRemoveType == removeDMTypes.RemoveNone)
-				fractionDM2Remove = 0.0;
-			else
-			{
-				fractionDM2Remove = 0.0;
-				foreach (AgPasture.PastureSpecies species in Pasture)
-					fractionDM2Remove += species.HarvestedDigestibility * species.HarvestedWt;
-				fractionDM2Remove /= removeAmount;
-			}
-			
-			RemovedWt = HarvestedWt * fractionDM2Remove;
-			RemovedN = HarvestedN * FractionN2Remove;
-			ReturnedWt = HarvestedWt - RemovedWt;
-			ReturnedN = HarvestedN - RemovedN;
+            // get amounts actually removed from field and that to be returned (dung/urine)
+            if (DMRemoveType == removeDMTypes.RemoveAll)
+                fractionDM2Remove = 1.0;
+            else if (DMRemoveType == removeDMTypes.RemoveNone)
+                fractionDM2Remove = 0.0;
+            else
+            {
+                fractionDM2Remove = 0.0;
+                foreach (AgPasture.PastureSpecies species in Pasture)
+                    fractionDM2Remove += species.HarvestedDigestibility * species.HarvestedWt;
+                fractionDM2Remove /= removeAmount;
+            }
+            
+            RemovedWt = HarvestedWt * fractionDM2Remove;
+            RemovedN = HarvestedN * FractionN2Remove;
+            ReturnedWt = HarvestedWt - RemovedWt;
+            ReturnedN = HarvestedN - RemovedN;
 
-			if (ReturnType == returnTypes.AsDungUrine)
-			{
-				if (NDungType == dungNContentTypes.DefineProportion)
-					NReturnedInDung = ReturnedN * ProportionN2Dung;
-				else
-					NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);
-				NReturnedInUrine = ReturnedN - NReturnedInDung;
-			}
-			else
-			{
-				NReturnedInDung = 0.0;
-				NReturnedInUrine = 0.0;
-			}
-		}
-		
-		// Return dung and urine
-		private void returnExcreta()
-		{
-			if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))
-			{
-				PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
-				string[] type = new string[] { "RuminantDung_PastureFed" };
-				float[] dltdm = new float[] { (Single)ReturnedWt };
-				float[] dltn = new float[] { (Single)NReturnedInDung };
-				float[] dltp = new float[] { 0 };
-				float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
+            if (ReturnType == returnTypes.AsDungUrine)
+            {
+                if (NDungType == dungNContentTypes.DefineProportion)
+                    NReturnedInDung = ReturnedN * ProportionN2Dung;
+                else
+                    NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);
+                NReturnedInUrine = ReturnedN - NReturnedInDung;
+            }
+            else
+            {
+                NReturnedInDung = 0.0;
+                NReturnedInUrine = 0.0;
+            }
+        }
+        
+        // Return dung and urine
+        private void returnExcreta()
+        {
+            if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))
+            {
+                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
+                string[] type = new string[] { "RuminantDung_PastureFed" };
+                float[] dltdm = new float[] { (Single)ReturnedWt };
+                float[] dltn = new float[] { (Single)NReturnedInDung };
+                float[] dltp = new float[] { 0 };
+                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
 
-				BiomassDung.crop_type = "RuminantDung_PastureFed";
-				BiomassDung.dm_type = type;
-				BiomassDung.dlt_crop_dm = dltdm;
-				BiomassDung.dlt_dm_n = dltn;
-				BiomassDung.dlt_dm_p = dltp;
-				BiomassDung.fraction_to_residue = fraction;
-				BiomassRemoved.Invoke(BiomassDung);
-			}
+                BiomassDung.crop_type = "RuminantDung_PastureFed";
+                BiomassDung.dm_type = type;
+                BiomassDung.dlt_crop_dm = dltdm;
+                BiomassDung.dlt_dm_n = dltn;
+                BiomassDung.dlt_dm_p = dltp;
+                BiomassDung.fraction_to_residue = fraction;
+                BiomassRemoved.Invoke(BiomassDung);
+            }
 
-			if (NReturnedInUrine > 0.0)
-			{
-				double[] myUrineDeposition = new double[nLayers];
-				for (int z = 0; z < nLayers; z++)
-					myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];
+            if (NReturnedInUrine > 0.0)
+            {
+                double[] myUrineDeposition = new double[nLayers];
+                for (int z = 0; z < nLayers; z++)
+                    myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];
 
-				mySolutes.Add("NO3", myUrineDeposition);
-				//fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);
-			}
-		}
+                mySolutes.Add("NO3", SoluteManager.SoluteSetterType.Fertiliser, myUrineDeposition);
+                //fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);
+            }
+        }
 
-		// Return pasture residues
-		private void returnResidues()
-		{
-			if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))
-			{
-				PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
-				string[] type = new string[] { "Grass" };
-				float[] dltdm = new float[] { (Single)ReturnedWt };
-				float[] dltn = new float[] { (Single)ReturnedN };
-				float[] dltp = new float[] { 0 };
-				float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
+        // Return pasture residues
+        private void returnResidues()
+        {
+            if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))
+            {
+                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
+                string[] type = new string[] { "Grass" };
+                float[] dltdm = new float[] { (Single)ReturnedWt };
+                float[] dltn = new float[] { (Single)ReturnedN };
+                float[] dltp = new float[] { 0 };
+                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
 
-				BiomassDung.crop_type = "Grass";
-				BiomassDung.dm_type = type;
-				BiomassDung.dlt_crop_dm = dltdm;
-				BiomassDung.dlt_dm_n = dltn;
-				BiomassDung.dlt_dm_p = dltp;
-				BiomassDung.fraction_to_residue = fraction;
-				BiomassRemoved.Invoke(BiomassDung);
-			}
-		}
-		
-		// Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -  - -
+                BiomassDung.crop_type = "Grass";
+                BiomassDung.dm_type = type;
+                BiomassDung.dlt_crop_dm = dltdm;
+                BiomassDung.dlt_dm_n = dltn;
+                BiomassDung.dlt_dm_p = dltp;
+                BiomassDung.fraction_to_residue = fraction;
+                BiomassRemoved.Invoke(BiomassDung);
+            }
+        }
+        
+        // Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -  - -
 
-		public enum yesnoType
-		{
-			/// <summary>a positive answer</summary>
-			yes,
-			/// <summary>a negative answer</summary>
-			no
-		}
+        public enum yesnoType
+        {
+            /// <summary>a positive answer</summary>
+            yes,
+            /// <summary>a negative answer</summary>
+            no
+        }
 
-		public enum removeAmountTypes
-		{
-			/// <summary>Setting DM amount to remove</summary>
-			DMToRemove,
-			/// <summary>Setting residual DM amount</summary>
-			ResidualDM
-		}
+        public enum removeAmountTypes
+        {
+            /// <summary>Setting DM amount to remove</summary>
+            DMToRemove,
+            /// <summary>Setting residual DM amount</summary>
+            ResidualDM
+        }
 
-		public enum rotationIntervalTypes
-		{
-			/// <summary>Setting a fixed interval</summary>
-			FixedInterval,
-			/// <summary>Setting a target (minimum) inteval</summary>
-			TargetInterval
-		}
+        public enum rotationIntervalTypes
+        {
+            /// <summary>Setting a fixed interval</summary>
+            FixedInterval,
+            /// <summary>Setting a target (minimum) inteval</summary>
+            TargetInterval
+        }
 
-		public enum removeDMTypes
-		{
-			/// <summary>Remove all DM</summary>
-			RemoveAll,
-			/// <summary>Remove no DM</summary>
-			RemoveNone,
-			/// <summary>Remove a fraction based on digestibility</summary>
-			BasedOnDigestibility
-		}
-		
-		public enum returnTypes
-		{
-			/// <summary>Return plant material as residue</summary>
-			AsResidue,
-			/// <summary>Return meterial as dung and urine</summary>
-			AsDungUrine
-		}
+        public enum removeDMTypes
+        {
+            /// <summary>Remove all DM</summary>
+            RemoveAll,
+            /// <summary>Remove no DM</summary>
+            RemoveNone,
+            /// <summary>Remove a fraction based on digestibility</summary>
+            BasedOnDigestibility
+        }
+        
+        public enum returnTypes
+        {
+            /// <summary>Return plant material as residue</summary>
+            AsResidue,
+            /// <summary>Return meterial as dung and urine</summary>
+            AsDungUrine
+        }
 
-		public enum dungNContentTypes
-		{
-			/// <summary>Define the proportion of N returned as dung</summary>
-			DefineProportion,
-			/// <summary>Define the C:N of dung</summary>
-			DefineCNratio,
-		}
-	}
+        public enum dungNContentTypes
+        {
+            /// <summary>Define the proportion of N returned as dung</summary>
+            DefineProportion,
+            /// <summary>Define the C:N of dung</summary>
+            DefineCNratio,
+        }
+    }
 }
 ]]></Code>
             </Manager>
@@ -3537,85 +3627,85 @@ using System.Xml.Serialization;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser fertiliser;
-		[Link] ISummary summary = null;
-		[Link] Soil Soil;
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser fertiliser;
+        [Link] ISummary summary = null;
+        [Link] Soil Soil;
 
-		//User inputs from properties tab
-		[Description("Turn ferliser applications on? ")]
-		public yesnoType AllowFertiliser { get; set; }
-		
-		[Description("Depth to calculate available soil N (mm): ")]
-		public double Depth2SoilN { get; set; }
+        //User inputs from properties tab
+        [Description("Turn ferliser applications on? ")]
+        public yesnoType AllowFertiliser { get; set; }
+        
+        [Description("Depth to calculate available soil N (mm): ")]
+        public double Depth2SoilN { get; set; }
 
-		[Description("Minimum available N, triggers an application (kgN/ha): ")]
-		public double CriticalSoilN { get; set; }
+        [Description("Minimum available N, triggers an application (kgN/ha): ")]
+        public double CriticalSoilN { get; set; }
 
-		[Description("Amount of N fertiliser for each application (kgN/ha): ")]
-		public double FertNAmount { get; set; }
+        [Description("Amount of N fertiliser for each application (kgN/ha): ")]
+        public double FertNAmount { get; set; }
 
-		[Description("Type of N fertiliser to apply: ")]
-		public Fertiliser.Types FertType { get; set; }
+        [Description("Type of N fertiliser to apply: ")]
+        public Fertiliser.Types FertType { get; set; }
 
-		[Description("Depth at which to apply the fertiliser (mm): ")]
-		public double FertApplicationDepth { get; set; }
-	   
-		[Description("Minimum period between applications (days): ")]
-		public double FertMinimumDays { get; set; }
-	   
-		public enum yesnoType
-		{
-			/// <summary>a positive answer</summary>
-			yes,
-			/// <summary>a negative answer</summary>
-			no
-		}
+        [Description("Depth at which to apply the fertiliser (mm): ")]
+        public double FertApplicationDepth { get; set; }
+       
+        [Description("Minimum period between applications (days): ")]
+        public double FertMinimumDays { get; set; }
+       
+        public enum yesnoType
+        {
+            /// <summary>a positive answer</summary>
+            yes,
+            /// <summary>a negative answer</summary>
+            no
+        }
 
-		[XmlIgnore] public double TopMineralN { get; set; }
-		
-		private DateTime lastApplicationDate;
-		private bool fertiliserIsAllowed;
-		private int nLayers;
+        [XmlIgnore] public double TopMineralN { get; set; }
+        
+        private DateTime lastApplicationDate;
+        private bool fertiliserIsAllowed;
+        private int nLayers;
 
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			fertiliserIsAllowed = (AllowFertiliser == yesnoType.yes);
-			nLayers = Soil.SoilWater.Thickness.Length;
-		}
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            fertiliserIsAllowed = (AllowFertiliser == yesnoType.yes);
+            nLayers = Soil.Thickness.Length;
+        }
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			double daysSinceLastApplication = (Clock.Today - lastApplicationDate).TotalDays;
-			
-			// get the N stored in the soil
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			TopMineralN = 0.0;
-			for (int layer = 0; layer < nLayers; layer++)
-			{
-				fracLayer = Math.Min(1.0, (Depth2SoilN - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopMineralN += (Soil.SoilNitrogen.NO3[layer]
-				+ Soil.SoilNitrogen.NH4[layer]
-				+ Soil.SoilNitrogen.urea[layer])
-				* fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= Depth2SoilN)
-					layer = nLayers;
-			}
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            double daysSinceLastApplication = (Clock.Today - lastApplicationDate).TotalDays;
+            
+            // get the N stored in the soil
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            TopMineralN = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                fracLayer = Math.Min(1.0, (Depth2SoilN - depthFromSurface) / Soil.Thickness[layer]);
+                TopMineralN += (Soil.SoilNitrogen.NO3[layer]
+                + Soil.SoilNitrogen.NH4[layer]
+                + Soil.SoilNitrogen.urea[layer])
+                * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= Depth2SoilN)
+                    layer = nLayers;
+            }
 
-			if (fertiliserIsAllowed && (daysSinceLastApplication >= FertMinimumDays) && (TopMineralN <= CriticalSoilN))
-			{
-				fertiliser.Apply(FertNAmount, FertType, FertApplicationDepth);
-				lastApplicationDate = Clock.Today;
-			}
-		}
-	}
+            if (fertiliserIsAllowed && (daysSinceLastApplication >= FertMinimumDays) && (TopMineralN <= CriticalSoilN))
+            {
+                fertiliser.Apply(FertNAmount, FertType, FertApplicationDepth);
+                lastApplicationDate = Clock.Today;
+            }
+        }
+    }
 }
 ]]></Code>
             </Manager>
@@ -3643,154 +3733,154 @@ using APSIM.Shared.Utilities;
         
 namespace Models
 {
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		//Communication to other modules
-		[Link] ISummary summary = null;
-		[Link] Irrigation Irrigation;
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link(IsOptional = true)] ICrop existingCrop;
-	   
-		//User inputs from properties tab
-		[Description("Turn irrigation on?")]
-		public bool allowIrrigation { get; set; }
-		[Description("Start of irrigation season (dd-MMM)")]
-		public string seasonStart { get; set; }
-		[Description("End of irrigation season (dd-MMM)")]
-		public string seasonEnd { get; set; }
-		[Description("Season allocation (mm)")]
-		public double seasonsAllocation { get; set; }
-		[Description("Deficit to trigger irrigation (% PAWC)")]
-		public double triggerDeficit { get; set; }
-		[Description("Deficit to stop irrigaton (% PAWC)")]
-		public double targetDeficit { get; set; }
-		[Description("Minimum days for irrigation to return")]
-		public double returndays { get; set; }
-		[Description("Maximum irrigation application (mm/day)")]
-		public double maximumAmount { get; set; }
-		[Description("Depth to calculate PAWC (mm)")]
-		public double depthPAWC { get; set; }
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        //Communication to other modules
+        [Link] ISummary summary = null;
+        [Link] Irrigation Irrigation;
+        [Link] Clock Clock;
+        [Link] Soil Soil;
+        [Link(IsOptional = true)] IPlant existingCrop;
+       
+        //User inputs from properties tab
+        [Description("Turn irrigation on?")]
+        public bool allowIrrigation { get; set; }
+        [Description("Start of irrigation season (dd-MMM)")]
+        public string seasonStart { get; set; }
+        [Description("End of irrigation season (dd-MMM)")]
+        public string seasonEnd { get; set; }
+        [Description("Season allocation (mm)")]
+        public double seasonsAllocation { get; set; }
+        [Description("Deficit to trigger irrigation (% PAWC)")]
+        public double triggerDeficit { get; set; }
+        [Description("Deficit to stop irrigaton (% PAWC)")]
+        public double targetDeficit { get; set; }
+        [Description("Minimum days for irrigation to return")]
+        public double returndays { get; set; }
+        [Description("Maximum irrigation application (mm/day)")]
+        public double maximumAmount { get; set; }
+        [Description("Depth to calculate PAWC (mm)")]
+        public double depthPAWC { get; set; }
 
-		//Class members
-		[XmlIgnore] public double TopSWdeficit { get; set; }
-		[XmlIgnore] public double TopSWC { get; set; }
-		[XmlIgnore] public double DaysSinceIrrigation { get; set; }
-		[XmlIgnore] public double AmountToApply { get; set; }
-		[XmlIgnore] public double SeasonAppliedAmount { get; set; }
-		
-		private bool IrrigationIsAllowed { get; set; }
-		private bool SeasonIsOpen { get; set; }
-		private bool CropIsActive { get; set; }
-		private bool IrrigatorIsAvailable { get; set; }
-		private bool SoilIsDry { get; set; }
+        //Class members
+        [XmlIgnore] public double TopSWdeficit { get; set; }
+        [XmlIgnore] public double TopSWC { get; set; }
+        [XmlIgnore] public double DaysSinceIrrigation { get; set; }
+        [XmlIgnore] public double AmountToApply { get; set; }
+        [XmlIgnore] public double SeasonAppliedAmount { get; set; }
+        
+        private bool IrrigationIsAllowed { get; set; }
+        private bool SeasonIsOpen { get; set; }
+        private bool CropIsActive { get; set; }
+        private bool IrrigatorIsAvailable { get; set; }
+        private bool SoilIsDry { get; set; }
 
-		private DateTime StartDate;
-		private DateTime EndDate;
-		private double TopDUL;
-		private double TopLL;
-		private int nLayers;
-	
-		//Calculate static soil variables
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{   
-			//Set the season dates
-			StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
-			EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
-			
-			//Can we irrigate at all?
-			IrrigationIsAllowed = false; 
-			if (allowIrrigation)
-				IrrigationIsAllowed = true; 
+        private DateTime StartDate;
+        private DateTime EndDate;
+        private double TopDUL;
+        private double TopLL;
+        private int nLayers;
+    
+        //Calculate static soil variables
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {   
+            //Set the season dates
+            StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
+            EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
+            
+            //Can we irrigate at all?
+            IrrigationIsAllowed = false; 
+            if (allowIrrigation)
+                IrrigationIsAllowed = true; 
 
-			//Calculate soil water variables
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			nLayers = Soil.SoilWater.Thickness.Length;
-			for (int layer = 0; layer < nLayers; layer++)
-			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
-				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= depthPAWC)
-					layer = nLayers;
-			}
-		}
-	   	  
-		//Determine daily requirement for irrigation
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			//Can we irrigate today?		  
-			SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
+            //Calculate soil water variables
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            nLayers = Soil.Thickness.Length;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+                TopLL += Soil.LL15mm[layer] * fracLayer;
+                TopDUL += Soil.DULmm[layer] * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= depthPAWC)
+                    layer = nLayers;
+            }
+        }
+             
+        //Determine daily requirement for irrigation
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            //Can we irrigate today?          
+            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
 
-			//Is there a crop in the ground that needs irrigation?
-			CropIsActive = false;
-			if ((existingCrop != null) && (existingCrop.IsAlive))
-				CropIsActive = true;
-			//if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
-	      
-			//Is the irrigator available?
-			IrrigatorIsAvailable = false;
-			DaysSinceIrrigation += 1;
-			if (DaysSinceIrrigation >= returndays)
-				IrrigatorIsAvailable = true;
-	      
-			//Is the soil dry enough to require irrigation?
-			SoilIsDry = false;
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			TopSWC = 0.0;
-			for (int layer = 0; layer < nLayers; layer++)
-			//for (int layer = 0; depthFromSurface < depthPAWC + Soil.SoilWater.Thickness[layer]; layer++)
-			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= depthPAWC)
-					layer = nLayers;
-			}
-			
-			TopSWdeficit = TopSWC - TopDUL;
-			if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
-				SoilIsDry = true;
-	            
-			//Are all the conditions ratifying irrigation
-			if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
-			{
-				//Lets bloody well irrigate then!!!!
-				AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
-				AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
-				Irrigation.Apply(AmountToApply);
-				DaysSinceIrrigation = 0;
-				SeasonAppliedAmount += AmountToApply;
-			}
-		}
-		
-		///Checks whether theDate is between iniDate and endDate (non-year specific)
-		private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
-		{
-			bool result = false;
-			if (iniDate.DayOfYear < endDate.DayOfYear)
-			{
-				// period is within one year, ex: summer in the northern hemisphere
-				if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
-					result = true;
-			}
-			else
-			{
-				// period goes over the end of the year, ex: summer in the southern hemisphere
-				if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
-					result = true;
-			}
-			
-			return result;
-		}
-	}
+            //Is there a crop in the ground that needs irrigation?
+            CropIsActive = false;
+            if ((existingCrop != null) && (existingCrop.IsAlive))
+                CropIsActive = true;
+            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
+          
+            //Is the irrigator available?
+            IrrigatorIsAvailable = false;
+            DaysSinceIrrigation += 1;
+            if (DaysSinceIrrigation >= returndays)
+                IrrigatorIsAvailable = true;
+          
+            //Is the soil dry enough to require irrigation?
+            SoilIsDry = false;
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            TopSWC = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            //for (int layer = 0; depthFromSurface < depthPAWC + Soil.Thickness[layer]; layer++)
+            {
+                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+                TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= depthPAWC)
+                    layer = nLayers;
+            }
+            
+            TopSWdeficit = TopSWC - TopDUL;
+            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
+                SoilIsDry = true;
+                
+            //Are all the conditions ratifying irrigation
+            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
+            {
+                //Lets bloody well irrigate then!!!!
+                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
+                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
+                Irrigation.Apply(AmountToApply);
+                DaysSinceIrrigation = 0;
+                SeasonAppliedAmount += AmountToApply;
+            }
+        }
+        
+        ///Checks whether theDate is between iniDate and endDate (non-year specific)
+        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
+        {
+            bool result = false;
+            if (iniDate.DayOfYear < endDate.DayOfYear)
+            {
+                // period is within one year, ex: summer in the northern hemisphere
+                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
+                    result = true;
+            }
+            else
+            {
+                // period goes over the end of the year, ex: summer in the southern hemisphere
+                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
+                    result = true;
+            }
+            
+            return result;
+        }
+    }
 }
 ]]></Code>
             </Manager>
@@ -4409,6 +4499,51 @@ namespace Models
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
             <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
+            <PastureAboveGroundOrgan>
+              <Name>Leaves</Name>
+              <GenericTissue>
+                <Name>LeafCohort1</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort2</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort3</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>Dead</Name>
+              </GenericTissue>
+            </PastureAboveGroundOrgan>
+            <PastureAboveGroundOrgan>
+              <Name>Stems</Name>
+              <GenericTissue>
+                <Name>LeafCohort1</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort2</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort3</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>Dead</Name>
+              </GenericTissue>
+            </PastureAboveGroundOrgan>
+            <PastureAboveGroundOrgan>
+              <Name>Stolons</Name>
+              <GenericTissue>
+                <Name>LeafCohort1</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort2</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort3</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>Dead</Name>
+              </GenericTissue>
+            </PastureAboveGroundOrgan>
           </PastureSpecies>
           <PastureSpecies>
             <Name>WhiteClover</Name>
@@ -4525,6 +4660,51 @@ namespace Models
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
             <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
+            <PastureAboveGroundOrgan>
+              <Name>Leaves</Name>
+              <GenericTissue>
+                <Name>LeafCohort1</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort2</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort3</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>Dead</Name>
+              </GenericTissue>
+            </PastureAboveGroundOrgan>
+            <PastureAboveGroundOrgan>
+              <Name>Stems</Name>
+              <GenericTissue>
+                <Name>LeafCohort1</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort2</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort3</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>Dead</Name>
+              </GenericTissue>
+            </PastureAboveGroundOrgan>
+            <PastureAboveGroundOrgan>
+              <Name>Stolons</Name>
+              <GenericTissue>
+                <Name>LeafCohort1</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort2</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>LeafCohort3</Name>
+              </GenericTissue>
+              <GenericTissue>
+                <Name>Dead</Name>
+              </GenericTissue>
+            </PastureAboveGroundOrgan>
           </PastureSpecies>
           <Report>
             <Name>Results</Name>
@@ -7342,322 +7522,322 @@ using System.Diagnostics;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		// - Links to APSIM models
-		[Link] Zone myZone;
-		[Link] Clock Clock;
-		[Link] Fertiliser fertiliser;
-		[Link] ISummary summary = null;
-		
-		List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
-		
-		// - Paramters for this manager
-		[Description("Date to begin the rotation: ")]
-		public DateTime CutRotationStartDate { get; set; }
-		[Description("Date to finish the rotation: ")]
-		public DateTime CutRotationEndDate { get; set; }
-		[Description("Rotation interval (days): ")]
-		public int CutInterval { get; set; }
-		[Description("How the interval is defined: ")]
-		public rotationIntervalTypes IntervalType { get; set; }
-		[Description("Duration of each event (days): ")]
-		public int DurationOfCut { get; set; }
-		[Description("What amount is being defined: ")]
-		public removeAmountTypes RemoveAmountType { get; set; }
-		[Description("Amount to use (kg/ha): ")]
-		public double AmountGiven { get; set; }
-		[Description("Fraction of DM that is removed from the field:")]
-		public removeDMTypes DMRemoveType { get; set; }
-		[Description("Fraction of N that is removed from the field (0-1):")]
-		public double FractionN2Remove { get; set; }
-		[Description("Proportion of N returned in dung (0-1):")]
-		public double ProportionN2Dung { get; set; }
+    [Serializable]
+    public class Script : Model
+    {
+        // - Links to APSIM models
+        [Link] Zone myZone;
+        [Link] Clock Clock;
+        [Link] Fertiliser fertiliser;
+        [Link] ISummary summary = null;
+        
+        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
+        
+        // - Paramters for this manager
+        [Description("Date to begin the rotation: ")]
+        public DateTime CutRotationStartDate { get; set; }
+        [Description("Date to finish the rotation: ")]
+        public DateTime CutRotationEndDate { get; set; }
+        [Description("Rotation interval (days): ")]
+        public int CutInterval { get; set; }
+        [Description("How the interval is defined: ")]
+        public rotationIntervalTypes IntervalType { get; set; }
+        [Description("Duration of each event (days): ")]
+        public int DurationOfCut { get; set; }
+        [Description("What amount is being defined: ")]
+        public removeAmountTypes RemoveAmountType { get; set; }
+        [Description("Amount to use (kg/ha): ")]
+        public double AmountGiven { get; set; }
+        [Description("Fraction of DM that is removed from the field:")]
+        public removeDMTypes DMRemoveType { get; set; }
+        [Description("Fraction of N that is removed from the field (0-1):")]
+        public double FractionN2Remove { get; set; }
+        [Description("Proportion of N returned in dung (0-1):")]
+        public double ProportionN2Dung { get; set; }
 
-		// - Outputs from this manager
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM defoliated today
-		public double DefoliatedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N defoliate today
-		public double DefoliatedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM harvested today
-		public double HarvestedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N harvested today
-		public double HarvestedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture DM removed from the field
-		public double RemovedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Pasture N removed from the field
-		public double RemovedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Residue DM returned to the field
-		public double ReturnedWt { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Residue N returned to the field
-		public double ReturnedN { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Harvested N returned as dung (SurfaceOM)
-		public double NReturnedInDung { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Harvested N returned as urine (urea)
-		public double NReturnedInUrine { get; set; }
-		[XmlIgnore][Units("day")]// Description: Number of days after last defoliation
-		public int DaysAfterCut { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut
-		public double PreHarvestDM { get; set; }
-		[XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut
-		public double PostHarvestDM { get; set; }
-		
-		// - Internal variables
-		// fraction of harvested Dm to actually remove from field
-		private double fractionDM2Remove = 1.0;
-		// flag whether defoliation is allowed
-		private bool rotationAllowed = true;
-		// number of days for each defoliation event
-		private int cuttingDuration = 0;
-		// counter for day within each defoliation
-		private int daysCutting = 0;
-		// type of interval (Fixed or target)
-		private string intervalType;
-		// total herbage to remove in g/m2 per day
-		private double herbageToRemove;
-		// type of DM amount (ResidualDM or DMToRemove)
-		private string amountType;
-		// auxiliary flag for defoliation
-		private bool aCutHasHappened = false;
+        // - Outputs from this manager
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM defoliated today
+        public double DefoliatedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N defoliate today
+        public double DefoliatedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM harvested today
+        public double HarvestedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N harvested today
+        public double HarvestedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture DM removed from the field
+        public double RemovedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Pasture N removed from the field
+        public double RemovedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Residue DM returned to the field
+        public double ReturnedWt { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Residue N returned to the field
+        public double ReturnedN { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Harvested N returned as dung (SurfaceOM)
+        public double NReturnedInDung { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Harvested N returned as urine (urea)
+        public double NReturnedInUrine { get; set; }
+        [XmlIgnore][Units("day")]// Description: Number of days after last defoliation
+        public int DaysAfterCut { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut
+        public double PreHarvestDM { get; set; }
+        [XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut
+        public double PostHarvestDM { get; set; }
+        
+        // - Internal variables
+        // fraction of harvested Dm to actually remove from field
+        private double fractionDM2Remove = 1.0;
+        // flag whether defoliation is allowed
+        private bool rotationAllowed = true;
+        // number of days for each defoliation event
+        private int cuttingDuration = 0;
+        // counter for day within each defoliation
+        private int daysCutting = 0;
+        // type of interval (Fixed or target)
+        private string intervalType;
+        // total herbage to remove in g/m2 per day
+        private double herbageToRemove;
+        // type of DM amount (ResidualDM or DMToRemove)
+        private string amountType;
+        // auxiliary flag for defoliation
+        private bool aCutHasHappened = false;
 
-		// - Event to add residue or dung to surface OM
-		public event BiomassRemovedDelegate BiomassRemoved;
+        // - Event to add residue or dung to surface OM
+        public event BiomassRemovedDelegate BiomassRemoved;
 
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			foreach (AgPasture.PastureSpecies species in Apsim.Children(myZone, typeof(AgPasture.PastureSpecies)))
-			{
-				Pasture.Add(species);
-			}
-			
-			Pasture[0].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000, specificRootLength: 100);
-			Pasture[0].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500, specificRootLength: 100);
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            foreach (AgPasture.PastureSpecies species in Apsim.Children(myZone, typeof(AgPasture.PastureSpecies)))
+            {
+                Pasture.Add(species);
+            }
+            
+            Pasture[0].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000, specificRootLength: 100);
+            Pasture[0].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500, specificRootLength: 100);
 
-			Pasture[1].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000, specificRootLength: 100);
-			Pasture[1].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500, specificRootLength: 100);
+            Pasture[1].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000, specificRootLength: 100);
+            Pasture[1].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500, specificRootLength: 100);
 
-			// reset variables
-			DaysAfterCut = 0;
-			resetVariables();
-			cuttingDuration = DurationOfCut;
-			
-			// get the type of amount given
-			if (RemoveAmountType == removeAmountTypes.ResidualDM)
-				amountType = "SetResidueAmount";
-			else
-				amountType = "SetRemoveAmount";
+            // reset variables
+            DaysAfterCut = 0;
+            resetVariables();
+            cuttingDuration = DurationOfCut;
+            
+            // get the type of amount given
+            if (RemoveAmountType == removeAmountTypes.ResidualDM)
+                amountType = "SetResidueAmount";
+            else
+                amountType = "SetRemoveAmount";
 
-			// get the type of amount given
-			if (IntervalType == rotationIntervalTypes.FixedInterval)
-				intervalType = "Fixed";
-			else
-				intervalType = "Target";
+            // get the type of amount given
+            if (IntervalType == rotationIntervalTypes.FixedInterval)
+                intervalType = "Fixed";
+            else
+                intervalType = "Target";
 
-			// make sure that rotation start when startDate < simulationStartDay
-			if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))
-				CutRotationStartDate = Clock.Today;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (rotationAllowed)
-			{
-				if (Clock.Today == CutRotationStartDate)
-					DaysAfterCut = CutInterval;
+            // make sure that rotation start when startDate < simulationStartDay
+            if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))
+                CutRotationStartDate = Clock.Today;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (rotationAllowed)
+            {
+                if (Clock.Today == CutRotationStartDate)
+                    DaysAfterCut = CutInterval;
 
-				// Check whether we can defoliate
-				if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate) && (Pasture[0].IsAlive))
-				{
-					// Check whether we should start a defoliation
-					if (DaysAfterCut >= (CutInterval - 1))
-					{
-						Graze(AmountGiven, amountType, DurationOfCut);
-					}
-				}
-			}
+                // Check whether we can defoliate
+                if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate) && (Pasture[0].IsAlive))
+                {
+                    // Check whether we should start a defoliation
+                    if (DaysAfterCut >= (CutInterval - 1))
+                    {
+                        Graze(AmountGiven, amountType, DurationOfCut);
+                    }
+                }
+            }
 
-			// Check whether we need to continue cutting
-			if ((daysCutting > 0) && (daysCutting < cuttingDuration))
-			{
-				// reset outputs
-				resetVariables();
+            // Check whether we need to continue cutting
+            if ((daysCutting > 0) && (daysCutting < cuttingDuration))
+            {
+                // reset outputs
+                resetVariables();
 
-				removeDM(herbageToRemove);
-				returnExcreta();
-				daysCutting += 1;
-				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
-			}
+                removeDM(herbageToRemove);
+                returnExcreta();
+                daysCutting += 1;
+                if (daysCutting == cuttingDuration)
+                    PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
+            }
 
-			// reset outputs
-			if (daysCutting < 0)
-			{
-				resetVariables();
-				daysCutting = 0;
-			}
-		}
+            // reset outputs
+            if (daysCutting < 0)
+            {
+                resetVariables();
+                daysCutting = 0;
+            }
+        }
 
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			// Check whether a cutting has finished
-			if (daysCutting == cuttingDuration)
-			{
-				aCutHasHappened = true;
-				daysCutting = -1;
-			}
+        [EventSubscribe("DoManagementCalculations")]
+        private void OnDoManagementCalculations(object sender, EventArgs e)
+        {
+            // Check whether a cutting has finished
+            if (daysCutting == cuttingDuration)
+            {
+                aCutHasHappened = true;
+                daysCutting = -1;
+            }
 
-			// Increase the counter for days after cutting
-			if (aCutHasHappened && (daysCutting == 0))
-				DaysAfterCut += 1;
-		}
+            // Increase the counter for days after cutting
+            if (aCutHasHappened && (daysCutting == 0))
+                DaysAfterCut += 1;
+        }
 
-		public enum removeAmountTypes
-		{
-			/// <summary>Setting DM amount to remove</summary>
-			DMToRemove,
-			/// <summary>Setting residual DM amount</summary>
-			ResidualDM
-		}
+        public enum removeAmountTypes
+        {
+            /// <summary>Setting DM amount to remove</summary>
+            DMToRemove,
+            /// <summary>Setting residual DM amount</summary>
+            ResidualDM
+        }
 
-		public enum rotationIntervalTypes
-		{
-			/// <summary>Setting a fixed interval</summary>
-			FixedInterval,
-			/// <summary>Setting a target (minimum) inteval</summary>
-			TargetInterval
-		}
+        public enum rotationIntervalTypes
+        {
+            /// <summary>Setting a fixed interval</summary>
+            FixedInterval,
+            /// <summary>Setting a target (minimum) inteval</summary>
+            TargetInterval
+        }
 
-		public enum removeDMTypes
-		{
-			/// <summary>Remove all DM</summary>
-			RemoveAll,
-			/// <summary>Remove no DM</summary>
-			RemoveNone,
-			/// <summary>Remove a fraction based on digestibility</summary>
-			BasedOnDigestibility
-		}
+        public enum removeDMTypes
+        {
+            /// <summary>Remove all DM</summary>
+            RemoveAll,
+            /// <summary>Remove no DM</summary>
+            RemoveNone,
+            /// <summary>Remove a fraction based on digestibility</summary>
+            BasedOnDigestibility
+        }
 
-		// Resets the values of all outputs
-		private void resetVariables()
-		{
-			DefoliatedWt = 0.0;
-			DefoliatedN = 0.0;
-			HarvestedWt = 0.0;
-			HarvestedN = 0.0;
-			RemovedWt = 0.0;
-			RemovedN = 0.0;
-			ReturnedWt = 0.0;
-			ReturnedN = 0.0;
-			NReturnedInDung = 0.0;
-			NReturnedInUrine = 0.0;
-		}
+        // Resets the values of all outputs
+        private void resetVariables()
+        {
+            DefoliatedWt = 0.0;
+            DefoliatedN = 0.0;
+            HarvestedWt = 0.0;
+            HarvestedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
+            ReturnedWt = 0.0;
+            ReturnedN = 0.0;
+            NReturnedInDung = 0.0;
+            NReturnedInUrine = 0.0;
+        }
 
-		// Description: Perform the basic calculations for defoliation
-		public void Graze(double amountDM, string amountType, int duration)
-		{
-			// Get the existing plant amount
-			PreHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
-			
-			// Check the amount to remove and print some info
-			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
-			{
-				summary.WriteMessage(this, "   Defoliating " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-				herbageToRemove = amountDM / duration;
-			}
-			else if ((amountType == "SetResidueAmount") && (PreHarvestDM >= amountDM))
-			{
-				summary.WriteMessage(this, "   Defoliating down to approximately " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-				herbageToRemove = (PreHarvestDM - amountDM) / duration;
-			}
-			else
-			{
-				summary.WriteMessage(this, "   Defoliation will not happend because there is not enough plant material");
-				if (intervalType == "Fixed")
-					DaysAfterCut = -duration;
-				return;
-			}
+        // Description: Perform the basic calculations for defoliation
+        public void Graze(double amountDM, string amountType, int duration)
+        {
+            // Get the existing plant amount
+            PreHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
+            
+            // Check the amount to remove and print some info
+            if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
+            {
+                summary.WriteMessage(this, "   Defoliating " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
+                herbageToRemove = amountDM / duration;
+            }
+            else if ((amountType == "SetResidueAmount") && (PreHarvestDM >= amountDM))
+            {
+                summary.WriteMessage(this, "   Defoliating down to approximately " + (10 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
+                herbageToRemove = (PreHarvestDM - amountDM) / duration;
+            }
+            else
+            {
+                summary.WriteMessage(this, "   Defoliation will not happend because there is not enough plant material");
+                if (intervalType == "Fixed")
+                    DaysAfterCut = -duration;
+                return;
+            }
 
-			cuttingDuration = duration;
-			// Preform first defoliation
-			removeDM(herbageToRemove);
-			returnExcreta();
-			daysCutting = 1;
-			DaysAfterCut = 0;
-			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
-		}
+            cuttingDuration = duration;
+            // Preform first defoliation
+            removeDM(herbageToRemove);
+            returnExcreta();
+            daysCutting = 1;
+            DaysAfterCut = 0;
+            if (daysCutting == cuttingDuration)
+                PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
+        }
 
-		// Do the DM removal
-		private void removeDM(double removeAmount)
-		{
-			double existingWt = Pasture[0].HarvestableWt + Pasture[1].HarvestableWt;
+        // Do the DM removal
+        private void removeDM(double removeAmount)
+        {
+            double existingWt = Pasture[0].HarvestableWt + Pasture[1].HarvestableWt;
 
-			// Check whether we harvest anything
-			if (existingWt >= removeAmount)
-			{
-				foreach (AgPasture.PastureSpecies species in Pasture)
-				{
-					double amountToRemove = removeAmount * species.HarvestableWt / existingWt;
-					species.Graze(amount: amountToRemove, type: "SetRemoveAmount");
-				}
-				
-				// get total harvested
-				DefoliatedWt = Pasture[0].HarvestedWt + Pasture[1].HarvestedWt;
-				DefoliatedN = Pasture[0].HarvestedN + Pasture[1].HarvestedN;
-				HarvestedWt = DefoliatedWt;
-				HarvestedN = DefoliatedN;
+            // Check whether we harvest anything
+            if (existingWt >= removeAmount)
+            {
+                foreach (AgPasture.PastureSpecies species in Pasture)
+                {
+                    double amountToRemove = removeAmount * species.HarvestableWt / existingWt;
+                    species.Graze(amount: amountToRemove, type: "SetRemoveAmount");
+                }
+                
+                // get total harvested
+                DefoliatedWt = Pasture[0].HarvestedWt + Pasture[1].HarvestedWt;
+                DefoliatedN = Pasture[0].HarvestedN + Pasture[1].HarvestedN;
+                HarvestedWt = DefoliatedWt;
+                HarvestedN = DefoliatedN;
 
-				// get amounts actually removed from field and that to be returned (dung/urine)
-				if (DMRemoveType == removeDMTypes.RemoveAll)
-					fractionDM2Remove = 1.0;
-				else if (DMRemoveType == removeDMTypes.RemoveNone)
-					fractionDM2Remove = 0.0;
-				else
-				{
-					fractionDM2Remove = Pasture[0].HarvestedDigestibility * Pasture[0].HarvestedWt + Pasture[1].HarvestedDigestibility * Pasture[1].HarvestedWt;
-					fractionDM2Remove /= removeAmount;
-				}
-				
-				RemovedWt = HarvestedWt * fractionDM2Remove;
-				RemovedN = HarvestedN * FractionN2Remove;
-				ReturnedWt = HarvestedWt - RemovedWt;
-				ReturnedN = HarvestedN - RemovedN;
-				NReturnedInDung = ReturnedN * ProportionN2Dung;
-				NReturnedInUrine = ReturnedN - NReturnedInDung;
-			}
-		}
+                // get amounts actually removed from field and that to be returned (dung/urine)
+                if (DMRemoveType == removeDMTypes.RemoveAll)
+                    fractionDM2Remove = 1.0;
+                else if (DMRemoveType == removeDMTypes.RemoveNone)
+                    fractionDM2Remove = 0.0;
+                else
+                {
+                    fractionDM2Remove = Pasture[0].HarvestedDigestibility * Pasture[0].HarvestedWt + Pasture[1].HarvestedDigestibility * Pasture[1].HarvestedWt;
+                    fractionDM2Remove /= removeAmount;
+                }
+                
+                RemovedWt = HarvestedWt * fractionDM2Remove;
+                RemovedN = HarvestedN * FractionN2Remove;
+                ReturnedWt = HarvestedWt - RemovedWt;
+                ReturnedN = HarvestedN - RemovedN;
+                NReturnedInDung = ReturnedN * ProportionN2Dung;
+                NReturnedInUrine = ReturnedN - NReturnedInDung;
+            }
+        }
 
-		// Return dung and urine
-		private void returnExcreta()
-		{
-			if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))
-			{
-				PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
-				string[] type = new string[] { "RuminantDung_PastureFed" };
-				float[] dltdm = new float[] { (Single)ReturnedWt };
-				float[] dltn = new float[] { (Single)NReturnedInDung };
-				float[] dltp = new float[] { 0 };
-				float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
+        // Return dung and urine
+        private void returnExcreta()
+        {
+            if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))
+            {
+                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
+                string[] type = new string[] { "RuminantDung_PastureFed" };
+                float[] dltdm = new float[] { (Single)ReturnedWt };
+                float[] dltn = new float[] { (Single)NReturnedInDung };
+                float[] dltp = new float[] { 0 };
+                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
 
-				BiomassDung.crop_type = "RuminantDung_PastureFed";
-				BiomassDung.dm_type = type;
-				BiomassDung.dlt_crop_dm = dltdm;
-				BiomassDung.dlt_dm_n = dltn;
-				BiomassDung.dlt_dm_p = dltp;
-				BiomassDung.fraction_to_residue = fraction;
-				BiomassRemoved.Invoke(BiomassDung);
-			}
+                BiomassDung.crop_type = "RuminantDung_PastureFed";
+                BiomassDung.dm_type = type;
+                BiomassDung.dlt_crop_dm = dltdm;
+                BiomassDung.dlt_dm_n = dltn;
+                BiomassDung.dlt_dm_p = dltp;
+                BiomassDung.fraction_to_residue = fraction;
+                BiomassRemoved.Invoke(BiomassDung);
+            }
 
-			if (NReturnedInUrine > 0.0)
-			{
-				fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);
-			}
-		}
-	}
+            if (NReturnedInUrine > 0.0)
+            {
+                fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);
+            }
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -7681,85 +7861,85 @@ using System.Xml.Serialization;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser fertiliser;
-		[Link] ISummary summary = null;
-		[Link] Soil Soil;
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser fertiliser;
+        [Link] ISummary summary = null;
+        [Link] Soil Soil;
 
-		//User inputs from properties tab
-		[Description("Turn ferliser applications on? ")]
-		public yesnoType AllowFertiliser { get; set; }
-		
-		[Description("Depth to calculate available soil N (mm): ")]
-		public double Depth2SoilN { get; set; }
+        //User inputs from properties tab
+        [Description("Turn ferliser applications on? ")]
+        public yesnoType AllowFertiliser { get; set; }
+        
+        [Description("Depth to calculate available soil N (mm): ")]
+        public double Depth2SoilN { get; set; }
 
-		[Description("Minimum available N, triggers an application (kgN/ha): ")]
-		public double CriticalSoilN { get; set; }
+        [Description("Minimum available N, triggers an application (kgN/ha): ")]
+        public double CriticalSoilN { get; set; }
 
-		[Description("Amount of N fertiliser for each application (kgN/ha): ")]
-		public double FertNAmount { get; set; }
+        [Description("Amount of N fertiliser for each application (kgN/ha): ")]
+        public double FertNAmount { get; set; }
 
-		[Description("Type of N fertiliser to apply: ")]
-		public Fertiliser.Types FertType { get; set; }
+        [Description("Type of N fertiliser to apply: ")]
+        public Fertiliser.Types FertType { get; set; }
 
-		[Description("Depth at which to apply the fertiliser (mm): ")]
-		public double FertApplicationDepth { get; set; }
-	   
-		[Description("Minimum period between applications (days): ")]
-		public double FertMinimumDays { get; set; }
-	   
-		public enum yesnoType
-		{
-			/// <summary>a positive answer</summary>
-			yes,
-			/// <summary>a negative answer</summary>
-			no
-		}
+        [Description("Depth at which to apply the fertiliser (mm): ")]
+        public double FertApplicationDepth { get; set; }
+       
+        [Description("Minimum period between applications (days): ")]
+        public double FertMinimumDays { get; set; }
+       
+        public enum yesnoType
+        {
+            /// <summary>a positive answer</summary>
+            yes,
+            /// <summary>a negative answer</summary>
+            no
+        }
 
-		[XmlIgnore] public double TopMineralN { get; set; }
-		
-		private DateTime lastApplicationDate;
-		private bool fertiliserIsAllowed;
-		private int nLayers;
+        [XmlIgnore] public double TopMineralN { get; set; }
+        
+        private DateTime lastApplicationDate;
+        private bool fertiliserIsAllowed;
+        private int nLayers;
 
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			fertiliserIsAllowed = (AllowFertiliser == yesnoType.yes);
-			nLayers = Soil.SoilWater.Thickness.Length;
-		}
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            fertiliserIsAllowed = (AllowFertiliser == yesnoType.yes);
+            nLayers = Soil.Thickness.Length;
+        }
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			double daysSinceLastApplication = (Clock.Today - lastApplicationDate).TotalDays;
-			
-			// get the N stored in the soil
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			TopMineralN = 0.0;
-			for (int layer = 0; layer < nLayers; layer++)
-			{
-				fracLayer = Math.Min(1.0, (Depth2SoilN - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopMineralN += (Soil.SoilNitrogen.NO3[layer]
-				+ Soil.SoilNitrogen.NH4[layer]
-				+ Soil.SoilNitrogen.urea[layer])
-				* fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= Depth2SoilN)
-					layer = nLayers;
-			}
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            double daysSinceLastApplication = (Clock.Today - lastApplicationDate).TotalDays;
+            
+            // get the N stored in the soil
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            TopMineralN = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                fracLayer = Math.Min(1.0, (Depth2SoilN - depthFromSurface) / Soil.Thickness[layer]);
+                TopMineralN += (Soil.SoilNitrogen.NO3[layer]
+                + Soil.SoilNitrogen.NH4[layer]
+                + Soil.SoilNitrogen.urea[layer])
+                * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= Depth2SoilN)
+                    layer = nLayers;
+            }
 
-			if (fertiliserIsAllowed && (daysSinceLastApplication >= FertMinimumDays) && (TopMineralN <= CriticalSoilN))
-			{
-				fertiliser.Apply(FertNAmount, FertType, FertApplicationDepth);
-				lastApplicationDate = Clock.Today;
-			}
-		}
-	}
+            if (fertiliserIsAllowed && (daysSinceLastApplication >= FertMinimumDays) && (TopMineralN <= CriticalSoilN))
+            {
+                fertiliser.Apply(FertNAmount, FertType, FertApplicationDepth);
+                lastApplicationDate = Clock.Today;
+            }
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -7787,162 +7967,162 @@ using APSIM.Shared.Utilities;
         
 namespace Models
 {
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		//Communication to other modules
-		[Link] ISummary summary = null;
-		[Link] Irrigation Irrigation;
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link(IsOptional = true)] ICrop existingCrop;
-	   
-		//User inputs from properties tab
-		[Description("Turn irrigation on?")]
-		public answerType allowIrrigation { get; set; }
-		[Description("Start of irrigation season (dd-MMM)")]
-		public string seasonStart { get; set; }
-		[Description("End of irrigation season (dd-MMM)")]
-		public string seasonEnd { get; set; }
-		[Description("Season allocation (mm)")]
-		public double seasonsAllocation { get; set; }
-		[Description("Deficit to trigger irrigation (% PAWC)")]
-		public double triggerDeficit { get; set; }
-		[Description("Deficit to stop irrigaton (% PAWC)")]
-		public double targetDeficit { get; set; }
-		[Description("Minimum days for irrigation to return")]
-		public double returndays { get; set; }
-		[Description("Maximum irrigation application (mm/day)")]
-		public double maximumAmount { get; set; }
-		[Description("Depth to calculate PAWC (mm)")]
-		public double depthPAWC { get; set; }
-	   
-		public enum answerType
-		{
-			/// <summary>a positive answer</summary>
-			yes,
-			/// <summary>a negative answer</summary>
-			no
-		}
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        //Communication to other modules
+        [Link] ISummary summary = null;
+        [Link] Irrigation Irrigation;
+        [Link] Clock Clock;
+        [Link] Soil Soil;
+        [Link(IsOptional = true)] IPlant existingCrop;
+       
+        //User inputs from properties tab
+        [Description("Turn irrigation on?")]
+        public answerType allowIrrigation { get; set; }
+        [Description("Start of irrigation season (dd-MMM)")]
+        public string seasonStart { get; set; }
+        [Description("End of irrigation season (dd-MMM)")]
+        public string seasonEnd { get; set; }
+        [Description("Season allocation (mm)")]
+        public double seasonsAllocation { get; set; }
+        [Description("Deficit to trigger irrigation (% PAWC)")]
+        public double triggerDeficit { get; set; }
+        [Description("Deficit to stop irrigaton (% PAWC)")]
+        public double targetDeficit { get; set; }
+        [Description("Minimum days for irrigation to return")]
+        public double returndays { get; set; }
+        [Description("Maximum irrigation application (mm/day)")]
+        public double maximumAmount { get; set; }
+        [Description("Depth to calculate PAWC (mm)")]
+        public double depthPAWC { get; set; }
+       
+        public enum answerType
+        {
+            /// <summary>a positive answer</summary>
+            yes,
+            /// <summary>a negative answer</summary>
+            no
+        }
 
-		//Class members
-		[XmlIgnore] public double TopSWdeficit { get; set; }
-		[XmlIgnore] public double TopSWC { get; set; }
-		[XmlIgnore] public double DaysSinceIrrigation { get; set; }
-		[XmlIgnore] public double AmountToApply { get; set; }
-		[XmlIgnore] public double SeasonAppliedAmount { get; set; }
-		
-		private bool IrrigationIsAllowed { get; set; }
-		private bool SeasonIsOpen { get; set; }
-		private bool CropIsActive { get; set; }
-		private bool IrrigatorIsAvailable { get; set; }
-		private bool SoilIsDry { get; set; }
+        //Class members
+        [XmlIgnore] public double TopSWdeficit { get; set; }
+        [XmlIgnore] public double TopSWC { get; set; }
+        [XmlIgnore] public double DaysSinceIrrigation { get; set; }
+        [XmlIgnore] public double AmountToApply { get; set; }
+        [XmlIgnore] public double SeasonAppliedAmount { get; set; }
+        
+        private bool IrrigationIsAllowed { get; set; }
+        private bool SeasonIsOpen { get; set; }
+        private bool CropIsActive { get; set; }
+        private bool IrrigatorIsAvailable { get; set; }
+        private bool SoilIsDry { get; set; }
 
-		private DateTime StartDate;
-		private DateTime EndDate;
-		private double TopDUL;
-		private double TopLL;
-		private int nLayers;
-	
-		//Calculate static soil variables
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{   
-			//Set the season dates
-			StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
-			EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
-			
-			//Can we irrigate at all?
-			IrrigationIsAllowed = false; 
-			if (allowIrrigation == answerType.yes)
-				IrrigationIsAllowed = true; 
+        private DateTime StartDate;
+        private DateTime EndDate;
+        private double TopDUL;
+        private double TopLL;
+        private int nLayers;
+    
+        //Calculate static soil variables
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {   
+            //Set the season dates
+            StartDate = DateTime.Parse(seasonStart + "-" + Clock.Today.Year.ToString());
+            EndDate = DateTime.Parse(seasonEnd + "-" + Clock.Today.Year.ToString());
+            
+            //Can we irrigate at all?
+            IrrigationIsAllowed = false; 
+            if (allowIrrigation == answerType.yes)
+                IrrigationIsAllowed = true; 
 
-			//Calculate soil water variables
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			nLayers = Soil.SoilWater.Thickness.Length;
-			for (int layer = 0; layer < nLayers; layer++)
-			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopLL += Soil.SoilWater.LL15mm[layer] * fracLayer;
-				TopDUL += Soil.SoilWater.DULmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= depthPAWC)
-					layer = nLayers;
-			}
-		}
-	   	  
-		//Determine daily requirement for irrigation
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			//Can we irrigate today?		  
-			SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
+            //Calculate soil water variables
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            nLayers = Soil.Thickness.Length;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+                TopLL += Soil.LL15mm[layer] * fracLayer;
+                TopDUL += Soil.DULmm[layer] * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= depthPAWC)
+                    layer = nLayers;
+            }
+        }
+             
+        //Determine daily requirement for irrigation
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            //Can we irrigate today?          
+            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);
 
-			//Is there a crop in the ground that needs irrigation?
-			CropIsActive = false;
-			if ((existingCrop != null) && (existingCrop.IsAlive))
-				CropIsActive = true;
-			//if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
-	      
-			//Is the irrigator available?
-			IrrigatorIsAvailable = false;
-			DaysSinceIrrigation += 1;
-			if (DaysSinceIrrigation >= returndays)
-				IrrigatorIsAvailable = true;
-	      
-			//Is the soil dry enough to require irrigation?
-			SoilIsDry = false;
-			double depthFromSurface = 0.0;
-			double fracLayer = 0.0;
-			TopSWC = 0.0;
-			for (int layer = 0; layer < nLayers; layer++)
-			//for (int layer = 0; depthFromSurface < depthPAWC + Soil.SoilWater.Thickness[layer]; layer++)
-			{
-				fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.SoilWater.Thickness[layer]);
-				TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
-				depthFromSurface += Soil.SoilWater.Thickness[layer];
-				if (depthFromSurface >= depthPAWC)
-					layer = nLayers;
-			}
-			
-			TopSWdeficit = TopSWC - TopDUL;
-			if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
-				SoilIsDry = true;
-	            
-			//Are all the conditions ratifying irrigation
-			if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
-			{
-				//Lets bloody well irrigate then!!!!
-				AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
-				AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
-				Irrigation.Apply(AmountToApply);
-				DaysSinceIrrigation = 0;
-				SeasonAppliedAmount += AmountToApply;
-			}
-		}
-		
-		///Checks whether theDate is between iniDate and endDate (non-year specific)
-		private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
-		{
-			bool result = false;
-			if (iniDate.DayOfYear < endDate.DayOfYear)
-			{
-				// period is within one year, ex: summer in the northern hemisphere
-				if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
-					result = true;
-			}
-			else
-			{
-				// period goes over the end of the year, ex: summer in the southern hemisphere
-				if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
-					result = true;
-			}
-			
-			return result;
-		}
-	}
+            //Is there a crop in the ground that needs irrigation?
+            CropIsActive = false;
+            if ((existingCrop != null) && (existingCrop.IsAlive))
+                CropIsActive = true;
+            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))
+          
+            //Is the irrigator available?
+            IrrigatorIsAvailable = false;
+            DaysSinceIrrigation += 1;
+            if (DaysSinceIrrigation >= returndays)
+                IrrigatorIsAvailable = true;
+          
+            //Is the soil dry enough to require irrigation?
+            SoilIsDry = false;
+            double depthFromSurface = 0.0;
+            double fracLayer = 0.0;
+            TopSWC = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            //for (int layer = 0; depthFromSurface < depthPAWC + Soil.Thickness[layer]; layer++)
+            {
+                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);
+                TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;
+                depthFromSurface += Soil.Thickness[layer];
+                if (depthFromSurface >= depthPAWC)
+                    layer = nLayers;
+            }
+            
+            TopSWdeficit = TopSWC - TopDUL;
+            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)
+                SoilIsDry = true;
+                
+            //Are all the conditions ratifying irrigation
+            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)
+            {
+                //Lets bloody well irrigate then!!!!
+                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;
+                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));
+                Irrigation.Apply(AmountToApply);
+                DaysSinceIrrigation = 0;
+                SeasonAppliedAmount += AmountToApply;
+            }
+        }
+        
+        ///Checks whether theDate is between iniDate and endDate (non-year specific)
+        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)
+        {
+            bool result = false;
+            if (iniDate.DayOfYear < endDate.DayOfYear)
+            {
+                // period is within one year, ex: summer in the northern hemisphere
+                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))
+                    result = true;
+            }
+            else
+            {
+                // period goes over the end of the year, ex: summer in the southern hemisphere
+                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))
+                    result = true;
+            }
+            
+            return result;
+        }
+    }
 }
 ]]></Code>
           </Manager>
@@ -8561,6 +8741,51 @@ namespace Models
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
           <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
+          <PastureAboveGroundOrgan>
+            <Name>Leaves</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+            </GenericTissue>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stems</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+            </GenericTissue>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stolons</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+            </GenericTissue>
+          </PastureAboveGroundOrgan>
         </PastureSpecies>
         <PastureSpecies>
           <Name>WhiteClover</Name>
@@ -8677,6 +8902,51 @@ namespace Models
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
           <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
+          <PastureAboveGroundOrgan>
+            <Name>Leaves</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+            </GenericTissue>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stems</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+            </GenericTissue>
+          </PastureAboveGroundOrgan>
+          <PastureAboveGroundOrgan>
+            <Name>Stolons</Name>
+            <GenericTissue>
+              <Name>LeafCohort1</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort2</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>LeafCohort3</Name>
+            </GenericTissue>
+            <GenericTissue>
+              <Name>Dead</Name>
+            </GenericTissue>
+          </PastureAboveGroundOrgan>
         </PastureSpecies>
         <Report>
           <Name>Results</Name>

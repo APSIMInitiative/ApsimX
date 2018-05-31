@@ -94,7 +94,6 @@ namespace Models.Soils
         /// <summary>Gets or sets the boron.</summary>
         /// <value>The boron.</value>
         [Description("Boron")]
-        [Units("Hot water mg/kg")]
         public double[] Boron { get; set; }
         /// <summary>Gets or sets the boron metadata.</summary>
         /// <value>The boron metadata.</value>

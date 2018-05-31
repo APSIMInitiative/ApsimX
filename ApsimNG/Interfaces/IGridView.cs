@@ -145,5 +145,18 @@ namespace UserInterface.Interfaces
 
         /// <summary>Get screenshot of grid.</summary>
         Image GetScreenshot();
+
+        /// <summary>
+        /// Indicates that a row should be treated as a separator line
+        /// </summary>
+        /// <param name="row">the row number</param>
+        /// <param name="isSep">added as a separator if true; removed as a separator if false</param>
+        void SetRowAsSeparator(int row, bool isSep = true);
+
+        /// <summary>
+        /// Inserts text into the current cell at the cursor position.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        void InsertText(string text);
     }
 }
