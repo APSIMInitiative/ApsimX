@@ -36,27 +36,27 @@ Simulating variations in plant N concentration (seasonal or due to changes in so
         <MemoText><![CDATA[
 ## Presentation
 
-This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  To simulate the aboveground plant structure, including the photosynthesis process, the plantain model uses the SimpleLeaf procedure of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of white clover ( *Trifolium repens* ) as a forage crop.  The model focus primarily on describing the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds. The white clover simulates the aboveground plant structure, including the photosynthesis process, using the SimpleLeaf procedure of PMF, which does not consider leaf age or place,ent in the canopy explicitly.  The model describes a perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.
 
 
 ##Inclusion in APSIM simulations
-A forage plantain crop can be included in a simulation the same as any other APSIM crop.
+To include white clover in a simulation the procedure is the same as any other APSIM crop:
 
- * - The plantain object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;
- * - To become active and grow, plantain needs to be sown using a manager script with a sowing rule. e.g.:
+ * - The white clover object can be dragged or copied from the Crop folder in the toolbox into a Field in your simulation;
+ * - To become active and grow, the white clover crop needs to be sown using a manager script with a sowing rule. e.g.:
 <pre><code class='language-cs'>
- Plantain.Sow(cultivar: Tonic, population: 300, depth: 10, rowSpacing: 150);  
+ WhiteClover.Sow(cultivar: Huia, population: 450, depth: 5, rowSpacing: 100);  
 </code></pre>
 If a specified cultivar is not available, a fatal error will be thrown.
 
 
 ###Harvest and biomass removal
-Plantain biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, similarly to other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
+White clover biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, similarly to other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
 private void OnSimulationCommencing(object sender, EventArgs e)  
 {  
-  RemoveFraction = new RemovalFractions(Plantain.Organs);  
+  RemoveFraction = new RemovalFractions(WhiteClover.Organs);  
 }  
 [EventSubscribe("DoManagement")]    
 private void OnDoManagement(object sender, EventArgs e)  
@@ -66,7 +66,7 @@ private void OnDoManagement(object sender, EventArgs e)
     RemoveFraction.SetFractionToRemove("Leaf", 0.80);  
     RemoveFraction.SetFractionToRemove("Stem", 0.50);  
     RemoveFraction.SetFractionToResidue("leaf",0.05);
-    Plantain.Harvest(RemoveFraction);  
+    WhiteClover.Harvest(RemoveFraction);  
   }
 }  
  </code></pre>
@@ -76,13 +76,13 @@ The RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events
 ###Crop termination
 To fully terminate a crop the EndCrop event should be raised:
 <pre><code class='language-cs'>
- Plantain.EndCrop();  
+ WhiteClover.EndCrop();  
 </code></pre>
-Once a crop has been ended the field is open to be used by another APSIM plant model, or another plantain crop.  Note that ending plantain is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.
+Once a crop has been ended the field is open to be used by another APSIM plant model, or another white clover crop.  Note that ending white clover is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.
 
 
 ## Acknowledgements
-This model was developed with help from Brittany Paton and Russel McAuliffe organising data and simulations. Datasets were kindly shared by Julia M. Lee and the Forages for Reduced Nitrogen Leaching (FRNL) programme.  
+This model was developed with help from Ellen Hume gathering plant parameters and organising data. Datasets were produced by the Forages for Reduced Nitrogen Leaching (FRNL) programme.  
 ]]></MemoText>
       </Memo>
       <Phenology>
@@ -369,7 +369,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Constant>
             <Name>InitialPlantWt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.0025</FixedValue>
+            <FixedValue>0.00025</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -387,7 +387,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>0.95</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -844,12 +844,12 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
+            <MemoText><![CDATA[White clover has a relatively high rate of leaf senescence, with leaf area estabilising when LAI reaches about 5.0 m2/m2 ([Brougham1958_LeafDev], [HartChapter1987], [NicholsEtAl2014_Drought]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
           </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.005</FixedValue>
+            <FixedValue>0.1</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -880,23 +880,23 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.5</double>
-                <double>0.9</double>
-                <double>0.95</double>
-                <double>0.99</double>
-                <double>1</double>
+                <double>2</double>
+                <double>4</double>
+                <double>5</double>
+                <double>6</double>
+                <double>7</double>
               </X>
               <Y>
+                <double>0</double>
+                <double>0.1</double>
                 <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1.25</double>
-                <double>2.25</double>
-                <double>3</double>
+                <double>1.5</double>
+                <double>2</double>
+                <double>2</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Leaf].CoverTotal</XProperty>
+            <XProperty>[Leaf].LAI</XProperty>
           </LinearInterpolationFunction>
           <WeightedTemperatureFunction>
             <Name>TemperatureFactor</Name>
@@ -914,8 +914,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <Y>
                 <double>1.5</double>
                 <double>0.25</double>
-                <double>0</double>
-                <double>0</double>
+                <double>0.1</double>
+                <double>0.1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -1077,11 +1077,11 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <LAIDead>0</LAIDead>
       </SimpleLeaf>
       <GenericOrgan>
-        <Name>Stolon</Name>
+        <Name>Petiole</Name>
         <Memo>
           <Name>Description</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[__Note:__ this represents all the stolons in the plant, without distinction between ages or placement in the canopy.  
+          <MemoText><![CDATA[__Note:__ this represents all the petioles and flower peduncles in the plant, without distinction between ages or placement in the canopy.  
 ]]></MemoText>
         </Memo>
         <Constant>
@@ -1104,18 +1104,19 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.005</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
-        <VariableReference>
+        <Constant>
           <Name>CriticalNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
-        </VariableReference>
+          <FixedValue>0.025</FixedValue>
+          <Units>gN/gDM</Units>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.035</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1271,7 +1272,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Constant>
             <Name>ReferenceRate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.2</FixedValue>
+            <FixedValue>0.1</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1281,19 +1282,17 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>3</double>
-                <double>3.999</double>
                 <double>4</double>
-                <double>4.5</double>
-                <double>4.75</double>
-                <double>5</double>
+                <double>5.5</double>
+                <double>5.8</double>
+                <double>6</double>
               </X>
               <Y>
-                <double>1</double>
-                <double>1</double>
                 <double>0.5</double>
-                <double>0.55</double>
-                <double>0.75</double>
                 <double>1</double>
+                <double>1</double>
+                <double>1.5</double>
+                <double>1.5</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1305,18 +1304,18 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
-                <double>-15</double>
+                <double>-20</double>
+                <double>-5</double>
                 <double>0</double>
-                <double>2</double>
-                <double>10</double>
-                <double>20</double>
+                <double>5</double>
+                <double>18</double>
                 <double>30</double>
               </X>
               <Y>
-                <double>2</double>
-                <double>0.2</double>
-                <double>0</double>
-                <double>0</double>
+                <double>1.5</double>
+                <double>0.25</double>
+                <double>0.1</double>
+                <double>0.1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -1448,11 +1447,11 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
-        <Name>Petiole</Name>
+        <Name>Stolon</Name>
         <Memo>
           <Name>Description</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[__Note:__ this represents all the petioles and flower stalks in the plant, without distinction between ages or placement in the canopy.  
+          <MemoText><![CDATA[__Note:__ this represents all the stolons in the plant, without distinction between ages or placement in the canopy.  
 ]]></MemoText>
         </Memo>
         <Constant>
@@ -1464,7 +1463,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>0.75</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -1475,18 +1474,19 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.005</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
-        <VariableReference>
+        <Constant>
           <Name>CriticalNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
-        </VariableReference>
+          <FixedValue>0.0225</FixedValue>
+          <Units>gN/gDM</Units>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.035</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1642,7 +1642,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Constant>
             <Name>ReferenceRate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.2</FixedValue>
+            <FixedValue>0.0025</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1652,18 +1652,12 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>3</double>
-                <double>3.999</double>
                 <double>4</double>
-                <double>4.5</double>
-                <double>4.75</double>
-                <double>5</double>
+                <double>6</double>
               </X>
               <Y>
-                <double>1</double>
-                <double>1</double>
                 <double>0.5</double>
-                <double>0.55</double>
-                <double>0.75</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -1676,18 +1670,18 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
-                <double>-15</double>
+                <double>-20</double>
+                <double>-5</double>
                 <double>0</double>
-                <double>2</double>
-                <double>10</double>
-                <double>20</double>
+                <double>5</double>
+                <double>18</double>
                 <double>30</double>
               </X>
               <Y>
-                <double>2</double>
-                <double>0.2</double>
-                <double>0</double>
-                <double>0</double>
+                <double>1.5</double>
+                <double>0.25</double>
+                <double>0.1</double>
+                <double>0.1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -1714,6 +1708,12 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
+          <Constant>
+            <Name>ReferenceRate1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.0025</FixedValue>
+            <Units>/day</Units>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <MultiplyFunction>
@@ -1755,13 +1755,18 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>0.1</FixedValue>
           <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>0.1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
@@ -1769,11 +1774,6 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>/day</Units>
-        </Constant>
-        <Constant>
-          <Name>DMReallocationFactor</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>RemobilisationCost</Name>
@@ -1835,7 +1835,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>0.95</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -1843,23 +1843,87 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.4</FixedValue>
         </Constant>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>MinimumNConc</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The N concentration in the inflorescence of is relatively low compared to other organs (typical values about 2.0%), but the seed N content is considerably higher (about 4.5%).  The model currently does not separate inflrescence from seeds, thus it uses variable thresholds to account for the fact that the proportion of seed increases with time during the reproductive phase.  
+]]></MemoText>
+          </Memo>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>5</double>
+              <double>5.1</double>
+              <double>5.3</double>
+              <double>5.7</double>
+              <double>5.9</double>
+              <double>6</double>
+            </X>
+            <Y>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.015</double>
+              <double>0.02</double>
+              <double>0.03</double>
+              <double>0.03</double>
+            </Y>
+          </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
-          <Units>gN/gDM</Units>
-        </Constant>
-        <VariableReference>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
           <Name>CriticalNConc</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>5</double>
+              <double>5.1</double>
+              <double>5.3</double>
+              <double>5.7</double>
+              <double>5.9</double>
+              <double>6</double>
+            </X>
+            <Y>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.025</double>
+              <double>0.035</double>
+              <double>0.045</double>
+              <double>0.045</double>
+            </Y>
+          </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Inflorescence].MinimumNConc.Value()</VariableName>
-        </VariableReference>
-        <Constant>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>5</double>
+              <double>5.1</double>
+              <double>5.3</double>
+              <double>5.7</double>
+              <double>5.9</double>
+              <double>6</double>
+            </X>
+            <Y>
+              <double>0.025</double>
+              <double>0.026</double>
+              <double>0.032</double>
+              <double>0.042</double>
+              <double>0.048</double>
+              <double>0.048</double>
+            </Y>
+          </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.06</FixedValue>
-          <Units>gN/gDM</Units>
-        </Constant>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>NitrogenDemandSwitch</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2028,10 +2092,10 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>3</double>
-                <double>3.99</double>
-                <double>4</double>
-                <double>4.5</double>
+                <double>4.99</double>
                 <double>5</double>
+                <double>5.5</double>
+                <double>6</double>
               </X>
               <Y>
                 <double>1</double>
@@ -2050,15 +2114,19 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
+                <double>-20</double>
+                <double>-5</double>
                 <double>0</double>
                 <double>5</double>
-                <double>20</double>
+                <double>18</double>
                 <double>30</double>
               </X>
               <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>1</double>
+                <double>1.5</double>
+                <double>0.5</double>
+                <double>0.25</double>
+                <double>0.1</double>
+                <double>0.75</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -2129,7 +2197,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <Constant>
           <Name>DMReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -2228,13 +2296,18 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.03</FixedValue>
         </Constant>
-        <VariableReference>
+        <Constant>
           <Name>CriticalNConc</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
-        </VariableReference>
+          <FixedValue>0.05</FixedValue>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Memo>
@@ -2243,7 +2316,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.06</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -2379,7 +2452,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Name>Description</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[__Note:__ this represents all the taproots of the plant.  
-Taproots are the primary reserve organs and will supply sugars and N to burst growth especially early in spring and following defoliation.  To accomplish this, the taproots' biomass is partioned into structural and non-structural fractions, the later is available to be used in new growth (via biomass retranslocation).  There is very few data on how much reserves are kept in plantain taproots, results from [QuijadaThesis_2015] suggest that sugars plus fructan made up 4-11% of taproots biomass compared to 15-35% in chicory, which is consistent with plantain having much smaller taproots.  Based on these values, and some trial and error, the parameters related to retranslocation (StructuralFraction, DMRetranslocationFactor, and NRetranslocationFactor) were estimated.  These should be upgraded when more data is made available.  
+Taproots in white clover are generally efemerous.  They develop from seeds and are ubiquitous in young plants, but these die out about a year after germination and adult plant are generally described as having no taproots ([HartChapter1987]; [BrockEtAl2000]). However, some secondary roots can be taproot-like, especially in especific cultivars, e.g. ladino ([ThomasChapter1987]; [CaradusAndWoodfield1998]). Given that the model simulates the a whole population, it is assumed that taproots are always present, but constitute a minor fraction of the root systems in most cultivars.
 ]]></MemoText>
         </Memo>
         <Constant>
@@ -2391,7 +2464,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.1</FixedValue>
+          <FixedValue>0.75</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -2402,18 +2475,19 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.007</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
-        <VariableReference>
+        <Constant>
           <Name>CriticalNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Taproot].MinimumNConc.Value()</VariableName>
-        </VariableReference>
+          <FixedValue>0.0225</FixedValue>
+          <Units>gN/gDM</Units>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.035</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -2537,7 +2611,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           <Constant>
             <Name>ReferenceRate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.001</FixedValue>
+            <FixedValue>0.005</FixedValue>
             <Units>/day</Units>
           </Constant>
           <WeightedTemperatureFunction>
@@ -2548,7 +2622,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
               <X>
                 <double>0</double>
                 <double>5</double>
-                <double>22</double>
+                <double>22.5</double>
                 <double>30</double>
               </X>
               <Y>
@@ -2597,7 +2671,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.15</FixedValue>
+          <FixedValue>0.2</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
@@ -2674,25 +2748,16 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           <MemoText><![CDATA[__Note:__ this represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
 ]]></MemoText>
         </Memo>
-        <MultiplyFunction>
+        <Constant>
           <Name>InitialDM</Name>
-          <Constant>
-            <Name>InitialRootWt</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.001</FixedValue>
-            <Units>g/plant</Units>
-          </Constant>
-          <VariableReference>
-            <Name>Population</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Plant].Population</VariableName>
-          </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MultiplyFunction>
+          <FixedValue>0.0004</FixedValue>
+          <Units>g/plant</Units>
+        </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>0.8</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -2701,15 +2766,15 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           <FixedValue>0.4</FixedValue>
         </Constant>
         <Constant>
-          <Name>MaximumNConc</Name>
+          <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.015</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
-          <Name>MinimumNConc</Name>
+          <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.005</FixedValue>
+          <FixedValue>0.035</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -2823,7 +2888,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
             <Constant>
               <Name>ReferenceVelocity</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>5</FixedValue>
+              <FixedValue>4.5</FixedValue>
               <Units>mm/day</Units>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2835,7 +2900,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
             <Constant>
               <Name>ReferenceVelocity</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>10</FixedValue>
+              <FixedValue>9</FixedValue>
               <Units>mm/day</Units>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2859,7 +2924,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <Constant>
           <Name>MaximumRootDepth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1000</FixedValue>
+          <FixedValue>750</FixedValue>
           <Units>mm</Units>
         </Constant>
         <Constant>
@@ -2897,7 +2962,7 @@ No effect of soil water content on root growth is currently captured in the mode
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  Currently only sensitivity to temperature is considered, based on general knowledge from other plant models. The sensitivity of plantain roots to low moisture or water logging is not clear (according to [SagarHarper_1964], *P. major* is more tolerant to water logging than *P. lanceolata*) , so this will have to be upgrade in the future when more data is available.  
+            <MemoText><![CDATA[The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -2914,7 +2979,7 @@ No effect of soil water content on root growth is currently captured in the mode
               <X>
                 <double>0</double>
                 <double>5</double>
-                <double>20</double>
+                <double>22.5</double>
                 <double>30</double>
               </X>
               <Y>
@@ -2956,25 +3021,25 @@ No effect of soil water content on root growth is currently captured in the mode
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>0.1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>DMReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>0.1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
@@ -2993,7 +3058,7 @@ No effect of soil water content on root growth is currently captured in the mode
 ]]></MemoText>
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[No adjustment of KL are considered for plantain at this stage.  More analyses, preferebly with support from data specific to this issue, are needed to improve the description of this relationship.  
+            <MemoText><![CDATA[No adjustment of KL are considered for white clover in the current model.  More analyses, preferebly with support from data specific to this issue, are needed to improve the description of this relationship.  
 ]]></MemoText>
           </Memo>
           <XYPairs>
@@ -4744,7 +4809,7 @@ Where:
     <Memo>
       <Name>Note</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText><![CDATA[The performance of the white clover model is evaluated in simulations based on experiments conducted primarily in New Zealand. ]]></MemoText>
+      <MemoText><![CDATA[The performance of the white clover model is evaluated in simulations based on experiments conducted in New Zealand. ]]></MemoText>
     </Memo>
     <Folder>
       <Name>New Zealand</Name>
@@ -5180,7 +5245,7 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2014-03-20</Date>
-                  <Action> [WhiteClover].Sow(population: 200, cultivar: "Kopu", depth: 10, rowSpacing: 150)</Action>
+                  <Action> [WhiteClover].Sow(population: 500, cultivar: "Kopu", depth: 5, rowSpacing: 150)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -7714,7 +7779,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.Phenology.Stage</YFieldName>
+              <YFieldName>WhiteClover.Phenology.Stage</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14255,7 +14320,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2014-10-24</Date>
-                  <Action> [WhiteClover].Sow(population: 200, cultivar: "Kopu", depth: 10, rowSpacing: 150)</Action>
+                  <Action> [WhiteClover].Sow(population: 500, cultivar: "Kopu", depth: 5, rowSpacing: 150)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -15982,7 +16047,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.Population</YFieldName>
+              <YFieldName>WhiteClover.Population</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -16026,7 +16091,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.Phenology.Stage</YFieldName>
+              <YFieldName>WhiteClover.Phenology.Stage</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -22379,5 +22444,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>283</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
