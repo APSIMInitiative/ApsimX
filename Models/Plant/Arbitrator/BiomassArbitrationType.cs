@@ -213,7 +213,10 @@ namespace Models.PMF
             SinkLimitation = 0;
             NutrientLimitation = 0;
         }
+
+
         
+
         /// <summary>Clear the arbitration type</summary>
         public void Clear()
         {

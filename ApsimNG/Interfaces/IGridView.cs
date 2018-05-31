@@ -152,5 +152,11 @@ namespace UserInterface.Interfaces
         /// <param name="row">the row number</param>
         /// <param name="isSep">added as a separator if true; removed as a separator if false</param>
         void SetRowAsSeparator(int row, bool isSep = true);
+
+        /// <summary>
+        /// Inserts text into the current cell at the cursor position.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        void InsertText(string text);
     }
 }

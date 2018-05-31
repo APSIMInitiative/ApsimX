@@ -60,6 +60,13 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Gets the total biomass</summary>
         Biomass Total { get; }
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        double MaintenanceRespiration { get; }
+
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        void RemoveMaintenanceRespiration(double respiration);
+
     }
 
 

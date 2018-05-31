@@ -417,6 +417,20 @@ namespace Models.PMF.Organs
             Allocated.StorageN -= nitrogen.Reallocation;
         }
 
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+            {
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            }
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
+
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -692,9 +706,7 @@ namespace Models.PMF.Organs
                 // Do maintenance respiration
                 MaintenanceRespiration = 0;
                 MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
                 MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
-                Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
             }
         }
 
