@@ -140,7 +140,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         virtual public double MaintenanceRespiration { get { return 0; }  set { } }
-
+        
         #endregion
 
         #region Management event methods
