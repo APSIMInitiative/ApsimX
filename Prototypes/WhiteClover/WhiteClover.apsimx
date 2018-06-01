@@ -4684,6 +4684,14 @@ namespace Models
         <string>Observed</string>
       </SheetNames>
     </ExcelInput>
+    <ExcelInput>
+      <Name>ObservedMeans</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>ObservedMeans</string>
+      </SheetNames>
+    </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <Tests>
@@ -4802,6 +4810,124 @@ Where:
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
     </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedMeans</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <Memo>
+          <Name>Note</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[
+Where:
+ - n: The number of PO (predicted-observed) pairs for the given variable;  
+ - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  
+ - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  
+ - SEslope: Standard error in the slope;  
+ - SEintercept: Standard error in the intercept.;  
+ - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  
+ - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  
+ - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -∞ to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  
+ - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  
+ - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  
+ - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  
+
+]]></MemoText>
+        </Memo>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>CumulativeHarvestedWt</Name>
+            <n>670</n>
+            <Slope>0.97309781341743862</Slope>
+            <Intercept>-29.948521884296724</Intercept>
+            <SEslope>0.014656689371518244</SEslope>
+            <SEintercept>9.4216343010691173</SEintercept>
+            <R2>0.86840022052538879</R2>
+            <RMSE>140.63461820465241</RMSE>
+            <NSE>0.83978677203470564</NSE>
+            <ME>-44.4300674562622</ME>
+            <MAE>102.15118276645478</MAE>
+            <RSR>0.3999676283706603</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>HarvestedWt</Name>
+            <n>660</n>
+            <Slope>0.58670417114370876</Slope>
+            <Intercept>49.155663572922577</Intercept>
+            <SEslope>0.024039209841381713</SEslope>
+            <SEintercept>3.4331873541921447</SEintercept>
+            <R2>0.47513653387519061</R2>
+            <RMSE>59.185908341350185</RMSE>
+            <NSE>0.44893378801015893</NSE>
+            <ME>0.1844928962339818</ME>
+            <MAE>41.817543279981088</MAE>
+            <RSR>0.74177574992971818</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>NRate</Name>
+            <n>1446</n>
+            <Slope>1</Slope>
+            <Intercept>0</Intercept>
+            <SEslope>0</SEslope>
+            <SEintercept>0</SEintercept>
+            <R2>1</R2>
+            <RMSE>0</RMSE>
+            <NSE>1</NSE>
+            <ME>0</ME>
+            <MAE>0</MAE>
+            <RSR>0</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Plantain.AboveGround.Wt</Name>
+            <n>786</n>
+            <Slope>0.60679234273468741</Slope>
+            <Intercept>55.970575106073127</Intercept>
+            <SEslope>0.024174221853703416</SEslope>
+            <SEintercept>3.7133225383592525</SEintercept>
+            <R2>0.44556425102792585</R2>
+            <RMSE>46.755556359784983</RMSE>
+            <NSE>0.38719417248424148</NSE>
+            <ME>0.32413761368694255</ME>
+            <MAE>32.329828769572593</MAE>
+            <RSR>0.78232101872294924</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Plantain.AboveGroundLive.NConc</Name>
+            <n>831</n>
+            <Slope>0.78205499883465268</Slope>
+            <Intercept>0.002181454199117118</Intercept>
+            <SEslope>0.047189577790026464</SEslope>
+            <SEintercept>0.0014490341749911614</SEintercept>
+            <R2>0.24885727623264597</R2>
+            <RMSE>0.010449614216479683</RMSE>
+            <NSE>-1.288141276907834</NSE>
+            <ME>-0.0043393527333705512</ME>
+            <MAE>0.0087078923027927978</MAE>
+            <RSR>1.5117499123974099</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Plantain.Population</Name>
+            <n>4</n>
+            <Slope>0.38417781788092276</Slope>
+            <Intercept>161.23341848362017</Intercept>
+            <SEslope>0.20612985450763727</SEslope>
+            <SEintercept>51.0067273295133</SEintercept>
+            <R2>0.63461134968038535</R2>
+            <RMSE>47.8001466015656</RMSE>
+            <NSE>0.48863962957437135</NSE>
+            <ME>14.513783593750006</ME>
+            <MAE>35.25</MAE>
+            <RSR>0.619290140256747</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved</POName>
+      </Tests>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>ObservedMeans</ObservedTableName>
+      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
   <Folder>
@@ -4820,7 +4946,7 @@ Where:
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[###FRNL Lincoln###
 
-Simulation setup based on field trial performed at Lincoln University Research Dairy Farm, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program and the data is basically unpublished (references will be added when this come about).  Here only plots with pure plantain are used.  
+Simulation setup based on field trial performed at Lincoln University Research Dairy Farm, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program (for more details see [MartinEtAl2017]).  Here only plots with pure white clover are used.  
 The experiment consisted of six fertiliser treatments (N rates of 0, 50, 100, 200, 350 and 500 kg/ha/yr) in four replicates, and measurements comprised yield and quality indicators (here N content is used).  
 Data supplied by Grant Edwards, Lincoln University.
 
@@ -13038,7 +13164,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGround.Wt</YFieldName>
+              <YFieldName>WhiteClover.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13061,7 +13187,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGround.Wt</YFieldName>
+              <YFieldName>WhiteClover.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13109,8 +13235,8 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObserved</TableName>
-              <XFieldName>Observed.Plantain.AboveGround.Wt</XFieldName>
-              <YFieldName>Predicted.Plantain.AboveGround.Wt</YFieldName>
+              <XFieldName>Observed.WhiteClover.AboveGround.Wt</XFieldName>
+              <YFieldName>Predicted.WhiteClover.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13391,7 +13517,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+              <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13414,7 +13540,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+              <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13462,8 +13588,8 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObserved</TableName>
-              <XFieldName>Observed.Plantain.AboveGroundLive.NConc</XFieldName>
-              <YFieldName>Predicted.Plantain.AboveGroundLive.NConc</YFieldName>
+              <XFieldName>Observed.WhiteClover.AboveGroundLive.NConc</XFieldName>
+              <YFieldName>Predicted.WhiteClover.AboveGroundLive.NConc</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13510,7 +13636,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13534,7 +13660,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13579,7 +13705,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13603,7 +13729,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13648,7 +13774,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13672,7 +13798,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13717,7 +13843,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13741,7 +13867,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13786,7 +13912,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13810,7 +13936,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13855,7 +13981,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13879,7 +14005,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13921,7 +14047,7 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[###FRNL Ruakura###
 
-This simulation setup was based on field trials performed at DairyNZ's Scott Farm, in Ruakura, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program and the data is basically unpublished (references will be added when this come about).  Here only plots with pure plantain are used.  
+This simulation setup was based on field trials performed at DairyNZ's Scott Farm, in Ruakura, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program and the data is basically unpublished (references will be added when this come about).  Here only plots with pure white clover are used.  
 The experiment consisted of six fertiliser treatments (N rates of 0, 50, 100, 200, 350 and 500 kg/ha/yr) in three replicates, and measurements comprised yield and quality indicators (here N content is used).  
 Observed data supplied by Grant Edwards, Lincoln University.
 
@@ -21332,127 +21458,9 @@ namespace Models
         <Folder>
           <Name>ObservedResults</Name>
           <Graph>
-            <Name>AboveGroundWt</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16747854</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Small</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGround.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Observed</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Small</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Observed</TableName>
-              <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGround.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title>Dry Matter (g/m2)</Title>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>AboveGroundWt_PO</Name>
-            <Series>
-              <Name>PO</Name>
-              <Regression>
-                <Name>Regression</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ForEachSeries>false</ForEachSeries>
-              </Regression>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Small</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>PredictedObserved</TableName>
-              <XFieldName>Observed.Plantain.AboveGround.Wt</XFieldName>
-              <YFieldName>Predicted.Plantain.AboveGround.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[Date] &lt; "2016-02-5"</Filter>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopRight</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
             <Name>HarvestedWt</Name>
             <Series>
-              <Name>Predicted1</Name>
+              <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -21704,7 +21712,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+              <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -21727,7 +21735,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+              <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -21775,8 +21783,8 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
               <TableName>PredictedObserved</TableName>
-              <XFieldName>Observed.Plantain.AboveGroundLive.NConc</XFieldName>
-              <YFieldName>Predicted.Plantain.AboveGroundLive.NConc</YFieldName>
+              <XFieldName>Observed.WhiteClover.AboveGroundLive.NConc</XFieldName>
+              <YFieldName>Predicted.WhiteClover.AboveGroundLive.NConc</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -21823,7 +21831,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -21847,7 +21855,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -21892,7 +21900,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -21916,7 +21924,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -21961,7 +21969,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -21985,7 +21993,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -22030,7 +22038,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -22054,7 +22062,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -22099,7 +22107,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -22123,7 +22131,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -22168,7 +22176,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -22192,7 +22200,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Observed</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.AboveGroundLive.NConc</YFieldName>
+                <YFieldName>WhiteClover.AboveGroundLive.NConc</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
