@@ -4149,7 +4149,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <Name>ExtraVariables</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
-          <CordonDiameter>15</CordonDiameter>
+          <CordonDiameter>10</CordonDiameter>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -4185,7 +4185,7 @@ namespace Models
         <Name>Operations</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
-          <Date>2005-01-01</Date>
+          <Date>2004-01-01</Date>
           <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 800, rowSpacing: 2400, budNumber:24);</Action>
           <Enabled>true</Enabled>
         </Operation>
@@ -4805,7 +4805,7 @@ namespace Models
             <Name>Operations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
-              <Date>2005-01-01</Date>
+              <Date>2004-01-01</Date>
               <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 80, rowSpacing: 2400, budNumber:24);</Action>
               <Enabled>true</Enabled>
             </Operation>
@@ -4878,7 +4878,7 @@ namespace Models
       <Clock>
         <Name>Clock</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <StartDate>2005-01-01T00:00:00</StartDate>
+        <StartDate>2004-01-01T00:00:00</StartDate>
         <EndDate>2008-10-31T00:00:00</EndDate>
       </Clock>
       <Summary>
@@ -6326,7 +6326,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Site1001_BRA.met</FileName>
+          <FileName>Site1004_RPC.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -6773,7 +6773,7 @@ namespace Models
               <Name>Operations</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>2005-01-01</Date>
+                <Date>2004-01-01</Date>
                 <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 80, rowSpacing: 2400, budNumber:24);</Action>
                 <Enabled>true</Enabled>
               </Operation>
@@ -6865,8 +6865,8 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <Checkpoint>Current</Checkpoint>
         <TableName>PhenoPredObs</TableName>
-        <XFieldName>Observed.BudBurstDOY</XFieldName>
-        <YFieldName>Predicted.BudBurstDOY</YFieldName>
+        <XFieldName>SimulationName</XFieldName>
+        <YFieldName>SimulationName</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6996,10 +6996,10 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>Flowering</Name>
+          <Name>Budding</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
-            <string>[ParameterTest].Script.FloweringTarget = 20,24,25,26,27,28,29</string>
+            <string>[ParameterTest].Script.BudBurstBase = 120,130,135,140,145,150</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -7463,7 +7463,7 @@ namespace Models
               <Name>Operations</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>2005-01-01</Date>
+                <Date>2004-01-01</Date>
                 <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 80, rowSpacing: 2400, budNumber:24);</Action>
                 <Enabled>true</Enabled>
               </Operation>
@@ -7531,7 +7531,7 @@ namespace Models
           <Name>ParameterTest</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <FloweringTarget>0</FloweringTarget>
+            <BudBurstBase>0</BudBurstBase>
           </Script>
           <Code><![CDATA[
 using System;
@@ -7550,20 +7550,20 @@ namespace Models
     	[Link] Zone zone;
         [Link] Summary Summary;
 
-		//[Description("BudBurstBase")]
-        //public double BudBurstBase  {get; set;}
+		[Description("BudBurstBase")]
+        public double BudBurstBase  {get; set;}
         //Description("EndoTarget")]
         //public double EndoTarget  {get; set;}
-        [Description("FloweringTarget")]
-        public double FloweringTarget  {get; set;}
+        //[Description("FloweringTarget")]
+        //public double FloweringTarget  {get; set;}
 
                 
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, EventArgs e)
         {
-        	//zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
+        	zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
 			//zone.Set("Grapevine.Phenology.EndoDormancy.Target.FixedValue", EndoTarget);
-			zone.Set("Grapevine.Phenology.Flowering.Target.FixedValue", FloweringTarget);                      
+			//zone.Set("Grapevine.Phenology.Flowering.Target.FixedValue", FloweringTarget);                      
         }
     }
 }
