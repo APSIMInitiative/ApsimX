@@ -711,11 +711,6 @@ A function is used to capture the year of the current season as in the south hem
           <EndDate>1-MAY</EndDate>
           <ResetDate>30-JUN</ResetDate>
         </AccumulateByDate>
-        <VariableReference>
-          <Name>AccChillMar1st1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>Phenology.AccChillMar1st.Value()</VariableName>
-        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionBiomassRemoved>0</FractionBiomassRemoved>
         <DaysAfterSowing>0</DaysAfterSowing>
