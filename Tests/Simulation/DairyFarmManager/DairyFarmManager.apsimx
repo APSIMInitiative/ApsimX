@@ -719,8 +719,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Script>
         <StockingRate>3</StockingRate>
-        <CurrentLocation>
-        </CurrentLocation>
+        <CurrentLocation>OneBigPaddock</CurrentLocation>
         <NumCows>3</NumCows>
         <FarmArea>0</FarmArea>
       </Script>
@@ -5949,8 +5948,8 @@ namespace Models
     <Clock>
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <StartDate>2000-08-01T00:00:00</StartDate>
-      <EndDate>2000-09-30T00:00:00</EndDate>
+      <StartDate>2001-10-01T00:00:00</StartDate>
+      <EndDate>2001-10-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
@@ -5988,12 +5987,23 @@ namespace Models
       <Name>Ex_TargetRotationLength</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Script>
-        <DoVerbose>True</DoVerbose>
-        <StockingRate>0</StockingRate>
-        <CurrentLocationName>Paddock00</CurrentLocationName>
-        <TargetRotationLength>2</TargetRotationLength>
-        <HarvestExcessHerbage>True</HarvestExcessHerbage>
+        <DoVerbose>False</DoVerbose>
+        <Seperator0>
+        </Seperator0>
+        <StockingRate>3</StockingRate>
+        <CurrentLocationName>Paddock01</CurrentLocationName>
+        <Seperator1>
+        </Seperator1>
+        <TargetRotationLength>4</TargetRotationLength>
         <PostGrazingResidual>1500</PostGrazingResidual>
+        <HarvestExcessHerbage>False</HarvestExcessHerbage>
+        <Seperator2>
+        </Seperator2>
+        <SilageEveryDay>0</SilageEveryDay>
+        <SilageOnPastureMass>0</SilageOnPastureMass>
+        <TriggerPastureMass>1500</TriggerPastureMass>
+        <Seperator3>
+        </Seperator3>
         <NumCows>3</NumCows>
         <pastLocationName>
         </pastLocationName>
@@ -6028,7 +6038,7 @@ namespace Models
         [Link] Supplement Feed;
         [Link] Zone[] Paddocks;
         [Link] ISummary summary = null;
-		[Link] Simulation Farm;
+        [Link] Simulation Farm;
 
         //List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();
 
@@ -6043,14 +6053,27 @@ namespace Models
         }
 
         [Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
+        [Description("===============================")] public string Seperator0 { get; set; }
 
         [Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
         [Description("Initial location of the cows (paddock name): ")] public string CurrentLocationName { get; set; }
-        // move more cow stuff to the interface
+        [Description("===============================")] public string Seperator1 { get; set; }
 
         [Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
-        [Description("Harvest excess herbage? (days): ")] public bool HarvestExcessHerbage { get; set; }
         [Description("Post grazing residual (kgDM/ha): ")] public double PostGrazingResidual { get; set; }
+        [Description("Harvest excess herbage above residual when cows leave the paddock?: ")] public bool HarvestExcessHerbage { get; set; }
+        [Description("===============================")] public string Seperator2 { get; set; }
+
+        [Description("Baseline feeding of silage (kgDM/head/day): ")] public double SilageEveryDay { get; set; }
+        [Description("Low pasture mass feeding of silage (kgDM/head/day): ")] public double SilageOnPastureMass { get; set; }
+        [Description("Trigger pasture mass for above rule (kgDM/ha): ")] public double TriggerPastureMass { get; set; }
+
+
+
+
+
+
+        [Description("===============================")] public string Seperator3 { get; set; }
 
 
         public int NumCows { get; set; } // number of cows on the whole farm
@@ -6068,7 +6091,7 @@ namespace Models
         private bool MoveToday = false;
 
         public event BiomassRemovedDelegate BiomassRemoved;
-        public List<PaddockInfo> listOfPaddockInfo { get; set; } 
+        public List<PaddockInfo> listOfPaddockInfo { get; set; }
 
 
         [EventSubscribe("StartOfSimulation")]
@@ -6086,7 +6109,7 @@ namespace Models
             SetInitialCowStuff();
 
             if (NumCows > 0)
-            	Cows.Move(g, CurrentLocationName);
+                Cows.Move(g, CurrentLocationName);
 
             summary.WriteMessage(this, "     The number of animals has been rounded to " + NumCows + " from " + (StockingRate * Farm.Area));
             summary.WriteMessage(this, "     The animals will begin in " + CurrentLocationName + " which is paddock number " + CurrentLocationNum + " in the simulation");
@@ -6104,74 +6127,78 @@ namespace Models
             DaysInThisPaddock += 1;
             if (DaysInThisPaddock >= TargetRotationLength)
             {
-	            MoveToday = true;
+                MoveToday = true;
 
-   	        	pastLocationName = CurrentLocationName;
-    	        if (CurrentLocationNum < NumPaddocks -1)
-    	        {
-    	        	CurrentLocationNum += 1;
-    	        	newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName; 
-    	        }
-    	        else
-    	        {
-    	        	CurrentLocationNum = 0;
-    	        	newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName; 
-    	        }
-    	        CurrentLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName; 
+                pastLocationName = CurrentLocationName;
+                if (CurrentLocationNum < NumPaddocks - 1)
+                {
+                    CurrentLocationNum += 1;
+                    newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName;
+                }
+                else
+                {
+                    CurrentLocationNum = 0;
+                    newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName;
+                }
+                CurrentLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName;
 
-    	        if (NumCows > 0)
-                	Cows.Move(g, listOfPaddockInfo[CurrentLocationNum].paddockName);
+                if (NumCows > 0)
+                    Cows.Move(g, listOfPaddockInfo[CurrentLocationNum].paddockName);
 
                 if (DoVerbose)
                     summary.WriteMessage(this, "moving Stock to " + listOfPaddockInfo[CurrentLocationNum].paddockName);
                 DaysInThisPaddock = 0;
 
+
                 if (HarvestExcessHerbage)
                 {
-                foreach (Zone paddock in Paddocks)
-                {
-                    if (paddock.Name == pastLocationName)
+                    foreach (Zone paddock in Paddocks)
                     {
-                    	double pastPaddockBiomass = 0.0;
-                        foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-                            pastPaddockBiomass += plant.AboveGroundWt;
-                        if (pastPaddockBiomass > (PostGrazingResidual + 200.0))
+                        if (paddock.Name == pastLocationName)
                         {
-                        	foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-                        		plant.Graze(amount: (plant.AboveGroundWt / pastPaddockBiomass * PostGrazingResidual), type: "SetResidueAmount");
-                        
+                            double pastPaddockBiomass = 0.0;
+                            foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+                                pastPaddockBiomass += plant.AboveGroundWt;
+                            if (pastPaddockBiomass > (PostGrazingResidual + 250.0))
+                            {
+                                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+                                    plant.Graze(amount: (plant.AboveGroundWt / pastPaddockBiomass * PostGrazingResidual), type: "SetResidueAmount");
+
+                            }
                         }
                     }
                 }
-
-                	//PostGrazingResidual
-                }
             }
+
+                            if (SilageEveryDay > 0)
+                {
+                	Feed.Feed("silage_highquality", SilageEveryDay * Cows.NumberAll, CurrentLocationName);
+                }
 
 
         } // End of Do Management
 
         public void SetInitialCowStuff()
         {
-        	if (NumCows > 0)
-        	{
-            g = Cows.NoGroups + 1;
+            if (NumCows > 0)
+            {
+                g = Cows.NoGroups + 1;
 
-            StockBuy purchase = new StockBuy();
-            purchase.Genotype = "Friesian";
-            purchase.Number = NumCows;
-            purchase.Sex = "heifers";
-            purchase.Age = 24;       // age in months
-            purchase.Weight = 550.0;  // live weight in kg
-            purchase.UseTag = g + 1;
-            purchase.MatedTo = "Friesian";
-            purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
-            purchase.Lactating = 1;  // 0 for dry, 1 for lactating
-            purchase.NumYoung = 2;
-            purchase.YoungWt = 45;
+                StockBuy purchase = new StockBuy();
+                purchase.Genotype = "Friesian";
+                purchase.Number = NumCows;
+                purchase.Sex = "heifers";
+                purchase.Age = 24;       // age in months
+                purchase.Weight = 550.0;  // live weight in kg
+                purchase.UseTag = g + 1;
+                purchase.MatedTo = "Friesian";
+                purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
+                purchase.Lactating = 1;  // 0 for dry, 1 for lactating
+                purchase.NumYoung = 2;
+                purchase.YoungWt = 45;
 
-            Cows.Buy(purchase);
-        	}
+                Cows.Buy(purchase);
+            }
         }
 
         public void GetPaddockInfo()
@@ -6191,10 +6218,10 @@ namespace Models
 
                 foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
                 {
-                	paddockInfo.harvestableBiomass += plant.HarvestableWt;
-                	paddockInfo.totalBiomass += plant.AboveGroundWt;
+                    paddockInfo.harvestableBiomass += plant.HarvestableWt;
+                    paddockInfo.totalBiomass += plant.AboveGroundWt;
                 }
-                    
+
 
                 listOfPaddockInfo.Add(paddockInfo);
 
@@ -6253,7 +6280,7 @@ namespace Models
         </StoreType>
         <StoreType>
           <IsRoughage>true</IsRoughage>
-          <DMContent>0.25</DMContent>
+          <DMContent>1</DMContent>
           <DMD>0.70000000000000007</DMD>
           <MEContent>11</MEContent>
           <CPConc>0.16</CPConc>
@@ -6265,7 +6292,7 @@ namespace Models
           <AshAlk>0.6</AshAlk>
           <MaxPassage>0</MaxPassage>
           <Name>silage_highquality</Name>
-          <Stored>0</Stored>
+          <Stored>20000000</Stored>
         </StoreType>
       </stores>
       <PaddockList />
@@ -6280,9 +6307,13 @@ namespace Models
         <string>[Ex_TargetRotationLength].Script.listOfPaddockInfo[1].harvestableBiomass as PaddockInfo</string>
         <string>[Ex_TargetRotationLength].Script.CurrentLocation as CurrentLoc</string>
         <string>[Ex_TargetRotationLength].Script.CurrentLocationNum as CurrentLocNum</string>
-        <string>[Stock].IntakeAll.Weight</string>
+        <string>[Stock].PastIntakeAll.Weight as IntakePast</string>
+        <string>[Stock].SuppIntakeAll.Weight as IntakeSupp</string>
+        <string>[Stock].IntakeAll.Weight as IntakePastSupp</string>
         <string>[Stock].Paddock</string>
         <string>[Stock].NumberAll</string>
+        <string>[Stock].IntakeAll.Weight * [Stock].NumberAll as TotalIntake</string>
+        <string>([Paddock00].Ryegrass.HerbageGrowthWt + [Paddock00].WhiteClover.HerbageGrowthWt) * [Paddock00].Area + ([Paddock01].Ryegrass.HerbageGrowthWt + [Paddock01].WhiteClover.HerbageGrowthWt) * [Paddock01].Area + ([Paddock02].Ryegrass.HerbageGrowthWt + [Paddock02].WhiteClover.HerbageGrowthWt) * [Paddock02].Area as TotalGrowth</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -7689,13 +7720,15 @@ namespace Models
           <string>[WhiteClover].AboveGroundWt</string>
           <string>[WhiteClover].HarvestableWt</string>
           <string>[Ryegrass].AboveGroundWt + [WhiteClover].AboveGroundWt as PaddockBiomass</string>
+          <string>[Ryegrass].HerbageGrowthWt + [WhiteClover].HerbageGrowthWt as PGR</string>
+          <string>([Ryegrass].HerbageGrowthWt + [WhiteClover].HerbageGrowthWt) * [Zone].Area as PaddockFeedAccum</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
         </EventNames>
       </Report>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>10</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Zone>
@@ -8884,13 +8917,15 @@ namespace Models
           <string>[WhiteClover].AboveGroundWt</string>
           <string>[WhiteClover].HarvestableWt</string>
           <string>[Ryegrass].AboveGroundWt + [WhiteClover].AboveGroundWt as PaddockBiomass</string>
+          <string>[Ryegrass].HerbageGrowthWt + [WhiteClover].HerbageGrowthWt as PGR</string>
+          <string>([Ryegrass].HerbageGrowthWt + [WhiteClover].HerbageGrowthWt) * [Zone].Area as PaddockFeedAccum</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
         </EventNames>
       </Report>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>10</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Zone>
@@ -10079,60 +10114,278 @@ namespace Models
           <string>[WhiteClover].AboveGroundWt</string>
           <string>[WhiteClover].HarvestableWt</string>
           <string>[Ryegrass].AboveGroundWt + [WhiteClover].AboveGroundWt as PaddockBiomass</string>
+          <string>[Ryegrass].HerbageGrowthWt + [WhiteClover].HerbageGrowthWt as PGR</string>
+          <string>([Ryegrass].HerbageGrowthWt + [WhiteClover].HerbageGrowthWt) * [Zone].Area as PaddockFeedAccum</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
         </EventNames>
       </Report>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>10</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
-    <Graph>
-      <Name>Biomass</Name>
-      <Series>
-        <Name>Series1</Name>
+    <Folder>
+      <Name>Biomass and Intake</Name>
+      <Graph>
+        <Name>Biomass</Name>
+        <Series>
+          <Name>Series1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>PaddockBiomass</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <Checkpoint>Current</Checkpoint>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>PaddockBiomass</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Intake</Name>
+        <Series>
+          <Name>Pasture</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportTop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>IntakePast</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>PastureAndSilage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportTop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>IntakePastSupp</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Silage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportTop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>IntakeSupp</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Total Intake and Growth</Name>
+        <Series>
+          <Name>TotIntake</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportTop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalIntake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>TotGrowth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportTop</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalGrowth</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>PGR</Name>
+        <Series>
+          <Name>Series1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>PGR</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <DataStore>
