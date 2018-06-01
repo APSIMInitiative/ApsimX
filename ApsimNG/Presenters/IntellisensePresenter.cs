@@ -56,7 +56,9 @@
         /// <param name="textEditor">Reference to the view holding the text editor. Cannot be null.</param>
         public IntellisensePresenter(ViewBase textEditor)
         {
-            Editor = textEditor ?? throw new ArgumentException("textEditor cannot be null.");
+            if (textEditor == null)
+                throw new ArgumentException("textEditor cannot be null.");
+            Editor = textEditor; // ?? throw new ArgumentException("textEditor cannot be null.");
 
             // The way that the ItemSelected event handler works is a little complicated. If the user has half-typed 
             // a word and needs completion options for it, we can't just insert the selected completion at the caret 
