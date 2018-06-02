@@ -6215,12 +6215,12 @@ namespace Models
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2015-04-10</Date>
+                  <Date>2015-04-16</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2015-06-06</Date>
+                  <Date>2015-06-09</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -6240,7 +6240,7 @@ namespace Models
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2016-01-21</Date>
+                  <Date>2016-01-25</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -6250,12 +6250,12 @@ namespace Models
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2016-04-08</Date>
+                  <Date>2016-04-09</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2016-05-27</Date>
+                  <Date>2016-05-24</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
