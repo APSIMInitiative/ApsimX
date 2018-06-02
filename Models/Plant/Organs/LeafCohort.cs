@@ -817,8 +817,17 @@ namespace Models.PMF.Organs
                     thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
                 else thermalTime = tt;
 
+                //Modify leaf area using tillering approach
+                double totalf = ApexGroupSize[0];
+                for (int i = 1; i < ApexGroupAge.Count; i++)
+                {
+                    double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
+                    totalf += f * ApexGroupSize[i];
+                }
+                double sizeAgeFactor = totalf / ApexGroupSize.Sum();
+
                 //Leaf area growth parameters
-                DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime);
+                DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime) * sizeAgeFactor;
                 //Calculate delta leaf area in the absence of water stress
                 DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
                 //Reduce potential growth for water stress
@@ -905,16 +914,8 @@ namespace Models.PMF.Organs
             //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
             double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
 
-            //Modify leaf area using tillering approach
-            double totalf = ApexGroupSize[0];
-            for(int i=1; i< ApexGroupAge.Count;i++)
-            {
-                double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
-                totalf += f * Leaf.ApexGroupSize[i];
-            }
-
+            
             //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
-            deltaActualArea = deltaActualArea * totalf / ApexGroupSize.Sum();
             LiveArea += deltaActualArea;
             
             //Senessing leaf area
