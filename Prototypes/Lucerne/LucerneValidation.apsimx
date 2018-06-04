@@ -891,26 +891,11 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
         </Memo>
         <RUEModel>
           <Name>Photosynthesis</Name>
-          <AirTemperatureFunction>
+          <Constant>
             <Name>RUE</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>8.5</double>
-                <double>15</double>
-                <double>18</double>
-                <double>25</double>
-              </X>
-              <Y>
-                <double>0.8</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-          </AirTemperatureFunction>
+            <FixedValue>1.5</FixedValue>
+          </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
@@ -918,7 +903,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>15</double>
+                <double>18</double>
                 <double>30</double>
                 <double>40</double>
               </X>
@@ -1514,7 +1499,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
                 <Constant>
                   <Name>Constant</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <FixedValue>0.0005</FixedValue>
+                  <FixedValue>0.01</FixedValue>
                 </Constant>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Start>Emergence</Start>
@@ -3453,67 +3438,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
-          <LinearInterpolationFunction>
-            <Name>RespirationCoefficient</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <Graph>
-                <Name>Graph</Name>
-                <Series>
-                  <Name>Series</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-65536</ColourArgb>
-                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <Checkpoint>Current</Checkpoint>
-                  <XFieldName>.Simulations.Replacements.Lucerne.TapRoot.DMDemandFunction.PartitionFraction.XYPairs.X</XFieldName>
-                  <YFieldName>.Simulations.Replacements.Lucerne.TapRoot.DMDemandFunction.PartitionFraction.XYPairs.Y</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Axis>
-                  <Type>Left</Type>
-                  <Title>Y</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Title>X</Title>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>BottomRight</LegendPosition>
-                <DisabledSeries />
-              </Graph>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>8</double>
-                <double>16</double>
-              </X>
-              <Y>
-                <double>0.003</double>
-                <double>0.035</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
-          </LinearInterpolationFunction>
           <Constant>
             <Name>Constant</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3549,6 +3473,64 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
             <B>1</B>
             <C>1</C>
           </ExponentialFunction>
+          <PhaseLookup>
+            <Name>RespirationCoefficient</Name>
+            <PhaseLookupValue>
+              <Name>Juvenile</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.002</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>EndJuvenile</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <LinearInterpolationFunction>
+                <Name>RespirationCoefficient</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>10</double>
+                    <double>13.5</double>
+                    <double>16.5</double>
+                  </X>
+                  <Y>
+                    <double>0.002</double>
+                    <double>0.01</double>
+                    <double>0.035</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Phenology].Photoperiod.Value()</XProperty>
+              </LinearInterpolationFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>EndJuvenile</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.0002</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartFlowering</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[
+The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover
+]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
@@ -3707,15 +3689,21 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
+                <double>200</double>
+                <double>400</double>
+                <double>500</double>
                 <double>650</double>
               </X>
               <Y>
-                <double>0.6</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0</double>
                 <double>0</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[TapRoot].Wt</XProperty>
+            <XProperty>[Lucerne].TapRoot.Live.Wt</XProperty>
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
@@ -3955,6 +3943,8 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>[Lucerne].Leaf.Live.Wt *10 as LeafWt</string>
         <string>[Lucerne].Root.Live.Wt </string>
         <string>[Lucerne].TapRoot.Live.Wt*10 as RootWt</string>
+        <string>[Lucerne].TapRoot.Total.Wt*10 as RootTotal</string>
+        <string>[lucerne].TapRoot.Senesced.Wt</string>
         <string>[Lucerne].Leaf.Live.N</string>
         <string>[Lucerne].Root.Live.N</string>
         <string>[Lucerne].Leaf.Live.NConc</string>
@@ -7723,7 +7713,9 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>dry</string>
+            </DisabledSeries>
           </Graph>
           <Graph>
             <Name>LeafWt</Name>
@@ -11817,7 +11809,18 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>SD2</string>
+              <string>SD3</string>
+              <string>SD4</string>
+              <string>SD1dry</string>
+              <string>SD2dry</string>
+              <string>SD3dry</string>
+              <string>SD4dry</string>
+              <string>SD2irr</string>
+              <string>SD3irr</string>
+              <string>SD4irr</string>
+            </DisabledSeries>
           </Graph>
           <Graph>
             <Name>LeafWt</Name>
@@ -15983,7 +15986,7 @@ namespace Models
               <TableName>ObsAllData</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Shootbiomass</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16031,7 +16034,11 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>SL</string>
+              <string>SS</string>
+              <string>LS</string>
+            </DisabledSeries>
           </Graph>
           <Graph>
             <Name>LeafWt</Name>
@@ -16053,7 +16060,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>LeafWt</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16099,7 +16106,11 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>SL</string>
+              <string>SS</string>
+              <string>LS</string>
+            </DisabledSeries>
           </Graph>
           <Graph>
             <Name>StemWt</Name>
@@ -16121,7 +16132,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>StemWt</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
+              <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -16167,7 +16178,11 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>SL</string>
+              <string>SS</string>
+              <string>LS</string>
+            </DisabledSeries>
           </Graph>
           <Graph>
             <Name>RootWt</Name>
@@ -16235,7 +16250,11 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
-            <DisabledSeries />
+            <DisabledSeries>
+              <string>SL</string>
+              <string>SS</string>
+              <string>LS</string>
+            </DisabledSeries>
           </Graph>
           <Graph>
             <Name>MRespriation</Name>
@@ -16256,7 +16275,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Lucerne.Root.MaintenanceRespiration</YFieldName>
+              <YFieldName>lucerne.TapRoot.Senesced.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -16273,7 +16292,52 @@ namespace Models
             </Axis>
             <Axis>
               <Type>Left</Type>
-              <Title>RootWt (Kg/ha)</Title>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>RootWt1</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>RootWt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
               <Maximum>NaN</Maximum>
@@ -24668,7 +24732,7 @@ namespace Models
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
               <Operation>
-                <Date>2018-01-16</Date>
+                <Date>2018-01-15</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
             </Operations>
@@ -24781,7 +24845,7 @@ namespace Models
           <Name>clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>2014-10-08T00:00:00</StartDate>
-          <EndDate>2018-01-16T00:00:00</EndDate>
+          <EndDate>2018-01-01T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -27947,12 +28011,12 @@ namespace Models
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
+              <Marker>FilledDiamond</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
-              <TableName>ObsAll</TableName>
+              <TableName>ObsAllData</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -28229,9 +28293,9 @@ namespace Models
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
-              <TableName>Observed</TableName>
+              <TableName>ObsAllData</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>StemWt</YFieldName>
+              <YFieldName>LeafWt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
