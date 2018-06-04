@@ -4510,7 +4510,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Do a request for the biomasses
+        /// Do a request for all the biomasses in every paddock
+        /// Note: This could be optimised to not request paddocks that are unstocked (drafting still needs to get the amounts)
         /// </summary>
         private void RequestAvailableToAnimal()
         {
@@ -4521,6 +4522,42 @@ namespace Models.GrazPlan
                 if (forageProvider.ForageObj != null)
                 {
                     forageProvider.UpdateForages(forageProvider.ForageObj);
+                }
+            }
+
+            // iterate through all the paddocks and sum the total green and store it in each forage provider
+            for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
+            {
+                double pastureGreen = 0;
+                PaddockInfo paddInfo = this.stockModel.Paddocks.byIndex(idx);
+                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+                {
+                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                    if (string.Compare(forageProvider.OwningPaddock.sName, paddInfo.sName, true) == 0)
+                    {
+                        if (forageProvider.ForageObj != null)
+                        {
+                            foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IRemovableBiomass)))
+                            {
+                                if (biomass.IsAboveGround)
+                                {
+                                    if (biomass.Live.Wt > 0)
+                                    {
+                                        pastureGreen += biomass.Live.Wt;   // g/m^2
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+                {
+                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                    if (string.Compare(forageProvider.OwningPaddock.sName, paddInfo.sName, true) == 0)
+                    {
+                        forageProvider.PastureGreenDM = pastureGreen;
+                    }
                 }
             }
         }
