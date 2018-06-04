@@ -105,6 +105,14 @@ namespace UserInterface.Presenters
             }
         }
 
+        private string GetPathToNode(IModel model)
+        {
+            if (model is Simulations)
+            {
+                return model.Name;
+            }
+            return GetPathToNode(model.Parent) + "." + model.Name;
+        }
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>

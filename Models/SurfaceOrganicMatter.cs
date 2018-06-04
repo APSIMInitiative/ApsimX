@@ -263,7 +263,7 @@
         /// <value>The type.</value>
         [Summary]
         [Description("Surface organic matter pool type")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.ResidueName)]
+        [Display(Type = DisplayType.ResidueName)]
         [Units("")]
         public string type 
         {

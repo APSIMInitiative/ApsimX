@@ -14601,9 +14601,16 @@ namespace Models
 
         #endregion
 
-
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
 
         }
+
+    }
 
     
     }
