@@ -817,8 +817,17 @@ namespace Models.PMF.Organs
                     thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
                 else thermalTime = tt;
 
+                //Modify leaf area using tillering approach
+                double totalf = ApexGroupSize[0];
+                for (int i = 1; i < ApexGroupAge.Count; i++)
+                {
+                    double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
+                    totalf += f * ApexGroupSize[i];
+                }
+                double sizeAgeFactor = totalf / ApexGroupSize.Sum();
+
                 //Leaf area growth parameters
-                DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime);
+                DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime) * sizeAgeFactor;
                 //Calculate delta leaf area in the absence of water stress
                 DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
                 //Reduce potential growth for water stress
@@ -905,16 +914,8 @@ namespace Models.PMF.Organs
             //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
             double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
 
-            //Modify leaf area using tillering approach
-            double totalf = ApexGroupSize[0];
-            for(int i=1; i< ApexGroupAge.Count;i++)
-            {
-                double f = leafCohortParameters.LeafSizeAgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
-                totalf += f * Leaf.ApexGroupSize[i];
-            }
-
+            
             //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
-            deltaActualArea = deltaActualArea * totalf / ApexGroupSize.Sum();
             LiveArea += deltaActualArea;
             
             //Senessing leaf area
@@ -967,10 +968,8 @@ namespace Models.PMF.Organs
             MaintenanceRespiration = 0;
             //Do Maintenance respiration
             MaintenanceRespiration += Live.MetabolicWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            Live.MetabolicWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
             MaintenanceRespiration += Live.StorageWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            Live.StorageWt *= (1 - leafCohortParameters.MaintenanceRespirationFunction.Value());
-
+            
             Age = Age + thermalTime;
 
             // Do Detachment of this Leaf Cohort
@@ -1031,7 +1030,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the zeroing of some varibles.</summary>
-        protected void DoDailyCleanup()
+        public void DoDailyCleanup()
         {
             Detached.Clear();
             Removed.Clear();
@@ -1189,15 +1188,6 @@ namespace Models.PMF.Organs
             return fracDetach;
         }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (Plant.IsAlive)
-                DoDailyCleanup();
-        }
         #endregion
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

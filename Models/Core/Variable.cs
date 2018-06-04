@@ -14,7 +14,6 @@
     [Serializable]
     public class VariableObject : IVariable
     {
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -55,6 +54,11 @@
         }
 
         /// <summary>
+        /// Gets the data type of the property
+        /// </summary>
+        public override Type DataType { get { return null; } }
+
+        /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
         public override string Description
@@ -64,7 +68,6 @@
                 return null;
             }
         }
-
 
         /// <summary>
         /// Gets the text to use as a label for the property.
@@ -103,6 +106,33 @@
                 return null;
             }
         }
+
+        /// <summary>
+        /// Gets the associated display type for the related property.
+        /// </summary>
+        public override DisplayAttribute Display
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
+        /// </summary>
+        public override object ValueWithArrayHandling
+        {
+            get
+            {
+                return Value;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return true; } }
     }
 
     /// <summary>
@@ -159,6 +189,69 @@
             set
             {
                 FieldInfo.SetValue(Object, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
+        /// </summary>
+        public override object ValueWithArrayHandling
+        {
+            get
+            {
+                object value = this.Value;
+                if (value == null)
+                {
+                    return string.Empty;
+                }
+
+                if (this.DataType.IsArray)
+                {
+                    string stringValue = string.Empty;
+                    Array arr = value as Array;
+                    if (arr == null)
+                    {
+                        return stringValue;
+                    }
+
+                    for (int j = 0; j < arr.Length; j++)
+                    {
+                        if (j > 0)
+                        {
+                            stringValue += ",";
+                        }
+
+                        Array arr2d = arr.GetValue(j) as Array;
+                        if (arr2d == null)
+                            stringValue += VariableProperty.AsString(arr.GetValue(j));
+                        else
+                        {
+                            for (int k = 0; k < arr2d.Length; k++)
+                            {
+                                if (k > 0)
+                                {
+                                    stringValue += " \r\n ";
+                                }
+                                stringValue += VariableProperty.AsString(arr2d.GetValue(k));
+                            }
+                        }
+                    }
+
+                    value = stringValue;
+                }
+
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the data type of the property
+        /// </summary>
+        public override Type DataType
+        {
+            get
+            {
+                return FieldInfo.FieldType;
             }
         }
 
@@ -226,5 +319,21 @@
                 return null;
             }
         }
+
+        /// <summary>
+        /// Gets the associated display type for the related property.
+        /// </summary>
+        public override DisplayAttribute Display
+        {
+            get
+            {
+                return ReflectionUtilities.GetAttribute(FieldInfo, typeof(DisplayAttribute), false) as DisplayAttribute;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return true; } }
     }
 }

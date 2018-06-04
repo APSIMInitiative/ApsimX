@@ -60,6 +60,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.SoluteManager))]
         [XmlElement(typeof(Models.AgPasture.Sward))]
         [XmlElement(typeof(Models.AgPasture.PastureSpecies))]
+        [XmlElement(typeof(Models.AgPasture.PastureAboveGroundOrgan))]
+        [XmlElement(typeof(Models.AgPasture.GenericTissue))]
         [XmlElement(typeof(Clock))]
         [XmlElement(typeof(DataStore))]
         [XmlElement(typeof(Fertiliser))]

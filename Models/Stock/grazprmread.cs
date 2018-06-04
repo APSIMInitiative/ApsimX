@@ -381,7 +381,8 @@ namespace Models.GrazPlan
         /// <param name="Params"></param>
         public void readDefaults(string sPrmID, ref TParameterSet Params)
         {
-            readFromResource(sPrmID, ref Params, false); 
+            readFromResource(sPrmID, ref Params, false);
+            Params.sCurrLocale = GrazLocale.sDefaultLocale();
         }
 
         /// <summary>

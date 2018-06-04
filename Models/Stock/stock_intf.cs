@@ -349,7 +349,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Conception rates
         /// </summary>
-        public double[] Conceptions = new double[4];    // array[1..  3]
+        public double[] Conceptions = new double[4];    // array[1..3]
     }
 
     /// <summary>
@@ -520,7 +520,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// List of forage providers/components
         /// </summary>
-        private TForageProviders forageProviders;
+        private ForageProviders forageProviders;
 
         /// <summary>
         /// Gets or sets the ref to the hosts random number generator
@@ -568,7 +568,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets all the forage providers
         /// </summary>
-        public TForageProviders ForagesAll
+        public ForageProviders ForagesAll
         {
             get { return this.forageProviders; }
         }
@@ -589,7 +589,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="constFileName">The name of the parameter file</param>
         /// <returns>The animal parameter set</returns>
-        private TAnimalParamSet MakeParamSet(string constFileName)
+        public static TAnimalParamSet MakeParamSet(string constFileName)
         {
             TAnimalParamSet result = new TAnimalParamSet((TAnimalParamSet)null);
             result.CopyAll(TGAnimalParams.AnimalParamsGlb());
@@ -607,7 +607,7 @@ namespace Models.GrazPlan
         private void SetParamFile(string fileName)
         {
             this.baseParams = null;
-            this.baseParams = this.MakeParamSet(fileName);
+            this.baseParams = StockList.MakeParamSet(fileName);
             this.paramFile = fileName;
         }
 
@@ -836,7 +836,7 @@ namespace Models.GrazPlan
                 if (this.stock[posIdx].StepForageInputs[jdx] == null)
                     this.stock[posIdx].StepForageInputs[jdx] = new GrazType.TGrazingInputs();
 
-                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.byIndex(jdx).availForage(group.Genotype.GrazeC[17], group.Genotype.GrazeC[18], group.Genotype.GrazeC[19]);
+                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.byIndex(jdx).availForage();
                 this.stock[posIdx].StepForageInputs[jdx].CopyFrom(this.stock[posIdx].InitForageInputs[jdx]);
             }
         }
@@ -1074,10 +1074,7 @@ namespace Models.GrazPlan
             paddockInputs = new GrazType.TGrazingInputs();
             for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
             {
-                forageInputs = paddock.Forages.byIndex(jdx).availForage(
-                                                                        animalGroup.Genotype.GrazeC[17],
-                                                                        animalGroup.Genotype.GrazeC[18],
-                                                                        animalGroup.Genotype.GrazeC[19]);
+                forageInputs = paddock.Forages.byIndex(jdx).availForage();
                 GrazType.addGrazingInputs(jdx + 1, forageInputs, ref paddockInputs);
             }
             animalGroup.Herbage = paddockInputs;
@@ -1426,7 +1423,7 @@ namespace Models.GrazPlan
             this.paddockList = new TPaddockList();
             this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
-            this.forageProviders = new TForageProviders();
+            this.forageProviders = new ForageProviders();
             this.enterpriseList = new EnterpriseList();
             this.grazingList = new GrazingList();
         }
@@ -2921,9 +2918,9 @@ namespace Models.GrazPlan
 
             TAnimalGroup srcGroup;
             double splitSD;                                                         // Position of the threshold on the live wt   
-            //   distribution of the group, in S.D. units 
+                                                                                    //   distribution of the group, in S.D. units 
             double removePropn;                                                     // Proportion of animals lighter than SplitWt 
-            int numToRemove;                                                         // Number to transfer to TempAnimals          
+            int numToRemove;                                                        // Number to transfer to TempAnimals          
             int numAnimals;
             double liveWt;
             TDifferenceRecord diffs;
@@ -2940,7 +2937,7 @@ namespace Models.GrazPlan
             {
                 numAnimals = srcGroup.NoAnimals;
                 liveWt = srcGroup.LiveWeight;
-                splitSD = (splitWt - liveWt) / (varRatio * liveWt);               // NB SplitWt is a live weight value     
+                splitSD = (splitWt - liveWt) / (varRatio * liveWt);                 // NB SplitWt is a live weight value     
 
                 removePropn = StdMath.CumNormal(splitSD);                           // Normal distribution of weights assumed
                 numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn));
@@ -2971,11 +2968,11 @@ namespace Models.GrazPlan
                         diffs.BaseWeight = diffRatio * srcGroup.BaseWeight;
                         diffs.StdRefWt = diffRatio * srcGroup.StdReferenceWt;               // Weight diffs within a group are       
                         diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;              // assumed genetic!                    
-                    } // _ if (NoToRemove < NoAnimals) _
+                    }                       
 
                     this.Add(srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
                          this.GetPaddInfo(groupIdx), this.GetTag(groupIdx), this.GetPriority(groupIdx));   // up the animals                      
-                } // _ if (NoToRemove > 0) _
+                } 
             }
         }
 
@@ -3309,14 +3306,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Convert the Stock geno object to TSingleGenotypeInits
+        /// Convert the Stock geno object to SingleGenotypeInits
         /// </summary>
         /// <param name="genoValue">A genotype value</param>
         /// <param name="genoInits">Genotype initial value</param>
-        public void Value2GenotypeInits(TStockGeno genoValue, ref SingleGenotypeInits genoInits)
+        public void Value2GenotypeInits(StockGeno genoValue, ref SingleGenotypeInits genoInits)
         {
-            int idx;
-
             genoInits.GenotypeName = genoValue.Name;
             genoInits.DamBreed = genoValue.DamBreed;
             genoInits.SireBreed = genoValue.SireBreed;
@@ -3333,10 +3328,43 @@ namespace Models.GrazPlan
             if (genoInits.DeathRate[TRUE] == 0.0)
                 genoInits.DeathRate[TRUE] = genoInits.DeathRate[FALSE];
 
-            for (int i = 0; i < genoInits.Conceptions.Length; i++)
-                genoInits.Conceptions[0] = 0.0;
-            for (idx = 1; idx <= genoValue.Conception.Length; idx++)
-                genoInits.Conceptions[idx - 1] = genoValue.Conception[idx - 1];
+            int i;
+            for (i = 0; i < genoInits.Conceptions.Length; i++)
+                genoInits.Conceptions[i] = 0.0;
+            if (genoValue.Conception != null)
+            {
+                for (i = 0; i < genoValue.Conception.Length; i++)
+                    genoInits.Conceptions[i] = genoValue.Conception[i]; // Conceptions[1..
+            }
+        }
+
+        /// <summary>
+        /// Convert the inits into a StockGeno array
+        /// </summary>
+        /// <param name="genoInits">The array of genotype inits</param>
+        /// <param name="genoValues">The returned array of StockGeno</param>
+        public void GenotypeInits2Value(SingleGenotypeInits[] genoInits, ref StockGeno[] genoValues)
+        {
+            genoValues = new StockGeno[genoInits.Length];
+            for (int idx = 0; idx < genoInits.Length; idx++)
+            {
+                genoValues[idx] = new StockGeno();
+                genoValues[idx].Name = genoInits[idx].GenotypeName;
+                genoValues[idx].DamBreed = genoInits[idx].DamBreed;
+                genoValues[idx].SireBreed = genoInits[idx].SireBreed;
+                genoValues[idx].Generation = genoInits[idx].Generation;
+                genoValues[idx].SRW = genoInits[idx].SRW;
+                genoValues[idx].RefFleeceWt = genoInits[idx].PotFleeceWt;
+                genoValues[idx].MaxFibreDiam = genoInits[idx].MaxFibreDiam;
+                genoValues[idx].FleeceYield = genoInits[idx].FleeceYield;
+                genoValues[idx].PeakMilk = genoInits[idx].PeakMilk;
+                genoValues[idx].DeathRate = genoInits[idx].DeathRate[FALSE];
+                genoValues[idx].WnrDeathRate = genoInits[idx].DeathRate[TRUE];
+
+                //genoValues[idx].Conception = new double[4];
+                for (int i = 0; i < genoInits[idx].Conceptions.Length; i++)
+                    genoValues[idx].Conception[i] = genoInits[idx].Conceptions[i]; // Conceptions[1..
+            }
         }
 
         /// <summary>
@@ -3564,7 +3592,7 @@ namespace Models.GrazPlan
         private string[] CRITERIA = new string[MAX_CRITERIA] { "draft" };   // used in radiogroup on dialog
 
         /// <summary>
-        /// Initialises a TGenotypeInits so that most parameters revert to their         
+        /// Initialises a SingleGenotypeInits so that most parameters revert to their         
         /// defaults.  Can't be done as a constant because MISSING is a typed value      
         /// </summary>
         /// <param name="genotype">Returns the empty genotype</param>
@@ -3782,11 +3810,11 @@ namespace Models.GrazPlan
             for (int weanerIdx = 0; weanerIdx <= 1; weanerIdx++)
             {
                 // A zero death rate is permissible      
-                if (genoInits[genoIdx].DeathRate[weanerIdx] != StdMath.DMISSING)                    
+                if (genoInits[genoIdx].DeathRate[weanerIdx] != StdMath.DMISSING)
                     result.SetAnnualDeaths(weanerIdx == 1, genoInits[genoIdx].DeathRate[weanerIdx]);
             }
             if (this.IsGiven(genoInits[genoIdx].Conceptions[1]))
-                result.Conceptions = genoInits[genoIdx].Conceptions;
+                genoInits[genoIdx].Conceptions.CopyTo(result.Conceptions, 0);
 
             return result;
         }

@@ -82,7 +82,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateView()
         {
-            this.view.ShowMap(this.map.GetCoordinates());
+            List<string> files = new List<string>();
+            this.view.ShowMap(this.map.GetCoordinates(files), files, this.map.Zoom, this.map.Center);
         }
 
         /// <summary>
