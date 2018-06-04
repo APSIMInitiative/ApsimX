@@ -4516,14 +4516,6 @@ namespace Models.GrazPlan
         private void RequestAvailableToAnimal()
         {
             ForageProvider forageProvider;
-            for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
-            {
-                forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
-                if (forageProvider.ForageObj != null)
-                {
-                    forageProvider.UpdateForages(forageProvider.ForageObj);
-                }
-            }
 
             // iterate through all the paddocks and sum the total green and store it in each forage provider
             for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
@@ -4558,6 +4550,16 @@ namespace Models.GrazPlan
                     {
                         forageProvider.PastureGreenDM = pastureGreen;
                     }
+                }
+            }
+
+            // now update the available forages
+            for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+            {
+                forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                if (forageProvider.ForageObj != null)
+                {
+                    forageProvider.UpdateForages(forageProvider.ForageObj);
                 }
             }
         }
