@@ -602,46 +602,22 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
-              <Name>Vegetative</Name>
+              <Name>VegetativeInductive</Name>
               <DivideFunction>
                 <Name>LeafFraction</Name>
-                <MultiplyFunction>
-                  <Name>Numerator</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
+                <AllometricDemandFunction>
+                  <Name>LeafProp</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <AddFunction>
-                  <Name>Denominator</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSRs</Name>
-                    <VariableReference>
-                      <Name>TargetSR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
+                  <Const>0.4</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Leaf].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </AddFunction>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -652,77 +628,87 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
               <Name>Reproductive</Name>
               <DivideFunction>
                 <Name>LeafFraction</Name>
-                <MultiplyFunction>
-                  <Name>Numerator</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>CurrentSL</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[StemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
+                <AllometricDemandFunction>
+                  <Name>LeafProp</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <MultiplyFunction>
-                  <Name>Denominator</Name>
-                  <AddFunction>
-                    <Name>SRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSRs</Name>
-                      <VariableReference>
-                        <Name>TargetSR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[ShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>SLs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSLs</Name>
-                      <VariableReference>
-                        <Name>TargetSL1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSL2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSL</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[StemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
+                  <Const>0.2</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Leaf].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Flowering</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunctionOld</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[In the plantain model, the DM demand function attempts to keep the shoot to root ratio and then the stem to leaf ratio close to a target value (defined by the [TargetShootRootRatio].Value and [TargetStemsLeafRatio].Value), which may vary according to the phenolgical stage.  This approach ensures that the plantain plants will recovery after being cut or grazed.  In this case, biomass will be allocated to leaves preferably, even during reproductive phase.  
+]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>VegetativeInductive</Name>
+              <MultiplyFunction>
+                <Name>LeafFraction</Name>
+                <AllometricDemandFunction>
+                  <Name>AboveGroundProp</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Const>0.75</Const>
+                  <Power>1</Power>
+                  <XProperty>[TotalLive].Wt</XProperty>
+                  <YProperty>[AboveGroundLive].Wt</YProperty>
+                </AllometricDemandFunction>
+                <AllometricDemandFunction>
+                  <Name>LeafProp</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Const>0.4</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Leaf].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <MultiplyFunction>
+                <Name>LeafFraction</Name>
+                <AllometricDemandFunction>
+                  <Name>AboveGroundProp</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Const>0.8</Const>
+                  <Power>1</Power>
+                  <XProperty>[TotalLive].Wt</XProperty>
+                  <YProperty>[AboveGroundLive].Wt</YProperty>
+                </AllometricDemandFunction>
+                <AllometricDemandFunction>
+                  <Name>LeafProp</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Const>0.2</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Leaf].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Flowering</Start>
               <End>Ripening</End>
@@ -910,6 +896,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>5</double>
                 <double>18</double>
                 <double>30</double>
+                <double>35</double>
               </X>
               <Y>
                 <double>1.5</double>
@@ -918,6 +905,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>0.1</double>
                 <double>1</double>
                 <double>1</double>
+                <double>1.5</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1026,8 +1014,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.7</FractionLiveToRemove>
-            <FractionDeadToRemove>0.5</FractionDeadToRemove>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0.2</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
@@ -1037,13 +1025,13 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <FractionLiveToRemove>0.7</FractionLiveToRemove>
             <FractionDeadToRemove>0.1</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionDeadToResidue>0.2</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToRemove>0.1</FractionLiveToRemove>
+            <FractionDeadToRemove>0.1</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0.1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
@@ -1052,8 +1040,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0.2</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
@@ -1135,111 +1123,45 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
+              <Name>VegetativeInductive</Name>
+              <DivideFunction>
+                <Name>PetioleFraction</Name>
+                <AllometricDemandFunction>
+                  <Name>PetioleProp</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Const>0.3</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Petiole].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>Reproductive</Name>
               <DivideFunction>
-                <Name>StemFraction</Name>
-                <MultiplyFunction>
-                  <Name>Numerator</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>CurrentFS</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[FlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
+                <Name>PetioleFraction</Name>
+                <AllometricDemandFunction>
+                  <Name>PetioleProp</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <MultiplyFunction>
-                  <Name>Denominator</Name>
-                  <AddFunction>
-                    <Name>SRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSRs</Name>
-                      <VariableReference>
-                        <Name>TargetSR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[ShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>SLs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSLs</Name>
-                      <VariableReference>
-                        <Name>TargetSL1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSL2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSL</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[StemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>FSs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetFSs</Name>
-                      <VariableReference>
-                        <Name>TargetFS1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetFS2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentFS</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[FlowerStemRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
+                  <Const>0.3</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Petiole].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1310,6 +1232,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>5</double>
                 <double>18</double>
                 <double>30</double>
+                <double>35</double>
               </X>
               <Y>
                 <double>1.5</double>
@@ -1318,6 +1241,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>0.1</double>
                 <double>1</double>
                 <double>1</double>
+                <double>1.5</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1413,24 +1337,24 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.65</FractionDeadToRemove>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0.5</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.25</FractionDeadToRemove>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0.3</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.2</FractionDeadToResidue>
+            <FractionDeadToResidue>0.1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToRemove>0.1</FractionLiveToRemove>
+            <FractionDeadToRemove>0.2</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0.1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
@@ -1439,7 +1363,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.5</FractionLiveToResidue>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0.2</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1505,111 +1429,45 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
+              <Name>VegetativeInductive</Name>
+              <DivideFunction>
+                <Name>StolonFraction</Name>
+                <AllometricDemandFunction>
+                  <Name>StolonProp</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Const>0.3</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Stolon].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>Reproductive</Name>
               <DivideFunction>
-                <Name>StemFraction</Name>
-                <MultiplyFunction>
-                  <Name>Numerator</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>CurrentFS</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[FlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
+                <Name>StolonFraction</Name>
+                <AllometricDemandFunction>
+                  <Name>StolonProp</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <MultiplyFunction>
-                  <Name>Denominator</Name>
-                  <AddFunction>
-                    <Name>SRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSRs</Name>
-                      <VariableReference>
-                        <Name>TargetSR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[ShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>SLs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSLs</Name>
-                      <VariableReference>
-                        <Name>TargetSL1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSL2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSL</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[StemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>FSs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetFSs</Name>
-                      <VariableReference>
-                        <Name>TargetFS1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetFS2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentFS</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[FlowerStemRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
+                  <Const>0.1</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Stolon].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1676,6 +1534,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>5</double>
                 <double>18</double>
                 <double>30</double>
+                <double>37</double>
               </X>
               <Y>
                 <double>1.5</double>
@@ -1684,6 +1543,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>0.1</double>
                 <double>1</double>
                 <double>1</double>
+                <double>1.25</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1785,16 +1645,16 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.65</FractionDeadToRemove>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.25</FractionDeadToRemove>
+            <FractionLiveToRemove>0.2</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0.2</FractionDeadToResidue>
           </OrganBiomassRemovalType>
@@ -1803,15 +1663,15 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.5</FractionLiveToResidue>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0.2</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1940,116 +1800,33 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
+              <Name>VegetativeInductive</Name>
+              <Constant>
+                <Name>InflorescenceFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>Reproductive</Name>
               <DivideFunction>
-                <Name>FlowerFraction</Name>
-                <MultiplyFunction>
-                  <Name>Numerator</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetFS1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetFS2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
+                <Name>InflorescenceFraction</Name>
+                <AllometricDemandFunction>
+                  <Name>InflorescenceProp</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <MultiplyFunction>
-                  <Name>Denominator</Name>
-                  <AddFunction>
-                    <Name>SRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSRs</Name>
-                      <VariableReference>
-                        <Name>TargetSR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[ShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>SLs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSLs</Name>
-                      <VariableReference>
-                        <Name>TargetSL1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSL2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSL</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[StemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>FSs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetFSs</Name>
-                      <VariableReference>
-                        <Name>TargetFS1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetFS2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentFS</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[FlowerStemRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
+                  <Const>0.4</Const>
+                  <Power>1</Power>
+                  <XProperty>[AboveGroundLive].Wt</XProperty>
+                  <YProperty>[Inflorescence].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2120,6 +1897,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>5</double>
                 <double>18</double>
                 <double>30</double>
+                <double>35</double>
               </X>
               <Y>
                 <double>1.5</double>
@@ -2128,6 +1906,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
                 <double>0.1</double>
                 <double>0.75</double>
                 <double>1</double>
+                <double>1.5</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2222,17 +2001,17 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <Name>Cut</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.25</FractionDeadToRemove>
+            <FractionDeadToRemove>0.6</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.25</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0.2</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0.3</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2247,8 +2026,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.5</FractionLiveToResidue>
-            <FractionDeadToResidue>0.25</FractionDeadToResidue>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0.2</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
@@ -2318,27 +2097,118 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.06</FixedValue>
         </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseBasedSwitch>
         <Constant>
-          <Name>DMDemandFunction</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
+          <Name>NitrogenDemandSwitch</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>1</FixedValue>
+          <Units />
         </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
+]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>AllPhases</Name>
+              <MultiplyFunction>
+                <Name>NoduleFraction</Name>
+                <Constant>
+                  <Name>MaxNoduleFraction</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>0.15</FixedValue>
+                  <Units>Fraction of total plant biomass</Units>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>NFactor</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>0</double>
+                      <double>0.3</double>
+                      <double>0.5</double>
+                      <double>0.8</double>
+                      <double>1</double>
+                    </X>
+                    <Y>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>0.8</double>
+                      <double>0.2</double>
+                      <double>0</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <XProperty>[Leaf].Fn</XProperty>
+                </LinearInterpolationFunction>
+                <WeightedTemperatureFunction>
+                  <Name>TemperatureFactor</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>0</double>
+                      <double>2</double>
+                      <double>15</double>
+                      <double>28</double>
+                      <double>37</double>
+                    </X>
+                    <Y>
+                      <double>0</double>
+                      <double>0</double>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>0</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+                </WeightedTemperatureFunction>
+                <LinearInterpolationFunction>
+                  <Name>SoilMoistureFactor</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>0</double>
+                      <double>0.3</double>
+                      <double>0.5</double>
+                      <double>0.7</double>
+                      <double>0.9</double>
+                      <double>1</double>
+                    </X>
+                    <Y>
+                      <double>0.1</double>
+                      <double>0.2</double>
+                      <double>0.8</double>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>0.75</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <XProperty>[Leaf].Fw</XProperty>
+                </LinearInterpolationFunction>
+                <Constant>
+                  <Name>SoilAerationFactor</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2413,17 +2283,17 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionLiveToResidue>0.025</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionLiveToResidue>0.025</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -2431,15 +2301,15 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionLiveToResidue>0.025</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionLiveToResidue>0.025</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2509,75 +2379,19 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
               <Name>AllPhases</Name>
               <DivideFunction>
                 <Name>TaprootFraction</Name>
-                <MultiplyFunction>
-                  <Name>Numerator</Name>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetTR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetTR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
+                <AllometricDemandFunction>
+                  <Name>TaprootProp</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <MultiplyFunction>
-                  <Name>Denominator</Name>
-                  <AddFunction>
-                    <Name>SRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSRs</Name>
-                      <VariableReference>
-                        <Name>TargetSR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[ShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>TRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetTRs</Name>
-                      <VariableReference>
-                        <Name>TargetTR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetTR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentTR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
+                  <Const>0.1</Const>
+                  <Power>1</Power>
+                  <XProperty>[BelowGroundLive].Wt</XProperty>
+                  <YProperty>[Taproot].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2797,70 +2611,19 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
               <Name>AllPhases</Name>
               <DivideFunction>
                 <Name>RootFraction</Name>
-                <MultiplyFunction>
-                  <Name>Numerator</Name>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>CurrentTR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
+                <AllometricDemandFunction>
+                  <Name>TaprootProp</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <MultiplyFunction>
-                  <Name>Denominator</Name>
-                  <AddFunction>
-                    <Name>SRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetSRs</Name>
-                      <VariableReference>
-                        <Name>TargetSR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetSR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentSR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[ShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
-                  <AddFunction>
-                    <Name>TRs</Name>
-                    <MultiplyFunction>
-                      <Name>TargetTRs</Name>
-                      <VariableReference>
-                        <Name>TargetTR1</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>TargetTR2</Name>
-                        <IncludeInDocumentation>true</IncludeInDocumentation>
-                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                    </MultiplyFunction>
-                    <VariableReference>
-                      <Name>CurrentTR</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[TaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                  </AddFunction>
+                  <Const>0.9</Const>
+                  <Power>1</Power>
+                  <XProperty>[BelowGroundLive].Wt</XProperty>
+                  <YProperty>[Root].Live.Wt</YProperty>
+                </AllometricDemandFunction>
+                <VariableReference>
+                  <Name>TotalBiomass</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
+                  <VariableName>[TotalLive].Wt</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3202,6 +2965,17 @@ No effect of soil water content on root growth is currently captured in the mode
         </Propertys>
       </CompositeBiomass>
       <CompositeBiomass>
+        <Name>AboveGroundDead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stolon].Dead</string>
+          <string>[Petiole].Dead</string>
+          <string>[Inflorescence].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
         <Name>BelowGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DMDOfStructural>0.6</DMDOfStructural>
@@ -3225,6 +2999,16 @@ No effect of soil water content on root growth is currently captured in the mode
         </Propertys>
       </CompositeBiomass>
       <CompositeBiomass>
+        <Name>BelowGroundDead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
+        <Propertys>
+          <string>[Root].Dead</string>
+          <string>[Taproot].Dead</string>
+          <string>[Nodule].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
         <Name>Total</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DMDOfStructural>0.6</DMDOfStructural>
@@ -3242,6 +3026,34 @@ No effect of soil water content on root growth is currently captured in the mode
           <string>[Taproot].Live</string>
           <string>[Taproot].Dead</string>
           <string>[Nodule].Live</string>
+          <string>[Nodule].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalLive</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stolon].Live</string>
+          <string>[Petiole].Live</string>
+          <string>[Inflorescence].Live</string>
+          <string>[Root].Live</string>
+          <string>[Taproot].Live</string>
+          <string>[Nodule].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>TotalDead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <DMDOfStructural>0.6</DMDOfStructural>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stolon].Dead</string>
+          <string>[Petiole].Dead</string>
+          <string>[Inflorescence].Dead</string>
+          <string>[Root].Dead</string>
+          <string>[Taproot].Dead</string>
           <string>[Nodule].Dead</string>
         </Propertys>
       </CompositeBiomass>
@@ -4505,7 +4317,8 @@ namespace Models
         <string>[WhiteClover].Stem.DMDemandFunction.PartitionFraction.Value()</string>
         <string>[WhiteClover].Inflorescence.DMDemandFunction.PartitionFraction.Value()</string>
         <string>[WhiteClover].Taproot.DMDemandFunction.PartitionFraction.Value()</string>
-        <string>[WhiteClover].Root.PartitionFraction.Value()</string>
+        <string>[WhiteClover].Root.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[WhiteClover].Nodule.DMDemandFunction.PartitionFraction.Value()</string>
         <string>[WhiteClover].StemsLeafRatio.Value()</string>
         <string>[WhiteClover].FlowerStemRatio.Value()</string>
         <string>[WhiteClover].TaprootRootRatio.Value()</string>
@@ -9119,7 +8932,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.StructuralWt</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Live.StructuralWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9142,7 +8955,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9169,7 +8982,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <Graph>
-              <Name>Stem</Name>
+              <Name>Stolon</Name>
               <Series>
                 <Name>Structural</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -9187,7 +9000,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.StructuralWt</YFieldName>
+                <YFieldName>WhiteClover.Stolon.Live.StructuralWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9210,7 +9023,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
+                <YFieldName>WhiteClover.Stolon.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9255,7 +9068,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.StructuralWt</YFieldName>
+                <YFieldName>WhiteClover.Root.Live.StructuralWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9278,7 +9091,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
+                <YFieldName>WhiteClover.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9323,7 +9136,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.StructuralWt</YFieldName>
+                <YFieldName>WhiteClover.Taproot.Live.StructuralWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9346,7 +9159,75 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Live.StorageWt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Biomass (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>Petiole</Name>
+              <Series>
+                <Name>Structural</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Petiole.Live.StructuralWt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>NonStructural</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Petiole.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9391,7 +9272,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.StructuralWt</YFieldName>
+                <YFieldName>WhiteClover.Inflorescence.Live.StructuralWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9414,7 +9295,75 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
+                <YFieldName>WhiteClover.Inflorescence.Live.StorageWt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Biomass (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>Nodule</Name>
+              <Series>
+                <Name>Structural</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Nodule.Live.StructuralWt</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>NonStructural</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Nodule.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9471,7 +9420,30 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>Stem</Name>
+                <Name>Petiole</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>PetioleFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Stolon</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -9487,7 +9459,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>StemFraction</YFieldName>
+                <YFieldName>StolonFraction</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9579,6 +9551,30 @@ namespace Models
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
                 <YFieldName>TaprootFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Series>
+                <Name>Nodule</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>NoduleFraction</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10036,6 +10032,213 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries />
             </Graph>
+            <Graph>
+              <Name>AboveGround1</Name>
+              <Series>
+                <Name>Leaf</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Leaf.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Petiole</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Petiole.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Stolon</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Stolon.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Inflorescence</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Inflorescence.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Fraction</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>BelowGround1</Name>
+              <Series>
+                <Name>FineRoots</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>RootFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Taproot</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-990142</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>WhiteClover.Taproot.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Series>
+                <Name>Nodule</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>NoduleFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Ratio</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <ShowPageOfGraphs>false</ShowPageOfGraphs>
           </Folder>
@@ -10060,7 +10263,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DM.TotalPlantDemand</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10083,7 +10286,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DM.TotalFixationSupply</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10097,7 +10300,7 @@ namespace Models
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
                 <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -10106,7 +10309,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DM.Allocated</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.DM.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10150,7 +10353,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DM.SinkLimitation</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.DM.SinkLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10173,7 +10376,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DM.NutrientLimitation</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.DM.NutrientLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -11933,7 +12136,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.N.TotalPlantDemand</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.N.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -11956,7 +12159,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.N.TotalPlantSupply</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.N.TotalPlantSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -11979,7 +12182,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.N.Allocated</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12023,7 +12226,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.FN</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.DM.NutrientLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12796,7 +12999,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.FDM</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.FDM</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12840,7 +13043,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.FN</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.FN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12863,7 +13066,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Fn</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Fn</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12886,7 +13089,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Photosynthesis.FN</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Photosynthesis.FN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12930,7 +13133,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.FW</YFieldName>
+                <YFieldName>WhiteClover.Arbitrator.FW</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12953,7 +13156,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Fw</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Fw</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -12976,7 +13179,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Photosynthesis.FW</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Photosynthesis.FW</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13020,7 +13223,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.FRGR</YFieldName>
+                <YFieldName>WhiteClover.Leaf.FRGR</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13064,7 +13267,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Photosynthesis.FCO2</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Photosynthesis.FCO2</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13087,7 +13290,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Photosynthesis.FT</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Photosynthesis.FT</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13111,7 +13314,7 @@ namespace Models
                 <Checkpoint>Current</Checkpoint>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Photosynthesis.FVPD</YFieldName>
+                <YFieldName>WhiteClover.Leaf.Photosynthesis.FVPD</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13135,6 +13338,602 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <ShowPageOfGraphs>false</ShowPageOfGraphs>
+          </Folder>
+          <Folder>
+            <Name>DMPartition1</Name>
+            <Graph>
+              <Name>AboveGround</Name>
+              <Series>
+                <Name>Leaf</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>LeafFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Stem</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>StemFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Inflorescence</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>FlowerFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Fraction</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>BelowGround</Name>
+              <Series>
+                <Name>FineRoots</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>RootFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Taproot</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-990142</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>TaprootFraction</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Ratio</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>AllocationAG</Name>
+              <Series>
+                <Name>Leaf</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Leaf.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Stem</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Stem.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Inflorescence</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Inflorescence.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Fraction</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>AllocationBG</Name>
+              <Series>
+                <Name>FineRoots</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Root.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Taproot</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-990142</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Taproot.DMDemandFunction.PartitionFraction.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Ratio</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>ShootRootRatio</Name>
+              <Series>
+                <Name>Target</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16747854</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.TargetShootRootRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Current</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.ShootRootRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Ratio</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>StemsLeafRatio</Name>
+              <Series>
+                <Name>Target</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16747854</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.TargetStemsLeafRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Current</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.StemsLeafRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Biomass ratio</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>FlowerStemRatio</Name>
+              <Series>
+                <Name>Target</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16747854</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.TargetFlowerStemRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Current</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.FlowerStemRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Biomass ratio</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>TaprootRootRatio</Name>
+              <Series>
+                <Name>Target</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16747854</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.TargetTaprootRootRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Current</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-3376729</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.TaprootRootRatio.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Biomass ratio</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries />
             </Graph>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -14985,9 +15784,12 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <SoilType>Typic Udivitrand (US), Typic Orthic
  Allophanic Soil (NZ)</SoilType>
-              <LocalName>Horotiu silt loam</LocalName>
-              <Site>Ruakura</Site>
-              <NearestTown>Hamilton</NearestTown>
+              <LocalName>Horotiu silt loam
+</LocalName>
+              <Site>Ruakura
+</Site>
+              <NearestTown>Hamilton
+</NearestTown>
               <Region>Waikato</Region>
               <State />
               <Country>New Zealand</Country>
