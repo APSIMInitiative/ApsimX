@@ -83,14 +83,16 @@ namespace UserInterface.Presenters
         {
             this.DisconnectViewEvents();
             this.initialWaterView.PercentFull = Convert.ToInt32(this.initialWater.FractionFull * 100);
-            this.initialWaterView.PAW = (int)this.initialWater.PAW;
+            this.initialWaterView.PAW = (int)Math.Round(this.initialWater.PAW);
             if (double.IsNaN(this.initialWater.DepthWetSoil))
             {
+                this.initialWaterView.FilledByDepth = false;
                 this.initialWaterView.DepthOfWetSoil = int.MinValue;
             }
             else
             {
-                this.initialWaterView.DepthOfWetSoil = (int)this.initialWater.DepthWetSoil / 10; // mm to cm
+                this.initialWaterView.FilledByDepth = true;
+                this.initialWaterView.DepthOfWetSoil = (int)Math.Round(this.initialWater.DepthWetSoil / 10); // mm to cm
             }
 
             this.initialWaterView.FilledFromTop = this.initialWater.PercentMethod == InitialWater.PercentMethodEnum.FilledFromTop;
@@ -119,6 +121,7 @@ namespace UserInterface.Presenters
             this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
             this.initialWaterView.OnPercentFullChanged += this.OnPercentFullChanged;
             this.initialWaterView.OnRelativeToChanged += this.OnRelativeToChanged;
+            this.initialWaterView.OnSpecifierChanged += this.OnSpecifierChanged;
         }
 
         /// <summary>
@@ -131,6 +134,7 @@ namespace UserInterface.Presenters
             this.initialWaterView.OnPAWChanged -= this.OnPAWChanged;
             this.initialWaterView.OnPercentFullChanged -= this.OnPercentFullChanged;
             this.initialWaterView.OnRelativeToChanged -= this.OnRelativeToChanged;
+            this.initialWaterView.OnSpecifierChanged -= this.OnSpecifierChanged;
         }
 
         /// <summary>
@@ -203,7 +207,32 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDepthWetSoilChanged(object sender, System.EventArgs e)
         {
-            double depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil, System.Globalization.CultureInfo.InvariantCulture) * 10; // cm to mm
+            double depthOfWetSoil;
+            if (this.initialWaterView.DepthOfWetSoil == int.MinValue)
+                depthOfWetSoil = Double.NaN;
+            else
+                depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil, System.Globalization.CultureInfo.InvariantCulture) * 10; // cm to mm
+            Commands.ChangeProperty command = new Commands.ChangeProperty(
+                this.initialWater, "DepthWetSoil", depthOfWetSoil);
+
+            this.explorerPresenter.CommandHistory.Add(command);
+        }
+
+        /// <summary>
+        /// The method used to specify initial water has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSpecifierChanged(object sender, System.EventArgs e)
+        {
+            double depthOfWetSoil;
+            if (this.initialWaterView.DepthOfWetSoil == int.MinValue)
+                depthOfWetSoil = Double.NaN;
+            else
+                depthOfWetSoil = this.initialWater.TotalSoilDepth() * Math.Min(1.0, this.initialWater.FractionFull);
+
+            // The InitialWater model uses the value of DepthWetSoil as a flag
+            // to inidicate whether specification is by depth or by fraction
             Commands.ChangeProperty command = new Commands.ChangeProperty(
                 this.initialWater, "DepthWetSoil", depthOfWetSoil);
 
