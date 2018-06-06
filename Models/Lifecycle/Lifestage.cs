@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using System.Xml.Serialization;
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
@@ -12,8 +12,8 @@ namespace Models.Lifecycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Lifecycle))]
-    public class Lifestage: Model
+    [ValidParent(ParentType = typeof(LifeCycle))]
+    public class LifeStage: Model
     {
         /// <summary>
         /// Reference to the current cohort
@@ -24,7 +24,7 @@ namespace Models.Lifecycle
         /// <summary>
         /// Owning lifecycle
         /// </summary>
-        public Lifecycle OwningCycle;
+        public LifeCycle OwningCycle;
 
         [NonSerialized]
         private List<Cohort> CohortList;
@@ -33,12 +33,12 @@ namespace Models.Lifecycle
         private double StepMortality;
 
         [NonSerialized]
-        private List<ILifestageProcess> ProcessList;
+        private List<ILifeStageProcess> ProcessList;
 
         /// <summary>
         /// 
         /// </summary>
-        public Lifestage()
+        public LifeStage()
         {
             
         }
@@ -109,7 +109,7 @@ namespace Models.Lifecycle
                     //apply functions to cohort
                     CurrentCohort = aCohort;
                     //iterate throught the process children of this lifestage
-                    foreach (ILifestageProcess proc in ProcessList)
+                    foreach (ILifeStageProcess proc in ProcessList)
                     {
                         proc.ProcessCohort(aCohort);    // execute process function and may include transfer to another lifestage
                     }
@@ -123,7 +123,7 @@ namespace Models.Lifecycle
         /// <summary>
         /// Move cohort on to the next stage
         /// </summary>
-        public void PromoteGraduates(Cohort srcCohort, Lifestage destStage, double count)
+        public void PromoteGraduates(Cohort srcCohort, LifeStage destStage, double count)
         {
             if (destStage != null)
             {
@@ -147,7 +147,7 @@ namespace Models.Lifecycle
         /// <param name="srcCohort"></param>
         /// <param name="destStage"></param>
         /// <param name="count"></param>
-        public void Reproduce(Cohort srcCohort, Lifestage destStage, double count)
+        public void Reproduce(Cohort srcCohort, LifeStage destStage, double count)
         {
             if (destStage != null)
             {
@@ -238,8 +238,8 @@ namespace Models.Lifecycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            ProcessList = new List<ILifestageProcess>();
-            foreach (ILifestageProcess proc in Apsim.Children(this, typeof(ILifestageProcess)))
+            ProcessList = new List<ILifeStageProcess>();
+            foreach (ILifeStageProcess proc in Apsim.Children(this, typeof(ILifeStageProcess)))
             {
                 ProcessList.Add(proc);
             }

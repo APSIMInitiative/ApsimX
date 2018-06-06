@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Models.Core;
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
@@ -12,7 +12,7 @@ namespace Models.Lifecycle
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Lifecycle : Model
+    public class LifeCycle : Model
     {
         [Link]
         private ISummary mySummary = null;
@@ -21,17 +21,17 @@ namespace Models.Lifecycle
         /// 
         /// </summary>
         [NonSerialized]
-        public List<Lifestage> ChildStages = null;
+        public List<LifeStage> ChildStages = null;
 
         /// <summary>
         /// Current Lifestage being processed.
         /// </summary>
-        public Lifestage CurrentLifestage { get; set; }
+        public LifeStage CurrentLifestage { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public Lifecycle()
+        public LifeCycle()
         {
             
         }
@@ -50,7 +50,7 @@ namespace Models.Lifecycle
             get
             {
                 double sum = 0;
-                foreach (Lifestage stage in ChildStages)
+                foreach (LifeStage stage in ChildStages)
                 {
                     sum += stage.TotalPopulation;
                 }
@@ -66,8 +66,8 @@ namespace Models.Lifecycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            ChildStages = new List<Lifestage>();
-            foreach (Lifestage stage in Apsim.Children(this, typeof(Lifestage)))
+            ChildStages = new List<LifeStage>();
+            foreach (LifeStage stage in Apsim.Children(this, typeof(LifeStage)))
             {
                 stage.OwningCycle = this;
                 ChildStages.Add(stage);
@@ -75,7 +75,7 @@ namespace Models.Lifecycle
             
             int i= 0;
             //create new cohorts from the InitialPopulation[]
-            foreach (Lifestage stage in ChildStages)
+            foreach (LifeStage stage in ChildStages)
             {
                 if ((InitialPopulation != null) && (InitialPopulation.Length > i))
                 {
@@ -93,7 +93,7 @@ namespace Models.Lifecycle
         [EventSubscribe("DoLifecycle")]
         private void OnDoLifecycle(object sender, EventArgs e)
         {
-            foreach (Lifestage stage in ChildStages)
+            foreach (LifeStage stage in ChildStages)
             {
                 CurrentLifestage = stage;
                 stage.Process();
