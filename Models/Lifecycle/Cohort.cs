@@ -6,7 +6,7 @@ namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
-    /// A generic cohort item that exists in a Lifestage within a Lifecycle
+    /// A generic cohort item that exists in a LifeStage within a LifeCycle
     /// </summary>
     [Serializable]
     public class Cohort

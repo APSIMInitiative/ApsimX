@@ -6,7 +6,7 @@ namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
-    /// A lifecycle that contains lifestages. 
+    /// A LifeCycle that contains LifeStages. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -18,7 +18,7 @@ namespace Models.LifeCycle
         private ISummary mySummary = null;
 
         /// <summary>
-        /// 
+        /// List of child LifeStages
         /// </summary>
         [NonSerialized]
         public List<LifeStage> ChildStages = null;
@@ -29,7 +29,7 @@ namespace Models.LifeCycle
         public LifeStage CurrentLifeStage { get; set; }
 
         /// <summary>
-        /// 
+        /// Default constructor
         /// </summary>
         public LifeCycle()
         {
@@ -59,7 +59,7 @@ namespace Models.LifeCycle
         }
 
         /// <summary>
-        /// 
+        /// At the start of the simulation construct the list of child LifeStages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -90,6 +90,11 @@ namespace Models.LifeCycle
             }
         }
 
+        /// <summary>
+        /// Handle the DoLifeCycle event and process each LifeStage
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [EventSubscribe("DoLifecycle")]
         private void OnDoLifecycle(object sender, EventArgs e)
         {
