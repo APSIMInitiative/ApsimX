@@ -26,7 +26,7 @@ namespace Models.LifeCycle
         /// <summary>
         /// Current Lifestage being processed.
         /// </summary>
-        public LifeStage CurrentLifestage { get; set; }
+        public LifeStage CurrentLifeStage { get; set; }
 
         /// <summary>
         /// 
@@ -39,7 +39,7 @@ namespace Models.LifeCycle
         /// <summary>
         /// Population of the initial cohort at each lifestage. e.g. [2,6,3]
         /// </summary>
-        [Description("Initial population at each lifestage")]
+        [Description("Initial population at each LifeStage")]
         public double[] InitialPopulation { get; set; }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Models.LifeCycle
         {
             foreach (LifeStage stage in ChildStages)
             {
-                CurrentLifestage = stage;
+                CurrentLifeStage = stage;
                 stage.Process();
             }
         }
