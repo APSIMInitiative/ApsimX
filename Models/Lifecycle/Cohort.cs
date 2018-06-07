@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Models.Core;
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
-    /// A generic cohort item that exists in a Lifestage within a Lifecycle
+    /// A generic cohort item that exists in a LifeStage within a LifeCycle
     /// </summary>
     [Serializable]
     public class Cohort
@@ -49,7 +49,7 @@ namespace Models.Lifecycle
         /// <summary>
         /// The Lifestage that owns this cohort.
         /// </summary>
-        public Lifestage OwningStage;
+        public LifeStage OwningStage;
 
         /// <summary>
         /// Default constructor
@@ -63,7 +63,7 @@ namespace Models.Lifecycle
         /// Construct and store reference to owner.
         /// </summary>
         /// <param name="owner"></param>
-        public Cohort(Lifestage owner)
+        public Cohort(LifeStage owner)
         {
             OwningStage = owner;
         }

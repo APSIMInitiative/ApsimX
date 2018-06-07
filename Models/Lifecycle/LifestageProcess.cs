@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Models.Core;
 using Models.PMF.Functions;
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
@@ -31,7 +31,7 @@ namespace Models.Lifecycle
     /// <summary>
     /// The general description of a lifestage process. A Lifestage can contain a number of these.
     /// </summary>
-    interface ILifestageProcess 
+    interface ILifeStageProcess 
     {
         void ProcessCohort(Cohort cohortItem);
     }
@@ -42,8 +42,8 @@ namespace Models.Lifecycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Lifestage))]
-    public class LifestageProcess : Model, ILifestageProcess
+    [ValidParent(ParentType = typeof(LifeStage))]
+    public class LifeStageProcess : Model, ILifeStageProcess
     {
         /// <summary>
         /// 
@@ -79,7 +79,7 @@ namespace Models.Lifecycle
                     if (numberToMove > 0)
                     {
                         //transfer magic here
-                        Lifestage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
+                        LifeStage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
                         cohortItem.OwningStage.PromoteGraduates(cohortItem, destStage, numberToMove);
                     }
                 }

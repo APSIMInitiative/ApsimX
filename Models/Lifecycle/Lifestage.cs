@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using System.Xml.Serialization;
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
@@ -12,8 +12,8 @@ namespace Models.Lifecycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Lifecycle))]
-    public class Lifestage: Model
+    [ValidParent(ParentType = typeof(LifeCycle))]
+    public class LifeStage: Model
     {
         /// <summary>
         /// Reference to the current cohort
@@ -24,7 +24,7 @@ namespace Models.Lifecycle
         /// <summary>
         /// Owning lifecycle
         /// </summary>
-        public Lifecycle OwningCycle;
+        public LifeCycle OwningCycle;
 
         [NonSerialized]
         private List<Cohort> CohortList;
@@ -33,12 +33,12 @@ namespace Models.Lifecycle
         private double StepMortality;
 
         [NonSerialized]
-        private List<ILifestageProcess> ProcessList;
+        private List<ILifeStageProcess> ProcessList;
 
         /// <summary>
-        /// 
+        /// Default LifeStage constructor
         /// </summary>
-        public Lifestage()
+        public LifeStage()
         {
             
         }
@@ -81,6 +81,23 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
+        /// Gets the array of cohort populations for this LifeStage
+        /// </summary>
+        public double[] Populations
+        {
+            get
+            {
+                double[] populations = new double[CohortList.Count];
+                for (int i = 0; i< CohortList.Count; i++)
+                {
+                    populations[i] = CohortList[i].Count;
+                }
+
+                return populations;
+            }
+        }
+
+        /// <summary>
         /// The current mortality numbers for this timestep
         /// </summary>
         public double Mortality
@@ -109,7 +126,7 @@ namespace Models.Lifecycle
                     //apply functions to cohort
                     CurrentCohort = aCohort;
                     //iterate throught the process children of this lifestage
-                    foreach (ILifestageProcess proc in ProcessList)
+                    foreach (ILifeStageProcess proc in ProcessList)
                     {
                         proc.ProcessCohort(aCohort);    // execute process function and may include transfer to another lifestage
                     }
@@ -123,7 +140,7 @@ namespace Models.Lifecycle
         /// <summary>
         /// Move cohort on to the next stage
         /// </summary>
-        public void PromoteGraduates(Cohort srcCohort, Lifestage destStage, double count)
+        public void PromoteGraduates(Cohort srcCohort, LifeStage destStage, double count)
         {
             if (destStage != null)
             {
@@ -144,10 +161,10 @@ namespace Models.Lifecycle
         /// <summary>
         /// The source cohort reproduces and sends count creatures to the destination stage.
         /// </summary>
-        /// <param name="srcCohort"></param>
-        /// <param name="destStage"></param>
-        /// <param name="count"></param>
-        public void Reproduce(Cohort srcCohort, Lifestage destStage, double count)
+        /// <param name="srcCohort">The source cohort</param>
+        /// <param name="destStage">The destination LifeStage</param>
+        /// <param name="count">The population for the migrated cohort</param>
+        public void Reproduce(Cohort srcCohort, LifeStage destStage, double count)
         {
             if (destStage != null)
             {
@@ -180,19 +197,22 @@ namespace Models.Lifecycle
         /// <summary>
         /// Construct a new cohort, add it to the list and return a reference to it.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new initialised cohort object</returns>
         public Cohort NewCohort()
         {
             if (CohortList == null)
                 CohortList = new List<Cohort>();
 
             Cohort a = new Cohort(this);
+            a.Count = 0;
+            a.ChronoAge = 0;
+            a.PhysiologicalAge = 0;
             CohortList.Add(a);
             return a;
         }
 
         /// <summary>
-        /// 
+        /// Remove the cohort at the end of the list
         /// </summary>
         public void RemoveLastCohort()
         {
@@ -214,16 +234,16 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
-        /// 
+        /// Remove a specified cohort item
         /// </summary>
-        /// <param name="aCohort"></param>
+        /// <param name="aCohort">The cohort object to be removed</param>
         public void Remove(Cohort aCohort)
         {
             CohortList.Remove(aCohort);
         }
 
         /// <summary>
-        /// 
+        /// Empty the cohort list
         /// </summary>
         public void Clear()
         {
@@ -231,15 +251,15 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
-        /// 
+        /// Handle the start event and add LifeStage processes to the internal list
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            ProcessList = new List<ILifestageProcess>();
-            foreach (ILifestageProcess proc in Apsim.Children(this, typeof(ILifestageProcess)))
+            ProcessList = new List<ILifeStageProcess>();
+            foreach (ILifeStageProcess proc in Apsim.Children(this, typeof(ILifeStageProcess)))
             {
                 ProcessList.Add(proc);
             }
