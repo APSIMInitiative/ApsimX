@@ -5493,45 +5493,11 @@ namespace Models
         [XmlIgnore] public double StolonFraction { get; set; }
         [XmlIgnore] public double PetioleFraction { get; set; }
         [XmlIgnore] public double InflorescenceFraction { get; set; }
-        
+
         [XmlIgnore] public double ShootRootRatio { get; set; }
 
-        [XmlIgnore] public double Leaf_DMSupply { get; set; }
-        [XmlIgnore] public double Stolon_DMSupply { get; set; }
-        [XmlIgnore] public double Petiole_DMSupply { get; set; }
-        [XmlIgnore] public double Inflorescence_DMSupply { get; set; }
-        [XmlIgnore] public double Root_DMSupply { get; set; }
-        [XmlIgnore] public double Taproot_DMSupply { get; set; }
-        [XmlIgnore] public double Nodule_DMSupply { get; set; }
-        [XmlIgnore] public double Leaf_DMDemand { get; set; }
-        [XmlIgnore] public double Stolon_DMDemand { get; set; }
-        [XmlIgnore] public double Petiole_DMDemand { get; set; }
-        [XmlIgnore] public double Inflorescence_DMDemand { get; set; }
-        [XmlIgnore] public double Root_DMDemand { get; set; }
-        [XmlIgnore] public double Taproot_DMDemand { get; set; }
-        [XmlIgnore] public double Nodule_DMDemand { get; set; }
-
-        [XmlIgnore] public double Leaf_NSupply { get; set; }
-        [XmlIgnore] public double Stolon_NSupply { get; set; }
-        [XmlIgnore] public double Petiole_NSupply { get; set; }
-        [XmlIgnore] public double Inflorescence_NSupply { get; set; }
-        [XmlIgnore] public double Taproot_NSupply { get; set; }
-        [XmlIgnore] public double Nodule_NSupply { get; set; }
-        [XmlIgnore] public double Root_NSupply { get; set; }
-        [XmlIgnore] public double Leaf_NDemand { get; set; }
-        [XmlIgnore] public double Stolon_NDemand { get; set; }
-        [XmlIgnore] public double Petiole_NDemand { get; set; }
-        [XmlIgnore] public double Inflorescence_NDemand { get; set; }
-        [XmlIgnore] public double Taproot_NDemand { get; set; }
-        [XmlIgnore] public double Nodule_NDemand { get; set; }
-        [XmlIgnore] public double Root_NDemand { get; set; }
-        
-        [XmlIgnore] public double Leaf_NSupplyReallocation { get; set; }
-        [XmlIgnore] public double Stolon_NSupplyReallocation { get; set; }
-        [XmlIgnore] public double Petiole_NSupplyReallocation { get; set; }
-        [XmlIgnore] public double Root_NSupplyReallocation { get; set; }
-        
         [XmlIgnore] public double AccumHarvestedWt { get; set; }
+        [XmlIgnore] public double AccumHarvestedN { get; set; }
 
         private DateTime YearStartDate;
     
@@ -5578,7 +5544,7 @@ namespace Models
             DeltaSoilOMN = OrganicN - InitialSoilOMN;
             DeltaSoilMineralN = MineralN - InitialMineralN;
             SoilNitrogenContent = MineralN;
-            
+
             //!!!!!! Water balance components !!!!!!
             //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 
@@ -5607,78 +5573,6 @@ namespace Models
             //!!!!!! Plant DM components !!!!!!
             //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
             ShootRootRatio = MathUtilities.Divide((double)zone.Get("WhiteClover.AboveGroundLive.Wt"), (double)zone.Get("WhiteClover.BelowGroundLive.Wt"), 0.0);
-            PMF.Interfaces.BiomassSupplyType Leaf_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Leaf.DMSupply");
-            PMF.Interfaces.BiomassSupplyType Stolon_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Stolon.DMSupply");
-            PMF.Interfaces.BiomassSupplyType Petiole_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Petiole.DMSupply");
-            PMF.Interfaces.BiomassSupplyType Inflorescence_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Inflorescence.DMSupply");
-            PMF.Interfaces.BiomassSupplyType Root_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Root.DMSupply");
-            PMF.Interfaces.BiomassSupplyType Taproot_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Taproot.DMSupply");
-            PMF.Interfaces.BiomassSupplyType Nodule_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Nodule.DMSupply");
-            PMF.Interfaces.BiomassPoolType Leaf_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Leaf.DMDemand");
-            PMF.Interfaces.BiomassPoolType Stolon_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Stolon.DMDemand");
-            PMF.Interfaces.BiomassPoolType Petiole_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Petiole.DMDemand");
-            PMF.Interfaces.BiomassPoolType Inflorescence_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Inflorescence.DMDemand");
-            PMF.Interfaces.BiomassPoolType Root_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Root.DMDemand");
-            PMF.Interfaces.BiomassPoolType Taproot_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Taproot.DMDemand");
-            PMF.Interfaces.BiomassPoolType Nodule_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Nodule.DMDemand");
-
-            PMF.Interfaces.BiomassSupplyType Leaf_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Leaf.NSupply");
-            PMF.Interfaces.BiomassSupplyType Stolon_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Stolon.NSupply");
-            PMF.Interfaces.BiomassSupplyType Petiole_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Petiole.NSupply");
-            PMF.Interfaces.BiomassSupplyType Inflorescence_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Inflorescence.NSupply");
-            PMF.Interfaces.BiomassSupplyType Taproot_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Taproot.NSupply");
-            PMF.Interfaces.BiomassSupplyType Nodule_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Nodule.NSupply");
-            PMF.Interfaces.BiomassSupplyType Root_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("WhiteClover.Root.NSupply");
-            
-            PMF.Interfaces.BiomassPoolType Leaf_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Leaf.NDemand");
-            PMF.Interfaces.BiomassPoolType Stolon_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Stolon.NDemand");
-            PMF.Interfaces.BiomassPoolType Petiole_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Petiole.NDemand");
-            PMF.Interfaces.BiomassPoolType Inflorescence_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Inflorescence.NDemand");
-            PMF.Interfaces.BiomassPoolType Taproot_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Taproot.NDemand");
-            PMF.Interfaces.BiomassPoolType Nodule_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Nodule.NDemand");
-            PMF.Interfaces.BiomassPoolType Root_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("WhiteClover.Root.NDemand");
-            
-            Leaf_DMSupply = Leaf_DMSupplies.Fixation + Leaf_DMSupplies.Uptake + Leaf_DMSupplies.Reallocation + Leaf_DMSupplies.Retranslocation;
-            Stolon_DMSupply = Stolon_DMSupplies.Fixation + Stolon_DMSupplies.Uptake + Stolon_DMSupplies.Reallocation + Stolon_DMSupplies.Retranslocation;
-            Petiole_DMSupply = Petiole_DMSupplies.Fixation + Petiole_DMSupplies.Uptake + Petiole_DMSupplies.Reallocation + Petiole_DMSupplies.Retranslocation;
-            Inflorescence_DMSupply = Inflorescence_DMSupplies.Fixation + Inflorescence_DMSupplies.Uptake + Inflorescence_DMSupplies.Reallocation + Inflorescence_DMSupplies.Retranslocation;
-            Root_DMSupply = Root_DMSupplies.Fixation + Root_DMSupplies.Uptake + Root_DMSupplies.Reallocation + Root_DMSupplies.Retranslocation;
-            Taproot_DMSupply = Taproot_DMSupplies.Fixation + Taproot_DMSupplies.Uptake + Taproot_DMSupplies.Reallocation + Taproot_DMSupplies.Retranslocation;
-            Nodule_DMSupply = Nodule_DMSupplies.Fixation + Nodule_DMSupplies.Uptake + Nodule_DMSupplies.Reallocation + Nodule_DMSupplies.Retranslocation;
-            Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.Storage + Leaf_DMDemands.Metabolic;
-            Stolon_DMDemand = Stolon_DMDemands.Structural + Stolon_DMDemands.Storage + Stolon_DMDemands.Metabolic;
-            Petiole_DMDemand = Petiole_DMDemands.Structural + Petiole_DMDemands.Storage + Petiole_DMDemands.Metabolic;
-            Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.Storage + Inflorescence_DMDemands.Metabolic;
-            Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.Storage + Root_DMDemands.Metabolic;
-            Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.Storage + Taproot_DMDemands.Metabolic;
-            Nodule_DMDemand = Nodule_DMDemands.Structural + Nodule_DMDemands.Storage + Nodule_DMDemands.Metabolic;
-
-            Leaf_NSupply = Leaf_NSupplies.Fixation + Leaf_NSupplies.Uptake + Leaf_NSupplies.Reallocation + Leaf_NSupplies.Retranslocation;
-            Stolon_NSupply = Stolon_NSupplies.Fixation + Stolon_NSupplies.Uptake + Stolon_NSupplies.Reallocation + Stolon_NSupplies.Retranslocation;
-            Petiole_NSupply = Petiole_NSupplies.Fixation + Petiole_NSupplies.Uptake + Petiole_NSupplies.Reallocation + Petiole_NSupplies.Retranslocation;
-            Inflorescence_NSupply = Inflorescence_NSupplies.Fixation + Inflorescence_NSupplies.Uptake + Inflorescence_NSupplies.Reallocation + Inflorescence_NSupplies.Retranslocation;
-            Taproot_NSupply = Taproot_NSupplies.Fixation + Taproot_NSupplies.Uptake + Taproot_NSupplies.Reallocation + Taproot_NSupplies.Retranslocation;
-            Nodule_NSupply = Nodule_NSupplies.Fixation + Nodule_NSupplies.Uptake + Nodule_NSupplies.Reallocation + Nodule_NSupplies.Retranslocation;
-            Root_NSupply = Root_NSupplies.Fixation + Root_NSupplies.Uptake + Root_NSupplies.Reallocation + Root_NSupplies.Retranslocation;
-
-            Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.Storage + Leaf_NDemands.Metabolic;
-            Stolon_NDemand = Stolon_NDemands.Structural + Stolon_NDemands.Storage + Stolon_NDemands.Metabolic;
-            Petiole_NDemand = Petiole_NDemands.Structural + Petiole_NDemands.Storage + Petiole_NDemands.Metabolic;
-            Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.Storage + Inflorescence_NDemands.Metabolic;
-            Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.Storage + Taproot_NDemands.Metabolic;
-            Nodule_NDemand = Nodule_NDemands.Structural + Nodule_NDemands.Storage + Nodule_NDemands.Metabolic;
-            Root_NDemand = Root_NDemands.Structural + Root_NDemands.Storage + Root_NDemands.Metabolic;
-
-            Leaf_NSupplyReallocation = Leaf_NSupplies.Reallocation;
-            Stolon_NSupplyReallocation = Stolon_NSupplies.Reallocation;
-            Petiole_NSupplyReallocation = Petiole_NSupplies.Reallocation;
-            Root_NSupplyReallocation = Root_NSupplies.Reallocation;
-            
-            //!!!!!! Plant Harvest !!!!!!
-            if (Clock.Today.DayOfYear == YearStartDate.DayOfYear)
-                AccumHarvestedWt = (double)zone.Get("[Defoliate].Script.DefoliatedDM");
-            else
-                AccumHarvestedWt += (double)zone.Get("[Defoliate].Script.DefoliatedDM");            
         }
         
         [EventSubscribe("DoManagementCalculations")]
@@ -5697,10 +5591,22 @@ namespace Models
             AccumRunoff -= Soil.SoilWater.Runoff;
             SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
             DUL = MathUtilities.Sum(Soil.DULmm);
+
+            //!!!!!! Plant Harvest !!!!!!
+            if (Clock.Today.DayOfYear == YearStartDate.DayOfYear)
+            {
+                AccumHarvestedWt = (double)zone.Get("[Defoliate].Script.DefoliatedDM");
+                AccumHarvestedN = (double)zone.Get("[Defoliate].Script.DefoliatedN");
+            }
+            else
+            {
+                AccumHarvestedWt += (double)zone.Get("[Defoliate].Script.DefoliatedDM");
+                AccumHarvestedN += (double)zone.Get("[Defoliate].Script.DefoliatedN");
+            }
         }
     }
 }
-       
+
 ]]></Code>
     </Manager>
     <Report>
@@ -5710,9 +5616,11 @@ namespace Models
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today as Date</string>
+        <string>[Clock].Today.DayOfYear as DayOfYear</string>
         <string>[MicroClimate].net_radn</string>
         <string>[Weather].Radn as SolarRadiation</string>
         <string>[WhiteClover].Leaf.RadIntTot as InterceptedRadiation</string>
+        <string>[Weather].MeanT</string>
         <string>[Weather].Rain as Rainfall</string>
         <string>[Irrigation].IrrigationApplied as IrrigationApplied</string>
         <string />
@@ -5759,6 +5667,10 @@ namespace Models
         <string>sum([Soil].SoilWater.outflow_lat) as LateralFlow</string>
         <string>sum([Soil].SoilWater.SWmm) as TotalSWC</string>
         <string>sum([Soil].DULmm) as TotalDUL</string>
+        <string>sum([Soil].LL15mm) as TotalLL15</string>
+        <string>[Soil].SoilWater.SW[1] as SWCTopLayer</string>
+        <string>[Soil].DUL[1] as DULTopLayer</string>
+        <string />
         <string>[Fertiliser].NitrogenApplied as FertiliserN</string>
         <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
         <string>([Soil].SoilWater.LeachNH4 + [Soil].SoilWater.LeachNO3) as LeachedN</string>
@@ -5768,7 +5680,6 @@ namespace Models
         <string>([WhiteClover].Leaf.Detached.N+[WhiteClover].Stolon.Detached.N+[WhiteClover].Petiole.Detached.N+[WhiteClover].Inflorescence.Detached.N) as DetachedAGN</string>
         <string>([WhiteClover].Nodule.Detached.N+[WhiteClover].Taproot.Detached.N+[WhiteClover].Root.Detached.N) as DetachedBGN</string>
         <string>(10*([WhiteClover].Leaf.Detached.N+[WhiteClover].Stolon.Detached.N+[WhiteClover].Petiole.Detached.N+[WhiteClover].Inflorescence.Detached.N+[WhiteClover].Nodule.Detached.N+[WhiteClover].Taproot.Detached.N+[WhiteClover].Root.Detached.N)) as DetachedTotalN</string>
-        <string />
         <string>(10*[WhiteClover].Nodule.NFixed) as WhiteClover.Nodule.NFixed</string>
         <string>(sum([Soil].SoilNitrogen.urea) + sum([Soil].SoilNitrogen.NH4) + sum([Soil].SoilNitrogen.NO3)) as SoilNContent</string>
         <string>sum([Soil].SoilNitrogen.urea) as SoilUrea</string>
@@ -5788,7 +5699,7 @@ namespace Models
         <string>[Defoliate].Script.DefoliatedDM</string>
         <string>[Defoliate].Script.HarvestedDM</string>
         <string>[Defoliate].Script.RemovedDM</string>
-        <string>[Defoliate].Script.DefoliatedN</string>
+        <string>[Defoliate].Script.DefoliatedN as NTakenOff</string>
         <string>[Defoliate].Script.HarvestedN</string>
         <string>(10*[Defoliate].Script.RemovedN) as Defoliate.Script.RemovedN</string>
         <string>[Defoliate].Script.NReturnedInDung</string>
@@ -5798,6 +5709,7 @@ namespace Models
         <string>[Defoliate].Script.DefoliatedNConc</string>
         <string>[Defoliate].Script.RemovedNConc</string>
         <string>[ExtraVariables].Script.AccumHarvestedWt as CumulativeHarvestedWt</string>
+        <string>[ExtraVariables].Script.AccumHarvestedN as CumulativeNTakenOff</string>
         <string />
         <string>[WhiteClover].Phenology.ThermalTime.Value()</string>
         <string>[WhiteClover].Phenology.Photoperiod.Value()</string>
@@ -5826,20 +5738,20 @@ namespace Models
         <string>[WhiteClover].Arbitrator.DM.SinkLimitation</string>
         <string>[WhiteClover].Arbitrator.DM.NutrientLimitation</string>
         <string>[WhiteClover].Arbitrator.FDM</string>
-        <string>[ExtraVariables].Script.Leaf_DMSupply</string>
-        <string>[ExtraVariables].Script.Petiole_DMSupply</string>
-        <string>[ExtraVariables].Script.Stolon_DMSupply</string>
-        <string>[ExtraVariables].Script.Inflorescence_DMSupply</string>
-        <string>[ExtraVariables].Script.Root_DMSupply</string>
-        <string>[ExtraVariables].Script.Taproot_DMSupply</string>
-        <string>[ExtraVariables].Script.Nodule_DMSupply</string>
-        <string>[ExtraVariables].Script.Leaf_DMDemand</string>
-        <string>[ExtraVariables].Script.Petiole_DMDemand</string>
-        <string>[ExtraVariables].Script.Stolon_DMDemand</string>
-        <string>[ExtraVariables].Script.Inflorescence_DMDemand</string>
-        <string>[ExtraVariables].Script.Root_DMDemand</string>
-        <string>[ExtraVariables].Script.Taproot_DMDemand</string>
-        <string>[ExtraVariables].Script.Nodule_DMDemand</string>
+        <string>[WhiteClover].Leaf.DMSupply.Total</string>
+        <string>[WhiteClover].Petiole.DMSupply.Total</string>
+        <string>[WhiteClover].Stolon.DMSupply.Total</string>
+        <string>[WhiteClover].Inflorescence.DMSupply.Total</string>
+        <string>[WhiteClover].Root.DMSupply.Total</string>
+        <string>[WhiteClover].Taproot.DMSupply.Total</string>
+        <string>[WhiteClover].Nodule.DMSupply.Total</string>
+        <string>[WhiteClover].Leaf.DMDemand.Total</string>
+        <string>[WhiteClover].Petiole.DMDemand.Total</string>
+        <string>[WhiteClover].Stolon.DMDemand.Total</string>
+        <string>[WhiteClover].Inflorescence.DMDemand.Total</string>
+        <string>[WhiteClover].Root.DMDemand.Total</string>
+        <string>[WhiteClover].Taproot.DMDemand.Total</string>
+        <string>[WhiteClover].Nodule.DMDemand.Total</string>
         <string />
         <string>[WhiteClover].Arbitrator.N.TotalPlantSupply</string>
         <string>[WhiteClover].Arbitrator.N.TotalPlantDemand</string>
@@ -5853,20 +5765,20 @@ namespace Models
         <string>[WhiteClover].Root.NTakenUp</string>
         <string>[WhiteClover].Root.NSupply.Uptake</string>
         <string>[WhiteClover].Root.NUptake</string>
-        <string>[ExtraVariables].Script.Leaf_NSupply</string>
-        <string>[ExtraVariables].Script.Petiole_NSupply</string>
-        <string>[ExtraVariables].Script.Stolon_NSupply</string>
-        <string>[ExtraVariables].Script.Inflorescence_NSupply</string>
-        <string>[ExtraVariables].Script.Root_NSupply</string>
-        <string>[ExtraVariables].Script.Taproot_NSupply</string>
-        <string>[ExtraVariables].Script.Nodule_NSupply</string>
-        <string>[ExtraVariables].Script.Leaf_NDemand</string>
-        <string>[ExtraVariables].Script.Petiole_NDemand</string>
-        <string>[ExtraVariables].Script.Stolon_NDemand</string>
-        <string>[ExtraVariables].Script.Inflorescence_NDemand</string>
-        <string>[ExtraVariables].Script.Root_NDemand</string>
-        <string>[ExtraVariables].Script.Taproot_NDemand</string>
-        <string>[ExtraVariables].Script.Nodule_NDemand</string>
+        <string>[WhiteClover].Leaf.NSupply.Total</string>
+        <string>[WhiteClover].Petiole.NSupply.Total</string>
+        <string>[WhiteClover].Stolon.NSupply.Total</string>
+        <string>[WhiteClover].Inflorescence.NSupply.Total</string>
+        <string>[WhiteClover].Root.NSupply.Total</string>
+        <string>[WhiteClover].Taproot.NSupply.Total</string>
+        <string>[WhiteClover].Nodule.NSupply.Total</string>
+        <string>[WhiteClover].Leaf.NDemand.Total</string>
+        <string>[WhiteClover].Petiole.NDemand.Total</string>
+        <string>[WhiteClover].Stolon.NDemand.Total</string>
+        <string>[WhiteClover].Inflorescence.NDemand.Total</string>
+        <string>[WhiteClover].Root.NDemand.Total</string>
+        <string>[WhiteClover].Taproot.NDemand.Total</string>
+        <string>[WhiteClover].Nodule.NDemand.Total</string>
         <string />
         <string>[WhiteClover].ShootRootRatio.Value()</string>
         <string>[WhiteClover].TargetShootRootRatio.Value()</string>
@@ -6039,6 +5951,35 @@ namespace Models
         <string>[WhiteClover].Nodule.Removed.Wt</string>
         <string>[WhiteClover].Taproot.Removed.Wt</string>
         <string>[WhiteClover].Root.Removed.Wt</string>
+        <string />
+        <string>[WhiteClover].Leaf.Allocated.N</string>
+        <string>[WhiteClover].Stolon.Allocated.N</string>
+        <string>[WhiteClover].Petiole.Allocated.N</string>
+        <string>[WhiteClover].Inflorescence.Allocated.N</string>
+        <string>[WhiteClover].Nodule.Allocated.N</string>
+        <string>[WhiteClover].Taproot.Allocated.N</string>
+        <string>[WhiteClover].Root.Allocated.N</string>
+        <string>[WhiteClover].Leaf.Senesced.N</string>
+        <string>[WhiteClover].Stolon.Senesced.N</string>
+        <string>[WhiteClover].Petiole.Senesced.N</string>
+        <string>[WhiteClover].Inflorescence.Senesced.N</string>
+        <string>[WhiteClover].Nodule.Senesced.N</string>
+        <string>[WhiteClover].Taproot.Senesced.N</string>
+        <string>[WhiteClover].Root.Senesced.N</string>
+        <string>[WhiteClover].Leaf.Detached.N</string>
+        <string>[WhiteClover].Stolon.Detached.N</string>
+        <string>[WhiteClover].Petiole.Detached.N</string>
+        <string>[WhiteClover].Inflorescence.Detached.N</string>
+        <string>[WhiteClover].Nodule.Detached.N</string>
+        <string>[WhiteClover].Taproot.Detached.N</string>
+        <string>[WhiteClover].Root.Detached.N</string>
+        <string>[WhiteClover].Leaf.Removed.N</string>
+        <string>[WhiteClover].Stolon.Removed.N</string>
+        <string>[WhiteClover].Petiole.Removed.N</string>
+        <string>[WhiteClover].Inflorescence.Removed.N</string>
+        <string>[WhiteClover].Nodule.Removed.N</string>
+        <string>[WhiteClover].Taproot.Removed.N</string>
+        <string>[WhiteClover].Root.Removed.N</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -6354,72 +6295,87 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-10-23</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-17</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-04-17</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2015-11-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-11-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-01-21</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-01-25</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-03-01</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-02-26</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-08</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-04-09</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-05-24</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-11-10</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-12-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 5.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
             </Operations>
@@ -6428,72 +6384,87 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-10-23</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-17</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-04-17</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2015-11-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-11-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-01-21</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-01-25</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-03-01</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-02-26</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-08</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-04-09</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-05-24</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-11-10</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-12-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 11.1, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
             </Operations>
@@ -6502,72 +6473,87 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-10-23</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-17</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-04-17</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2015-11-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-11-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-01-21</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-01-25</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-03-01</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-02-26</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-08</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-04-09</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-05-24</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-11-10</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-12-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 22.2, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
             </Operations>
@@ -6576,72 +6562,87 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-10-23</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-17</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-04-17</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2015-11-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-11-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-01-21</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-01-25</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-03-01</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-02-26</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-08</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-04-09</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-05-24</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-11-10</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-12-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 38.9, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
             </Operations>
@@ -6650,72 +6651,87 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-10-23</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-02-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-03-10</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-17</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-04-17</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-06-09</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-10-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2015-11-06</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2015-11-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2015-12-16</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-01-21</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-01-25</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-03-01</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-02-26</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
-                <Date>2016-04-08</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Date>2016-04-09</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-05-24</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2016-10-05</Date>
-                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-11-10</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+                <Enabled>true</Enabled>
+              </Operation>
+              <Operation>
+                <Date>2016-12-16</Date>
+                <Action>[Fertiliser].Apply(Amount: 55.6, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
                 <Enabled>true</Enabled>
               </Operation>
             </Operations>
@@ -6732,7 +6748,7 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
             <Name>clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartDate>2014-03-01T00:00:00</StartDate>
-            <EndDate>2016-05-31T00:00:00</EndDate>
+            <EndDate>2016-12-31T00:00:00</EndDate>
           </Clock>
           <Weather>
             <Name>Weather</Name>
@@ -7525,7 +7541,22 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
+                  <Date>2016-09-30</Date>
+                  <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-10-01</Date>
+                  <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
                   <Date>2016-10-05</Date>
+                  <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-10-12</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -7535,8 +7566,78 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2016-10-26</Date>
+                  <Date>2016-10-19</Date>
+                  <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-10-27</Date>
                   <Action>[Irrigation].Apply(amount: 10)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-10-31</Date>
+                  <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-01</Date>
+                  <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-03</Date>
+                  <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-08</Date>
+                  <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-10</Date>
+                  <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-11</Date>
+                  <Action>[Irrigation].Apply(amount: 9)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-14</Date>
+                  <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-21</Date>
+                  <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-22</Date>
+                  <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-23</Date>
+                  <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-24</Date>
+                  <Action>[Irrigation].Apply(amount: 7)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-28</Date>
+                  <Action>[Irrigation].Apply(amount: 8)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-29</Date>
+                  <Action>[Irrigation].Apply(amount: 9)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -7651,7 +7752,12 @@ namespace Models
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2016-11-07</Date>
+                  <Date>2016-11-10</Date>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-12-16</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
