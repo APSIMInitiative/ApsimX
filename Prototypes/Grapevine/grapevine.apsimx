@@ -65,12 +65,21 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
         </WangEngelTempFunction>
         <GenericPhase>
           <Name>EndoDormancy</Name>
-          <Constant>
+          <SubtractFunction>
             <Name>Target</Name>
+            <Constant>
+              <Name>BaseTarget</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>14</FixedValue>
+              <Units>days</Units>
+            </Constant>
+            <VariableReference>
+              <Name>AccChillMar1st</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>Phenology.AccChillMar1st.Value()</VariableName>
+            </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>13.5</FixedValue>
-            <Units>days</Units>
-          </Constant>
+          </SubtractFunction>
           <AirTemperatureFunction>
             <Name>ThermalTime</Name>
             <XYPairs>
@@ -205,94 +214,6 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
                   <LegendPosition>BottomRight</LegendPosition>
                   <DisabledSeries />
                 </Graph>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>5</double>
@@ -314,22 +235,6 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
-          <AccumulateFunction>
-            <Name>AccChill</Name>
-            <VariableReference>
-              <Name>ThermalTime</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Phenology].EndoDormancy.ThermalTime.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>StartDormancy</StartStageName>
-            <EndStageName>BudBurst</EndStageName>
-            <ResetStageName>Veraison</ResetStageName>
-            <FractionRemovedOnCut>0</FractionRemovedOnCut>
-            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
-            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
-            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
-          </AccumulateFunction>
           <MultiplyFunction>
             <Name>FractionOfBudBurst</Name>
             <SigmoidFunction>
@@ -553,6 +458,31 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <AddFunction>
+            <Name>AccChill</Name>
+            <AccumulateFunction>
+              <Name>AccChillMay1st</Name>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Phenology].EndoDormancy.ThermalTime.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <StartStageName>StartDormancy</StartStageName>
+              <EndStageName>BudBurst</EndStageName>
+              <ResetStageName>Veraison</ResetStageName>
+              <FractionRemovedOnCut>0</FractionRemovedOnCut>
+              <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+              <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+              <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
+            </AccumulateFunction>
+            <VariableReference>
+              <Name>AccChillMar1st</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>Phenology.AccChillMar1st.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </AddFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndDormancy</Start>
           <End>BudBurst</End>
@@ -699,6 +629,11 @@ A function is used to provide flowering date as days after sowing(DAS).
           <VariableReference>
             <Name>PostEventValue</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].DoyJuly1st.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>PostEventValue1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Clock].Today.DayOfYear</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -751,6 +686,31 @@ A function is used to capture the year of the current season as in the south hem
           <SetEvent>BudBurst</SetEvent>
           <ReSetEvent>StartDormancy</ReSetEvent>
         </OnEventFunction>
+        <AccumulateByDate>
+          <Name>DoyJuly1st</Name>
+          <Constant>
+            <Name>Days</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
+            <Units>days/day</Units>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <StartDate>01-JUL</StartDate>
+          <EndDate>30-JUN</EndDate>
+          <ResetDate>30-JUN</ResetDate>
+        </AccumulateByDate>
+        <AccumulateByDate>
+          <Name>AccChillMar1st</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].EndoDormancy.ThermalTime.Value()</VariableName>
+          </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <StartDate>01-MAR</StartDate>
+          <EndDate>1-MAY</EndDate>
+          <ResetDate>30-JUN</ResetDate>
+        </AccumulateByDate>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionBiomassRemoved>0</FractionBiomassRemoved>
         <DaysAfterSowing>0</DaysAfterSowing>
@@ -2340,50 +2300,6 @@ A function is used to capture the year of the current season as in the south hem
                   <LegendPosition>BottomRight</LegendPosition>
                   <DisabledSeries />
                 </Graph>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
@@ -2422,6 +2338,16 @@ A function is used to capture the year of the current season as in the south hem
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
             <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
+          <AccumulateByNumericPhase>
+            <Name>AccumulateByNumericPhase</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartStageName>0</StartStageName>
+            <EndStageName>0</EndStageName>
+            <FractionRemovedOnCut>0</FractionRemovedOnCut>
+            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
+          </AccumulateByNumericPhase>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <DivideFunction>
@@ -4218,7 +4144,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <Name>ExtraVariables</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
-          <CordonDiameter>15</CordonDiameter>
+          <CordonDiameter>10</CordonDiameter>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -4254,8 +4180,9 @@ namespace Models
         <Name>Operations</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
-          <Date>2005-01-01</Date>
+          <Date>2004-01-01</Date>
           <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 800, rowSpacing: 2400, budNumber:24);</Action>
+          <Enabled>true</Enabled>
         </Operation>
       </Operations>
       <Manager>
@@ -4322,14 +4249,16 @@ namespace Models
         <string>[Clock].Today</string>
         <string>[Clock].Today.Year</string>
         <string>[Clock].Today.DayOfYear</string>
-        <string>[Grapevine].Phenology.CurrentSeason.Value()</string>
+        <string>[Grapevine].Phenology.CurrentSeason.Value() as CurrentSeason</string>
         <string>[Grapevine].Phenology.Stage</string>
         <string>[Grapevine].Phenology.AccumulatedEmergedTT</string>
-        <string>[Grapevine].Phenology.BudBurstDOY.Value()</string>
-        <string>[Grapevine].Phenology.FloweringDOY.Value()</string>
-        <string>[Grapevine].Phenology.VeraisonDOY.Value()</string>
-        <string>[Grapevine].Phenology.CurrentStageName</string>
-        <string>[Grapevine].Phenology.Budding.AccChill.Value()</string>
+        <string>[Grapevine].Phenology.BudBurstDOY.Value() as BudBurstDOY</string>
+        <string>[Grapevine].Phenology.FloweringDOY.Value() as FloweringDOY</string>
+        <string>[Grapevine].Phenology.DoyJuly1st.Value() as DoyJuly1st</string>
+        <string>[Grapevine].Phenology.VeraisonDOY.Value() as VeraisonDOY</string>
+        <string>[Grapevine].Phenology.CurrentStageName as CurrentStageName</string>
+        <string>[Grapevine].Phenology.Budding.AccChill.Value() </string>
+        <string>[Grapevine].Phenology.AccChillMar1st.Value()</string>
         <string>[Grapevine].Phenology.Budding.FractionOfBudBurst.Value()</string>
         <string>[Grapevine].Structure.PrimaryBudNo</string>
         <string>[Grapevine].Structure.MainStemPopn</string>
@@ -4432,8 +4361,8 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Data</ObservedTableName>
-      <FieldNameUsedForMatch>Grapevine.Phenology.CurrentSeason.Value()</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>Grapevine.Phenology.CurrentStageName</FieldName2UsedForMatch>
+      <FieldNameUsedForMatch>CurrentSeason</FieldNameUsedForMatch>
+      <FieldName2UsedForMatch>CurrentStageName</FieldName2UsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
@@ -4871,8 +4800,9 @@ namespace Models
             <Name>Operations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
-              <Date>2005-01-01</Date>
+              <Date>2004-01-01</Date>
               <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 80, rowSpacing: 2400, budNumber:24);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Manager>
@@ -4943,7 +4873,7 @@ namespace Models
       <Clock>
         <Name>Clock</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <StartDate>2005-01-01T00:00:00</StartDate>
+        <StartDate>2004-01-01T00:00:00</StartDate>
         <EndDate>2008-10-31T00:00:00</EndDate>
       </Clock>
       <Summary>
@@ -5272,7 +5202,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Grapevine.Phenology.CurrentStageName</YFieldName>
+        <YFieldName>CurrentStageName</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6135,7 +6065,7 @@ namespace Models
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          <ColumnName>CurrentStageName</ColumnName>
         </EventNamesOnGraph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
@@ -6256,7 +6186,7 @@ namespace Models
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          <ColumnName>CurrentStageName</ColumnName>
         </EventNamesOnGraph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
@@ -6284,7 +6214,7 @@ namespace Models
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          <ColumnName>CurrentStageName</ColumnName>
         </EventNamesOnGraph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
@@ -6391,14 +6321,14 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Site1001_BRA.met</FileName>
+          <FileName>Site1004_RPC.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartDate>2005-01-01T00:00:00</StartDate>
-          <EndDate>2012-09-29T00:00:00</EndDate>
+          <StartDate>2004-05-01T00:00:00</StartDate>
+          <EndDate>2017-07-01T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
@@ -6838,8 +6768,9 @@ namespace Models
               <Name>Operations</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>2005-01-01</Date>
+                <Date>2004-01-01</Date>
                 <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 80, rowSpacing: 2400, budNumber:24);</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Manager>
@@ -6906,11 +6837,6 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <DisabledSimNames />
     </Experiment>
-    <Folder>
-      <Name>PhenoValidation</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
-    </Folder>
     <Graph>
       <Name>BudBurstPredic</Name>
       <Series>
@@ -6934,8 +6860,8 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <Checkpoint>Current</Checkpoint>
         <TableName>PhenoPredObs</TableName>
-        <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value()</XFieldName>
-        <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value()</YFieldName>
+        <XFieldName>SimulationName</XFieldName>
+        <YFieldName>SimulationName</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6982,8 +6908,8 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <Checkpoint>Current</Checkpoint>
         <TableName>PhenoPredObs</TableName>
-        <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value()</XFieldName>
-        <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value()</YFieldName>
+        <XFieldName>Observed.FloweringDOY</XFieldName>
+        <YFieldName>Predicted.FloweringDOY</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6993,16 +6919,16 @@ namespace Models
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
-        <Minimum>300</Minimum>
-        <Maximum>366</Maximum>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Inverted>false</Inverted>
-        <Minimum>300</Minimum>
-        <Maximum>365</Maximum>
-        <Interval>10</Interval>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
@@ -7030,8 +6956,8 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <Checkpoint>Current</Checkpoint>
         <TableName>PhenoPredObs</TableName>
-        <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value()</XFieldName>
-        <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value()</YFieldName>
+        <XFieldName>Observed.VeraisonDOY</XFieldName>
+        <YFieldName>Predicted.VeraisonDOY</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7065,17 +6991,17 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>EndoDormancy</Name>
+          <Name>Budding</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
-            <string>[ParameterTest].Script.EndoTarget = 13</string>
+            <string>[ParameterTest].Script.BudBurstBase = 120,130,135,140,145,150</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>BudBurst</Name>
+          <Name>Climate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
-            <string>[ParameterTest].Script.BudBurstBase = 140,150</string>
+            <string>[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met</string>
           </Specifications>
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7091,8 +7017,8 @@ namespace Models
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartDate>2005-01-01T00:00:00</StartDate>
-          <EndDate>2012-09-29T00:00:00</EndDate>
+          <StartDate>2004-01-01T00:00:00</StartDate>
+          <EndDate>2017-07-01T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
@@ -7490,48 +7416,6 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
-          <Manager>
-            <Name>ParameterTest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script>
-              <BudBurstBase>0</BudBurstBase>
-              <EndoTarget>0</EndoTarget>
-            </Script>
-            <Code><![CDATA[
-using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Interfaces;
-using System.Xml.Serialization;
-
-namespace Models
-{
-    [Serializable] 
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
-    {
-    	[Link] Zone zone;
-        [Link] Summary Summary;
-
-		[Description("BudBurstBase")]
-        public double BudBurstBase  {get; set;}
-        [Description("EndoTarget")]
-        public double EndoTarget  {get; set;}
-
-                
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, EventArgs e)
-        {
-        	zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
-			zone.Set("Grapevine.Phenology.EndoDormancy.Target.FixedValue", EndoTarget);           
-        }
-    }
-}
-            
-                
-]]></Code>
-          </Manager>
           <Folder>
             <Name>Management</Name>
             <Manager>
@@ -7574,8 +7458,9 @@ namespace Models
               <Name>Operations</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
-                <Date>2005-01-01</Date>
+                <Date>2004-01-01</Date>
                 <Action>[Grapevine].Sow(population: 0.231481, cultivar: "SauvignonBlanc", depth: 80, rowSpacing: 2400, budNumber:24);</Action>
+                <Enabled>true</Enabled>
               </Operation>
             </Operations>
             <Manager>
@@ -7637,6 +7522,50 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <Manager>
+          <Name>ParameterTest</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <BudBurstBase>0</BudBurstBase>
+          </Script>
+          <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+    	[Link] Zone zone;
+        [Link] Summary Summary;
+
+		[Description("BudBurstBase")]
+        public double BudBurstBase  {get; set;}
+        //Description("EndoTarget")]
+        //public double EndoTarget  {get; set;}
+        //[Description("FloweringTarget")]
+        //public double FloweringTarget  {get; set;}
+
+                
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+        	zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
+			//zone.Set("Grapevine.Phenology.EndoDormancy.Target.FixedValue", EndoTarget);
+			//zone.Set("Grapevine.Phenology.Flowering.Target.FixedValue", FloweringTarget);                      
+        }
+    }
+}
+            
+                
+]]></Code>
+        </Manager>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Simulation>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7646,5 +7575,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>283</ExplorerWidth>
+  <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
