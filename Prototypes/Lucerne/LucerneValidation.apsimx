@@ -894,7 +894,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
           <Constant>
             <Name>RUE</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1.5</FixedValue>
+            <FixedValue>2.3</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -928,7 +928,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
                 <double>1.5</double>
               </X>
               <Y>
-                <double>0</double>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -1499,7 +1499,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
                 <Constant>
                   <Name>Constant</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <FixedValue>0.01</FixedValue>
+                  <FixedValue>0.0008</FixedValue>
                 </Constant>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Start>Emergence</Start>
@@ -1689,13 +1689,13 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
                     </Graph>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <X>
-                      <double>11</double>
+                      <double>10.5</double>
                       <double>15</double>
                       <double>16</double>
                     </X>
                     <Y>
-                      <double>0.0075</double>
-                      <double>0.015</double>
+                      <double>0.007</double>
+                      <double>0.0145</double>
                       <double>0.017</double>
                     </Y>
                   </XYPairs>
@@ -3436,103 +3436,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.03</FixedValue>
         </Constant>
-        <MultiplyFunction>
-          <Name>SenescenceRate</Name>
-          <Constant>
-            <Name>Constant</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.18</FixedValue>
-          </Constant>
-          <ExponentialFunction>
-            <Name>ExponentialFunction</Name>
-            <DivideFunction>
-              <Name>DivideFunction</Name>
-              <SubtractFunction>
-                <Name>SubtractFunction</Name>
-                <SoilTemperatureDepthFunction>
-                  <Name>SoilTemperatureDepthFunction</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Depth>100</Depth>
-                </SoilTemperatureDepthFunction>
-                <Constant>
-                  <Name>Constant</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <FixedValue>20</FixedValue>
-                </Constant>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </SubtractFunction>
-              <Constant>
-                <Name>Constant</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>10</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </DivideFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <A>0</A>
-            <B>1</B>
-            <C>1</C>
-          </ExponentialFunction>
-          <PhaseLookup>
-            <Name>RespirationCoefficient</Name>
-            <PhaseLookupValue>
-              <Name>Juvenile</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.002</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>Emergence</Start>
-              <End>EndJuvenile</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Vegetative</Name>
-              <LinearInterpolationFunction>
-                <Name>RespirationCoefficient</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <X>
-                    <double>10</double>
-                    <double>13.5</double>
-                    <double>16.5</double>
-                  </X>
-                  <Y>
-                    <double>0.002</double>
-                    <double>0.01</double>
-                    <double>0.035</double>
-                  </Y>
-                </XYPairs>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <XProperty>[Phenology].Photoperiod.Value()</XProperty>
-              </LinearInterpolationFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>EndJuvenile</Start>
-              <End>StartFlowering</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Reproductive</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.0002</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>StartFlowering</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-            <Memo>
-              <Name>Description</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MemoText><![CDATA[
-The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover
-]]></MemoText>
-            </Memo>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </PhaseLookup>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MultiplyFunction>
         <Constant>
           <Name>MinimumNConc</Name>
           <Memo>
@@ -3662,6 +3565,103 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
+        <MultiplyFunction>
+          <Name>SenescenceRate</Name>
+          <Constant>
+            <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1.8</FixedValue>
+          </Constant>
+          <ExponentialFunction>
+            <Name>ExponentialFunction</Name>
+            <DivideFunction>
+              <Name>DivideFunction</Name>
+              <SubtractFunction>
+                <Name>SubtractFunction</Name>
+                <SoilTemperatureDepthFunction>
+                  <Name>SoilTemperatureDepthFunction</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Depth>100</Depth>
+                </SoilTemperatureDepthFunction>
+                <Constant>
+                  <Name>Constant</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>20</FixedValue>
+                </Constant>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SubtractFunction>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>10</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </DivideFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <A>0</A>
+            <B>1</B>
+            <C>1</C>
+          </ExponentialFunction>
+          <PhaseLookup>
+            <Name>RespirationCoefficient</Name>
+            <PhaseLookupValue>
+              <Name>Juvenile</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.002</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>EndJuvenile</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <LinearInterpolationFunction>
+                <Name>RespirationCoefficient</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>10</double>
+                    <double>13.5</double>
+                    <double>16.5</double>
+                  </X>
+                  <Y>
+                    <double>0.002</double>
+                    <double>0.01</double>
+                    <double>0.035</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Phenology].Photoperiod.Value()</XProperty>
+              </LinearInterpolationFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>EndJuvenile</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.0035</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartFlowering</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[
+The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover
+]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3682,29 +3682,63 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
-          <LinearInterpolationFunction>
+          <PhaseLookup>
             <Name>PartitionFraction</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
+            <PhaseLookupValue>
+              <Name>Juvenile</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1</FixedValue>
+              </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>200</double>
-                <double>400</double>
-                <double>500</double>
-                <double>650</double>
-              </X>
-              <Y>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
+              <Start>Emergence</Start>
+              <End>EndJuvenile</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <LinearInterpolationFunction>
+                <Name>PartitionFraction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>0</double>
+                    <double>550</double>
+                    <double>650</double>
+                    <double>700</double>
+                    <double>900</double>
+                    <double>1000</double>
+                  </X>
+                  <Y>
+                    <double>0.9</double>
+                    <double>0.9</double>
+                    <double>0.9</double>
+                    <double>0.9</double>
+                    <double>0.9</double>
+                    <double>0.1</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Lucerne].TapRoot.Live.Wt</XProperty>
+              </LinearInterpolationFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>EndJuvenile</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.5</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartFlowering</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Lucerne].TapRoot.Live.Wt</XProperty>
-          </LinearInterpolationFunction>
+          </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
         <Constant>
@@ -3944,6 +3978,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>[Lucerne].Root.Live.Wt </string>
         <string>[Lucerne].TapRoot.Live.Wt*10 as RootWt</string>
         <string>[Lucerne].TapRoot.Total.Wt*10 as RootTotal</string>
+        <string>[Lucerne].TapRoot.Wt*10 as TapRoot</string>
         <string>[lucerne].TapRoot.Senesced.Wt</string>
         <string>[Lucerne].Leaf.Live.N</string>
         <string>[Lucerne].Root.Live.N</string>
@@ -4603,11 +4638,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1996-11-02</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>450</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1996-11-02</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -4712,7 +4747,11 @@ namespace Models
             <Name>Cutting</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Operation>
-              <Date>1997-02-22</Date>
+              <Date>1997-01-22</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-03-02</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -9319,11 +9358,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -12880,11 +12919,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -16320,7 +16359,52 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>RootWt</YFieldName>
+              <YFieldName>RootTotal</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>TapRoot</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>TapRoot</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -17100,11 +17184,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -21010,11 +21094,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2000-10-24</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2000-10-24</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -25146,11 +25230,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2014-10-08</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>20</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2014-10-08</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -28947,11 +29031,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1995-06-01</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1995-06-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -32805,11 +32889,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1999-08-01</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1999-08-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -37842,11 +37926,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1994-05-05</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1994-05-05</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -41244,11 +41328,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1998-06-09</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1998-06-09</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -44341,11 +44425,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1979-04-30</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>1979-04-30</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -47585,11 +47669,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1998-08-17</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>300</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>1998-08-17</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -51135,11 +51219,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>0001-01-01</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>100</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>0001-01-01</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -61805,11 +61889,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1993-09-27</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>70</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>1993-09-27</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -65690,11 +65774,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1990-10-11</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>southern_special</CultivarName>
-              <SowingDate>1990-10-11</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -74129,11 +74213,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>1998-08-26</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>30</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>1998-08-26</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -77672,11 +77756,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2010-04-19</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2010-04-19</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -80621,11 +80705,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2012-10-18</SowingDate>
               <RowSpacing>300</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>480</SowingRate>
               <CultivarName>WL611</CultivarName>
-              <SowingDate>2012-10-18</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -83603,11 +83687,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2010-03-29</SowingDate>
               <RowSpacing>175</RowSpacing>
               <SowingDepth>10</SowingDepth>
               <SowingRate>250</SowingRate>
               <CultivarName>Kaituna</CultivarName>
-              <SowingDate>2010-03-29</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -86589,11 +86673,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2010-05-15</SowingDate>
               <RowSpacing>175</RowSpacing>
               <SowingDepth>15</SowingDepth>
               <SowingRate>350</SowingRate>
               <CultivarName>Sceptre</CultivarName>
-              <SowingDate>2010-05-15</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
