@@ -164,75 +164,20 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Constant>
               <Name>Base</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>150</FixedValue>
+              <FixedValue>155</FixedValue>
             </Constant>
-            <LinearInterpolationFunction>
+            <ExponentialFunction>
               <Name>ChillingTadjustment</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.Target.ChillingTadjustment.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
+              <VariableReference>
+                <Name>AccChill</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <X>
-                  <double>5</double>
-                  <double>13.8</double>
-                  <double>23.3</double>
-                  <double>32.7</double>
-                  <double>42</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>0.66</double>
-                  <double>0.53</double>
-                  <double>0.46</double>
-                  <double>0.43</double>
-                </Y>
-              </XYPairs>
+                <VariableName>[Budding].AccChill.Value()</VariableName>
+              </VariableReference>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Budding].AccChill.Value()</XProperty>
-            </LinearInterpolationFunction>
+              <A>0.4</A>
+              <B>0.936</B>
+              <C>-0.3</C>
+            </ExponentialFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -6327,7 +6272,7 @@ namespace Models
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartDate>2004-05-01T00:00:00</StartDate>
+          <StartDate>2004-01-01T00:00:00</StartDate>
           <EndDate>2017-07-01T00:00:00</EndDate>
         </Clock>
         <Summary>
@@ -6860,8 +6805,8 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <Checkpoint>Current</Checkpoint>
         <TableName>PhenoPredObs</TableName>
-        <XFieldName>SimulationName</XFieldName>
-        <YFieldName>SimulationName</YFieldName>
+        <XFieldName>Observed.BudBurstDOY</XFieldName>
+        <YFieldName>Predicted.BudBurstDOY</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6991,10 +6936,10 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>Budding</Name>
+          <Name>ChillA</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
-            <string>[ParameterTest].Script.BudBurstBase = 120,130,135,140,145,150</string>
+            <string>[ParameterTest].Script.chill_a = 0.4</string>
           </Specifications>
         </Factor>
         <Factor>
@@ -7002,6 +6947,13 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
             <string>[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>ChillC</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[ParameterTest].Script.chill_c = -0.28, -0.3, -0.32, -0.35</string>
           </Specifications>
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7526,7 +7478,8 @@ namespace Models
           <Name>ParameterTest</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <BudBurstBase>0</BudBurstBase>
+            <chill_a>0</chill_a>
+            <chill_c>0</chill_c>
           </Script>
           <Code><![CDATA[
 using System;
@@ -7545,8 +7498,14 @@ namespace Models
     	[Link] Zone zone;
         [Link] Summary Summary;
 
-		[Description("BudBurstBase")]
-        public double BudBurstBase  {get; set;}
+		//[Description("BudBurstBase")]
+        //public double BudBurstBase  {get; set;}
+		[Description("chill_a")]
+        public double chill_a  {get; set;}
+
+		[Description("chill_c")]
+        public double chill_c  {get; set;}
+	
         //Description("EndoTarget")]
         //public double EndoTarget  {get; set;}
         //[Description("FloweringTarget")]
@@ -7556,7 +7515,9 @@ namespace Models
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, EventArgs e)
         {
-        	zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
+        	//zone.Set("Grapevine.Phenology.Budding.Target.Base.FixedValue", BudBurstBase);
+        	zone.Set("Grapevine.Phenology.Budding.Target.ChillingTadjustment.A", chill_a);
+        	zone.Set("Grapevine.Phenology.Budding.Target.ChillingTadjustment.C", chill_c);
 			//zone.Set("Grapevine.Phenology.EndoDormancy.Target.FixedValue", EndoTarget);
 			//zone.Set("Grapevine.Phenology.Flowering.Target.FixedValue", FloweringTarget);                      
         }
