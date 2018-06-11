@@ -18,15 +18,7 @@ namespace UserInterface.Intellisense
     /// </summary>
     public class CSharpCompletion
     {
-        /// <summary>
-        /// The content we are examining for completion options.
-        /// </summary>
         private IProjectContent projectContent;
-
-        /// <summary>
-        /// List of assemblies which in which we will search for completion options.
-        /// </summary>
-        private static IUnresolvedAssembly[] unresolvedAssemblies = GetAssemblies();
 
         /// <summary>
         /// Default construtor. If null is passed in, the default assemblies list will be used.
@@ -35,11 +27,36 @@ namespace UserInterface.Intellisense
         public CSharpCompletion(IReadOnlyList<Assembly> assemblies = null)
         {
             projectContent = new CSharpProjectContent();
-            if (assemblies != null)
+            if (assemblies == null)
             {
-                unresolvedAssemblies = GetAssemblies(assemblies.ToList());
+                // List of assemblies frequently used in manager scripts. 
+                // These assemblies get used by the CSharpCompletion object to look for intellisense options.
+                // Would be better to dynamically generate this list based on the user's script. The disadvantage of doing it that way
+                // is that loading these assemblies into the CSharpCompletion object is quite slow. 
+                assemblies = new List<Assembly>
+                {
+                    typeof(object).Assembly, // mscorlib
+		            typeof(Uri).Assembly, // System.dll
+		            typeof(System.Linq.Enumerable).Assembly, // System.Core.dll
+                    typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
+                    typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
+		            typeof(IProjectContent).Assembly,
+                    typeof(Models.Core.IModel).Assembly, // Models.exe
+                    typeof(APSIM.Shared.Utilities.StringUtilities).Assembly, // APSIM.Shared.dll
+                };
             }
-            
+
+            assemblies = assemblies.Where(v => !v.IsDynamic).ToList();
+
+            var unresolvedAssemblies = new IUnresolvedAssembly[assemblies.Count];
+            Parallel.For(
+                0, assemblies.Count,
+                delegate (int i)
+                {
+                    var loader = new CecilLoader();
+                    loader.DocumentationProvider = GetXmlDocumentation(assemblies[i].Location);
+                    unresolvedAssemblies[i] = loader.LoadAssemblyFile(assemblies[i].Location);
+                });
             projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
         }
 
@@ -196,7 +213,7 @@ namespace UserInterface.Intellisense
         /// </summary>
         /// <param name="dllPath">Path to the binary file.</param>
         /// <returns>XML documentation.</returns>
-        private static XmlDocumentationProvider GetXmlDocumentation(string dllPath)
+        private XmlDocumentationProvider GetXmlDocumentation(string dllPath)
         {
             if (string.IsNullOrEmpty(dllPath))
                 return null;
@@ -212,42 +229,6 @@ namespace UserInterface.Intellisense
                 return new XmlDocumentationProvider(netPath);
 
             return null;
-        }
-
-        /// <summary>
-        /// Loads the assemblies needed to generate completion options.
-        /// </summary>
-        /// <param name="assemblies">List of assemblies. If nothing is passed in, a default list will be used.</param>
-        /// <returns>List of assemblies.</returns>
-        /// <remarks>This is an expensive operation.</remarks>
-        private static IUnresolvedAssembly[] GetAssemblies(List<Assembly> assemblies = null)
-        {
-            // List of assemblies frequently used in manager scripts. 
-            // These assemblies get used by the CSharpCompletion object to look for intellisense options.
-            // Would be better to dynamically generate this list based on the user's script. The disadvantage of doing it that way
-            // is that loading these assemblies into the CSharpCompletion object is quite slow. 
-            if (assemblies == null)
-                assemblies = new List<Assembly>
-                {
-                    typeof(object).Assembly, // mscorlib
-		            typeof(Uri).Assembly, // System.dll
-		            typeof(System.Linq.Enumerable).Assembly, // System.Core.dll
-                    typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
-                    typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
-		            typeof(IProjectContent).Assembly,
-                    typeof(Models.Core.IModel).Assembly, // Models.exe
-                    typeof(APSIM.Shared.Utilities.StringUtilities).Assembly, // APSIM.Shared.dll
-                };
-            assemblies = assemblies.Where(v => !v.IsDynamic).ToList();
-
-            IUnresolvedAssembly[] assemblyList = new IUnresolvedAssembly[assemblies.Count];
-            for (int i = 0; i < assemblies.Count; i++)
-            {
-                var loader = new CecilLoader();
-                loader.DocumentationProvider = GetXmlDocumentation(assemblies[i].Location);
-                assemblyList[i] = loader.LoadAssemblyFile(assemblies[i].Location);
-            }
-            return assemblyList;
         }
     }
 }

@@ -93,16 +93,16 @@ namespace Models
         public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
+        /// <summary> Process stock methods in GrazPlan Stock </summary>
+        public event EventHandler DoStock;
+        /// <summary> Process a Pest and Disease lifecycle object </summary>
+        public event EventHandler DoLifecycle;
         /// <summary>Occurs when [do management calculations].</summary>
         public event EventHandler DoManagementCalculations;
         /// <summary>Occurs when [do report calculations].</summary>
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
-        /// <summary> Process stock methods in GrazPlan Stock </summary>
-        public event EventHandler DoStock;
-        /// <summary> Process a Pest and Disease lifecycle object </summary>
-        public event EventHandler DoLifecycle;
 
         /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
