@@ -212,6 +212,10 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double MinNconc { get { return minimumNConc.Value(); } }
 
+        /// <summary>Gets the minimum N concentration.</summary>
+        [XmlIgnore]
+        public double CritNconc { get { return criticalNConc.Value(); } }
+
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [XmlIgnore]
         public double Wt { get { return Live.Wt + Dead.Wt; } }
