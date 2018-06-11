@@ -107,7 +107,7 @@ namespace Models.PMF.Struct
         [Link]
         [Units("/node")]
         IFunction BranchingRate = null;
-        /// <summary>The branch mortality (in ratio of total branching)</summary>
+        /// <summary>The branch mortality</summary>
         [Link]
         [Units("/d")]
         IFunction BranchMortality = null;
@@ -358,7 +358,7 @@ namespace Models.PMF.Struct
 
                     //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
                      if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
-                     {
+                    {
                         int i = 1;
                         for (i = 1; i <= LeavesToAppear; i++)
                         {
@@ -367,7 +367,7 @@ namespace Models.PMF.Struct
                             DoLeafTipAppearance();
                         }
                         // Apex calculation
-                        ApexNum += BranchingRate.Value() * PrimaryBudNo;
+                        ApexNum += (BranchingRate.Value() - BranchMortality.Value()) * PrimaryBudNo;
 
                         if (Phenology.Stage > 4 & !SenescenceByAge)
                         {
@@ -389,8 +389,6 @@ namespace Models.PMF.Struct
                         double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
-                        // Reduce the apex number by branching mortality
-                        ApexNum -= PropnMortality * (ApexNum - 1);
                     }
                 }
             }

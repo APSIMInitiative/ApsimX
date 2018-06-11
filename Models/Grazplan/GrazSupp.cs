@@ -239,16 +239,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The s name
         /// </summary>
-        internal string sName;
-
-        /// <summary>
-        /// Name of the supplement
-        /// </summary>
-        public string Name
-        {
-            get { return sName; }
-            set { sName = value; }
-        }
+        public string sName;
         /// <summary>
         /// The f translations
         /// </summary>
@@ -1542,14 +1533,5 @@ namespace Models.GrazPlan
         /// </summary>
         internal static TSupplementLibrary GDefSupp = null;
 
-        /// <summary>
-        /// Returns the index of TSupplement in the array of supplements
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns>The array index, or -1 if not found</returns>
-        public int IndexOf(TSupplementItem item)
-        {
-            return Array.IndexOf(fSuppts, item);
-        }
     }
 }

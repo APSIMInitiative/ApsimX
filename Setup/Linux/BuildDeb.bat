@@ -50,10 +50,10 @@ echo Version: %APSIM_VERSION%
 echo Section: science
 echo Architecture: all
 echo Priority: optional
-echo Maintainer: APSIM Initiative ^<apsim@csiro.au^>
+echo Maintainer: APSIM Initiative ^<apsim@daf.qld.gov.au^>
 echo Homepage: www.apsim.info
 echo Installed-Size: %INSTALL_SIZE%
-echo Depends: gtk-sharp2 ^(^>=2.12^), libwebkitgtk-1.0-0, mono-runtime ^(^>=4.0^), mono-devel ^(^>=4.0^), sqlite3, libcanberra-gtk-module
+echo Depends: gtk-sharp2 ^(^>=2.12^), libwebkitgtk-1.0-0, mono-runtime ^(^>=4.0^), mono-devel ^(^>=4.0^), sqlite3
 echo Description: The Agricultural Production Systems Simulator.
 echo ^ The Agricultural Production Systems sIMulator ^(APSIM^) is internationally recognised 
 echo ^ as a highly advanced simulator of agricultural systems. It contains a suite of modules 
