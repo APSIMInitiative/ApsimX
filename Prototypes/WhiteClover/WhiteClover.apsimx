@@ -19051,7 +19051,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
             <Name>clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartDate>2014-09-01T00:00:00</StartDate>
-            <EndDate>2016-06-30T00:00:00</EndDate>
+            <EndDate>2016-12-31T00:00:00</EndDate>
           </Clock>
           <Weather>
             <Name>Weather</Name>
@@ -19186,6 +19186,21 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>2016-09-12</Date>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-10-18</Date>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-11-22</Date>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+                <Operation>
+                  <Date>2016-12-15</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -28066,29 +28081,6 @@ namespace Models
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
-            <Series>
-              <Name>Predicted1</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dash</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Date</XFieldName>
-              <YFieldName>Defoliate.Script.RemovedNConc</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Axis>
               <Type>Left</Type>
@@ -29732,5 +29724,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>384</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
