@@ -218,8 +218,10 @@ namespace UserInterface.Presenters
                         }
 
                         if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
-                            properties.Add(new VariableObject(property.Description));  // use a VariableObject for separators
-
+                        {
+                            SeparatorAttribute separator = Attribute.GetCustomAttribute(member, typeof(SeparatorAttribute)) as SeparatorAttribute;
+                            properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
+                        }
                         if (includeProperty)
                             this.properties.Add(property);
 
