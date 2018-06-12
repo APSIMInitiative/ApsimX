@@ -988,7 +988,7 @@ namespace  Models.GrazPlan
                 if (srcSet.Animal == GrazType.AnimalType.Sheep)
                     setPotGFW(srcSet.PotentialGFW);
 
-                if (srcSet.bUseDairyCurve)
+                if (srcSet.bDairyBreed)
                     setPeakMilk(srcSet.PotMilkYield);
 
                 if (srcSet.FParentage.Length == 0)
