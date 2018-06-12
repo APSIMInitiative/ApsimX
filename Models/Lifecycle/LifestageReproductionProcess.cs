@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Models.Core;
 using Models.PMF.Functions;
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
@@ -16,8 +16,8 @@ namespace Models.Lifecycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Lifestage))]
-    public class LifestageReproductionProcess: Model, ILifestageProcess
+    [ValidParent(ParentType = typeof(LifeStage))]
+    public class LifeStageReproductionProcess: Model, ILifeStageProcess
     {
         private IFunction ProgenyFunc = null;
         private IFunction FecundityFunc = null;
@@ -70,7 +70,7 @@ namespace Models.Lifecycle
                                 if (numberToCreate > 0)
                                 {
                                     //transfer magic here
-                                    Lifestage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
+                                    LifeStage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
                                     cohortItem.OwningStage.Reproduce(cohortItem, destStage, numberToCreate);
                                 }
                                 cohortItem.Fecundity -= progenyRate;

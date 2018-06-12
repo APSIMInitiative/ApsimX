@@ -43,6 +43,9 @@ namespace Models
         /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
         /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
-        void Apply(double amount, double depth = 0.0, double startTime = 0.0, double duration = 1.0, double efficiency = 1.0, bool willIntercept = false, bool willRunoff = false);
+        /// <param name="no3">Amount of NO3 in irrigation water</param>
+        /// <param name="nh4">Amount of NH4 in irrigation water</param>
+        void Apply(double amount, double depth = 0.0, double startTime = 0.0, double duration = 1.0, double efficiency = 1.0, bool willIntercept = false, bool willRunoff = false,
+                   double no3 = -1.0, double nh4 = -1.0);
     }
 }

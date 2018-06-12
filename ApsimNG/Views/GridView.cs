@@ -573,7 +573,14 @@ namespace UserInterface.Views
                     }
                     render.Destroy();
                 }
-                Gridview.RemoveColumn(Gridview.GetColumn(0));
+                Widget w = col.Widget;
+                while (!(w is Button || w == null))
+                {
+                    w = w.Parent;
+                }
+                if (w != null)
+                    w.ButtonPressEvent -= HeaderClicked;
+                Gridview.RemoveColumn(col);
             }
             while (FixedColview.Columns.Length > 0)
             {
@@ -587,7 +594,14 @@ namespace UserInterface.Views
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
-                FixedColview.RemoveColumn(FixedColview.GetColumn(0));
+                Widget w = col.Widget;
+                while (!(w is Button || w == null))
+                {
+                    w = w.Parent;
+                }
+                if (w != null)
+                    w.ButtonPressEvent -= HeaderClicked;
+                FixedColview.RemoveColumn(col);
             }
         }
 

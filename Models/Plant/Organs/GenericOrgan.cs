@@ -129,8 +129,11 @@ namespace Models.PMF.Organs
         /// <summary>Structural nitrogen demand</summary>
         private BiomassPoolType nitrogenDemand = new BiomassPoolType();
 
+        /// <summary>The dry matter potentially being allocated</summary>
+        private BiomassPoolType potentialDMAllocation = new BiomassPoolType();
+
         /// <summary>The potential DM allocation</summary>
-        private double potentialDMAllocation = 0.0;
+        private double potentialDMAllocating = 0.0;
 
         /// <summary>The potential structural DM allocation</summary>
         private double potentialStructuralDMAllocation = 0.0;
@@ -200,6 +203,9 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
 
+        /// <summary>Gets the potential DM allocation for this computation round.</summary>
+        public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
+
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         public virtual double NFixationCost { get { return 0; } }
@@ -211,6 +217,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets the minimum N concentration.</summary>
         [XmlIgnore]
         public double MinNconc { get { return minimumNConc.Value(); } }
+
+        /// <summary>Gets the minimum N concentration.</summary>
+        [XmlIgnore]
+        public double CritNconc { get { return criticalNConc.Value(); } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [XmlIgnore]
@@ -330,7 +340,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         public virtual BiomassPoolType CalculateNitrogenDemand()
         {
-            double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocation) - Live.N);
+            double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocating) - Live.N);
             NDeficit *= nitrogenDemandSwitch.Value();
 
             nitrogenDemand.Structural = Math.Min(NDeficit, potentialStructuralDMAllocation * minimumNConc.Value());
@@ -345,7 +355,10 @@ namespace Models.PMF.Organs
         {
             potentialMetabolicDMAllocation = dryMatter.Metabolic;
             potentialStructuralDMAllocation = dryMatter.Structural;
-            potentialDMAllocation = dryMatter.Structural + dryMatter.Metabolic;
+            potentialDMAllocating = dryMatter.Structural + dryMatter.Metabolic;
+            potentialDMAllocation.Structural = dryMatter.Structural;
+            potentialDMAllocation.Metabolic = dryMatter.Metabolic;
+            potentialDMAllocation.Storage = dryMatter.Storage;
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
@@ -599,10 +612,10 @@ namespace Models.PMF.Organs
             nitrogenSupply.Clear();
             dryMatterDemand.Clear();
             nitrogenDemand.Clear();
-            potentialDMAllocation = 0.0;
+            potentialDMAllocation.Clear();
+            potentialDMAllocating = 0.0;
             potentialStructuralDMAllocation = 0.0;
             potentialMetabolicDMAllocation = 0.0;
-            dryMatterDemand.Clear();
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
