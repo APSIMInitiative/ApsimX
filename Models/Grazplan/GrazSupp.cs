@@ -98,6 +98,7 @@ namespace Models.GrazPlan
     /// <summary>
     /// Supplement information
     /// </summary>
+    [Serializable]
     public class SuppInfo
     {
         /// <summary>

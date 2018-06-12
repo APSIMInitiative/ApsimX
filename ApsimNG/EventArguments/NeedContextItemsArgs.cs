@@ -376,7 +376,7 @@ namespace UserInterface.EventArguments
                         {
                             IList nodeList = node as IList;
                             if (index >= nodeList.Count)
-                                throw new Exception("Unable to access element " + index + " of list " + childName + ": " + childName + " only has " + childName.Count() + " items.");
+                                throw new Exception("Unable to access element " + index + " of list " + childName + ": " + childName + " only has " + nodeList.Count + " items.");
                             node = nodeList[index];
                         }
                         else
