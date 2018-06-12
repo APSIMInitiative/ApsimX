@@ -427,7 +427,7 @@ namespace UserInterface.Views
             }
             else if (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace)
             {
-                // If user one of the IntelliSenseChars, then display contextlist.
+                // If user entered one of the Intellisense characters, then display the context list.
                 string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
 
                 // If the user entered a period, we need to take that into account when generating intellisense options.
