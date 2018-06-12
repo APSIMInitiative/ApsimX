@@ -257,6 +257,18 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the metabolic N concentration factor.</summary>
+        public double FNmetabolic
+        {
+            get
+            {
+                double factor = 0.0;
+                if (Live != null)
+                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+                return Math.Min(1.0, factor);
+            }
+        }
+
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
 
