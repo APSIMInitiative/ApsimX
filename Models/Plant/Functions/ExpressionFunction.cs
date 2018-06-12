@@ -19,24 +19,9 @@ namespace Models.PMF.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExpressionFunction : Model, IFunction, ICustomDocumentation
     {
-        /// <summary>The expression.</summary>
+        /// <summary>The expression</summary>
         [Core.Description("Expression")]
-        private string expression;
-
-        /// <summary>The expression.</summary>
-        [Core.Description("Expression")]
-        public string Expression
-        {
-            get
-            {
-                return expression;
-            }
-            set
-            {
-                expression = value;
-                parsed = false;
-            }
-        }
+        public string Expression { get; set; }
 
         /// <summary>The function</summary>
         private ExpressionEvaluator fn = new ExpressionEvaluator();

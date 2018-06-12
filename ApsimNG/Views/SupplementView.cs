@@ -218,8 +218,7 @@ namespace UserInterface.Views
                             TSuppAttrArgs args = new TSuppAttrArgs();
                             args.attr = (int)tagEnum;
                             args.attrVal = value * scale;
-                            if (SuppAttrChanged != null)
-                                SuppAttrChanged.Invoke(sender, args);
+                            SuppAttrChanged.Invoke(sender, args);
                         }
                     }
                 }
@@ -263,8 +262,7 @@ namespace UserInterface.Views
 
                 TIntArgs args = new TIntArgs();
                 args.value = selPath.Indices[0];
-                if (SupplementSelected != null)
-                    SupplementSelected.Invoke(sender, args);
+                SupplementSelected.Invoke(sender, args);
             }
         }
 
@@ -322,7 +320,7 @@ namespace UserInterface.Views
         {
             set
             {
-                tbName.Text = value.Name;
+                tbName.Text = value.sName;
                 tbAmount.Text = value.Amount.ToString("F");
                 cbxRoughage.Active = value.IsRoughage;
                 tbDM.Text = (value.DM_Propn * 100.0).ToString("F");
@@ -416,8 +414,7 @@ namespace UserInterface.Views
             TSuppAttrArgs args = new TSuppAttrArgs();
             args.attr = -2;
             args.attrVal = cbxRoughage.Active ? 1 : 0;
-            if (SuppAttrChanged != null)
-                SuppAttrChanged.Invoke(sender, args);
+            SuppAttrChanged.Invoke(sender, args);
         }
 
         private void tbAmount_Validating(object sender, EventArgs e)
@@ -442,8 +439,7 @@ namespace UserInterface.Views
                     TSuppAttrArgs args = new TSuppAttrArgs();
                     args.attr = -1;
                     args.attrVal = value;
-                    if (SuppAttrChanged != null)
-                        SuppAttrChanged.Invoke(sender, args);
+                    SuppAttrChanged.Invoke(sender, args);
                 }
             }
         }
@@ -451,7 +447,7 @@ namespace UserInterface.Views
         private void tbName_Validating(object sender, EventArgs e)
         {
             bool cancel = false;
-            if (string.IsNullOrWhiteSpace(tbName.Text) && SupplementNames.Length > 0)
+            if (string.IsNullOrWhiteSpace(tbName.Text))
             {
                 cancel = true;
                 MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
@@ -466,8 +462,7 @@ namespace UserInterface.Views
                 {
                     TStringArgs args = new TStringArgs();
                     args.name = tbName.Text;
-                    if (SuppNameChanged != null)
-                        SuppNameChanged.Invoke(sender, args);
+                    SuppNameChanged.Invoke(sender, args);
                 }
             }
         }
@@ -481,8 +476,7 @@ namespace UserInterface.Views
                 {
                     TStringArgs args = new TStringArgs();
                     args.name = (string)defNameList.GetValue(iter, 0);
-                    if (SupplementAdded != null)
-                        SupplementAdded.Invoke(sender, args);
+                    SupplementAdded.Invoke(sender, args);
                 }
             }
             lbDefaultNames.Visible = false;

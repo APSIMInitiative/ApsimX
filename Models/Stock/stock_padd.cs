@@ -904,7 +904,6 @@ namespace Models.GrazPlan
         private int FSetterID;                  // setting property ID (or published event ID)
         private int FDriverID;                  // driving property ID
         private PaddockInfo FOwningPaddock;     // ptr to the paddock object in the model
-
         /// <summary>
         /// Construct the forage provider
         /// </summary>
@@ -914,11 +913,6 @@ namespace Models.GrazPlan
             OwningPaddock = null;
             FUseCohorts = false;
         }
-
-        /// <summary>
-        /// The total calculated green dm for the paddock
-        /// </summary>
-        public double PastureGreenDM { get; set; }
 
         /// <summary>
         /// Use forage cohorts
@@ -1038,14 +1032,6 @@ namespace Models.GrazPlan
             double meanDMD = 0;
             double dmd;
 
-            // calculate the green available based on the total green in this paddock
-            double greenPropn = 0;
-            // ** should really take into account the height ratio here e.g. Params.HeightRatio
-            if (PastureGreenDM > GrazType.Ungrazeable)
-            {
-                greenPropn = 1.0 - GrazType.Ungrazeable / PastureGreenDM;
-            }
-
             // calculate the total live and dead biomass
             foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
             {
@@ -1053,22 +1039,30 @@ namespace Models.GrazPlan
                 {
                     if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
                     {
-                        result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
+                        result.TotalGreen += biomass.Live.Wt;   // g/m^2
                         result.TotalDead += biomass.Dead.Wt;
 
-                        dmd = ((biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
+                        dmd = ((biomass.Live.DMDOfStructural * biomass.Live.StructuralWt) + (1 * biomass.Live.StorageWt) + (1 * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
                         dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
                         totalDMD += dmd;
-                        totalN += (greenPropn * biomass.Live.N) + biomass.Dead.N;
+                        totalN += biomass.Live.N + biomass.Dead.N;
                     }
                 }
             }
 
+            // *temporary* code to estimate the Available amount
+            double availDM = Math.Max(0, result.TotalGreen + result.TotalDead - 40);
+            double availPropn = availDM / (result.TotalGreen + result.TotalDead);
+            totalN *= availPropn;
+            
+
             // TODO: Improve this routine
-            double availDM = result.TotalGreen + result.TotalDead;
+
             if (availDM > 0)
             {
                 meanDMD = totalDMD / (result.TotalGreen + result.TotalDead); //calc the average dmd for the plant
+                result.TotalGreen *= availPropn;
+                result.TotalDead *= availPropn;
 
                 //get the dmd distribution
                 double[] dDMDPropns = new double[GrazType.DigClassNo + 1];

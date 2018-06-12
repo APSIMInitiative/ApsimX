@@ -1178,20 +1178,12 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
         }
 
-        /// <summary>
-        /// TODO: This method needs documentation
-        /// </summary>
-        /// <param name="NewLeaf"></param>
         private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
-            // update age of cohorts
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
 
-            // check for increase in apex size, add new group if needed
-            // (ApexNum should be an integer, but need to check in case of flag leaf)
-            double deltaApex = apexGroupSize.Sum() - Structure.ApexNum;
-            if (deltaApex < -1E-12)
+            while (apexGroupSize.Sum() < Structure.ApexNum)
             {
                 if (apexGroupSize.Count == 0)
                     apexGroupSize.Add(Structure.ApexNum);
@@ -1200,23 +1192,27 @@ namespace Models.PMF.Organs
                 apexGroupAge.Add(1);
             }
 
-            // check for reduction in the apex size
-            if ((apexGroupSize.Count > 0) && (deltaApex > 1E-12))
+            if (apexGroupSize.Count > 1)
             {
-                double remainingRemoveApex = deltaApex;
-                for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                while (apexGroupSize.Sum() > Structure.ApexNum)
                 {
-                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
-                    apexGroupSize[i] -= remove;
-                    remainingRemoveApex -= remove;
-                    if (remainingRemoveApex <= 0.0)
-                        break;
+                    double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                    double remainingRemoveApex = removeApex;
+                    for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                    {
+                        double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                        apexGroupSize[i] -= remove;
+                        remainingRemoveApex -= remove;
+                        if (remainingRemoveApex <= 0)
+                            break;
+                    }
                 }
-
-                if (remainingRemoveApex > 0.0)
-                    throw new Exception("There are not enough apex to remove from plant.");
             }
-
+            else
+            {
+                // not sure what to do here as the while loop would not have exited.... ever!
+            }
+            
             NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
             NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }

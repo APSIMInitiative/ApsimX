@@ -192,7 +192,6 @@
     <Compile Include="Commands\RenameModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
-    <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />

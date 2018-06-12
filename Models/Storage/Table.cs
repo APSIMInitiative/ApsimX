@@ -249,7 +249,7 @@ namespace Models.Storage
             sql.Append("SELECT Units FROM _Units WHERE TableName='");
             sql.Append(Name);
             sql.Append("' AND ColumnHeading='");
-            sql.Append(columnName.Trim('\''));
+            sql.Append(columnName);
             sql.Append("'");
             DataTable data = connection.ExecuteQuery(sql.ToString());
             if (data.Rows.Count > 0)

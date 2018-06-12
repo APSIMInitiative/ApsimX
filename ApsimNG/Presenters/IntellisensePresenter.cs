@@ -56,9 +56,10 @@
         /// <param name="textEditor">Reference to the view holding the text editor. Cannot be null.</param>
         public IntellisensePresenter(ViewBase textEditor)
         {
-            if (textEditor == null)
+            if (textEditor != null)
+                Editor = textEditor;
+            else
                 throw new ArgumentException("textEditor cannot be null.");
-            Editor = textEditor; // ?? throw new ArgumentException("textEditor cannot be null.");
 
             // The way that the ItemSelected event handler works is a little complicated. If the user has half-typed 
             // a word and needs completion options for it, we can't just insert the selected completion at the caret 
@@ -227,11 +228,7 @@
             // Set the trigger word for later use.
             triggerWord = controlSpace ? completionResult.TriggerWord : string.Empty;
 
-            // If the user pressed control space, we assume they are trying to generate completions for a partially typed word.
-            // In this situation we need to filter the results based on what they have already typed.
-            // The exception is if the most recent character is a period. 
-            // No idea why NRefactory can't do this for us.
-            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord) && code[offset - 1] != '.')
+            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
             {
                 // Filter items.
                 completionResult.CompletionData = completionResult.CompletionData.Where(item => GetMatchQuality(item.CompletionText, completionResult.TriggerWord) > 0).ToList();
