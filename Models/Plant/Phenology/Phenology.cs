@@ -182,6 +182,11 @@ namespace Models.PMF.Phen
         /// </summary>
         private int PhaseIndexOffset = 0;
 
+        /// <summary>
+        /// Phases that can't be rewound (e.g. due to grazing)
+        /// </summary>
+        private static Type[] phasesThatWontRewind = new Type[] { typeof(NodeNumberPhase), typeof(LeafDeathPhase), typeof(LeafAppearancePhase), typeof(GotoPhase), typeof(GerminatingPhase), typeof(EndPhase) };
+
         /// <summary>A one based stage number.</summary>
         [XmlIgnore]
         public double Stage { get; set; }
@@ -712,7 +717,7 @@ namespace Models.PMF.Phen
         public void BiomassRemoved(double fractionRemoved)
         {
             int existingPhaseIndex = CurrentPhaseIndex;
-            if (RewindDueToBiomassRemoved != null)
+            if (RewindDueToBiomassRemoved != null && !phasesThatWontRewind.Contains(CurrentPhase.GetType()))
             {
                 FractionBiomassRemoved = fractionRemoved; // The RewindDueToBiomassRemoved function will use this.
 
@@ -727,12 +732,11 @@ namespace Models.PMF.Phen
                 //msg += "    Critical TT          = " + ttCritical.ToString() + "\r\n";
                 //msg += "    Remove TT            = " + removeTTPheno.ToString() + "\r\n";
                 //Summary.WriteMessage(this, msg);
-
                 double ttRemaining = removeTTPheno;
                 for (int i = Phases.Count - 1; i >= 0; i--)
                 {
                     Phase Phase = Phases[i];
-                    if (Phase.TTinPhase > 0)
+                    if (Phase.TTinPhase > 0 && !phasesThatWontRewind.Contains(Phase.GetType()))
                     {
                         double ttCurrentPhase = Phase.TTinPhase;
                         if (ttRemaining > ttCurrentPhase)

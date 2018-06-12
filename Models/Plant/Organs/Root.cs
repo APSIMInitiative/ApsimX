@@ -211,6 +211,9 @@ namespace Models.PMF.Organs
         /// <summary>Structural nitrogen demand</summary>
         private BiomassPoolType nitrogenDemand = new BiomassPoolType();
 
+        /// <summary>The dry matter potentially being allocated</summary>
+        private BiomassPoolType potentialDMAllocation = new BiomassPoolType();
+
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
 
@@ -492,6 +495,9 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public BiomassPoolType NDemand { get { return nitrogenDemand; } }
 
+        /// <summary>Gets the potential DM allocation for this computation round.</summary>
+        public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
+
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
@@ -625,6 +631,10 @@ namespace Models.PMF.Organs
                 }
                 needToRecalculateLiveDead = true;
             }
+
+            potentialDMAllocation.Structural = dryMatter.Structural;
+            potentialDMAllocation.Metabolic = dryMatter.Metabolic;
+            potentialDMAllocation.Storage = dryMatter.Storage;
         }
 
         /// <summary>Sets the dry matter allocation.</summary>

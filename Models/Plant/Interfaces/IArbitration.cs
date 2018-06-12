@@ -87,6 +87,10 @@ namespace Models.PMF.Interfaces
         /// <value>The metabolic.</value>
         public double Metabolic { get; set; }
 
+        /// <summary>Gets the total amount.</summary>
+        public double Total
+        { get { return Structural + Metabolic + Storage; } }
+
         internal void Clear()
         {
             Structural = 0;
@@ -112,6 +116,10 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the retranslocation.</summary>
         /// <value>The retranslocation.</value>
         public double Retranslocation { get; set; }
+
+        /// <summary>Gets the total supply.</summary>
+        public double Total
+        { get { return Fixation + Reallocation + Retranslocation + Uptake; } }
 
         internal void Clear()
         {
