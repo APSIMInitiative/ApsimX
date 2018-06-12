@@ -332,10 +332,10 @@ namespace Models.Core
         [XmlElement(typeof(Models.CLEM.Resources.WaterStore))]
         [XmlElement(typeof(Models.CLEM.Resources.WaterType))]
         [XmlElement(typeof(Models.CLEM.ZoneCLEM))]
-		[XmlElement(typeof(Models.Lifecycle.Lifecycle))]
-        [XmlElement(typeof(Models.Lifecycle.Lifestage))]
-        [XmlElement(typeof(Models.Lifecycle.LifestageProcess))]
-        [XmlElement(typeof(Models.Lifecycle.LifestageReproductionProcess))]
+		[XmlElement(typeof(Models.LifeCycle.LifeCycle))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStage))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStageProcess))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStageReproductionProcess))]
 		[XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
