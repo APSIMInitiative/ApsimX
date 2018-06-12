@@ -45,7 +45,7 @@ namespace Models
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
-                AutoDocumentation.ParseTextForTags(MemoText, this, tags, headingLevel, indent, true);
+                AutoDocumentation.ParseTextForTags(MemoText, this, tags, headingLevel, indent, true, true);
         }
 
     }
