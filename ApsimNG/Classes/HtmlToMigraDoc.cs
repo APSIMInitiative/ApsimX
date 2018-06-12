@@ -89,7 +89,8 @@
                 case "tr": return AddTableRow(node, section);
                 case "td": return AddTableColumn(node, section);
                 case "img": return AddImage(node, section, imagePath);
-                case "code": foundCode = true; return null;
+                case "pre": foundCode = true; return null;
+                case "code": if (!foundCode) { FormattedText txt = AddFormattedText(section); txt.FontName = "Courier New"; return txt; } else return null;
             }
 
             return null;
@@ -359,7 +360,7 @@
             }
 
             // remove line breaks
-            var innerText = text.Replace("\r", string.Empty).Replace("\n", string.Empty);
+            var innerText = text.Replace("\r", " ").Replace("\n", " ");
 
             if (string.IsNullOrWhiteSpace(innerText))
                 return parentObject;
@@ -536,15 +537,14 @@
             column.Width = Unit.FromMillimeter(180);
 
             Row row = table.AddRow();
-
-            string[] lines = text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
             foreach (string line in lines)
             {
-                int numSpaces = StringUtilities.IndexNotOfAny(line, " ".ToCharArray(), 0);
+                string spacedLine = line.Replace(' ', (char)0xa0); // Turn spaces into non-breaking spaces
+                
                 Paragraph p = row[0].AddParagraph();
-                p.AddSpace(numSpaces);
-                p.AddText(line);
+                p.AddText(WebUtility.HtmlDecode(spacedLine));
                 p.Style = "TableParagraph";
             }
         }
