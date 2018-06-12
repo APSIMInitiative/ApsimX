@@ -5168,7 +5168,6 @@ namespace Models
         private void OnStartOfDay(object sender, EventArgs e)
         {
             yesterdayNconc =  MathUtilities.Divide((double)zone.Get("WhiteClover.Leaf.N")+(double)zone.Get("WhiteClover.Petiole.N"), (double)zone.Get("WhiteClover.Leaf.Wt")+(double)zone.Get("WhiteClover.Petiole.Wt"), 0.0);
-            Clock.
         }
 
         [EventSubscribe("DoManagement")]
