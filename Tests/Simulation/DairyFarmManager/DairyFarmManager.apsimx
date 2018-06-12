@@ -671,54 +671,11 @@ namespace Models
                 }
             } */]]></MemoText>
     </Memo>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <ShowPageOfGraphs>true</ShowPageOfGraphs>
-  </Folder>
-  <Simulation>
-    <Name>OnBigPaddock</Name>
-    <Clock>
-      <Name>Clock</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <StartDate>2000-08-01T00:00:00</StartDate>
-      <EndDate>2001-07-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>SummaryFile</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Summary>
-    <SoilArbitrator>
-      <Name>SoilArbitrator</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </SoilArbitrator>
-    <Weather>
-      <Name>Weather</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
-      <ExcelWorkSheetName />
-    </Weather>
-    <Stock>
-      <Name>Stock</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <RandSeed>9999</RandSeed>
-      <GenoTypes />
-      <Sheep />
-      <Cattle />
-      <PaddockList>
-        <PaddockInit>
-          <Forages />
-          <Name />
-          <Area>1</Area>
-          <Slope>0</Slope>
-        </PaddockInit>
-      </PaddockList>
-      <EnterpriseList />
-      <GrazingPeriods />
-    </Stock>
     <Manager>
-      <Name>CreateStock</Name>
+      <Name>ManageStock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Script>
-        <StockingRate>0.5</StockingRate>
+        <StockingRate>2.5</StockingRate>
         <CurrentLocation>OneBigPaddock</CurrentLocation>
         <NumCows>3</NumCows>
         <FarmArea>0</FarmArea>
@@ -796,7 +753,7 @@ namespace Models
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (Cows.NumberAll > 0)
+           /*if (Cows.NumberAll > 0)
             {
                 Feed.Feed("Silage", 15.0 * Cows.NumberAll, CurrentLocation);
                 // remove some biomass
@@ -825,7 +782,7 @@ namespace Models
                         }
                     }
                 }
-            }
+            } */
         }
 
 
@@ -847,6 +804,227 @@ namespace Models
             purchase.YoungWt = 45;
 
             Cows.Buy(purchase);
+        }
+
+        public void GetFarmAreaAndOtherInfo()
+        {
+            NumPaddocks = 0;
+            FarmArea = 0.0;
+            CurrentLocationNum = 0;
+
+            foreach (Zone paddock in Paddocks)
+            {
+                NumPaddocks += 1;
+
+                PaddockInfo paddockInfo = new PaddockInfo();
+
+                paddockInfo.paddockName = paddock.Name;
+                paddockInfo.paddockNum = NumPaddocks - 1;
+                paddockInfo.paddockArea = paddock.Area;
+
+                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+                    paddockInfo.harvestableBiomass += plant.HarvestableWt;
+
+                listOfPaddockInfo.Add(paddockInfo);
+
+                FarmArea += paddock.Area;
+                if (paddock.Name == CurrentLocation)
+                    CurrentLocationNum = paddockInfo.paddockNum;
+
+                summary.WriteMessage(this, "     Paddock " + NumPaddocks + " is called " + paddock.Name + ", has an area of " + paddock.Area + " ha and an initial harvestable biomass of " + paddockInfo.harvestableBiomass + " kg DM / ha");
+
+            }
+
+        }
+
+        public void UpdatePaddockInfo()
+        {
+            int ii = -1;
+
+            foreach (Zone paddock in Paddocks)
+            {
+                ii += 1;
+                listOfPaddockInfo[ii].harvestableBiomass = 0.0;
+                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+                    listOfPaddockInfo[ii].harvestableBiomass += plant.HarvestableWt;
+
+            }
+
+        }
+
+
+    }
+}
+]]></Code>
+    </Manager>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
+  </Folder>
+  <Simulation>
+    <Name>OneBigPaddock</Name>
+    <Clock>
+      <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <StartDate>2000-08-01T00:00:00</StartDate>
+      <EndDate>2001-07-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>SummaryFile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Summary>
+    <SoilArbitrator>
+      <Name>SoilArbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </SoilArbitrator>
+    <Weather>
+      <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+      <ExcelWorkSheetName />
+    </Weather>
+    <Stock>
+      <Name>Stock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <RandSeed>9999</RandSeed>
+      <GenoTypes />
+      <Sheep />
+      <Cattle />
+      <PaddockList>
+        <PaddockInit>
+          <Forages />
+          <Name />
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </PaddockInit>
+      </PaddockList>
+      <EnterpriseList />
+      <GrazingPeriods />
+    </Stock>
+    <Manager>
+      <Name>ManageStock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Script>
+        <genotypeInput>Angus</genotypeInput>
+        <sexInput>Steers</sexInput>
+        <ageInput>36</ageInput>
+        <weightInput>500</weightInput>
+        <pregnantInput>0</pregnantInput>
+        <lactatingInput>0</lactatingInput>
+        <youngNumberInput>0</youngNumberInput>
+        <youngWtInput>0</youngWtInput>
+        <StockingRate>2.5</StockingRate>
+        <CurrentLocation>OneBigPaddock</CurrentLocation>
+        <NumStock>0</NumStock>
+        <FarmArea>0</FarmArea>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.Utilities;
+using Models.GrazPlan;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.PMF;
+using Models.Soils;
+using System.Collections;
+using System.Collections.Generic;
+using Models.AgPasture;
+using System.Diagnostics;
+
+namespace Models
+{
+
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Stock Stock;
+        [Link] Supplement Feed;
+        [Link] Zone[] Paddocks;
+        [Link] ISummary summary = null;
+
+        [Serializable]
+        public class PaddockInfo
+        {
+            public string paddockName;
+            public double harvestableBiomass;
+            public int paddockNum;
+            public double paddockArea;
+        }
+
+		//public enum Genotypes {string1, string2 }
+
+
+        [Separator("======= Stock type info, the same type of stock are bought at each purchase =======")]
+        [Description("Stock: genotype (e.g. Small Merino, Angus, Freisian):")] public string genotypeInput { get; set; }
+        [Description("Stock: sex (Cows, Heifers, Steers, Bulls, Ewes, Weathers, Rams, Cryptos):")] public string sexInput { get; set; }
+        [Description("Stock: age (months):")] public double ageInput { get; set; }
+        [Description("Stock: weight (kg liveweight /head):")] public double weightInput { get; set; }
+        [Description("Stock: fertility status (0 if non-pregnant or days since conception):")] public int pregnantInput { get; set; }
+        [Description("Stock: lactation status (0 if non-lactating or days since parturition):")] public int lactatingInput { get; set; }
+        [Description("Stock: number of unweaned young:")] public int youngNumberInput { get; set; }
+        [Description("Stock: weight of unweaned young:")] public double youngWtInput { get; set; }
+
+        [Separator("======= Farm type info =======")]
+        [Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
+        [Description("Initial location of the cows (paddock name): ")] public string CurrentLocation { get; set; }
+
+
+        public int NumStock { get; set; } // number of cows on the whole farm
+        public double FarmArea { get; set; }
+        //public double FarmArea { get; set; }
+
+        private int group_count; // how many groups are there in the simulation
+        private int g = 1;      // index to the groups of animals
+        private int CurrentLocationNum; 
+        private int NumPaddocks = 1;
+
+        public event BiomassRemovedDelegate BiomassRemoved;
+        List<PaddockInfo> listOfPaddockInfo = new List<PaddockInfo>();
+
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            summary.WriteMessage(this, "Initialising the paddock information");
+
+            GetFarmAreaAndOtherInfo();
+
+            NumStock = (int)(Math.Round(StockingRate * FarmArea, 0));
+
+            SetInitialCowStuff();
+
+            Stock.Move(g, CurrentLocation);
+
+            summary.WriteMessage(this, "     The number of animals has been rounded to " + NumStock + " from " + (StockingRate * FarmArea));
+            summary.WriteMessage(this, "     The animals will begin in " + CurrentLocation + " which is paddock number " + CurrentLocationNum + " in the simulation");
+            summary.WriteMessage(this, "     The area of the whole farm is " + FarmArea + " ha");
+
+        }
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+        }
+
+
+        public void SetInitialCowStuff()
+        {
+            g = Stock.NoGroups + 1;
+
+            StockBuy purchase = new StockBuy();
+            purchase.Genotype = genotypeInput;
+            purchase.Number = NumStock;
+            purchase.Sex = sexInput;
+            purchase.Age = ageInput;       // age in months
+            purchase.Weight = weightInput;  // live weight in kg
+            purchase.UseTag = g + 1;
+            purchase.MatedTo = genotypeInput;
+            purchase.Pregnant = pregnantInput;  // days pregnant, 0 = non pregnant, 1 = pregnant
+            purchase.Lactating = lactatingInput;  // 0 for dry, 1 for lactating
+            purchase.NumYoung = youngNumberInput;
+            purchase.YoungWt = youngWtInput;
+
+            Stock.Buy(purchase);
         }
 
         public void GetFarmAreaAndOtherInfo()
@@ -941,18 +1119,19 @@ namespace Models
       <PaddockList />
     </Supplement>
     <Report>
-      <Name>ReportRV</Name>
+      <Name>ReportTop</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[Stock].NumberAll as NumCows</string>
+        <string>[Stock].NumberAll as NumStock</string>
         <string>[Stock].IntakeAll.Weight as AveDMI</string>
         <string>[Stock].MEIntakeAll as AveMEIntake</string>
         <string>[Stock].WeightAll as AveBodyWeight</string>
         <string>[Stock].CondScoreAll as AveCS</string>
         <string>[Stock].MilkWtAll as AveMilkWeight</string>
+        <string>[Stock].Paddock as CurrentLocation</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -961,7 +1140,7 @@ namespace Models
     <Folder>
       <Name>Folder</Name>
       <Graph>
-        <Name>Live Cows</Name>
+        <Name>Number of Stock</Name>
         <Series>
           <Name>Series1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -977,11 +1156,11 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>Report1</TableName>
+          <TableName>ReportTop</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Stock.NumberAll</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>NumStock</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1022,11 +1201,11 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>Report1</TableName>
+          <TableName>ReportTop</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Stock.WeightAll</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>AveBodyWeight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1045,11 +1224,11 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>Report1</TableName>
+          <TableName>ReportTop</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Stock.MilkWtAll</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>AveMilkWeight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1097,11 +1276,11 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>Report1</TableName>
+          <TableName>ReportTop</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Stock.CondScoreAll</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>AveCS</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -1126,9 +1305,9 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Supplement Stores</Name>
+        <Name>Herbage</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Ryegrass</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
@@ -1142,11 +1321,34 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>Report1</TableName>
+          <TableName>ReportPaddock</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Supplement.stores2.Stored</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>Ryegrass.AboveGroundWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>WhiteClover</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportPaddock</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>WhiteClover.AboveGroundWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -3271,21 +3473,15 @@ namespace Models
       <Name>Ex_TargetRotationLength</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Script>
-        <DoVerbose>False</DoVerbose>
+        <DoVerbose>True</DoVerbose>
         <StockingRate>3</StockingRate>
         <CurrentLocationName>Paddock01</CurrentLocationName>
-        <Seperator1>
-        </Seperator1>
         <TargetRotationLength>4</TargetRotationLength>
         <PostGrazingResidual>1500</PostGrazingResidual>
         <HarvestExcessHerbage>False</HarvestExcessHerbage>
-        <Seperator2>
-        </Seperator2>
         <SilageEveryDay>0.25</SilageEveryDay>
         <SilageOnPastureMass>5</SilageOnPastureMass>
-        <TriggerPastureMass>1500</TriggerPastureMass>
-        <Seperator3>
-        </Seperator3>
+        <TriggerPastureMass>1800</TriggerPastureMass>
         <NumCows>3</NumCows>
         <pastLocationName>
         </pastLocationName>
@@ -3335,28 +3531,23 @@ namespace Models
         }
 
         [Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
-        [Separator("some text")]         //[Description("===============================")] public string Seperator0 { get; set; }
 
+        [Separator("======= Whole farm info =======")]
         [Description("Whole-farm stocking rate (head/ha): ")]
         public double StockingRate { get; set; }
         [Description("Initial location of the cows (paddock name): ")] public string CurrentLocationName { get; set; }
-        [Description("===============================")] public string Seperator1 { get; set; }
 
+        [Separator("======= Rotation and topping =======")]
         [Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
         [Description("Post grazing residual (kgDM/ha): ")] public double PostGrazingResidual { get; set; }
         [Description("Harvest excess herbage above residual when cows leave the paddock?: ")] public bool HarvestExcessHerbage { get; set; }
-        [Description("===============================")] public string Seperator2 { get; set; }
 
+        [Separator("======= Feeding of silage  =======")]
         [Description("Baseline feeding of silage (kgDM/head/day): ")] public double SilageEveryDay { get; set; }
         [Description("Low pasture mass feeding of silage (kgDM/head/day): ")] public double SilageOnPastureMass { get; set; }
         [Description("Trigger pasture mass for above rule (kgDM/ha): ")] public double TriggerPastureMass { get; set; }
 
-
-
-
-
-
-        [Description("===============================")] public string Seperator3 { get; set; }
+        [Separator("======= Stock variables in here eventually =======")]
 
 
         public int NumCows { get; set; } // number of cows on the whole farm
