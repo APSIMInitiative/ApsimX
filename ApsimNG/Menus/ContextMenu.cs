@@ -625,5 +625,26 @@ namespace UserInterface.Presenters
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.CheckpointsPresenter");
         }
+
+
+        /// <summary>
+        /// Event handler for 'Enabled' menu item.
+        /// </summary>
+        [ContextMenu(MenuName = "Enabled", IsToggle = true)]
+        public void Enabled(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            model.Enabled = !model.Enabled;
+            explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Enabled' menu item.
+        /// </summary>
+        public bool EnabledChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return model.Enabled;
+        }
     }
 }
