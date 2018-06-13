@@ -8024,6 +8024,266 @@ namespace Models
       <Name>Soil Arbitrator</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </SoilArbitrator>
+    <Supplement>
+      <Name>Supplement</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <SpoilageTime>0</SpoilageTime>
+      <stores>
+        <StoreType>
+          <IsRoughage>true</IsRoughage>
+          <DMContent>0.85</DMContent>
+          <DMD>0</DMD>
+          <MEContent>0</MEContent>
+          <CPConc>0</CPConc>
+          <ProtDg>0</ProtDg>
+          <PConc>0</PConc>
+          <SConc>0</SConc>
+          <EEConc>0</EEConc>
+          <ADIP2CP>0</ADIP2CP>
+          <AshAlk>0</AshAlk>
+          <MaxPassage>0</MaxPassage>
+          <Name>fodder</Name>
+          <Stored>0</Stored>
+        </StoreType>
+        <StoreType>
+          <IsRoughage>true</IsRoughage>
+          <DMContent>0.25</DMContent>
+          <DMD>0.75</DMD>
+          <MEContent>12</MEContent>
+          <CPConc>0.18</CPConc>
+          <ProtDg>0.8</ProtDg>
+          <PConc>0.0032</PConc>
+          <SConc>0.0024</SConc>
+          <EEConc>0.02</EEConc>
+          <ADIP2CP>0.06</ADIP2CP>
+          <AshAlk>0.6</AshAlk>
+          <MaxPassage>0</MaxPassage>
+          <Name>silage</Name>
+          <Stored>2000</Stored>
+        </StoreType>
+      </stores>
+      <PaddockList />
+    </Supplement>
+    <Stock>
+      <Name>Stock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <RandSeed>9999</RandSeed>
+      <GenoTypes />
+      <Sheep />
+      <Cattle />
+      <PaddockList>
+        <PaddockInit>
+          <Forages />
+          <Name />
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </PaddockInit>
+      </PaddockList>
+      <EnterpriseList />
+      <GrazingPeriods />
+    </Stock>
+    <Manager>
+      <Name>GrazeForageCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Script>
+        <genotypeInput>Angus</genotypeInput>
+        <sexInput>Steers</sexInput>
+        <ageInput>36</ageInput>
+        <weightInput>500</weightInput>
+        <pregnantInput>0</pregnantInput>
+        <lactatingInput>0</lactatingInput>
+        <youngNumberInput>0</youngNumberInput>
+        <youngWtInput>0</youngWtInput>
+        <StockingRate>50</StockingRate>
+        <CurrentLocation>Away</CurrentLocation>
+        <NumStock>0</NumStock>
+        <FarmArea>0</FarmArea>
+        <CurrentLocationNum>0</CurrentLocationNum>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.Utilities;
+using Models.GrazPlan;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.PMF;
+using Models.Soils;
+using System.Collections;
+using System.Collections.Generic;
+using Models.AgPasture;
+using System.Diagnostics;
+
+namespace Models
+{
+
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Stock Stock;
+        [Link] Supplement Feed;
+        [Link] Zone[] Paddocks;
+        [Link] ISummary summary = null;
+
+        [Serializable]
+        public class PaddockInfo
+        {
+            public string paddockName;
+            public double harvestableBiomass;
+            public int paddockNum;
+            public double paddockArea;
+        }
+
+		//public enum Genotypes {string1, string2 }
+
+
+        [Separator("======= Stock type info, the same type of stock are brought onto the paddock at each grazing =======")]
+        [Description("Stock: genotype (e.g. Small Merino, Angus, Freisian):")] public string genotypeInput { get; set; }
+        [Description("Stock: sex (Cows, Heifers, Steers, Bulls, Ewes, Weathers, Rams, Cryptos):")] public string sexInput { get; set; }
+        [Description("Stock: age (months):")] public double ageInput { get; set; }
+        [Description("Stock: weight (kg liveweight /head):")] public double weightInput { get; set; }
+        [Description("Stock: fertility status (0 if non-pregnant or days since conception):")] public int pregnantInput { get; set; }
+        [Description("Stock: lactation status (0 if non-lactating or days since parturition):")] public int lactatingInput { get; set; }
+        [Description("Stock: number of unweaned young:")] public int youngNumberInput { get; set; }
+        [Description("Stock: weight of unweaned young:")] public double youngWtInput { get; set; }
+
+        [Separator("======= Farm type info =======")]
+        [Description("Whole-farm stocking rate (head/ha): ")] public double StockingRate { get; set; }
+        [Description("Initial location of the cows (give either the paddock name or 'away'): ")] public string CurrentLocation { get; set; }
+
+
+        public int NumStock { get; set; } // number of cows on the whole farm
+        public double FarmArea { get; set; }
+        //public double FarmArea { get; set; }
+
+        private int group_count; // how many groups are there in the simulation
+        private int g = 1;      // index to the groups of animals
+        public int CurrentLocationNum { get; set; }  
+        private int NumPaddocks = 1;
+
+        public event BiomassRemovedDelegate BiomassRemoved;
+        List<PaddockInfo> listOfPaddockInfo = new List<PaddockInfo>();
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            summary.WriteMessage(this, "Initialising the paddock information");
+
+            GetFarmAreaAndOtherInfo();
+
+            NumStock = (int)(Math.Round(StockingRate * FarmArea, 0));
+
+
+            if (CurrentLocation.ToLower() != "away")
+            {
+	            BuyStock();
+            	Stock.Move(g, CurrentLocation);
+            	summary.WriteMessage(this, " The Stock have been moved");
+            }
+
+            summary.WriteMessage(this, "     The number of animals has been rounded to " + NumStock + " from " + (StockingRate * FarmArea));
+            summary.WriteMessage(this, "     The animals will begin in " + CurrentLocation + " which is paddock number " + CurrentLocationNum + " in the simulation");
+            summary.WriteMessage(this, "     The area of the whole farm is " + FarmArea + " ha");
+
+        }
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+        }
+
+
+        public void BuyStock()
+        {
+            g = Stock.NoGroups + 1;
+
+            StockBuy purchase = new StockBuy();
+            purchase.Genotype = genotypeInput;
+            purchase.Number = NumStock;
+            purchase.Sex = sexInput;
+            purchase.Age = ageInput;       // age in months
+            purchase.Weight = weightInput;  // live weight in kg
+            purchase.UseTag = g + 1;
+            purchase.MatedTo = genotypeInput;
+            purchase.Pregnant = pregnantInput;  // days pregnant, 0 = non pregnant, 1 = pregnant
+            purchase.Lactating = lactatingInput;  // 0 for dry, 1 for lactating
+            purchase.NumYoung = youngNumberInput;
+            purchase.YoungWt = youngWtInput;
+
+            Stock.Buy(purchase);
+        }
+
+        public void GetFarmAreaAndOtherInfo()
+        {
+            NumPaddocks = 0;
+            FarmArea = 0.0;
+            CurrentLocationNum = -1;
+
+            foreach (Zone paddock in Paddocks)
+            {
+                NumPaddocks += 1;
+
+                PaddockInfo paddockInfo = new PaddockInfo();
+
+                paddockInfo.paddockName = paddock.Name;
+                paddockInfo.paddockNum = NumPaddocks - 1;
+                paddockInfo.paddockArea = paddock.Area;
+
+                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+                    paddockInfo.harvestableBiomass += plant.HarvestableWt;
+
+                listOfPaddockInfo.Add(paddockInfo);
+
+                FarmArea += paddock.Area;
+                if (paddock.Name == CurrentLocation)
+                    CurrentLocationNum = paddockInfo.paddockNum;
+
+                summary.WriteMessage(this, "     Paddock " + NumPaddocks + " is called " + paddock.Name + ", has an area of " + paddock.Area + " ha and an initial harvestable biomass of " + paddockInfo.harvestableBiomass + " kg DM / ha");
+
+            }
+
+        }
+
+        public void UpdatePaddockInfo()
+        {
+            int ii = -1;
+
+            foreach (Zone paddock in Paddocks)
+            {
+                ii += 1;
+                listOfPaddockInfo[ii].harvestableBiomass = 0.0;
+                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
+                    listOfPaddockInfo[ii].harvestableBiomass += plant.HarvestableWt;
+
+            }
+
+        }
+
+
+    }
+}
+]]></Code>
+    </Manager>
+    <Report>
+      <Name>ReportTop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Stock].NumberAll as NumStock</string>
+        <string>[Stock].IntakeAll.Weight as AveDMI</string>
+        <string>[Stock].MEIntakeAll as AveMEIntake</string>
+        <string>[Stock].WeightAll as AveBodyWeight</string>
+        <string>[Stock].CondScoreAll as AveCS</string>
+        <string>[Stock].MilkWtAll as AveMilkWeight</string>
+        <string>[Stock].Paddock as CurrentLocation</string>
+        <string>[GrazeForageCrop].Script.CurrentLocationNum</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].EndOfDay</string>
+      </EventNames>
+    </Report>
     <Zone>
       <Name>Field</Name>
       <Folder>
@@ -8035,8 +8295,9 @@ namespace Models
             <StartDate>1-oct</StartDate>
             <EndDate>30-oct</EndDate>
             <MinESW>50</MinESW>
-            <MinRain>10</MinRain>
-            <RainDays>7</RainDays>
+            <MinRain>30</MinRain>
+            <RainDays>5</RainDays>
+            <mustSow>yes</mustSow>
             <CultivarName>Tonic</CultivarName>
             <SowingDepth>10</SowingDepth>
             <RowSpacing>150</RowSpacing>
@@ -8063,11 +8324,12 @@ namespace Models
         Accumulator accumulatedRain;
 
         [Separator("======= Sowing conditions =======")]
-        [Description("Start of sowing window (d-mmm)")] public string StartDate { get; set;}
-        [Description("End of sowing window (d-mmm)")] public string EndDate { get; set;}
+        [Description("Start of sowing window (dd-mmm)")] public string StartDate { get; set;}
+        [Description("End of sowing window (dd-mmm)")] public string EndDate { get; set;}
         [Description("Minimum extractable soil water for sowing (mm)")] public double MinESW { get; set;}
         [Description("Accumulated rainfall required for sowing (mm)")] public double MinRain { get; set;}
         [Description("Duration of rainfall accumulation (d)")] public int RainDays { get; set;}
+        [Description("Must sow at the end of the window?")] public answerType mustSow { get; set; }
 
         [Separator("======= Sowing data =======")]
         [Description("Cultivar to be sown")] public string CultivarName { get; set;}
@@ -8078,7 +8340,14 @@ namespace Models
         [Separator("======= Sowing fertiliser =======")]
         [Description("Amount of fertiliser to be applied (kg/ha)")] public double Amount { get; set;}
 
-        
+           public enum answerType
+        {
+            /// <summary>a positive answer</summary>
+            yes,
+            /// <summary>a negative answer</summary>
+            no
+        }
+
         
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -8091,9 +8360,17 @@ namespace Models
         private void OnDoManagement(object sender, EventArgs e)
         {
             accumulatedRain.Update();
+            //if (allowIrrigation == answerType.yes)
+
+            bool doSowing = false;
+            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) && !Plantain.IsAlive)
+            	doSowing = true;
+            if ((MathUtilities.Sum(Soil.SoilWater.ESW) < MinESW) || (accumulatedRain.Sum < MinRain))
+            	doSowing = false;
+            if ((mustSow == answerType.yes) && (DateUtilities.DatesEqual(EndDate, Clock.Today)))
+            	doSowing = true;
             
-            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) && !Plantain.IsAlive &&
-                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW && accumulatedRain.Sum > MinRain)
+            if (doSowing)
             {
                Plantain.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);
                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);    
@@ -8342,7 +8619,8 @@ namespace Models
           <Name>Defoliate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <Crop>.Simulations.PlantainGrazing.Field.Plantain</Crop>
+            <Crop>
+            </Crop>
             <cutPasture_StartDate>2011-01-01</cutPasture_StartDate>
             <cutPasture_EndDate>2100-12-31</cutPasture_EndDate>
             <defoliateType>Graze</defoliateType>
