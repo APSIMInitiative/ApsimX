@@ -1,6 +1,7 @@
 gtk-icon-sizes = "gtk-menu=13,13:gtk-small-toolbar=16,16:gtk-large-toolbar=24,24:gtk-dnd=32,32"
 gtk-toolbar-icon-size = small-toolbar
 
+
 # disable images in buttons. i've only seen ugly delphi apps use this feature.
 gtk-button-images = 0
 
@@ -16,10 +17,8 @@ gtk-alternative-sort-arrows = 1
 
 # Windows users don't expect the PC Speaker beeping at them when they backspace in an empty textview and stuff like that
 gtk-error-bell = 0
-
 style "msw-default"
 {
-  font_name="Segoe UI 10.5"
   GtkWidget::interior-focus = 1
   GtkOptionMenu::indicator-size = { 9, 5 }
   GtkOptionMenu::indicator-spacing = { 7, 5, 2, 2 }
@@ -47,7 +46,8 @@ style "msw-default"
   {
   }
 }
-class "*" style "msw-default"
+
+widget_class "*.<GtkWidget>.*" style "msw-default"
 
 binding "ms-windows-tree-view"
 {
@@ -65,11 +65,3 @@ style "msw-combobox-thickness" = "msw-default"
 
 widget_class "*TreeView*ComboBox*" style "msw-combobox-thickness"
 widget_class "*ComboBox*GtkFrame*" style "msw-combobox-thickness"
-
-
-
-style "RightHandView"
-{
-      bg[NORMAL] = {255.0, 255.0, 255.0}
-}
-widget "*RightHandView" style "RightHandView"
