@@ -24,6 +24,9 @@ namespace Models.Core
         /// <summary>Gets a list of cultivar names</summary>
         string[] CultivarNames { get; }
 
+        /// <summary>Get above ground biomass</summary>
+        PMF.Biomass AboveGround { get; }
+
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>

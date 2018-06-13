@@ -119,6 +119,8 @@ namespace Models.PMF
         [Units("kg/ha")]
         public double NDemand { get; set; }
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The plant_status</summary>
         [XmlIgnore]

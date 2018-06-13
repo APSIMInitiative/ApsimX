@@ -131,6 +131,8 @@ namespace Models.PMF.OilPalm
         [Link]
         private SoluteManager solutes = null;
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The soil crop</summary>
         private SoilCropOilPalm soilCrop;
