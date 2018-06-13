@@ -1003,6 +1003,8 @@ namespace UserInterface.Presenters
                 }
             }
             description.IncludeInDocumentation = model.IncludeInDocumentation;
+            System.Drawing.Color colour = model.IncludeInDocumentation ? System.Drawing.Color.Black : System.Drawing.Color.Red;
+            description.Colour = colour;
             return description;
         }
 

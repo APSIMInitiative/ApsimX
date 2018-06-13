@@ -25,6 +25,8 @@ namespace UserInterface.Interfaces
         public List<NodeDescriptionArgs> Children = new List<NodeDescriptionArgs>();
         /// <summary>Whether this node will be included in auto-docs.</summary>
         public bool IncludeInDocumentation { get; set; }
+        /// <summary>The text colour of this node.</summary>
+        public System.Drawing.Color Colour { get; set; }
     }
 
     /// <summary>A class for holding info about a collection of menu items.</summary>
