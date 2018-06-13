@@ -896,13 +896,9 @@ namespace Models.GrazPlan
     [Serializable]
     public class ForageProvider
     {
-        bool FUseCohorts;                       // uses new cohorts array type
         private ForageList FForages;
         private string FForageHostName;         // host crop, pasture component name
-        private int FHostID;                    // plant/pasture comp
         private string FPaddockOwnerName;       // owning paddock FQN
-        private int FSetterID;                  // setting property ID (or published event ID)
-        private int FDriverID;                  // driving property ID
         private PaddockInfo FOwningPaddock;     // ptr to the paddock object in the model
 
         /// <summary>
@@ -912,7 +908,6 @@ namespace Models.GrazPlan
         {
             FForages = new ForageList(true);
             OwningPaddock = null;
-            FUseCohorts = false;
         }
 
         /// <summary>
@@ -921,9 +916,11 @@ namespace Models.GrazPlan
         public double PastureGreenDM { get; set; }
 
         /// <summary>
-        /// Use forage cohorts
+        /// The mass units used by this forage provider simulation component (plant/pasture) 
+        /// "kg", "g/m^2", "kg/ha"
         /// </summary>
-        public bool UseCohorts { get { return FUseCohorts; } set { FUseCohorts = value; } }
+        public GrazType.MassUnits ForageMassUnits { get; set; }
+
         /// <summary>
         /// The owning paddock
         /// </summary>
@@ -936,18 +933,6 @@ namespace Models.GrazPlan
         /// Forage host name
         /// </summary>
         public string ForageHostName { get { return FForageHostName; } set { FForageHostName = value; } }
-        /// <summary>
-        /// Component id of the host
-        /// </summary>
-        public int HostID { get { return FHostID; } set { FHostID = value; } }
-        /// <summary>
-        /// Driver id
-        /// </summary>
-        public int DriverID { get { return FDriverID; } set { FDriverID = value; } }
-        /// <summary>
-        /// Setter id
-        /// </summary>
-        public int SetterID { get { return FSetterID; } set { FSetterID = value; } }
         /// <summary>
         /// The crop, pasture component
         /// </summary>
@@ -971,13 +956,13 @@ namespace Models.GrazPlan
             }
             
             // TODO: just assuming one forage cohort in this component (expand here?)
-            passGrazingInputs(forage, Crop2GrazingInputs(forageObj), "g/m^2"); //then update it's value
+            passGrazingInputs(forage, Crop2GrazingInputs(forageObj), ForageMassUnits); //then update it's value
         }
 
         /// <summary>
         /// The forage name is the name of the cohort.
         /// </summary>
-        /// <param name="forageName"></param>
+        /// <param name="forageName">Name of the forage</param>
         /// <returns></returns>
         public ForageInfo ForageByName(string forageName)
         {
@@ -985,7 +970,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Find the forage by index
         /// </summary>
         /// <param name="idx">idx = 0..n</param>
         /// <returns></returns>
@@ -999,19 +984,20 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="forage"></param>
         /// <param name="Grazing"></param>
-        /// <param name="sUnit"></param>
+        /// <param name="units"></param>
         public void passGrazingInputs(ForageInfo forage,
                                       GrazType.TGrazingInputs Grazing,
-                                      string sUnit)
+                                      GrazType.MassUnits units)
         {
             double fScale;
 
-            if (sUnit == "kg/ha")                                                     // Convert to kg/ha                      
+            // Convert the input to kg/ha
+            if (units == GrazType.MassUnits.kg_ha)                                                        
                 fScale = 1.0;
-            else if (sUnit == "g/m^2")
+            else if (units == GrazType.MassUnits.g_m2)
                 fScale = 10.0;
             else
-                throw new Exception("Stock: Unit (" + sUnit + ") not recognised");
+                throw new Exception("Stock: Units for passGrazingInputs() not recognised");
 
             if (forage != null)
                 forage.setAvailForage(GrazType.scaleGrazingInputs(Grazing, fScale));
@@ -1053,7 +1039,7 @@ namespace Models.GrazPlan
                 {
                     if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
                     {
-                        result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
+                        result.TotalGreen += (greenPropn * biomass.Live.Wt);   
                         result.TotalDead += biomass.Dead.Wt;
 
                         dmd = ((biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
@@ -1105,42 +1091,52 @@ namespace Models.GrazPlan
             string chemType = string.Empty;
             int forageIdx = 0;
 
+            // Convert the biomass in the plant/pasture component to kg/ha
+            double scale = 1.0;
+            if (ForageMassUnits == GrazType.MassUnits.g_m2)
+                scale = 10.0;
+
             ForageInfo forage = this.ForageByIndex(forageIdx);
             while (forage != null)
             {
                 double area = forage.InPaddock.fArea;
                 GrazType.TGrazingOutputs removed = forage.RemovalKG;
 
-                // total the amount removed kg/ha
-                double totalRemoved = 0.0;
+                // total herbage on the plant/pasture (in the native units)
+                double totalDM = 0;
+                foreach (IRemovableBiomass biomass in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                {
+                    if (biomass.IsAboveGround && (biomass.Live.Wt + biomass.Dead.Wt) > 0)
+                    {
+                        totalDM += biomass.Live.Wt + biomass.Dead.Wt;
+                    }
+                }
+
+                // calculate the proportion of total DM removed
+                double totalRemoved = 0.0;                                                              // total the amount removed kg
                 for (int i = 0; i < removed.Herbage.Length; i++)
                     totalRemoved += removed.Herbage[i];
-                double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead));
+                double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (totalDM * scale));
 
-                // calculations of proportions each organ of the total plant removed (in the native units)
-                double totalDM = 0;
-                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                foreach (IRemovableBiomass biomass in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
                 {
-                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    if (biomass.IsAboveGround && (biomass.Live.Wt + biomass.Dead.Wt) > 0)
                     {
-                        totalDM += organ.Live.Wt + organ.Dead.Wt;
+                        double propnOfPlantDM = (biomass.Live.Wt + biomass.Dead.Wt) / totalDM;          // this biomass fraction of the total DM
+                        double prpnToRemove = propnRemoved * propnOfPlantDM;                            // proportion of this biomass to remove
+                        if (prpnToRemove <= 1.0)
+                        {
+                            PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
+                            removal.FractionDeadToRemove = prpnToRemove;
+                            removal.FractionLiveToRemove = prpnToRemove;
+                            biomass.RemoveBiomass("Graze", removal);
+                            ((IPlant)this.ForageObj).BiomassRemovalComplete(prpnToRemove);
+                        }
+                        else
+                            throw new Exception("Attempting to eat " + (prpnToRemove * 100.0).ToString() + "% of plant matter in RemoveHerbageFromPlant()");
                     }
                 }
 
-                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
-                {
-                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
-                    {
-                        double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
-                        double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
-                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = prpnToRemove;
-                        removal.FractionLiveToRemove = prpnToRemove;
-                        organ.RemoveBiomass("Graze", removal);
-                        ((IPlant)this.ForageObj).BiomassRemovalComplete(prpnToRemove);
-                    }
-                }
-                
                 forageIdx++;
                 forage = this.ForageByIndex(forageIdx);
             }
@@ -1250,25 +1246,19 @@ namespace Models.GrazPlan
         /// <param name="paddock"></param>
         /// <param name="paddName"></param>
         /// <param name="forageName"></param>
-        /// <param name="hostID"></param>
-        /// <param name="driverID"></param>
         /// <param name="forageObj"></param>
-        /// <param name="usePlantCohorts"></param>
-        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, Object forageObj, bool usePlantCohorts)
+        /// <param name="units">The units used by the biomass classes in this forage provider component</param>
+        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, Object forageObj, GrazType.MassUnits units)
         {
             ForageProvider forageProvider;
 
-            //this is a forage provider
-            // this provider can host a number of forages/species
+            // a forage provider that can host a number of forages/species
             forageProvider = new ForageProvider();
-            forageProvider.PaddockOwnerName = paddName;    // owning paddock
-            forageProvider.ForageHostName = forageName;    // host pasture/plant component name
-            forageProvider.HostID = hostID;                // plant/pasture comp
-            forageProvider.DriverID = driverID;            // driving property ID
-            forageProvider.ForageObj = forageObj;          // setting property ID
-            // keep a ptr to the paddock owned by the model so the forages can be assigned there as they become available
-            forageProvider.OwningPaddock = paddock;
-            forageProvider.UseCohorts = usePlantCohorts;   // use cohorts array type
+            forageProvider.PaddockOwnerName = paddName;     // owning paddock
+            forageProvider.ForageHostName = forageName;     // host pasture/plant component name
+            forageProvider.ForageObj = forageObj;           // ref to the plant/pasture component in the simulation
+            forageProvider.OwningPaddock = paddock;         // keep a ref to the paddock owned by the model so the forages can be assigned there as they become available
+            forageProvider.ForageMassUnits = units;         
 
             FForageProviderList.Add(forageProvider);
         }
@@ -1289,51 +1279,6 @@ namespace Models.GrazPlan
             {
                 //if the name matches
                 if (FForageProviderList[i].ForageHostName == providerName)
-                    provider = FForageProviderList[i];
-                i++;
-            }
-            return provider;
-        }
-
-        /// <summary>
-        /// Find the forage provider for this component ID. Ensure this is the correct driver also.
-        /// </summary>
-        /// <param name="hostID"></param>
-        /// <param name="driverID"></param>
-        /// <returns></returns>
-        public ForageProvider FindProvider(int hostID, int driverID)
-        {
-            ForageProvider provider;
-            int i;
-
-            provider = null;
-            i = 0;
-            while ((provider == null) || (i <= FForageProviderList.Count - 1))
-            {
-                // if the host and driver match
-                if ((FForageProviderList[i].DriverID == driverID) && (FForageProviderList[i].HostID == hostID))
-                    provider = FForageProviderList[i];
-                i++;
-            }
-            return provider;
-        }
-
-        /// <summary>
-        /// Find the forage provider for this component ID.
-        /// </summary>
-        /// <param name="hostID"></param>
-        /// <returns></returns>
-        public ForageProvider FindProvider(int hostID)
-        {
-            ForageProvider provider;
-            int i;
-
-            provider = null;
-            i = 0;
-            while ((provider == null) && (i <= FForageProviderList.Count - 1))
-            {
-                // if the host matches
-                if (FForageProviderList[i].HostID == hostID)
                     provider = FForageProviderList[i];
                 i++;
             }
