@@ -281,8 +281,8 @@ namespace UserInterface.EventArguments
         /// <param name="objectName">Name of the object or model for which we want completion options.</param>
         /// <returns></returns>
         private static object GetNodeFromPath(Model relativeTo, string objectName)
-        {
-            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
+        {       
+            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9\s_]*)\]";
             var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
             if (matches.Count <= 0)
                 return null;
