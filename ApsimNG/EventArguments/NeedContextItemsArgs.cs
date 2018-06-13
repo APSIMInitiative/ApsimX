@@ -281,8 +281,8 @@ namespace UserInterface.EventArguments
         /// <param name="objectName">Name of the object or model for which we want completion options.</param>
         /// <returns></returns>
         private static object GetNodeFromPath(Model relativeTo, string objectName)
-        {
-            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
+        {       
+            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9\s_]*)\]";
             var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
             if (matches.Count <= 0)
                 return null;
@@ -375,9 +375,10 @@ namespace UserInterface.EventArguments
                         if (Int32.TryParse(textBetweenBrackets, out index))
                         {
                             IList nodeList = node as IList;
-                            if (index >= nodeList.Count)
-                                throw new Exception("Unable to access element " + index + " of list " + childName + ": " + childName + " only has " + nodeList.Count + " items.");
-                            node = nodeList[index];
+                            if (index > nodeList.Count || index <= 0)
+                                node = node.GetType().GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEnumerable<>)).Select(x => x.GetGenericArguments()[0]).FirstOrDefault();
+                            else
+                                node = nodeList[index - 1];
                         }
                         else
                             throw new Exception("Unable to access element \"" + textBetweenBrackets + "\" of list \"" + namePathBits[i] + "\"");
