@@ -62,10 +62,29 @@ namespace Models.GrazPlan
         /// </summary>
         public const double Ungrazeable = 40.0;  // g/m^2 
 
-    /// <summary>
-    /// Maximum soil layers
-    /// </summary>
-    public const int MaxSoilLayers = 50;
+        /// <summary>
+        /// Mass units used by forage sources
+        /// </summary>
+        public enum MassUnits
+        {
+            /// <summary>
+            /// Kilograms
+            /// </summary>
+            kg,
+            /// <summary>
+            /// Grams per square metre
+            /// </summary>
+            g_m2,
+            /// <summary>
+            /// Kilograms per hectare
+            /// </summary>
+            kg_ha
+        };
+
+        /// <summary>
+        /// Maximum soil layers
+        /// </summary>
+        public const int MaxSoilLayers = 50;
 #pragma warning disable 1591 //missing xml comment
         public const int stSEEDL = 1; public const int ptLEAF = 1; public const int SOFT = 1; public const int EFFR = 1;
         public const int stESTAB = 2; public const int ptSTEM = 2; public const int HARD = 2; public const int OLDR = 2;

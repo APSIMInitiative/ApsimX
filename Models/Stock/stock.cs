@@ -440,7 +440,7 @@ namespace Models.GrazPlan
 
                 // using the component ID
                 // return the mass per area for all forages
-                forageProvider = this.stockModel.ForagesAll.FindProvider(0);
+                forageProvider = this.stockModel.ForagesAll.ForageProvider(0);
                 return this.stockModel.ReturnMassPerArea(0, forageProvider, "kg/ha"); // by paddock or from forage ref
             }
         }
@@ -4104,7 +4104,7 @@ namespace Models.GrazPlan
                     // find all the child crop, pasture components that have removable biomass
                     foreach (Model crop in Apsim.FindAll(zone, typeof(IPlant)))
                     {
-                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop, true);
+                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, crop, GrazType.MassUnits.g_m2);
                     }
 
                     // locate surfaceOM and soil nutrient model
