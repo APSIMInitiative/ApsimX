@@ -17,7 +17,7 @@ namespace Models.Core
     /// If no matching model is found (and IsOptional is not specified or is false), then an 
     /// exception will be thrown. 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class LinkAttribute : XmlIgnoreAttribute
     {
         /// <summary>Stores the value of IsOptional if specified.</summary>
@@ -27,18 +27,18 @@ namespace Models.Core
         public bool IsOptional { get { return this.isOptional; } set { this.isOptional = value; } }
 
         /// <summary>Is this link a scoped link</summary>
-        public virtual bool IsScoped(FieldInfo field)
+        public virtual bool IsScoped(IVariable field)
         {
-            if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
-                typeof(Biomass).IsAssignableFrom(field.FieldType) ||
-                field.FieldType.Name == "Object")
+            if (typeof(IFunction).IsAssignableFrom(field.DataType) ||
+                typeof(Biomass).IsAssignableFrom(field.DataType) ||
+                field.DataType.Name == "Object")
                 return false;
             else
                 return true;
         }
 
         /// <summary>Should the fields name be used when matching?</summary>
-        public virtual bool UseNameToMatch(FieldInfo field)
+        public virtual bool UseNameToMatch(IVariable field)
         {
             if (IsScoped(field))
                 return false;
@@ -69,10 +69,10 @@ namespace Models.Core
     public class ScopedLinkByNameAttribute : LinkAttribute
     {
         /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return true; }
+        public override bool IsScoped(IVariable fieldInfo) { return true; }
 
         /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return true; }
+        public override bool UseNameToMatch(IVariable field) { return true; }
     }
 
     /// <summary>
@@ -85,10 +85,10 @@ namespace Models.Core
     public class ScopedLinkAttribute : LinkAttribute
     {
         /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return true; }
+        public override bool IsScoped(IVariable fieldInfo) { return true; }
 
         /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return false; }
+        public override bool UseNameToMatch(IVariable field) { return false; }
     }
 
     /// <summary>
@@ -101,10 +101,10 @@ namespace Models.Core
     public class ChildLinkAttribute : LinkAttribute
     {
         /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return false; }
+        public override bool IsScoped(IVariable fieldInfo) { return false; }
 
         /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return false; }
+        public override bool UseNameToMatch(IVariable field) { return false; }
     }
 
     /// <summary>
@@ -117,10 +117,10 @@ namespace Models.Core
     public class ChildLinkByNameAttribute : LinkAttribute
     {
         /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return false; }
+        public override bool IsScoped(IVariable fieldInfo) { return false; }
 
         /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return true; }
+        public override bool UseNameToMatch(IVariable field) { return true; }
     }
 
     /// <summary>
@@ -133,9 +133,9 @@ namespace Models.Core
     public class ParentLinkAttribute : LinkAttribute
     {
         /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return false; }
+        public override bool IsScoped(IVariable fieldInfo) { return false; }
 
         /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return false; }
+        public override bool UseNameToMatch(IVariable field) { return false; }
     }
 }
