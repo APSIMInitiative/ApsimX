@@ -131,6 +131,8 @@ namespace Models.PMF.OilPalm
         [Link]
         private SoluteManager solutes = null;
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The soil crop</summary>
         private SoilCropOilPalm soilCrop;
@@ -1775,6 +1777,15 @@ namespace Models.PMF.OilPalm
             double HS = Math.Acos(-Math.Tan(LATr) * Math.Tan(DECr));
 
             return 86400.0 * 1360.0 * (HS * Math.Sin(LATr) * Math.Sin(DECr) + Math.Cos(LATr) * Math.Cos(DECr) * Math.Sin(HS)) / 3.14159265 / 1000000.0;
+        }
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+
         }
     }
 }

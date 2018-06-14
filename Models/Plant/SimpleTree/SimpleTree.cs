@@ -119,6 +119,8 @@ namespace Models.PMF
         [Units("kg/ha")]
         public double NDemand { get; set; }
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The plant_status</summary>
         [XmlIgnore]
@@ -283,6 +285,16 @@ namespace Models.PMF
         {
 
         }
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+
+        }
+
         /// <summary>Roots the proportion.</summary>
         /// <param name="layer">The layer.</param>
         /// <param name="root_depth">The root_depth.</param>

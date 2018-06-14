@@ -115,12 +115,10 @@ namespace Models
         /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
         /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
-        /// <exception cref="ApsimXException">Check the depth for irrigation, it cannot be deeper than the soil depth</exception>
-        /// <exception cref="ApsimXException">Check the duration for the irrigation, it must be less than 1440 minutes</exception>
-        /// <exception cref="ApsimXException">Check the start time for irrigation, it must be less than 1440 minutes</exception>
-        /// <exception cref="ApsimXException">Check the start time and duration of irrigation, the sum must be smaller than 1440 minutes</exception>
-        /// <exception cref="ApsimXException">Check the value of irrigation efficiency, it must be between 0 and 1</exception>
-        public void Apply(double amount, double depth = -1.0, double startTime = -1.0, double duration = -1.0, double efficiency = -1.0, bool willIntercept = false, bool willRunoff = false)
+        /// <param name="no3">Amount of NO3 in irrigation water</param>
+        /// <param name="nh4">Amount of NH4 in irrigation water</param>
+        public void Apply(double amount, double depth = -1.0, double startTime = -1.0, double duration = -1.0, double efficiency = -1.0, bool willIntercept = false, bool willRunoff = false,
+                          double no3 = -1.0, double nh4 = -1.0)
         {
             if (Irrigated != null && amount > 0.0)
             {
@@ -183,6 +181,10 @@ namespace Models
                 irrigData.Duration = Duration;
                 irrigData.WillIntercept = WillIntercept;
                 irrigData.WillRunoff = WillRunoff;
+                if (no3 != -1)
+                    irrigData.NO3 = no3;
+                if (nh4 != -1)
+                    irrigData.NH4 = nh4;
 
                 // Raise event and write log
                 Irrigated.Invoke(this, irrigData);

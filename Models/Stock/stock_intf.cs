@@ -3951,7 +3951,7 @@ namespace Models.GrazPlan
                         model.Wean(param1, param3, false, true);
                     else if (strParam == "females")
                         model.Wean(param1, param3, true, false);
-                    else if ((strParam == "all") || (strParam == string.Empty))
+                    else if ((strParam == "all") || (strParam == "both") || (strParam == string.Empty))
                         model.Wean(param1, param3, true, true);
                     else
                         throw new Exception("Invalid offspring type \"" + strParam + "\" in WEAN event");

@@ -1132,6 +1132,7 @@ namespace Models.PMF.Organs
             TipsAtEmergence = 0;
             Structure.TipToAppear = 0;
             apexGroupAge.Clear();
+            apexGroupSize.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
             nitrogenSupply.Clear();
@@ -1177,12 +1178,20 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
         }
 
+        /// <summary>
+        /// TODO: This method needs documentation
+        /// </summary>
+        /// <param name="NewLeaf"></param>
         private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
+            // update age of cohorts
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
 
-            while (apexGroupSize.Sum() < Structure.ApexNum)
+            // check for increase in apex size, add new group if needed
+            // (ApexNum should be an integer, but need to check in case of flag leaf)
+            double deltaApex = apexGroupSize.Sum() - Structure.ApexNum;
+            if (deltaApex < -1E-12)
             {
                 if (apexGroupSize.Count == 0)
                     apexGroupSize.Add(Structure.ApexNum);
@@ -1191,27 +1200,23 @@ namespace Models.PMF.Organs
                 apexGroupAge.Add(1);
             }
 
-            if (apexGroupSize.Count > 1)
+            // check for reduction in the apex size
+            if ((apexGroupSize.Count > 0) && (deltaApex > 1E-12))
             {
-                while (apexGroupSize.Sum() > Structure.ApexNum)
+                double remainingRemoveApex = deltaApex;
+                for (int i = apexGroupSize.Count - 1; i > 0; i--)
                 {
-                    double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
-                    double remainingRemoveApex = removeApex;
-                    for (int i = apexGroupSize.Count - 1; i > 0; i--)
-                    {
-                        double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
-                        apexGroupSize[i] -= remove;
-                        remainingRemoveApex -= remove;
-                        if (remainingRemoveApex <= 0)
-                            break;
-                    }
+                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                    apexGroupSize[i] -= remove;
+                    remainingRemoveApex -= remove;
+                    if (remainingRemoveApex <= 0.0)
+                        break;
                 }
+
+                if (remainingRemoveApex > 0.0)
+                    throw new Exception("There are not enough apex to remove from plant.");
             }
-            else
-            {
-                // not sure what to do here as the while loop would not have exited.... ever!
-            }
-            
+
             NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
             NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
@@ -1296,7 +1301,7 @@ namespace Models.PMF.Organs
                 {
                     double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
-                    writeToSummary = false; // only want it written once.
+                    //writeToSummary = false; // only want it written once.
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
                 }
@@ -1765,6 +1770,28 @@ namespace Models.PMF.Organs
                 throw new Exception(Name + "Some Leaf N was not allocated.");
         }
 
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double totalResLeaf = MaintenanceRespiration;
+
+            foreach (LeafCohort L in Leaves)
+            {
+                double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
+                double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
+                if (resLeafCohort > totalBMLeafCohort)
+                {
+                    throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+                }
+                L.Live.MetabolicWt = L.Live.MetabolicWt - 
+                    (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
+                L.Live.StorageWt = L.Live.StorageWt - 
+                    (resLeafCohort * L.Live.StorageWt / totalBMLeafCohort);
+            }
+        }
+
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         public override double MinNconc
         {
@@ -1893,6 +1920,24 @@ namespace Models.PMF.Organs
         {
             CohortsAtInitialisation = 0;
         }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        override protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
+                foreach (LeafCohort leaf in Leaves)
+                    leaf.DoDailyCleanup();
+            }
+        }
+
         #endregion
 
     }

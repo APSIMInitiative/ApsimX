@@ -469,6 +469,9 @@ namespace Models
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
         public bool IsC4 { get { return true; } }
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
+
         //CONSTANTS
 
 
@@ -14601,9 +14604,16 @@ namespace Models
 
         #endregion
 
-
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
 
         }
+
+    }
 
     
     }

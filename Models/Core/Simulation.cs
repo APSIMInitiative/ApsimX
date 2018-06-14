@@ -10,6 +10,7 @@ using APSIM.Shared.Utilities;
 using Models.Factorial;
 using System.ComponentModel;
 using Models.Core.Runners;
+using System.Linq;
 
 namespace Models.Core
 {
@@ -29,6 +30,15 @@ namespace Models.Core
 
         /// <summary>Has this simulation been run?</summary>
         private bool hasRun;
+
+        /// <summary>Return total area.</summary>
+        public double Area
+        {
+            get
+            {
+                return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
+            }
+        }
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
@@ -160,6 +170,20 @@ namespace Models.Core
             {
                 Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 simulationToRun = Apsim.Clone(this) as Simulation;
+
+                // We are breaking.NET naming rules with our manager scripts.All our manager scripts are class 
+                // Script in the Models namespace.This is OK until we do a clone(binary serialise/deserialise). 
+                // When this happens, the serialisation engine seems to choose the first assembly it can find 
+                // that has the 'right' code.It seems that if the script c# is close to an existing assembly then 
+                // it chooses that assembly. In the attached .apsimx, it chooses the wrong temporary assembly for 
+                // SowingRule2. It chooses SowingRule assembly even though the script for the 2 manager files is 
+                // different. I'm not sure how to fix this yet. A brute force way is to recompile all manager 
+                // scripts after cloning.
+                // https://github.com/APSIMInitiative/ApsimX/issues/2603
+                Events events = new Events(simulationToRun);
+                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
+
                 simulationEngine.MakeSubstitutions(simulationToRun);
             }
             return simulationToRun;

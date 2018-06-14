@@ -79,6 +79,16 @@ namespace Utility
         /// </summary>
         public string EditorStyleName { get; set; } = "Visual Studio";
 
+        /// <summary>
+        /// Store the zoom level for editors
+        /// </summary>
+        public double EditorZoom { get; set; } = 1.0;
+
+        /// <summary>
+        /// Store the user's preferred font size
+        /// </summary>
+        public double BaseFontSize { get; set; } = 12.5;
+
         /// <summary>Add a filename to the list.</summary>
         /// <param name="filename">File path</param>
         public void AddMruFile(string filename)
