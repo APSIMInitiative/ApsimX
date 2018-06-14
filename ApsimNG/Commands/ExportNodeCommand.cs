@@ -714,7 +714,7 @@ namespace UserInterface.Commands
             HtmlToMigraDoc.Convert(html, section, workingDirectory);
 
             Paragraph para = section.LastParagraph;
-            para.Format.LeftIndent = Unit.FromCentimeter(paragraph.indent);
+            para.Format.LeftIndent += Unit.FromCentimeter(paragraph.indent);
             if (paragraph.bookmarkName != null)
                 para.AddBookmark(paragraph.bookmarkName);
             if (paragraph.handingIndent)
