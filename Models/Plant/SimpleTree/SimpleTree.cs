@@ -19,7 +19,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class SimpleTree : Model, ICrop, ICanopy, IUptake
+    public class SimpleTree : Model, IPlant, ICanopy, IUptake
     {
         #region Canopy interface
 
@@ -67,6 +67,12 @@ namespace Models.PMF
         /// </summary>
         public string CropType { get; set; }
 
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        public double Legumosity { get { return 0; } }
+
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        public bool IsC4 { get { return false; } }
+
         /// <summary>Albedo.</summary>
         public double Albedo { get { return 0.15; } }
 
@@ -113,6 +119,8 @@ namespace Models.PMF
         [Units("kg/ha")]
         public double NDemand { get; set; }
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The plant_status</summary>
         [XmlIgnore]
@@ -277,6 +285,16 @@ namespace Models.PMF
         {
 
         }
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+
+        }
+
         /// <summary>Roots the proportion.</summary>
         /// <param name="layer">The layer.</param>
         /// <param name="root_depth">The root_depth.</param>

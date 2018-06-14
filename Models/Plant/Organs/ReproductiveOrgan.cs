@@ -10,10 +10,11 @@ using Models.PMF.Library;
 namespace Models.PMF.Organs
 {
     /// <summary>
+    /// # [Name] 
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
-    public class ReproductiveOrgan : BaseOrgan, IArbitration
+    public class ReproductiveOrgan : BaseOrgan, IArbitration, IRemovableBiomass
     {
         #region Parameter Input Classes
         /// <summary>The phenology</summary>
@@ -91,6 +92,9 @@ namespace Models.PMF.Organs
 
         /// <summary>The dead biomass</summary>
         public Biomass Dead { get; set; }
+        
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
 
         /// <summary>The number</summary>
         [XmlIgnore]
@@ -282,9 +286,7 @@ namespace Models.PMF.Organs
 
             {
                 MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
                 MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-                Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
             }
 
         }
@@ -361,11 +363,24 @@ namespace Models.PMF.Organs
         }
 
         #endregion
+        
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+            {
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            }
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
-        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }

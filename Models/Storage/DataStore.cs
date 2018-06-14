@@ -884,10 +884,14 @@
                         ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", unknownSimulationNames, ")");
             }
             // Delete all data that we are about to run,
-            int currentCheckpointID = checkpointIDs["Current"];
-            foreach (Table table in tables)
-                if (table.Columns.Find(c => c.Name == "SimulationID") != null)
-                    ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", simulationNamesBeingRun, ") AND CheckpointID=" + currentCheckpointID);
+            if (checkpointIDs.Any())
+            {
+                int currentCheckpointID = checkpointIDs["Current"];
+                foreach (Table table in tables)
+                    if (table.Columns.Find(c => c.Name == "SimulationID") != null)
+                        ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", simulationNamesBeingRun, ") AND CheckpointID=" + currentCheckpointID);
+            }
+            
 
             // Make sure each known simulation name has an ID in the simulations table in the .db
             ExecuteInsertQuery("_Simulations", "Name", knownSimulationNames);

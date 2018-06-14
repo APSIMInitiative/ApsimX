@@ -11,6 +11,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// TSupplementModel contains a list of supplement "stores", each of which
@@ -721,6 +722,11 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Used to keep track of the selected TSupplementItem in the user interface
+        /// </summary>
+        [XmlIgnore] public int curIndex = 0;
+
+        /// <summary>
         /// The model
         /// </summary>
         private TSupplementModel theModel;
@@ -1038,10 +1044,10 @@ namespace Models.GrazPlan
             if (Animals != null)
             {
                 // get the supplement eaten from the Stock component
-                TSupplementEaten[] eaten = Animals.SuppEaten;
+                SupplementEaten[] eaten = Animals.SuppEaten;
 
                 for (int Idx = 0; Idx < eaten.Length; Idx++)
-                    theModel.RemoveEaten(eaten[Idx].paddock, eaten[Idx].eaten);
+                    theModel.RemoveEaten(eaten[Idx].Paddock, eaten[Idx].Eaten);
             }
             theModel.CompleteTimeStep();
         }
@@ -1148,12 +1154,42 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Adds the specified TSupplement.
+        /// </summary>
+        /// <param name="supplement">Supplement to be added</param>
+        /// <returns>Index of the added supplement</returns>
+        public int Add(TSupplement supplement)
+        {
+            return theModel.AddToStore(0.0, supplement);
+        }
+
+        /// <summary>
         /// Deletes the specified index.
         /// </summary>
         /// <param name="idx">The index.</param>
         public void Delete(int idx)
         {
             theModel.Delete(idx);
+        }
+
+        /// <summary>
+        /// Returns the index of TSupplement in the array of supplements
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>The array index, or -1 if not found</returns>
+        public int IndexOf(TSupplementItem item)
+        {
+            return theModel.IndexOf(item);
+        }
+        
+        /// <summary>
+        /// Returns true if the currently named supplement is already in the mix
+        /// </summary>
+        /// <param name="suppName"></param>
+        /// <returns></returns>
+        public int IndexOf(string suppName)
+        {
+            return theModel.IndexOf(suppName);
         }
     }
 }

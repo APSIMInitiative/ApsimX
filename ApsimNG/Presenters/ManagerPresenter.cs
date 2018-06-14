@@ -13,10 +13,13 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using APSIM.Shared.Utilities;
     using EventArguments;
-    using ICSharpCode.NRefactory.CSharp;
     using Models;
     using Models.Core;
     using Views;
+    using System.IO;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+    using ICSharpCode.NRefactory.CSharp;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -44,6 +47,11 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>
+        /// Handles generation of completion options for the view.
+        /// </summary>
+        private IntellisensePresenter intellisense;
+
+        /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
         /// <param name="model">The model</param>
@@ -54,9 +62,11 @@ namespace UserInterface.Presenters
             this.manager = model as Manager;
             this.managerView = view as IManagerView;
             this.explorerPresenter = explorerPresenter;
+            this.intellisense = new IntellisensePresenter(managerView as ViewBase);
+            intellisense.ItemSelected += (sender, e) => managerView.Editor.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
 
             this.propertyPresenter.Attach(this.manager.Script, this.managerView.GridView, this.explorerPresenter);
-
+            this.managerView.Editor.ScriptMode = true;
             this.managerView.Editor.Text = this.manager.Code;
             this.managerView.Editor.ContextItemsNeeded += this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor += this.OnEditorLeave;
@@ -64,6 +74,7 @@ namespace UserInterface.Presenters
             this.managerView.Editor.AddContextActionWithAccel("Test compile", this.OnDoCompile, "Ctrl+T");
             this.managerView.Editor.AddContextActionWithAccel("Reformat", this.OnDoReformat, "Ctrl+R");
             this.managerView.Editor.Location = manager.Location;
+            this.managerView.TabIndex = manager.ActiveTabIndex;
             this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
@@ -78,6 +89,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
+            intellisense.Cleanup();
         }
 
         /// <summary>
@@ -87,47 +99,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Context item arguments</param>
         public void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
         {
-            CSharpParser parser = new CSharpParser();
-            SyntaxTree syntaxTree = parser.Parse(this.managerView.Editor.Text); // Manager.Code);
-            syntaxTree.Freeze();
-
-            IEnumerable<FieldDeclaration> fields = syntaxTree.Descendants.OfType<FieldDeclaration>();
-
-            e.ObjectName = e.ObjectName.Trim(" \t".ToCharArray());
-            string typeName = string.Empty;
-
-            // Determine the field name to find. User may have typed 
-            // Soil.SoilWater. In this case the field to look for is Soil
-            string fieldName = e.ObjectName;
-            int posPeriod = e.ObjectName.IndexOf('.');
-            if (posPeriod != -1)
+            try
             {
-                fieldName = e.ObjectName.Substring(0, posPeriod);
+                if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
             }
-               
-            // Look for the field name.
-            foreach (FieldDeclaration field in fields)
+            catch (Exception err)
             {
-                foreach (VariableInitializer var in field.Variables)
-                {
-                    if (fieldName == var.Name)
-                    {
-                        typeName = field.ReturnType.ToString();
-                    }
-                }
-            }
-            
-            // find the properties and methods
-            if (typeName != string.Empty)
-            {
-                Type atype = ReflectionUtilities.GetTypeFromUnqualifiedName(typeName);
-                if (posPeriod != -1)
-                {
-                    string childName = e.ObjectName.Substring(posPeriod + 1);
-                    atype = this.FindType(atype, childName);
-                }
-                    
-                e.AllItems.AddRange(NeedContextItemsArgs.ExamineTypeForContextItems(atype, true, true, false));
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -139,7 +118,8 @@ namespace UserInterface.Presenters
         public void OnEditorLeave(object sender, EventArgs e)
         {
             // this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
-            this.BuildScript();
+            if (!intellisense.Visible)
+                this.BuildScript();
             if (this.manager.Script != null)
             {
                 this.propertyPresenter.FindAllProperties(this.manager.Script);
@@ -203,6 +183,8 @@ namespace UserInterface.Presenters
             try
             {
                 this.manager.Location = this.managerView.Editor.Location;
+                this.manager.ActiveTabIndex = this.managerView.TabIndex;
+
                 string code = this.managerView.Editor.Text;
 
                 // set the code property manually first so that compile error can be trapped via

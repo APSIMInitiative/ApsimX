@@ -1058,7 +1058,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
+        /// <summary>Gets or sets the ammonia N for each layer (kg/ha)</summary>
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] NH4N
@@ -1073,6 +1073,24 @@ namespace Models.Soils
             set
             {
                 SoluteManager.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, value);
+            }
+        }
+
+        /// <summary>Gets the or sets urea N for each layer (kg/ha)</summary>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] UreaN
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("urea");
+            }
+            set
+            {
+                SoluteManager.SetSolute("urea", SoluteManager.SoluteSetterType.Soil, value);
             }
         }
 

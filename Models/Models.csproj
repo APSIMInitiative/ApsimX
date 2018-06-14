@@ -161,6 +161,7 @@
     <Compile Include="Core\ApsimFile\Reader.cs" />
     <Compile Include="Core\ApsimFile\Writer.cs" />
     <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
+    <Compile Include="Core\Attributes\Separator.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\HelpUriAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Plant\Functions\StringComparisonFunction.cs" />
     <Compile Include="Plant\Functions\TrackerFunction.cs" />
     <Compile Include="Plant\Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
     <Compile Include="Plant\Phenology\BBCH.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
@@ -484,9 +486,10 @@
     <Compile Include="Graph\Axis.cs" />
     <Compile Include="Graph\Series.cs" />
     <Compile Include="Clock.cs" />
-    <Compile Include="Core\ICrop.cs" />
+    <Compile Include="Core\IPlant.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
+    <Compile Include="Utilities\R.cs" />
     <Compile Include="WaterModel\CNReductionForCover.cs" />
     <Compile Include="WaterModel\CNReductionForTillage.cs" />
     <Compile Include="WaterModel\Conversions.cs" />
@@ -675,6 +678,7 @@
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />
+    <None Include="Resources\Plantain.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>

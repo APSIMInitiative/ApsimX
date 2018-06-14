@@ -39,6 +39,9 @@ namespace Models.PMF
         protected double _MetabolicWt = 0;
         /// <summary>The _ metabolic n</summary>
         protected double _MetabolicN = 0;
+        /// <summary>Dry matter digestibility. 0.7 for live, 0.4 for dead </summary>
+        protected double _DMDOfStructural = 0.6;
+
 
         /// <summary>Gets or sets the non structural n.</summary>
         /// <value>The non structural n.</value>
@@ -212,6 +215,20 @@ namespace Models.PMF
                     return 0.0;
             }
         }
+
+        /// <summary>Dry matter digestibility. 0.7 for live, 0.4 for dead </summary>
+        public double DMDOfStructural
+        {
+            get
+            {
+                return _DMDOfStructural;
+            }
+            set
+            {
+                _DMDOfStructural = value;
+            }
+        }
+
         /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
         public Biomass() { }
 

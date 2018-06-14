@@ -12,7 +12,7 @@ namespace Models.PMF.Organs
     /// A root model for SWIM
     /// </summary>
     [Serializable]
-    public class RootSWIM : BaseOrgan, IArbitration, BelowGround
+    public class RootSWIM : BaseOrgan, IArbitration
     {
         /// <summary>The uptake</summary>
         private double[] Uptake = null;
@@ -97,11 +97,22 @@ namespace Models.PMF.Organs
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
-        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
-
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+            {
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            }
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {

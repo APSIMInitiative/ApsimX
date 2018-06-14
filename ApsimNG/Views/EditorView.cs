@@ -13,6 +13,8 @@ namespace UserInterface.Views
     using Gtk;
     using Mono.TextEditor;
     using Utility;
+    using Presenters;
+    using Cairo;
 
     /// <summary>
     /// This is IEditorView interface
@@ -60,9 +62,14 @@ namespace UserInterface.Views
         System.Drawing.Rectangle Location { get; set; }
         
         /// <summary>
+        /// Indicates whether we are editing a script, rather than "ordinary" text.
+        /// </summary>
+        bool ScriptMode { get; set; }
+
+        /// <summary>
         /// Add a separator line to the context menu
         /// </summary>
-        void AddContextSeparator();
+        MenuItem AddContextSeparator();
 
         /// <summary>
         /// Add an action (on context menu) on the series grid.
@@ -70,7 +77,28 @@ namespace UserInterface.Views
         /// <param name="menuItemText">The text of the menu item</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
         /// <param name="shortcut">Describes the key to use as the accelerator</param>
-        void AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut);
+        MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut);
+
+        /// <summary>
+        /// Offset of the caret from the beginning of the text editor.
+        /// </summary>
+        int Offset { get; }
+
+        /// <summary>
+        /// Inserts text at a given offset in the editor.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        void InsertAtCaret(string text);
+
+        /// <summary>
+        /// Inserts a new completion option at the caret, potentially overwriting a partially-completed word.
+        /// </summary>
+        /// <param name="triggerWord">
+        /// Word to be overwritten. May be empty.
+        /// This function will overwrite the last occurrence of this word before the caret.
+        /// </param>
+        /// <param name="completionOption">Completion option to be inserted.</param>
+        void InsertCompletionOption(string completionOption, string triggerWord);
     }
 
     /// <summary>
@@ -82,11 +110,6 @@ namespace UserInterface.Views
         /// The find-and-replace form
         /// </summary>
         private FindAndReplaceForm _findForm = new FindAndReplaceForm();
-        
-        /// <summary>
-        /// The completion form.
-        /// </summary>
-        private IntellisenseView intellisense;
 
         /// <summary>
         /// Scrolled window
@@ -146,9 +169,20 @@ namespace UserInterface.Views
             set
             {
                 textEditor.Text = value;
-                textEditor.Document.MimeType = "text/x-csharp";
-                textEditor.Options.EnableSyntaxHighlighting = true;
-                textEditor.Options.HighlightMatchingBracket = true;
+                if (ScriptMode)
+                {
+                    textEditor.Document.MimeType = "text/x-csharp";
+                    textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
+                    textEditor.Options.Zoom = Utility.Configuration.Settings.EditorZoom;
+                    StyleSeparator.Visible = true;
+                    StyleMenu.Visible = true;
+                }
+                else
+                {
+                    textEditor.Options.ColorScheme = "Default";
+                    StyleSeparator.Visible = false;
+                    StyleMenu.Visible = false;
+                }
             }
         }
 
@@ -185,6 +219,11 @@ namespace UserInterface.Views
         public string IntelliSenseChars { get; set; }
 
         /// <summary>
+        /// Indicates whether we are editing a script, rather than "ordinary" text.
+        /// </summary>
+        public bool ScriptMode { get; set; }
+
+        /// <summary>
         /// Gets the current line number
         /// </summary>
         public int CurrentLineNumber
@@ -194,6 +233,9 @@ namespace UserInterface.Views
                 return textEditor.Caret.Line;
             }
         }
+
+        private MenuItem StyleMenu;
+        private MenuItem StyleSeparator;
 
         /// <summary>
         /// Gets or sets the current location of the caret (column and line) and the current scrolling position
@@ -221,6 +263,14 @@ namespace UserInterface.Views
             }
         }
 
+        public int Offset
+        {
+            get
+            {
+                return textEditor.Caret.Offset;
+            }
+        }
+
         /// <summary>
         /// Default constructor that configures the Completion form.
         /// </summary>
@@ -231,11 +281,16 @@ namespace UserInterface.Views
             textEditor = new TextEditor();
             scroller.Add(textEditor);
             _mainWidget = scroller;
+            Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
             Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
-            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName; 
+            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
+            options.Zoom = Utility.Configuration.Settings.EditorZoom;
             options.HighlightCaretLine = true;
+            options.EnableSyntaxHighlighting = true;
+            options.HighlightMatchingBracket = true;
             textEditor.Options = options;
+            textEditor.Options.Changed += EditorOptionsChanged;
             textEditor.TextArea.DoPopupMenu = DoPopup;
             textEditor.Document.LineChanged += OnTextHasChanged;
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
@@ -254,26 +309,25 @@ namespace UserInterface.Views
             AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
-            AddContextSeparator();
-            MenuItem styleMenu = AddMenuItem("Use style", null);
+            StyleSeparator = AddContextSeparator();
+            StyleMenu = AddMenuItem("Use style", null);
             Menu styles = new Menu();
-            styleMenu.Submenu = styles;
 
             // find all the editor styles and add sub menu items to the popup
             string[] styleNames = Mono.TextEditor.Highlighting.SyntaxModeService.Styles;
             Array.Sort(styleNames, StringComparer.InvariantCulture);
             foreach (string name in styleNames)
             {
-                MenuItem subItem = new MenuItem(name);
+                CheckMenuItem subItem = new CheckMenuItem(name);
+                if (string.Compare(name, options.ColorScheme, true) == 0)
+                    subItem.Toggle();
                 subItem.Activated += OnChangeEditorStyle;
+                subItem.Visible = true;
                 styles.Append(subItem);
             }
+            StyleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
-
-            intellisense = new IntellisenseView();
-            intellisense.ContextItemsNeeded += ContextItemsNeeded;
-            intellisense.LoseFocus += HideCompletionWindow;
         }
 
         /// <summary>
@@ -289,12 +343,8 @@ namespace UserInterface.Views
             textEditor.TextArea.KeyPressEvent -= OnKeyPress;
             scroller.Hadjustment.Changed -= Hadjustment_Changed;
             scroller.Vadjustment.Changed -= Vadjustment_Changed;
+            textEditor.Options.Changed -= EditorOptionsChanged;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
-
-            intellisense.ContextItemsNeeded -= ContextItemsNeeded;
-            intellisense.ItemSelected -= InsertCompletionItemIntoTextBox;
-            intellisense.LoseFocus -= HideCompletionWindow;
-            intellisense.Cleanup();
 
             // It's good practice to disconnect all event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -366,6 +416,7 @@ namespace UserInterface.Views
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
             char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+            bool controlSpace = IsControlSpace(e.Event);
             if (e.Event.Key == Gdk.Key.F3)
             {
                 if (string.IsNullOrEmpty(_findForm.LookFor))
@@ -374,18 +425,52 @@ namespace UserInterface.Views
                     _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
                 e.RetVal = true;
             }
-            else if (IntelliSenseChars.Contains(keyChar.ToString()) && ContextItemsNeeded != null)
+            else if (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace)
             {
-                // If user one of the IntelliSenseChars, then display contextlist.
-                if (ShowCompletionWindow(keyChar))
+                // If user entered one of the Intellisense characters, then display the context list.
+                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
+
+                // If the user entered a period, we need to take that into account when generating intellisense options.
+                // To do this, we insert a period manually and stop the Gtk signal from propagating further.
+                e.RetVal = true;
+                if (keyChar == '.')
                 {
-                    e.RetVal = false;
-                }                
+                    textEditor.InsertAtCaret(keyChar.ToString());
+
+                    // Process all events in the main loop, so that the period is inserted into the text editor.
+                    while (GLib.MainContext.Iteration()) ;
+                }
+                NeedContextItemsArgs args = new NeedContextItemsArgs
+                {
+                    Coordinates = GetPositionOfCursor(),
+                    Code = textEditor.Text,
+                    Offset = this.Offset,
+                    ControlSpace = controlSpace,
+                    LineNo = textEditor.Caret.Line,
+                    ColNo = textEditor.Caret.Column - 1
+                };
+
+                ContextItemsNeeded?.Invoke(this, args);
+            }
+            else if (e.Event.Key == Gdk.Key.Key_0 && (e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
+            {
+                textEditor.Options.ZoomReset();
+                e.RetVal = true;
             }
             else
             {
                 e.RetVal = false;
             }
+        }
+
+        /// <summary>
+        /// Checks whether a keypress is a control+space event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        /// <returns>True iff the event represents a control+space click.</returns>
+        private bool IsControlSpace(Gdk.EventKey e)
+        {
+            return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && (e.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask;
         }
 
         /// <summary>
@@ -405,33 +490,19 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Show the context list. Return true if popup box shown
+        /// Gets the location (in screen coordinates) of the cursor.
         /// </summary>
-        /// <param name="characterPressed">Character pressed</param>
-        /// <returns>Completion form showing</returns>        
-        private bool ShowCompletionWindow(char characterPressed)
+        /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
+        private Tuple<int, int> GetPositionOfCursor()
         {
-            string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
-            intellisense.ContextItemsNeeded += ContextItemsNeeded;
-            if (!intellisense.GenerateAutoCompletionOptions(textBeforePeriod))
-                return false;
-            textEditor.TextArea.InsertAtCaret(characterPressed.ToString());
-
-            // Turn readonly on so that the editing window doesn't process keystrokes.
-            textEditor.Document.ReadOnly = true;
-
-            // Work out where to put the completion window.            
-            Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
+            Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
             p.Y += (int)textEditor.LineHeight;
-
             // Need to convert to screen coordinates....
             int x, y, frameX, frameY;
             mainWindow.GetOrigin(out frameX, out frameY);
             textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
-            intellisense.ItemSelected += InsertCompletionItemIntoTextBox;
-            intellisense.MainWindow = MainWidget.Toplevel as Window;
-            return intellisense.SmartShowAtCoordinates(frameX + x, frameY + y);
+            return new Tuple<int, int>(x + frameX, y + frameY);
         }
 
         /// <summary>
@@ -446,18 +517,40 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Inserts a new completion option at the caret, potentially overwriting a partially-completed word.
+        /// </summary>
+        /// <param name="triggerWord">
+        /// Word to be overwritten. May be empty.
+        /// This function will overwrite the last occurrence of this word before the caret.
+        /// </param>
+        /// <param name="completionOption">Completion option to be inserted.</param>
+        public void InsertCompletionOption(string completionOption, string triggerWord)
+        {
+            if (string.IsNullOrEmpty(completionOption))
+                return;
+            if (string.IsNullOrEmpty(triggerWord))
+                textEditor.InsertAtCaret(completionOption);
+            else
+                textEditor.Replace(Text.Substring(0, Offset).LastIndexOf(triggerWord), triggerWord.Length, completionOption);
+        }
+        
+        /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void InsertCompletionItemIntoTextBox(object sender, IntellisenseItemSelectedArgs e)
-        {            
-            if (!string.IsNullOrEmpty(e.ItemSelected))
-            {
-                textEditor.Document.ReadOnly = false;
-                textEditor.InsertAtCaret(e.ItemSelected);
-            }
+        public void InsertAtCaret(string text)
+        {
             textEditor.Document.ReadOnly = false;
+            string textToCaret = textEditor.Text.Substring(0, Offset);
+            if (textToCaret.LastIndexOf('.') != Offset - 1)
+            {
+                string textBeforeCaret = textEditor.Text.Substring(0, Offset);
+                // TODO : insert text at the correct location
+                // Currently, if we half-type a word, then hit control-space, the word will be inserted at the caret.
+                textEditor.Text = textEditor.Text.Substring(0, textEditor.Text.LastIndexOf('.')) + textEditor.Text.Substring(Offset);
+            }
+            textEditor.InsertAtCaret(text);
             textEditor.GrabFocus();
         }
 
@@ -525,9 +618,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
-        public void AddContextSeparator()
+        public MenuItem AddContextSeparator()
         {
-            popupMenu.Append(new SeparatorMenuItem());
+            MenuItem result = new SeparatorMenuItem();
+            popupMenu.Append(result);
+            return result;
         }
 
         /// <summary>
@@ -536,7 +631,7 @@ namespace UserInterface.Views
         /// <param name="menuItemText">The text of the menu item</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
         /// <param name="shortcut">The shortcut string</param>
-        public void AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
+        public MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
         {
             ImageMenuItem item = new ImageMenuItem(menuItemText);
             if (!string.IsNullOrEmpty(shortcut))
@@ -570,6 +665,7 @@ namespace UserInterface.Views
                 item.Activated += onClick;
             popupMenu.Append(item);
             popupMenu.ShowAll();
+            return item;
         }
 
         /// <summary>
@@ -659,11 +755,30 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnChangeEditorStyle(object sender, EventArgs e)
         {
-            string caption = ((Gtk.Label)(((MenuItem)sender).Children[0])).LabelProp;
-            
+            MenuItem subItem = (MenuItem)sender;
+            string caption = ((Gtk.Label)(subItem.Children[0])).LabelProp;
+
+            foreach (CheckMenuItem item in ((Menu)subItem.Parent).Children)
+            {
+                item.Activated -= OnChangeEditorStyle;  // stop recursion
+                item.Active = (string.Compare(caption, ((Gtk.Label)item.Children[0]).LabelProp, true) == 0);
+                item.Activated += OnChangeEditorStyle;
+            }
+
             Utility.Configuration.Settings.EditorStyleName = caption;
             textEditor.Options.ColorScheme = caption;
             textEditor.QueueDraw();
+        }
+
+        /// <summary>
+        /// Handle other changes to editor options. All we're really interested in 
+        /// here at present is keeping track of the editor zoom level.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void EditorOptionsChanged(object sender, EventArgs e)
+        {
+            Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
         }
 
         // The following block comes from the example code provided at 

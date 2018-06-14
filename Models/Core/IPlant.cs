@@ -10,13 +10,22 @@ namespace Models.Core
     /// crops must have. In effect this interface describes the interactions
     /// between a crop and the other models in APSIM.
     /// </summary>
-    public interface ICrop
+    public interface IPlant
     {
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        double Legumosity { get; }
+
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        bool IsC4 { get; }
+
         /// <summary> Is the plant alive?</summary>
         bool IsAlive { get; }
 
         /// <summary>Gets a list of cultivar names</summary>
         string[] CultivarNames { get; }
+
+        /// <summary>Get above ground biomass</summary>
+        PMF.Biomass AboveGround { get; }
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
@@ -35,5 +44,11 @@ namespace Models.Core
 
         /// <summary>End the crop</summary>
         void EndCrop();
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        void BiomassRemovalComplete(double fractionRemoved);
     }
 }

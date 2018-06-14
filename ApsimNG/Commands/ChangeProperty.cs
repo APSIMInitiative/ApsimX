@@ -27,10 +27,7 @@ namespace UserInterface.Commands
         /// <param name="value">The new value of the property</param>
         public ChangeProperty(object obj, string name, object value)
         {
-            Property property = new Property();
-            property.Obj = obj;
-            property.Name = name;
-            property.NewValue = value;
+            Property property = new Property(obj, name, value);
 
             List<Property> listOfProperties = new List<Property>();
             listOfProperties.Add(property);
@@ -130,6 +127,19 @@ namespace UserInterface.Commands
             public object NewValue { get; set; }
 
             /// <summary>
+            /// Initializes a new instance of the <see cref="Property" /> class.
+            /// </summary>
+            /// <param name="obj">The object containing the property</param>
+            /// <param name="name">The name of the property</param>
+            /// <param name="value">The new value of the property</param>
+            public Property(object obj, string name, object value)
+            {
+                this.Obj = obj;
+                this.Name = name;
+                this.NewValue = value;
+            }
+
+            /// <summary>
             /// Perform the property change
             /// </summary>
             /// <returns>Returns true if the property was successfully modified.</returns>
@@ -146,7 +156,7 @@ namespace UserInterface.Commands
                     }
                     else
                     {
-                        this.wasModified = ReflectionUtilities.SetValueOfProperty(this.Name, this.Obj, this.NewValue);
+                        this.wasModified = ReflectionUtilities.SetValueOfFieldOrProperty(this.Name, this.Obj, this.NewValue);
                     }
                 }
                 catch (Exception e)

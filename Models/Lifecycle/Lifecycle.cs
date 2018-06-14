@@ -2,33 +2,36 @@
 using System.Collections.Generic;
 using Models.Core;
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
     /// <summary>
     /// # [Name]
-    /// A lifecycle that contains lifestages. 
+    /// A LifeCycle that contains LifeStages. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Lifecycle : Model
+    public class LifeCycle : Model
     {
+        [Link]
+        private ISummary mySummary = null;
+
         /// <summary>
-        /// 
+        /// List of child LifeStages
         /// </summary>
         [NonSerialized]
-        public List<Lifestage> ChildStages = null;
+        public List<LifeStage> ChildStages = null;
 
         /// <summary>
         /// Current Lifestage being processed.
         /// </summary>
-        public Lifestage CurrentLifestage { get; set; }
+        public LifeStage CurrentLifeStage { get; set; }
 
         /// <summary>
-        /// 
+        /// Default constructor
         /// </summary>
-        public Lifecycle()
+        public LifeCycle()
         {
             
         }
@@ -36,7 +39,7 @@ namespace Models.Lifecycle
         /// <summary>
         /// Population of the initial cohort at each lifestage. e.g. [2,6,3]
         /// </summary>
-        [Description("Initial population at each lifestage")]
+        [Description("Initial population at each LifeStage")]
         public double[] InitialPopulation { get; set; }
 
         /// <summary>
@@ -47,7 +50,7 @@ namespace Models.Lifecycle
             get
             {
                 double sum = 0;
-                foreach (Lifestage stage in ChildStages)
+                foreach (LifeStage stage in ChildStages)
                 {
                     sum += stage.TotalPopulation;
                 }
@@ -56,15 +59,15 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
-        /// 
+        /// At the start of the simulation construct the list of child LifeStages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            ChildStages = new List<Lifestage>();
-            foreach (Lifestage stage in Apsim.Children(this, typeof(Lifestage)))
+            ChildStages = new List<LifeStage>();
+            foreach (LifeStage stage in Apsim.Children(this, typeof(LifeStage)))
             {
                 stage.OwningCycle = this;
                 ChildStages.Add(stage);
@@ -72,23 +75,32 @@ namespace Models.Lifecycle
             
             int i= 0;
             //create new cohorts from the InitialPopulation[]
-            foreach (Lifestage stage in ChildStages)
+            foreach (LifeStage stage in ChildStages)
             {
-                if (InitialPopulation.Length > i)
+                if ((InitialPopulation != null) && (InitialPopulation.Length > i))
                 {
                     Cohort newCohort = stage.NewCohort();
                     newCohort.Count = InitialPopulation[i];
+                }
+                else
+                {
+                    mySummary.WriteWarning(this, "No initial population in " + stage.Name);
                 }
                 i++;
             }
         }
 
+        /// <summary>
+        /// Handle the DoLifeCycle event and process each LifeStage
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         [EventSubscribe("DoLifecycle")]
         private void OnDoLifecycle(object sender, EventArgs e)
         {
-            foreach (Lifestage stage in ChildStages)
+            foreach (LifeStage stage in ChildStages)
             {
-                CurrentLifestage = stage;
+                CurrentLifeStage = stage;
                 stage.Process();
             }
         }

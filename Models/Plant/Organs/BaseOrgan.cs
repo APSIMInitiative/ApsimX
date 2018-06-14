@@ -140,18 +140,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         virtual public double MaintenanceRespiration { get { return 0; }  set { } }
-
-        #endregion
-
-        #region Biomass removal
-        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="value">The fractions of biomass to remove</param>
-        virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         #endregion
 
         #region Management event methods

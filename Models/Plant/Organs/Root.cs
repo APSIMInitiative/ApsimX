@@ -14,7 +14,7 @@ namespace Models.PMF.Organs
 
     ///<summary>
     /// # [Name]
-    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each sol layer. 
+    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
     /// 
     /// **Root Growth**
     /// 
@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     /// **Nitrogen Demands**
     /// 
     /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage 
-    /// and can be used for retranslocation and/or reallocation is the respective factors are set to values other then zero.  
+    /// and can be used for retranslocation and/or reallocation as the respective factors are set to values other then zero.  
     /// 
     /// **Nitrogen Uptake**
     /// 
@@ -40,9 +40,9 @@ namespace Models.PMF.Organs
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
     /// 
-    ///     _NO3 uptake = NO3<sub>i</sub> x KNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NO3 uptake = NO3<sub>i</sub> x kNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
     ///     
-    ///     _NH4 uptake = NH4<sub>i</sub> x KNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NH4 uptake = NH4<sub>i</sub> x kNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
     /// 
     /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
     /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand
@@ -62,7 +62,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
     {
         /// <summary>The plant</summary>
         [Link]
@@ -211,6 +211,9 @@ namespace Models.PMF.Organs
         /// <summary>Structural nitrogen demand</summary>
         private BiomassPoolType nitrogenDemand = new BiomassPoolType();
 
+        /// <summary>The dry matter potentially being allocated</summary>
+        private BiomassPoolType potentialDMAllocation = new BiomassPoolType();
+
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
 
@@ -249,6 +252,9 @@ namespace Models.PMF.Organs
             ZoneRootDepths = new List<double>();
             ZoneInitialDM = new List<double>();
         }
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return false; } }
 
         /// <summary>A list of other zone names to grow roots in</summary>
         [XmlIgnore]
@@ -432,6 +438,20 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double N { get { return Total.N; } }
 
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        [XmlIgnore]
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
+
+
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         public double NFixationCost { get { return 0; } }
@@ -474,6 +494,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets the nitrogen demand.</summary>
         [XmlIgnore]
         public BiomassPoolType NDemand { get { return nitrogenDemand; } }
+
+        /// <summary>Gets the potential DM allocation for this computation round.</summary>
+        public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
@@ -608,6 +631,10 @@ namespace Models.PMF.Organs
                 }
                 needToRecalculateLiveDead = true;
             }
+
+            potentialDMAllocation.Structural = dryMatter.Structural;
+            potentialDMAllocation.Metabolic = dryMatter.Metabolic;
+            potentialDMAllocation.Storage = dryMatter.Storage;
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
@@ -728,6 +755,19 @@ namespace Models.PMF.Organs
                 throw new Exception("Error in N Allocation: " + Name);
         }
 
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+            {
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            }
+            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
+            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
+        }
+
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
@@ -760,7 +800,7 @@ namespace Models.PMF.Organs
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="removal">The fractions of biomass to remove</param>
-        public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
@@ -957,7 +997,7 @@ namespace Models.PMF.Organs
         private void DoPlantEnding(object sender, EventArgs e)
         {
             //Send all root biomass to soil FOM
-            DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
+            RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
             Clear();
         }
 
@@ -1035,15 +1075,15 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
                 // Do Root Senescence
-                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
+                RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
             }
             needToRecalculateLiveDead = false;
             // Do maintenance respiration
             MaintenanceRespiration = 0;
             MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-            Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
+            // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
             MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
-            Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
+            // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
             needToRecalculateLiveDead = true;
         }
 
