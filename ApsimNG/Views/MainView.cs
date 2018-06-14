@@ -209,6 +209,7 @@ namespace UserInterface.Views
                                       ".gtkrc"));
             }
             baseFont = Gtk.Rc.GetStyle(new Label()).FontDescription.Copy();
+            defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
             FontSize = Utility.Configuration.Settings.BaseFontSize;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
@@ -254,16 +255,14 @@ namespace UserInterface.Views
             window1.DeleteEvent += OnClosing;
             listButtonView1.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
             listButtonView2.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
+            listButtonView1.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
+            listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
             if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
         }
 
-
-        /// <summary>
-        /// Keep track of last scroll event, so we don't go too fast
-        /// </summary>
-        private uint lastScrollTime = 0;
+        private double defaultBaseSize;
 
         /// <summary>
         /// The size, in points, of our base font
@@ -298,22 +297,44 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void ListView_ScrollEvent(object o, ScrollEventArgs args)
         {
-            var modifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
                 //Mac window manager already uses control-scroll, so use command
                 //Command might be either meta or mod1, depending on GTK version
                 : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
 
-            bool hasZoomModifier = (args.Event.State & modifier) != 0;
-            if (hasZoomModifier && lastScrollTime != 0 && (args.Event.Time - lastScrollTime) < 100)
+            if ((args.Event.State & ctlModifier) != 0)
             {
                 if (args.Event.Direction == Gdk.ScrollDirection.Up)
                     baseFontSize += scrollSizeStep;
                 else if (args.Event.Direction == Gdk.ScrollDirection.Down)
                     baseFontSize -= scrollSizeStep;
                 SetFontSize(baseFontSize);
+                args.RetVal = true;
             }
-            lastScrollTime = args.Event.Time;
-            args.RetVal = hasZoomModifier;
+        }
+
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
+        private void ListView_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            args.RetVal = false;
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
+            if ((args.Event.State & ctlModifier) != 0)
+            {
+                switch (args.Event.Key)
+                {
+                    case Gdk.Key.Key_0: baseFontSize = defaultBaseSize; args.RetVal = true; break;
+                    case Gdk.Key.KP_Add:
+                    case Gdk.Key.plus: baseFontSize += scrollSizeStep; args.RetVal = true; break;
+                    case Gdk.Key.KP_Subtract:
+                    case Gdk.Key.minus: baseFontSize -= scrollSizeStep; args.RetVal = true; break;
+                }
+                if ((bool)args.RetVal)
+                    SetFontSize(baseFontSize);
+            }
         }
 
         /// <summary>
@@ -434,6 +455,8 @@ namespace UserInterface.Views
             window1.DeleteEvent -= OnClosing;
             listButtonView1.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
             listButtonView2.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
+            listButtonView1.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
+            listButtonView2.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
             _mainWidget.Destroy();
 
             // Let all the destruction stuff be carried out, just in 
