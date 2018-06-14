@@ -635,6 +635,8 @@ namespace UserInterface.Presenters
         {
             IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
             model.Enabled = !model.Enabled;
+            foreach (IModel child in Apsim.ChildrenRecursively(model))
+                child.Enabled = !child.Enabled;
             explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
             explorerPresenter.Refresh();
         }
