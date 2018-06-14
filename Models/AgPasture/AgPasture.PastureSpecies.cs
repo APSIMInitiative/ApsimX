@@ -278,9 +278,9 @@ namespace Models.AgPasture
             DoAddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // Incorporate all root mass to soil fresh organic matter
-            plantZoneRoots.DoEndOrgan(CarbonFractionInDM,this);
+            plantZoneRoots.DoEndOrgan(CarbonFractionInDM);
             foreach (PastureBelowGroundOrgan root in rootZones)
-                root.DoEndOrgan(CarbonFractionInDM, this);
+                root.DoEndOrgan(CarbonFractionInDM);
 
             // zero all variables
             RefreshVariables();

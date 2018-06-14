@@ -59,7 +59,7 @@ namespace Models.Core
         public string Path { get; set; }
 
         /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field)
+        public override bool UseNameToMatch(IVariable field)
         {
             return false;
         }
