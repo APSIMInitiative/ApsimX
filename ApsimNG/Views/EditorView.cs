@@ -415,7 +415,13 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
+            e.RetVal = false;
             char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
             bool controlSpace = IsControlSpace(e.Event);
             string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
             if (e.Event.Key == Gdk.Key.F3)
@@ -451,14 +457,16 @@ namespace UserInterface.Views
 
                 ContextItemsNeeded?.Invoke(this, args);
             }
-            else if (e.Event.Key == Gdk.Key.Key_0 && (e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
+            else if ((e.Event.State & ctlModifier) != 0)
             {
-                textEditor.Options.ZoomReset();
-                e.RetVal = true;
-            }
-            else
-            {
-                e.RetVal = false;
+                switch (e.Event.Key)
+                {
+                    case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
+                    case Gdk.Key.KP_Add:
+                    case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
+                    case Gdk.Key.KP_Subtract:
+                    case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
+                }
             }
         }
 
