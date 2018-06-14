@@ -417,6 +417,7 @@ namespace UserInterface.Views
         {
             char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
             bool controlSpace = IsControlSpace(e.Event);
+            string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
             if (e.Event.Key == Gdk.Key.F3)
             {
                 if (string.IsNullOrEmpty(_findForm.LookFor))
@@ -425,11 +426,9 @@ namespace UserInterface.Views
                     _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
                 e.RetVal = true;
             }
-            else if (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace)
+            // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
+            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out _) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) )
             {
-                // If user entered one of the Intellisense characters, then display the context list.
-                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
-
                 // If the user entered a period, we need to take that into account when generating intellisense options.
                 // To do this, we insert a period manually and stop the Gtk signal from propagating further.
                 e.RetVal = true;
@@ -482,11 +481,9 @@ namespace UserInterface.Views
         {
             if (pos == 0)
                 return string.Empty;
-            else
-            {
-                int PosDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
-                return textEditor.Text.Substring(PosDelimiter + 1, pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
-            }
+
+            int posDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
+            return textEditor.Text.Substring(posDelimiter + 1, pos - posDelimiter - 1).TrimEnd(".".ToCharArray());
         }
 
         /// <summary>
