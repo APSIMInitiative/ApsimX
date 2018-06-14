@@ -65,7 +65,8 @@ namespace UserInterface.Views
 
         private Menu Popup = new Menu();
 
-        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(System.Drawing.Color));
+        // If you add a new item to the tree model that is not at the end (e.g. add a bool as the third item), a lot of things will break.
+        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(Color), typeof(bool));
         private CellRendererText textRender;
         private AccelGroup accel = new AccelGroup();
         private bool showIncludeInDocs = false;
@@ -132,32 +133,38 @@ namespace UserInterface.Views
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// Allows for fine control over how each individual cell is rendered.
+        /// </summary>
+        /// <param name="col">Column in which the cell appears.</param>
+        /// <param name="cell">
+        /// The individual cells. 
+        /// Any changes to this cell only affect this cell.
+        /// The other cells in the column are unaffected.
+        /// </param>
+        /// <param name="model">
+        /// The tree model which holds the data being displayed in the tree.
+        /// </param>
+        /// <param name="iter">
+        /// TreeIter object associated with this cell in the tree. This object
+        /// can be used for many things, such as retrieving this cell's data.
+        /// </param>
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
-            TreePath path = model.GetPath(iter);
-            TreeView view = col.TreeView as TreeView;
-            int rowNo = path.Indices[0];
-            int colNo = GetColNumber(col);
-            object node = model.GetValue(iter, colNo);
-            System.Drawing.Color colour = (System.Drawing.Color)model.GetValue(iter, 4);
-            
-            //IntPtr values = IntPtr.Zero;
-            //model.GetValist(iter, values);
+            // This makes a lot of assumptions about how the tree model is structured.
             if (cell is CellRendererText)
             {
+                Color colour = (Color)model.GetValue(iter, 4);
+                (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
                 //(cell as CellRendererText).ForegroundGdk = colour;
+
+                // This is a bit of a hack which we use to convert a System.Drawing.Color
+                // to its hex string equivalent (e.g. #FF0000).
                 string hex = ColorTranslator.ToHtml(Color.FromArgb(colour.ToArgb()));
+
                 string text = (string)model.GetValue(iter, 0);
                 (cell as CellRendererText).Markup = "<span foreground=\"" + hex + "\">" + text + "</span>";
             }
-        }
-
-        private int GetColNumber(TreeViewColumn col)
-        {
-            for (int i = 0; i < this.treeview1.Columns.Length; i++)
-                if (treeview1.Columns[i] == col)
-                    return i;
-            return -1;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -631,7 +638,7 @@ namespace UserInterface.Views
                 }
             }
             string tick = description.IncludeInDocumentation && showIncludeInDocs ? "✔" : "";
-            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour);
+            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
 
             for (int i = 0; i < description.Children.Count; i++)
             {
