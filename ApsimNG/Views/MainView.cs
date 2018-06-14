@@ -168,7 +168,22 @@ namespace UserInterface.Views
         /// <summary>Invoked when application tries to close</summary>
         public event EventHandler<EventArgs> StopSimulation;
                 
-        public event EventHandler ShowDetailedError;    
+        public event EventHandler ShowDetailedError;
+
+        /// <summary>
+        /// Stores the size, in points, of the "default" base font
+        /// </summary>
+        private double defaultBaseSize;
+
+        /// <summary>
+        /// The size, in points, of our base font
+        /// </summary>
+        private double baseFontSize = 12.5;
+
+        /// <summary>
+        /// Step by which we do font size changes (in points)
+        /// </summary>
+        private double scrollSizeStep = 0.5;
 
         public int StatusPanelHeight
         {
@@ -181,6 +196,28 @@ namespace UserInterface.Views
                 hbox1.HeightRequest = value;                
             }
         }
+
+        /// <summary>
+        /// The size, in pointer, of our base font
+        /// </summary>
+        public double FontSize
+        {
+            get
+            {
+                return baseFontSize;
+            }
+            set
+            {
+                double newSize = Math.Min(40.0, Math.Max(4.0, value));
+                if (newSize != baseFontSize)
+                {
+                    baseFontSize = value;
+                    SetFontSize(baseFontSize);
+                }
+            }
+        }
+
+
         private int numberOfButtons;
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
@@ -260,81 +297,6 @@ namespace UserInterface.Views
             //window1.ShowAll();
             if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
-        }
-
-        private double defaultBaseSize;
-
-        /// <summary>
-        /// The size, in points, of our base font
-        /// </summary>
-        private double baseFontSize = 12.5;
-
-        /// <summary>
-        /// Step by which we do font size changes (in points)
-        /// </summary>
-        private double scrollSizeStep = 0.5;
-
-        /// <summary>
-        /// The size, in pointer, of our base font
-        /// </summary>
-        public double FontSize
-        {
-            get
-            {
-                return baseFontSize;
-            }
-            set
-            {
-                baseFontSize = value;
-                SetFontSize(baseFontSize);
-            }
-        }
-
-        /// <summary>
-        /// Handler for mouse wheel events. We intercept it to allow Ctrl+wheel-up/down to adjust font size
-        /// </summary>
-        /// <param name="o"></param>
-        /// <param name="args"></param>
-        private void ListView_ScrollEvent(object o, ScrollEventArgs args)
-        {
-            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
-                //Mac window manager already uses control-scroll, so use command
-                //Command might be either meta or mod1, depending on GTK version
-                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
-
-            if ((args.Event.State & ctlModifier) != 0)
-            {
-                if (args.Event.Direction == Gdk.ScrollDirection.Up)
-                    baseFontSize += scrollSizeStep;
-                else if (args.Event.Direction == Gdk.ScrollDirection.Down)
-                    baseFontSize -= scrollSizeStep;
-                SetFontSize(baseFontSize);
-                args.RetVal = true;
-            }
-        }
-
-        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
-        private void ListView_KeyPressEvent(object o, KeyPressEventArgs args)
-        {
-            args.RetVal = false;
-            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
-                //Mac window manager already uses control-scroll, so use command
-                //Command might be either meta or mod1, depending on GTK version
-                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
-
-            if ((args.Event.State & ctlModifier) != 0)
-            {
-                switch (args.Event.Key)
-                {
-                    case Gdk.Key.Key_0: baseFontSize = defaultBaseSize; args.RetVal = true; break;
-                    case Gdk.Key.KP_Add:
-                    case Gdk.Key.plus: baseFontSize += scrollSizeStep; args.RetVal = true; break;
-                    case Gdk.Key.KP_Subtract:
-                    case Gdk.Key.minus: baseFontSize -= scrollSizeStep; args.RetVal = true; break;
-                }
-                if ((bool)args.RetVal)
-                    SetFontSize(baseFontSize);
-            }
         }
 
         /// <summary>
@@ -849,6 +811,55 @@ namespace UserInterface.Views
             {
                 EventArgs args = new EventArgs();
                 StopSimulation.Invoke(this, args);
+            }
+        }
+
+        /// <summary>
+        /// Handler for mouse wheel events. We intercept it to allow Ctrl+wheel-up/down to adjust font size
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void ListView_ScrollEvent(object o, ScrollEventArgs args)
+        {
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
+            if ((args.Event.State & ctlModifier) != 0)
+            {
+                if (args.Event.Direction == Gdk.ScrollDirection.Up)
+                    FontSize += scrollSizeStep;
+                else if (args.Event.Direction == Gdk.ScrollDirection.Down)
+                    FontSize -= scrollSizeStep;
+                args.RetVal = true;
+            }
+        }
+
+        /// <summary>
+        /// Handle key press events to allow ctrl +/-/0 to adjust font size
+        /// </summary>
+        /// <param name="o">Source of the event</param>
+        /// <param name="args">Event arguments</param>
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
+        private void ListView_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            args.RetVal = false;
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
+            if ((args.Event.State & ctlModifier) != 0)
+            {
+                switch (args.Event.Key)
+                {
+                    case Gdk.Key.Key_0: FontSize = defaultBaseSize; args.RetVal = true; break;
+                    case Gdk.Key.KP_Add:
+                    case Gdk.Key.plus: FontSize += scrollSizeStep; args.RetVal = true; break;
+                    case Gdk.Key.KP_Subtract:
+                    case Gdk.Key.minus: FontSize -= scrollSizeStep; args.RetVal = true; break;
+                }
             }
         }
 
