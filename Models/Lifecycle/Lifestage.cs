@@ -123,6 +123,7 @@ namespace Models.LifeCycle
                 for (int i = 0; i < count; i++)
                 {
                     aCohort = CohortList[i];
+                    aCohort.Mortality = 0;              // can have multiple mortality processes in this stage
                     //apply functions to cohort
                     CurrentCohort = aCohort;
                     //iterate throught the process children of this lifestage
