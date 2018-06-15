@@ -3172,6 +3172,20 @@ namespace Models.AgPasture
 
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+        /// <summary>Get above ground biomass</summary>
+        public Biomass AboveGround
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt = leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.StructuralN = leaves.NLive + leaves.NDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.DMDOfStructural = leaves.DigestibilityLive;
+                return mass;
+            }
+        }
+
+
         /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
         [Description("Dry matter weight available for harvesting")]
         [Units("kg/ha")]

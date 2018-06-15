@@ -55,6 +55,11 @@ namespace UserInterface.Views
         int StatusPanelHeight { get; set; }
 
         /// <summary>
+        ///  Default font size, in points.
+        /// </summary>
+        double FontSize { get; set; }
+
+        /// <summary>
         /// Returns true if the object is a control on the left side
         /// </summary>
         bool IsControlOnLeft(object control);
@@ -163,7 +168,22 @@ namespace UserInterface.Views
         /// <summary>Invoked when application tries to close</summary>
         public event EventHandler<EventArgs> StopSimulation;
                 
-        public event EventHandler ShowDetailedError;    
+        public event EventHandler ShowDetailedError;
+
+        /// <summary>
+        /// Stores the size, in points, of the "default" base font
+        /// </summary>
+        private double defaultBaseSize;
+
+        /// <summary>
+        /// The size, in points, of our base font
+        /// </summary>
+        private double baseFontSize = 12.5;
+
+        /// <summary>
+        /// Step by which we do font size changes (in points)
+        /// </summary>
+        private double scrollSizeStep = 0.5;
 
         public int StatusPanelHeight
         {
@@ -176,6 +196,28 @@ namespace UserInterface.Views
                 hbox1.HeightRequest = value;                
             }
         }
+
+        /// <summary>
+        /// The size, in pointer, of our base font
+        /// </summary>
+        public double FontSize
+        {
+            get
+            {
+                return baseFontSize;
+            }
+            set
+            {
+                double newSize = Math.Min(40.0, Math.Max(4.0, value));
+                if (newSize != baseFontSize)
+                {
+                    baseFontSize = value;
+                    SetFontSize(baseFontSize);
+                }
+            }
+        }
+
+
         private int numberOfButtons;
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
@@ -191,6 +233,9 @@ namespace UserInterface.Views
         private HPaned hpaned1 = null;
         private HBox hbox1 = null;
 
+        private Gtk.RcStyle rcStyle = new Gtk.RcStyle();
+        private Pango.FontDescription baseFont;
+
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
@@ -200,6 +245,9 @@ namespace UserInterface.Views
                 Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                       ".gtkrc"));
             }
+            baseFont = Gtk.Rc.GetStyle(new Label()).FontDescription.Copy();
+            defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
+            FontSize = Utility.Configuration.Settings.BaseFontSize;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
@@ -242,6 +290,10 @@ namespace UserInterface.Views
             stopButton.Image.Visible = true;
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
+            listButtonView1.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
+            listButtonView2.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
+            listButtonView1.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
+            listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
             if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
@@ -361,6 +413,12 @@ namespace UserInterface.Views
                 if (!args.AllowClose)
                     return;
             }
+            stopButton.Clicked -= OnStopClicked;
+            window1.DeleteEvent -= OnClosing;
+            listButtonView1.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
+            listButtonView2.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
+            listButtonView1.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
+            listButtonView2.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
             _mainWidget.Destroy();
 
             // Let all the destruction stuff be carried out, just in 
@@ -754,6 +812,97 @@ namespace UserInterface.Views
                 EventArgs args = new EventArgs();
                 StopSimulation.Invoke(this, args);
             }
+        }
+
+        /// <summary>
+        /// Handler for mouse wheel events. We intercept it to allow Ctrl+wheel-up/down to adjust font size
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void ListView_ScrollEvent(object o, ScrollEventArgs args)
+        {
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
+            if ((args.Event.State & ctlModifier) != 0)
+            {
+                if (args.Event.Direction == Gdk.ScrollDirection.Up)
+                    FontSize += scrollSizeStep;
+                else if (args.Event.Direction == Gdk.ScrollDirection.Down)
+                    FontSize -= scrollSizeStep;
+                args.RetVal = true;
+            }
+        }
+
+        /// <summary>
+        /// Handle key press events to allow ctrl +/-/0 to adjust font size
+        /// </summary>
+        /// <param name="o">Source of the event</param>
+        /// <param name="args">Event arguments</param>
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
+        private void ListView_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            args.RetVal = false;
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
+            if ((args.Event.State & ctlModifier) != 0)
+            {
+                switch (args.Event.Key)
+                {
+                    case Gdk.Key.Key_0: FontSize = defaultBaseSize; args.RetVal = true; break;
+                    case Gdk.Key.KP_Add:
+                    case Gdk.Key.plus: FontSize += scrollSizeStep; args.RetVal = true; break;
+                    case Gdk.Key.KP_Subtract:
+                    case Gdk.Key.minus: FontSize -= scrollSizeStep; args.RetVal = true; break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recursively applies a new FontDescription to all widgets
+        /// </summary>
+        /// <param name="widget"></param>
+        /// <param name="newFont"></param>
+        private void SetWidgetFont(Widget widget, Pango.FontDescription newFont)
+        {
+            widget.ModifyFont(newFont);
+            if (widget is Container)
+            {
+                foreach (Widget child in (widget as Container).Children)
+                {
+                    SetWidgetFont(child, newFont);
+                }
+                if (widget is Notebook)
+                    for (int i = 0; i < (widget as Notebook).NPages; i++)
+                        SetWidgetFont((widget as Notebook).GetTabLabel((widget as Notebook).GetNthPage(i)), newFont);
+            }
+        }
+
+        /// <summary>
+        /// Change the font size
+        /// </summary>
+        /// <param name="newSize">New base font size, in points</param>
+        private void SetFontSize(double newSize)
+        {
+            newSize = Math.Min(40.0, Math.Max(4.0, newSize));
+            // Convert the new size from points to Pango units
+            int newVal = Convert.ToInt32(newSize * Pango.Scale.PangoScale);
+            baseFont.Size = newVal;
+
+            // Iterate through all existing controls, setting the new base font
+            if (_mainWidget != null)
+                SetWidgetFont(_mainWidget, baseFont);
+
+            // Reset the style machinery to apply the new base font to all
+            // newly created Widgets.
+            rcStyle.FontDesc = baseFont;
+            bool result = Gtk.Rc.ReparseAllForSettings(Gtk.Settings.Default, true);
+            Gtk.Rc.AddWidgetClassStyle(rcStyle, "*.<GtkWidget>.*");
         }
 
     }

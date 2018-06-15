@@ -89,8 +89,11 @@ namespace Models.PMF
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
+
+        /// <summary>Above ground weight</summary>
         [Link(IsOptional = true)]
-        Biomass AboveGround = null;
+        public Biomass AboveGround { get; set; }
+
         /// <summary>
         /// Clock
         /// </summary>
