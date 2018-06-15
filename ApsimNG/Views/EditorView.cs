@@ -424,6 +424,7 @@ namespace UserInterface.Views
 
             bool controlSpace = IsControlSpace(e.Event);
             string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
+            double x; // unused, but needed as an out parameter.
             if (e.Event.Key == Gdk.Key.F3)
             {
                 if (string.IsNullOrEmpty(_findForm.LookFor))
@@ -433,7 +434,7 @@ namespace UserInterface.Views
                 e.RetVal = true;
             }
             // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
-            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out _) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) )
+            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) )
             {
                 // If the user entered a period, we need to take that into account when generating intellisense options.
                 // To do this, we insert a period manually and stop the Gtk signal from propagating further.
