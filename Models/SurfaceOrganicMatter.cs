@@ -144,13 +144,6 @@
         private double irrig;
         /// <summary>The cumeos</summary>
         private double cumeos;
-        /// <summary>The old som state</summary>
-        private OMFractionType oldSOMState;
-        /// <summary>The daily initial c</summary>
-        private double DailyInitialC;
-        /// <summary>The daily initial n</summary>
-        private double DailyInitialN;
-
         /// <summary>Gets or sets the report additions.</summary>
         /// <value>The report additions.</value>
         public string ReportAdditions { get; set; }
@@ -475,10 +468,6 @@
         /// <summary>The specific_area</summary>
         private double[] specific_area = new double[0];      // specific area of residue (ha/kg)
 
-        /// <summary>The pond active</summary>
-        [Units("")]
-        public string PondActive = null;
-
         /// <summary>The labile_p</summary>
         [Units("")]
         public double[] labile_p = null;
@@ -487,16 +476,6 @@
         /// <value>The Surface OM Weight.</value>
         [Units("kg/ha")]
         public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
-
-        /// <summary>Gets the carbonbalance.</summary>
-        /// <value>The carbonbalance.</value>
-        [Units("kg/ha")]
-        public double carbonbalance { get { return 0 - (C - DailyInitialC); } }
-
-        /// <summary>Gets the nitrogenbalance.</summary>
-        /// <value>The nitrogenbalance.</value>
-        [Units("kg/ha")]
-        public double nitrogenbalance { get { return 0 - (N - DailyInitialN); } }
 
         /// <summary>Total mass of all surface organic carbon</summary>
         /// <value>The surfaceom_c.</value>
@@ -1244,22 +1223,6 @@
             public SurfaceOrganicMatterPoolType[] Pool;
         }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (initialised)
-            {
-                DailyInitialC = SumSurfOMStandingLying(SurfOM, x => x.C);
-                DailyInitialN = SumSurfOMStandingLying(SurfOM, x => x.N);
-            }
-        }
-
-        /// <summary>The initialised</summary>
-        bool initialised = false;
-
         /// <summary>Incorporates the specified fraction.</summary>
         /// <param name="fraction">The fraction.</param>
         /// <param name="depth">The depth.</param>
@@ -1292,10 +1255,7 @@
             irrig = 0;
             cumeos = 0;
             _leaching_fr = 0;
-            PondActive = "no";
-            oldSOMState = new OMFractionType();
             ZeroVariables();
-            initialised = true; 
             SurfomReset();
         }
 
@@ -1328,8 +1288,11 @@
         /// <returns></returns>
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
-            GetOtherVariables();
-            return Process();
+            double leachRain = 0; // "leaching" rainfall (if rain>10mm)
+            SetVars(out cumeos, out leachRain);
+            if (leachRain > 0.0)
+                Leach(leachRain);
+            return SendPotDecompEvent();
         }
 
         /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
@@ -1414,19 +1377,6 @@
             irrig = 0;
         }
 
-        /// <summary>Get the values of variables from other modules</summary>
-        private void GetOtherVariables()
-        {
-            CheckPond();
-        }
-
-        /// <summary>Checks the pond.</summary>
-        private void CheckPond()
-        {
-            if (PondActive == null || PondActive.Length < 1)
-                PondActive = "no";
-        }
-
         /// <summary>
         /// Read in all parameters from parameter file
         /// <para>
@@ -1444,12 +1394,6 @@
 
             if (ReportRemovals == null || ReportRemovals.Length == 0)
                 ReportRemovals = "no";
-
-            // NOW, PUT ALL THIS INFO INTO THE "SurfaceOM" STRUCTURE;
-
-            DailyInitialC = DailyInitialN = 0;
-
-            // SurfOM = new List<SurfOrganicMatterType>();
 
             for (int i = 0; i < Pools.Count; i++)
             {
@@ -1493,8 +1437,6 @@
                     SurfOM[SOMNo].Lying[j].P += totP[i] * frPoolP[j, SOMNo] * (1.0 - standFract);
                 }
             }
-            DailyInitialC = totC.Sum();
-            DailyInitialN = totN.Sum();
         }
 
 
@@ -1639,10 +1581,7 @@
         /// <returns></returns>
         private double MoistureFactor()
         {
-            if (PondActive == "yes")
-                return 0.5;
-            else
-                return MathUtilities.Bound(1.0 - MathUtilities.Divide(cumeos, MaxCumulativeEOS, 0.0), 0.0, 1.0);
+            return MathUtilities.Bound(1.0 - MathUtilities.Divide(cumeos, MaxCumulativeEOS, 0.0), 0.0, 1.0);
         }
 
         /// <summary>Calculate total cover</summary>
@@ -1655,20 +1594,6 @@
                 combinedCover = AddCover(combinedCover, CoverOfSOM(i));
 
             return combinedCover;
-        }
-
-        /// <summary>Perform actions for current day.</summary>
-        /// <returns></returns>
-        private SurfaceOrganicMatterDecompType Process()
-        {
-            double leachRain = 0; // "leaching" rainfall (if rain>10mm)
-
-            SetVars(out cumeos, out leachRain);
-
-            if (leachRain > 0.0)
-                Leach(leachRain);
-
-            return SendPotDecompEvent();
         }
 
         /// <summary>
