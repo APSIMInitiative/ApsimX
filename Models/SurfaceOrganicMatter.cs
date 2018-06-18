@@ -1196,51 +1196,12 @@
         /// <summary>Initialise residue module</summary>
         private void SurfomReset()
         {
-            SaveState();
             ZeroVariables();
             ReadParam();
-            DeltaState();
-        }
-
-        /// <summary>Saves the state.</summary>
-        private void SaveState()
-        {
-            oldSOMState = SurfomTotalState();
-        }
-
-        /// <summary>Deltas the state.</summary>
-        private void DeltaState()
-        {
-            OMFractionType newSOMState = SurfomTotalState();
-            Models.Soils.ExternalMassFlowType massBalanceChange = new Models.Soils.ExternalMassFlowType();
-
-            massBalanceChange.DM = newSOMState.amount - oldSOMState.amount;
-            massBalanceChange.C = newSOMState.C - oldSOMState.C;
-            massBalanceChange.N = newSOMState.N - oldSOMState.N;
-            massBalanceChange.P = newSOMState.P - oldSOMState.P;
-            massBalanceChange.SW = 0.0;
-
-            if (massBalanceChange.DM >= 0.0)
-                massBalanceChange.FlowType = "gain";
-            else
-                massBalanceChange.FlowType = "loss";
-
-            SendExternalMassFlow(massBalanceChange);
-            return;
         }
 
         /// <summary>Published when a tillage has been completed.</summary>
         public event TillageTypeDelegate TillageCompleted;
-
-        /// <summary>Occurs when [external mass flow].</summary>
-        public event Models.Soils.SoilNitrogen.ExternalMassFlowDelegate ExternalMassFlow;
-        /// <summary>Publishes the external mass flow.</summary>
-        /// <param name="massBalanceChange">The mass balance change.</param>
-        private void PublishExternalMassFlow(ExternalMassFlowType massBalanceChange)
-        {
-            if (ExternalMassFlow != null)
-                ExternalMassFlow.Invoke(massBalanceChange);
-        }
 
         /// <summary>
         /// 
@@ -1422,14 +1383,6 @@
         /// <summary>Called when [add faeces].</summary>
         /// <param name="data">The data.</param>
         public void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
-
-        /// <summary>Sends the external mass flow.</summary>
-        /// <param name="massBalanceChange">The mass balance change.</param>
-        private void SendExternalMassFlow(ExternalMassFlowType massBalanceChange)
-        {
-            massBalanceChange.PoolClass = "surface";
-            PublishExternalMassFlow(massBalanceChange);
-        }
 
         /// <summary>Surfoms the total state.</summary>
         /// <returns></returns>
@@ -2007,7 +1960,6 @@
             double[] nh4 = new double[nLayers]; // total nh4 to go into each soil layer (from all surfOM"s)
             double[] po4 = new double[nLayers]; // total po4 to go into each soil layer (from all surfOM"s)
             FOMPoolType FPoolProfile = new FOMPoolType();
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
 
             fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
@@ -2062,27 +2014,6 @@
                 }
                 if (IncorpFOMPool != null)
                     IncorpFOMPool.Invoke(FPoolProfile);
-            }
-
-            if (tillageDepth <= 0.000001)
-            {
-                // the OM is not incorporated and is lost from the system;
-                massBalanceChange.PoolClass = "surface";
-                massBalanceChange.FlowType = "loss";
-                massBalanceChange.DM = 0.0;
-                massBalanceChange.C = 0.0;
-                massBalanceChange.N = 0.0;
-                massBalanceChange.P = 0.0;
-                massBalanceChange.SW = 0.0;
-
-                for (int pool = 0; pool < maxFr; pool++)
-                {
-                    massBalanceChange.DM += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].amount + x.Lying[pool].amount) * fIncorp;
-                    massBalanceChange.C += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].C + x.Lying[pool].C) * fIncorp;
-                    massBalanceChange.N += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].N + x.Lying[pool].N) * fIncorp;
-                    massBalanceChange.P += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].P + x.Lying[pool].P) * fIncorp;
-                }
-                SendExternalMassFlow(massBalanceChange);
             }
 
             for (int pool = 0; pool < maxFr; pool++)
