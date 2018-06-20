@@ -17,7 +17,7 @@
     /// [DocumentView]
     /// ## Pools
     /// [DocumentType NutrientPool]
-    /// ## Solutes:
+    /// ## Solutes
     /// [DocumentType Solute]
     /// </summary>
     [Serializable]
