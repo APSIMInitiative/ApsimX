@@ -1,4 +1,4 @@
-﻿namespace Models.Soils.Nutrient
+﻿namespace Models.Soils.Nutrients
 {
     using Interfaces;
     using Models.Core;
@@ -24,7 +24,7 @@
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
+    public class Nutrient : ModelCollectionFromResource, INutrient, IVisualiseAsDirectedGraph
     {
         private DirectedGraph _directedGraphInfo;
 
@@ -51,6 +51,10 @@
         /// <summary>The surface organic matter</summary>
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
+
+        /// <summary>The surface organic matter</summary>
+        [Link]
+        private Soil Soil = null;
 
         [ChildLinkByName]
         NutrientPool FOMCellulose = null;
@@ -85,6 +89,86 @@
             }
         }
 
+
+        /// <summary>
+        /// total C lost to the atmosphere
+        /// </summary>
+        public double[] Catm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
+
+                foreach (CarbonFlow f in Flows)
+                    values = MathUtilities.Add(values, f.Catm);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// total N lost to the atmosphere
+        /// </summary>
+        public double[] Natm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
+
+                foreach (NFlow f in Flows)
+                    values = MathUtilities.Add(values, f.Natm);
+                return values;
+            }
+        }
+
+
+        /// <summary>
+        /// total N lost to the atmosphere
+        /// </summary>
+        public double[] N2Oatm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
+
+                foreach (NFlow f in Flows)
+                    values = MathUtilities.Add(values, f.N2Oatm);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// total Net N Mineralisaed in each soil layer
+        /// </summary>
+        public double[] MineralisedN
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
+
+                foreach (CarbonFlow f in Flows)
+                    values = MathUtilities.Add(values, f.MineralisedN);
+                return values;
+            }
+        }
+        /// <summary>
+        /// total Net N Mineralisaed in each soil layer
+        /// </summary>
+        public double[] MineralN
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                double[] NH4 = solutes.GetSolute("NH4");
+                double[] NO3 = solutes.GetSolute("NO3");
+                values = MathUtilities.Add(values, NH4);
+                values = MathUtilities.Add(values, NO3);
+                return values;
+            }
+        }
         /// <summary>
         /// Total C in each soil layer
         /// </summary>
@@ -253,6 +337,7 @@
 
             SurfaceResidue.C[0] = 0;
             SurfaceResidue.N[0] = 0;
+            SurfaceResidue.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / Soil.Thickness[0]),0.0);
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
                 SurfaceResidue.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;

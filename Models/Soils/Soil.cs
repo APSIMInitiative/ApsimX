@@ -13,6 +13,7 @@ namespace Models.Soils
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Interfaces;
+    using Soils.Nutrients;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -39,6 +40,11 @@ namespace Models.Soils
         [XmlIgnore]
         public SoilNitrogen SoilNitrogen { get; private set; }
 
+        /// <summary>
+        /// Soil Nutrient model
+        /// </summary>
+        [XmlIgnore]
+        public Nutrient Nutrient { get; private set; }
 
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
@@ -171,6 +177,7 @@ namespace Models.Soils
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoluteManager = Apsim.Find(this, typeof(SoluteManager)) as SoluteManager;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
+            Nutrient = Apsim.Child(this, typeof(Nutrient)) as Nutrient;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
 
@@ -930,6 +937,18 @@ namespace Models.Soils
                 if (SoilOrganicMatter.FInert == null) return null;
                 return Map(SoilOrganicMatter.FInert, SoilOrganicMatter.Thickness, Thickness,
                            MapType.Concentration, LastValue(SoilOrganicMatter.FInert));
+            }
+        }
+        /// <summary>Initial Root Wt</summary>
+        /// <value>Initial Root Wt</value>
+        [Units("kg/ha")]
+        public double[] InitialRootWt
+        {
+            get
+            {
+                if (SoilOrganicMatter.RootWt == null) return null;
+                return Map(SoilOrganicMatter.RootWt, SoilOrganicMatter.Thickness, Thickness,
+                           MapType.Mass, LastValue(SoilOrganicMatter.RootWt));
             }
         }
         #endregion

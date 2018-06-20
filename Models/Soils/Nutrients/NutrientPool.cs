@@ -1,4 +1,4 @@
-﻿namespace Models.Soils.Nutrient
+﻿namespace Models.Soils.Nutrients
 {
     using Models.Core;
     using PMF.Functions;
@@ -7,7 +7,17 @@
     using APSIM.Shared.Utilities;
     /// <summary>
     /// # [Name]
-    /// This pool encapsulates the carbon and nitrogen within a soil organic matter pool.  Child functions provide information on its initialisation and flows of C and N from it to other pools, or losses from the system.
+    /// [DocumentType Memo]
+    /// 
+    /// This nutrient pool class used for this pool encapsulates the carbon and nitrogen within a soil organic matter pool.  Child functions provide information on its initialisation and flows of C and N from it to other pools, or losses from the system.
+    /// 
+    /// ## Initialisation
+    /// [Document InitialCarbon]
+    /// [Document InitialNitrogen]
+    /// 
+    /// ## Organic Matter Flows
+    /// [DocumentType CarbonFlow]
+    /// 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
@@ -31,6 +41,11 @@
         /// <summary>Amount of nitrogen (kg/ha)</summary>
         public double[] N { get; set; }
 
+        /// <summary>
+        /// Fraction of each layer occupied by this pool.
+        /// /// </summary>
+        public double[] LayerFraction { get; set; }
+
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -44,6 +59,12 @@
             N = new double[soil.Thickness.Length];
             for (int i = 0; i < N.Length; i++)
                 N[i] = InitialNitrogen.Value(i);
+
+            // Set fraction of the layer undertaking this flow to 1 - default unless changed by parent model
+            LayerFraction = new double[soil.Thickness.Length];
+            for (int i = 0; i < LayerFraction.Length; i++)
+                LayerFraction[i] = 1.0;
+
         }
         /// <summary>
         /// Add C and N into nutrient pool

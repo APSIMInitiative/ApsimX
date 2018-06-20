@@ -69,9 +69,9 @@ namespace Models.Properties {
         ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
         ///    &lt;MemoText&gt;
         ///      &lt;![CDATA[
-        ///## Presentation
+        ///# Presentation
         ///
-        ///This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit [rest of string was truncated]&quot;;.
+        ///This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Chicory {
             get {
@@ -80,8 +80,7 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant&gt;
+        ///   Looks up a localized string similar to &lt;Plant&gt;
         ///  &lt;Name&gt;Maize&lt;/Name&gt;
         ///  &lt;OrganArbitrator&gt;
         ///    &lt;Name&gt;Arbitrator&lt;/Name&gt;
@@ -96,11 +95,33 @@ namespace Models.Properties {
         ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
         ///  &lt;/OrganArbitrator&gt;
         ///  &lt;Phenology&gt;
-        ///   [rest of string was truncated]&quot;;.
+        ///    &lt;Name&gt;Phenology&lt;/Name&gt;
+        ///    &lt;MultiplyF [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Maize {
             get {
                 return ResourceManager.GetString("Maize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
+        ///&lt;Nutrient&gt;
+        ///  &lt;Name&gt;Nutrient&lt;/Name&gt;
+        ///  &lt;Memo&gt;
+        ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
+        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
+        ///    &lt;MemoText&gt;
+        ///      &lt;![CDATA[
+        ///# The APSIM Soil Nutrient Model
+        ///
+        ///The APSIM soil nutrient model has been developed to simulate soil organic matter pools and the flows and losses of soil nutrients.  This model captures the functionality previously provided in the APSIM SoilN model ([probert_apsims_1998]).
+        ///
+        ///The model consists o [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Nutrient {
+            get {
+                return ResourceManager.GetString("Nutrient", resourceCulture);
             }
         }
         
@@ -122,6 +143,24 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Plant&gt;
+        ///  &lt;Name&gt;Plantain&lt;/Name&gt;
+        ///  &lt;Memo&gt;
+        ///    &lt;Name&gt;GeneralDescription&lt;/Name&gt;
+        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
+        ///    &lt;MemoText&gt;&lt;![CDATA[
+        ///## Presentation
+        ///
+        ///This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Plantain {
+            get {
+                return ResourceManager.GetString("Plantain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;Plant&gt;
         ///	&lt;Name&gt;Potato&lt;/Name&gt;
         ///	&lt;Memo&gt;
@@ -132,8 +171,8 @@ namespace Models.Properties {
         ///
         ///_Brown, H.E., Huth, N.I. and Holzworth, D.P._
         ///
-        ///##Building the model.
-        ///The APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to cons [rest of string was truncated]&quot;;.
+        ///#Building the model.
+        ///The APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to const [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Potato {
             get {

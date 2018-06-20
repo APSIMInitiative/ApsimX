@@ -195,14 +195,6 @@ namespace Models.Soils
         #region Parameters for setting up fresh organic matter (FOM)
 
         /// <summary>
-        /// Initial amount of FOM in the soil (kgDM/ha).
-        /// </summary>
-        [Bounds(Lower = 0, Upper = 100000)]
-        [Units("kg/ha")]
-        [XmlIgnore]
-        public double InitialFOMWt = 2000;
-
-        /// <summary>
         /// Initial depth over which FOM is distributed within the soil profile (mm).
         /// </summary>
         /// <remarks>

@@ -4924,14 +4924,21 @@ namespace Models.AgPasture
                     FOMdataLayer[layer] = layerData;
                 }
 
-                if (IncorpFOM != null)
-                {
-                    FOMLayerType FOMData = new FOMLayerType();
-                    FOMData.Type = mySpeciesFamily.ToString();
-                    FOMData.Layer = FOMdataLayer;
-                    IncorpFOM.Invoke(FOMData);
-                }
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = mySpeciesFamily.ToString();
+                FOMData.Layer = FOMdataLayer;
+
+                InvokeIncorpFOM(FOMData);
             }
+        }
+        /// <summary>
+        /// Invoke the Incorp FOM Event
+        /// </summary>
+        /// <param name="FOMData"></param>
+        public void InvokeIncorpFOM( FOMLayerType FOMData)
+        {
+            if (IncorpFOM != null)
+                IncorpFOM.Invoke(FOMData);
         }
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
