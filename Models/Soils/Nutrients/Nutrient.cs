@@ -26,19 +26,20 @@
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
     public class Nutrient : ModelCollectionFromResource, INutrient, IVisualiseAsDirectedGraph
     {
-        private DirectedGraph _directedGraphInfo;
+        private DirectedGraph directedGraphInfo;
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
         {
             get
             {
-                CalculateDirectedGraph();
-                return _directedGraphInfo;
+                if (Children != null && Children.Count > 0)
+                    CalculateDirectedGraph();
+                return directedGraphInfo;
             }
             set
             {
-                _directedGraphInfo = value;
+                directedGraphInfo = value;
             }
         }
 
@@ -350,16 +351,17 @@
         /// <summary>Calculate / create a directed graph from model</summary>
         public void CalculateDirectedGraph()
         {
-            if (_directedGraphInfo == null)
-                _directedGraphInfo = new DirectedGraph();
+            if (directedGraphInfo == null)
+                directedGraphInfo = new DirectedGraph();
 
-            _directedGraphInfo.Begin();
+            directedGraphInfo.Begin();
 
             bool needAtmosphereNode = false;
 
             foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
             {
-                _directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+                directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+
                 foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
                 {
                     foreach (string destinationName in cFlow.destinationNames)
@@ -370,7 +372,7 @@
                             destName = "Atmosphere";
                             needAtmosphereNode = true;
                         }
-                        _directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
+                        directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
 
                     }
                 }
@@ -378,7 +380,7 @@
 
             foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
             {
-                _directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
+                directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
                 foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
                 {
                     string destName = nitrogenFlow.destinationName;
@@ -387,15 +389,15 @@
                         destName = "Atmosphere";
                         needAtmosphereNode = true;
                     }
-
-                    _directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
+                    directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
                 }
             }
 
             if (needAtmosphereNode)
-                _directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
+                directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
 
-            _directedGraphInfo.End();
+            
+            directedGraphInfo.End();
         }
 
     }
