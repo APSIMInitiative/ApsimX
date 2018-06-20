@@ -1252,7 +1252,7 @@ But their data suggests a value of 0.3]]></MemoText>
         <Memo>
           <Name>Memo</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[This pool simulates the urea content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].]]></MemoText>
+          <MemoText><![CDATA[This pool simulates the urea content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize ([jones_ceres-maize:_1986]).]]></MemoText>
         </Memo>
         <NFlow>
           <Name>Hydrolysis</Name>
@@ -1342,7 +1342,7 @@ But their data suggests a value of 0.3]]></MemoText>
         <Memo>
           <Name>Memo</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].]]></MemoText>
+          <MemoText><![CDATA[This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize ([jones_ceres-maize:_1986]).]]></MemoText>
         </Memo>
         <NFlow>
           <Name>Denitrification</Name>
@@ -2386,10 +2386,10 @@ But their data suggests a value of 0.3]]></MemoText>
       <Name>Map</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Center>
-        <Latitude>44.715513732021336</Latitude>
-        <Longitude>94.833984375</Longitude>
+        <Latitude>4.9158328013131642</Latitude>
+        <Longitude>58.710937500000007</Longitude>
       </Center>
-      <Zoom>3</Zoom>
+      <Zoom>1</Zoom>
     </Map>
     <Folder>
       <Name>Combined Results</Name>
@@ -2449,7 +2449,7 @@ But their data suggests a value of 0.3]]></MemoText>
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[Insert text here to document the Australian datasets]]></MemoText>
+        <MemoText><![CDATA[Datasets from Australia have been chosen to test the soil nutrient model across a range of environments and soil types.  Preference was also given to datasets of long enough duration to show changes in soil organic matter status.]]></MemoText>
       </Memo>
       <Folder>
         <Name>Tarlee</Name>
@@ -2458,7 +2458,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Insert text here to document the Tarlee dataset]]></MemoText>
+            <MemoText><![CDATA[The Tarlee crop rotation trial was established in 1977 in Tarlee, South Australia to monitor the long term impact of crop rotations on soil properties and crop production ([Schultz1995]).  Rundown in soil organic matter status has been documented and modelled for this data set ([Skjemstad2004]).  The soil is a hard setting red-brown earth with a sandy loam texture. The long term mean annual rainfall for the rainfall is 475 mm.]]></MemoText>
           </Memo>
           <Factors>
             <Name>Factors</Name>
@@ -21205,6 +21205,21 @@ namespace Models
         <Name>Pendleton</Name>
         <Experiment>
           <Name>Pendleton</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This dataset describes the long term trial at Pendleton, Oregon.  The experiment design included Winter-wheat / fallow rotations in 9 treatments (2 replications with 2 blocks offset by 1 year).  Wheat varieties varied over the duration of the trial as follows:
+1931 to 1966: Medium-tall soft white
+1967+ : Semi-dwarf
+
+Wheat was planted mid-October and harvested after 6-7 months growth.
+
+The treatments included:
+2 Organic residues: Pea Vines and Manure
+3 N rates: 0, 45 and 90 kgN/ha (Prior to 1966 - only 0 and 34 kgN/ha)
+3 Stubble managements:  No burn, Spring Burn and Fall Burn
+]]></MemoText>
+          </Memo>
           <Factors>
             <Name>Factors</Name>
             <Factor>
