@@ -2062,8 +2062,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Inert</Name>
             <Location>
-              <X>800</X>
-              <Y>519</Y>
+              <X>551</X>
+              <Y>449</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2071,8 +2071,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>SurfaceResidue</Name>
             <Location>
-              <X>383</X>
-              <Y>101</Y>
+              <X>283</X>
+              <Y>69</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2080,8 +2080,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Microbial</Name>
             <Location>
-              <X>224</X>
-              <Y>514</Y>
+              <X>144</X>
+              <Y>437</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2089,8 +2089,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Humic</Name>
             <Location>
-              <X>538</X>
-              <Y>529</Y>
+              <X>374</X>
+              <Y>453</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2098,8 +2098,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>FOMLignin</Name>
             <Location>
-              <X>86</X>
-              <Y>323</Y>
+              <X>80</X>
+              <Y>221</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2107,8 +2107,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>FOMCellulose</Name>
             <Location>
-              <X>367</X>
-              <Y>325</Y>
+              <X>278</X>
+              <Y>227</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2116,8 +2116,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>FOMCarbohydrate</Name>
             <Location>
-              <X>637</X>
-              <Y>330</Y>
+              <X>467</X>
+              <Y>219</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2125,8 +2125,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Urea</Name>
             <Location>
-              <X>753</X>
-              <Y>787</Y>
+              <X>74</X>
+              <Y>666</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2134,8 +2134,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>NO3</Name>
             <Location>
-              <X>300</X>
-              <Y>777</Y>
+              <X>400</X>
+              <Y>672</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2143,8 +2143,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>NH4</Name>
             <Location>
-              <X>526</X>
-              <Y>782</Y>
+              <X>237</X>
+              <Y>673</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2152,8 +2152,8 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Atmosphere</Name>
             <Location>
-              <X>84</X>
-              <Y>779</Y>
+              <X>586</X>
+              <Y>673</Y>
             </Location>
             <Colour />
             <OutlineColour />
@@ -2164,8 +2164,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>SurfaceResidue</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
-              <X>276</X>
-              <Y>229</Y>
+              <X>165</X>
+              <Y>251</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2173,8 +2173,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>SurfaceResidue</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>513</X>
-              <Y>352</Y>
+              <X>420</X>
+              <Y>293</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2182,8 +2182,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Microbial</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
-              <X>318</X>
-              <Y>626</Y>
+              <X>211</X>
+              <Y>584</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2191,8 +2191,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Microbial</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>380</X>
-              <Y>607</Y>
+              <X>263</X>
+              <Y>529</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2200,8 +2200,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Humic</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
-              <X>293</X>
-              <Y>525</Y>
+              <X>250</X>
+              <Y>451</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2209,8 +2209,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMLignin</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
-              <X>33</X>
-              <Y>493</Y>
+              <X>56</X>
+              <Y>396</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2227,8 +2227,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMCellulose</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
-              <X>337</X>
-              <Y>410</Y>
+              <X>211</X>
+              <Y>391</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2245,8 +2245,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMCarbohydrate</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
-              <X>517</X>
-              <Y>362</Y>
+              <X>407</X>
+              <Y>337</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2254,8 +2254,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMCarbohydrate</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
-              <X>588</X>
-              <Y>400</Y>
+              <X>517</X>
+              <Y>377</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2263,8 +2263,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Urea</SourceName>
             <DestinationName>NH4</DestinationName>
             <Location>
-              <X>768</X>
-              <Y>771</Y>
+              <X>180</X>
+              <Y>665</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2272,8 +2272,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>NO3</SourceName>
             <DestinationName>Atmosphere</DestinationName>
             <Location>
-              <X>307</X>
-              <Y>765</Y>
+              <X>507</X>
+              <Y>668</Y>
             </Location>
             <Colour />
           </Arc>
@@ -2281,8 +2281,8 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>NH4</SourceName>
             <DestinationName>NO3</DestinationName>
             <Location>
-              <X>505</X>
-              <Y>767</Y>
+              <X>314</X>
+              <Y>670</Y>
             </Location>
             <Colour />
           </Arc>

@@ -171,7 +171,7 @@ namespace Models.Soils.Nutrients
                 tableData.Columns.Add("Destination Pool", typeof(string));
                 tableData.Columns.Add("Carbon Fraction", typeof(string));
 
-                for (int j = 0; j < destinations.Count; j++)
+                for (int j = 0; j < destinationNames.Length; j++)
                 {
                     DataRow row = tableData.NewRow();
                     row[0] = destinationNames[j];
