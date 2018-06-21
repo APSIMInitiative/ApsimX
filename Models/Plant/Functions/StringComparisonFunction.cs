@@ -69,6 +69,10 @@ namespace Models.PMF.Functions
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
                 tags.Add(new AutoDocumentation.Paragraph("If " + PropertyName + " = " + StringValue + " Then", indent));
                 AutoDocumentation.DocumentModel(TrueValue as IModel,tags, headingLevel+1, indent+1);
 

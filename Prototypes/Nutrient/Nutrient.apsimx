@@ -1215,18 +1215,23 @@ But their data suggests a value of 0.3]]></MemoText>
         </Constant>
         <CarbonFlow>
           <Name>Decomposition</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The soil nutrient model will attempt to decompose all potentially decomposable surface organic materials.]]></MemoText>
-          </Memo>
           <Constant>
             <Name>Rate</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The soil nutrient model will attempt to decompose all potentially decomposable surface organic materials.]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.4</FixedValue>
           </Constant>
@@ -1424,6 +1429,11 @@ But their data suggests a value of 0.3]]></MemoText>
           </MultiplyFunction>
           <ExpressionFunction>
             <Name>N2OFraction</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The model for the fraction of N loss as N2O is taken from the DayCent model of ([PARTON1998]) as tested within APSIM by [huth_impacts_2010] and [THORBURN2010].]]></MemoText>
+            </Memo>
             <MinimumFunction>
               <Name>N2N2ORatio</Name>
               <Constant>
@@ -1504,6 +1514,11 @@ But their data suggests a value of 0.3]]></MemoText>
         </ExpressionFunction>
         <CarbonFlow>
           <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
@@ -1530,6 +1545,11 @@ But their data suggests a value of 0.3]]></MemoText>
           </MultiplyFunction>
           <Constant>
             <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.4</FixedValue>
           </Constant>
@@ -1564,6 +1584,11 @@ But their data suggests a value of 0.3]]></MemoText>
         </ExpressionFunction>
         <CarbonFlow>
           <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
@@ -1590,6 +1615,11 @@ But their data suggests a value of 0.3]]></MemoText>
           </MultiplyFunction>
           <Constant>
             <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.4</FixedValue>
           </Constant>
@@ -1624,6 +1654,11 @@ But their data suggests a value of 0.3]]></MemoText>
         </ExpressionFunction>
         <CarbonFlow>
           <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
@@ -1650,6 +1685,11 @@ But their data suggests a value of 0.3]]></MemoText>
           </MultiplyFunction>
           <Constant>
             <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.4</FixedValue>
           </Constant>
@@ -1670,7 +1710,7 @@ But their data suggests a value of 0.3]]></MemoText>
         <Memo>
           <Name>Memo</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[The Microbial pool captures "microbial biomass -like" organic matter within the soil.  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]). ]]></MemoText>
+          <MemoText><![CDATA[The Microbial pool captures organic matter within the soil such as microbial biomass that has a relatively low carbon:nitrogen ratio and a relatively high decomposition rate.  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]). ]]></MemoText>
         </Memo>
         <ExpressionFunction>
           <Name>InitialCarbon</Name>
@@ -1684,11 +1724,21 @@ But their data suggests a value of 0.3]]></MemoText>
         </ExpressionFunction>
         <Constant>
           <Name>CNRatio</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The carbon:nitrogen ratio for microbial biomass is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>8</FixedValue>
         </Constant>
         <CarbonFlow>
           <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Rate</Name>
             <StringComparisonFunction>
@@ -1721,6 +1771,11 @@ But their data suggests a value of 0.3]]></MemoText>
           </MultiplyFunction>
           <Constant>
             <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.4</FixedValue>
           </Constant>
@@ -1776,6 +1831,11 @@ But their data suggests a value of 0.3]]></MemoText>
           </MultiplyFunction>
           <Constant>
             <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.4</FixedValue>
           </Constant>
@@ -1795,6 +1855,11 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>Nitrification</Name>
           <Constant>
             <Name>NLoss</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[Currently, no loss of N to the atmosphere is assumed to occur during nitrification processes ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
@@ -7529,8 +7594,235 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <ResourceName>Nutrient</ResourceName>
                   <DirectedGraphInfo>
-                    <Nodes />
-                    <Arcs />
+                    <Nodes>
+                      <Node>
+                        <Name>Inert</Name>
+                        <Location>
+                          <X>800</X>
+                          <Y>519</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>SurfaceResidue</Name>
+                        <Location>
+                          <X>383</X>
+                          <Y>101</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Microbial</Name>
+                        <Location>
+                          <X>224</X>
+                          <Y>514</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Humic</Name>
+                        <Location>
+                          <X>538</X>
+                          <Y>529</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMLignin</Name>
+                        <Location>
+                          <X>86</X>
+                          <Y>323</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCellulose</Name>
+                        <Location>
+                          <X>367</X>
+                          <Y>325</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCarbohydrate</Name>
+                        <Location>
+                          <X>637</X>
+                          <Y>330</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Urea</Name>
+                        <Location>
+                          <X>753</X>
+                          <Y>787</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NO3</Name>
+                        <Location>
+                          <X>300</X>
+                          <Y>777</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NH4</Name>
+                        <Location>
+                          <X>526</X>
+                          <Y>782</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Atmosphere</Name>
+                        <Location>
+                          <X>84</X>
+                          <Y>779</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                    </Nodes>
+                    <Arcs>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>276</X>
+                          <Y>229</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>513</X>
+                          <Y>352</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>318</X>
+                          <Y>626</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>380</X>
+                          <Y>607</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Humic</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>293</X>
+                          <Y>525</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>33</X>
+                          <Y>493</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>226</X>
+                          <Y>395</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>337</X>
+                          <Y>410</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>453</X>
+                          <Y>413</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>517</X>
+                          <Y>362</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>588</X>
+                          <Y>400</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Urea</SourceName>
+                        <DestinationName>NH4</DestinationName>
+                        <Location>
+                          <X>768</X>
+                          <Y>771</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NO3</SourceName>
+                        <DestinationName>Atmosphere</DestinationName>
+                        <Location>
+                          <X>307</X>
+                          <Y>765</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NH4</SourceName>
+                        <DestinationName>NO3</DestinationName>
+                        <Location>
+                          <X>505</X>
+                          <Y>767</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                    </Arcs>
                   </DirectedGraphInfo>
                 </Nutrient>
                 <SoilOrganicMatter>
@@ -8622,8 +8914,235 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Nutrient</ResourceName>
                 <DirectedGraphInfo>
-                  <Nodes />
-                  <Arcs />
+                  <Nodes>
+                    <Node>
+                      <Name>Inert</Name>
+                      <Location>
+                        <X>800</X>
+                        <Y>519</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>SurfaceResidue</Name>
+                      <Location>
+                        <X>383</X>
+                        <Y>101</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Microbial</Name>
+                      <Location>
+                        <X>224</X>
+                        <Y>514</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Humic</Name>
+                      <Location>
+                        <X>538</X>
+                        <Y>529</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMLignin</Name>
+                      <Location>
+                        <X>86</X>
+                        <Y>323</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCellulose</Name>
+                      <Location>
+                        <X>367</X>
+                        <Y>325</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCarbohydrate</Name>
+                      <Location>
+                        <X>637</X>
+                        <Y>330</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Urea</Name>
+                      <Location>
+                        <X>753</X>
+                        <Y>787</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NO3</Name>
+                      <Location>
+                        <X>300</X>
+                        <Y>777</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NH4</Name>
+                      <Location>
+                        <X>526</X>
+                        <Y>782</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Atmosphere</Name>
+                      <Location>
+                        <X>84</X>
+                        <Y>779</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                  </Nodes>
+                  <Arcs>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>276</X>
+                        <Y>229</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>513</X>
+                        <Y>352</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>318</X>
+                        <Y>626</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>380</X>
+                        <Y>607</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Humic</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>293</X>
+                        <Y>525</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>33</X>
+                        <Y>493</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>226</X>
+                        <Y>395</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>337</X>
+                        <Y>410</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>453</X>
+                        <Y>413</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>517</X>
+                        <Y>362</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>588</X>
+                        <Y>400</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Urea</SourceName>
+                      <DestinationName>NH4</DestinationName>
+                      <Location>
+                        <X>768</X>
+                        <Y>771</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NO3</SourceName>
+                      <DestinationName>Atmosphere</DestinationName>
+                      <Location>
+                        <X>307</X>
+                        <Y>765</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NH4</SourceName>
+                      <DestinationName>NO3</DestinationName>
+                      <Location>
+                        <X>505</X>
+                        <Y>767</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                  </Arcs>
                 </DirectedGraphInfo>
               </Nutrient>
               <SoilOrganicMatter>
@@ -13987,8 +14506,235 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Nutrient</ResourceName>
                 <DirectedGraphInfo>
-                  <Nodes />
-                  <Arcs />
+                  <Nodes>
+                    <Node>
+                      <Name>Inert</Name>
+                      <Location>
+                        <X>800</X>
+                        <Y>519</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>SurfaceResidue</Name>
+                      <Location>
+                        <X>383</X>
+                        <Y>101</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Microbial</Name>
+                      <Location>
+                        <X>224</X>
+                        <Y>514</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Humic</Name>
+                      <Location>
+                        <X>538</X>
+                        <Y>529</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMLignin</Name>
+                      <Location>
+                        <X>86</X>
+                        <Y>323</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCellulose</Name>
+                      <Location>
+                        <X>367</X>
+                        <Y>325</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCarbohydrate</Name>
+                      <Location>
+                        <X>637</X>
+                        <Y>330</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Urea</Name>
+                      <Location>
+                        <X>753</X>
+                        <Y>787</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NO3</Name>
+                      <Location>
+                        <X>300</X>
+                        <Y>777</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NH4</Name>
+                      <Location>
+                        <X>526</X>
+                        <Y>782</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Atmosphere</Name>
+                      <Location>
+                        <X>84</X>
+                        <Y>779</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                  </Nodes>
+                  <Arcs>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>276</X>
+                        <Y>229</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>513</X>
+                        <Y>352</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>318</X>
+                        <Y>626</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>380</X>
+                        <Y>607</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Humic</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>293</X>
+                        <Y>525</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>33</X>
+                        <Y>493</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>226</X>
+                        <Y>395</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>337</X>
+                        <Y>410</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>453</X>
+                        <Y>413</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>517</X>
+                        <Y>362</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>588</X>
+                        <Y>400</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Urea</SourceName>
+                      <DestinationName>NH4</DestinationName>
+                      <Location>
+                        <X>768</X>
+                        <Y>771</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NO3</SourceName>
+                      <DestinationName>Atmosphere</DestinationName>
+                      <Location>
+                        <X>307</X>
+                        <Y>765</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NH4</SourceName>
+                      <DestinationName>NO3</DestinationName>
+                      <Location>
+                        <X>505</X>
+                        <Y>767</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                  </Arcs>
                 </DirectedGraphInfo>
               </Nutrient>
               <SoilOrganicMatter>
@@ -16178,8 +16924,235 @@ endif
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Nutrient</ResourceName>
                 <DirectedGraphInfo>
-                  <Nodes />
-                  <Arcs />
+                  <Nodes>
+                    <Node>
+                      <Name>Inert</Name>
+                      <Location>
+                        <X>800</X>
+                        <Y>519</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>SurfaceResidue</Name>
+                      <Location>
+                        <X>383</X>
+                        <Y>101</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Microbial</Name>
+                      <Location>
+                        <X>224</X>
+                        <Y>514</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Humic</Name>
+                      <Location>
+                        <X>538</X>
+                        <Y>529</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMLignin</Name>
+                      <Location>
+                        <X>86</X>
+                        <Y>323</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCellulose</Name>
+                      <Location>
+                        <X>367</X>
+                        <Y>325</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCarbohydrate</Name>
+                      <Location>
+                        <X>637</X>
+                        <Y>330</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Urea</Name>
+                      <Location>
+                        <X>753</X>
+                        <Y>787</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NO3</Name>
+                      <Location>
+                        <X>300</X>
+                        <Y>777</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NH4</Name>
+                      <Location>
+                        <X>526</X>
+                        <Y>782</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Atmosphere</Name>
+                      <Location>
+                        <X>84</X>
+                        <Y>779</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                  </Nodes>
+                  <Arcs>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>276</X>
+                        <Y>229</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>513</X>
+                        <Y>352</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>318</X>
+                        <Y>626</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>380</X>
+                        <Y>607</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Humic</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>293</X>
+                        <Y>525</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>33</X>
+                        <Y>493</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>226</X>
+                        <Y>395</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>337</X>
+                        <Y>410</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>453</X>
+                        <Y>413</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>517</X>
+                        <Y>362</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>588</X>
+                        <Y>400</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Urea</SourceName>
+                      <DestinationName>NH4</DestinationName>
+                      <Location>
+                        <X>768</X>
+                        <Y>771</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NO3</SourceName>
+                      <DestinationName>Atmosphere</DestinationName>
+                      <Location>
+                        <X>307</X>
+                        <Y>765</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NH4</SourceName>
+                      <DestinationName>NO3</DestinationName>
+                      <Location>
+                        <X>505</X>
+                        <Y>767</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                  </Arcs>
                 </DirectedGraphInfo>
               </Nutrient>
               <SoilOrganicMatter>
@@ -21208,16 +22181,14 @@ namespace Models
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This dataset describes the long term trial at Pendleton, Oregon.  The experiment design included Winter-wheat / fallow rotations in 9 treatments (2 replications with 2 blocks offset by 1 year).  Wheat varieties varied over the duration of the trial as follows:
-1931 to 1966: Medium-tall soft white
-1967+ : Semi-dwarf
-
-Wheat was planted mid-October and harvested after 6-7 months growth.
+            <MemoText><![CDATA[This dataset describes the long term trial at Pendleton, Oregon.  The experiment design included Winter-wheat / fallow rotations in 9 treatments (2 replications with 2 blocks offset by 1 year).  
 
 The treatments included:
 2 Organic residues: Pea Vines and Manure
 3 N rates: 0, 45 and 90 kgN/ha (Prior to 1966 - only 0 and 34 kgN/ha)
 3 Stubble managements:  No burn, Spring Burn and Fall Burn
+
+Wheat varieties varied over the duration of the trial (1931 to 1966: Medium-tall soft white, 1967+: Semi-dwarf).  Wheat was planted mid-October and harvested after 6-7 months growth.
 ]]></MemoText>
           </Memo>
           <Factors>
@@ -29376,8 +30347,235 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <ResourceName>Nutrient</ResourceName>
                   <DirectedGraphInfo>
-                    <Nodes />
-                    <Arcs />
+                    <Nodes>
+                      <Node>
+                        <Name>Inert</Name>
+                        <Location>
+                          <X>800</X>
+                          <Y>519</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>SurfaceResidue</Name>
+                        <Location>
+                          <X>383</X>
+                          <Y>101</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Microbial</Name>
+                        <Location>
+                          <X>224</X>
+                          <Y>514</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Humic</Name>
+                        <Location>
+                          <X>538</X>
+                          <Y>529</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMLignin</Name>
+                        <Location>
+                          <X>86</X>
+                          <Y>323</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCellulose</Name>
+                        <Location>
+                          <X>367</X>
+                          <Y>325</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCarbohydrate</Name>
+                        <Location>
+                          <X>637</X>
+                          <Y>330</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Urea</Name>
+                        <Location>
+                          <X>753</X>
+                          <Y>787</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NO3</Name>
+                        <Location>
+                          <X>300</X>
+                          <Y>777</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NH4</Name>
+                        <Location>
+                          <X>526</X>
+                          <Y>782</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Atmosphere</Name>
+                        <Location>
+                          <X>84</X>
+                          <Y>779</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                    </Nodes>
+                    <Arcs>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>276</X>
+                          <Y>229</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>513</X>
+                          <Y>352</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>318</X>
+                          <Y>626</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>380</X>
+                          <Y>607</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Humic</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>293</X>
+                          <Y>525</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>33</X>
+                          <Y>493</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>226</X>
+                          <Y>395</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>337</X>
+                          <Y>410</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>453</X>
+                          <Y>413</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>517</X>
+                          <Y>362</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>588</X>
+                          <Y>400</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Urea</SourceName>
+                        <DestinationName>NH4</DestinationName>
+                        <Location>
+                          <X>768</X>
+                          <Y>771</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NO3</SourceName>
+                        <DestinationName>Atmosphere</DestinationName>
+                        <Location>
+                          <X>307</X>
+                          <Y>765</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NH4</SourceName>
+                        <DestinationName>NO3</DestinationName>
+                        <Location>
+                          <X>505</X>
+                          <Y>767</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                    </Arcs>
                   </DirectedGraphInfo>
                 </Nutrient>
                 <SoilOrganicMatter>
