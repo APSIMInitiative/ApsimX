@@ -102,7 +102,7 @@ namespace UserInterface.Views
             int width;
             int height;
             MainWidget.GdkWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(MainWidget.GdkWindow, MainWidget.Colormap, 0, 0, 0, 0, width, height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
             byte[] buffer = screenshot.SaveToBuffer("png");
             MemoryStream stream = new MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new Bitmap(stream);
