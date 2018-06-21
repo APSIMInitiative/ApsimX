@@ -144,12 +144,6 @@
         private double irrig;
         /// <summary>The cumeos</summary>
         private double cumeos;
-        /// <summary>Gets or sets the report additions.</summary>
-        /// <value>The report additions.</value>
-        public string ReportAdditions { get; set; }
-        /// <summary>Gets or sets the report removals.</summary>
-        /// <value>The report removals.</value>
-        public string ReportRemovals { get; set; }
 
         /// <summary>Initializes a new instance of the <see cref="SurfaceOrganicMatter"/> class.</summary>
         public SurfaceOrganicMatter()
@@ -533,13 +527,6 @@
         /// <value>The wf.</value>
         [Units("0-1")]
         public double wf { get { return MoistureFactor(); } }
-
-        /// <summary>The _leaching_fr</summary>
-        private double _leaching_fr;
-        /// <summary>Gets the leaching_fr.</summary>
-        /// <value>The leaching_fr.</value>
-        [Units("")]
-        public double leaching_fr { get { return _leaching_fr; } }
 
         /// <summary>Get the weight of the given SOM pool</summary>
         /// <param name="pool">Name of the pool to get the weight from.</param>
@@ -1086,7 +1073,6 @@
             SurfOM = new List<SurfOrganicMatterType>();
             irrig = 0;
             cumeos = 0;
-            _leaching_fr = 0;
             ZeroVariables();
             SurfomReset();
         }
@@ -1120,10 +1106,18 @@
         /// <returns></returns>
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
-            double leachRain = 0; // "leaching" rainfall (if rain>10mm)
-            SetVars(out cumeos, out leachRain);
-            if (leachRain > 0.0)
-                Leach(leachRain);
+            double precip = weather.Rain + irrig;
+            if (precip > 4.0)
+                cumeos = soil.SoilWater.Eos - precip;
+            else
+                cumeos = this.cumeos + soil.SoilWater.Eos - precip;
+            cumeos = Math.Max(cumeos, 0.0);
+
+            if (precip >= MinRainToLeach)
+                Leach(precip);
+
+            irrig = 0.0; // reset irrigation log now that we have used that information;
+
             return SendPotDecompEvent();
         }
 
@@ -1220,12 +1214,6 @@
             double[] totC = new double[Pools.Count];  // total C in residue;
             double[] totN = new double[Pools.Count];  // total N in residue;
             double[] totP = new double[Pools.Count];  // total P in residue;
-
-            if (ReportAdditions == null || ReportAdditions.Length == 0)
-                ReportAdditions = "no";
-
-            if (ReportRemovals == null || ReportRemovals.Length == 0)
-                ReportRemovals = "no";
 
             for (int i = 0; i < Pools.Count; i++)
             {
@@ -1429,32 +1417,6 @@
         }
 
         /// <summary>
-        /// Calculates variables required for today"s decomposition and;
-        /// leaching factors.
-        /// </summary>
-        /// <param name="cumeos">The cumeos.</param>
-        /// <param name="leachRain">The leach rain.</param>
-        private void SetVars(out double cumeos, out double leachRain)
-        {
-            double precip = weather.Rain + irrig;  
-
-            if (precip > 4.0)
-                cumeos = soil.SoilWater.Eos - precip;
-            else
-                cumeos = this.cumeos + soil.SoilWater.Eos - precip;
-
-            cumeos = Math.Max(cumeos, 0.0);
-
-            if (precip >= MinRainToLeach)
-                leachRain = precip;
-            else
-                leachRain = 0.0;
-            
-            irrig = 0.0; // reset irrigation log now that we have used that information;
-        }
-
-
-        /// <summary>
         /// Remove mineral N and P from surfom with leaching rainfall and;
         /// pass to Soil N and Soil P modules.
         /// </summary>
@@ -1467,10 +1429,10 @@
             double po4Incorp;
 
             // Apply leaching fraction to all mineral pools and put all mineral NO3,NH4 and PO4 into top layer;
-            _leaching_fr = MathUtilities.Bound(MathUtilities.Divide(leachRain, TotalLeachRain, 0.0), 0.0, 1.0);
-            no3Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.no3) * _leaching_fr;
-            nh4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.nh4) * _leaching_fr;
-            po4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.po4) * _leaching_fr;
+            double leaching_fr = MathUtilities.Bound(MathUtilities.Divide(leachRain, TotalLeachRain, 0.0), 0.0, 1.0);
+            no3Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.no3) * leaching_fr;
+            nh4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.nh4) * leaching_fr;
+            po4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.po4) * leaching_fr;
 
 
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
@@ -1482,9 +1444,9 @@
 
             for (int i = 0; i < numSurfom; i++)
             {
-                SurfOM[i].no3 = SurfOM[i].no3 * (1.0 - _leaching_fr);
-                SurfOM[i].nh4 = SurfOM[i].nh4 * (1.0 - _leaching_fr);
-                SurfOM[i].po4 = SurfOM[i].po4 * (1.0 - _leaching_fr);
+                SurfOM[i].no3 = SurfOM[i].no3 * (1.0 - leaching_fr);
+                SurfOM[i].nh4 = SurfOM[i].nh4 * (1.0 - leaching_fr);
+                SurfOM[i].po4 = SurfOM[i].po4 * (1.0 - leaching_fr);
             }
         }
 
@@ -1574,23 +1536,6 @@
                     lamount = SOM.Pool[SOMNo].LyingFraction.Sum<FOMType>(x => x.amount),
                     lN = SOM.Pool[SOMNo].LyingFraction.Sum<FOMType>(x => x.N),
                     lP = SOM.Pool[SOMNo].LyingFraction.Sum<FOMType>(x => x.P);
-
-                if (ReportRemovals == "yes")
-                    summary.WriteMessage(this, string.Format(
-    @"Removed SurfaceOM
-    SurfaceOM name  = {0}
-    SurfaceOM Type  = {1}
-
-    Amount Removed (kg/ha):
-        Lying:
-            Amount = {2:0.0##}
-            N      = {3:0.0##}
-            P      = {4:0.0##}
-        Standing:
-            Amount = {5:0.0##}
-            N      = {6:0.0##}
-            P      = {7:0.0##}", SOM.Pool[SOMNo].Name, SOM.Pool[SOMNo].OrganicMatterType, lamount, lN, lP, samount, sN, sP));
-
             }
         }
 
@@ -1934,14 +1879,6 @@
         /// <param name="name">Name of the biomass written to summary file</param>
         public void Add(double mass, double N, double P, string type, string name)
         {
-             if (ReportAdditions == "yes")
-            {
-                summary.WriteMessage(this, string.Format(
-                    @"Added surface organic matter:\r\n" +
-                     "   Type          = {0}\r\n" +
-                     "   Amount Added (kg/ha)    = {1}", type + " " + name, mass));
-            }       
-
             // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
             int SOMNo = GetResidueNumber(type);
             if (SOMNo < 0)
