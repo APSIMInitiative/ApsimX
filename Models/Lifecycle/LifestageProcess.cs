@@ -88,7 +88,7 @@ namespace Models.LifeCycle
                     //kill some creatures
                     double mortality = cohortItem.Count - cohortItem.Count * (1 - func.Value());
                     cohortItem.Count = cohortItem.Count * (1 - func.Value());
-                    cohortItem.Mortality = mortality;
+                    cohortItem.Mortality += mortality;      // can be multiple mortality events in a lifestage step
                 }
             }
         }

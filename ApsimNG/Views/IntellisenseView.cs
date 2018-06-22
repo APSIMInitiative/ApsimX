@@ -289,12 +289,9 @@
         public void Populate(List<CompletionData> items)
         {
             completionModel.Clear();
-            int i = 0;
             foreach (CompletionData item in items)
             {
-                System.Diagnostics.Debug.WriteLine(i);
                 completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y), item.CompletionText);
-                i++;
             }
         }
 
