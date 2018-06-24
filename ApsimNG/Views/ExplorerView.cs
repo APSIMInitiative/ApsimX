@@ -84,8 +84,6 @@ namespace UserInterface.Views
             RightHandView = (Viewport)builder.GetObject("RightHandView");
             _mainWidget = vbox1;
             RightHandView.ShadowType = ShadowType.EtchedOut;
-            Color lightGrey = Color.LightGray;
-            treeview1.ModifyBase(StateType.Selected, new Gdk.Color(lightGrey.R, lightGrey.G, lightGrey.B));
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
