@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="30">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="31">
   <Name>Simulations</Name>
   <Morris>
     <Name>Morris</Name>
@@ -657,9 +657,6 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -1261,7 +1258,7 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
   <Graph>
-    <Name>Graph</Name>
+    <Name>Elemental Effects</Name>
     <Series>
       <Name>CN2</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1269,9 +1266,6 @@ namespace Models
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16777216</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>None</Marker>
       <MarkerSize>Normal</MarkerSize>
       <Line>Solid</Line>
@@ -1293,9 +1287,6 @@ namespace Models
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-1663232</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
       <Marker>None</Marker>
       <MarkerSize>Normal</MarkerSize>
       <Line>Solid</Line>
@@ -1329,7 +1320,7 @@ namespace Models
     <DisabledSeries />
   </Graph>
   <Graph>
-    <Name>Graph1</Name>
+    <Name>MuStar</Name>
     <Series>
       <Name>CN2</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1337,12 +1328,10 @@ namespace Models
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16777216</ColourArgb>
-      <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>None</Marker>
+      <FactorToVaryColours>MorrisVariable</FactorToVaryColours>
+      <Marker>FilledCircle</Marker>
       <MarkerSize>Normal</MarkerSize>
-      <Line>Solid</Line>
+      <Line>None</Line>
       <LineThickness>Normal</LineThickness>
       <Checkpoint>Current</Checkpoint>
       <TableName>MorrisMuStar</TableName>

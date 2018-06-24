@@ -153,13 +153,12 @@
         }
 
         /// <summary>Gets a list of factors</summary>
-        public List<ISimulationGeneratorFactor> GetFactors()
+        public List<ISimulationGeneratorFactors> GetFactors()
         {
-            var factors = new List<ISimulationGeneratorFactor>();
+            var factors = new List<ISimulationGeneratorFactors>();
             foreach (Parameter param in parameters)
             {
-                var factor = new SimulationGeneratorFactor("MorrisVariable", param.Name, "Variable");
-                factor.ColumnValues.Add(param.Name);
+                var factor = new SimulationGeneratorFactors("Variable", param.Name, "MorrisVariable", param.Name);
                 factors.Add(factor);
             }
             return factors;

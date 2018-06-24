@@ -113,15 +113,13 @@
         }
 
         /// <summary>Gets a list of factors</summary>
-        public List<ISimulationGeneratorFactor> GetFactors()
+        public List<ISimulationGeneratorFactors> GetFactors()
         {
             if (serialisedBase == null || allCombinations.Count == 0)
                 Initialise(true);
 
-            List<ISimulationGeneratorFactor> factors = new List<ISimulationGeneratorFactor>();
+            List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
 
-            SimulationGeneratorFactor experimentFactor = new SimulationGeneratorFactor("Experiment", Name, "SimulationName");
-            factors.Add(experimentFactor);
             List<string> simulationNames = new List<string>();
             foreach (List<FactorValue> combination in allCombinations)
             {
@@ -129,7 +127,9 @@
                 string simulationName = Name;
                 foreach (FactorValue value in combination)
                     simulationName += value.Name;
-                experimentFactor.ColumnValues.Add(simulationName);
+                SimulationGeneratorFactors simulationFactors = new SimulationGeneratorFactors("SimulationName", simulationName);
+                factors.Add(simulationFactors);
+                simulationFactors.AddFactor("Experiment", Name);
 
                 foreach (FactorValue value in combination)
                 {
@@ -137,9 +137,7 @@
                     if (value.Factor.Parent is Factor)
                         factorName = value.Factor.Parent.Name;
                     string factorValue = value.Name.Replace(factorName, "");
-                    SimulationGeneratorFactor newFactor = new SimulationGeneratorFactor(factorName, factorValue, "SimulationName");
-                    newFactor.ColumnValues.Add(simulationName);
-                    factors.Add(newFactor);
+                    simulationFactors.AddFactor(factorName, factorValue);
                 }
             }
             return factors;

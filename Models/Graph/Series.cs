@@ -29,9 +29,6 @@ namespace Models.Graph
         {
             this.Checkpoint = "Current";
             this.XAxis = Axis.AxisType.Bottom;
-            this.FactorIndexToVaryColours = -1;
-            this.FactorIndexToVaryLines = -1;
-            this.FactorIndexToVaryMarkers = -1;
         }
 
         /// <summary>Gets or sets the series type</summary>
@@ -63,14 +60,14 @@ namespace Models.Graph
             }
         }
 
-        /// <summary>The FactorIndex to vary colours.</summary>
-        public int FactorIndexToVaryColours { get; set; }
+        /// <summary>The factor to vary for colours.</summary>
+        public string FactorToVaryColours { get; set; }
 
-        /// <summary>The FactorIndex to vary markers types.</summary>
-        public int FactorIndexToVaryMarkers { get; set; }
+        /// <summary>The factor to vary for markers types.</summary>
+        public string FactorToVaryMarkers { get; set; }
 
-        /// <summary>The FactorIndex to vary line types.</summary>
-        public int FactorIndexToVaryLines { get; set; }
+        /// <summary>The factor to vary for line types.</summary>
+        public string FactorToVaryLines { get; set; }
 
         /// <summary>Gets or sets the marker size</summary>
         public MarkerType Marker { get; set; }
@@ -136,41 +133,36 @@ namespace Models.Graph
                 // Find a parent that heads the scope that we're going to graph
                 IModel parent = FindParent();
 
-                List<ISimulationGeneratorFactor> simulationZones = null;
+                List<ISimulationGeneratorFactors> factors = null;
                 do
                 {
                     // Create a list of all simulation/zone objects that we're going to graph.
-                    simulationZones = BuildListFromModel(parent);
+                    factors = BuildListFromModel(parent);
                     parent = parent.Parent;
                 }
-                while (simulationZones.Count == 0 && parent != null);
+                while (factors.Count == 0 && parent != null);
 
                 // Get rid of factors that don't vary across objects.
-                simulationZones = MergeFactors(simulationZones);
-                FactorNamesForVarying = simulationZones.Select(f => f.Name).Distinct().ToList();
+                RemoveFactorsThatDontVary(factors);
 
-                // Check for old .apsimx that doesn't vary colours, lines or markers but has experiments. In this 
-                // new code, we want to make this situation explicit and say we'll vary colours and markers by
-                // experiment.
-                if (FactorIndexToVaryColours == -1 && FactorIndexToVaryLines == -1 && FactorIndexToVaryMarkers == -1 &&
-                    FactorNamesForVarying.Contains("Experiment") && !ColourUtilities.Colours.Contains(Colour))
-                {
-                    FactorIndexToVaryColours = FactorNamesForVarying.IndexOf("Experiment");
-                    FactorIndexToVaryMarkers = FactorIndexToVaryColours;
-                }
-                else if (!ColourUtilities.Colours.Contains(Colour))
-                {
-                    Colour = ColourUtilities.Colours[0];
-                }
+                // Get a list of factors that the presenter uses to show the user.
+                FactorNamesForVarying = GetFactorList(factors);
 
                 // If a factor isn't being used to vary a colour/marker/line, then remove the factor. i.e. we
                 // don't care about it.
-                simulationZones = RemoveFactorsNotBeingUsed(simulationZones);
+                RemoveFactorsNotBeingUsed(factors);
+
+                // Merge factors where possible.
+                factors = MergeFactors(factors);
+
+                if (!ColourUtilities.Colours.Contains(Colour))
+                    Colour = ColourUtilities.Colours[0];
+
+                DataTable baseData = GetBaseData(storage, factors);
 
                 // Get data for each simulation / zone object
-                DataTable baseData = GetBaseData(storage, simulationZones);
                 if (baseData != null && baseData.Rows.Count > 0)
-                    ourDefinitions = ConvertToSeriesDefinitions(simulationZones, storage, baseData);
+                    ourDefinitions = ConvertToSeriesDefinitions(factors, storage, baseData);
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
@@ -183,53 +175,84 @@ namespace Models.Graph
             definitions.AddRange(ourDefinitions);
         }
 
-        ///// <summary>
-        ///// Go through all simulation zone objects and remove factors that don't vary between objects.
-        ///// </summary>
-        ///// <param name="simulationZones">A list of simulation zones.</param>
-        //private List<string> GetFactorList(List<SimulationZone> simulationZones)
-        //{
-        //    List<string> factorNames = new List<string>();
-        //    foreach (SimulationZone simZone in simulationZones)
-        //        foreach (KeyValuePair<string, string> factorPair in simZone.factorNameValues)
-        //            factorNames.Add(factorPair.Key);
-        //    return factorNames.Distinct().ToList();
-        //}
+        /// <summary>
+        /// Go through all factor objects and get a list of factor names
+        /// </summary>
+        /// <param name="factors">A list of simulation zones.</param>
+        private List<string> GetFactorList(List<ISimulationGeneratorFactors> factors)
+        {
+            List<string> factorNames = new List<string>();
+            foreach (var factor in factors)
+                foreach (var factorPair in factor.Factors)
+                    factorNames.Add(factorPair.Key);
+            return factorNames.Distinct().ToList();
+        }
 
         /// <summary>
-        /// Go through all factors and try to merge the ones that have the same Name, Value and ColumnName
+        /// Go through all simulation zone objects and remove factors that don't vary between objects.
         /// </summary>
-        /// <param name="factors">A list of factors to potentially merge.</param>
+        /// <param name="factors">A list of factors.</param>
         /// <returns>A new list of factors</returns>
-        private List<ISimulationGeneratorFactor> MergeFactors(List<ISimulationGeneratorFactor> factors)
+        private void RemoveFactorsThatDontVary(List<ISimulationGeneratorFactors> factors)
         {
-            List<ISimulationGeneratorFactor> newFactors = new List<ISimulationGeneratorFactor>();
-            foreach (var factor in factors)
+            List<ISimulationGeneratorFactors> newFactors = new List<ISimulationGeneratorFactors>();
+            foreach (string factorName in GetFactorList(factors))
             {
-                var existingFactor = newFactors.Find(f => f.Equals(factor));
-                if (existingFactor == null)
-                    newFactors.Add(factor);
-                else
-                    existingFactor.Merge(factor); 
+                List<string> factorValues = new List<string>();
+                factors.ForEach(factor => factorValues.Add(factor.GetFactorValue(factorName)));
+
+                if (factorValues.Distinct().Count() == 1)
+                {
+                    // All factor values are the same so remove the factor.
+                    factors.ForEach(factor => factor.RemoveFactor(factorName));
+                }
             }
-            return newFactors;
         }
 
         /// <summary>
         /// Remove factors that aren't being used to vary visual elements (e.g. line/marker etc)
         /// </summary>
         /// <param name="factors">A list of simulation zones.</param>
-        private List<ISimulationGeneratorFactor> RemoveFactorsNotBeingUsed(List<ISimulationGeneratorFactor> factors)
+        private void RemoveFactorsNotBeingUsed(List<ISimulationGeneratorFactors> factors)
         {
             List<string> factorsToKeep = new List<string>();
-            if (FactorIndexToVaryColours >= 0 && FactorIndexToVaryColours < FactorNamesForVarying.Count)
-                factorsToKeep.Add(FactorNamesForVarying[FactorIndexToVaryColours]);
-            if (FactorIndexToVaryLines >= 0 && FactorIndexToVaryLines < FactorNamesForVarying.Count)
-                factorsToKeep.Add(FactorNamesForVarying[FactorIndexToVaryLines]);
-            if (FactorIndexToVaryMarkers >= 0 && FactorIndexToVaryMarkers < FactorNamesForVarying.Count)
-                factorsToKeep.Add(FactorNamesForVarying[FactorIndexToVaryMarkers]);
+            if (FactorToVaryColours != null)
+                factorsToKeep.Add(FactorToVaryColours);
+            if (FactorToVaryLines != null)
+                factorsToKeep.Add(FactorToVaryLines);
+            if (FactorToVaryMarkers != null)
+                factorsToKeep.Add(FactorToVaryMarkers);
+            factorsToKeep = factorsToKeep.Distinct().ToList();
 
-            return factors.FindAll(factor => factorsToKeep.Contains(factor.Name));
+            var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
+
+            foreach (var factor in factors)
+                foreach (var factorToRemove in factorsToRemove)
+                    factor.RemoveFactor(factorToRemove);
+
+            // Make sure each factor has the factors we want to keep.
+            foreach (var factor in factors)
+                foreach (var factorToKeep in factorsToKeep)
+                    factor.AddFactorIfNotExist(factorToKeep, "?");
+        }
+
+        /// <summary>
+        /// Go through all factors and try to merge the ones that have the same Name, Value and ColumnName
+        /// </summary>
+        /// <param name="factors">A list of factors to potentially merge.</param>
+        /// <returns>A new list of factors</returns>
+        private List<ISimulationGeneratorFactors> MergeFactors(List<ISimulationGeneratorFactors> factors)
+        {
+            List<ISimulationGeneratorFactors> newFactors = new List<ISimulationGeneratorFactors>();
+            foreach (var factor in factors)
+            {
+                var existingFactor = newFactors.Find(f => f.Equals(factor));
+                if (existingFactor == null)
+                    newFactors.Add(factor);
+                else
+                    existingFactor.Merge(factor);
+            }
+            return newFactors;
         }
 
         ///// <summary>
@@ -272,9 +295,9 @@ namespace Models.Graph
         /// Create graph definitions for the specified model
         /// </summary>
         /// <param name="model"></param>
-        private List<ISimulationGeneratorFactor> BuildListFromModel(IModel model)
+        private List<ISimulationGeneratorFactors> BuildListFromModel(IModel model)
         {
-            var simulationZonePairs = new List<ISimulationGeneratorFactor>();
+            var simulationZonePairs = new List<ISimulationGeneratorFactors>();
             if (model is ISimulationGenerator)
                 simulationZonePairs.AddRange((model as ISimulationGenerator).GetFactors());
             else
@@ -368,46 +391,45 @@ namespace Models.Graph
         /// <param name="factors">The simulation/zone pairs to change</param>
         /// <param name="storage">Storage reader</param>
         /// <param name="baseData">Base data</param>
-        private List<SeriesDefinition> ConvertToSeriesDefinitions(List<ISimulationGeneratorFactor> factors, IStorageReader storage, DataTable baseData)
+        private List<SeriesDefinition> ConvertToSeriesDefinitions(List<ISimulationGeneratorFactors> factors, IStorageReader storage, DataTable baseData)
         {
             // Create an appropriate painter object
             SimulationZonePainter.IPainter painter;
-            if (FactorIndexToVaryColours != -1 && FactorIndexToVaryColours < FactorNamesForVarying.Count)
+            if (FactorToVaryColours != null)
             {
-                string factorNameToVaryByColours = FactorNamesForVarying[FactorIndexToVaryColours];
-                if (FactorIndexToVaryLines == FactorIndexToVaryColours)
+                if (FactorToVaryLines == FactorToVaryColours)
                     painter = new SimulationZonePainter.SequentialPainterTwoFactors()
                     {
-                        FactorName = factorNameToVaryByColours,
+                        FactorName = FactorToVaryColours,
                         MaximumIndex1 = ColourUtilities.Colours.Length,
                         MaximumIndex2 = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
                         Setter1 = VisualElements.SetColour,
                         Setter2 = VisualElements.SetLineType
                     };
-                else if (FactorIndexToVaryMarkers == FactorIndexToVaryColours)
+                else if (FactorToVaryMarkers == FactorToVaryColours)
                     painter = new SimulationZonePainter.SequentialPainterTwoFactors()
                     {
-                        FactorName = factorNameToVaryByColours,
+                        FactorName = FactorToVaryColours,
                         MaximumIndex1 = ColourUtilities.Colours.Length,
                         MaximumIndex2 = Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
                         Setter1 = VisualElements.SetColour,
                         Setter2 = VisualElements.SetMarker
                     };
-                else if (FactorIndexToVaryLines != -1)
+                else if (FactorToVaryLines != null)
                     painter = new SimulationZonePainter.DualPainter()
                     {
-                        FactorName1 = factorNameToVaryByColours,
-                        FactorName2 = FactorNamesForVarying[FactorIndexToVaryLines],
+                        FactorName1 = FactorToVaryColours,
+                        FactorName2 = FactorToVaryLines,
                         MaximumIndex1 = ColourUtilities.Colours.Length,
                         MaximumIndex2 = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
                         Setter1 = VisualElements.SetColour,
                         Setter2 = VisualElements.SetLineType
                     };
-                else if (FactorIndexToVaryMarkers != -1)
+                else if (FactorToVaryMarkers != null)
                     painter = new SimulationZonePainter.DualPainter()
                     {
-                        FactorName1 = factorNameToVaryByColours,
-                        FactorName2 = FactorNamesForVarying[FactorIndexToVaryMarkers],
+                        FactorName1 = FactorToVaryColours,
+                        FactorName2 = FactorToVaryMarkers,
                         MaximumIndex1 = ColourUtilities.Colours.Length,
                         MaximumIndex2 = Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
                         Setter1 = VisualElements.SetColour,
@@ -416,27 +438,25 @@ namespace Models.Graph
                 else
                     painter = new SimulationZonePainter.SequentialPainter()
                     {
-                        FactorName = factorNameToVaryByColours,
+                        FactorName = FactorToVaryColours,
                         MaximumIndex = ColourUtilities.Colours.Length,
                         Setter = VisualElements.SetColour
                     };
             }
-            else if (FactorIndexToVaryLines != -1 && FactorIndexToVaryLines < FactorNamesForVarying.Count)
+            else if (FactorToVaryLines != null)
             {
-                string factorNameToVaryByLine = FactorNamesForVarying[FactorIndexToVaryLines];
                 painter = new SimulationZonePainter.SequentialPainter()
                 {
-                    FactorName = factorNameToVaryByLine,
+                    FactorName = FactorToVaryLines,
                     MaximumIndex = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type   
                     Setter = VisualElements.SetLineType
                 };
             }
-            else if (FactorIndexToVaryMarkers != -1 && FactorIndexToVaryMarkers < FactorNamesForVarying.Count)
+            else if (FactorToVaryMarkers != null)
             {
-                string factorNameToVaryByMarker = FactorNamesForVarying[FactorIndexToVaryMarkers];
                 painter = new SimulationZonePainter.SequentialPainter()
                 {
-                    FactorName = factorNameToVaryByMarker,
+                    FactorName = FactorToVaryMarkers,
                     MaximumIndex = Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
                     Setter = VisualElements.SetMarker
                 };
@@ -446,7 +466,7 @@ namespace Models.Graph
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
             // Apply the painter to all simulation zone objects.
-            foreach (ISimulationGeneratorFactor factor in factors)
+            foreach (ISimulationGeneratorFactors factor in factors)
             {
                 VisualElements visualElement = new VisualElements();
                 visualElement.colour = Colour;
@@ -470,7 +490,7 @@ namespace Models.Graph
                 seriesDefinition.xFieldUnits = storage.GetUnits(TableName, XFieldName);
                 seriesDefinition.yFieldUnits = storage.GetUnits(TableName, YFieldName);
                 seriesDefinition.showInLegend = ShowInLegend;
-                seriesDefinition.title = factor.Name + factor.Value;
+                factor.Factors.ForEach(f => seriesDefinition.title += f.Value);
                 if (IncludeSeriesNameInLegend)
                 {
                     seriesDefinition.title += ": " + Name;
@@ -480,7 +500,7 @@ namespace Models.Graph
                 DataView data = new DataView(baseData);
                 try
                 {
-                    data.RowFilter = CreateRowFilter(new ISimulationGeneratorFactor[] { factor });
+                    data.RowFilter = CreateRowFilter(new ISimulationGeneratorFactors[] { factor });
                 }
                 catch
                 {
@@ -640,10 +660,10 @@ namespace Models.Graph
         /// </summary>
         /// <param name="factors">The list of simulation / zone pairs.</param>
         /// <param name="storage">Storage service</param>
-        private DataTable GetBaseData(IStorageReader storage, List<ISimulationGeneratorFactor> factors)
+        private DataTable GetBaseData(IStorageReader storage, List<ISimulationGeneratorFactors> factors)
         {
             List<string> fieldNames = new List<string>();
-            foreach (ISimulationGeneratorFactor factor in factors)
+            foreach (ISimulationGeneratorFactors factor in factors)
                 fieldNames.Add(factor.ColumnName);
             if (XFieldName != null)
                 fieldNames.Add(XFieldName);
@@ -664,7 +684,7 @@ namespace Models.Graph
                 fieldNames.Add(annotation.ColumnName);
 
             string filterToUse;
-            if (Filter == null)
+            if (Filter == null || Filter == string.Empty)
                 filterToUse = CreateRowFilter(factors);
             else
                 filterToUse = Filter + " AND (" + CreateRowFilter(factors) + ")";
@@ -690,7 +710,7 @@ namespace Models.Graph
         /// Create a row filter for the specified factors.
         /// </summary>
         /// <param name="factors">A list of factors to build a filter for</param>
-        private string CreateRowFilter(IEnumerable<ISimulationGeneratorFactor> factors)
+        private string CreateRowFilter(IEnumerable<ISimulationGeneratorFactors> factors)
         {
             string factorFilters = null;
 
@@ -778,7 +798,7 @@ namespace Models.Graph
             /// <summary>A painter interface for setting visual elements of a simulation/zone pair</summary>
             public interface IPainter
             {
-                void PaintSimulationZone(ISimulationGeneratorFactor factor, VisualElements visualElement);
+                void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement);
             }
 
             /// <summary>A default painter for setting a simulation / zone pair to default values.</summary>
@@ -787,7 +807,7 @@ namespace Models.Graph
                 public Color Colour { get; set; }
                 public LineType LineType { get; set; }
                 public MarkerType MarkerType { get; set; }
-                public void PaintSimulationZone(ISimulationGeneratorFactor factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
                 {
                     visualElement.colour = Colour;
                     visualElement.Line = LineType;
@@ -803,9 +823,9 @@ namespace Models.Graph
                 public int MaximumIndex { get; set; }
                 public SetFunction Setter { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactor factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
                 {
-                    string factorValue = factor.Value;
+                    string factorValue = factor.GetFactorValue(FactorName);
                     int index = values.IndexOf(factorValue);
                     if (index == -1)
                     {
@@ -828,9 +848,9 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactor factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
                 {
-                    string factorValue = factor.Value;
+                    string factorValue = factor.GetFactorValue(FactorName);
 
                     int index1 = values.IndexOf(factorValue);
                     if (index1 == -1)
@@ -859,10 +879,10 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactor factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
                 {
-                    string factorValue1 = null; // = simulationZonePair.GetValueOf(FactorName1);
-                    string factorValue2 = null; // simulationZonePair.GetValueOf(FactorName2);
+                    string factorValue1 = factor.GetFactorValue(FactorName1);
+                    string factorValue2 = factor.GetFactorValue(FactorName2);
 
                     int index1 = values1.IndexOf(factorValue1);
                     if (index1 == -1)

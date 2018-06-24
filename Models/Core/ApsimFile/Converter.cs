@@ -916,7 +916,20 @@ namespace Models.Core.ApsimFile
                 while (factorNames.Count == 0 && parent != null);
 
                 var uniqueFactorNames = CalculateDistinctFactorNames(factorNames);
+                int index = Convert.ToInt32(XmlUtilities.Value(series, "FactorIndexToVaryColours"));
+                if (index > -1 && index < uniqueFactorNames.Count())
+                    XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
+                XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
 
+                index = Convert.ToInt32(XmlUtilities.Value(series, "FactorIndexToVaryMarkers"));
+                if (index > -1 && index < uniqueFactorNames.Count())
+                    XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
+                XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
+
+                index = Convert.ToInt32(XmlUtilities.Value(series, "FactorIndexToVaryLines"));
+                if (index > -1 && index < uniqueFactorNames.Count())
+                    XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
+                XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
             }
         }
 
@@ -966,8 +979,8 @@ namespace Models.Core.ApsimFile
                     {
                         string zoneName = XmlUtilities.Value(zone, "Name");
                         string simulationName = exp.Name;
-                        factors.Add(new KeyValuePair<string, string>("SimulationName", simulationName));
-                        factors.Add(new KeyValuePair<string, string>("ZoneName", zoneName));
+                        factors.Add(new KeyValuePair<string, string>("Simulation", simulationName));
+                        factors.Add(new KeyValuePair<string, string>("Zone", zoneName));
                         foreach (FactorValue value in combination)
                         {
                             simulationName += value.Name;
@@ -1015,7 +1028,7 @@ namespace Models.Core.ApsimFile
                 var matchingFactors = factors.FindAll(f => f.Key == factorName);
                 var matchingFactorValues = matchingFactors.Select(f => f.Value);
 
-                if (matchingFactorValues.Distinct().Count() > 1)
+                if (matchingFactorValues.Distinct().Count() > 1 || matchingFactors.Count() != factors.Count())
                 {
                     // All factor values are the same so remove the factor.
                     factorNamesToReturn.Add(factorName);
