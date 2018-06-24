@@ -300,9 +300,12 @@
                 bool doFullFactorial = false;
                 foreach (Factor factor in Factors.factors)
                 {
-                    List<FactorValue> factorValues = factor.CreateValues();
-                    allValues.Add(factorValues);
-                    doFullFactorial = doFullFactorial || factorValues.Count > 1;
+                    if (factor.Enabled)
+                    {
+                        List<FactorValue> factorValues = factor.CreateValues();
+                        allValues.Add(factorValues);
+                        doFullFactorial = doFullFactorial || factorValues.Count > 1;
+                    }
                 }
                 if (doFullFactorial)
                     return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());

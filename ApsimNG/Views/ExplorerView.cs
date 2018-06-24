@@ -22,6 +22,7 @@ namespace UserInterface.Views
     using System.Runtime.Serialization;
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
+    using System.Drawing;
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left
     /// and a user interface on the right allowing the user to modify properties of whatever they
@@ -64,7 +65,8 @@ namespace UserInterface.Views
 
         private Menu Popup = new Menu();
 
-        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
+        // If you add a new item to the tree model that is not at the end (e.g. add a bool as the third item), a lot of things will break.
+        private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(Color), typeof(bool));
         private CellRendererText textRender;
         private AccelGroup accel = new AccelGroup();
         private bool showIncludeInDocs = false;
@@ -82,7 +84,6 @@ namespace UserInterface.Views
             RightHandView = (Viewport)builder.GetObject("RightHandView");
             _mainWidget = vbox1;
             RightHandView.ShadowType = ShadowType.EtchedOut;
-
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
@@ -92,6 +93,8 @@ namespace UserInterface.Views
             textRender.EditingStarted += OnBeforeLabelEdit;
             textRender.Edited += OnAfterLabelEdit;
             column.PackStart(textRender, true);
+            column.SetCellDataFunc(textRender, OnSetCellData);
+
             CellRendererText tickCell = new CellRendererText();
             tickCell.Editable = false;
             column.PackEnd(tickCell, false);
@@ -126,6 +129,40 @@ namespace UserInterface.Views
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
             timer.Elapsed += Timer_Elapsed;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        /// <summary>
+        /// Allows for fine control over how each individual cell is rendered.
+        /// </summary>
+        /// <param name="col">Column in which the cell appears.</param>
+        /// <param name="cell">
+        /// The individual cells. 
+        /// Any changes to this cell only affect this cell.
+        /// The other cells in the column are unaffected.
+        /// </param>
+        /// <param name="model">
+        /// The tree model which holds the data being displayed in the tree.
+        /// </param>
+        /// <param name="iter">
+        /// TreeIter object associated with this cell in the tree. This object
+        /// can be used for many things, such as retrieving this cell's data.
+        /// </param>
+        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+        {
+            // This makes a lot of assumptions about how the tree model is structured.
+            if (cell is CellRendererText)
+            {
+                Color colour = (Color)model.GetValue(iter, 4);
+                (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
+                //(cell as CellRendererText).ForegroundGdk = colour;
+
+                // This is a bit of a hack which we use to convert a System.Drawing.Color
+                // to its hex string equivalent (e.g. #FF0000).
+                string hex = ColorTranslator.ToHtml(Color.FromArgb(colour.ToArgb()));
+
+                string text = (string)model.GetValue(iter, 0);
+                (cell as CellRendererText).Markup = "<span foreground=\"" + hex + "\">" + text + "</span>";
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -443,7 +480,7 @@ namespace UserInterface.Views
                 else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
                 {
                     ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
-                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    imageItem.Image = new Gtk.Image(null, Description.ResourceNameForImage);
                     item = imageItem;
                 }
                 else
@@ -599,7 +636,7 @@ namespace UserInterface.Views
                 }
             }
             string tick = description.IncludeInDocumentation && showIncludeInDocs ? "✔" : "";
-            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick);
+            treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
 
             for (int i = 0; i < description.Children.Count; i++)
             {

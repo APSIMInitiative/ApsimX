@@ -23,16 +23,16 @@ An Arbitrator is also included which determines the allocation of drymatter and 
 A scrum crop is included in a simulation the same as any other APSIM crop  
  * The SCRUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
  * It is then planted with a sowing rule  
-<pre><code class='language-cs'>
+~~~
 SCRUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  
-</code></pre>
+~~~
   * Note that SCRUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
   * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.
-<pre><code class='language-cs'>
+~~~
  zone.Set("[SCRUM].Product.ExpectedYield.Value()", ResetValue);  
-</code></pre>
+~~~
 * SCRUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  
-<pre><code class='language-cs'>
+~~~
 [EventSubscribe("Commencing")]  
 private void OnSimulationCommencing(object sender, EventArgs e)  
 {  
@@ -50,7 +50,7 @@ private void OnDoManagement(object sender, EventArgs e)
     SCRUM.EndCrop();  
   }  
 }  
- </code></pre>
+~~~
 * A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.
  * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCRUM crop.  
 ]]>
@@ -1272,7 +1272,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <![CDATA[
 This is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  
 
-<pre><code class='language-cs'>
+~~~
 for (int layer = 0; layer lessthan  Soil.Thickness.Length; layer++)  
 {  
 if (layer.depth lessthan 305)  
@@ -1282,7 +1282,7 @@ else if (layer.depth lessthan Crop.RootDepth)
 else:  
  layer.KLModifier = 0;  
 }  
-</code></pre>
+~~~
 
 This gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  
 

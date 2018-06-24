@@ -66,7 +66,7 @@ namespace Models.Core
         /// <param name="documentAllChildren">Document all children?</param>
         public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true)
         {
-            if (model.IncludeInDocumentation)
+            if (model.IncludeInDocumentation && model.Enabled)
             {
                 if (model is ICustomDocumentation)
                     (model as ICustomDocumentation).Document(tags, headingLevel, indent);

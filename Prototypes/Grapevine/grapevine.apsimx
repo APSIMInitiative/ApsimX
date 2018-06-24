@@ -45,7 +45,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>Memo</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[Dormancy sequence: Paradormancy (Apical dominance), Endodormancy(Chilling requirement), Ecodormancy (forcing unit)
-Sarvas (1974) separates bud dormancy in two periods: the "rest" period is defined as the period when buds are dormant due to physiological conditions (endodormancy), and the "quiescence" period is when buds remain dormant due to unfavourable environmental conditions (ecodormancy). The current phenological models assume the dormancy starts at March 1st, and budburst is regulated by temperature. EndDormancy is induced by a period with chilling temperatures, and then followed by a period with forcing temperatures till bud burst (Chuine et al., 2003).
+Sarvas (1974) separates bud dormancy in two periods: the "rest" period is defined as the period when buds are dormant due to physiological conditions (endodormancy), and the "quiescence" period is when buds remain dormant due to unfavourable environmental conditions (ecodormancy). The current phenological models assume the dormancy starts at March 1st, and budburst is regulated by temperature. Ecodormancy is induced by a period with chilling temperatures, and then followed by a period with forcing temperatures till bud burst (Chuine et al., 2003).
 
 We then simulated the time of flowering, fruitSet,veraison, leaf fall. After one cycle, bud goes to dormancy at March 1st. 
 
@@ -145,8 +145,8 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>StartDormancy</Start>
-          <End>EndDormancy</End>
+          <Start>Endodormancy</Start>
+          <End>Ecodormancy</End>
         </GenericPhase>
         <BuddingPhase>
           <Name>Budding</Name>
@@ -413,7 +413,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
                 <VariableName>[Phenology].EndoDormancy.ThermalTime.Value()</VariableName>
               </VariableReference>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <StartStageName>StartDormancy</StartStageName>
+              <StartStageName>Endodormancy</StartStageName>
               <EndStageName>BudBurst</EndStageName>
               <ResetStageName>Veraison</ResetStageName>
               <FractionRemovedOnCut>0</FractionRemovedOnCut>
@@ -426,10 +426,26 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>Phenology.AccChillMar1st.Value()</VariableName>
             </VariableReference>
+            <AccumulateByNumericPhase>
+              <Name>AccumulateByNumericPhase</Name>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Phenology].EndoDormancy.ThermalTime.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <StartStageName>2.5877</StartStageName>
+              <EndStageName>3</EndStageName>
+              <ResetStageName>5</ResetStageName>
+              <FractionRemovedOnCut>0</FractionRemovedOnCut>
+              <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+              <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+              <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
+            </AccumulateByNumericPhase>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>EndDormancy</Start>
+          <Start>Ecodormancy</Start>
           <End>BudBurst</End>
         </BuddingPhase>
         <GenericPhase>
@@ -555,7 +571,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>BudBurst</SetEvent>
-          <ReSetEvent>StartDormancy</ReSetEvent>
+          <ReSetEvent>Endodormancy</ReSetEvent>
         </OnEventFunction>
         <OnEventFunction>
           <Name>FloweringDOY</Name>
@@ -583,7 +599,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>StartFlowering</SetEvent>
-          <ReSetEvent>StartDormancy</ReSetEvent>
+          <ReSetEvent>Endodormancy</ReSetEvent>
         </OnEventFunction>
         <OnEventFunction>
           <Name>VeraisonDOY</Name>
@@ -606,7 +622,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>Veraison</SetEvent>
-          <ReSetEvent>StartDormancy</ReSetEvent>
+          <ReSetEvent>Endodormancy</ReSetEvent>
         </OnEventFunction>
         <OnEventFunction>
           <Name>CurrentSeason</Name>
@@ -629,7 +645,7 @@ A function is used to capture the year of the current season as in the south hem
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>BudBurst</SetEvent>
-          <ReSetEvent>StartDormancy</ReSetEvent>
+          <ReSetEvent>Endodormancy</ReSetEvent>
         </OnEventFunction>
         <AccumulateByDate>
           <Name>DoyJuly1st</Name>
@@ -2283,21 +2299,11 @@ A function is used to capture the year of the current season as in the south hem
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
             <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
-          <AccumulateByNumericPhase>
-            <Name>AccumulateByNumericPhase</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>0</StartStageName>
-            <EndStageName>0</EndStageName>
-            <FractionRemovedOnCut>0</FractionRemovedOnCut>
-            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
-            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
-            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
-          </AccumulateByNumericPhase>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <DivideFunction>
           <Name>MeanTempBudBurst</Name>
-          <AccumulateFunction>
+          <AccumulateByNumericPhase>
             <Name>Temperature</Name>
             <AirTemperatureFunction>
               <Name>AirTemperatureFunction</Name>
@@ -2316,15 +2322,15 @@ A function is used to capture the year of the current season as in the south hem
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </AirTemperatureFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>EndDormancy</StartStageName>
-            <EndStageName>BudBurst</EndStageName>
-            <ResetStageName>StartDormancy</ResetStageName>
+            <StartStageName>2.5877</StartStageName>
+            <EndStageName>3</EndStageName>
+            <ResetStageName>5</ResetStageName>
             <FractionRemovedOnCut>0</FractionRemovedOnCut>
             <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
             <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
-          </AccumulateFunction>
-          <AccumulateFunction>
+          </AccumulateByNumericPhase>
+          <AccumulateByNumericPhase>
             <Name>Time</Name>
             <Constant>
               <Name>Days</Name>
@@ -2333,14 +2339,14 @@ A function is used to capture the year of the current season as in the south hem
               <Units>days/day</Units>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>EndDormancy</StartStageName>
-            <EndStageName>BudBurst</EndStageName>
-            <ResetStageName>StartDormancy</ResetStageName>
+            <StartStageName>2.5877</StartStageName>
+            <EndStageName>3</EndStageName>
+            <ResetStageName>5</ResetStageName>
             <FractionRemovedOnCut>0</FractionRemovedOnCut>
             <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
             <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
-          </AccumulateFunction>
+          </AccumulateByNumericPhase>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <DivideFunction>
@@ -2466,9 +2472,9 @@ A function is used to capture the year of the current season as in the south hem
               <XProperty>[Arbitrator].FDM</XProperty>
             </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>EndDormancy</StartStageName>
+            <StartStageName>Ecodormancy</StartStageName>
             <EndStageName>BudBurst</EndStageName>
-            <ResetStageName>EndDormancy</ResetStageName>
+            <ResetStageName>Ecodormancy</ResetStageName>
             <FractionRemovedOnCut>0</FractionRemovedOnCut>
             <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
@@ -2483,9 +2489,9 @@ A function is used to capture the year of the current season as in the south hem
               <Units>days/day</Units>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>EndDormancy</StartStageName>
+            <StartStageName>Ecodormancy</StartStageName>
             <EndStageName>BudBurst</EndStageName>
-            <ResetStageName>StartDormancy</ResetStageName>
+            <ResetStageName>Endodormancy</ResetStageName>
             <FractionRemovedOnCut>0</FractionRemovedOnCut>
             <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
@@ -2998,7 +3004,7 @@ For simiplicity, right now, the CHO effect during bud burst is expressed as a fu
           </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>BudBurst</SetEvent>
-          <ReSetEvent>EndDormancy</ReSetEvent>
+          <ReSetEvent>Ecodormancy</ReSetEvent>
         </OnEventFunction>
         <MultiplyFunction>
           <Name>FlowersPerBunch</Name>
@@ -3021,7 +3027,7 @@ Flowers per bunch is affected by the temperature and CHO during initiation, whic
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
-                <double>0</double>
+                <double>1</double>
                 <double>10</double>
                 <double>14</double>
                 <double>15</double>
@@ -3030,13 +3036,13 @@ Flowers per bunch is affected by the temperature and CHO during initiation, whic
                 <double>40</double>
               </X>
               <Y>
-                <double>0</double>
-                <double>0.76</double>
                 <double>1</double>
-                <double>1.0588</double>
-                <double>1.176</double>
-                <double>1.35</double>
-                <double>1.4</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>

@@ -1002,7 +1002,13 @@ namespace UserInterface.Presenters
                     description.Children.Add(this.GetNodeDescription(child));
                 }
             }
+            description.Strikethrough = !model.Enabled;
             description.IncludeInDocumentation = model.IncludeInDocumentation;
+            /*
+            // Set the colour here
+            System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;
+            description.Colour = colour;
+            */
             return description;
         }
 
