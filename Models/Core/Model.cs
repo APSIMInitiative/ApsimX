@@ -31,6 +31,7 @@ namespace Models.Core
             this.IsHidden = false;
             this.Children = new List<Model>();
             IncludeInDocumentation = true;
+            Enabled = true;
         }
 
         /// <summary>
@@ -365,6 +366,11 @@ namespace Models.Core
                 child.ClearChildLists();
             Children.Clear();
         }
+
+        /// <summary>
+        /// Gets or sets whether the model is enabled
+        /// </summary>
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Return the current APSIM version number.
