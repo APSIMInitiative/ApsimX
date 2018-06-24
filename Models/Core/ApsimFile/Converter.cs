@@ -916,20 +916,32 @@ namespace Models.Core.ApsimFile
                 while (factorNames.Count == 0 && parent != null);
 
                 var uniqueFactorNames = CalculateDistinctFactorNames(factorNames);
-                int index = Convert.ToInt32(XmlUtilities.Value(series, "FactorIndexToVaryColours"));
-                if (index > -1 && index < uniqueFactorNames.Count())
-                    XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
-                XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
+                string value = XmlUtilities.Value(series, "FactorIndexToVaryColours");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
+                }
 
-                index = Convert.ToInt32(XmlUtilities.Value(series, "FactorIndexToVaryMarkers"));
-                if (index > -1 && index < uniqueFactorNames.Count())
-                    XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
-                XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
+                value = XmlUtilities.Value(series, "FactorIndexToVaryMarkers");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
+                }
 
-                index = Convert.ToInt32(XmlUtilities.Value(series, "FactorIndexToVaryLines"));
-                if (index > -1 && index < uniqueFactorNames.Count())
-                    XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
-                XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
+                value = XmlUtilities.Value(series, "FactorIndexToVaryLines");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
+                }
             }
         }
 
