@@ -198,12 +198,12 @@ namespace Models.Core
         }
 
         /// <summary>Gets a list of factors</summary>
-        public List<KeyValuePair<string, string>> GetFactors()
+        public List<ISimulationGeneratorFactor> GetFactors()
         {
-            List<KeyValuePair<string, string>> factors = new List<KeyValuePair<string, string>>();
-            factors.Add(new KeyValuePair<string, string>("Simulation", Name));
+            List<ISimulationGeneratorFactor> factors = new List<ISimulationGeneratorFactor>();
+            factors.Add(new SimulationGeneratorFactor("Simulation", Name, "SimulationName"));
             foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
-                factors.Add(new KeyValuePair<string, string>("Zone", zone.Name)); 
+                factors.Add(new SimulationGeneratorFactor("Zone", zone.Name, "Zone")); 
             return factors;
         }
 

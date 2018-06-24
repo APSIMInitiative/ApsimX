@@ -113,23 +113,35 @@
         }
 
         /// <summary>Gets a list of factors</summary>
-        public List<KeyValuePair<string, string>> GetFactors()
+        public List<ISimulationGeneratorFactor> GetFactors()
         {
-            if (serialisedBase == null)
+            if (serialisedBase == null || allCombinations.Count == 0)
                 Initialise(true);
 
-            List<KeyValuePair<string, string>> factors = new List<KeyValuePair<string, string>>();
+            List<ISimulationGeneratorFactor> factors = new List<ISimulationGeneratorFactor>();
 
-            var combination = allCombinations[0];
-            foreach (FactorValue value in combination)
+            SimulationGeneratorFactor experimentFactor = new SimulationGeneratorFactor("Experiment", Name, "SimulationName");
+            factors.Add(experimentFactor);
+            List<string> simulationNames = new List<string>();
+            foreach (List<FactorValue> combination in allCombinations)
             {
-                string factorName = value.Factor.Name;
-                if (value.Factor.Parent is Factor)
-                    factorName = value.Factor.Parent.Name;
-                string factorValue = value.Name.Replace(factorName, "");
-                factors.Add(new KeyValuePair<string, string>(factorName, factorValue));
+                // Work out a simulation name for this combination
+                string simulationName = Name;
+                foreach (FactorValue value in combination)
+                    simulationName += value.Name;
+                experimentFactor.ColumnValues.Add(simulationName);
+
+                foreach (FactorValue value in combination)
+                {
+                    string factorName = value.Factor.Name;
+                    if (value.Factor.Parent is Factor)
+                        factorName = value.Factor.Parent.Name;
+                    string factorValue = value.Name.Replace(factorName, "");
+                    SimulationGeneratorFactor newFactor = new SimulationGeneratorFactor(factorName, factorValue, "SimulationName");
+                    newFactor.ColumnValues.Add(simulationName);
+                    factors.Add(newFactor);
+                }
             }
-            factors.Add(new KeyValuePair<string, string>("Experiment", Name));
             return factors;
         }
 

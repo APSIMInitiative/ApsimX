@@ -16,6 +16,7 @@ namespace Models.Core.ApsimFile
     using System.Text.RegularExpressions;
     using PMF;
     using System.Data;
+    using Models.Factorial;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -23,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 30; } }
+        public static int LastestVersion { get { return 31; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -894,6 +895,135 @@ namespace Models.Core.ApsimFile
                 ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, "Type=DisplayType.", null);
             }
         }
+
+        /// <summary>
+        /// Change the VaryByIndex in series from an integer index to a name of a factor.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion31(XmlNode node, string fileName)
+        {
+            foreach (XmlNode series in XmlUtilities.FindAllRecursivelyByType(node, "series"))
+            {
+                string[] parentTypesToMatch = new string[] { "Simulation", "Zone", "Experiment", "Folder", "Simulations" };
+                XmlNode parent = XmlUtilities.ParentOfType(series, parentTypesToMatch);
+                List<KeyValuePair<string, string>> factorNames;
+                do
+                {
+                    factorNames = GetFactorNames(parent);
+                    parent = parent.ParentNode;
+                }
+                while (factorNames.Count == 0 && parent != null);
+
+                var uniqueFactorNames = CalculateDistinctFactorNames(factorNames);
+
+            }
+        }
+
+        /// <summary>
+        /// Create graph definitions for the specified model
+        /// </summary>
+        /// <param name="node"></param>
+        private static List<KeyValuePair<string, string>> GetFactorNames(XmlNode node)
+        {
+            string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
+            var factors = new List<KeyValuePair<string, string>>();
+            if (node.Name == "Simulation" || Array.IndexOf(zoneTypes, node.Name) != -1)
+                factors.AddRange(BuildListFromSimulation(node));
+            else if (node.Name == "Experiment")
+                factors.AddRange(BuildListFromExperiment(node));
+            else
+            {
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (child.Name == "Simulation" || child.Name == "Experiment" || child.Name == "Folder")
+                        factors.AddRange(GetFactorNames(child));
+                }
+            }
+            return factors;
+        }
+
+
+        /// <summary>
+        /// Build a list of simulation / zone pairs from the specified experiment
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private static List<KeyValuePair<string, string>> BuildListFromExperiment(XmlNode node)
+        {
+            string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
+
+            var factors = new List<KeyValuePair<string, string>>();
+
+            Experiment exp = XmlUtilities.Deserialise(node, typeof(Experiment)) as Experiment;
+            Apsim.ParentAllChildren(exp);
+            if (exp != null)
+            {
+                XmlNode baseSimulation = XmlUtilities.FindByType(node, "Simulation");
+                foreach (XmlNode zone in XmlUtilities.FindAllRecursivelyByTypes(baseSimulation, zoneTypes))
+                {
+                    foreach (List<FactorValue> combination in (exp).AllCombinations())
+                    {
+                        string zoneName = XmlUtilities.Value(zone, "Name");
+                        string simulationName = exp.Name;
+                        factors.Add(new KeyValuePair<string, string>("SimulationName", simulationName));
+                        factors.Add(new KeyValuePair<string, string>("ZoneName", zoneName));
+                        foreach (FactorValue value in combination)
+                        {
+                            simulationName += value.Name;
+                            string factorName = value.Factor.Name;
+                            if (value.Factor.Parent is Factor)
+                            {
+                                factorName = value.Factor.Parent.Name;
+                            }
+                            string factorValue = value.Name.Replace(factorName, "");
+                            factors.Add(new KeyValuePair<string, string>(factorName, factorValue));
+                        }
+                        factors.Add(new KeyValuePair<string, string>("Experiment", exp.Name));
+                    }
+                }
+            }
+            return factors;
+        }
+
+        /// <summary>
+        /// Build a list of simulation / zone pairs from the specified simulation
+        /// </summary>
+        /// <param name="node">This can be either a simulation or a zone</param>
+        /// <returns>A list of simulation / zone pairs</returns>
+        private static List<KeyValuePair<string, string>> BuildListFromSimulation(XmlNode node)
+        {
+            var simulationZonePairs = new List<KeyValuePair<string, string>>();
+            simulationZonePairs.Add(new KeyValuePair<string,string>("Simulation", XmlUtilities.Value(node, "Name")));
+            foreach (XmlNode zone in XmlUtilities.ChildNodes(node, "Zone"))
+                simulationZonePairs.Add(new KeyValuePair<string, string>("Zone", XmlUtilities.Value(zone, "Name")));
+            return simulationZonePairs;
+        }
+
+
+        /// <summary>
+        /// Go through all factors and determine which are distict.
+        /// </summary>
+        /// <param name="factors">A list of simulation zones.</param>
+        private static List<string> CalculateDistinctFactorNames(List<KeyValuePair<string, string>> factors)
+        {
+            var factorNamesToReturn = new List<string>();
+            var factorNames = factors.Select(f => f.Key).Distinct();
+            foreach (var factorName in factorNames)
+            {
+                List<string> factorValues = new List<string>();
+                var matchingFactors = factors.FindAll(f => f.Key == factorName);
+                var matchingFactorValues = matchingFactors.Select(f => f.Value);
+
+                if (matchingFactorValues.Distinct().Count() > 1)
+                {
+                    // All factor values are the same so remove the factor.
+                    factorNamesToReturn.Add(factorName);
+                }
+            }
+            return factorNamesToReturn;
+        }
+
 
     }
 }

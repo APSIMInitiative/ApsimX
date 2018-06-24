@@ -173,6 +173,7 @@
     <Compile Include="Core\ApsimFile\Format.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\SimulationGeneratorFactor.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\IReferenceExternalFiles.cs" />

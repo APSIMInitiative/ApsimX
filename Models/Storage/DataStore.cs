@@ -239,7 +239,7 @@
             else
                 fieldList = fieldNames.ToList();
 
-            bool hasSimulationName = fieldList.Contains("SimulationID");
+            bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName");
 
             sql.Append("SELECT C.Name AS CheckpointName, C.ID AS CheckpointID");
             if (hasSimulationName)

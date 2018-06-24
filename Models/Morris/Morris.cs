@@ -10,7 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Utility;
+    using Models.Utilities;
 
     /// <summary>
     /// # [Name]
@@ -153,11 +153,15 @@
         }
 
         /// <summary>Gets a list of factors</summary>
-        public List<KeyValuePair<string, string>> GetFactors()
+        public List<ISimulationGeneratorFactor> GetFactors()
         {
-            List<KeyValuePair<string, string>> factors = new List<KeyValuePair<string, string>>();
-            //foreach (Parameter param in parameters)
-            //    factors.Add(new KeyValuePair<string, string>("Variable", param.Name));
+            var factors = new List<ISimulationGeneratorFactor>();
+            foreach (Parameter param in parameters)
+            {
+                var factor = new SimulationGeneratorFactor("MorrisVariable", param.Name, "Variable");
+                factor.ColumnValues.Add(param.Name);
+                factors.Add(factor);
+            }
             return factors;
         }
 
@@ -313,6 +317,10 @@
                 DataTable muStarByPath = CreateMuStarByPath(elementalEffects);
                 dataStore.DeleteDataInTable(muStarByPath.TableName);
                 dataStore.WriteTable(muStarByPath);
+
+                DataTable muStar = CreateMuStar(muStarByPath);
+                dataStore.DeleteDataInTable(muStar.TableName);
+                dataStore.WriteTable(muStar);
             }
         }
 
@@ -324,7 +332,7 @@
         {
             // Add all the necessary columns to our data table.
             DataTable eeTable = new DataTable();
-            eeTable.TableName = "ElementalEffects";
+            eeTable.TableName = Name + "ElementalEffects";
             eeTable.Columns.Add("Variable", typeof(string));
             eeTable.Columns.Add("Path", typeof(int));
             foreach (DataColumn column in predictedData.Columns)
@@ -367,7 +375,7 @@
         {
             // Add all the necessary columns to our data table.
             DataTable muStarTable = new DataTable();
-            muStarTable.TableName = "MuStar";
+            muStarTable.TableName = Name + "MuStarByPath";
             muStarTable.Columns.Add("Variable", typeof(string));
             muStarTable.Columns.Add("Path", typeof(int));
             foreach (DataColumn column in eeTable.Columns)
@@ -402,6 +410,26 @@
                     muStarTable.Rows.Add(newRow);
                 }
             }
+            return muStarTable;
+        }
+
+        /// <summary>
+        /// Create a MuStar by path number table - running mean mustar
+        /// </summary>
+        private DataTable CreateMuStar(DataTable muStarByPathTable)
+        {
+            // Add all the necessary columns to our data table.
+            DataTable muStarTable = new DataTable();
+            muStarTable.TableName = Name + "MuStar";
+            muStarTable.Columns.Add("Variable", typeof(string));
+            foreach (DataColumn column in muStarByPathTable.Columns)
+            {
+                if (column.DataType == typeof(double))
+                    muStarTable.Columns.Add(column.ColumnName, typeof(double));
+            }
+
+            muStarTable.ImportRow(muStarByPathTable.Rows[muStarByPathTable.Rows.Count - 2]);
+            muStarTable.ImportRow(muStarByPathTable.Rows[muStarByPathTable.Rows.Count - 1]);
             return muStarTable;
         }
 
