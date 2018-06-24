@@ -305,7 +305,8 @@ namespace UserInterface.Presenters
             {
                 // Run all child model post processors.
                 foreach (IPostSimulationTool tool in Apsim.Children(storage as Model, typeof(IPostSimulationTool)))
-                    tool.Run(storage);
+                    if ((tool as IModel).Enabled)
+                        tool.Run(storage);
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -636,7 +637,7 @@ namespace UserInterface.Presenters
             IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
             model.Enabled = !model.Enabled;
             foreach (IModel child in Apsim.ChildrenRecursively(model))
-                child.Enabled = !child.Enabled;
+                child.Enabled = model.Enabled;
             explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
             explorerPresenter.Refresh();
         }
