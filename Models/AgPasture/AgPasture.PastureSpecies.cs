@@ -3172,6 +3172,20 @@ namespace Models.AgPasture
 
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+        /// <summary>Get above ground biomass</summary>
+        public Biomass AboveGround
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt = leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.StructuralN = leaves.NLive + leaves.NDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.DMDOfStructural = leaves.DigestibilityLive;
+                return mass;
+            }
+        }
+
+
         /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
         [Description("Dry matter weight available for harvesting")]
         [Units("kg/ha")]
@@ -5270,8 +5284,15 @@ namespace Models.AgPasture
                 if (amountToRemove - HarvestableWt > -Epsilon)
                 {
                     // All existing DM is removed
+                    amountToRemove = HarvestableWt;
                     for (int i = 0; i < 5; i++)
-                        fracRemoving[i] = 1.0;
+                    {
+                        fracRemoving[0] = MathUtilities.Divide(leaves.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[1] = MathUtilities.Divide(stems.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[2] = MathUtilities.Divide(stolons.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[3] = MathUtilities.Divide(leaves.DMDeadHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[4] = MathUtilities.Divide(stems.DMDeadHarvestable, HarvestableWt, 0.0);
+                    }
                 }
                 else
                 {

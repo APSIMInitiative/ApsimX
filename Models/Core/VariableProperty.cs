@@ -677,5 +677,15 @@ namespace Models.Core
                 }
             }
         }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType)
+        {
+            return ReflectionUtilities.GetAttribute(this.property, attributeType, false);
+        }
     }
 }

@@ -133,6 +133,14 @@
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType) { return null; }
+
     }
 
     /// <summary>
@@ -335,5 +343,16 @@
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType)
+        {
+            return ReflectionUtilities.GetAttribute(FieldInfo, attributeType, false);
+        }
+
     }
 }

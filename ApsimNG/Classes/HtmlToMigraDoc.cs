@@ -73,7 +73,7 @@
                 case "h5": return AddHeading(section, 5);
                 case "h6": return AddHeading(section, 6);
                 case "#text": return AddText(section, node.InnerText);
-                case "p": return AddParagraph(section);
+                case "p": return AddParagraph(section, node);
                 case "strong": FormattedText text = AddFormattedText(section); text.Bold = true; return text;
                 case "em": text = AddFormattedText(section); text.Italic = true; return text;
                 case "u": text = AddFormattedText(section); text.Underline = Underline.Single; return text;
@@ -161,11 +161,22 @@
         private static DocumentObject AddTable(DocumentObject section)
         {
             tableColumnNames = new List<string>();
+            Table table = null;
             if (section is Section)
-                return (section as Section).AddTable();
+            {
+                table = (section as Section).AddTable();
+                var tableEnd = (section as Section).AddParagraph();
+                tableEnd.Style = "ListEnd";
+            }
             else if (section is Paragraph)
-                return (section as Paragraph).Section.AddTable();
-            return null;
+                table = (section as Paragraph).Section.AddTable();
+
+            if (table != null)
+            {
+                table.Borders.Visible = true;
+                table.Rows.LeftIndent = "0cm";
+            }
+            return table;
         }
 
         /// <summary>
@@ -186,7 +197,7 @@
             if (!string.IsNullOrWhiteSpace(innerText))
             {
                 tableColumnNames.Add(innerText);
-                table.AddColumn(Unit.FromCentimeter(innerText.Length / 2));
+                table.AddColumn(Unit.FromCentimeter(innerText.Length / 3));
             }
 
             return table;
@@ -244,7 +255,16 @@
                 if (sibling == node)
                 {
                     Paragraph tableText = row.Cells[index].AddParagraph(node.InnerText);
+                    if (node.Attributes.Contains("align"))
+                    {
+                        string alignment = node.Attributes["align"].Value;
+                        if (String.Compare(alignment, "right", true) == 0)
+                            tableText.Format.Alignment = ParagraphAlignment.Right;
+                        else if (String.Compare(alignment, "center", true) == 0)
+                            tableText.Format.Alignment = ParagraphAlignment.Center;
+                    }
                     tableText.Style = "TableText";
+                    return section;
                 }
                 else if (sibling.Name == "td")
                     index++;
@@ -260,14 +280,45 @@
         /// <param name="node"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        private static DocumentObject AddParagraph(DocumentObject section)
+        private static DocumentObject AddParagraph(DocumentObject section, HtmlNode node)
         {
+            Paragraph newParagraph = null;
+            int quoteLevel = 0;
+            bool isListItem = false;
+            HtmlNode testNode = node.ParentNode;
+            string listStyle = "";
+            while (testNode != null)
+            {
+                if (testNode.Name == "blockquote")
+                    quoteLevel++;
+                if (testNode.Name == "li")
+                {
+                    isListItem = true;
+                    listStyle = testNode.ParentNode.Name == "ul" ? "UnorderedList" : "OrderedList";
+                }
+                testNode = testNode.ParentNode;
+            }
+
+            if (isListItem)
+            {
+                Paragraph paragraph = GetParagraph(section);
+                bool isFirst = node.ParentNode.Elements("p").First() == node;
+                if (!isFirst)
+                    paragraph.AddLineBreak();
+                return paragraph;
+            }
+
             if (section is Section)
-                return (section as Section).AddParagraph();
+                newParagraph = (section as Section).AddParagraph();
             else if (section is Paragraph)
-                return (section as Paragraph).Section.AddParagraph();
-            else
-                return null;
+                newParagraph = (section as Paragraph).Section.AddParagraph();
+
+            if (quoteLevel > 0)
+            {
+                newParagraph.Format.LeftIndent = Unit.FromCentimeter(1.0 * quoteLevel);
+                newParagraph.Format.RightIndent = Unit.FromCentimeter(1.0 * quoteLevel);
+            }
+            return newParagraph;
         }
 
         /// <summary>
@@ -352,9 +403,15 @@
             if (foundCode)
             {
                 if (parentObject is Section)
+                {
                     AddCodeBlock(parentObject as Section, text);
+                    var tableEnd = (parentObject as Section).AddParagraph();
+                    tableEnd.Style = "ListEnd";
+                }
                 else if (parentObject is Paragraph)
+                {
                     AddCodeBlock((parentObject as Paragraph).Section, text);
+                }
                 foundCode = false;
                 return null;
             }
@@ -472,7 +529,7 @@
 
             if (doc.Styles["ListEnd"] == null)
             {
-                var unorderedlist = doc.AddStyle("ListStart", "Normal");
+                var unorderedlist = doc.AddStyle("ListEnd", "Normal");
                 unorderedlist.ParagraphFormat.SpaceAfter = 0;
             }
 
@@ -532,18 +589,21 @@
             table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
             table.LeftPadding = "5mm";
             table.Rows.LeftIndent = "0cm";
-
+            
             var column = table.AddColumn();
             column.Width = Unit.FromMillimeter(180);
 
             Row row = table.AddRow();
+            Paragraph p = row[0].AddParagraph();
+            p.Style = "TableParagraph";
+
             string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
             foreach (string line in lines)
             {
                 string spacedLine = line.Replace(' ', (char)0xa0); // Turn spaces into non-breaking spaces
                 
-                Paragraph p = row[0].AddParagraph();
+                p = row[0].AddParagraph();
                 p.AddText(WebUtility.HtmlDecode(spacedLine));
                 p.Style = "TableParagraph";
             }

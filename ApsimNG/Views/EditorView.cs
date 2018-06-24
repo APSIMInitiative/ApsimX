@@ -415,8 +415,16 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
+            e.RetVal = false;
             char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
             bool controlSpace = IsControlSpace(e.Event);
+            string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
+            double x; // unused, but needed as an out parameter.
             if (e.Event.Key == Gdk.Key.F3)
             {
                 if (string.IsNullOrEmpty(_findForm.LookFor))
@@ -425,11 +433,9 @@ namespace UserInterface.Views
                     _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
                 e.RetVal = true;
             }
-            else if (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace)
+            // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
+            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) )
             {
-                // If user one of the IntelliSenseChars, then display contextlist.
-                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
-
                 // If the user entered a period, we need to take that into account when generating intellisense options.
                 // To do this, we insert a period manually and stop the Gtk signal from propagating further.
                 e.RetVal = true;
@@ -452,14 +458,16 @@ namespace UserInterface.Views
 
                 ContextItemsNeeded?.Invoke(this, args);
             }
-            else if (e.Event.Key == Gdk.Key.Key_0 && (e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
+            else if ((e.Event.State & ctlModifier) != 0)
             {
-                textEditor.Options.ZoomReset();
-                e.RetVal = true;
-            }
-            else
-            {
-                e.RetVal = false;
+                switch (e.Event.Key)
+                {
+                    case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
+                    case Gdk.Key.KP_Add:
+                    case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
+                    case Gdk.Key.KP_Subtract:
+                    case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
+                }
             }
         }
 
@@ -482,11 +490,9 @@ namespace UserInterface.Views
         {
             if (pos == 0)
                 return string.Empty;
-            else
-            {
-                int PosDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
-                return textEditor.Text.Substring(PosDelimiter + 1, pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
-            }
+
+            int posDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
+            return textEditor.Text.Substring(posDelimiter + 1, pos - posDelimiter - 1).TrimEnd(".".ToCharArray());
         }
 
         /// <summary>
