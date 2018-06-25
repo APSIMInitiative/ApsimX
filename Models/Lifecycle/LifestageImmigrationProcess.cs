@@ -8,8 +8,6 @@ namespace Models.LifeCycle
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Models.Core;
     using Models.PMF.Functions;
 
@@ -28,10 +26,38 @@ namespace Models.LifeCycle
         private List<IFunction> FunctionList;
 
         /// <summary>
-        /// The number of immigrants
+        /// The number of immigrants during this process
         /// </summary>
-        [Description("Immigration numbers into Lifestage")]
-        public double Immigrants { get; set; }
+        [NonSerialized]
+        private double immigrantNumbers;
+
+        /// <summary>
+        /// Report the number of immigrants at this timestep
+        /// </summary>
+        public double Immigrants
+        {
+            get
+            {
+                return immigrantNumbers;
+            }
+        }
+
+        /// <summary>
+        /// Process this lifestage before cohorts are processed.
+        /// This process is immigration.
+        /// </summary>
+        /// <param name="host">The host LifeStage</param>
+        public void Process(LifeStage host)
+        {
+            double number = 0;
+            // apply the functions from the function list to calculate the total number of immigrants
+            foreach (IFunction func in FunctionList)
+            {
+                number += func.Value();
+            }
+            immigrantNumbers = number;
+            host.AddImmigrants(number);
+        }
 
         /// <summary>
         /// Applies each function in this Lifestage process to a cohort item that is owned by a Lifestage
@@ -39,18 +65,14 @@ namespace Models.LifeCycle
         /// <param name="cohortItem">An existing cohort</param>
         public void ProcessCohort(Cohort cohortItem)
         {
-            //apply the functions from the function list to this cohort
-            foreach (IFunction func in FunctionList)
-            {
-
-            }
+            //immigration does not require this
         }
 
         /// <summary>
         /// At the start of the simulation get the functions required
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event parameters</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
