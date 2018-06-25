@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
             this.allowableChildFunctions = Apsim.GetAllowableChildFunctions(this.model);
 
             this.view.List.IsModelList = true;
-            this.view.List.Values = this.allowableChildFunctions.Select(m => m.Name).ToArray();
+            this.view.List.Values = this.allowableChildFunctions.Select(m => m.FullName).ToArray();
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
 
             // Trap events from the view.
@@ -103,7 +103,7 @@ namespace UserInterface.Presenters
                 {
                     foreach (Type t in assembly.GetTypes())
                     {
-                        if (t.Name == modelName && t.IsPublic && t.IsClass)
+                        if (t.FullName == modelName && t.IsPublic && t.IsClass)
                         {
                             modelType = t;
                             break;
