@@ -17,7 +17,7 @@ largely taken from the [website of John Gruber] [Gruber], the developer of Markd
 
 -------
 
-##*Markdown* Syntax
+## *Markdown* Syntax
 
 Markdown paragraphs are simply one or more lines of consecutive text, separated by one or more blank lines. 
 They should not be indented with spaces or tabs. Most formatting operations can be easily accomplished using 
@@ -39,11 +39,11 @@ the line, corresponding to header levels 1-6. For example:
 These will appear as:
 
 
-###### This is an H6
+# This is an H1
 
 ## This is an H2
 
-# This is an H1
+###### This is an H6
 
 
 ### Emphasis
@@ -276,6 +276,7 @@ adding additional levels of `>`:
     > Back to the first level.
 
 will produce
+
 > This is the first level of quoting.
 >
 > > This is nested blockquote.
