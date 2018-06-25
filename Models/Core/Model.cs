@@ -337,7 +337,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.LifeCycle.LifeStage))]
         [XmlElement(typeof(Models.LifeCycle.LifeStageProcess))]
         [XmlElement(typeof(Models.LifeCycle.LifeStageReproductionProcess))]
-		[XmlElement(typeof(Map))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStageImmigrationProcess))]
+        [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
         /// <summary>
