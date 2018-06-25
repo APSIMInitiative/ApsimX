@@ -534,10 +534,7 @@ namespace UserInterface.Views
         {
             if (string.IsNullOrEmpty(completionOption))
                 return;
-            if (string.IsNullOrEmpty(triggerWord))
-                textEditor.InsertAtCaret(completionOption);
-            else
-                textEditor.InsertAtCaret(completionOption);
+            textEditor.InsertAtCaret(completionOption);
         }
         
         /// <summary>
