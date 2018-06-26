@@ -2339,7 +2339,7 @@ namespace UserInterface.Views
                                                     // value into the cell.
                                                     if (words[i] == string.Empty)
                                                     {
-                                                        cell.Value = null;
+                                                        cell.Value = DBNull.Value;
                                                     }
                                                     else
                                                     {
