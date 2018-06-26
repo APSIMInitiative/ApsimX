@@ -476,7 +476,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                var mainView = GetMainViewReference(this);
+                MainView mainView = GetMainViewReference(this);
                 if (mainView != null)
                     mainView.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
             }
@@ -760,48 +760,7 @@ namespace UserInterface.Views
             char c;
             return char.TryParse(keyName, out c) && !char.IsControl(c);
         }
-
-        /*
-        /// <summary>
-        /// Show the completion window
-        /// </summary>
-        private void ShowCompletionWindow()
-        {
-            if (ContextItemsNeeded == null)
-                return;
-            try
-            {
-                caretLocation = (editControl as Entry).Position;
-                string cellContents = (editControl as Entry).Text;
-                string contentsToCursor = cellContents.Substring(0, caretLocation);
-                string contentsAfterCursor = cellContents.Substring(caretLocation);
-                string node = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
-
-                intellisense.ContextItemsNeeded += this.ContextItemsNeeded;
-                if (!intellisense.GenerateAutoCompletionOptions(node))
-                    return;
-
-                GetCurrentCell.Value = contentsToCursor + "." + contentsAfterCursor;
-                Gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Gridview.Columns[GetCurrentCell.ColumnIndex], true);
-                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
-
-                // Get the coordinates of the cell 1 row beneath the current one - we don't want the popup to cover the cell we're working on
-                Tuple<int, int> coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1);
-                intellisense.MainWindow = MainWidget.Toplevel as Window;
-                intellisense.SmartShowAtCoordinates(coordinates.Item1, coordinates.Item2);
-
-                while (Gtk.Application.EventsPending())
-                    Gtk.Application.RunIteration();
-            }
-            catch (Exception e)
-            {
-                var mainView = GetMainViewReference(this);
-                if (mainView != null)
-                    mainView.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
-            }
-        }
-        */
-
+        
         /// <summary>
         /// Show the completion window
         /// </summary>
@@ -2326,10 +2285,21 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnPasteFromClipboard(object sender, EventArgs e)
         {
+            try
             {
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                int rowIndex = popupCell.RowIndex;
-                int columnIndex = popupCell.ColumnIndex;
+                int rowIndex, columnIndex;
+                if (popupCell == null)
+                {
+                    rowIndex = GetCurrentCell.RowIndex;
+                    columnIndex = GetCurrentCell.ColumnIndex;
+                }
+                else
+                {
+                    rowIndex = popupCell.RowIndex;
+                    columnIndex = popupCell.ColumnIndex;
+                }
+                
                 if (this.userEditingCell && this.editControl != null)
                 {
                     (editControl as Entry).PasteClipboard();
@@ -2369,7 +2339,7 @@ namespace UserInterface.Views
                                                     // value into the cell.
                                                     if (words[i] == string.Empty)
                                                     {
-                                                        cell.Value = null;
+                                                        cell.Value = DBNull.Value;
                                                     }
                                                     else
                                                     {
@@ -2408,6 +2378,12 @@ namespace UserInterface.Views
                     Gridview.QueueDraw();
                     this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                 }
+            }
+            catch (Exception err)
+            {
+                MainView mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
             }
         }
 
