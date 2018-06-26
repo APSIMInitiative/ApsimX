@@ -144,19 +144,6 @@
         private double irrig;
         /// <summary>The cumeos</summary>
         private double cumeos;
-        /// <summary>The old som state</summary>
-        private OMFractionType oldSOMState;
-        /// <summary>The daily initial c</summary>
-        private double DailyInitialC;
-        /// <summary>The daily initial n</summary>
-        private double DailyInitialN;
-
-        /// <summary>Gets or sets the report additions.</summary>
-        /// <value>The report additions.</value>
-        public string ReportAdditions { get; set; }
-        /// <summary>Gets or sets the report removals.</summary>
-        /// <value>The report removals.</value>
-        public string ReportRemovals { get; set; }
 
         /// <summary>Initializes a new instance of the <see cref="SurfaceOrganicMatter"/> class.</summary>
         public SurfaceOrganicMatter()
@@ -475,10 +462,6 @@
         /// <summary>The specific_area</summary>
         private double[] specific_area = new double[0];      // specific area of residue (ha/kg)
 
-        /// <summary>The pond active</summary>
-        [Units("")]
-        public string PondActive = null;
-
         /// <summary>The labile_p</summary>
         [Units("")]
         public double[] labile_p = null;
@@ -487,16 +470,6 @@
         /// <value>The Surface OM Weight.</value>
         [Units("kg/ha")]
         public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
-
-        /// <summary>Gets the carbonbalance.</summary>
-        /// <value>The carbonbalance.</value>
-        [Units("kg/ha")]
-        public double carbonbalance { get { return 0 - (C - DailyInitialC); } }
-
-        /// <summary>Gets the nitrogenbalance.</summary>
-        /// <value>The nitrogenbalance.</value>
-        [Units("kg/ha")]
-        public double nitrogenbalance { get { return 0 - (N - DailyInitialN); } }
 
         /// <summary>Total mass of all surface organic carbon</summary>
         /// <value>The surfaceom_c.</value>
@@ -555,13 +528,6 @@
         [Units("0-1")]
         public double wf { get { return MoistureFactor(); } }
 
-        /// <summary>The _leaching_fr</summary>
-        private double _leaching_fr;
-        /// <summary>Gets the leaching_fr.</summary>
-        /// <value>The leaching_fr.</value>
-        [Units("")]
-        public double leaching_fr { get { return _leaching_fr; } }
-
         /// <summary>Get the weight of the given SOM pool</summary>
         /// <param name="pool">Name of the pool to get the weight from.</param>
         /// <returns>The weight of the given pool</returns>
@@ -571,175 +537,7 @@
             return SumOMFractionType(SomType.Standing, y => y.amount) +
                 SumOMFractionType(SomType.Lying, y => y.amount);
         }
-
-        /// <summary>Mass of organic matter in all pools</summary>
-        /// <value>The surfaceom_wt_all.</value>
-        [Units("kg/ha")]
-        public double[] WtAllPools
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x =>
-                        SumOMFractionType(x.Standing, y => y.amount) +
-                        SumOMFractionType(x.Lying, y => y.amount)).ToArray<double>();
-            }
-        }
-
-        /// <summary>Mass of organic carbon in all pools</summary>
-        /// <value>The surfaceom_c_all.</value>
-        [Units("kg/ha")]
-        public double[] surfaceom_c_all
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x =>
-                        SumOMFractionType(x.Standing, y => y.C) +
-                        SumOMFractionType(x.Lying, y => y.C)).ToArray<double>();
-            }
-        }
-
-        /// <summary>Mass of organic nitrogen in all pools</summary>
-        /// <value>The surfaceom_n_all.</value>
-        [Units("kg/ha")]
-        public double[] surfaceom_n_all
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x =>
-                        SumOMFractionType(x.Standing, y => y.N) +
-                        SumOMFractionType(x.Lying, y => y.N)).ToArray<double>();
-            }
-        }
-
-        /// <summary>Mass of organic phosphor in all pools</summary>
-        /// <value>The surfaceom_p_all.</value>
-        [Units("kg/ha")]
-        public double[] surfaceom_p_all
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x =>
-                        SumOMFractionType(x.Standing, y => y.P) +
-                        SumOMFractionType(x.Lying, y => y.P)).ToArray<double>();
-            }
-        }
-
-        /// <summary>Mass of nitrate in all pools</summary>
-        /// <value>The surfaceom_no3_all.</value>
-        [Units("")]
-        public double[] surfaceom_no3_all
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x => x.no3).ToArray<double>();
-            }
-        }
-
-        /// <summary>Mass of ammonium in all pools</summary>
-        /// <value>The surfaceom_nh4_all.</value>
-        [Units("")]
-        public double[] surfaceom_nh4_all
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x => x.nh4).ToArray<double>();
-            }
-        }
-
-        /// <summary>Mass of labile phosphorus in all pools</summary>
-        /// <value>The surfaceom_labile_p_all.</value>
-        [Units("")]
-        public double[] surfaceom_labile_p_all
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x => x.nh4).ToArray<double>();
-            }
-        }
-
-        /// <summary>Potential organic C decomposition in all pools</summary>
-        /// <value>The pot_c_decomp_all.</value>
-        [Units("")]
-        public double[] pot_c_decomp_all
-        {
-            get
-            {
-                double[] c, n, p;
-                PotDecomp(out c, out n, out p);
-
-                return c;
-            }
-        }
-
-        /// <summary>Potential organic N decomposition in all pools</summary>
-        /// <value>The pot_n_decomp_all.</value>
-        [Units("")]
-        public double[] pot_n_decomp_all
-        {
-            get
-            {
-                double[] c, n, p;
-                PotDecomp(out c, out n, out p);
-
-                return n;
-            }
-        }
-
-        /// <summary>Potential organic P decomposition in all pools</summary>
-        /// <value>The pot_p_decomp_all.</value>
-        [Units("")]
-        public double[] pot_p_decomp_all
-        {
-            get
-            {
-                double[] c, n, p;
-                PotDecomp(out c, out n, out p);
-
-                return p;
-            }
-        }
-
-        /// <summary>Fraction of all pools which is inert, ie not in contact with the ground</summary>
-        /// <value>The standing_fr_all.</value>
-        [Units("")]
-        public double[] standing_fr_all
-        {
-            get
-            {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x => MathUtilities.Divide(x.Standing[0].amount, x.Standing[0].amount + x.Lying[0].amount, 0)).ToArray<double>();
-            }
-        }
-
-        /// <summary>Fraction of ground covered by all pools</summary>
-        /// <value>The surfaceom_cover_all.</value>
-        [Units("m^2/m^2")]
-        public double[] surfaceom_cover_all
-        {
-            get
-            {
-                double[] result = new double[SurfOM.Count];
-                for (int i = 0; i < result.Length; i++)
-                    result[i] = CoverOfSOM(i);
-
-                return result;
-            }
-        }
-
-        /// <summary>C:N ratio factor for decomposition for all pools</summary>
-        /// <value>The cnrf_all.</value>
-        [Units("")]
-        public double[] cnrf_all
-        {
-            get
-            {
-                double[] result = new double[SurfOM.Count];
-                for (int i = 0; i < result.Length; i++)
-                    result[i] = CNRatioFactor(i);
-
-                return result;
-            }
-        }
-
+        
         /// <summary>Called when [deserialised].</summary>
         /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
         [EventSubscribe("Deserialised")]
@@ -979,7 +777,6 @@
             /// <summary>Gets the residue.</summary>
             /// <param name="name">The name.</param>
             /// <returns></returns>
-            /// <exception cref="ApsimXException">Could not find residue name  + name</exception>
             public ResidueType getResidue(string name)
             {
                 if (residues != null)
@@ -1185,7 +982,6 @@
         /// <param name="type">The type.</param>
         /// <param name="func">The function.</param>
         /// <returns></returns>
-        /// <exception cref="ApsimXException">No organic matter called  + type +  present</exception>
         double ResidueMass(string type, Func<OMFractionType, double> func)
         {
             int SOMNo = GetResidueNumber(type);
@@ -1198,67 +994,12 @@
         /// <summary>Initialise residue module</summary>
         private void SurfomReset()
         {
-            SaveState();
             ZeroVariables();
             ReadParam();
-            DeltaState();
-        }
-
-        /// <summary>Saves the state.</summary>
-        private void SaveState()
-        {
-            oldSOMState = SurfomTotalState();
-        }
-
-        /// <summary>Deltas the state.</summary>
-        private void DeltaState()
-        {
-            OMFractionType newSOMState = SurfomTotalState();
-            Models.Soils.ExternalMassFlowType massBalanceChange = new Models.Soils.ExternalMassFlowType();
-
-            massBalanceChange.DM = newSOMState.amount - oldSOMState.amount;
-            massBalanceChange.C = newSOMState.C - oldSOMState.C;
-            massBalanceChange.N = newSOMState.N - oldSOMState.N;
-            massBalanceChange.P = newSOMState.P - oldSOMState.P;
-            massBalanceChange.SW = 0.0;
-
-            if (massBalanceChange.DM >= 0.0)
-                massBalanceChange.FlowType = "gain";
-            else
-                massBalanceChange.FlowType = "loss";
-
-            SendExternalMassFlow(massBalanceChange);
-            return;
         }
 
         /// <summary>Published when a tillage has been completed.</summary>
         public event TillageTypeDelegate TillageCompleted;
-
-        /// <summary>Occurs when [external mass flow].</summary>
-        public event Models.Soils.SoilNitrogen.ExternalMassFlowDelegate ExternalMassFlow;
-        /// <summary>Publishes the external mass flow.</summary>
-        /// <param name="massBalanceChange">The mass balance change.</param>
-        private void PublishExternalMassFlow(ExternalMassFlowType massBalanceChange)
-        {
-            if (ExternalMassFlow != null)
-                ExternalMassFlow.Invoke(massBalanceChange);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
-        /// <summary>Occurs when [potential residue decomposition calculated].</summary>
-        public event SurfaceOrganicMatterDecompDelegate PotentialResidueDecompositionCalculated;
-
-        /// <summary>Publishes the surface organic matter decomp.</summary>
-        /// <param name="SOMDecomp">The som decomp.</param>
-        private void PublishSurfaceOrganicMatterDecomp(SurfaceOrganicMatterDecompType SOMDecomp)
-        {
-            if (PotentialResidueDecompositionCalculated != null)
-                PotentialResidueDecompositionCalculated.Invoke(SOMDecomp);
-        }
 
         /// <summary>
         /// 
@@ -1268,14 +1009,6 @@
 
         /// <summary>Occurs when [incorp fom pool].</summary>
         public event FOMPoolDelegate IncorpFOMPool;
-
-        /// <summary>Publishes the fom pool.</summary>
-        /// <param name="data">The fom data.</param>
-        private void PublishFOMPool(FOMPoolType data)
-        {
-            if (IncorpFOMPool != null)
-                IncorpFOMPool.Invoke(data);
-        }
 
         /// <summary>
         /// 
@@ -1309,133 +1042,6 @@
             public SurfaceOrganicMatterPoolType[] Pool;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void SurfaceOrganicMatterDelegate(SurfaceOrganicMatterType Data);
-
-        /// <summary>Occurs when [surface organic matter state].</summary>
-        public event SurfaceOrganicMatterDelegate SurfaceOrganicMatterState;
-
-        /// <summary>Publish_s the surface organic matter.</summary>
-        /// <param name="SOM">The som.</param>
-        private void publish_SurfaceOrganicMatter(SurfaceOrganicMatterType SOM)
-        {
-            if (SurfaceOrganicMatterState != null)
-                SurfaceOrganicMatterState.Invoke(SOM);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public class ResidueRemovedType
-        {
-            /// <summary>The residue_removed_action</summary>
-            public string residue_removed_action = string.Empty;
-            /// <summary>The dlt_residue_fraction</summary>
-            public double dlt_residue_fraction;
-            /// <summary>The residue_incorp_fraction</summary>
-            public double[] residue_incorp_fraction;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public class ResidueAddedType
-        {
-            /// <summary>The residue_type</summary>
-            public string residue_type = string.Empty;
-            /// <summary>The dm_type</summary>
-            public string dm_type = string.Empty;
-            /// <summary>The dlt_residue_wt</summary>
-            public double dlt_residue_wt;
-            /// <summary>The DLT_DM_N</summary>
-            public double dlt_dm_n;
-            /// <summary>The DLT_DM_P</summary>
-            public double dlt_dm_p;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void Residue_addedDelegate(ResidueAddedType Data);
-
-        /// <summary>Occurs when [residue_added].</summary>
-        public event Residue_addedDelegate Residue_added;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void Residue_removedDelegate(ResidueRemovedType Data);
-
-        /// <summary>Occurs when [residue_removed].</summary>
-        public event Residue_removedDelegate Residue_removed;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public class SurfaceOMRemovedType
-        {
-            /// <summary>The surface o m_type</summary>
-            public string SurfaceOM_type = string.Empty;
-            /// <summary>The surface o m_dm_type</summary>
-            public string SurfaceOM_dm_type = string.Empty;
-            /// <summary>The DLT_ surface o M_WT</summary>
-            public double dlt_SurfaceOM_wt;
-            /// <summary>The surface o M_DLT_DM_N</summary>
-            public double SurfaceOM_dlt_dm_n;
-            /// <summary>The surface o M_DLT_DM_P</summary>
-            public double SurfaceOM_dlt_dm_p;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void SurfaceOM_removedDelegate(SurfaceOMRemovedType Data);
-
-        /// <summary>Occurs when [surface o m_removed].</summary>
-        public event SurfaceOM_removedDelegate SurfaceOM_removed;
-
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (initialised)
-            {
-                DailyInitialC = SumSurfOMStandingLying(SurfOM, x => x.C);
-                DailyInitialN = SumSurfOMStandingLying(SurfOM, x => x.N);
-            }
-        }
-
-        /// <summary>The initialised</summary>
-        bool initialised = false;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public class Add_surfaceomType
-        {
-            /// <summary>The name</summary>
-            public string name = string.Empty;
-            /// <summary>The type</summary>
-            public string type = string.Empty;
-            /// <summary>The mass</summary>
-            public double mass;
-            /// <summary>The n</summary>
-            public double n;
-            /// <summary>The CNR</summary>
-            public double cnr;
-            /// <summary>The p</summary>
-            public double p;
-            /// <summary>The CPR</summary>
-            public double cpr;
-        }
         /// <summary>Incorporates the specified fraction.</summary>
         /// <param name="fraction">The fraction.</param>
         /// <param name="depth">The depth.</param>
@@ -1467,11 +1073,7 @@
             SurfOM = new List<SurfOrganicMatterType>();
             irrig = 0;
             cumeos = 0;
-            _leaching_fr = 0;
-            PondActive = "no";
-            oldSOMState = new OMFractionType();
             ZeroVariables();
-            initialised = true; 
             SurfomReset();
         }
 
@@ -1504,8 +1106,19 @@
         /// <returns></returns>
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
-            GetOtherVariables();
-            return Process();
+            double precip = weather.Rain + irrig;
+            if (precip > 4.0)
+                cumeos = soil.SoilWater.Eos - precip;
+            else
+                cumeos = this.cumeos + soil.SoilWater.Eos - precip;
+            cumeos = Math.Max(cumeos, 0.0);
+
+            if (precip >= MinRainToLeach)
+                Leach(precip);
+
+            irrig = 0.0; // reset irrigation log now that we have used that information;
+
+            return SendPotDecompEvent();
         }
 
         /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
@@ -1560,14 +1173,6 @@
         /// <param name="data">The data.</param>
         public void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
 
-        /// <summary>Sends the external mass flow.</summary>
-        /// <param name="massBalanceChange">The mass balance change.</param>
-        private void SendExternalMassFlow(ExternalMassFlowType massBalanceChange)
-        {
-            massBalanceChange.PoolClass = "surface";
-            PublishExternalMassFlow(massBalanceChange);
-        }
-
         /// <summary>Surfoms the total state.</summary>
         /// <returns></returns>
         private OMFractionType SurfomTotalState()
@@ -1598,19 +1203,6 @@
             irrig = 0;
         }
 
-        /// <summary>Get the values of variables from other modules</summary>
-        private void GetOtherVariables()
-        {
-            CheckPond();
-        }
-
-        /// <summary>Checks the pond.</summary>
-        private void CheckPond()
-        {
-            if (PondActive == null || PondActive.Length < 1)
-                PondActive = "no";
-        }
-
         /// <summary>
         /// Read in all parameters from parameter file
         /// <para>
@@ -1622,18 +1214,6 @@
             double[] totC = new double[Pools.Count];  // total C in residue;
             double[] totN = new double[Pools.Count];  // total N in residue;
             double[] totP = new double[Pools.Count];  // total P in residue;
-
-            if (ReportAdditions == null || ReportAdditions.Length == 0)
-                ReportAdditions = "no";
-
-            if (ReportRemovals == null || ReportRemovals.Length == 0)
-                ReportRemovals = "no";
-
-            // NOW, PUT ALL THIS INFO INTO THE "SurfaceOM" STRUCTURE;
-
-            DailyInitialC = DailyInitialN = 0;
-
-            // SurfOM = new List<SurfOrganicMatterType>();
 
             for (int i = 0; i < Pools.Count; i++)
             {
@@ -1677,8 +1257,6 @@
                     SurfOM[SOMNo].Lying[j].P += totP[i] * frPoolP[j, SOMNo] * (1.0 - standFract);
                 }
             }
-            DailyInitialC = totC.Sum();
-            DailyInitialN = totN.Sum();
         }
 
 
@@ -1760,7 +1338,6 @@
         {
             double
                 ave_temp = MathUtilities.Divide((weather.MaxT + weather.MinT), 2.0, 0.0);  // today"s average air temp (oC)
-            // tf;  // temperature factor;
 
             if (ave_temp > 0.0)
                 return MathUtilities.Bound(
@@ -1824,10 +1401,7 @@
         /// <returns></returns>
         private double MoistureFactor()
         {
-            if (PondActive == "yes")
-                return 0.5;
-            else
-                return MathUtilities.Bound(1.0 - MathUtilities.Divide(cumeos, MaxCumulativeEOS, 0.0), 0.0, 1.0);
+            return MathUtilities.Bound(1.0 - MathUtilities.Divide(cumeos, MaxCumulativeEOS, 0.0), 0.0, 1.0);
         }
 
         /// <summary>Calculate total cover</summary>
@@ -1842,52 +1416,11 @@
             return combinedCover;
         }
 
-        /// <summary>Perform actions for current day.</summary>
-        /// <returns></returns>
-        private SurfaceOrganicMatterDecompType Process()
-        {
-            double leachRain = 0; // "leaching" rainfall (if rain>10mm)
-
-            SetVars(out cumeos, out leachRain);
-
-            if (leachRain > 0.0)
-                Leach(leachRain);
-
-            return SendPotDecompEvent();
-        }
-
-        /// <summary>
-        /// Calculates variables required for today"s decomposition and;
-        /// leaching factors.
-        /// </summary>
-        /// <param name="cumeos">The cumeos.</param>
-        /// <param name="leachRain">The leach rain.</param>
-        private void SetVars(out double cumeos, out double leachRain)
-        {
-            double precip = weather.Rain + irrig;  
-
-            if (precip > 4.0)
-                cumeos = soil.SoilWater.Eos - precip;
-            else
-                cumeos = this.cumeos + soil.SoilWater.Eos - precip;
-
-            cumeos = Math.Max(cumeos, 0.0);
-
-            if (precip >= MinRainToLeach)
-                leachRain = precip;
-            else
-                leachRain = 0.0;
-            
-            irrig = 0.0; // reset irrigation log now that we have used that information;
-        }
-
-
         /// <summary>
         /// Remove mineral N and P from surfom with leaching rainfall and;
         /// pass to Soil N and Soil P modules.
         /// </summary>
         /// <param name="leachRain">The leach rain.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
         private void Leach(double leachRain)
         {
 
@@ -1896,10 +1429,10 @@
             double po4Incorp;
 
             // Apply leaching fraction to all mineral pools and put all mineral NO3,NH4 and PO4 into top layer;
-            _leaching_fr = MathUtilities.Bound(MathUtilities.Divide(leachRain, TotalLeachRain, 0.0), 0.0, 1.0);
-            no3Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.no3) * _leaching_fr;
-            nh4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.nh4) * _leaching_fr;
-            po4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.po4) * _leaching_fr;
+            double leaching_fr = MathUtilities.Bound(MathUtilities.Divide(leachRain, TotalLeachRain, 0.0), 0.0, 1.0);
+            no3Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.no3) * leaching_fr;
+            nh4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.nh4) * leaching_fr;
+            po4Incorp = SurfOM.Sum<SurfOrganicMatterType>(x => x.po4) * leaching_fr;
 
 
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
@@ -1911,9 +1444,9 @@
 
             for (int i = 0; i < numSurfom; i++)
             {
-                SurfOM[i].no3 = SurfOM[i].no3 * (1.0 - _leaching_fr);
-                SurfOM[i].nh4 = SurfOM[i].nh4 * (1.0 - _leaching_fr);
-                SurfOM[i].po4 = SurfOM[i].po4 * (1.0 - _leaching_fr);
+                SurfOM[i].no3 = SurfOM[i].no3 * (1.0 - leaching_fr);
+                SurfOM[i].nh4 = SurfOM[i].nh4 * (1.0 - leaching_fr);
+                SurfOM[i].po4 = SurfOM[i].po4 * (1.0 - leaching_fr);
             }
         }
 
@@ -1954,8 +1487,6 @@
 
         /// <summary>Calculates surfom removal as a result of remove_surfom message</summary>
         /// <param name="SOM">The som.</param>
-        /// <exception cref="ApsimXException">Attempting to remove more dm from  + SOM.Pool[som_index].Name +  lying Surface Organic Matter pool  + pool +  than available + Environment.NewLine
-        ///                                 + Removing  + SOM.Pool[SOMNo].LyingFraction[pool].amount +  (kg/ha)  + from  + SurfOM[SOMNo].Lying[pool].amount +  (kg/ha) available.</exception>
         private void RemoveSurfom(SurfaceOrganicMatterType SOM)
         {
             for (int som_index = 0; som_index < numSurfom; som_index++)
@@ -2005,39 +1536,11 @@
                     lamount = SOM.Pool[SOMNo].LyingFraction.Sum<FOMType>(x => x.amount),
                     lN = SOM.Pool[SOMNo].LyingFraction.Sum<FOMType>(x => x.N),
                     lP = SOM.Pool[SOMNo].LyingFraction.Sum<FOMType>(x => x.P);
-
-                if (ReportRemovals == "yes")
-                    summary.WriteMessage(this, string.Format(
-    @"Removed SurfaceOM
-    SurfaceOM name  = {0}
-    SurfaceOM Type  = {1}
-
-    Amount Removed (kg/ha):
-        Lying:
-            Amount = {2:0.0##}
-            N      = {3:0.0##}
-            P      = {4:0.0##}
-        Standing:
-            Amount = {5:0.0##}
-            N      = {6:0.0##}
-            P      = {7:0.0##}", SOM.Pool[SOMNo].Name, SOM.Pool[SOMNo].OrganicMatterType, lamount, lN, lP, samount, sN, sP));
-
-                SendSOMRemovedEvent(
-                    SOM.Pool[SOMNo].OrganicMatterType,
-                    SOM.Pool[SOMNo].OrganicMatterType,
-                    samount + lamount,
-                    sN + lN,
-                    sP + lP);
             }
         }
 
         /// <summary>Decomposes the surfom.</summary>
         /// <param name="SOMDecomp">The som decomp.</param>
-        /// <exception cref="ApsimXException">
-        /// SurfaceOM - C decomposition exceeds potential rate
-        /// or
-        /// SurfaceOM - N decomposition exceeds potential rate
-        /// </exception>
         private void DecomposeSurfom(SurfaceOrganicMatterDecompType SOMDecomp)
         {
             int numSurfom = SOMDecomp.Pool.Length;          // local surfom counter from received event;
@@ -2114,7 +1617,6 @@
 
         /// <summary>Calculates surfom incorporation as a result of tillage operations.</summary>
         /// <param name="data">The data.</param>
-        /// <exception cref="ApsimXException">Cannot find info for tillage:-  + data.Name</exception>
         private void Tillage(TillageType data)
         {
             //   If no user defined characteristics then use the lookup table compiled from expert knowledge;
@@ -2160,7 +1662,6 @@
             double[] nh4 = new double[nLayers]; // total nh4 to go into each soil layer (from all surfOM"s)
             double[] po4 = new double[nLayers]; // total po4 to go into each soil layer (from all surfOM"s)
             FOMPoolType FPoolProfile = new FOMPoolType();
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
 
             fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
@@ -2213,29 +1714,8 @@
                             AshAlk = AshAlkPool[i, layer]
                         };
                 }
-                PublishFOMPool(FPoolProfile);
-                SendResRemovedEvent(actionType, fIncorp, residueIncorpFraction, deepestLayer);
-            }
-
-            if (tillageDepth <= 0.000001)
-            {
-                // the OM is not incorporated and is lost from the system;
-                massBalanceChange.PoolClass = "surface";
-                massBalanceChange.FlowType = "loss";
-                massBalanceChange.DM = 0.0;
-                massBalanceChange.C = 0.0;
-                massBalanceChange.N = 0.0;
-                massBalanceChange.P = 0.0;
-                massBalanceChange.SW = 0.0;
-
-                for (int pool = 0; pool < maxFr; pool++)
-                {
-                    massBalanceChange.DM += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].amount + x.Lying[pool].amount) * fIncorp;
-                    massBalanceChange.C += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].C + x.Lying[pool].C) * fIncorp;
-                    massBalanceChange.N += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].N + x.Lying[pool].N) * fIncorp;
-                    massBalanceChange.P += SurfOM.Sum<SurfOrganicMatterType>(x => x.Standing[pool].P + x.Lying[pool].P) * fIncorp;
-                }
-                SendExternalMassFlow(massBalanceChange);
+                if (IncorpFOMPool != null)
+                    IncorpFOMPool.Invoke(FPoolProfile);
             }
 
             for (int pool = 0; pool < maxFr; pool++)
@@ -2311,11 +1791,6 @@
         /// <param name="surfom_type">The surfom_type.</param>
         /// <param name="i">The i.</param>
         /// <param name="pot_decomp_rate">The pot_decomp_rate.</param>
-        /// <exception cref="ApsimXException">
-        /// Cannot find residue type description for ' + surfom_type + '
-        /// or
-        /// Error reading in fr_c/n/p values, inconsistent array lengths
-        /// </exception>
         private void ReadTypeSpecificConstants(string surfom_type, int i, out double pot_decomp_rate)
         {
             ResidueType thistype = ResidueTypes.getResidue(surfom_type);
@@ -2404,14 +1879,6 @@
         /// <param name="name">Name of the biomass written to summary file</param>
         public void Add(double mass, double N, double P, string type, string name)
         {
-             if (ReportAdditions == "yes")
-            {
-                summary.WriteMessage(this, string.Format(
-                    @"Added surface organic matter:\r\n" +
-                     "   Type          = {0}\r\n" +
-                     "   Amount Added (kg/ha)    = {1}", type + " " + name, mass));
-            }       
-
             // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
             int SOMNo = GetResidueNumber(type);
             if (SOMNo < 0)
@@ -2429,72 +1896,7 @@
                 SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
-            }
-            SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, mass, N, P);
-        }
-
-        /// <summary>Notify other modules of residue added to residue pool.</summary>
-        /// <param name="residueType">Type of the residue.</param>
-        /// <param name="dmType">Type of the dm.</param>
-        /// <param name="dltResidueWt">The DLT residue wt.</param>
-        /// <param name="dltResidueNWt">The DLT residue n wt.</param>
-        /// <param name="dltResiduePWt">The DLT residue p wt.</param>
-        private void SendResAddedEvent(string residueType, string dmType, double dltResidueWt, double dltResidueNWt, double dltResiduePWt)
-        {
-            if (Residue_added != null)
-            {
-                ResidueAddedType data = new ResidueAddedType()
-                {
-                    residue_type = residueType,
-                    dm_type = dmType,
-                    dlt_residue_wt = dltResidueWt,
-                    dlt_dm_n = dltResidueNWt,
-                    dlt_dm_p = dltResiduePWt
-                };
-                Residue_added.Invoke(data);
-            }
-        }
-
-        /// <summary>Notify other modules of residue removed from residue pool</summary>
-        /// <param name="residueRemovedAction">The residue removed action.</param>
-        /// <param name="dltResidueFraction">The DLT residue fraction.</param>
-        /// <param name="residueIncorpFraction">The residue incorp fraction.</param>
-        /// <param name="deepestLayer">The deepest layer.</param>
-        private void SendResRemovedEvent(string residueRemovedAction, double dltResidueFraction, double[] residueIncorpFraction, int deepestLayer)
-        {
-            if (Residue_removed != null)
-            {
-                ResidueRemovedType data = new ResidueRemovedType()
-                {
-                    residue_removed_action = residueRemovedAction,
-                    dlt_residue_fraction = dltResidueFraction,
-                    residue_incorp_fraction = residueIncorpFraction
-                };
-                Residue_removed.Invoke(data);
-            }
-        }
-
-        /// <summary>Notify other modules of residue added to residue pool</summary>
-        /// <param name="residueType">Type of the residue.</param>
-        /// <param name="dmType">Type of the dm.</param>
-        /// <param name="dltResidueWt">The DLT residue wt.</param>
-        /// <param name="dltResidueNWt">The DLT residue n wt.</param>
-        /// <param name="dltResiduePWt">The DLT residue p wt.</param>
-        private void SendSOMRemovedEvent(string residueType, string dmType, double dltResidueWt, double dltResidueNWt, double dltResiduePWt)
-        {
-            if (SurfaceOM_removed != null)
-            {
-                SurfaceOMRemovedType data = new SurfaceOMRemovedType()
-                {
-                    SurfaceOM_type = residueType,
-                    SurfaceOM_dm_type = dmType,
-                    dlt_SurfaceOM_wt = dltResidueWt,
-                    SurfaceOM_dlt_dm_n = dltResidueNWt,
-                    SurfaceOM_dlt_dm_p = dltResiduePWt
-                };
-
-                SurfaceOM_removed.Invoke(data);
-            }
+            }            
         }
 
         /// <summary>Resize2s the d array.</summary>

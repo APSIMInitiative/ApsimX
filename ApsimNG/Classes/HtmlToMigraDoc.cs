@@ -161,11 +161,22 @@
         private static DocumentObject AddTable(DocumentObject section)
         {
             tableColumnNames = new List<string>();
+            Table table = null;
             if (section is Section)
-                return (section as Section).AddTable();
+            {
+                table = (section as Section).AddTable();
+                var tableEnd = (section as Section).AddParagraph();
+                tableEnd.Style = "ListEnd";
+            }
             else if (section is Paragraph)
-                return (section as Paragraph).Section.AddTable();
-            return null;
+                table = (section as Paragraph).Section.AddTable();
+
+            if (table != null)
+            {
+                table.Borders.Visible = true;
+                table.Rows.LeftIndent = "0cm";
+            }
+            return table;
         }
 
         /// <summary>
@@ -392,9 +403,15 @@
             if (foundCode)
             {
                 if (parentObject is Section)
+                {
                     AddCodeBlock(parentObject as Section, text);
+                    var tableEnd = (parentObject as Section).AddParagraph();
+                    tableEnd.Style = "ListEnd";
+                }
                 else if (parentObject is Paragraph)
+                {
                     AddCodeBlock((parentObject as Paragraph).Section, text);
+                }
                 foundCode = false;
                 return null;
             }
@@ -512,7 +529,7 @@
 
             if (doc.Styles["ListEnd"] == null)
             {
-                var unorderedlist = doc.AddStyle("ListStart", "Normal");
+                var unorderedlist = doc.AddStyle("ListEnd", "Normal");
                 unorderedlist.ParagraphFormat.SpaceAfter = 0;
             }
 
@@ -572,18 +589,21 @@
             table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
             table.LeftPadding = "5mm";
             table.Rows.LeftIndent = "0cm";
-
+            
             var column = table.AddColumn();
             column.Width = Unit.FromMillimeter(180);
 
             Row row = table.AddRow();
+            Paragraph p = row[0].AddParagraph();
+            p.Style = "TableParagraph";
+
             string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
             foreach (string line in lines)
             {
                 string spacedLine = line.Replace(' ', (char)0xa0); // Turn spaces into non-breaking spaces
                 
-                Paragraph p = row[0].AddParagraph();
+                p = row[0].AddParagraph();
                 p.AddText(WebUtility.HtmlDecode(spacedLine));
                 p.Style = "TableParagraph";
             }
