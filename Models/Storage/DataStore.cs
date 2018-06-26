@@ -202,7 +202,10 @@
             {
                 object[] args = new object[] { this, new EventArgs() };
                 foreach (IPostSimulationTool tool in Apsim.FindAll(Parent, typeof(IPostSimulationTool)))
-                    tool.Run(this);
+                {
+                    if ((tool as IModel).Enabled)
+                        tool.Run(this);
+                }
             }
         }
 
