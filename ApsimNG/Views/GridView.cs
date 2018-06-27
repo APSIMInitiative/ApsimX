@@ -2189,10 +2189,10 @@ namespace UserInterface.Views
 
             if (gridmodel.IterNChildren() == 0)
             {
-                Gridview.Visible = false;
+                Gridview.Sensitive = false;
             }
             else
-                Gridview.Visible = true;
+                Gridview.Sensitive = true;
         }
 
         /// <summary>
