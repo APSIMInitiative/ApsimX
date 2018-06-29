@@ -145,8 +145,9 @@ namespace UserInterface.Presenters
             IGridCell selectedCell = this.grid.GetCurrentCell;
             this.model = model;
             DataTable table = new DataTable();
-            table.Columns.Add("Description", typeof(string));
-            table.Columns.Add("Value", typeof(object));
+            bool hasData = this.properties.Count > 0;
+            table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
+            table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
             this.grid.PropertyMode = true;
             this.FillTable(table);

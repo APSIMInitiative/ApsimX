@@ -1,9 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Core;
+﻿// -----------------------------------------------------------------------
+// <copyright file="Cohort.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.LifeCycle
 {
+    using System;
+
     /// <summary>
     /// # [Name]
     /// A generic cohort item that exists in a LifeStage within a LifeCycle
