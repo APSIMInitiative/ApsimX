@@ -101,6 +101,8 @@ namespace Models.Utilities
         {
             RunAsync(fileName);
             proc.WaitForExit();
+            if (Output == null && Error != null)
+                throw new Exception(Error);
             return Output;
         }
 

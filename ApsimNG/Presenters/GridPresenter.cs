@@ -19,7 +19,7 @@ namespace UserInterface.Presenters
         private IGridView grid;
 
         /// <summary>The interface we're going to work with</summary>
-        private IModelAsTable tableModel;
+        private Models.Interfaces.IModelAsTable tableModel;
 
         /// <summary>The parent ExplorerPresenter.</summary>
         private ExplorerPresenter explorerPresenter;
