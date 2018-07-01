@@ -2,7 +2,7 @@ getPackage <- function(pkg) {
     if (!pkg %in% rownames(installed.packages())) {
 		i = which(!grepl("Program Files", .libPaths()))[1]
 		location = ""
-		if (i > length(.libPaths()) || identical(i, integer(0))) {
+        if (is.na(i) || i > length(.libPaths()) || identical(i, integer(0))) {
 		    # No lib paths outside of program files exist....
 			location = getwd()
 		} else {
