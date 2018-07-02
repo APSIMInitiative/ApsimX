@@ -257,8 +257,7 @@ namespace Models.PMF
             SWUptake = info[0].Water;
             EP = MathUtilities.Sum(SWUptake);
 
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
-                Soil.SoilWater.SetSWmm(j, Soil.SoilWater.SWmm[j] - SWUptake[j]);
+            Soil.SoilWater.RemoveWater(SWUptake);
         }
         /// <summary>
         /// Set the n uptake for today

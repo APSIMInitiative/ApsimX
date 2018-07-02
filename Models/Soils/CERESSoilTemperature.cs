@@ -141,11 +141,11 @@ namespace Models.Soils
             _mint = weather.MinT;
             _maxt = weather.MaxT;
             _radn = weather.Radn;
-            _salb = soil.SoilWater.Salb;
+            _salb = (soil.SoilWater as SoilWater).Salb;
             _dlayer = soil.Thickness;
             _bd = soil.BD;
             _ll15_dep = soil.LL15mm;
-            _sw_dep = soil.SoilWater.SWmm;
+            _sw_dep = (soil.SoilWater as SoilWater).SWmm;
             _latitude = weather.Latitude;
             _tav = weather.Tav;
             _amp = weather.Amp;

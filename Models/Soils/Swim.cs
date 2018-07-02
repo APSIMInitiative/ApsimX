@@ -103,7 +103,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.GridView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Soil))]
-    public class Swim3 : Model
+    public class Swim3 : Model, ISoilWater
     {
         #region Links
 
@@ -5302,7 +5302,7 @@ namespace Models.Soils
                         roff = 0.0;
                         roffd = 0.0;
                         if (isbc == 2)
-                            Runoff(t, _h, out roff, out roffd);
+                            RunoffRate(t, _h, out roff, out roffd);
                         q[0] = ron - roff - res - (_h - hold) / _dt;
                         qp2[0] = (-roffd - respsi - 1.0 / _dt) * psip[0];
                     }
@@ -5373,7 +5373,7 @@ namespace Models.Soils
                         roff = 0.0;
                         roffd = 0.0;
                         if (isbc == 2 && _h > 0.0)
-                            Runoff(t, _h, out roff, out roffd);
+                            RunoffRate(t, _h, out roff, out roffd);
                         q[0] = g_ * (_h - _psi[0]);
                         qp1[0] = g_ + gh * (_h - _psi[0]);
                         qp2[0] = -g_ * psip[0];
@@ -5526,7 +5526,7 @@ namespace Models.Soils
         /// <param name="h">The h.</param>
         /// <param name="roff">The roff.</param>
         /// <param name="roffh">The roffh.</param>
-        private void Runoff(double t, double h, out double roff, out double roffh)
+        private void RunoffRate(double t, double h, out double roff, out double roffh)
         {
             //     Short Description:
             //     gets runoff rate
@@ -5790,6 +5790,69 @@ namespace Models.Soils
                 summary.WriteWarning(this, warningText);
             else
                 Console.WriteLine(warningText);
+        }
+
+        ///<summary>Remove water from the profile</summary>
+        public void RemoveWater(double[] dlt_sw_dep)
+        {
+            throw new NotImplementedException("SWIM doesn't implement RemoveWater method");
+        }
+
+        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
+        public double[] Thickness { get { return _dlayer; } }
+
+        ///<summary>Get volumetric water content (mm/mm)</summary>
+        public double[] SW { get { return th; } set { th = value; } }
+
+        ///<summary>Get water content (mm)</summary>
+        public double[] SWmm { get { return MathUtilities.Multiply(th, _dlayer); } }
+
+        ///<summary>Gets potential evaporation from soil surface (mm)</summary>
+        public double Eos { get { return PotEvapotranspiration(); } }
+
+        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>
+        public double Es { get { throw new NotImplementedException("SWIM doesn't implement an ES property"); } }
+        
+        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
+        public double Eo { get { throw new NotImplementedException("SWIM doesn't implement an E0 property"); } }
+
+        /// <summary>Gets the amount of water runoff (mm)</summary>
+        public double Runoff { get { throw new NotImplementedException("SWIM doesn't implement an Runoff property"); } }
+
+        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
+        public double Drainage { get { throw new NotImplementedException("SWIM doesn't implement an Drainage property"); } }
+
+        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
+        public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement an LateralOutflow property"); } }
+
+        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
+        public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement an LeachNO3 property"); } }
+
+        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
+        public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement an LeachNH4 property"); } }
+        
+        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
+        public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement an LeachUrea property"); } }
+
+        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
+        public double[] ESW { get { throw new NotImplementedException("SWIM doesn't implement an ESW property"); } }
+
+        ///<summary>Perform a reset</summary>
+        public void Reset()
+        {
+            throw new NotImplementedException("SWIM doesn't implement a reset method");
+        }
+
+        ///<summary>Perform tillage</summary>
+        public void Tillage(TillageType Data)
+        {
+            throw new NotImplementedException("SWIM doesn't implement a tillage method");
+        }
+
+        ///<summary>Perform tillage</summary>
+        public void Tillage(string tillageType)
+        {
+            throw new NotImplementedException("SWIM doesn't implement a tillage method");
         }
     }
 }

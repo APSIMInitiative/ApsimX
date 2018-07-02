@@ -124,7 +124,7 @@ namespace Models.Soils
         public double max_pond { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] outflow_lat { get; set; }
+        public double[] LateralOutflow { get; set; }
         /// <summary> The Plant available water content of the soil layer /// </summary>
         [XmlIgnore]
         public double[] PAWC { get; set; }
@@ -190,7 +190,7 @@ namespace Models.Soils
         [XmlIgnore]
         public double WinterU { get; set; }
         ///<summary> Who knows</summary>
-        public void SetSWmm(int Layer, double NewSWmm) { }
+        public void RemoveWater(double[] NewSWmm) { }
         ///<summary> Who knows</summary>
         public void SetWater_frac(double[] New_SW) { }
         ///<summary> Who knows</summary>

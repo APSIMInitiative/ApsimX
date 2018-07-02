@@ -980,7 +980,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double[] outflow_lat
+        public double[] LateralOutflow
         { get { return SoilObject != null ? SoilObject.outflow_lat : new double[0] ; } }
 
         //DELTA ARRAY FOR A SOLUTE
@@ -1143,7 +1143,7 @@ namespace Models.Soils
             double reduction;
 
             //! Ensure cn equation won't go silly
-            reduction = constants.bound(Data.cn_red, 0.0, Soil.SoilWater.CN2Bare);
+            reduction = constants.bound(Data.cn_red, 0.0, CN2Bare);
 
             switch (surface.SurfaceType)
                 {
@@ -1290,27 +1290,16 @@ namespace Models.Soils
         /// Sets the water_frac.
         /// </summary>
         /// <param name="New_SW">The new_ sw.</param>
-        public void SetWater_frac(double[] New_SW)
+        private void SetWater_frac(double[] New_SW)
             {
             SoilObject.SetWater_frac(New_SW); 
             }
 
-        //TODO: Change these delta properties into methods and change the manager scripts to call the methods instead.
-        /// <summary>
-        /// Change in soil water depth in each soil layer (mm)
-        /// </summary>
-        /// <value>
-        /// The dlt_sw_dep.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] dlt_sw_dep
-            {
-            set
-                {
-                SoilObject.DeltaWater_mm(value);
-                }
-            }
+        ///<summary>Remove water from the profile</summary>
+        public void RemoveWater(double[] value)
+        {
+            SoilObject.DeltaWater_mm(value);
+        }
 
         /// <summary>
         /// Change in volumetric soil water content in each soil layer
