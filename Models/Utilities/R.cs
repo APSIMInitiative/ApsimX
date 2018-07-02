@@ -144,7 +144,7 @@ namespace Models.Utilities
         private void OnExited(object sender, EventArgs e)
         {
             if (Directory.Exists(workingDirectory))
-                Directory.Delete(workingDirectory);
+                Directory.Delete(workingDirectory, true);
             Finished?.Invoke(sender, e);
         }
 
