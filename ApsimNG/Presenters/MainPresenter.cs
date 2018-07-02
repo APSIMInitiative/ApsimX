@@ -222,7 +222,7 @@ namespace UserInterface.Presenters
             if (error != null)
             {
                 LastError = new List<string> { error.ToString() };
-                view.ShowMessage(error.Message, Simulation.ErrorLevel.Error);
+                view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
             }
             else
             {
@@ -244,7 +244,7 @@ namespace UserInterface.Presenters
                 for (int i = 0; i < errors.Count; i++)
                 {
                     // only overwrite other messages the first time through the loop
-                    view.ShowMessage(errors[i].Message, Simulation.ErrorLevel.Error, i == 0, true);
+                    view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, i == 0, true);
                 }
             }
             else
@@ -431,6 +431,18 @@ namespace UserInterface.Presenters
         public void CloseTabContaining(object o)
         {
             this.view.CloseTabContaining(o);
+        }
+
+        /// <summary>
+        /// Gets the inner-most exception of an exception.
+        /// </summary>
+        /// <param name="error">An exception.</param>
+        private Exception GetInnerException(Exception error)
+        {
+            Exception inner = error;
+            while (inner.InnerException != null)
+                inner = inner.InnerException;
+            return inner;
         }
 
         /// <summary>Populate the view for the first time. Will throw if there are errors on startup.</summary>
