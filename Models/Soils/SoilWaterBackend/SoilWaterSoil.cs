@@ -1369,7 +1369,7 @@ namespace Models.Soils.SoilWaterBackend
             foreach (Layer lyr in this)
                 {
                 if (Delta_mm.Length >= lyr.number)
-                    lyr.sw_dep = lyr.sw_dep + Delta_mm[lyr.number - 1];
+                    lyr.sw_dep = lyr.sw_dep - Delta_mm[lyr.number - 1];
                 }
             }
 
