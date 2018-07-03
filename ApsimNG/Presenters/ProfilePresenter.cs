@@ -283,7 +283,7 @@ namespace UserInterface.Presenters
                 }
 
                 string format = property.Format;
-                if (format == null)
+                if (format == null || format == string.Empty)
                 {
                     format = "N3";
                 }

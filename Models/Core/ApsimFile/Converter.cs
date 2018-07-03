@@ -907,11 +907,21 @@ namespace Models.Core.ApsimFile
             {
                 ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}", null);
                 ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow", ".SoilWater.Flow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flux", ".SoilWater.Flux", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception", null);
             }
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
             {
                 ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}");
                 ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow", ".SoilWater.Flow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flux", ".SoilWater.Flux");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception");
             }
         }
 
