@@ -2180,28 +2180,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Called when the window is resized to resize all grid controls.
+        /// Called to handle any needed changes when the model in changed
         /// </summary>
-        public void ResizeControls()
+        public void UpdateControls()
         {
             if (gridmodel.NColumns == 0)
                 return;
 
             if (gridmodel.IterNChildren() == 0)
-            {
-                Gridview.Visible = false;
-            }
+                Gridview.Sensitive = false;
             else
-                Gridview.Visible = true;
+                Gridview.Sensitive = true;
+
+            Gridview.Visible = true;
         }
 
-        /// <summary>
-        /// Trap any grid data errors, usually as a result of cell values not being
-        /// in combo boxes. We'll handle these elsewhere.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnDataError(object sender, /* TBI DataGridViewDataError */ EventArgs e)
+    /// <summary>
+    /// Trap any grid data errors, usually as a result of cell values not being
+    /// in combo boxes. We'll handle these elsewhere.
+    /// </summary>
+    /// <param name="sender">The sender of the event</param>
+    /// <param name="e">The event arguments</param>
+    private void OnDataError(object sender, /* TBI DataGridViewDataError */ EventArgs e)
         {
             // TBI e.Cancel = true;
         }
@@ -2467,16 +2467,6 @@ namespace UserInterface.Views
                 Gridview.QueueDraw();
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
-        }
-
-        /// <summary>
-        /// Handle the resize event
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void GridView_Resize(object sender, EventArgs e)
-        {
-            ResizeControls();
         }
 
         /// <summary>

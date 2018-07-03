@@ -53,7 +53,7 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.view.Grid.ResizeControls();
+            this.view.Grid.UpdateControls();
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
