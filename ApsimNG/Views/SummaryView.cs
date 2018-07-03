@@ -10,10 +10,29 @@ namespace UserInterface.Views
     /// </summary>
     public class SummaryView : ViewBase, ISummaryView
     {
+        /// <summary>
+        /// Gtk VBox which holds all other UI elements in the view.
+        /// </summary>
         private VBox vbox1 = null;
+
+        /// <summary>
+        /// Drop down box which displays the simulation names.
+        /// </summary>
         private ComboBox combobox1 = null;
+
+        /// <summary>
+        /// Model behind the dropdown box, which stores the simulation names.
+        /// </summary>
         private ListStore comboModel = new ListStore(typeof(string));
+
+        /// <summary>
+        /// The cell which displays the data in the drop down box.
+        /// </summary>
         private CellRendererText comboRender = new CellRendererText();
+
+        /// <summary>
+        /// View which displays the summary data.
+        /// </summary>
         private HTMLView htmlview;
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
@@ -30,7 +49,7 @@ namespace UserInterface.Views
             htmlview = new HTMLView(this);
             htmlview.Copy += OnCopy;
             vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            _mainWidget.Destroyed += MainWidgetDestroyed;
         }
 
         /// <summary>
@@ -39,15 +58,6 @@ namespace UserInterface.Views
         /// browsers are capable of handling the copy event themselves.
         /// </summary>
         public event EventHandler<CopyEventArgs> Copy;
-
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
-        {
-            comboModel.Dispose();
-            comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            htmlview.Copy -= OnCopy;
-            _owner = null;
-        }
 
         /// <summary>Occurs when the name of the simulation is changed by the user</summary>
         public event EventHandler SimulationNameChanged;
@@ -63,7 +73,6 @@ namespace UserInterface.Views
                 else
                     return "";
             }
-
             set
             {
                 TreeIter iter;
@@ -85,14 +94,14 @@ namespace UserInterface.Views
         {
             get
             {
-                int nNames = comboModel.IterNChildren();
-                string[] result = new string[nNames];
+                int nameCount = comboModel.IterNChildren();
+                string[] result = new string[nameCount];
                 TreeIter iter;
                 int i = 0;
                 if (combobox1.GetActiveIter(out iter))
                     do
                         result[i++] = (string)comboModel.GetValue(iter, 0);
-                    while (comboModel.IterNext(ref iter) && i < nNames);
+                    while (comboModel.IterNext(ref iter) && i < nameCount);
                 return result;
             }
             set
@@ -134,6 +143,16 @@ namespace UserInterface.Views
         private void OnCopy(object sender, CopyEventArgs e)
         {
             Copy?.Invoke(sender, e);
+        }
+
+
+        private void MainWidgetDestroyed(object sender, EventArgs e)
+        {
+            comboModel.Dispose();
+            comboRender.Destroy();
+            _mainWidget.Destroyed -= MainWidgetDestroyed;
+            htmlview.Copy -= OnCopy;
+            _owner = null;
         }
     }
 }

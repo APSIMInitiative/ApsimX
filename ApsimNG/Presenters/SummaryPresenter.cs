@@ -4,22 +4,23 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using EventArguments;
+using System;
+using System.IO;
+using System.Linq;
+using Models;
+using Models.Core;
+using Models.Factorial;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using Models;
-    using Models.Core;
-    using Models.Factorial;
-    using Views;
+
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
     {
         /// <summary>The summary model to work with.</summary>
-        private Summary summary;
+        private Summary summaryModel;
 
         /// <summary>The view model to work with.</summary>
         private ISummaryView view;
@@ -37,16 +38,16 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.summary = model as Summary;
+            this.summaryModel = model as Summary;
             this.presenter = explorerPresenter;
             this.view = view as ISummaryView;
             // populate the simulation names in the view.
-            Simulation simulation = Apsim.Parent(this.summary, typeof(Simulation)) as Simulation;
-            if (simulation != null)
+            Simulation parentSimulation = Apsim.Parent(this.summaryModel, typeof(Simulation)) as Simulation;
+            if (parentSimulation != null)
             {
-                if (simulation.Parent is Experiment)
+                if (parentSimulation.Parent is Experiment)
                 {
-                    Experiment experiment = simulation.Parent as Experiment;
+                    Experiment experiment = parentSimulation.Parent as Experiment;
                     string[] simulationNames = experiment.GetSimulationNames().ToArray();
                     this.view.SimulationNames = simulationNames;
                     if (simulationNames.Length > 0)
@@ -56,8 +57,8 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    this.view.SimulationNames = new string[] { simulation.Name };
-                    this.view.SimulationName = simulation.Name;
+                    this.view.SimulationNames = new string[] { parentSimulation.Name };
+                    this.view.SimulationName = parentSimulation.Name;
                 }
 
                 // Populate the view.
