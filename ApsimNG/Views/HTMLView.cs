@@ -6,6 +6,7 @@ using Gtk;
 using WebKit;
 using MonoMac.AppKit;
 using APSIM.Shared.Utilities;
+using EventArguments;
 
 namespace UserInterface.Views
 {
@@ -435,6 +436,11 @@ namespace UserInterface.Views
         private Frame frame1 = null;
         private HBox hbox1 = null;
 
+        /// <summary>
+        /// Only used on Windows. Holds the HTML element which responds to key
+        /// press events.
+        /// </summary>
+        private object keyPressObject = null;
         protected IBrowserWidget browser = null;
         private MemoView memoView1;
         protected Gtk.Window popupWin = null;
@@ -480,9 +486,18 @@ namespace UserInterface.Views
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// Invoked when the user wishes to copy data out of the HTMLView.
+        /// This is currently only used on Windows, as the other web 
+        /// browsers are capable of handling the copy event themselves.
+        /// </summary>
+        public event EventHandler<CopyEventArgs> Copy;
+
         protected void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             memoView1.MemoChange -= this.TextUpdate;
+            if (keyPressObject != null)
+                (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
             frame1.ExposeEvent -= OnWidgetExpose;
             hbox1.Realized -= Hbox1_Realized;
             if ((browser as TWWebBrowserIE) != null)
@@ -576,7 +591,76 @@ namespace UserInterface.Views
                 browser.Navigate(contents);
             else
                browser.LoadHTML(contents);
+
+            if (browser is TWWebBrowserIE)
+            {
+                keyPressObject = (browser as TWWebBrowserIE).wb.Document.ActiveElement;
+                (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+            }
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
+        }
+
+        /// <summary>
+        /// Handle's the Windows IE browser's key press events.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnKeyPress(object sender, HtmlElementEventArgs e)
+        {
+            if (browser is TWWebBrowserIE)
+            {
+                TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
+
+                // By default, we assume that the key press is not significant, so we set the
+                // event args' return value to false, so event propagation continues.
+                e.ReturnValue = false;
+
+                int keyCode = e.KeyPressedCode;
+                if (e.CtrlKeyPressed)
+                {
+                    keyCode += 96;
+                    if (keyCode == 'c')
+                    {
+                        // User pressed control + c, so we need to copy any selected text.
+                        mshtml.IHTMLSelectionObject selectionRange = (ieBrowser.wb.Document.DomDocument as mshtml.IHTMLDocument2).selection;
+                        if (selectionRange != null)
+                        {
+                            mshtml.IHTMLTxtRange textRange = selectionRange.createRange();
+                            if (textRange != null)
+                            {
+                                Copy?.Invoke(this, new CopyEventArgs { Text = textRange.text });
+                            }
+                        }
+                        // Prevent this event from propagating further.
+                        e.ReturnValue = true;
+                    }
+                    else if (keyCode == 'a')
+                    {
+                        // User pressed control + a, so we need to select all.
+                        // Perhaps it's possible to do this via the .NET WebBrowser, but I haven't managed
+                        // to find a way. Instead, we will inject and run some javascript to do it for us.
+
+                        // First, check if a script to do this is already defined.
+                        if (ieBrowser.wb.Document.GetElementById("selectAllScript") == null)
+                        {
+                            // Script doesn't exist. This must be the first time the user has pressed control + a.
+                            // We add a script element to the document body, which contains a single function.
+                            HtmlElement head = ieBrowser.wb.Document.GetElementsByTagName("head")[0];
+                            HtmlElement selectAllScript = ieBrowser.wb.Document.CreateElement("script");
+                            selectAllScript.Id = "selectAllScript";
+                            mshtml.IHTMLScriptElement scriptDomElement = (mshtml.IHTMLScriptElement)selectAllScript.DomElement;
+                            scriptDomElement.text = "function selectAll() {"
+                                                                                + "range = document.body.createTextRange();"
+                                                                                + "range.moveToElementText(document.body);"
+                                                                                + "range.select();"
+                                                                        + "} ";
+                            head.AppendChild(selectAllScript);
+                        }
+                        // Execute the select all function.
+                        browser.ExecJavaScript("selectAll", null);
+                    }
+                }
+            }
         }
 
         private IBrowserWidget CreateIEBrowser(Gtk.Box box)

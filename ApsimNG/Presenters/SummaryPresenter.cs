@@ -3,6 +3,8 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using EventArguments;
+
 namespace UserInterface.Presenters
 {
     using System;
@@ -22,6 +24,9 @@ namespace UserInterface.Presenters
         /// <summary>The view model to work with.</summary>
         private ISummaryView view;
 
+        /// <summary>The explorer presenter which manages this presenter.</summary>
+        private ExplorerPresenter presenter;
+
         /// <summary>Our data store</summary>
         [Link]
         private IStorageReader dataStore = null;
@@ -33,8 +38,8 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.summary = model as Summary;
+            this.presenter = explorerPresenter;
             this.view = view as ISummaryView;
-
             // populate the simulation names in the view.
             Simulation simulation = Apsim.Parent(this.summary, typeof(Simulation)) as Simulation;
             if (simulation != null)
@@ -55,11 +60,14 @@ namespace UserInterface.Presenters
                     this.view.SimulationName = simulation.Name;
                 }
 
-                // populate the view
+                // Populate the view.
                 this.SetHtmlInView();
 
-                // subscribe to the simulation name changed event.
+                // Subscribe to the simulation name changed event.
                 this.view.SimulationNameChanged += this.OnSimulationNameChanged;
+
+                // Subscribe to the view's copy event.
+                this.view.Copy += OnCopy;
             }
         }
 
@@ -67,6 +75,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.view.SimulationNameChanged -= this.OnSimulationNameChanged;
+            this.view.Copy -= OnCopy;
         }
 
         /// <summary>Populate the summary view.</summary>
@@ -84,6 +93,16 @@ namespace UserInterface.Presenters
         private void OnSimulationNameChanged(object sender, EventArgs e)
         {
             this.SetHtmlInView();
+        }
+
+        /// <summary>
+        /// Event handler for the view's copy event.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnCopy(object sender, CopyEventArgs e)
+        {
+            this.presenter.SetClipboardText(e.Text, "CLIPBOARD");
         }
     }
 }

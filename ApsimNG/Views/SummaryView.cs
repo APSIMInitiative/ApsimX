@@ -1,6 +1,7 @@
 ﻿using Gtk;
 using System;
 using System.Collections.Generic;
+using EventArguments;
 
 namespace UserInterface.Views
 {
@@ -27,15 +28,24 @@ namespace UserInterface.Views
             combobox1.Model = comboModel;
             combobox1.Changed += comboBox1_TextChanged;
             htmlview = new HTMLView(this);
+            htmlview.Copy += OnCopy;
             vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
+
+        /// <summary>
+        /// Invoked when the user wishes to copy data out of the HTMLView.
+        /// This is currently only used on Windows, as the other web 
+        /// browsers are capable of handling the copy event themselves.
+        /// </summary>
+        public event EventHandler<CopyEventArgs> Copy;
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             comboModel.Dispose();
             comboRender.Destroy();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            htmlview.Copy -= OnCopy;
             _owner = null;
         }
 
@@ -104,10 +114,26 @@ namespace UserInterface.Views
             this.htmlview.SetContents(content, false);
         }
 
+        /// <summary>
+        /// Event handler which fires whenever the combo box's text changes.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             if (this.SimulationNameChanged != null)
                 this.SimulationNameChanged(this, e);
+        }
+
+        /// <summary>
+        /// Event handler for <see cref="htmlview"/>'s copy event.
+        /// Propagates the copy event up to the presenter.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnCopy(object sender, CopyEventArgs e)
+        {
+            Copy?.Invoke(sender, e);
         }
     }
 }
