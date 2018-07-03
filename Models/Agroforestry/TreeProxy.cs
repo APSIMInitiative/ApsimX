@@ -603,7 +603,7 @@ namespace Models.Agroforestry
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
-                        ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
+                        ThisSoil.SoilWater.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
                         { }

@@ -432,7 +432,7 @@ namespace Models.AgPasture
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
                     if (mySoilWaterUptake.Sum() > Epsilon)
-                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(zone.Water, -1.0);
+                        root.mySoil.SoilWater.RemoveWater(zone.Water);
                 }
             }
         }

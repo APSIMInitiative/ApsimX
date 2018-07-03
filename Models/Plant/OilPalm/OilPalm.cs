@@ -1205,7 +1205,7 @@ namespace Models.PMF.OilPalm
                 Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
 
 
-            PEP = Soil.SoilWater.Eo * cover_green*Math.Min(Fn, Fvpd);
+            PEP = (Soil.SoilWater as SoilWater).Eo * cover_green*Math.Min(Fn, Fvpd);
 
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
@@ -1220,9 +1220,8 @@ namespace Models.PMF.OilPalm
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                Soil.SoilWater.SetSWmm(j, Soil.SoilWater.SWmm[j] - SWUptake[j]);
-
             }
+            Soil.SoilWater.RemoveWater(SWUptake);
 
             if (PEP > 0.0)
             {
@@ -1655,7 +1654,7 @@ namespace Models.PMF.OilPalm
         {
 
             UnderstoryCoverGreen = UnderstoryCoverMax * (1 - cover_green);
-            UnderstoryPEP = Soil.SoilWater.Eo * UnderstoryCoverGreen * (1 - cover_green);
+            UnderstoryPEP = (Soil.SoilWater as SoilWater).Eo * UnderstoryCoverGreen * (1 - cover_green);
 
             for (int j = 0; j < Soil.Thickness.Length; j++)
                 UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.Water[j] - Soil.LL15mm[j]));
@@ -1663,15 +1662,12 @@ namespace Models.PMF.OilPalm
             double TotUnderstoryPotSWUptake = MathUtilities.Sum(UnderstoryPotSWUptake);
 
             UnderstoryEP = 0.0;
-            double[] sw_dep = Soil.Water;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, UnderstoryPEP / TotUnderstoryPotSWUptake);
                 UnderstoryEP += UnderstorySWUptake[j];
-                sw_dep[j] = sw_dep[j] - UnderstorySWUptake[j];
-
             }
-            Soil.Water = sw_dep;
+            Soil.SoilWater.RemoveWater(UnderstorySWUptake);
 
             if (UnderstoryPEP > 0.0)
                 UnderstoryFW = UnderstoryEP / UnderstoryPEP;

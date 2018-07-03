@@ -411,6 +411,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />

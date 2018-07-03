@@ -552,7 +552,7 @@ namespace Models.PMF
                 else
                 {//claw back todays StorageDM allocation to cover the cost
                     double UnallocatedRespirationCost = DM.TotalRespiration - DM.SinkLimitation;
-                    if (DM.TotalStorageAllocation > 0)
+                    if (MathUtilities.IsGreaterThan(DM.TotalStorageAllocation, 0))
                     {
                         double Costmet = 0;
                         for (int i = 0; i < Organs.Length; i++)
