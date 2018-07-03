@@ -130,9 +130,9 @@ namespace UserInterface.Interfaces
         bool RowIsEmpty(int rowIndex);
 
         /// <summary>
-        /// Resizes controls on the GridView.
+        /// Updates controls on the GridView.
         /// </summary>
-        void ResizeControls();
+        void UpdateControls();
 
         /// <summary>
         /// End the user editing the cell.
