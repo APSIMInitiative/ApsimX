@@ -1588,20 +1588,16 @@ namespace Models.Soils
         /// <summary>
         /// Eventhandeler - initialisation
         /// </summary>
-        [EventSubscribe("Initialised")]
+        [EventSubscribe("StartOfSimulation")]
         public void OnInitialised()
         {
             ////// TODO OnReset();
             //initDone = true;
-            OnSum_Report();
+            SumReport();
         }
 
-        /// <summary>
-        /// EventHandler - generate a summary report
-        /// </summary>
-        /// <exception cref="System.Exception">bad bottom boundary conditions switch</exception>
-        [EventSubscribe("SumReport")]
-        public void OnSum_Report()
+        /// <summary>Generate a summary report</summary>
+        public void SumReport()
         {
             //Manager module can request that each module write its variables out to the summary file. This handles that event. 
 
@@ -3202,6 +3198,7 @@ namespace Models.Soils
         /// <param name="timestepStart">The timestep start.</param>
         /// <param name="timestep">The timestep.</param>
         /// <returns></returns>
+        [EventSubscribe("DoSoilWaterMovement")]
         private bool DoSwim(double timestepStart, double timestep)
         {
             //  Notes
@@ -5834,8 +5831,34 @@ namespace Models.Soils
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement an LeachUrea property"); } }
 
+        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
+        public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement an FlowNO3 property"); } }
+
+        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
+        public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement an FlowNH4 property"); } }
+
+        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>
+        public double[] Flow { get { throw new NotImplementedException("SWIM doesn't implement an Flow property"); } }
+
+        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
+        public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement an Flux property"); } }
+
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         public double[] ESW { get { throw new NotImplementedException("SWIM doesn't implement an ESW property"); } }
+
+        /// <summary>Loss of precipitation due in interception of surface residues (mm)</summary>
+        public double ResidueInterception
+        {
+            get { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
+            set { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
+        }
+
+        /// <summary>Sets the water table.</summary>
+        /// <param name="InitialDepth">The initial depth.</param>
+        public void SetWaterTable(double InitialDepth)
+        {
+            throw new NotImplementedException("SWIM doesn't implement SetWaterTable");
+        }
 
         ///<summary>Perform a reset</summary>
         public void Reset()

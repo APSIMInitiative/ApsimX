@@ -958,7 +958,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double[] flow
+        public double[] Flow
         { get { return SoilObject != null ? SoilObject.flow : new double[0]; } }
 
         /// <summary>
@@ -969,7 +969,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double[] flux
+        public double[] Flux
         { get { return SoilObject != null ? SoilObject.flux : new double[0]; } }
 
         /// <summary>
@@ -993,7 +993,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] flow_no3
+        public double[] FlowNO3
         { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("NO3") : new double[0]; } }
 
         /// <summary>
@@ -1004,7 +1004,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] flow_nh4
+        public double[] FlowNH4
         { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("NH4") : new double[0]; } }
 
         /// <summary>
@@ -1445,7 +1445,7 @@ namespace Models.Soils
         /// residueinterception is only used in ResiduesTrial.apsimx
         /// </remarks>
         [Units("mm")]
-        public double residueinterception { get; set; }     //residue interception loss (mm)
+        public double ResidueInterception { get; set; }     //residue interception loss (mm)
 
         #endregion
 
@@ -1523,7 +1523,7 @@ namespace Models.Soils
             surfaceCover.ZeroSurfaceCover();
 
             surfaceCover.surfaceom_cover = SurfaceOM.Cover;
-            surfaceCover.residueinterception = residueinterception;
+            surfaceCover.residueinterception = ResidueInterception;
             }
 
         /// <summary>
@@ -1660,7 +1660,7 @@ namespace Models.Soils
             //optional daily inputs
             runon = 0.0;      
             interception = 0.0;      
-            residueinterception = 0.0; 
+            ResidueInterception = 0.0; 
 
             if (Soil.Thickness != null)
                 {
@@ -1812,7 +1812,7 @@ namespace Models.Soils
             SendNitrogenChangedEvent();
 
             //zero this here so it is not used tomorrow. 
-            residueinterception = 0.0;
+            ResidueInterception = 0.0;
 
         }
 

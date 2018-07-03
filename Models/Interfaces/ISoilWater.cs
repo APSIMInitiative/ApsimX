@@ -45,6 +45,9 @@ namespace Models.Interfaces
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
         double Drainage { get; }
 
+        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>
+        double Salb { get; }
+
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         double[] LateralOutflow { get; }
 
@@ -56,6 +59,25 @@ namespace Models.Interfaces
         
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         double LeachUrea { get; }
+
+        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
+        double[] FlowNO3 { get; }
+
+        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>
+        double[] FlowNH4 { get; }
+
+        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>
+        double[] Flow { get; }
+
+        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
+        double[] Flux { get; }
+
+        /// <summary>Loss of precipitation due in interception of surface residues (mm)</summary>
+        double ResidueInterception { get; set; }
+
+        /// <summary>Sets the water table.</summary>
+        /// <param name="InitialDepth">The initial depth.</param>
+        void SetWaterTable(double InitialDepth);
 
         ///<summary>Perform a reset</summary>
         void Reset();
