@@ -1220,9 +1220,8 @@ namespace Models.PMF.OilPalm
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                Soil.SoilWater.RemoveWater(SWUptake);
-
             }
+            Soil.SoilWater.RemoveWater(SWUptake);
 
             if (PEP > 0.0)
             {
