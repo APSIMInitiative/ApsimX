@@ -230,6 +230,7 @@
             string rFileName = Path.GetTempFileName();
             File.WriteAllText(rFileName, script);
             R r = new R();
+            Console.WriteLine(r.GetPackage("sensitivity"));
             return r.RunToTable(rFileName);
         }
 

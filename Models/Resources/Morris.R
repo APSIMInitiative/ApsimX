@@ -1,21 +1,4 @@
-getPackage <- function(pkg) {
-    if (!pkg %in% rownames(installed.packages())) {
-		i = which(!grepl("Program Files", .libPaths()))[1]
-		location = ""
-        if (is.na(i) || i > length(.libPaths()) || identical(i, integer(0))) {
-		    # No lib paths outside of program files exist....
-			location = getwd()
-		} else {
-			location = .libPaths()[i]
-		}
-		print(paste("Location:", location))
-		install.packages(pkg,repos = "http://cran.us.r-project.org", lib = location)
-	}
-	library(pkg, character.only = TRUE)
-}
-
-
-getPackage('sensitivity')
+library('sensitivity')
 Params<-c(%PARAMNAMES%)
     APSIMMorris<-morris(model=NULL
         ,Params #string vector of parameter names

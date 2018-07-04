@@ -662,6 +662,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\Morris.R" />
+    <EmbeddedResource Include="Resources\GetPackage.R" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">
       <SubType>Designer</SubType>
