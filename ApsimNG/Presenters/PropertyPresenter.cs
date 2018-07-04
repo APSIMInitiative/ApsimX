@@ -401,7 +401,10 @@ namespace UserInterface.Presenters
                     else if (cellValue.GetType().IsEnum)
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = StringUtilities.EnumToStrings(cellValue);
+                        cell.DropDownStrings = VariableProperty.EnumToStrings(cellValue);
+                        Enum cellValueAsEnum = cellValue as Enum;
+                        if (cellValueAsEnum != null)
+                            cell.Value = VariableProperty.GetEnumDescription(cellValueAsEnum);
                     }
                     else if (cellValue.GetType() == typeof(IPlant))
                     {
@@ -611,7 +614,7 @@ namespace UserInterface.Presenters
             }
             else if (property.DataType.IsEnum)
             {
-                value = Enum.Parse(property.DataType, value.ToString());
+                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
             }
             else if (property.Display != null &&
                      property.Display.Type == DisplayType.Model)
