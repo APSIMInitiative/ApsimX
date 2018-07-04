@@ -3431,6 +3431,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <string>[Soil].SoilWater.WaterTable</string>
         <string>([Soybean].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
         <string>[Soybean].Nodule.FixationRate</string>
+        <string>[Soybean].Root.Depth</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -6981,9 +6982,9 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Script>
                   <InitialWaterTableDepth>2000</InitialWaterTableDepth>
+                  <InSeasonWaterTableDepth>1000</InSeasonWaterTableDepth>
                   <StartDate>2017-05-01</StartDate>
                   <EndDate>2017-05-20</EndDate>
-                  <InSeasonWaterTableDepth>1000</InSeasonWaterTableDepth>
                 </Script>
                 <Code><![CDATA[
         using System;
@@ -9298,6 +9299,81 @@ namespace Models
                   <Type>Left</Type>
                   <Inverted>false</Inverted>
                   <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
+            <Folder>
+              <Name>Roots</Name>
+              <Graph>
+                <Name>RootDepth</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>FACTSReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Root.Depth</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Root.Depth</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>true</Inverted>
+                  <Minimum>0</Minimum>
                   <Maximum>NaN</Maximum>
                   <Interval>NaN</Interval>
                 </Axis>
