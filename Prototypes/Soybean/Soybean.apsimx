@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="30">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="31">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -461,8 +461,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Y>
                 <double>0</double>
                 <double>0</double>
-                <double>1</double>
-                <double>1</double>
+                <double>0</double>
+                <double>0</double>
                 <double>0</double>
               </Y>
             </XYPairs>
@@ -616,7 +616,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </FillingRateFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <Start>StartFlowering</Start>
+            <Start>EndFlowering</Start>
             <End>EndGrainFill</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -626,13 +626,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>0.03</FixedValue>
+          <FixedValue>0.06</FixedValue>
         </Constant>
         <Constant>
           <Name>WaterContent</Name>
@@ -652,23 +652,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Enabled>true</Enabled>
                 <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
-              <AddFunction>
-                <Name>FillingDuration</Name>
-                <VariableReference>
-                  <Name>FillingDuration</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[Phenology].Flowering.Target.Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>FillingDuration</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -692,12 +675,18 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
               </MultiplyFunction>
+              <VariableReference>
+                <Name>FillingDuration</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
+              </VariableReference>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
             </FillingRateFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <Start>StartFlowering</Start>
+            <Start>EndFlowering</Start>
             <End>EndGrainFill</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1326,7 +1315,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>/d</Units>
         </Constant>
         <MultiplyFunction>
-          <Name>FixationRate</Name>
+          <Name>FixationRateOLD</Name>
           <Memo>
             <Name>Memo1</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1350,10 +1339,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FixedValue>4.5</FixedValue>
+            <FixedValue>0.1</FixedValue>
           </Constant>
           <MinimumFunction>
-            <Name>MinimumFunction</Name>
+            <Name>StressFactor</Name>
             <AirTemperatureFunction>
               <Name>FT</Name>
               <XYPairs>
@@ -1389,33 +1378,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <XProperty>[Leaf].Fw</XProperty>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>FWlog</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <MemoText><![CDATA[]]></MemoText>
-              </Memo>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>1.5</double>
-                </X>
-                <Y>
-                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                 </Y>
@@ -1480,6 +1442,41 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Enabled>true</Enabled>
           <FixedValue>0.4</FixedValue>
         </Constant>
+        <MinimumFunction>
+          <Name>FixationRate</Name>
+          <MultiplyFunction>
+            <Name>PotentialFixationRate</Name>
+            <Memo>
+              <Name>Memo1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <MemoText><![CDATA[
+]]></MemoText>
+            </Memo>
+            <VariableReference>
+              <Name>AboveGroundBiomass</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <VariableName>[AboveGround].Wt</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>SpecificFixationRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <FixedValue>0.0004</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </MultiplyFunction>
+          <Constant>
+            <Name>MaximumFixationRate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <FixedValue>0.3</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </MinimumFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
       </Nodule>
@@ -1531,7 +1528,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>0.03</FixedValue>
+          <FixedValue>0.009</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -2267,12 +2264,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>4</double>
               </X>
               <Y>
-                <double>45000</double>
-                <double>40000</double>
                 <double>35000</double>
                 <double>35000</double>
-                <double>35000</double>
-                <double>32000</double>
+                <double>34500</double>
+                <double>30000</double>
+                <double>25000</double>
+                <double>20000</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2407,7 +2404,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FixedValue>0</FixedValue>
+            <FixedValue>0.02</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
@@ -2804,9 +2801,9 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
-        <Albedo>0.2</Albedo>
-        <Gsmax>0.012</Gsmax>
-        <R50>200</R50>
+        <Albedo>0.25</Albedo>
+        <Gsmax>0.011</Gsmax>
+        <R50>150</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <MicroClimatePresent>true</MicroClimatePresent>
@@ -2860,18 +2857,27 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Enabled>true</Enabled>
           <FixedValue>0.1</FixedValue>
         </Constant>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
-          <Memo>
-            <Name>Memo</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
+            <X>
+              <double>3</double>
+              <double>4</double>
+              <double>5</double>
+            </X>
+            <Y>
+              <double>0.025</double>
+              <double>0.02</double>
+              <double>0.015</double>
+            </Y>
+          </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>0.03</FixedValue>
-        </Constant>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
           <Memo>
@@ -2882,7 +2888,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -2895,7 +2901,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Start>Emergence</Start>
-          <End>EndGrainFill</End>
+          <End>EndFlowering</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -3329,7 +3335,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <CropType>FieldPea</CropType>
+      <CropType>Soybean</CropType>
     </Plant>
     <Report>
       <Name>DailyReport</Name>
@@ -3340,6 +3346,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       <VariableNames>
         <string>[Clock].Today</string>
         <string>[Clock].Today.DayOfYear</string>
+        <string>[Soybean].Phenology.CurrentStageName</string>
         <string>[Soybean].AboveGround.Wt</string>
         <string>[Soybean].AboveGround.N</string>
         <string>[Soybean].Leaf.AppearedCohortNo</string>
@@ -3347,16 +3354,27 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <string>[Soybean].Leaf.Photosynthesis.FT</string>
         <string>[Soybean].Leaf.LAI</string>
         <string>[Soybean].Leaf.Live.Wt</string>
+        <string>[Soybean].Leaf.Live.N</string>
+        <string>[Soybean].Leaf.Live.NConc</string>
         <string>[Soybean].Leaf.Dead.Wt</string>
+        <string>[Soybean].Leaf.Dead.N</string>
+        <string>[Soybean].Leaf.Dead.NConc</string>
         <string>[Soybean].Leaf.SpecificArea</string>
         <string>[Soybean].Leaf.Wt</string>
-        <string>([Soybean].Leaf.Transpiration + [Soil].SoilWater.Es) as ET</string>
         <string>[Soybean].Stem.Wt</string>
+        <string>[Soybean].Stem.N</string>
+        <string>[Soybean].Stem.Nconc</string>
         <string>[Soybean].Shell.Wt</string>
+        <string>[Soybean].Shell.N</string>
+        <string>[Soybean].Shell.Nconc</string>
         <string>[Soybean].Grain.Wt</string>
+        <string>[Soybean].Grain.N</string>
+        <string>[Soybean].Grain.Nconc</string>
         <string>[Soybean].Shell.Wt</string>
         <string>[Soybean].Shell.PodNumber</string>
         <string>[Soybean].Pod.Wt</string>
+        <string>[Soybean].Pod.N</string>
+        <string>[Soybean].Pod.NConc</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -3398,6 +3416,26 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <string>[Soybean].Harvesting</string>
       </EventNames>
     </Report>
+    <Report>
+      <Name>FACTSReport</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Soil].SoilWater.SW[4] as SW15cm</string>
+        <string>([Soil].SoilWater.SW[6]+[Soil].SoilWater.SW[7])/2 as SW45cm</string>
+        <string>[Soil].Temperature[4] as ST15cm</string>
+        <string>([Soil].Temperature[6]+[Soil].Temperature[7])/2 as ST45cm</string>
+        <string>[Soil].SoilWater.WaterTable</string>
+        <string>([Soybean].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+        <string>[Soybean].Nodule.FixationRate</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].DoReport</string>
+      </EventNames>
+    </Report>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
   </Replacements>
@@ -3431,6 +3469,22 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Soybean.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedSW</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <PredictedTableName>DailyReport</PredictedTableName>
+      <ObservedTableName>ObservedSW</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedET</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <PredictedTableName>FACTSReport</PredictedTableName>
+      <ObservedTableName>ObservedET</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
   </DataStore>
@@ -3446,60 +3500,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
 Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
 ]]></MemoText>
       </Memo>
-      <Graph>
-        <Name>Biomass</Name>
-        <Series>
-          <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Soybean.AboveGround.Wt</XFieldName>
-          <YFieldName>Predicted.Soybean.AboveGround.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <Caption />
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
       <Graph>
         <Name>FloweringDAS</Name>
         <Series>
@@ -3716,6 +3716,168 @@ Simulation results for the combined datasets from the various countries are show
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Soybean.Leaf.LAI</XFieldName>
+          <YFieldName>Predicted.Soybean.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Biomass</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Soybean.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Soybean.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>BiomassN</Name>
+        <Series>
+          <Name>Series1</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Soybean.AboveGround.N</XFieldName>
+          <YFieldName>Predicted.Soybean.AboveGround.N</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -3850,7 +4012,7 @@ Simulation results for the combined datasets from the various countries are show
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -3868,32 +4030,32 @@ Simulation results for the combined datasets from the various countries are show
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -3902,41 +4064,41 @@ Simulation results for the combined datasets from the various countries are show
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -4060,8 +4222,8 @@ namespace Models
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -4188,7 +4350,7 @@ namespace Models
                     <double>0.223</double>
                     <double>0.423</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <SoilNitrogen>
                   <Name>SoilNitrogen</Name>
@@ -4507,7 +4669,7 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -4525,32 +4687,32 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -4559,41 +4721,41 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -4717,8 +4879,8 @@ namespace Models
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -4845,7 +5007,7 @@ namespace Models
                     <double>0.223</double>
                     <double>0.423</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <SoilNitrogen>
                   <Name>SoilNitrogen</Name>
@@ -5164,7 +5326,7 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -5182,32 +5344,32 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -5216,41 +5378,41 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -5374,8 +5536,8 @@ namespace Models
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -5502,7 +5664,7 @@ namespace Models
                     <double>0.223</double>
                     <double>0.423</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <SoilNitrogen>
                   <Name>SoilNitrogen</Name>
@@ -5998,7 +6160,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <a_interception>0</a_interception>
                 <b_interception>1</b_interception>
-                <c_interception>0</c_interception>
+                <c_interception>0.1</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
@@ -6075,7 +6237,7 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -6093,32 +6255,32 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -6127,41 +6289,41 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -6285,73 +6447,13 @@ namespace Models
                 <Name>Operations</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <Operation>
-                  <Date>1998-01-07T00:00:00</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-01-14T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-01-21T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-01-28T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-02-07T00:00:00</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-02-14T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-02-21T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-02-28T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-03-07T00:00:00</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-03-14T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-03-21T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1998-03-28T00:00:00</Date>
-                  <Action> [Irrigation].Apply(25);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <Plant>
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -6522,6 +6624,23 @@ namespace Models
                     <double>0.256</double>
                     <double>0.234</double>
                   </SAT>
+                  <KS>
+                    <double>151</double>
+                    <double>128</double>
+                    <double>239</double>
+                    <double>158</double>
+                    <double>144</double>
+                    <double>115</double>
+                    <double>103</double>
+                    <double>182</double>
+                    <double>168</double>
+                    <double>159</double>
+                    <double>2</double>
+                    <double>2</double>
+                    <double>2</double>
+                    <double>2</double>
+                    <double>2</double>
+                  </KS>
                 </Water>
                 <SoilOrganicMatter>
                   <Name>SoilOrganicMatter</Name>
@@ -6804,7 +6923,7 @@ namespace Models
                     <double>150</double>
                     <double>300</double>
                     <double>300</double>
-                    <double>300</double>
+                    <double>1000</double>
                   </Thickness>
                   <SWCON>
                     <double>0.7</double>
@@ -6817,7 +6936,7 @@ namespace Models
                     <double>0.7</double>
                     <double>0.7</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <CERESSoilTemperature>
                   <Name>CERESSoilTemperature</Name>
@@ -6856,6 +6975,64 @@ namespace Models
                   <string>[Clock].DoReport</string>
                 </EventNames>
               </Report>
+              <Manager>
+                <Name>WaterTableManager</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Script>
+                  <InitialWaterTableDepth>2000</InitialWaterTableDepth>
+                  <StartDate>2017-05-01</StartDate>
+                  <EndDate>2017-05-20</EndDate>
+                  <InSeasonWaterTableDepth>1000</InSeasonWaterTableDepth>
+                </Script>
+                <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using APSIM.Shared.Utilities;
+        using Models.Soils;
+        
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Soil Soil;
+               [Link] Clock Clock;
+
+               [Description("Initial Water Table Depth (mm)")]
+               public double InitialWaterTableDepth { get; set; }
+
+              [Description("InSeason Table Depth (mm)")]
+               public double InSeasonWaterTableDepth { get; set; }
+
+               [Description("Start Date")]
+               public DateTime StartDate { get; set; }
+
+               [Description("End Date")]
+               public DateTime EndDate { get; set; }
+
+
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+        //(Soil.SoilWater as SoilWater).WaterTable = InitialWaterTableDepth;
+        }       
+
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+                if (Clock.Today.Date >= StartDate && Clock.Today.Date >= EndDate)
+                   (Soil.SoilWater as SoilWater).WaterTable = InSeasonWaterTableDepth;
+                else
+                    (Soil.SoilWater as SoilWater).WaterTable = InitialWaterTableDepth;
+               }
+            }
+        }
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Area>1</Area>
@@ -7213,6 +7390,75 @@ namespace Models
                 <LegendPosition>TopLeft</LegendPosition>
                 <DisabledSeries />
               </Graph>
+              <Graph>
+                <Name>PodWt</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Pod.Wt</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Pod.Wt</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -7223,6 +7469,12 @@ namespace Models
                 <Name>LAI</Name>
                 <Series>
                   <Name>Predicted</Name>
+                  <EventNamesOnGraph>
+                    <Name>EventNamesOnGraph</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ColumnName>Soybean.Phenology.CurrentStageName</ColumnName>
+                  </EventNamesOnGraph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <Type>Scatter</Type>
@@ -7292,6 +7544,12 @@ namespace Models
                 <Name>MainStemLeafNo</Name>
                 <Series>
                   <Name>Predicted</Name>
+                  <EventNamesOnGraph>
+                    <Name>EventNamesOnGraph</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ColumnName>Soybean.Phenology.CurrentStageName</ColumnName>
+                  </EventNamesOnGraph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <Type>Scatter</Type>
@@ -7361,6 +7619,12 @@ namespace Models
                 <Name>SpecificLeafArea</Name>
                 <Series>
                   <Name>Predicted</Name>
+                  <EventNamesOnGraph>
+                    <Name>EventNamesOnGraph</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ColumnName>Soybean.Phenology.CurrentStageName</ColumnName>
+                  </EventNamesOnGraph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <Type>Scatter</Type>
@@ -7470,8 +7734,8 @@ namespace Models
                 <Axis>
                   <Type>Left</Type>
                   <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
+                  <Minimum>0</Minimum>
+                  <Maximum>1</Maximum>
                   <Interval>NaN</Interval>
                 </Axis>
                 <LegendPosition>TopLeft</LegendPosition>
@@ -7604,76 +7868,6 @@ namespace Models
             <Folder>
               <Name>WaterBalance</Name>
               <Graph>
-                <Name>ET</Name>
-                <Series>
-                  <Name>Predicted</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16777216</ColourArgb>
-                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>None</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>Solid</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <Checkpoint>Current</Checkpoint>
-                  <TableName>DailyReport</TableName>
-                  <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>ET</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                  <Filter />
-                </Series>
-                <Series>
-                  <Name>Observed</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <Type>Scatter</Type>
-                  <XAxis>Bottom</XAxis>
-                  <YAxis>Left</YAxis>
-                  <ColourArgb>-16777216</ColourArgb>
-                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                  <Marker>FilledCircle</Marker>
-                  <MarkerSize>Normal</MarkerSize>
-                  <Line>None</Line>
-                  <LineThickness>Normal</LineThickness>
-                  <Checkpoint>Current</Checkpoint>
-                  <TableName>ObservedET</TableName>
-                  <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>ET</YFieldName>
-                  <ShowInLegend>false</ShowInLegend>
-                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                  <Cumulative>false</Cumulative>
-                  <CumulativeX>false</CumulativeX>
-                </Series>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <Axis>
-                  <Type>Bottom</Type>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <Axis>
-                  <Type>Left</Type>
-                  <Inverted>false</Inverted>
-                  <Minimum>NaN</Minimum>
-                  <Maximum>NaN</Maximum>
-                  <Interval>NaN</Interval>
-                </Axis>
-                <LegendPosition>TopLeft</LegendPosition>
-                <DisabledSeries />
-              </Graph>
-              <Graph>
                 <Name>SoilWater15cm</Name>
                 <Series>
                   <Name>Predicted</Name>
@@ -7789,6 +7983,197 @@ namespace Models
                   <TableName>ObservedSW</TableName>
                   <XFieldName>Clock.Today</XFieldName>
                   <YFieldName>SW45cm</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>WaterTable</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>FACTSReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soil.SoilWater.WaterTable</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                  <Filter />
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>ObservedSW</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soil.SoilWater.WaterTable</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>true</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>ET</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>FACTSReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>ET</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                  <Filter />
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>ObservedET</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>ET</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>Pre vs Obs ET</Name>
+                <Series>
+                  <Name>Series</Name>
+                  <Regression>
+                    <Name>Regression</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ForEachSeries>false</ForEachSeries>
+                  </Regression>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>PredictedObservedET</TableName>
+                  <XFieldName>Observed.ET</XFieldName>
+                  <YFieldName>Predicted.ET</YFieldName>
                   <ShowInLegend>false</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -7935,6 +8320,966 @@ namespace Models
                   <TableName>ObservedST</TableName>
                   <XFieldName>Clock.Today</XFieldName>
                   <YFieldName>ST45cm</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
+            <Folder>
+              <Name>Nitrogen</Name>
+              <Graph>
+                <Name>BiomassN</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.AboveGround.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Aboveground.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>LeafLiveN</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Live.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Live.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>LeafDeadN</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Dead.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Dead.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>StemN</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Stem.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Stem.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>GrainN</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Grain.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Grain.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>PodN</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Pod.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Pod.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>ShellN</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.N</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
+            <Folder>
+              <Name>NitrogenConcentration</Name>
+              <Graph>
+                <Name>LeafLiveNConc</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Live.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Live.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>LeafDeadNConc</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Dead.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Leaf.Dead.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>StemNConc</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Stem.Nconc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Stem.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>GrainNConc</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Grain.Nconc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Grain.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>PodNConc</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Pod.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Pod.Nconc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>ShellNConc</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.Nconc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.NConc</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
+            <Folder>
+              <Name>Fixation</Name>
+              <Graph>
+                <Name>FixationRate</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>FACTSReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Nodule.FixationRate</YFieldName>
                   <ShowInLegend>false</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -8111,7 +9456,7 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -8129,32 +9474,32 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -8163,41 +9508,41 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -8386,8 +9731,8 @@ namespace Models
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -8858,7 +10203,7 @@ namespace Models
                     <double>0.7</double>
                     <double>0.7</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
@@ -9817,7 +11162,7 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -9835,32 +11180,32 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -9869,41 +11214,41 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -10027,8 +11372,8 @@ namespace Models
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -10166,7 +11511,7 @@ namespace Models
                     <double>0.369</double>
                     <double>0.369</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <SoilNitrogen>
                   <Name>SoilNitrogen</Name>
@@ -10686,7 +12031,7 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -10704,32 +12049,32 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -10738,41 +12083,41 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -10896,8 +12241,8 @@ namespace Models
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -11035,7 +12380,7 @@ namespace Models
                     <double>0.369</double>
                     <double>0.369</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <SoilNitrogen>
                   <Name>SoilNitrogen</Name>
@@ -11387,7 +12732,7 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.DeltaSoilOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSurfaceOMN</string>
                   <string>[DiagnosticsVariables].Script.DeltaSoilMineralN</string>
-                  <string>[FieldPea].Root.NSupply</string>
+                  <string>[Soybean].Root.NSupply</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[DiagnosticsVariables].Script.SWC</string>
@@ -11405,32 +12750,32 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.AccumIrrigation</string>
                   <string>[DiagnosticsVariables].Script.AccumOutflowLat</string>
                   <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
-                  <string>[FieldPea].Grain.Live.Wt</string>
-                  <string>[FieldPea].Shell.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Stem.Live.Wt</string>
-                  <string>[FieldPea].Grain.Live.N</string>
-                  <string>[FieldPea].Shell.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.Wt</string>
-                  <string>[FieldPea].Root.Live.Wt</string>
-                  <string>[FieldPea].Leaf.Live.N</string>
-                  <string>[FieldPea].Root.Live.N</string>
-                  <string>[FieldPea].Leaf.Live.NConc</string>
-                  <string>[FieldPea].Root.Live.NConc</string>
-                  <string>[FieldPea].Root.WaterSupply</string>
-                  <string>[FieldPea].Root.WaterUptake</string>
-                  <string>[FieldPea].Leaf.Transpiration</string>
-                  <string>[FieldPea].Leaf.WaterDemand</string>
-                  <string>[FieldPea].Root.Depth</string>
-                  <string>[FieldPea].Leaf.CoverTotal</string>
-                  <string>[FieldPea].Leaf.CoverDead</string>
-                  <string>[FieldPea].Leaf.LAI</string>
-                  <string>[FieldPea].Leaf.Height</string>
-                  <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
+                  <string>[Soybean].Grain.Live.Wt</string>
+                  <string>[Soybean].Shell.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Stem.Live.Wt</string>
+                  <string>[Soybean].Grain.Live.N</string>
+                  <string>[Soybean].Shell.Live.N</string>
+                  <string>[Soybean].Leaf.Live.Wt</string>
+                  <string>[Soybean].Root.Live.Wt</string>
+                  <string>[Soybean].Leaf.Live.N</string>
+                  <string>[Soybean].Root.Live.N</string>
+                  <string>[Soybean].Leaf.Live.NConc</string>
+                  <string>[Soybean].Root.Live.NConc</string>
+                  <string>[Soybean].Root.WaterSupply</string>
+                  <string>[Soybean].Root.WaterUptake</string>
+                  <string>[Soybean].Leaf.Transpiration</string>
+                  <string>[Soybean].Leaf.WaterDemand</string>
+                  <string>[Soybean].Root.Depth</string>
+                  <string>[Soybean].Leaf.CoverTotal</string>
+                  <string>[Soybean].Leaf.CoverDead</string>
+                  <string>[Soybean].Leaf.LAI</string>
+                  <string>[Soybean].Leaf.Height</string>
+                  <string>[Soybean].Leaf.PotentialBiomass.Value()</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
                   <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-                  <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[Soybean].Arbitrator.N.TotalPlantDemand</string>
                   <string>[MicroClimate].net_radn</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -11439,41 +12784,41 @@ namespace Models
                   <string>[DiagnosticsVariables].Script.BiomN</string>
                   <string>[DiagnosticsVariables].Script.DltNMinRes</string>
                   <string>[DiagnosticsVariables].Script.DltNMinTot</string>
-                  <string>[FieldPea].Leaf.Fw</string>
-                  <string>[FieldPea].Leaf.Fn</string>
-                  <string>[FieldPea].Phenology.CurrentPhaseName</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Pod.Wt</string>
-                  <string>[FieldPea].Pod.N</string>
-                  <string>[FieldPea].Structure.LeafTipsAppeared</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Leaf.CohortArea[1]</string>
-                  <string>[FieldPea].Leaf.CohortArea[2]</string>
-                  <string>[FieldPea].Leaf.CohortArea[3]</string>
-                  <string>[FieldPea].Leaf.CohortArea[4]</string>
-                  <string>[FieldPea].Leaf.CohortArea[5]</string>
-                  <string>[FieldPea].Leaf.CohortArea[6]</string>
-                  <string>[FieldPea].Leaf.CohortArea[7]</string>
-                  <string>[FieldPea].Leaf.CohortArea[8]</string>
-                  <string>[FieldPea].Leaf.CohortArea[9]</string>
-                  <string>[FieldPea].Leaf.CohortArea[10]</string>
-                  <string>[FieldPea].Leaf.CohortArea[11]</string>
-                  <string>[FieldPea].Leaf.CohortArea[12]</string>
-                  <string>[FieldPea].Leaf.CohortArea[13]</string>
-                  <string>[FieldPea].Leaf.CohortArea[14]</string>
-                  <string>[FieldPea].Leaf.CohortArea[15]</string>
-                  <string>[FieldPea].Leaf.AppearedCohortNo</string>
-                  <string>[FieldPea].Leaf.DeadCohortNo</string>
-                  <string>[FieldPea].AboveGround.Wt</string>
-                  <string>[FieldPea].Phenology.Stage</string>
-                  <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-                  <string>[FieldPea].Phenology.NFF.Value()</string>
-                  <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-                  <string>[FieldPea].Grain.NumberFunction.Value()</string>
-                  <string>[FieldPea].Shell.PodNumber.Value()</string>
-                  <string>[FieldPea].Phenology.FN.Value()</string>
-                  <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
-                  <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
+                  <string>[Soybean].Leaf.Fw</string>
+                  <string>[Soybean].Leaf.Fn</string>
+                  <string>[Soybean].Phenology.CurrentPhaseName</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Pod.Wt</string>
+                  <string>[Soybean].Pod.N</string>
+                  <string>[Soybean].Structure.LeafTipsAppeared</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Leaf.CohortArea[1]</string>
+                  <string>[Soybean].Leaf.CohortArea[2]</string>
+                  <string>[Soybean].Leaf.CohortArea[3]</string>
+                  <string>[Soybean].Leaf.CohortArea[4]</string>
+                  <string>[Soybean].Leaf.CohortArea[5]</string>
+                  <string>[Soybean].Leaf.CohortArea[6]</string>
+                  <string>[Soybean].Leaf.CohortArea[7]</string>
+                  <string>[Soybean].Leaf.CohortArea[8]</string>
+                  <string>[Soybean].Leaf.CohortArea[9]</string>
+                  <string>[Soybean].Leaf.CohortArea[10]</string>
+                  <string>[Soybean].Leaf.CohortArea[11]</string>
+                  <string>[Soybean].Leaf.CohortArea[12]</string>
+                  <string>[Soybean].Leaf.CohortArea[13]</string>
+                  <string>[Soybean].Leaf.CohortArea[14]</string>
+                  <string>[Soybean].Leaf.CohortArea[15]</string>
+                  <string>[Soybean].Leaf.AppearedCohortNo</string>
+                  <string>[Soybean].Leaf.DeadCohortNo</string>
+                  <string>[Soybean].AboveGround.Wt</string>
+                  <string>[Soybean].Phenology.Stage</string>
+                  <string>[Soybean].Structure.MainStemPrimordiaNo</string>
+                  <string>[Soybean].Phenology.NFF.Value()</string>
+                  <string>[SoybeanHarvestRule].Script.FinalTag</string>
+                  <string>[Soybean].Grain.NumberFunction.Value()</string>
+                  <string>[Soybean].Shell.PodNumber.Value()</string>
+                  <string>[Soybean].Phenology.FN.Value()</string>
+                  <string>[Soybean].Phenology.FN.TotalNodes.Value()</string>
+                  <string>[Soybean].Phenology.FN.VegetativeNodes.Value()</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -11597,8 +12942,8 @@ namespace Models
                 <Name>Soybean</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <ResourceName>FieldPea</ResourceName>
-                <CropType>FieldPea</CropType>
+                <ResourceName>Soybean</ResourceName>
+                <CropType>Soybean</CropType>
               </Plant>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -11736,7 +13081,7 @@ namespace Models
                     <double>0.369</double>
                     <double>0.369</double>
                   </SWCON>
-                  <residueinterception>0</residueinterception>
+                  <ResidueInterception>0</ResidueInterception>
                 </SoilWater>
                 <SoilNitrogen>
                   <Name>SoilNitrogen</Name>
@@ -12080,5 +13425,5 @@ namespace Models
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <Enabled>true</Enabled>
-  <ExplorerWidth>350</ExplorerWidth>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
