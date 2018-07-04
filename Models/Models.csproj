@@ -469,10 +469,10 @@
     <Compile Include="Soils\SoilOrganicMatter.cs" />
     <Compile Include="Soils\SoilTemperature.cs" />
     <Compile Include="Soils\SoilTemperature2.cs" />
-    <Compile Include="Soils\Swim.cs" />
-    <Compile Include="Soils\SwimSoluteParameters.cs" />
-    <Compile Include="Soils\SwimSubsurfaceDrain.cs" />
-    <Compile Include="Soils\SwimWaterTable.cs" />
+    <Compile Include="Soils\SWIM\Swim.cs" />
+    <Compile Include="Soils\SWIM\SwimSoluteParameters.cs" />
+    <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />
+    <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />

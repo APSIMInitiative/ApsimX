@@ -136,6 +136,7 @@ namespace UserInterface.Presenters
 
                     this.view.Grid.DataSource = data;
                     this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
+                    this.view.Grid.UpdateControls();
                 }
             }
         }

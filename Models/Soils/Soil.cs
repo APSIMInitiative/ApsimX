@@ -252,11 +252,6 @@ namespace Models.Soils
             {
                 return SoilWater.SWmm;
             }
-
-            set
-            {
-                SoilWater.SWmm = value;
-            }
         }
 
         /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
@@ -374,8 +369,8 @@ namespace Models.Soils
         { 
             get 
             {
-                if (SoilWater == null) return null;
-                return Map(SoilWater.SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                if (SoilWater == null || !(SoilWater is SoilWater)) return null;
+                return Map((SoilWater as SoilWater).SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
             }
         }
 
@@ -388,7 +383,7 @@ namespace Models.Soils
             get
                 {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                return Map((SoilWater as SoilWater).KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
             }
         }
 
@@ -1856,11 +1851,14 @@ namespace Models.Soils
             string Msg = "";
 
             // Check the summer / winter dates.
-            DateTime Temp;
-            if (!DateTime.TryParse(SoilWater.SummerDate, out Temp))
-                Msg += "Invalid summer date of: " + SoilWater.SummerDate + "\r\n";
-            if (!DateTime.TryParse(SoilWater.WinterDate, out Temp))
-                Msg += "Invalid winter date of: " + SoilWater.WinterDate + "\r\n";
+            if (SoilWater is SoilWater)
+            {
+                DateTime Temp;
+                if (!DateTime.TryParse((SoilWater as SoilWater).SummerDate, out Temp))
+                    Msg += "Invalid summer date of: " + (SoilWater as SoilWater).SummerDate + "\r\n";
+                if (!DateTime.TryParse((SoilWater as SoilWater).WinterDate, out Temp))
+                    Msg += "Invalid winter date of: " + (SoilWater as SoilWater).WinterDate + "\r\n";
+            }
 
             foreach (string Crop in CropNames)
             {
