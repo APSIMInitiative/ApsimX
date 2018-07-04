@@ -3304,28 +3304,28 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <Name>Pioneer92MGI_MG26</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Command>[Phenology].Vegetative.Target.FixedValue = 322</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 283</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 567</Command>
-        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.05, 16.46</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 271</Command>
+        <Command>[Phenology].Flowering.Target.FixedValue = 260</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 529</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.77, 17.57</Command>
       </Cultivar>
       <Cultivar>
         <Name>Becks321NRR_MG32</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Command>[Phenology].Vegetative.Target.FixedValue = 322</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 283</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 567</Command>
-        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.05, 16.46</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 272</Command>
+        <Command>[Phenology].Flowering.Target.FixedValue = 257</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 522</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.45, 18.0</Command>
       </Cultivar>
       <Cultivar>
         <Name>Becks367NRR_MG371</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Command>[Phenology].Vegetative.Target.FixedValue = 322</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 283</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 567</Command>
-        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.05, 16.46</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 267</Command>
+        <Command>[Phenology].Flowering.Target.FixedValue = 250</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 508</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.26, 17.26</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
@@ -3581,6 +3581,114 @@ Simulation results for the combined datasets from the various countries are show
           <TableName>PredictedObservedHarvest</TableName>
           <XFieldName>Observed.Soybean.Grain.Wt</XFieldName>
           <YFieldName>Predicted.Soybean.Grain.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Pred vs Obs EmergenceDAS</Name>
+        <Series>
+          <Name>Pre vs Obs</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PredictedObservedHarvest</TableName>
+          <XFieldName>Observed.Soybean.Phenology.EmergenceDAS</XFieldName>
+          <YFieldName>Predicted.Soybean.Phenology.EmergenceDAS</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Pred vs Obs MaturityDAS</Name>
+        <Series>
+          <Name>Pre vs Obs</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>PredictedObservedHarvest</TableName>
+          <XFieldName>Observed.Soybean.Phenology.MaturityDAS</XFieldName>
+          <YFieldName>Predicted.Soybean.Phenology.MaturityDAS</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9535,6 +9643,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Specifications>
                   <string>[SowingRule].Script.SowingDate=2006-03-30</string>
+                  <string>[SowingRule].Script.SowingDepth=65</string>
                 </Specifications>
               </Factor>
               <Factor>
@@ -9543,6 +9652,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Specifications>
                   <string>[SowingRule].Script.SowingDate=2006-04-13</string>
+                  <string>[SowingRule].Script.SowingDepth=80</string>
                 </Specifications>
               </Factor>
               <Factor>
@@ -9551,6 +9661,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Specifications>
                   <string>[SowingRule].Script.SowingDate=2006-04-27</string>
+                  <string>[SowingRule].Script.SowingDepth=50</string>
                 </Specifications>
               </Factor>
               <Factor>
@@ -9559,6 +9670,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Specifications>
                   <string>[SowingRule].Script.SowingDate=2006-05-10</string>
+                  <string>[SowingRule].Script.SowingDepth=35</string>
                 </Specifications>
               </Factor>
               <Factor>
@@ -9567,6 +9679,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Specifications>
                   <string>[SowingRule].Script.SowingDate=2006-05-30</string>
+                  <string>[SowingRule].Script.SowingDepth=80</string>
                 </Specifications>
               </Factor>
               <Factor>
@@ -9575,6 +9688,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Specifications>
                   <string>[SowingRule].Script.SowingDate=2006-06-06</string>
+                  <string>[SowingRule].Script.SowingDepth=100</string>
                 </Specifications>
               </Factor>
               <IncludeInDocumentation>true</IncludeInDocumentation>
