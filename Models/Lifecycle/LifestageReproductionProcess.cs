@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.Core;
-using Models.PMF.Functions;
+﻿// -----------------------------------------------------------------------
+// <copyright file="LifeStageReproductionProcess.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace Models.Lifecycle
+namespace Models.LifeCycle
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using Models.PMF.Functions;
+
     /// <summary>
     /// # [Name]
     /// A Reproduction process within a Lifestage.
@@ -16,8 +19,8 @@ namespace Models.Lifecycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Lifestage))]
-    public class LifestageReproductionProcess: Model, ILifestageProcess
+    [ValidParent(ParentType = typeof(LifeStage))]
+    public class LifeStageReproductionProcess: Model, ILifeStageProcess
     {
         private IFunction ProgenyFunc = null;
         private IFunction FecundityFunc = null;
@@ -42,6 +45,14 @@ namespace Models.Lifecycle
 
         [NonSerialized]
         private List<IFunction> FunctionList;
+
+        /// <summary>
+        /// Process this lifestage before cohorts are processed
+        /// </summary>
+        public void Process(LifeStage host)
+        {
+
+        }
 
         /// <summary>
         /// Applies each function in this Lifestage process to a cohort item that is owned by a Lifestage
@@ -70,7 +81,7 @@ namespace Models.Lifecycle
                                 if (numberToCreate > 0)
                                 {
                                     //transfer magic here
-                                    Lifestage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
+                                    LifeStage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
                                     cohortItem.OwningStage.Reproduce(cohortItem, destStage, numberToCreate);
                                 }
                                 cohortItem.Fecundity -= progenyRate;

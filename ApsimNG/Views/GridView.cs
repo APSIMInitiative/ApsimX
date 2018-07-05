@@ -111,16 +111,40 @@ namespace UserInterface.Views
         /// The cell at the popup locations
         /// </summary>
         private GridCell popupCell = null;
-
-        /// <summary>
-        /// The intellisense object
-        /// </summary>
-        private IntellisenseView intellisense;
-
+        
         /// <summary>
         /// List of active column indexes
         /// </summary>
         private List<int> activeCol = new List<int>();
+
+        /// <summary>
+        /// List of "category" row numbers - uneditable rows used as separators
+        /// </summary>
+        private List<int> categoryRows = new List<int>();
+
+        /// <summary>
+        /// Small data structure to hold information about how a column should be rendered
+        /// </summary>
+        private class ColRenderAttributes
+        {
+            /// <summary>
+            /// Whether the column data are read-only
+            /// </summary>
+            internal bool readOnly = false;
+            /// <summary>
+            /// Background colour for normal text rendering
+            /// </summary>
+            internal Gdk.Color backgroundColor;
+            /// <summary>
+            /// Foreground colour for normal text rendering
+            /// </summary>
+            internal Gdk.Color foregroundColor;
+        }
+
+        /// <summary>
+        /// Dictionary for looking up the rendering attributes for each column
+        /// </summary>
+        private Dictionary<int, ColRenderAttributes> colAttributes = new Dictionary<int, ColRenderAttributes>();
 
         /// <summary>
         /// Is used as a property editor
@@ -243,6 +267,25 @@ namespace UserInterface.Views
             {
                 this.defaultNumericFormat = value;
             }
+        }
+
+        /// <summary>
+        /// Marks the cell as readonly.
+        /// </summary>
+        /// <param name="gridCell">The grid cell to change</param>
+        internal void SetReadOnly(GridCell gridCell)
+        {
+            CellRendererText renderer = Gridview.Columns[gridCell.ColumnIndex].CellRenderers[gridCell.RowIndex] as CellRendererText;
+            if (renderer != null)
+                renderer.Editable = false;
+        }
+
+        /// <summary>
+        /// Changes the cell background colour
+        /// </summary>
+        /// <param name="gridCell">The grid cell to change</param>
+        internal void SetBackgroundColour(GridCell gridCell, Color colour)
+        {
         }
 
         /// <summary>
@@ -391,10 +434,6 @@ namespace UserInterface.Views
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
-
-            intellisense = new IntellisenseView();
-            intellisense.ContextItemsNeeded += ContextItemsNeeded;
-            intellisense.ItemSelected += InsertCompletionText;
         }
 
         /// <summary>
@@ -414,18 +453,20 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Inserts the currently selected text in the intellisense popup into the active grid cell, puts the cell in edit mode, then hides the intellisense popup.
+        /// Inserts text into the current cell at the cursor position.
         /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void InsertCompletionText(object sender, IntellisenseItemSelectedArgs e)
+        /// <param name="text">Text to be inserted.</param>
+        public void InsertText(string text)
         {
             try
             {
-                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation + 1);
-                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation + 1);
+                if (GetCurrentCell == null)
+                    return;
 
-                GetCurrentCell.Value = beforeCaret + e.ItemSelected + afterCaret;
+                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
+                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
+
+                GetCurrentCell.Value = beforeCaret + text + afterCaret;
                 Gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
                 (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
                 while (GLib.MainContext.Iteration())
@@ -435,7 +476,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                var mainView = GetMainViewReference(this);
+                MainView mainView = GetMainViewReference(this);
                 if (mainView != null)
                     mainView.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
             }
@@ -504,6 +545,7 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
+            colAttributes.Clear();
             while (Gridview.Columns.Length > 0)
             {
                 TreeViewColumn col = Gridview.GetColumn(0);
@@ -531,7 +573,14 @@ namespace UserInterface.Views
                     }
                     render.Destroy();
                 }
-                Gridview.RemoveColumn(Gridview.GetColumn(0));
+                Widget w = col.Widget;
+                while (!(w is Button || w == null))
+                {
+                    w = w.Parent;
+                }
+                if (w != null)
+                    w.ButtonPressEvent -= HeaderClicked;
+                Gridview.RemoveColumn(col);
             }
             while (FixedColview.Columns.Length > 0)
             {
@@ -545,7 +594,14 @@ namespace UserInterface.Views
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
-                FixedColview.RemoveColumn(FixedColview.GetColumn(0));
+                Widget w = col.Widget;
+                while (!(w is Button || w == null))
+                {
+                    w = w.Parent;
+                }
+                if (w != null)
+                    w.ButtonPressEvent -= HeaderClicked;
+                FixedColview.RemoveColumn(col);
             }
         }
 
@@ -602,7 +658,7 @@ namespace UserInterface.Views
                                 }
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                     }
                     else
                     {
@@ -629,7 +685,7 @@ namespace UserInterface.Views
                                 }
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                     }
 
                     EndEdit();
@@ -654,7 +710,42 @@ namespace UserInterface.Views
             }
             else if ((char)Gdk.Keyval.ToUnicode(args.Event.KeyValue) == '.')
             {
-                ShowCompletionWindow();
+                if (ContextItemsNeeded == null)
+                    return;
+
+                NeedContextItemsArgs e = new NeedContextItemsArgs
+                {
+                    Coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1)
+                };
+
+                if (editControl is Entry)
+                {
+                    Entry editable = editControl as Entry;
+                    e.Code = editable.Text;
+                    e.Offset = editable.Position;
+
+                    // The cursor position must be calculated before we insert the period.
+                    caretLocation = editable.Position;
+
+                    // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
+                    // before the period is inserted by the Gtk event handler. Therefore, we insert it manually now, and stop
+                    // this signal from propagating further.
+                    //editable.Text += ".";
+                    editable.InsertText(".", ref caretLocation);
+                    editable.Position = caretLocation;
+                }
+                else
+                {
+                    // Last resort - if this code ever runs, something has gone wrong.
+                    e.Code = GetCurrentCell.Value.ToString();
+                    e.Offset = e.Code.Length;
+                    caretLocation = 0;
+                }
+                
+                ContextItemsNeeded.Invoke(this, e);
+
+                // Stop the Gtk signal from propagating any further.
+                args.RetVal = true;
             }
         }
 
@@ -669,44 +760,14 @@ namespace UserInterface.Views
             char c;
             return char.TryParse(keyName, out c) && !char.IsControl(c);
         }
-
+        
         /// <summary>
         /// Show the completion window
         /// </summary>
-        private void ShowCompletionWindow()
+        /// <param name="context">Contents of the cell, which is used to generate the completion options.</param>
+        private void ShowCompletionWindow(string context)
         {
-            if (ContextItemsNeeded == null)
-                return;
-            try
-            {
-                caretLocation = (editControl as Entry).Position;
-                string cellContents = (editControl as Entry).Text;
-                string contentsToCursor = cellContents.Substring(0, caretLocation);
-                string contentsAfterCursor = cellContents.Substring(caretLocation);
-                string node = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
 
-                intellisense.ContextItemsNeeded += this.ContextItemsNeeded;
-                if (!intellisense.GenerateAutoCompletionOptions(node))
-                    return;
-
-                GetCurrentCell.Value = contentsToCursor + "." + contentsAfterCursor;
-                Gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Gridview.Columns[GetCurrentCell.ColumnIndex], true);
-                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
-
-                // Get the coordinates of the cell 1 row beneath the current one - we don't want the popup to cover the cell we're working on
-                Tuple<int, int> coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1);
-                intellisense.MainWindow = MainWidget.Toplevel as Window;
-                intellisense.SmartShowAtCoordinates(coordinates.Item1, coordinates.Item2);
-
-                while (Gtk.Application.EventsPending())
-                    Gtk.Application.RunIteration();
-            }
-            catch (Exception e)
-            {
-                var mainView = GetMainViewReference(this);
-                if (mainView != null)
-                    mainView.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
-            }
         }
 
         /// <summary>
@@ -878,13 +939,17 @@ namespace UserInterface.Views
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
+                ColRenderAttributes attrib = new ColRenderAttributes();
+                attrib.foregroundColor = Gridview.Style.Foreground(StateType.Normal);
+                attrib.backgroundColor = Gridview.Style.Base(StateType.Normal);
+                colAttributes.Add(i, attrib);
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
                 toggleRender.Visible = false;
                 toggleRender.Toggled += ToggleRender_Toggled;
                 toggleRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 0.5f; // Left of center align, as appropriate
-                CellRendererCombo comboRender = new Gtk.CellRendererCombo();
+                CellRendererCombo comboRender = new CellRendererDropDown();
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
@@ -984,7 +1049,7 @@ namespace UserInterface.Views
                 Gridview.Selection.UnselectAll();
                 int colNo = GetColNoFromButton(sender as Button);
 
-                if (e.Event.State == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
+                if ((e.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
                 {
                     int closestColumn = activeCol.Aggregate((a, b) => Math.Abs(a - colNo) < Math.Abs(b - colNo) ? a : b);
                     int lowerBound = Math.Min(colNo, closestColumn);
@@ -995,7 +1060,7 @@ namespace UserInterface.Views
                             activeCol.Add(columnIndex);
                     }
                 }
-                else if (e.Event.State == Gdk.ModifierType.ControlMask)
+                else if ((e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
                 {
                     if (activeCol.Contains(colNo))
                         activeCol.Remove(colNo);
@@ -1327,7 +1392,7 @@ namespace UserInterface.Views
             TreePath path = model.GetPath(iter);
             TreeView view = col.TreeView as TreeView;
             int rowNo = path.Indices[0];
-            int colNo;
+            int colNo = -1;
             string text = string.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
@@ -1398,8 +1463,26 @@ namespace UserInterface.Views
                     text = AsString(dataVal);
                 }
             }
+            // We have a "text" cell. Set the text, and other properties for the cell
             cell.Visible = true;
-            (cell as CellRendererText).Text = text;
+            CellRendererText textRenderer = cell as CellRendererText;
+            textRenderer.Text = text;
+            if (!activeCol.Contains(colNo))
+            {
+                if (categoryRows.Contains(rowNo))
+                {
+                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                    Color bgColor = Color.LightSteelBlue;
+                    textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
+                    textRenderer.Editable = false;
+                }
+                else
+                {
+                    textRenderer.ForegroundGdk = ColForegroundColor(colNo);
+                    textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
+                }
+            }
         }
 
         /// <summary>
@@ -1439,6 +1522,105 @@ namespace UserInterface.Views
         {
             return new GridColumn(this, columnIndex);
         }
+
+        /// <summary>
+        /// Indicates that a row should be treated as a separator line
+        /// </summary>
+        /// <param name="row">the row number</param>
+        /// <param name="isSep">added as a separator if true; removed as a separator if false</param>
+        public void SetRowAsSeparator(int row, bool isSep = true)
+        {
+            bool present = categoryRows.Contains(row);
+            if (isSep && !present)
+                categoryRows.Add(row);
+            else if (!isSep && present)
+                categoryRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Sets whether a column is readonly
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="isReadonly">true if readonly</param>
+        public void SetColAsReadonly(int col, bool isReadonly)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.readOnly = isReadonly;
+            }
+        }
+
+        /// <summary>
+        /// Returns whether a column is set as readonly
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>true if readonly</returns>
+        public bool ColIsReadonly(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.readOnly;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Sets the normal foreground colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="color">Gdk.Color to be used</param>
+        public void SetColForegroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.foregroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal foreground colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>Gdk.Color to be used as the foreground colour</returns>
+        public Gdk.Color ColForegroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.foregroundColor;
+            else
+                return Gridview.Style.Foreground(StateType.Normal);
+        }
+
+        /// <summary>
+        /// Sets the normal background colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <param name="color">Gdk.Color to be used</param>
+        public void SetColBackgroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.backgroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal background colour of a column
+        /// </summary>
+        /// <param name="col">the column number</param>
+        /// <returns>Gdk.Color to be used as the background colour</returns>
+        public Gdk.Color ColBackgroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.backgroundColor;
+            else
+                return Gridview.Style.Base(StateType.Normal);
+        }
+
 
         /// <summary>
         /// Add a separator (on context menu) on the series grid.
@@ -1835,7 +2017,9 @@ namespace UserInterface.Views
         {
             (e.Editable as ComboBox).Changed += (o, _) =>
             {
-                UpdateCellText(GetCurrentCell, (o as ComboBox).ActiveText);
+                IGridCell currentCell = GetCurrentCell;
+                if (currentCell != null)
+                    UpdateCellText(currentCell, (o as ComboBox).ActiveText);
             };
         }
 
@@ -1996,28 +2180,28 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Called when the window is resized to resize all grid controls.
+        /// Called to handle any needed changes when the model in changed
         /// </summary>
-        public void ResizeControls()
+        public void UpdateControls()
         {
             if (gridmodel.NColumns == 0)
                 return;
 
             if (gridmodel.IterNChildren() == 0)
-            {
-                Gridview.Visible = false;
-            }
+                Gridview.Sensitive = false;
             else
-                Gridview.Visible = true;
+                Gridview.Sensitive = true;
+
+            Gridview.Visible = true;
         }
 
-        /// <summary>
-        /// Trap any grid data errors, usually as a result of cell values not being
-        /// in combo boxes. We'll handle these elsewhere.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnDataError(object sender, /* TBI DataGridViewDataError */ EventArgs e)
+    /// <summary>
+    /// Trap any grid data errors, usually as a result of cell values not being
+    /// in combo boxes. We'll handle these elsewhere.
+    /// </summary>
+    /// <param name="sender">The sender of the event</param>
+    /// <param name="e">The event arguments</param>
+    private void OnDataError(object sender, /* TBI DataGridViewDataError */ EventArgs e)
         {
             // TBI e.Cancel = true;
         }
@@ -2101,10 +2285,21 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnPasteFromClipboard(object sender, EventArgs e)
         {
+            try
             {
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                int rowIndex = popupCell.RowIndex;
-                int columnIndex = popupCell.ColumnIndex;
+                int rowIndex, columnIndex;
+                if (popupCell == null)
+                {
+                    rowIndex = GetCurrentCell.RowIndex;
+                    columnIndex = GetCurrentCell.ColumnIndex;
+                }
+                else
+                {
+                    rowIndex = popupCell.RowIndex;
+                    columnIndex = popupCell.ColumnIndex;
+                }
+                
                 if (this.userEditingCell && this.editControl != null)
                 {
                     (editControl as Entry).PasteClipboard();
@@ -2144,7 +2339,7 @@ namespace UserInterface.Views
                                                     // value into the cell.
                                                     if (words[i] == string.Empty)
                                                     {
-                                                        cell.Value = null;
+                                                        cell.Value = DBNull.Value;
                                                     }
                                                     else
                                                     {
@@ -2183,6 +2378,12 @@ namespace UserInterface.Views
                     Gridview.QueueDraw();
                     this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                 }
+            }
+            catch (Exception err)
+            {
+                MainView mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
             }
         }
 
@@ -2266,16 +2467,6 @@ namespace UserInterface.Views
                 Gridview.QueueDraw();
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
-        }
-
-        /// <summary>
-        /// Handle the resize event
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void GridView_Resize(object sender, EventArgs e)
-        {
-            ResizeControls();
         }
 
         /// <summary>
@@ -2433,4 +2624,46 @@ namespace UserInterface.Views
             window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
         }
     }
+
+    /// <summary>
+    /// This is an attempt to extend the default CellRendererComob widget to allow
+    /// a drop-down arrow to be visible at all times, rather than just when editing.
+    /// </summary>
+    public class CellRendererDropDown : CellRendererCombo
+    {
+        /// <summary>
+        /// Render the cell in the window
+        /// </summary>
+        /// <param name="window">The owning window</param>
+        /// <param name="widget">The widget</param>
+        /// <param name="background_area">Background area</param>
+        /// <param name="cell_area">The cell area</param>
+        /// <param name="expose_area">Expose the area</param>
+        /// <param name="flags">Render flags</param>
+        protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
+        {
+            base.Render(window, widget, background_area, cell_area, expose_area, flags);
+            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, "", ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
+        }
+
+        protected override void OnEditingStarted(CellEditable editable, string path)
+        {
+            base.OnEditingStarted(editable, path);
+            editable.EditingDone += Editable_EditingDone;
+        }
+
+        private void Editable_EditingDone(object sender, EventArgs e)
+        {
+            if (sender is CellEditable)
+            {
+                (sender as CellEditable).EditingDone -= Editable_EditingDone;
+                if (sender is Widget && (sender as Widget).Parent is TreeView)
+                {
+                    TreeView view = (sender as Widget).Parent as TreeView;
+                    view.GrabFocus();
+                }
+            }
+        }
+    }
+
 }

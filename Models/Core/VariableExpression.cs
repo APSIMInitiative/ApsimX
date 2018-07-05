@@ -172,5 +172,44 @@ namespace Models.Core
             fn.Variables = variablesToFill;
         }
 
+        /// <summary>
+        /// Gets the associated display type for the related property.
+        /// </summary>
+        public override DisplayAttribute Display { get { return null; } }
+
+        /// <summary>
+        /// Gets the data type of the property
+        /// </summary>
+        public override Type DataType
+        {
+            get
+            {
+                return Object.GetType();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
+        /// </summary>
+        public override object ValueWithArrayHandling
+        {
+            get
+            {
+                return Object;
+            }
+        }
+
+
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return false; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType) { return null; }
     }
 }

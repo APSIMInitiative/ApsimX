@@ -31,6 +31,7 @@ namespace Models.Core
             this.IsHidden = false;
             this.Children = new List<Model>();
             IncludeInDocumentation = true;
+            Enabled = true;
         }
 
         /// <summary>
@@ -60,6 +61,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.SoluteManager))]
         [XmlElement(typeof(Models.AgPasture.Sward))]
         [XmlElement(typeof(Models.AgPasture.PastureSpecies))]
+        [XmlElement(typeof(Models.AgPasture.PastureAboveGroundOrgan))]
+        [XmlElement(typeof(Models.AgPasture.GenericTissue))]
         [XmlElement(typeof(Clock))]
         [XmlElement(typeof(DataStore))]
         [XmlElement(typeof(Fertiliser))]
@@ -330,11 +333,12 @@ namespace Models.Core
         [XmlElement(typeof(Models.CLEM.Resources.WaterStore))]
         [XmlElement(typeof(Models.CLEM.Resources.WaterType))]
         [XmlElement(typeof(Models.CLEM.ZoneCLEM))]
-		[XmlElement(typeof(Models.Lifecycle.Lifecycle))]
-        [XmlElement(typeof(Models.Lifecycle.Lifestage))]
-        [XmlElement(typeof(Models.Lifecycle.LifestageProcess))]
-        [XmlElement(typeof(Models.Lifecycle.LifestageReproductionProcess))]
-		[XmlElement(typeof(Map))]
+		[XmlElement(typeof(Models.LifeCycle.LifeCycle))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStage))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStageProcess))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStageReproductionProcess))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStageImmigrationProcess))]
+        [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
         /// <summary>
@@ -363,6 +367,11 @@ namespace Models.Core
                 child.ClearChildLists();
             Children.Clear();
         }
+
+        /// <summary>
+        /// Gets or sets whether the model is enabled
+        /// </summary>
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Return the current APSIM version number.

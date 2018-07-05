@@ -161,6 +161,7 @@
     <Compile Include="Core\ApsimFile\Reader.cs" />
     <Compile Include="Core\ApsimFile\Writer.cs" />
     <Compile Include="Core\Attributes\BriefLabelAttribute.cs" />
+    <Compile Include="Core\Attributes\Separator.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\HelpUriAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
+    <Compile Include="Lifecycle\LifestageImmigrationProcess.cs" />
     <Compile Include="Plant\Functions\AccumulateByDate.cs" />
     <Compile Include="Plant\Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Plant\Functions\TrackerFunction.cs" />
@@ -467,10 +469,10 @@
     <Compile Include="Soils\SoilOrganicMatter.cs" />
     <Compile Include="Soils\SoilTemperature.cs" />
     <Compile Include="Soils\SoilTemperature2.cs" />
-    <Compile Include="Soils\Swim.cs" />
-    <Compile Include="Soils\SwimSoluteParameters.cs" />
-    <Compile Include="Soils\SwimSubsurfaceDrain.cs" />
-    <Compile Include="Soils\SwimWaterTable.cs" />
+    <Compile Include="Soils\SWIM\Swim.cs" />
+    <Compile Include="Soils\SWIM\SwimSoluteParameters.cs" />
+    <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />
+    <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
@@ -487,6 +489,7 @@
     <Compile Include="Core\IPlant.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
+    <Compile Include="Utilities\R.cs" />
     <Compile Include="WaterModel\CNReductionForCover.cs" />
     <Compile Include="WaterModel\CNReductionForTillage.cs" />
     <Compile Include="WaterModel\Conversions.cs" />
@@ -675,6 +678,7 @@
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />
+    <None Include="Resources\Plantain.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>

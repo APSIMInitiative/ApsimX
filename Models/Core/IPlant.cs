@@ -24,6 +24,9 @@ namespace Models.Core
         /// <summary>Gets a list of cultivar names</summary>
         string[] CultivarNames { get; }
 
+        /// <summary>Get above ground biomass</summary>
+        PMF.Biomass AboveGround { get; }
+
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
@@ -41,5 +44,11 @@ namespace Models.Core
 
         /// <summary>End the crop</summary>
         void EndCrop();
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        void BiomassRemovalComplete(double fractionRemoved);
     }
 }

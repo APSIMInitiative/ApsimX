@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.Core;
-using Models.PMF.Functions;
-
-namespace Models.Lifecycle
+﻿// -----------------------------------------------------------------------
+// <copyright file="LifeStageProcess.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace Models.LifeCycle
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using Models.PMF.Functions;
+
     /// <summary>
     /// # [Name]
     /// Specifies the type of lifestage process
@@ -31,8 +33,9 @@ namespace Models.Lifecycle
     /// <summary>
     /// The general description of a lifestage process. A Lifestage can contain a number of these.
     /// </summary>
-    interface ILifestageProcess 
+    interface ILifeStageProcess 
     {
+        void Process(LifeStage host);
         void ProcessCohort(Cohort cohortItem);
     }
 
@@ -42,23 +45,31 @@ namespace Models.Lifecycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Lifestage))]
-    public class LifestageProcess : Model, ILifestageProcess
+    [ValidParent(ParentType = typeof(LifeStage))]
+    public class LifeStageProcess : Model, ILifeStageProcess
     {
         /// <summary>
-        /// 
+        /// The process type of this Process
         /// </summary>
         [Description("Lifestage Process type")]
         public ProcessType ProcessAction { get; set; }
 
         /// <summary>
-        /// 
+        /// The name of the LifeStage to transfer cohorts to
         /// </summary>
         [Description("Transfer to Lifestage")]
         public string TransferTo { get; set; }
 
         [NonSerialized]
         private List<IFunction> FunctionList;
+
+        /// <summary>
+        /// Process this lifestage before cohorts are processed
+        /// </summary>
+        public void Process(LifeStage host)
+        {
+
+        }
 
         /// <summary>
         /// Applies each function in this Lifestage process to a cohort item that is owned by a Lifestage
@@ -79,7 +90,7 @@ namespace Models.Lifecycle
                     if (numberToMove > 0)
                     {
                         //transfer magic here
-                        Lifestage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
+                        LifeStage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
                         cohortItem.OwningStage.PromoteGraduates(cohortItem, destStage, numberToMove);
                     }
                 }
@@ -88,7 +99,7 @@ namespace Models.Lifecycle
                     //kill some creatures
                     double mortality = cohortItem.Count - cohortItem.Count * (1 - func.Value());
                     cohortItem.Count = cohortItem.Count * (1 - func.Value());
-                    cohortItem.Mortality = mortality;
+                    cohortItem.Mortality += mortality;      // can be multiple mortality events in a lifestage step
                 }
             }
         }
@@ -96,8 +107,8 @@ namespace Models.Lifecycle
         /// <summary>
         /// At the start of the simulation get the functions required
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event parameters</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {

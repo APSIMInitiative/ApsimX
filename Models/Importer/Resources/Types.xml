@@ -511,6 +511,14 @@
       <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
+  <Type name="soybean">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Soybean</class>
+      <IsCrop>Yes</IsCrop>
+    </MetaData>
+  </Type>
+
   <Type name="floor">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
@@ -771,6 +779,13 @@
   <Type name="orobanche">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
+  <Type name="plantain">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Plantain</class>
+      <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
   <Type name="rice">

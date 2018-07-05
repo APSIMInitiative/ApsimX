@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 28; } }
+        public static int LastestVersion { get { return 31; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -835,5 +835,95 @@ namespace Models.Core.ApsimFile
                 ConverterUtilities.SearchReplaceManagerCode(manager, "(ICrop)", "(IPlant)");
             }
         }
+
+
+        /// <summary>
+        /// Upgrades to version 29. Change AgPasture to have leaves, stems, stolons included as child model nodes
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion29(XmlNode node, string fileName)
+        {
+            foreach (XmlNode pasture in XmlUtilities.FindAllRecursivelyByType(node, "PastureSpecies"))
+            {
+                XmlNode leaves = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(leaves, "Name", "Leaves");
+                XmlNode genericTissue1 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                XmlNode genericTissue2 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                XmlNode genericTissue3 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                XmlNode genericTissue4 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+
+                XmlNode stems = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(stems, "Name", "Stems");
+                genericTissue1 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                genericTissue2 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                genericTissue3 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                genericTissue4 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+
+                XmlNode stolons = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(stolons, "Name", "Stolons");
+                genericTissue1 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                genericTissue2 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                genericTissue3 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                genericTissue4 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 30. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion30(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                string pattern = @"DisplayType *= *DisplayAttribute\.DisplayTypeEnum\.";
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, "Type=DisplayType.", null);
+            }
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 31. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion31(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow", ".SoilWater.Flow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flux", ".SoilWater.Flux", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception", null);
+            }
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow", ".SoilWater.Flow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flux", ".SoilWater.Flux");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception");
+            }
+        }
+
     }
 }

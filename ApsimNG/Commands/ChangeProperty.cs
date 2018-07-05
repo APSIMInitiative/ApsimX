@@ -156,7 +156,7 @@ namespace UserInterface.Commands
                     }
                     else
                     {
-                        this.wasModified = ReflectionUtilities.SetValueOfProperty(this.Name, this.Obj, this.NewValue);
+                        this.wasModified = ReflectionUtilities.SetValueOfFieldOrProperty(this.Name, this.Obj, this.NewValue);
                     }
                 }
                 catch (Exception e)

@@ -130,9 +130,9 @@ namespace UserInterface.Interfaces
         bool RowIsEmpty(int rowIndex);
 
         /// <summary>
-        /// Resizes controls on the GridView.
+        /// Updates controls on the GridView.
         /// </summary>
-        void ResizeControls();
+        void UpdateControls();
 
         /// <summary>
         /// End the user editing the cell.
@@ -145,5 +145,18 @@ namespace UserInterface.Interfaces
 
         /// <summary>Get screenshot of grid.</summary>
         Image GetScreenshot();
+
+        /// <summary>
+        /// Indicates that a row should be treated as a separator line
+        /// </summary>
+        /// <param name="row">the row number</param>
+        /// <param name="isSep">added as a separator if true; removed as a separator if false</param>
+        void SetRowAsSeparator(int row, bool isSep = true);
+
+        /// <summary>
+        /// Inserts text into the current cell at the cursor position.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        void InsertText(string text);
     }
 }

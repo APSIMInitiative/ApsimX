@@ -147,6 +147,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// The total live herbage used as input in TGrazingInputs
+        /// Units: the same as the forage object
         /// </summary>
         public double TotalLive
         {
@@ -158,6 +159,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// The total dead herbage used as input in TGrazingInputs
+        /// Units: the same as the forage object
         /// </summary>
         public double TotalDead
         {
@@ -897,12 +899,12 @@ namespace Models.GrazPlan
         bool FUseCohorts;                       // uses new cohorts array type
         private ForageList FForages;
         private string FForageHostName;         // host crop, pasture component name
-        private Object FForageObj;              // the forage object (crop, pasture)
         private int FHostID;                    // plant/pasture comp
         private string FPaddockOwnerName;       // owning paddock FQN
         private int FSetterID;                  // setting property ID (or published event ID)
         private int FDriverID;                  // driving property ID
         private PaddockInfo FOwningPaddock;     // ptr to the paddock object in the model
+
         /// <summary>
         /// Construct the forage provider
         /// </summary>
@@ -912,6 +914,11 @@ namespace Models.GrazPlan
             OwningPaddock = null;
             FUseCohorts = false;
         }
+
+        /// <summary>
+        /// The total calculated green dm for the paddock
+        /// </summary>
+        public double PastureGreenDM { get; set; }
 
         /// <summary>
         /// Use forage cohorts
@@ -944,7 +951,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The crop, pasture component
         /// </summary>
-        public Object ForageObj { get { return FForageObj; } set { FForageObj = value; } }
+        public Object ForageObj { get; set; }
 
         /// <summary>
         /// Update the forage data for this crop/agpasture object
@@ -1031,6 +1038,14 @@ namespace Models.GrazPlan
             double meanDMD = 0;
             double dmd;
 
+            // calculate the green available based on the total green in this paddock
+            double greenPropn = 0;
+            // ** should really take into account the height ratio here e.g. Params.HeightRatio
+            if (PastureGreenDM > GrazType.Ungrazeable)
+            {
+                greenPropn = 1.0 - GrazType.Ungrazeable / PastureGreenDM;
+            }
+
             // calculate the total live and dead biomass
             foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
             {
@@ -1038,24 +1053,22 @@ namespace Models.GrazPlan
                 {
                     if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
                     {
-                        result.TotalGreen += biomass.Live.Wt;   // g/m^2
+                        result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
                         result.TotalDead += biomass.Dead.Wt;
 
-                        dmd = ((biomass.Live.DMDOfStructural * biomass.Live.StructuralWt) + (1 * biomass.Live.StorageWt) + (1 * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
+                        dmd = ((biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
                         dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
                         totalDMD += dmd;
-                        totalN += biomass.Live.N + biomass.Dead.N;
+                        totalN += (greenPropn * biomass.Live.N) + biomass.Dead.N;
                     }
                 }
             }
 
-            double totalDM = result.TotalGreen + result.TotalDead;
-
             // TODO: Improve this routine
-
-            if (totalDM > 0)
+            double availDM = result.TotalGreen + result.TotalDead;
+            if (availDM > 0)
             {
-                meanDMD = totalDMD / totalDM; //calc the average dmd for the plant
+                meanDMD = totalDMD / (result.TotalGreen + result.TotalDead); //calc the average dmd for the plant
 
                 //get the dmd distribution
                 double[] dDMDPropns = new double[GrazType.DigClassNo + 1];
@@ -1065,7 +1078,7 @@ namespace Models.GrazPlan
 
                 for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
                 {
-                    result.Herbage[idx].Biomass = dDMDPropns[idx] * totalDM;
+                    result.Herbage[idx].Biomass = dDMDPropns[idx] * availDM;
                     result.Herbage[idx].CrudeProtein = dDMDPropns[idx] * totalN * GrazType.N2Protein;
                     result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
                     result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
@@ -1075,13 +1088,62 @@ namespace Models.GrazPlan
                     result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
                 }
 
-                result.LegumePropn = 0.0;   // TODO: set from Plant model value
+                result.LegumePropn = ((IPlant)forageObj).Legumosity;  
                 result.SelectFactor = 0;    // TODO: set from Plant model value
 
-                // TODO: Store the seed pools
+                // TODO: Store any seed pools
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// The herbage is removed from the plant/agpasture
+        /// </summary>
+        public void RemoveHerbageFromPlant()
+        {
+            string chemType = string.Empty;
+            int forageIdx = 0;
+
+            ForageInfo forage = this.ForageByIndex(forageIdx);
+            while (forage != null)
+            {
+                double area = forage.InPaddock.fArea;
+                GrazType.TGrazingOutputs removed = forage.RemovalKG;
+
+                // total the amount removed kg/ha
+                double totalRemoved = 0.0;
+                for (int i = 0; i < removed.Herbage.Length; i++)
+                    totalRemoved += removed.Herbage[i];
+                double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead));
+
+                // calculations of proportions each organ of the total plant removed (in the native units)
+                double totalDM = 0;
+                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                {
+                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    {
+                        totalDM += organ.Live.Wt + organ.Dead.Wt;
+                    }
+                }
+
+                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                {
+                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    {
+                        double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
+                        double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
+                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
+                        removal.FractionDeadToRemove = prpnToRemove;
+                        removal.FractionLiveToRemove = prpnToRemove;
+                        organ.RemoveBiomass("Graze", removal);
+                        ((IPlant)this.ForageObj).BiomassRemovalComplete(prpnToRemove);
+                    }
+                }
+                
+                forageIdx++;
+                forage = this.ForageByIndex(forageIdx);
+            }
         }
 
         /// <summary>

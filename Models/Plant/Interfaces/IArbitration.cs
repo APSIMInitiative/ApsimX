@@ -60,6 +60,13 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Gets the total biomass</summary>
         Biomass Total { get; }
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        double MaintenanceRespiration { get; }
+
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        void RemoveMaintenanceRespiration(double respiration);
+
     }
 
 
@@ -79,6 +86,10 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the metabolic.</summary>
         /// <value>The metabolic.</value>
         public double Metabolic { get; set; }
+
+        /// <summary>Gets the total amount.</summary>
+        public double Total
+        { get { return Structural + Metabolic + Storage; } }
 
         internal void Clear()
         {
@@ -105,6 +116,10 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the retranslocation.</summary>
         /// <value>The retranslocation.</value>
         public double Retranslocation { get; set; }
+
+        /// <summary>Gets the total supply.</summary>
+        public double Total
+        { get { return Fixation + Reallocation + Retranslocation + Uptake; } }
 
         internal void Clear()
         {

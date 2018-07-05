@@ -105,6 +105,14 @@ namespace UserInterface.Presenters
             }
         }
 
+        private string GetPathToNode(IModel model)
+        {
+            if (model is Simulations)
+            {
+                return model.Name;
+            }
+            return GetPathToNode(model.Parent) + "." + model.Name;
+        }
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>
@@ -994,7 +1002,13 @@ namespace UserInterface.Presenters
                     description.Children.Add(this.GetNodeDescription(child));
                 }
             }
+            description.Strikethrough = !model.Enabled;
             description.IncludeInDocumentation = model.IncludeInDocumentation;
+            /*
+            // Set the colour here
+            System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;
+            description.Colour = colour;
+            */
             return description;
         }
 

@@ -333,7 +333,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the property
         /// </summary>
-        public Type DataType
+        public override Type DataType
         {
             get
             {
@@ -415,7 +415,6 @@ namespace Models.Core
             }
         }
 
-
         /// <summary>
         /// Special case where trying to get a property of an array(IList). In this case
         /// we want to return the property value for all items in the array.
@@ -470,13 +469,15 @@ namespace Models.Core
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private string AsString(object value)
+        internal static string AsString(object value)
         {
             if (value == null)
                 return string.Empty;
             Type type = value.GetType();
             if (type == typeof(double))
                 return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            else if (value is Enum)
+                return GetEnumDescription(value as Enum);
             else
                 return value.ToString();
         }
@@ -484,7 +485,7 @@ namespace Models.Core
         /// <summary>
         /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
         /// </summary>
-        public object ValueWithArrayHandling
+        public override object ValueWithArrayHandling
         {
             get
             {
@@ -512,7 +513,7 @@ namespace Models.Core
 
                         Array arr2d = arr.GetValue(j) as Array;
                         if (arr2d == null)
-                           stringValue += AsString(arr.GetValue(j));
+                            stringValue += AsString(arr.GetValue(j));
                         else
                         {
                             for (int k = 0; k < arr2d.Length; k++)
@@ -531,20 +532,13 @@ namespace Models.Core
 
                 return value;
             }
-
-            set
-            {
-                if (value is string)
-                {
-                    this.SetFromString(value as string);
-                }
-                else
-                {
-                    this.Value = value;   
-                }
-            }
         }
 
+        /// <summary>
+        /// Returns true if the variable is writable
+        /// </summary>
+        public override bool Writable { get { return property.CanRead && property.CanWrite; } }
+    
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
         /// </summary>
@@ -619,19 +613,11 @@ namespace Models.Core
         /// <summary>
         /// Gets the associated display type for the related property.
         /// </summary>
-        public DisplayAttribute.DisplayTypeEnum DisplayType
+        public override DisplayAttribute Display
         {
             get
             {
-                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                if (displayAttribute != null)
-                {
-                    return displayAttribute.DisplayType;
-                }
-                else
-                {
-                    return DisplayAttribute.DisplayTypeEnum.None;
-                }
+                return ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
             }
         }
 
@@ -692,6 +678,54 @@ namespace Models.Core
                     this.Value = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType)
+        {
+            return ReflectionUtilities.GetAttribute(this.property, attributeType, false);
+        }
+
+        /// <summary>
+        /// Convert the specified enum to a list of strings.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string[] EnumToStrings(object obj)
+        {
+            List<string> items = new List<string>();
+            foreach (object e in obj.GetType().GetEnumValues())
+            {
+                Enum value = e as Enum;
+                if (value != null)
+                    items.Add(GetEnumDescription(value));
+                else
+                    items.Add(e.ToString());
+            }
+            return items.ToArray();
+        }
+
+        /// <summary>
+        /// Parse the specified object to an enum. 
+        /// Similar to Enum.Parse(), but this will check against the enum's description attribute.
+        /// </summary>
+        /// <param name="obj">Object to parse. Should probably be a string.</param>
+        /// <param name="t">Enum in which we will try to find a matching member.</param>
+        /// <returns>Enum member.</returns>
+        public static Enum ParseEnum(Type t, object obj)
+        {
+            FieldInfo[] fields = t.GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                DescriptionAttribute description = field.GetCustomAttribute(typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (description != null && description.ToString() == obj.ToString())
+                    return field.GetValue(null) as Enum;
+            }
+            return Enum.Parse(t, obj.ToString()) as Enum;
         }
     }
 }

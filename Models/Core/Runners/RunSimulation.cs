@@ -98,6 +98,13 @@
                 else
                     events = new Events(simulationToRun);
 
+                // Remove disabled models from simulation
+                foreach (IModel model in Apsim.ChildrenRecursively(simulationToRun))
+                {
+                    if (!model.Enabled)
+                        model.Parent.Children.Remove(model as Model);
+                }
+
                 // Get an event and links service
                 if (simulationEngine != null)
                     links = simulationEngine.Links;

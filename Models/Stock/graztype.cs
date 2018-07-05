@@ -58,9 +58,14 @@ namespace Models.GrazPlan
         public const int MaxPlantSpp = 80;
 
         /// <summary>
-        /// Maximum soil layers
+        /// The ungrazeable amount of green in a paddock
         /// </summary>
-        public const int MaxSoilLayers = 50;
+        public const double Ungrazeable = 40.0;  // g/m^2 
+
+    /// <summary>
+    /// Maximum soil layers
+    /// </summary>
+    public const int MaxSoilLayers = 50;
 #pragma warning disable 1591 //missing xml comment
         public const int stSEEDL = 1; public const int ptLEAF = 1; public const int SOFT = 1; public const int EFFR = 1;
         public const int stESTAB = 2; public const int ptSTEM = 2; public const int HARD = 2; public const int OLDR = 2;

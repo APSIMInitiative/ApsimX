@@ -34,6 +34,11 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>
+        /// The intellisense object.
+        /// </summary>
+        private IntellisensePresenter intellisense;
+
+        /// <summary>
         /// Attach model to view.
         /// </summary>
         /// <param name="model">The model object</param>
@@ -44,6 +49,17 @@ namespace UserInterface.Presenters
             this.operations = model as Operations;
             this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
+            this.intellisense = new IntellisensePresenter(view as ViewBase);
+            intellisense.ItemSelected += (sender, e) =>
+            {
+                if (e.TriggerWord == string.Empty)
+                    this.view.InsertAtCaret(e.ItemSelected);
+                else
+                {
+                    int position = this.view.Text.Substring(0, this.view.Offset).LastIndexOf(e.TriggerWord);
+                    this.view.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
+                }
+            };
 
             this.PopulateEditorView();
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -59,6 +75,7 @@ namespace UserInterface.Presenters
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser -= this.OnTextHasChangedByUser;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            this.intellisense.Cleanup();
         }
 
         /// <summary>
@@ -71,7 +88,8 @@ namespace UserInterface.Presenters
             {
                 // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
                 string dateStr = DateUtilities.validateDateString(operation.Date);
-                st += dateStr + " " + operation.Action + Environment.NewLine;
+                string commentChar = operation.Enabled ? string.Empty : "// ";
+                st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
             }
 
             this.view.Text = st;
@@ -88,12 +106,22 @@ namespace UserInterface.Presenters
             List<Operation> operations = new List<Operation>();
             foreach (string line in this.view.Lines)
             {
-                int pos = line.IndexOf(' ');
+                string currentLine = line;
+                bool isComment = line.Trim().StartsWith("//");
+                if (isComment)
+                {
+                    int index = line.IndexOf("//");
+                    if (index >= 0)
+                        currentLine = currentLine.Remove(index, 2).Trim();
+                }
+                    
+                int pos = currentLine.IndexOf(' ');
                 if (pos != -1)
                 {
                     Operation operation = new Operation();
-                    operation.Date = DateUtilities.validateDateString(line.Substring(0, pos));
-                    operation.Action = line.Substring(pos + 1);
+                    operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
+                    operation.Action = currentLine.Substring(pos + 1);
+                    operation.Enabled = !isComment;
                     operations.Add(operation);
                 }
             }
@@ -109,7 +137,15 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(this.operations, e.ObjectName, true, true, false));
+            try
+            {
+                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>

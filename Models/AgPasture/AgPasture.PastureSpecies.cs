@@ -432,7 +432,7 @@ namespace Models.AgPasture
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
                     if (mySoilWaterUptake.Sum() > Epsilon)
-                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(zone.Water, -1.0);
+                        root.mySoil.SoilWater.RemoveWater(zone.Water);
                 }
             }
         }
@@ -1797,13 +1797,19 @@ namespace Models.AgPasture
         ////- Plant parts and state >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Holds info about state of leaves (DM and N).</summary>
-        internal PastureAboveGroundOrgan leaves;
+        [ChildLinkByName]
+        private PastureAboveGroundOrgan leaves = null;
 
         /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
-        internal PastureAboveGroundOrgan stems;
+        [ChildLinkByName]
+        private PastureAboveGroundOrgan stems = null;
 
+
+        // TODO: Currently STOCK will graze all stolons that it can see even though
+        // some will be on the ground and shouldn't be accessible to the animals.
         /// <summary>Holds info about state of stolons (DM and N).</summary>
-        internal PastureAboveGroundOrgan stolons;
+        [ChildLinkByName]
+        private PastureAboveGroundOrgan stolons = null;
 
         /// <summary>Holds a list of root organs, one for each zone where roots are growing.</summary>
         internal List<PastureBelowGroundOrgan> rootZones;
@@ -3166,6 +3172,20 @@ namespace Models.AgPasture
 
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+        /// <summary>Get above ground biomass</summary>
+        public Biomass AboveGround
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt = leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.StructuralN = leaves.NLive + leaves.NDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.DMDOfStructural = leaves.DigestibilityLive;
+                return mass;
+            }
+        }
+
+
         /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
         [Description("Dry matter weight available for harvesting")]
         [Units("kg/ha")]
@@ -3623,9 +3643,6 @@ namespace Models.AgPasture
             nLayers = mySoil.Thickness.Length;
 
             // set up the organs (use 4 or 2 tissues, the last is dead)
-            leaves = new PastureAboveGroundOrgan(this, 4);
-            stems = new PastureAboveGroundOrgan(this, 4);
-            stolons = new PastureAboveGroundOrgan(this, 4);
             rootZones = new List<PastureBelowGroundOrgan>();
             plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, 
                                                          myWaterAvailableMethod, myNitrogenAvailableMethod,
@@ -4785,9 +4802,9 @@ namespace Models.AgPasture
             // Update N remobilised in each organ
             if (senescedNRemobilised > Epsilon)
             {
-                leaves.Tissue[leaves.TissueCount - 1].DoRemobiliseN(fracRemobilised);
-                stems.Tissue[stems.TissueCount - 1].DoRemobiliseN(fracRemobilised);
-                stolons.Tissue[stolons.TissueCount - 1].DoRemobiliseN(fracRemobilised);
+                leaves.Tissue[leaves.Tissue.Length- 1].DoRemobiliseN(fracRemobilised);
+                stems.Tissue[stems.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
+                stolons.Tissue[stolons.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
                 plantZoneRoots.Tissue[plantZoneRoots.TissueCount - 1].DoRemobiliseN(fracRemobilised);
             }
         }
@@ -5267,8 +5284,15 @@ namespace Models.AgPasture
                 if (amountToRemove - HarvestableWt > -Epsilon)
                 {
                     // All existing DM is removed
+                    amountToRemove = HarvestableWt;
                     for (int i = 0; i < 5; i++)
-                        fracRemoving[i] = 1.0;
+                    {
+                        fracRemoving[0] = MathUtilities.Divide(leaves.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[1] = MathUtilities.Divide(stems.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[2] = MathUtilities.Divide(stolons.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[3] = MathUtilities.Divide(leaves.DMDeadHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[4] = MathUtilities.Divide(stems.DMDeadHarvestable, HarvestableWt, 0.0);
+                    }
                 }
                 else
                 {
@@ -5511,6 +5535,15 @@ namespace Models.AgPasture
                 stolons.Tissue[t].Namount *= fracRemaining;
                 //                stolons.Tissue[t].NRemobilisable *= fracRemaining;
             }
+        }
+
+        /// <summary>
+        /// Biomass has been removed from the plant by animals
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
+
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
