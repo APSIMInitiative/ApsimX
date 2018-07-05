@@ -320,7 +320,6 @@ namespace Models.Soils
         double water_table_conductance = 0;
 
         double[] init_psi;
-        double[] rhob;
         double[][] exco;
 
         int n;
@@ -444,12 +443,12 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        private double ersoil = 000001;
+        private double ersoil = 0.000001;
 
         /// <summary>
         /// 
         /// </summary>
-        private double ernode = 000001;
+        private double ernode = 0.000001;
 
         /// <summary>
         /// 
@@ -1305,7 +1304,7 @@ namespace Models.Soils
             {
                 summary.WriteMessage(this, String.Format("{0,6:F1} {1,6:F1}  {2,4:F3}  {3,5:F3}  {4,5:F3}  {5,5:F3}  {6,5:F3} {7,6:F2} {8,8:F2}",
                                            x[layer] * 10.0,
-                                           soil.Thickness[layer], rhob[layer], th[layer],
+                                           soil.Thickness[layer], soil.BD[layer], th[layer],
                                            soil.LL15[layer], soil.DUL[layer], soil.SAT[layer], soil.KS[layer],
                                            _psi[layer]));
 
@@ -2173,7 +2172,6 @@ namespace Models.Soils
             Array.Resize(ref k, newSize);
             Array.Resize(ref psid, newSize);
             Array.Resize(ref init_psi, newSize);
-            Array.Resize(ref rhob, newSize);
             Array.Resize(ref x, newSize);
             Array.Resize(ref dx, newSize);
 
