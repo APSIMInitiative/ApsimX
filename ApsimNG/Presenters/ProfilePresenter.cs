@@ -173,8 +173,6 @@ namespace UserInterface.Presenters
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             
-            this.view.ProfileGrid.ResizeControls();
-            this.view.PropertyGrid.ResizeControls();
             this.view.ShowView(true);
         }
 
@@ -283,7 +281,7 @@ namespace UserInterface.Presenters
                 }
 
                 string format = property.Format;
-                if (format == null)
+                if (format == null || format == string.Empty)
                 {
                     format = "N3";
                 }

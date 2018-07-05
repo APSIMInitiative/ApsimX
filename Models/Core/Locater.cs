@@ -189,7 +189,12 @@ namespace Models.Core
                     IModel localModel = relativeToModel.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
                     if (localModel == null)
                     {
-                        break;
+                        // Allow for the possibility that the first path element may point to
+                        // the starting parent model, rather than to a child within that model
+                        if ((i == 0) && relativeToModel.Name.Equals(namePathBits[i], compareType))
+                            continue;
+                        else
+                            break;
                     }
                     else
                     {

@@ -1028,7 +1028,7 @@ namespace UserInterface.Views
             FixedColview.EnableSearch = false;
             //// fixedcolview.SearchColumn = 0;
 
-            Gridview.Show();
+            UpdateControls();
 
             if (mainWindow != null)
                 mainWindow.Cursor = null;
@@ -2180,102 +2180,18 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Called when the window is resized to resize all grid controls.
+        /// Called to handle any needed changes when the model in changed
         /// </summary>
-        public void ResizeControls()
+        private void UpdateControls()
         {
-            if (gridmodel.NColumns == 0)
-                return;
-
-            if (gridmodel.IterNChildren() == 0)
+            if (gridmodel.NColumns > 0)
             {
-                Gridview.Sensitive = false;
+                if (gridmodel.IterNChildren() == 0)
+                    Gridview.Sensitive = false;
+                else
+                    Gridview.Sensitive = true;
             }
-            else
-                Gridview.Sensitive = true;
-        }
-
-        /// <summary>
-        /// Trap any grid data errors, usually as a result of cell values not being
-        /// in combo boxes. We'll handle these elsewhere.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnDataError(object sender, /* TBI DataGridViewDataError */ EventArgs e)
-        {
-            // TBI e.Cancel = true;
-        }
-
-        /// <summary>
-        /// User has clicked a cell. 
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnCellMouseDown(object sender, /* TBI DataGridViewCellMouse */ EventArgs e)
-        {
-            // Probably not needed in the Gtk implementation
-            /*
-            if (e.RowIndex == -1)
-            {
-                if (this.ColumnHeaderClicked != null)
-                {
-                    GridHeaderClickedArgs args = new GridHeaderClickedArgs();
-                    args.Column = this.GetColumn(e.ColumnIndex);
-                    args.RightClick = e.Button == System.Windows.Forms.MouseButtons.Right;
-                    this.ColumnHeaderClicked.Invoke(this, args);
-                }
-            }
-            else if (this.Grid[e.ColumnIndex, e.RowIndex] is Utility.ColorPickerCell)
-            {
-                ColorDialog dlg = new ColorDialog();
-
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    this.userEditingCell = true;
-                    this.valueBeforeEdit = this.Grid[e.ColumnIndex, e.RowIndex].Value;
-                    this.Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color.ToArgb();
-                }
-            }
-            */
-        }
-
-        /// <summary>
-        /// We need to trap the EditingControlShowing event so that we can tweak all combo box
-        /// cells to allow the user to edit the contents.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnEditingControlShowing(object sender, /* TBI DataGridViewEditingControlShowing */ EventArgs e)
-        {
-            // Probably not needed in the Gtk implementation
-            /* TBI
-            if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
-            {
-                DataGridViewComboBoxEditingControl combo = (DataGridViewComboBoxEditingControl)this.Grid.EditingControl;
-                combo.DropDownStyle = ComboBoxStyle.DropDown;
-            }
-            */
-        }
-
-        /// <summary>
-        /// If the cell being validated is a combo cell then always make sure the cell value 
-        /// is in the list of combo items.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnGridCellValidating(object sender, /* TBI DataGridViewCellValidating */ EventArgs e)
-        {
-            // Probably not needed in the Gtk implementation
-            /* 
-            if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
-            {
-                DataGridViewComboBoxEditingControl combo = (DataGridViewComboBoxEditingControl)this.Grid.EditingControl;
-                if (combo != null && !combo.Items.Contains(e.FormattedValue))
-                {
-                    combo.Items.Add(e.FormattedValue);
-                }
-            }
-            */
+            Gridview.Show();
         }
 
         /// <summary>
@@ -2467,16 +2383,6 @@ namespace UserInterface.Views
                 Gridview.QueueDraw();
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
-        }
-
-        /// <summary>
-        /// Handle the resize event
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void GridView_Resize(object sender, EventArgs e)
-        {
-            ResizeControls();
         }
 
         /// <summary>

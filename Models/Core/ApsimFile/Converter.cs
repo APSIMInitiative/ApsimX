@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 31; } }
+        public static int LastestVersion { get { return 32; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -896,12 +896,42 @@ namespace Models.Core.ApsimFile
             }
         }
 
+
         /// <summary>
-        /// Change the VaryByIndex in series from an integer index to a name of a factor.
+        /// Upgrades to version 31. Change DisplayAttribute
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion31(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow", ".SoilWater.Flow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flux", ".SoilWater.Flux", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception", null);
+            }
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow", ".SoilWater.Flow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flux", ".SoilWater.Flux");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception");
+            }
+        }
+		
+		/// <summary>
+        /// Change the VaryByIndex in series from an integer index to a name of a factor.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion32(XmlNode node, string fileName)
         {
             foreach (XmlNode series in XmlUtilities.FindAllRecursivelyByType(node, "series"))
             {
