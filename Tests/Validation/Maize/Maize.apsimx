@@ -4340,6 +4340,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
           <Enabled>true</Enabled>
           <Command>[Phenology].Juvenile.Target.FixedValue = 250</Command>
           <Command>[Phenology].GrainFilling.Target.FixedValue = 680</Command>
+          <Command>[Phenology].Photoperiod.Twilight = 0</Command>
           <Command>[Grain].MaximumGrainsPerCob.FixedValue = 900</Command>
         </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
