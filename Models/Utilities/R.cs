@@ -36,6 +36,25 @@ namespace Models.Utilities
                 throw new NotImplementedException();
             else if (ProcessUtilities.CurrentOS.IsLinux)
                 throw new NotImplementedException();
+
+            // Create a temporary working directory.
+            workingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            if (!Directory.Exists(workingDirectory)) // I would be very suprised if it did already exist
+                Directory.CreateDirectory(workingDirectory);
+
+            string startupCommand = ".libPaths(c(.libPaths(), getwd()))";
+            string startupFile = Path.Combine(workingDirectory, ".Rprofile");
+            if (!File.Exists(startupFile))
+                File.WriteAllText(startupFile, startupCommand);
+        }
+
+        /// <summary>
+        /// Destructor - deletes working directory.
+        /// </summary>
+        ~R()
+        {
+            if (Directory.Exists(workingDirectory))
+                Directory.Delete(workingDirectory, true);
         }
 
         /// <summary>
@@ -84,11 +103,6 @@ namespace Models.Utilities
             if (File.Exists(fileName))
             {
                 string rScript = GetRExePath();
-                // Create a temporary working directory.
-                workingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                if (!Directory.Exists(workingDirectory)) // I would be very suprised if it did already exist
-                    Directory.CreateDirectory(workingDirectory);
-
                 proc = new ProcessUtilities.ProcessWithRedirectedOutput();
                 proc.Exited += OnExited;
                 proc.Start(rScript, fileName + " " + arguments, workingDirectory, true);
@@ -176,8 +190,6 @@ namespace Models.Utilities
         /// <param name="e"></param>
         private void OnExited(object sender, EventArgs e)
         {
-            if (Directory.Exists(workingDirectory))
-                Directory.Delete(workingDirectory, true);
             Finished?.Invoke(sender, e);
         }
 
