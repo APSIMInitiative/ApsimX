@@ -53,7 +53,6 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.view.Grid.UpdateControls();
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
@@ -136,7 +135,6 @@ namespace UserInterface.Presenters
 
                     this.view.Grid.DataSource = data;
                     this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
-                    this.view.Grid.UpdateControls();
                 }
             }
         }

@@ -109,7 +109,6 @@ namespace UserInterface.Presenters
             }
             else
             {
-                this.grid.UpdateControls();
                 this.FormatTestGrid();
             }
 
@@ -156,8 +155,6 @@ namespace UserInterface.Presenters
             {
                 this.grid.GetCurrentCell = selectedCell;
             }
-
-            this.grid.UpdateControls();
         }
 
         /// <summary>
