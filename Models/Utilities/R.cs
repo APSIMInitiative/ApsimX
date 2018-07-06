@@ -224,7 +224,7 @@ namespace Models.Utilities
         /// </summary>
         private string GetRInstallDirectoryFromRegistry()
         {
-            string registryKey = @"SOFTWARE\R-coasdfsadfre";
+            string registryKey = @"SOFTWARE\R-core";
             List<string> subKeyNames = GetSubKeys(registryKey);
             if (subKeyNames == null)
             {
