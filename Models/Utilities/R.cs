@@ -191,7 +191,6 @@ namespace Models.Utilities
                     rScriptPath = rScript32;
                 else
                     throw new Exception("Unable to find path to R binaries.");
-                throw new Exception("Test");
             }
             else if (ProcessUtilities.CurrentOS.IsLinux)
             {
