@@ -153,7 +153,7 @@ The APSIM Soybean model has been tested on a range of datasets from around the w
           <End>StartFlowering</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>Flowering</Name>
+          <Name>EarlyFlowering</Name>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -182,7 +182,39 @@ The duration of the grain filling phase has been taken from the model of Roberts
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Start>StartFlowering</Start>
-          <End>EndFlowering</End>
+          <End>StartGrainFilling</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>EarlyPodDevelopment</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <MemoText><![CDATA[
+The duration of the grain filling phase has been taken from the model of Robertson et al (2002).]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <FixedValue>140</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Stress</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <VariableName>[Phenology].Vegetative.PhotoperiodEffect.Value()</VariableName>
+          </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Start>StartFlowering</Start>
+          <End>StartGrainFilling</End>
         </GenericPhase>
         <GenericPhase>
           <Name>GrainFilling</Name>
@@ -228,7 +260,7 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </AirTemperatureFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <Start>EndFlowering</Start>
+          <Start>StartGrainFilling</Start>
           <End>EndGrainFill</End>
         </GenericPhase>
         <GenericPhase>
@@ -328,7 +360,7 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </SubtractFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <SetEvent>EndFlowering</SetEvent>
+          <SetEvent>StartGrainFilling</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
         <OnEventFunction>
@@ -563,7 +595,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Start>StartFlowering</Start>
-            <End>EndFlowering</End>
+            <End>StartGrainFilling</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -626,7 +658,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </FillingRateFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <Start>EndFlowering</Start>
+            <Start>StartGrainFilling</Start>
             <End>EndGrainFill</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -696,7 +728,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </FillingRateFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <Start>EndFlowering</Start>
+            <Start>StartGrainFilling</Start>
             <End>EndGrainFill</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -887,7 +919,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Start>Emergence</Start>
-            <End>EndFlowering</End>
+            <End>StartGrainFilling</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
             <Name>late</Name>
@@ -899,7 +931,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <Start>EndFlowering</Start>
+            <Start>StartGrainFilling</Start>
             <End>Maturity</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1070,7 +1102,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Start>StartFlowering</Start>
-              <End>EndFlowering</End>
+              <End>StartGrainFilling</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>Late</Name>
@@ -1082,7 +1114,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <Start>EndFlowering</Start>
+              <Start>StartGrainFilling</Start>
               <End>Maturity</End>
             </PhaseLookupValue>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1168,7 +1200,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Start>StartFlowering</Start>
-              <End>EndFlowering</End>
+              <End>StartGrainFilling</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>Late</Name>
@@ -1180,7 +1212,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <Start>EndFlowering</Start>
+              <Start>StartGrainFilling</Start>
               <End>Maturity</End>
             </PhaseLookupValue>
             <Memo>
@@ -1791,7 +1823,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <WhenToHold>EndFlowering</WhenToHold>
+          <WhenToHold>StartGrainFilling</WhenToHold>
         </HoldFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
@@ -2926,7 +2958,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Start>Emergence</Start>
-          <End>EndFlowering</End>
+          <End>StartGrainFilling</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -3072,7 +3104,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Start>Emergence</Start>
-              <End>EndFlowering</End>
+              <End>StartGrainFilling</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>GrainFilling</Name>
@@ -3084,7 +3116,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <Start>EndFlowering</Start>
+              <Start>StartGrainFilling</Start>
               <End>EndGrainFill</End>
             </PhaseLookupValue>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3201,7 +3233,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 239</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 266</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 126</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 533</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.61, 17.1</Command>
       </Cultivar>
@@ -3210,7 +3242,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 329</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 290</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 150</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 580</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.92, 17.93</Command>
       </Cultivar>
@@ -3219,7 +3251,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 268</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 216</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 76</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 432</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.43, 21.19</Command>
       </Cultivar>
@@ -3228,7 +3260,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 294</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 221</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 81</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 442</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.29, 20.14</Command>
       </Cultivar>
@@ -3237,7 +3269,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 336</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 258</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 118</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 518</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.37, 19.30</Command>
       </Cultivar>
@@ -3246,7 +3278,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 329</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 290</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 150</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 580</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.92, 17.93</Command>
       </Cultivar>
@@ -3255,7 +3287,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 367</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 303</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 163</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 607</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.05, 17.56</Command>
       </Cultivar>
@@ -3264,7 +3296,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 322</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 283</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 143</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 567</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.05, 16.46</Command>
       </Cultivar>
@@ -3273,7 +3305,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 438</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 252</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 505</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.58, 15.88</Command>
       </Cultivar>
@@ -3282,7 +3314,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 436</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 233</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 93</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 467</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.39, 15.61</Command>
       </Cultivar>
@@ -3291,7 +3323,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 267</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 252</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 506</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.27, 16.70</Command>
       </Cultivar>
@@ -3300,7 +3332,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 292</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 263</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 123</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 535</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.09, 16.49</Command>
       </Cultivar>
@@ -3309,7 +3341,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 292</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 263</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 123</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 535</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.09, 16.49</Command>
       </Cultivar>
@@ -3318,7 +3350,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 404</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 271</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 131</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 549</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
       </Cultivar>
@@ -3327,7 +3359,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 404</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 252</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 505</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
       </Cultivar>
@@ -3336,7 +3368,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 271</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 260</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 120</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 529</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.77, 17.57</Command>
       </Cultivar>
@@ -3345,7 +3377,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 272</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 257</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 117</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 522</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.45, 18.0</Command>
       </Cultivar>
@@ -3354,7 +3386,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 410</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 220</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 440</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.2, 16.6</Command>
       </Cultivar>
@@ -3363,7 +3395,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 400</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 220</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 440</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
       </Cultivar>
@@ -3372,7 +3404,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 404</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 252</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 505</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
       </Cultivar>
@@ -3381,7 +3413,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 328</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 246</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 499</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
       </Cultivar>
@@ -3390,7 +3422,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 328</Command>
-        <Command>[Phenology].Flowering.Target.FixedValue = 246</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 499</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
       </Cultivar>
