@@ -33,6 +33,12 @@ namespace Models.Soils
         [Link]
         private Soil soil = null;
 
+        [Link]
+        private ISurfaceOrganicMatter surfaceOrganicMatter = null;
+
+        [Link]
+        private List<ICanopy> canopies = null;
+
         [ChildLink(IsOptional = true)]
         private SwimSoluteParameters SwimSoluteParameters = null;
 
@@ -57,19 +63,12 @@ namespace Models.Soils
         //[Input(IsOptional = true)]
         double eo_durn = Double.NaN;
 
-        ////[Input(IsOptional = true)]
-        //double cover_green_sum = Double.NaN;
-
         //[Input(IsOptional = true)]
         [Units("mm")]
         double interception = Double.NaN;
         //[Input(IsOptional = true)]
         [Units("mm")]
         double residueinterception = Double.NaN;
-
-        //[Input(IsOptional = true)]
-        [Units("0-1")]
-        double surfaceom_cover = Double.NaN;
 
         double[] SWIMRainTime = new double[0];
         double[] SWIMRainAmt = new double[0];
@@ -230,7 +229,7 @@ namespace Models.Soils
         #region parameters
 
         //[Param]
-        string evap_source = null;
+        string evap_source = "calc";
 
         //[Param(IsOptional = true)]
         string echo_directives = null;
@@ -1505,7 +1504,7 @@ namespace Models.Soils
             GetOtherVariables();
             GetSoluteVariables();
             //GetCropVariables();
-            GetResidueVariables();
+            residue_cover = surfaceOrganicMatter.Cover;
             RemoveInterception();
             CNRunoff();
 
@@ -2524,21 +2523,6 @@ namespace Models.Soils
         //    crop_cover = 1.0 - bare;
         //}
 
-        private void GetResidueVariables()
-        {
-            //+   Purpose
-            //      Get the values of residue variables from other modules
-            if (!Double.IsNaN(surfaceom_cover))
-            {
-                residue_cover = surfaceom_cover;
-                if (residue_cover < 0.0 || residue_cover > 1.0)
-                    throw new Exception("Value for residue_cover outside the expected range of 0 to 1");
-            }
-            else
-                residue_cover = 0.0;
-        }
-
-
         private void RemoveInterception()
         {
             double intercep = 0.0;
@@ -2623,28 +2607,14 @@ namespace Models.Soils
 
         private double GetGreenCover()
         {
-            //if (!Double.IsNaN(cover_green_sum))
-            //{
-            //    if (cover_green_sum < 0.0 || cover_green_sum > 1.0)
-            //        throw new Exception("cover_green_sum outside the expected range of 0 to 1");
-            //    return cover_green_sum;
-            //}
-            //else
-            //{
-            //    double bare = 1.0;
-            //    foreach (Component Comp in Paddock.Crops)
-            //    {
-            //        Double coverGreen;
-            //        bool foundCG = Paddock.Get(Comp.FullName + ".cover_green", out coverGreen);
-
-            //        // Note - this is based on a reduction of Beers law
-            //        // cover1+cover2 = 1 - exp (-(k1*lai1 + k2*lai2))
-            //        if (foundCG)
-            //            bare = bare * (1.0 - coverGreen);
-            //    }
-            //    return 1.0 - bare;
-            //}
-            throw new NotImplementedException("SWIM doesn't implement GetGreenCover");
+            double bare = 1.0;
+            foreach (ICanopy canopy in canopies)
+            {
+                // Note - this is based on a reduction of Beers law
+                // cover1+cover2 = 1 - exp (-(k1*lai1 + k2*lai2))
+                bare = bare * (1.0 - canopy.CoverGreen);
+            }
+            return 1.0 - bare;
         }
 
         private double PotEvapotranspiration()
@@ -6046,7 +6016,13 @@ namespace Models.Soils
         ///<summary>Remove water from the profile</summary>
         public void RemoveWater(double[] dlt_sw_dep)
         {
-            throw new NotImplementedException("SWIM doesn't implement RemoveWater method");
+            if (MathUtilities.Sum(dlt_sw_dep) > 0)
+            {
+                // convert to volumetric
+                double[] newSW = MathUtilities.Divide(dlt_sw_dep, soil.Thickness);
+                newSW = MathUtilities.Subtract(th, newSW);
+                ResetWaterBalance(1, ref newSW);
+            }
         }
 
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>

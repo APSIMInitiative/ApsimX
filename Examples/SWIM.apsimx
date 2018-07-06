@@ -2,7 +2,7 @@
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="31">
   <Name>Simulations</Name>
   <Simulation>
-    <Name>Wheat</Name>
+    <Name>WheatSWIM</Name>
     <Clock>
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -29,66 +29,6 @@
     </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
-      <Report>
-        <Name>Report</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ExperimentFactorNames />
-        <ExperimentFactorValues />
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Soil].Swim3.SW</string>
-          <string>[Soil].Swim3.psi</string>
-          <string>sum([Soil].Swim3.SWmm) as TotalSW</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <SurfaceOrganicMatter>
-        <Name>SurfaceOrganicMatter</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <Pools>
-          <Pool>
-            <PoolName>wheat_stubble</PoolName>
-            <ResidueType>wheat</ResidueType>
-            <Mass>500</Mass>
-            <CNRatio>100</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>wheat_stubble</PoolName>
-        <type>wheat</type>
-        <mass>500</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr />
-        <cnr>100</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
-      </SurfaceOrganicMatter>
-      <SoluteManager>
-        <Name>SoluteManager</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-      </SoluteManager>
       <Soil>
         <Name>Soil</Name>
         <InitialWater>
@@ -101,6 +41,38 @@
         </InitialWater>
         <Water>
           <Name>Water</Name>
+          <SoilCrop>
+            <Name>WheatSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <LL>
+              <double>0.261</double>
+              <double>0.248</double>
+              <double>0.28</double>
+              <double>0.306</double>
+              <double>0.36</double>
+              <double>0.392</double>
+              <double>0.446</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.01</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Thickness>
@@ -260,45 +232,8 @@
             <double>300</double>
             <double>300</double>
           </Thickness>
-          <Texture>
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-          </Texture>
-          <MunsellColour>
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-          </MunsellColour>
-          <EC>
-            <double>0.2</double>
-            <double>0.25</double>
-            <double>0.31</double>
-            <double>0.4</double>
-            <double>0.59</double>
-            <double>0.84</double>
-            <double>0.93</double>
-            <double>1.01</double>
-            <double>1.06</double>
-            <double>1.05</double>
-            <double>1.01</double>
-          </EC>
+          <Texture />
+          <MunsellColour />
           <PH>
             <double>8.4</double>
             <double>8.8</double>
@@ -518,6 +453,254 @@
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
       </Soil>
+      <SurfaceOrganicMatter>
+        <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat_stubble</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>500</Mass>
+            <CNRatio>100</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
+        <PoolName>wheat_stubble</PoolName>
+        <type>wheat</type>
+        <mass>500</mass>
+        <standing_fraction>0</standing_fraction>
+        <cpr />
+        <cnr>100</cnr>
+        <CriticalResidueWeight>2000</CriticalResidueWeight>
+        <OptimumDecompTemp>20</OptimumDecompTemp>
+        <MaxCumulativeEOS>20</MaxCumulativeEOS>
+        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+        <TotalLeachRain>25</TotalLeachRain>
+        <MinRainToLeach>10</MinRainToLeach>
+        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+        <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
+        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+      </SurfaceOrganicMatter>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+      </SoluteManager>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <refheight>2</refheight>
+        <albedo>0.15</albedo>
+        <emissivity>0.96</emissivity>
+        <RadIntTotal>0</RadIntTotal>
+      </MicroClimate>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+      </Fertiliser>
+      <Plant>
+        <Name>Wheat</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ResourceName>Wheat</ResourceName>
+        <CropType>Wheat</CropType>
+      </Plant>
+      <Manager>
+        <Name>SowingRule</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Script>
+          <StartDate>1-may</StartDate>
+          <EndDate>10-jul</EndDate>
+          <MinESW>0</MinESW>
+          <MinRain>0</MinRain>
+          <RainDays>7</RainDays>
+          <CultivarName>Hartog</CultivarName>
+          <SowingDepth>30</SowingDepth>
+          <RowSpacing>250</RowSpacing>
+          <Population>120</Population>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        [Link] Plant Wheat;
+        [Link] Soil Soil; 
+        Accumulator accumulatedRain;
+        
+        [Description("Start of sowing window (d-mmm)")]
+        public string StartDate { get; set;}
+        [Description("End of sowing window (d-mmm)")]
+        public string EndDate { get; set;}
+        [Description("Minimum extractable soil water for sowing (mm)")]
+        public double MinESW { get; set;}
+        [Description("Accumulated rainfall required for sowing (mm)")]
+        public double MinRain { get; set;}
+        [Description("Duration of rainfall accumulation (d)")]
+        public int RainDays { get; set;}
+        [Description("Cultivar to be sown")]
+        [Display(Type=DisplayType.CultivarName)]
+        public string CultivarName { get; set;}
+        [Description("Sowing depth (mm)")]
+        public double SowingDepth { get; set;}        
+        [Description("Row spacing (mm)")]
+        public double RowSpacing { get; set;}    
+        [Description("Plant population (/m2)")]
+        public double Population { get; set;}    
+        
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+        }
+        
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            accumulatedRain.Update();
+            
+            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+                !Wheat.IsAlive &&
+                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
+                accumulatedRain.Sum > MinRain)
+            {
+               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    
+            }
+        
+        }
+        
+    }
+}
+]]></Code>
+      </Manager>
+      <Manager>
+        <Name>SowingFertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Script>
+          <Amount>160</Amount>
+          <CropName>wheat</CropName>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        
+        
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double Amount { get; set;}
+        
+        [Description("Crop to be fertilised")]
+        public string CropName { get; set;}
+        
+        
+        
+
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
+        {
+            Model crop = sender as Model;
+            if (crop.Name.ToLower()==CropName.ToLower())
+                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+        }
+        
+    }
+}
+]]></Code>
+      </Manager>
+      <Manager>
+        <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Script />
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Wheat.IsReadyForHarvesting)
+            {
+               Wheat.Harvest();
+               Wheat.EndCrop();    
+            }
+        
+        }
+        
+    }
+}
+]]></Code>
+      </Manager>
+      <Report>
+        <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[Soil].Swim3.SW</string>
+          <string>[Soil].Swim3.psi</string>
+          <string>sum([Soil].Swim3.SWmm) as TotalSW</string>
+          <string>[Soil].Swim3.Es</string>
+          <string>[Wheat].Grain.Wt</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <Area>1</Area>
@@ -543,7 +726,7 @@
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Yield</YFieldName>
+        <YFieldName>Wheat.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -640,6 +823,53 @@
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>TotalSW</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Evap</Name>
+        <Series>
+          <Name>series1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.Swim3.Es</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
