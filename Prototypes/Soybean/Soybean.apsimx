@@ -182,7 +182,7 @@ The duration of the grain filling phase has been taken from the model of Roberts
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Start>StartFlowering</Start>
-          <End>StartGrainFilling</End>
+          <End>StartPodDevelopment</End>
         </GenericPhase>
         <GenericPhase>
           <Name>EarlyPodDevelopment</Name>
@@ -213,7 +213,7 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <Start>StartFlowering</Start>
+          <Start>StartPodDevelopment</Start>
           <End>StartGrainFilling</End>
         </GenericPhase>
         <GenericPhase>
@@ -1632,10 +1632,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <AddFunction>
             <Name>GrowthDuration</Name>
             <VariableReference>
-              <Name>FloweringGrowthPeriod</Name>
+              <Name>EarlyPodDevelopmentPeriod</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <VariableName>[Phenology].Flowering.Target.Value()</VariableName>
+              <VariableName>[Phenology].EarlyPodDevelopment.Target.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PostFloweringGrowthPeriod</Name>
@@ -3112,7 +3112,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>StemFraction</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <FixedValue>0.3</FixedValue>
+                <FixedValue>0</FixedValue>
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -14145,6 +14145,52 @@ namespace Models
           <Enabled>true</Enabled>
           <DisabledSimNames />
         </Experiment>
+        <Graph>
+          <Name>Growing Season Mean Air Temperature</Name>
+          <Series>
+            <Name>Series</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+            <YFieldName>Weather.MeanT</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>true</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Soybean.Phenology.DaysAfterSowing]&gt;0</Filter>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
