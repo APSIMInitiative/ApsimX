@@ -47,7 +47,7 @@ The APSIM Soybean model has been tested on a range of datasets from around the w
       <Phenology>
         <Name>Phenology</Name>
         <AirTemperatureFunction>
-          <Name>ThermalTime</Name>
+          <Name>ThermalTimeOriginal</Name>
           <XYPairs>
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -59,6 +59,28 @@ The APSIM Soybean model has been tested on a range of datasets from around the w
             </X>
             <Y>
               <double>0</double>
+              <double>20</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </AirTemperatureFunction>
+        <AirTemperatureFunction>
+          <Name>ThermalTime</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <X>
+              <double>10</double>
+              <double>20</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>10</double>
               <double>20</double>
               <double>0</double>
             </Y>
@@ -217,13 +239,49 @@ The duration of the grain filling phase has been taken from the model of Roberts
           <End>StartGrainFilling</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>GrainFilling</Name>
+          <Name>EarlyGrainFilling</Name>
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FixedValue>500</FixedValue>
+            <FixedValue>100</FixedValue>
           </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Stress</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <VariableName>[Phenology].Vegetative.PhotoperiodEffect.Value()</VariableName>
+          </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Start>StartGrainFilling</Start>
+          <End>EndCanopyDevelopment</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>LateGrainFilling</Name>
+          <SubtractFunction>
+            <Name>Target</Name>
+            <Constant>
+              <Name>EntireGrainfillPeriod</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <FixedValue>500</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>EarlyGrainFillingTarget</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <VariableName>[Phenology].EarlyGrainFilling.Target.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </SubtractFunction>
           <VariableReference>
             <Name>ThermalTime</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -260,7 +318,7 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </AirTemperatureFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <Start>StartGrainFilling</Start>
+          <Start>EndCanopyDevelopment</Start>
           <End>EndGrainFill</End>
         </GenericPhase>
         <GenericPhase>
@@ -582,10 +640,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Start>Emergence</Start>
-            <End>StartFlowering</End>
+            <End>StartPodDevelopment</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
-            <Name>Flowering</Name>
+            <Name>Podding</Name>
             <Constant>
               <Name>Function</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -594,8 +652,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <Start>StartFlowering</Start>
-            <End>StartGrainFilling</End>
+            <Start>StartPodDevelopment</Start>
+            <End>EndCanopyDevelopment</End>
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -647,12 +705,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Enabled>true</Enabled>
                 <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
               </VariableReference>
-              <VariableReference>
+              <AddFunction>
                 <Name>FillingDuration</Name>
+                <VariableReference>
+                  <Name>EarlyGrainFillingDuration</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[Phenology].EarlyGrainFilling.Target.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>LateGrainFillingDuration1</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[Phenology].LateGrainFilling.Target.Value()</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
-              </VariableReference>
+              </AddFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
             </FillingRateFunction>
@@ -717,12 +786,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
               </MultiplyFunction>
-              <VariableReference>
+              <AddFunction>
                 <Name>FillingDuration</Name>
+                <VariableReference>
+                  <Name>LatePodDevelopmentDuration</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[Phenology].LatePodDevelopment.Target.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>LateGrainFillingDuration1</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[Phenology].LateGrainFilling.Target.Value()</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
-              </VariableReference>
+              </AddFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
             </FillingRateFunction>
@@ -1524,6 +1604,51 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Nodule>
       <GenericOrgan>
         <Name>Shell</Name>
+        <AccumulateFunction>
+          <Name>PodNumber</Name>
+          <MultiplyFunction>
+            <Name>DailyPodAppearanceRate</Name>
+            <DivideFunction>
+              <Name>PodAppearanceRate</Name>
+              <Constant>
+                <Name>PodsPerNode</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>8</FixedValue>
+              </Constant>
+              <VariableReference>
+                <Name>NodeAppearanceRate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[Structure].Phyllochron.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </DivideFunction>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>PlantPopulation</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <VariableName>[Soybean].SowingData.Population</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <StartStageName>StartPodDevelopment</StartStageName>
+          <EndStageName>EndCanopyDevelopment</EndStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
+        </AccumulateFunction>
         <Constant>
           <Name>NReallocationFactor</Name>
           <Memo>
@@ -1632,17 +1757,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <AddFunction>
             <Name>GrowthDuration</Name>
             <VariableReference>
-              <Name>EarlyPodDevelopmentPeriod</Name>
+              <Name>EarlyPodDevelopmentDuration</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <VariableName>[Phenology].EarlyPodDevelopment.Target.Value()</VariableName>
             </VariableReference>
-            <Constant>
-              <Name>PostFloweringGrowthPeriod</Name>
+            <VariableReference>
+              <Name>LatePodDevelopmentDuration</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <FixedValue>60</FixedValue>
-            </Constant>
+              <VariableName>[Phenology].EarlyGrainFilling.Target.Value()</VariableName>
+            </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
           </AddFunction>
@@ -1650,13 +1775,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>StartStage</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FixedValue>4</FixedValue>
+            <FixedValue>5</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FixedValue>0.1</FixedValue>
+            <FixedValue>0.08</FixedValue>
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -1803,7 +1928,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Enabled>true</Enabled>
         </MultiplyFunction>
         <HoldFunction>
-          <Name>PodNumber</Name>
+          <Name>PodNumberByStem</Name>
           <MultiplyFunction>
             <Name>Value</Name>
             <Constant>
@@ -2878,6 +3003,65 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Enabled>true</Enabled>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>StemGrowthPhase</Name>
+              <LinearInterpolationFunction>
+                <Name>StemFraction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <X>
+                    <double>0</double>
+                    <double>200</double>
+                    <double>201</double>
+                    <double>400</double>
+                  </X>
+                  <Y>
+                    <double>0.4</double>
+                    <double>0.4</double>
+                    <double>0.35</double>
+                    <double>0.35</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <XProperty>[AboveGround].Wt</XProperty>
+              </LinearInterpolationFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>Emergence</Start>
+              <End>EndCanopyDevelopment</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>GrainFilling</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>EndCanopyDevelopment</Start>
+              <End>EndGrainFill</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </PartitionFractionDemandFunction>
         <Constant>
           <Name>NReallocationFactor</Name>
           <Memo>
@@ -3066,65 +3250,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Enabled>true</Enabled>
           <FixedValue>0.4</FixedValue>
         </Constant>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <PhaseLookup>
-            <Name>PartitionFraction</Name>
-            <Memo>
-              <Name>memo</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <MemoText><![CDATA[]]></MemoText>
-            </Memo>
-            <PhaseLookupValue>
-              <Name>StemGrowthPhase</Name>
-              <LinearInterpolationFunction>
-                <Name>StemFraction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <X>
-                    <double>0</double>
-                    <double>200</double>
-                    <double>201</double>
-                    <double>400</double>
-                  </X>
-                  <Y>
-                    <double>0.4</double>
-                    <double>0.4</double>
-                    <double>0.35</double>
-                    <double>0.35</double>
-                  </Y>
-                </XYPairs>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <XProperty>[AboveGround].Wt</XProperty>
-              </LinearInterpolationFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <Start>Emergence</Start>
-              <End>StartGrainFilling</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>GrainFilling</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <FixedValue>0</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <Start>StartGrainFilling</Start>
-              <End>EndGrainFill</End>
-            </PhaseLookupValue>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-          </PhaseLookup>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
       </GenericOrgan>
@@ -3229,22 +3354,22 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
  **Wilson DR, Robertson MJ.** **1996.** Pea phenology responses to temperature and photoperiod. _Australian Agronomy Society_.]]></MemoText>
       </Memo>
       <Cultivar>
-        <Name>Ames_P932T16R_32MG</Name>
+        <Name>PioneerP932T16R_MG32</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Command>[Phenology].Vegetative.Target.FixedValue = 239</Command>
-        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 126</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 533</Command>
-        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.61, 17.1</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 328</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
       </Cultivar>
       <Cultivar>
-        <Name>Sutherland_P22T69R_22MG</Name>
+        <Name>PioneerP22T69R_MG22</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Command>[Phenology].Vegetative.Target.FixedValue = 329</Command>
-        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 150</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 580</Command>
-        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.92, 17.93</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 328</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
       </Cultivar>
       <Cultivar>
         <Name>Trial_MG00</Name>
@@ -3252,7 +3377,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 268</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 76</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 432</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 432</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.43, 21.19</Command>
       </Cultivar>
       <Cultivar>
@@ -3261,7 +3386,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 294</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 81</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 442</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 442</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.29, 20.14</Command>
       </Cultivar>
       <Cultivar>
@@ -3270,7 +3395,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 336</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 118</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 518</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 518</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.37, 19.30</Command>
       </Cultivar>
       <Cultivar>
@@ -3279,7 +3404,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 329</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 150</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 580</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.92, 17.93</Command>
       </Cultivar>
       <Cultivar>
@@ -3288,7 +3413,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 367</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 163</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 607</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 607</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 14.05, 17.56</Command>
       </Cultivar>
       <Cultivar>
@@ -3297,7 +3422,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 322</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 143</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 567</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 567</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.05, 16.46</Command>
       </Cultivar>
       <Cultivar>
@@ -3306,7 +3431,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 438</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 505</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.58, 15.88</Command>
       </Cultivar>
       <Cultivar>
@@ -3315,7 +3440,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 436</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 93</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 467</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.39, 15.61</Command>
       </Cultivar>
       <Cultivar>
@@ -3324,7 +3449,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 267</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 506</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 506</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.27, 16.70</Command>
       </Cultivar>
       <Cultivar>
@@ -3333,7 +3458,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 292</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 123</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 535</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.09, 16.49</Command>
       </Cultivar>
       <Cultivar>
@@ -3342,7 +3467,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 292</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 123</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 535</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.09, 16.49</Command>
       </Cultivar>
       <Cultivar>
@@ -3351,7 +3476,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 404</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 131</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 549</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 549</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
       </Cultivar>
       <Cultivar>
@@ -3360,7 +3485,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 404</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 505</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
       </Cultivar>
       <Cultivar>
@@ -3369,7 +3494,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 271</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 120</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 529</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 529</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.77, 17.57</Command>
       </Cultivar>
       <Cultivar>
@@ -3378,7 +3503,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 272</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 117</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 522</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 522</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.45, 18.0</Command>
       </Cultivar>
       <Cultivar>
@@ -3387,7 +3512,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 410</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 440</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.2, 16.6</Command>
       </Cultivar>
       <Cultivar>
@@ -3396,7 +3521,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 400</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 440</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
       </Cultivar>
       <Cultivar>
@@ -3405,7 +3530,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 404</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 505</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
       </Cultivar>
       <Cultivar>
@@ -3414,7 +3539,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 328</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 499</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
       </Cultivar>
       <Cultivar>
@@ -3423,7 +3548,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 328</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
-        <Command>[Phenology].GrainFilling.Target.FixedValue = 499</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3442,6 +3567,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <string>[Soybean].Phenology.DaysAfterSowing</string>
         <string>[Soybean].Phenology.Stage</string>
         <string>[Weather].MeanT</string>
+        <string>[Weather].Radn</string>
+        <string>[Soybean].Phenology.Vegetative.PhotoperiodEffect</string>
         <string>[Soybean].Phenology.CurrentStageName</string>
         <string>[Soybean].Phenology.Photoperiod</string>
         <string>[Soybean].AboveGround.Wt</string>
@@ -5106,6 +5233,81 @@ namespace Models
                   <TableName>Observed</TableName>
                   <XFieldName>Clock.Today</XFieldName>
                   <YFieldName>Soybean.Pod.Wt</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>ShellWt</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <EventNamesOnGraph>
+                    <Name>EventNamesOnGraph</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ColumnName>Soybean.Phenology.CurrentStageName</ColumnName>
+                  </EventNamesOnGraph>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.Wt</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.Wt</YFieldName>
                   <ShowInLegend>false</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -7375,7 +7577,7 @@ namespace Models
                   <RowSpacing>760</RowSpacing>
                   <SowingDepth>50</SowingDepth>
                   <SowingRate>35</SowingRate>
-                  <CultivarName>Ames_P932T16R_32MG</CultivarName>
+                  <CultivarName>PioneerP932T16R_MG32</CultivarName>
                   <SowingDate>1997-12-23</SowingDate>
                 </Script>
                 <Code><![CDATA[
@@ -10863,7 +11065,7 @@ namespace Models
                   <RowSpacing>760</RowSpacing>
                   <SowingDepth>50</SowingDepth>
                   <SowingRate>30</SowingRate>
-                  <CultivarName>Ames_P932T16R_32MG</CultivarName>
+                  <CultivarName>PioneerP932T16R_MG32</CultivarName>
                   <SowingDate>1997-12-23</SowingDate>
                 </Script>
                 <Code><![CDATA[
@@ -12621,7 +12823,7 @@ namespace Models
                   <RowSpacing>760</RowSpacing>
                   <SowingDepth>50</SowingDepth>
                   <SowingRate>30</SowingRate>
-                  <CultivarName>Ames_P932T16R_32MG</CultivarName>
+                  <CultivarName>PioneerP22T69R_MG22</CultivarName>
                   <SowingDate>1997-12-23</SowingDate>
                 </Script>
                 <Code><![CDATA[
@@ -14189,6 +14391,144 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Growing Season Radiation</Name>
+          <Series>
+            <Name>Series</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+            <YFieldName>Weather.Radn</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Soybean.Phenology.DaysAfterSowing]&gt;0</Filter>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Growing Season Photoperiod</Name>
+          <Series>
+            <Name>Series</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+            <YFieldName>Soybean.Phenology.Photoperiod</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Soybean.Phenology.DaysAfterSowing]&gt;0</Filter>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Growing Season PhotoperiodFactor</Name>
+          <Series>
+            <Name>Series</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+            <YFieldName>Soybean.Phenology.Vegetative.PhotoperiodEffect</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Soybean.Phenology.DaysAfterSowing]&gt;0</Filter>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
           <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -19582,9 +19922,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <Script>
-                  <RowSpacing>500</RowSpacing>
+                  <RowSpacing>200</RowSpacing>
                   <SowingDepth>50</SowingDepth>
-                  <SowingRate>50</SowingRate>
+                  <SowingRate>38</SowingRate>
                   <CultivarName>Davis</CultivarName>
                   <SowingDate>2001-06-10</SowingDate>
                 </Script>
@@ -20562,6 +20902,52 @@ namespace Models
           <Enabled>true</Enabled>
           <DisabledSimNames />
         </Experiment>
+        <Graph>
+          <Name>Growing Season Mean Air Temperature</Name>
+          <Series>
+            <Name>Series</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+            <YFieldName>Weather.MeanT</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>[Soybean.Phenology.DaysAfterSowing] &gt; 0</Filter>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -21839,6 +22225,96 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries />
             </Graph>
+            <Graph>
+              <Name>N Stress</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>DailyReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Soybean.Leaf.Fn</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>1</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
+            <Graph>
+              <Name>N Fixed</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>DailyReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Soybean.Nodule.NFixed</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>1</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -21851,6 +22327,144 @@ namespace Models
         <Enabled>true</Enabled>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
+      <Graph>
+        <Name>Growing Season Solar Radiation</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>2</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+          <YFieldName>Weather.Radn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Soybean.Phenology.DaysAfterSowing] &gt; 0</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Growing Season Photoperiod</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>2</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+          <YFieldName>Soybean.Phenology.Photoperiod</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Soybean.Phenology.DaysAfterSowing] &gt; 0</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Growing Season PhotoperiodFactor</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+          <YFieldName>Soybean.Phenology.Vegetative.PhotoperiodEffect</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Soybean.Phenology.DaysAfterSowing]&gt;0</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -22247,6 +22861,98 @@ Simulation results for the combined datasets from the various countries are show
       <Enabled>true</Enabled>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <Graph>
+      <Name>Growing Season Solar Radiation</Name>
+      <Series>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>2</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+        <YFieldName>Weather.Radn</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter>[Soybean.Phenology.DaysAfterSowing] &gt; 0</Filter>
+      </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>Growing Season Photoperiod</Name>
+      <Series>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>2</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Soybean.Phenology.DaysAfterSowing</XFieldName>
+        <YFieldName>Soybean.Phenology.Photoperiod</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+        <Filter>[Soybean.Phenology.DaysAfterSowing] &gt; 0</Filter>
+      </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
