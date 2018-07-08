@@ -173,6 +173,7 @@
     <Compile Include="Core\ApsimFile\Format.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\IReferenceExternalFiles.cs" />
@@ -190,7 +191,9 @@
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
+    <Compile Include="Morris\Morris.cs" />
     <Compile Include="Lifecycle\LifestageImmigrationProcess.cs" />
     <Compile Include="Plant\Functions\AccumulateByDate.cs" />
     <Compile Include="Plant\Functions\AccumulateByNumericPhase.cs" />
@@ -658,6 +661,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\Morris.R" />
+    <EmbeddedResource Include="Resources\GetPackage.R" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">
       <SubType>Designer</SubType>

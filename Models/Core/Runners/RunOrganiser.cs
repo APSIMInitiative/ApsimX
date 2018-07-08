@@ -46,14 +46,16 @@
             // First time through there. Get a list of things to run.
             if (simulationEnumerator == null)
             {
-                
+                // Send event telling all models that we're about to begin running.
+                Events events = new Events(simulations);
+                events.Publish("BeginRun", null);
+
                 Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
                 simulationEnumerator = enumerator;
                 SimulationNamesBeingRun = enumerator.SimulationNamesBeingRun;
 
                 // Send event telling all models that we're about to begin running.
-                Events events = new Events(simulations);
-                events.Publish("BeginRun", new object[] { AllSimulationNames, SimulationNamesBeingRun });
+                events.Publish("RunCommencing", new object[] { AllSimulationNames, SimulationNamesBeingRun });
             }
 
             // If we didn't find anything to run then return null to tell job runner to exit.

@@ -136,6 +136,7 @@ namespace Utility
 
             window1.Parent = editor.Toplevel;
             UpdateTitleBar();
+            window1.WindowPosition = WindowPosition.CenterOnParent;
             window1.Show();
             txtLookFor.GrabFocus();
         }

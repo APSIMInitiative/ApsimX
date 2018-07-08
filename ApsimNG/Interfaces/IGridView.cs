@@ -130,11 +130,6 @@ namespace UserInterface.Interfaces
         bool RowIsEmpty(int rowIndex);
 
         /// <summary>
-        /// Updates controls on the GridView.
-        /// </summary>
-        void UpdateControls();
-
-        /// <summary>
         /// End the user editing the cell.
         /// </summary>
         void EndEdit();
