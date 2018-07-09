@@ -455,6 +455,7 @@ namespace UserInterface.Views
 
         private void UpdateSelectedCell()
         {
+            while (GLib.MainContext.Iteration()) ;
             TreePath path;
             TreeViewColumn column;
             Gridview.GetCursor(out path, out column);
@@ -654,77 +655,74 @@ namespace UserInterface.Views
                 keyName = "Tab";
             if (keyName == "Return" || keyName == "Tab")
             {
-                if (userEditingCell)
+                bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
+                int nextRow = rowIdx;
+                int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                int nextCol = colIdx;
+                if (shifted)
                 {
-                    bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
-                    int nextRow = rowIdx;
-                    int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
-                    int nextCol = colIdx;
-                    if (shifted)
+                    // Move backwards
+                    do
                     {
-                        // Move backwards
-                        do
+                        if (keyName == "Tab")
                         {
-                            if (keyName == "Tab")
+                            // Move horizontally
+                            if (--nextCol < 0)
                             {
-                                // Move horizontally
-                                if (--nextCol < 0)
-                                {
-                                    if (--nextRow < 0)
-                                        nextRow = RowCount - 1;
-                                    nextCol = numCols - 1;
-                                }
-                            }
-                            else if (keyName == "Return")
-                            {
-                                // Move vertically
                                 if (--nextRow < 0)
-                                {
-                                    if (--nextCol < 0)
-                                        nextCol = numCols - 1;
                                     nextRow = RowCount - 1;
-                                }
+                                nextCol = numCols - 1;
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
-                    }
-                    else
-                    {
-                        do
+                        else if (keyName == "Return")
                         {
-                            if (keyName == "Tab")
+                            // Move vertically
+                            if (--nextRow < 0)
                             {
-                                // Move horizontally
-                                if (++nextCol >= numCols)
-                                {
-                                    if (++nextRow >= RowCount)
-                                        nextRow = 0;
-                                    nextCol = 0;
-                                }
-                            }
-                            else if (keyName == "Return")
-                            {
-                                // Move vertically
-                                if (++nextRow >= RowCount)
-                                {
-                                    if (++nextCol >= numCols)
-                                        nextCol = 0;
-                                    nextRow = 0;
-                                }
+                                if (--nextCol < 0)
+                                    nextCol = numCols - 1;
+                                nextRow = RowCount - 1;
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                     }
-
-                    EndEdit();
-                    while (GLib.MainContext.Iteration())
-                    {
-                    }
-                    if (nextRow != rowIdx || nextCol != colIdx)
-                        Gridview.SetCursor(new TreePath(new int[1] { nextRow }), Gridview.GetColumn(nextCol), true);
-                    while (GLib.MainContext.Iteration()) ;
-                    args.RetVal = true;
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                 }
+                else
+                {
+                    do
+                    {
+                        if (keyName == "Tab")
+                        {
+                            // Move horizontally
+                            if (++nextCol >= numCols)
+                            {
+                                if (++nextRow >= RowCount)
+                                    nextRow = 0;
+                                nextCol = 0;
+                            }
+                        }
+                        else if (keyName == "Return")
+                        {
+                            // Move vertically
+                            if (++nextRow >= RowCount)
+                            {
+                                if (++nextCol >= numCols)
+                                    nextCol = 0;
+                                nextRow = 0;
+                            }
+                        }
+                    }
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                }
+
+                EndEdit();
+                while (GLib.MainContext.Iteration())
+                {
+                }
+                if (nextRow != rowIdx || nextCol != colIdx)
+                    Gridview.SetCursor(new TreePath(new int[1] { nextRow }), Gridview.GetColumn(nextCol), userEditingCell);
+                while (GLib.MainContext.Iteration()) ;
+                args.RetVal = true;
             }
             else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && (activeCol == null || activeCol.Count < 1) && IsPrintableChar(args.Event.Key))
             {
@@ -857,34 +855,6 @@ namespace UserInterface.Views
             int y = GetCellSize(0, 0).Item2 * row;
 
             return new Tuple<int, int>(x, y);
-        }
-
-        /// <summary>
-        /// Gets the row and column indices at the given coordinates in the form (row, column).
-        /// </summary>
-        /// <param name="x">x-coordinate of the cell.</param>
-        /// <param name="y">y-coordinate of the cell.</param>
-        /// <returns><see cref="Tuple<int, int>"/>of the form (row, column).</returns>
-        private Tuple<int, int> GetCellFromPosition(double x, double y)
-        {
-            int col = 0;
-            int xSum = 0;
-            for (col = 0; col < Gridview.Columns.Count(); col++)
-            {
-                xSum += GetCellSize(col, 0).Item1;
-                if (xSum >= x)
-                    break;
-            }
-
-            int row = 0;
-            int rowHeight = GetCellSize(0, 0).Item2;
-            while (y > rowHeight)
-            {
-                row++;
-                y -= rowHeight;
-            }
-
-            return new Tuple<int, int>(row, col);
         }
 
         /// <summary>
@@ -2475,13 +2445,23 @@ namespace UserInterface.Views
             activeCol = new List<int>();
             TreeView view = sender is TreeView ? sender as TreeView : Gridview;
             HighlightColumns(view);
-            Tuple<int, int> cellCoords = GetCellFromPosition(e.Event.X, e.Event.Y);
-            if (cellCoords != null)
+            TreePath path;
+            TreeViewColumn column;
+            Gridview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
+            if (path != null && column != null)
             {
                 try
                 {
-                    selectedCellColumnIndex = cellCoords.Item2;
-                    selectedCellRowIndex = cellCoords.Item1;
+                    selectedCellColumnIndex = Array.IndexOf(Gridview.Columns, column);
+                    selectedCellRowIndex = path.Indices[0];
+
+                    if (e.Event.Type == Gdk.EventType.TwoButtonPress)
+                    {
+                        while (GLib.MainContext.Iteration()) ;
+                        Gridview.SetCursor(path, Gridview.Columns[selectedCellColumnIndex], true);
+                        userEditingCell = true;
+                        e.RetVal = true;
+                    }
                 }
                 catch (Exception err)
                 {
@@ -2497,9 +2477,6 @@ namespace UserInterface.Views
                     GridHeaderClickedArgs args = new GridHeaderClickedArgs();
                     if (sender is TreeView)
                     {
-                        TreePath path;
-                        TreeViewColumn column;
-                        Gridview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
                         int rowIdx = path.Indices[0];
                         int xpos = (int)e.Event.X;
                         int colIdx = 0;
