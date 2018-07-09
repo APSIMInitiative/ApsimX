@@ -88,6 +88,16 @@ namespace UserInterface.Views
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
 
         /// <summary>
+        /// Row index of the selected celll.
+        /// </summary>
+        private int selectedCellRowIndex = -1;
+
+        /// <summary>
+        /// Column index of the selected cell.
+        /// </summary>
+        private int selectedCellColumnIndex = -1;
+
+        /// <summary>
         /// Dictionary of combobox lookups 
         /// </summary>
         public Dictionary<Tuple<int, int>, ListStore> ComboLookup = new Dictionary<Tuple<int, int>, ListStore>();
@@ -423,6 +433,8 @@ namespace UserInterface.Views
             AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
             AddContextActionWithAccel("Delete", OnDeleteClick, "Delete");
             Gridview.ButtonPressEvent += OnButtonDown;
+            Gridview.Selection.Mode = SelectionMode.None;
+            Gridview.CursorChanged += OnMoveCursor;
             FixedColview.ButtonPressEvent += OnButtonDown;
             Gridview.FocusInEvent += FocusInEvent;
             Gridview.FocusOutEvent += FocusOutEvent;
@@ -434,6 +446,22 @@ namespace UserInterface.Views
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void OnMoveCursor(object sender, EventArgs args)
+        {
+            UpdateSelectedCell();
+        }
+
+        private void UpdateSelectedCell()
+        {
+            TreePath path;
+            TreeViewColumn column;
+            Gridview.GetCursor(out path, out column);
+            int rowIndex = path.Indices[0];
+            int colIndex = Array.IndexOf(Gridview.Columns, column);
+            selectedCellRowIndex = rowIndex;
+            selectedCellColumnIndex = colIndex;
         }
 
         /// <summary>
@@ -694,6 +722,7 @@ namespace UserInterface.Views
                     }
                     if (nextRow != rowIdx || nextCol != colIdx)
                         Gridview.SetCursor(new TreePath(new int[1] { nextRow }), Gridview.GetColumn(nextCol), true);
+                    while (GLib.MainContext.Iteration()) ;
                     args.RetVal = true;
                 }
             }
@@ -828,6 +857,34 @@ namespace UserInterface.Views
             int y = GetCellSize(0, 0).Item2 * row;
 
             return new Tuple<int, int>(x, y);
+        }
+
+        /// <summary>
+        /// Gets the row and column indices at the given coordinates in the form (row, column).
+        /// </summary>
+        /// <param name="x">x-coordinate of the cell.</param>
+        /// <param name="y">y-coordinate of the cell.</param>
+        /// <returns><see cref="Tuple<int, int>"/>of the form (row, column).</returns>
+        private Tuple<int, int> GetCellFromPosition(double x, double y)
+        {
+            int col = 0;
+            int xSum = 0;
+            for (col = 0; col < Gridview.Columns.Count(); col++)
+            {
+                xSum += GetCellSize(col, 0).Item1;
+                if (xSum >= x)
+                    break;
+            }
+
+            int row = 0;
+            int rowHeight = GetCellSize(0, 0).Item2;
+            while (y > rowHeight)
+            {
+                row++;
+                y -= rowHeight;
+            }
+
+            return new Tuple<int, int>(row, col);
         }
 
         /// <summary>
@@ -1396,6 +1453,10 @@ namespace UserInterface.Views
             string text = string.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
+                if (rowNo == selectedCellRowIndex && colNo == selectedCellColumnIndex)
+                    cell.CellBackgroundGdk = new Gdk.Color(255, 0, 0); //Gridview.Style.Base(StateType.Selected);
+                else
+                    cell.CellBackgroundGdk = Gridview.Style.Base(StateType.Normal);
                 if (view == Gridview)
                 {
                     col.CellRenderers[1].Visible = false;
@@ -2414,6 +2475,21 @@ namespace UserInterface.Views
             activeCol = new List<int>();
             TreeView view = sender is TreeView ? sender as TreeView : Gridview;
             HighlightColumns(view);
+            Tuple<int, int> cellCoords = GetCellFromPosition(e.Event.X, e.Event.Y);
+            if (cellCoords != null)
+            {
+                try
+                {
+                    selectedCellColumnIndex = cellCoords.Item2;
+                    selectedCellRowIndex = cellCoords.Item1;
+                }
+                catch (Exception err)
+                {
+                    Console.WriteLine(err.ToString());
+                }
+            }
+                
+            
             if (e.Event.Button == 3)
             {
                 if (this.ColumnHeaderClicked != null)
