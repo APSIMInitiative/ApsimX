@@ -33,7 +33,7 @@
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun()
         {
             Initialise();
         }
@@ -94,6 +94,7 @@
                 sim = NextSimulationToRun();
             }
         }
+        
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
@@ -109,6 +110,37 @@
                 names.Add(newSimulationName);
             }
             return names;
+        }
+
+        /// <summary>Gets a list of factors</summary>
+        public List<ISimulationGeneratorFactors> GetFactors()
+        {
+            if (serialisedBase == null || allCombinations.Count == 0)
+                Initialise(true);
+
+            List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
+
+            List<string> simulationNames = new List<string>();
+            foreach (List<FactorValue> combination in allCombinations)
+            {
+                // Work out a simulation name for this combination
+                string simulationName = Name;
+                foreach (FactorValue value in combination)
+                    simulationName += value.Name;
+                SimulationGeneratorFactors simulationFactors = new SimulationGeneratorFactors("SimulationName", simulationName);
+                factors.Add(simulationFactors);
+                simulationFactors.AddFactor("Experiment", Name);
+
+                foreach (FactorValue value in combination)
+                {
+                    string factorName = value.Factor.Name;
+                    if (value.Factor.Parent is Factor)
+                        factorName = value.Factor.Parent.Name;
+                    string factorValue = value.Name.Replace(factorName, "");
+                    simulationFactors.AddFactor(factorName, factorValue);
+                }
+            }
+            return factors;
         }
 
         /// <summary>

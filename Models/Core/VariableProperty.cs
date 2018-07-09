@@ -476,6 +476,8 @@ namespace Models.Core
             Type type = value.GetType();
             if (type == typeof(double))
                 return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            else if (value is Enum)
+                return GetEnumDescription(value as Enum);
             else
                 return value.ToString();
         }
@@ -686,6 +688,44 @@ namespace Models.Core
         public override Attribute GetAttribute(Type attributeType)
         {
             return ReflectionUtilities.GetAttribute(this.property, attributeType, false);
+        }
+
+        /// <summary>
+        /// Convert the specified enum to a list of strings.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string[] EnumToStrings(object obj)
+        {
+            List<string> items = new List<string>();
+            foreach (object e in obj.GetType().GetEnumValues())
+            {
+                Enum value = e as Enum;
+                if (value != null)
+                    items.Add(GetEnumDescription(value));
+                else
+                    items.Add(e.ToString());
+            }
+            return items.ToArray();
+        }
+
+        /// <summary>
+        /// Parse the specified object to an enum. 
+        /// Similar to Enum.Parse(), but this will check against the enum's description attribute.
+        /// </summary>
+        /// <param name="obj">Object to parse. Should probably be a string.</param>
+        /// <param name="t">Enum in which we will try to find a matching member.</param>
+        /// <returns>Enum member.</returns>
+        public static Enum ParseEnum(Type t, object obj)
+        {
+            FieldInfo[] fields = t.GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                DescriptionAttribute description = field.GetCustomAttribute(typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (description != null && description.ToString() == obj.ToString())
+                    return field.GetValue(null) as Enum;
+            }
+            return Enum.Parse(t, obj.ToString()) as Enum;
         }
     }
 }
