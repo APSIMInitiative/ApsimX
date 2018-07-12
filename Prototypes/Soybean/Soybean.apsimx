@@ -3133,10 +3133,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>400</double>
                   </X>
                   <Y>
-                    <double>0.4</double>
-                    <double>0.4</double>
-                    <double>0.35</double>
-                    <double>0.35</double>
+                    <double>0.5</double>
+                    <double>0.5</double>
+                    <double>0.62</double>
+                    <double>0.62</double>
                   </Y>
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3639,10 +3639,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 380</Command>
-        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 123</Command>
+        <Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
         <Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
-        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535</Command>
-        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.2, 16.6</Command>
+        <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
+        <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 21500</Command>
       </Cultivar>
       <Cultivar>
@@ -3651,7 +3651,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Enabled>true</Enabled>
         <Command>[Phenology].Vegetative.Target.FixedValue = 360</Command>
         <Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
-        <Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
+        <Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
         <Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 23000</Command>
@@ -9410,6 +9410,81 @@ namespace Models
                   <TableName>Observed</TableName>
                   <XFieldName>Clock.Today</XFieldName>
                   <YFieldName>Soybean.Pod.Wt</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Left</Type>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <LegendPosition>TopLeft</LegendPosition>
+                <DisabledSeries />
+              </Graph>
+              <Graph>
+                <Name>ShellWt</Name>
+                <Series>
+                  <Name>Predicted</Name>
+                  <EventNamesOnGraph>
+                    <Name>EventNamesOnGraph</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ColumnName>Soybean.Phenology.CurrentStageName</ColumnName>
+                  </EventNamesOnGraph>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>None</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>Solid</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>DailyReport</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.Wt</YFieldName>
+                  <ShowInLegend>false</ShowInLegend>
+                  <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                  <Cumulative>false</Cumulative>
+                  <CumulativeX>false</CumulativeX>
+                </Series>
+                <Series>
+                  <Name>Observed</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-16777216</ColourArgb>
+                  <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                  <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                  <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                  <Marker>FilledCircle</Marker>
+                  <MarkerSize>Normal</MarkerSize>
+                  <Line>None</Line>
+                  <LineThickness>Normal</LineThickness>
+                  <Checkpoint>Current</Checkpoint>
+                  <TableName>Observed</TableName>
+                  <XFieldName>Clock.Today</XFieldName>
+                  <YFieldName>Soybean.Shell.Wt</YFieldName>
                   <ShowInLegend>false</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -19052,7 +19127,7 @@ namespace Models
             <TableName>Observed</TableName>
             <XFieldName>SimulationName</XFieldName>
             <YFieldName>Soybean.Phenology.FloweringDAS</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
+            <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -19100,7 +19175,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
+          <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -20420,6 +20495,51 @@ namespace Models
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soybean.Nodule.NFixed</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>0</Minimum>
+              <Maximum>1</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>HI</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soybean.Grain.HarvestIndex</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
