@@ -1,0 +1,26 @@
+pipeline {
+    agent none 
+    stages {
+        stage('Build') {
+			dockerfile {
+				filename 'Dockerfile.build'
+				dir 'Docker'
+				label 'buildapsimx'
+				additionalBuildArgs '-m 16g --cpu-count %NUMBER_OF_PROCESSORS%'
+			}
+            steps {
+                // 
+            }
+        }
+        stage('Test') { 
+            steps {
+                // 
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                // 
+            }
+        }
+    }
+}
