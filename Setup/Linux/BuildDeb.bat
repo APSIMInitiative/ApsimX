@@ -27,6 +27,12 @@ echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/ApsimNG.exe "$@
 )> .\DebPackage\data\usr\local\bin\apsim
 dos2unix -q .\DebPackage\data\usr\local\bin\apsim
 
+(
+echo #!/bin/sh
+echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/Models.exe "$@"
+)> .\DebPackage\data\usr\local\bin\Models
+dos2unix -q .\DebPackage\data\usr\local\bin\Models
+
 rem Copy the binaries and examples to their destinations
 xcopy /S /I /Y /Q %APSIMX_BUILD_DIR%\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
