@@ -2,7 +2,9 @@ pipeline {
 	agent none
     stages {
         stage('Build') {
-			agent any
+			agent {
+				label "windows && docker"
+			}
 			steps {
 				bat '''
 					if not exist ApsimX (
@@ -25,6 +27,66 @@ pipeline {
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
+			}
+		}
+		stage('RunTests') {
+			parallel {
+				stage('Prototypes') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							if not exist ApsimX (
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							
+							cd ApsimX
+							git checkout -- .
+							git clean -xfd
+							rem I assume the default repo name is origin.
+							git pull origin master
+							cd ..
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							cd APSIM.Shared
+							git pull origin master
+							cd ..
+							
+							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Prototypes
+						'''
+					}
+				}
+				stage('UI') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							if not exist ApsimX (
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							
+							cd ApsimX
+							git checkout -- .
+							git clean -xfd
+							rem I assume the default repo name is origin.
+							git pull origin master
+							cd ..
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							cd APSIM.Shared
+							git pull origin master
+							cd ..
+							
+							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests UI
+						'''
+					}
+				}
 			}
 		}
     }
