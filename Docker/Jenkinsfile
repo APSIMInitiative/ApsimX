@@ -10,12 +10,12 @@ pipeline {
 			}
             steps {
                 bat '''
-					call C:\BuildTools\Common7\Tools\VsDevCmd.bat
-					set apsimx=C:\ApsimX
+					call C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat
+					set apsimx=C:\\ApsimX
 					cd %apsimx%
 					nuget restore
-					copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin\
-					msbuild /m %apsimx%\ApsimX.sln
+					copy /y %apsimx%\\DeploymentSupport\\Windows\\Bin64\\* %apsimx%\\Bin
+					msbuild /m %apsimx%\\ApsimX.sln
 				'''
             }
         }
