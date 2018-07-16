@@ -1,0 +1,32 @@
+pipeline {
+	agent none
+    stages {
+        stage('Build') {
+			agent any
+			steps {
+				bat '''
+					if not exist ApsimX (
+						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+						git remote add upstream https://github.com/APSIMInitiative/ApsimX
+					)
+					
+					cd ApsimX
+					git reset --hard
+					git clean -x -f -d
+					git pull upstream master
+					cd ..
+					if not exist APSIM.Shared (
+						git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+						git remote add upstream https://github.com/APSIMInitiative/APSIM.Shared
+					)
+					cd APSIM.Shared
+					git pull upstream master
+					cd ..
+					
+					docker build -m 16g -t buildapsimx ApsimX\\Docker\\Dockerfile.build
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+				'''
+			}
+		}
+    }
+}
