@@ -6,8 +6,7 @@ pipeline {
 				dockerfile {
 					filename 'Dockerfile.build'
 					dir 'Docker'
-					label 'buildapsimx'
-					additionalBuildArgs '-m 16g --cpu-count %NUMBER_OF_PROCESSORS%'
+					additionalBuildArgs '-t buildapsimx -m 16g --cpu-count %NUMBER_OF_PROCESSORS%'
 				}
 			}
             steps {
