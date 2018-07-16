@@ -2,9 +2,22 @@ pipeline {
 	agent none
     stages {
         stage('Build') {
-			agent any
+		agent {
+			node {
+				label 'docker'
+				customWorkspace 'C:\Jenkins\workspace\Build'
+			}
+		}
             steps {
                 bat '''
+					if not exist ApsimX (
+						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+						git remote add upstream https://github.com/APSIMInitiative/ApsimX
+					)
+
+					cd ApsimX
+					git reset --hard e4d41a046d1ba174cdeddd72ffc8a6083522cbdb
+					cd ..
 					if not exist APSIM.Shared (
 						git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 						git remote add upstream https://github.com/APSIMInitiative/APSIM.Shared
