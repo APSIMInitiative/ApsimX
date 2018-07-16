@@ -22,7 +22,7 @@ pipeline {
 					git pull origin master
 					cd ..
 					
-					docker build -m 16g -t buildapsimx ApsimX\\Docker\\Dockerfile.build
+					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
 			}
