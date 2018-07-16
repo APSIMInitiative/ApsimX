@@ -1,21 +1,17 @@
 pipeline {
-    agent none 
+	agent none
     stages {
         stage('Build') {
-			agent {
-				dockerfile {
-					filename 'Dockerfile.build'
-					dir 'Docker'
-					additionalBuildArgs '-t buildapsimx -m 16g'
-				}
-			}
+			agent any
             steps {
-                bat "call C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat"
-				bat "set apsimx=C:\\ApsimX"
-				bat "cd %apsimx%"
-				bat "nuget restore"
-				bat "copy /y %apsimx%\\DeploymentSupport\\Windows\\Bin64\\* %apsimx%\\Bin"
-				bat "msbuild /m %apsimx%\\ApsimX.sln"
+                bat '''
+					if not exist APSIM.Shared (
+						git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+						git remote add upstream https://github.com/APSIMInitiative/APSIM.Shared
+					)
+					docker build -m 16g -t buildapsimx %cd%\\Docker\\NextGen\\compile
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+				'''
             }
         }
     }
