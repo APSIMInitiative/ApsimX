@@ -2,7 +2,12 @@ pipeline {
 	agent none
     stages {
         stage('Build') {
-			agent any
+		agent {
+			node {
+				label 'docker'
+				customWorkspace 'C:\Jenkins\workspace\Build'
+			}
+		}
             steps {
                 bat '''
 					if not exist ApsimX (
