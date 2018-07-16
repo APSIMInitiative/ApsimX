@@ -9,7 +9,7 @@ pipeline {
 						git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 						git remote add upstream https://github.com/APSIMInitiative/APSIM.Shared
 					)
-					docker build -m 16g -t buildapsimx %cd%\\Docker\\NextGen\\compile
+					docker build -m 16g -t buildapsimx ApsimX\Docker\Dockerfile.build
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
             }
