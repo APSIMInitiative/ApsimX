@@ -8,7 +8,9 @@ namespace Models.PMF.Functions
 {
     /// <summary>Value returned is determined according to given criteria</summary>
     [Serializable]
-    [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
+    [Description("Tests if value of a string property is equal to a given value and returns a value depending on the result.")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class StringComparisonFunction : Model, IFunction, ICustomDocumentation
     {
 
@@ -67,10 +69,15 @@ namespace Models.PMF.Functions
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
                 tags.Add(new AutoDocumentation.Paragraph("If " + PropertyName + " = " + StringValue + " Then", indent));
-                AutoDocumentation.DocumentModel(TrueValue as IModel,tags, headingLevel, indent + 1);
+                AutoDocumentation.DocumentModel(TrueValue as IModel,tags, headingLevel+1, indent+1);
+
                 tags.Add(new AutoDocumentation.Paragraph("Else", indent));
-                AutoDocumentation.DocumentModel(FalseValue as IModel, tags, headingLevel, indent + 1);
+                AutoDocumentation.DocumentModel(FalseValue as IModel, tags, headingLevel+1, indent+1);
             }
         }
     }

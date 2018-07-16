@@ -13,11 +13,16 @@
     /// <summary>
     /// # [Name]
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
-    /// ## Structure of nutrient
+    /// ## Soil Nutrient Model Structure
+    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients.  These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independantly specified, and are described in each case in the documentation for each organic matter pool below.
+    /// 
+    /// Mineral nutrient pools (e.g. Nitrate, Ammonium, Urea) are described as solutes within the model.  Each pool captures the mass of the nutrient (e.g. N,P) and they may also contain nutrient flows to describe losses or transformations for that particular compound (e.g. denitrification of nitrate, hydrolysis of urea).
     /// [DocumentView]
     /// ## Pools
+    /// The soil organic matter pools used within the model are described in the following sections in terms of their initialisation and the carbon flows occuring from them.
     /// [DocumentType NutrientPool]
-    /// ## Solutes:
+    /// ## Solutes
+    /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occuring from them.
     /// [DocumentType Solute]
     /// </summary>
     [Serializable]
@@ -26,19 +31,20 @@
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
     public class Nutrient : ModelCollectionFromResource, INutrient, IVisualiseAsDirectedGraph
     {
-        private DirectedGraph _directedGraphInfo;
+        private DirectedGraph directedGraphInfo;
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
         {
             get
             {
-                CalculateDirectedGraph();
-                return _directedGraphInfo;
+                if (Children != null && Children.Count > 0)
+                    CalculateDirectedGraph();
+                return directedGraphInfo;
             }
             set
             {
-                _directedGraphInfo = value;
+                directedGraphInfo = value;
             }
         }
 
@@ -350,16 +356,17 @@
         /// <summary>Calculate / create a directed graph from model</summary>
         public void CalculateDirectedGraph()
         {
-            if (_directedGraphInfo == null)
-                _directedGraphInfo = new DirectedGraph();
+            if (directedGraphInfo == null)
+                directedGraphInfo = new DirectedGraph();
 
-            _directedGraphInfo.Begin();
+            directedGraphInfo.Begin();
 
             bool needAtmosphereNode = false;
 
             foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
             {
-                _directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+                directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+
                 foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
                 {
                     foreach (string destinationName in cFlow.destinationNames)
@@ -370,7 +377,7 @@
                             destName = "Atmosphere";
                             needAtmosphereNode = true;
                         }
-                        _directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
+                        directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
 
                     }
                 }
@@ -378,7 +385,7 @@
 
             foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
             {
-                _directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
+                directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
                 foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
                 {
                     string destName = nitrogenFlow.destinationName;
@@ -387,15 +394,15 @@
                         destName = "Atmosphere";
                         needAtmosphereNode = true;
                     }
-
-                    _directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
+                    directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
                 }
             }
 
             if (needAtmosphereNode)
-                _directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
+                directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
 
-            _directedGraphInfo.End();
+            
+            directedGraphInfo.End();
         }
 
     }

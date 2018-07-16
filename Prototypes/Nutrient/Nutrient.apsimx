@@ -7,7 +7,7 @@
     <Enabled>true</Enabled>
     <MemoText><![CDATA[# The APSIM Soil Nutrient Model
  
-The APSIM Soil Nutrient model has been developed using approaches similar to those employed in the APSIM Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. 
+The APSIM Soil Nutrient model has been developed using approaches similar to those employed in the APSIM Plant Modelling Framework (PMF) of ([brown_plant_2014]). This new framework provides a library of process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. 
 
 The soil nutrient model consists of:
 
@@ -16,7 +16,7 @@ The soil nutrient model consists of:
 * a series of carbon flows that capture the flow of C from one pool to another, with associated CO2 losses and movement of N between pools and associated mineralisation or immobilisation of mineral N to facilitiate this flow.
 * a series of nitrogen flows that capture the movement of N between mineral N pools, or losses of N to the atmosphere.
 
-This work builds upon earlier APSIM soil organic matter models such as SoilN [probert_apsims_1998].]]></MemoText>
+This work builds upon earlier APSIM soil organic matter models such as SoilN ([probert_apsims_1998]).]]></MemoText>
   </Memo>
   <Replacements>
     <Name>Replacements</Name>
@@ -2234,6 +2234,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Enabled>true</Enabled>
           <FixedValue>1</FixedValue>
         </Constant>
+<<<<<<< HEAD
         <ExpressionFunction>
           <Name>CNRF</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2242,34 +2243,928 @@ But their data suggests a value of 0.3]]></MemoText>
         </ExpressionFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+=======
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </GenericOrgan>
+      <Cultivar>
+        <Name>Bambatsi</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Command />
+      </Cultivar>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <CropType>Bambatsi</CropType>
+    </Plant>
+    <Nutrient>
+      <Name>Nutrient</Name>
+      <NutrientPool>
+        <Name>Inert</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[The inert pool captures organic matter that either does not decompose, or decomposes at a rate slow enough to be of little importance to simulations.  Such an approach was also captured in the APSIM SoilN model ([probert_apsims_1998]).]]></MemoText>
+        </Memo>
+        <ExpressionFunction>
+          <Name>InitialCarbon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[Soil].FInert * [Soil].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
+        </ExpressionFunction>
+        <ExpressionFunction>
+          <Name>InitialNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[Inert].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
+        </ExpressionFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>SurfaceResidue</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This pool is used to provide the information about potential flows of Carbon and nutrients from the surface organic matter model to the soil nutrient model.  The potential daily flows of C and nutrients is provided to this pool at run time.  Matter not decomposed is returned to the surface organic matter model.  Such an approach was also captured in the APSIM SoilN model ([probert_apsims_1998]). This implementation is currently used to reproduce original functionality and should be refactored at some time in the future.]]></MemoText>
+        </Memo>
+        <Constant>
+          <Name>InitialCarbon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>InitialNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <CarbonFlow>
+          <Name>Decomposition</Name>
+          <Constant>
+            <Name>Rate</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The soil nutrient model will attempt to decompose all potentially decomposable surface organic materials.]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>N2OFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <destinationNames>
+            <string>Microbial</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
+        </CarbonFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </NutrientPool>
+      <Solute>
+        <Name>Urea</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This pool simulates the urea content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize ([jones_ceres-maize:_1986]).]]></MemoText>
+        </Memo>
+        <NFlow>
+          <Name>Hydrolysis</Name>
+          <Constant>
+            <Name>NLoss</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <BoundFunction>
+              <Name>PotentialRate</Name>
+              <Constant>
+                <Name>Upper</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Lower</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.25</FixedValue>
+              </Constant>
+              <ExpressionFunction>
+                <Name>Rate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Expression> -1.12 + 1.31 * [Soil].OC + 0.203 * [Soil].PH - 0.155 * [Soil].OC * [Soil].PH</Expression>
+              </ExpressionFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </BoundFunction>
+            <MinimumFunction>
+              <Name>RateModifier</Name>
+              <BoundFunction>
+                <Name>WF</Name>
+                <Constant>
+                  <Name>Upper</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <Constant>
+                  <Name>Lower</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <ExpressionFunction>
+                  <Name>Wfactor</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Expression>[WaterFactorForMineralisation]+0.2</Expression>
+                </ExpressionFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </BoundFunction>
+              <BoundFunction>
+                <Name>TF</Name>
+                <Constant>
+                  <Name>Upper</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <Constant>
+                  <Name>Lower</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <ExpressionFunction>
+                  <Name>Tfactor</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Expression>([Soil].Temperature/40)+0.2</Expression>
+                </ExpressionFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </BoundFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </MinimumFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <Constant>
+            <Name>N2OFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <sourceName>Urea</sourceName>
+          <destinationName>NH4</destinationName>
+        </NFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Solute>
+      <Solute>
+        <Name>NO3</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize ([jones_ceres-maize:_1986]).]]></MemoText>
+        </Memo>
+        <NFlow>
+          <Name>Denitrification</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Denitrification is simulated using the approaches initially used in CERES Maize[jones_ceres-maize:_1986] as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>NLoss</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.0006</FixedValue>
+            </Constant>
+            <ExpressionFunction>
+              <Name>ActiveC</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MemoText><![CDATA[Denitrification rate is affected by soil carbon content using an approach originally described by [Reddy1980]. ]]></MemoText>
+              </Memo>
+              <ExpressionFunction>
+                <Name>TotalCppm</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Expression>([Humic].C+[Inert].C+[FOMCarbohydrate].C+[FOMCellulose].C+[FOMLignin].C)/[ppm2kgha]</Expression>
+              </ExpressionFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Expression>0.0031 * [TotalCppm] + 24.5</Expression>
+            </ExpressionFunction>
+            <BoundFunction>
+              <Name>TF</Name>
+              <Constant>
+                <Name>Upper</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Lower</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <ExpressionFunction>
+                <Name>Tfactor</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Expression>0.1 * Exp(0.046 * [Soil].Temperature)</Expression>
+              </ExpressionFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </BoundFunction>
+            <LinearInterpolationFunction>
+              <Name>WF</Name>
+              <SoilWaterScale>
+                <Name>SoilWaterScale</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SoilWaterScale>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>2</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[SoilWaterScale]</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <ExpressionFunction>
+            <Name>N2OFraction</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The model for the fraction of N loss as N2O is taken from the DayCent model of ([PARTON1998]) as tested within APSIM by [huth_impacts_2010] and [THORBURN2010].]]></MemoText>
+            </Memo>
+            <MinimumFunction>
+              <Name>N2N2ORatio</Name>
+              <Constant>
+                <Name>Zero</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <MultiplyFunction>
+                <Name>Ratio</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>25.1</FixedValue>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>WFPSEffect</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>0</double>
+                      <double>28</double>
+                      <double>88</double>
+                      <double>100</double>
+                    </X>
+                    <Y>
+                      <double>0.1</double>
+                      <double>0.1</double>
+                      <double>1</double>
+                      <double>1.18</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <XProperty>[SoilWaterScale]</XProperty>
+                </LinearInterpolationFunction>
+                <MinimumFunction>
+                  <Name>CO2Effect</Name>
+                  <Constant>
+                    <Name>Constant</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <FixedValue>0.16</FixedValue>
+                  </Constant>
+                  <ExpressionFunction>
+                    <Name>Effect</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Expression>Math.Exp(-0.8 * [Nutrient].NO3.kgha / [Nutrient].Catm)</Expression>
+                  </ExpressionFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MinimumFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </MinimumFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Expression>1 / ([N2N2ORatio].Value() + 1)</Expression>
+          </ExpressionFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <sourceName>NO3</sourceName>
+        </NFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Solute>
+      <NutrientPool>
+        <Name>FOMLignin</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[The FOMLignin pool captures "lignin-like" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize ([jones_ceres-maize:_1986]). This pool has the slowest decomposition rate of the three FOM pools.]]></MemoText>
+        </Memo>
+        <ExpressionFunction>
+          <Name>InitialCarbon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[Soil].InitialRootWt * 0.1 * 0.4</Expression>
+        </ExpressionFunction>
+        <ExpressionFunction>
+          <Name>InitialNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[FOMLignin].C / [Soil].SoilOrganicMatter.RootCN</Expression>
+        </ExpressionFunction>
+        <CarbonFlow>
+          <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.0095</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <destinationNames>
+            <string>Microbial</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
+        </CarbonFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>FOMCellulose</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[The FOMCellulose pool captures "cellulose-like" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize ([jones_ceres-maize:_1986]). ]]></MemoText>
+        </Memo>
+        <ExpressionFunction>
+          <Name>InitialCarbon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[Soil].InitialRootWt * 0.7 * 0.4</Expression>
+        </ExpressionFunction>
+        <ExpressionFunction>
+          <Name>InitialNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[FOMCellulose].C / [Soil].SoilOrganicMatter.RootCN</Expression>
+        </ExpressionFunction>
+        <CarbonFlow>
+          <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.05</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <destinationNames>
+            <string>Microbial</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
+        </CarbonFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>FOMCarbohydrate</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[The FOMCarbohydrate pool captures "carbohydrate-like" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize ([jones_ceres-maize:_1986]). This pool has the fastest decomposition rate of the three FOM pools.]]></MemoText>
+        </Memo>
+        <ExpressionFunction>
+          <Name>InitialCarbon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[Soil].InitialRootWt * 0.2 * 0.4</Expression>
+        </ExpressionFunction>
+        <ExpressionFunction>
+          <Name>InitialNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[FOMCarbohydrate].C / [Soil].SoilOrganicMatter.RootCN</Expression>
+        </ExpressionFunction>
+        <CarbonFlow>
+          <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.2</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <destinationNames>
+            <string>Microbial</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
+        </CarbonFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>Microbial</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[The Microbial pool captures organic matter within the soil such as microbial biomass that has a relatively low carbon:nitrogen ratio and a relatively high decomposition rate.  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]). ]]></MemoText>
+        </Memo>
+        <ExpressionFunction>
+          <Name>InitialCarbon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>(([Soil].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)</Expression>
+        </ExpressionFunction>
+        <ExpressionFunction>
+          <Name>InitialNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[Microbial].C /  [CNRatio]</Expression>
+        </ExpressionFunction>
+        <Constant>
+          <Name>CNRatio</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The carbon:nitrogen ratio for microbial biomass is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>8</FixedValue>
+        </Constant>
+        <CarbonFlow>
+          <Name>Decomposition</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The model for decomposition of organic matter from this pool is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <StringComparisonFunction>
+              <Name>PotentialRate</Name>
+              <Constant>
+                <Name>TrueValue</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.0324</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>FalseValue</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.0081</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <PropertyName>[Soil].SoilType</PropertyName>
+              <StringValue>Sand</StringValue>
+            </StringComparisonFunction>
+            <VariableReference>
+              <Name>TF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <destinationNames>
+            <string>Microbial</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.6</double>
+            <double>0.4</double>
+          </destinationFraction>
+        </CarbonFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>Humic</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[The Humic pool describes the stable organic matter within the soil with a decomposition rate much lower than the other pools apart from the inert material.  As a result, this pool should ordinarily account for the majority of the decomposable soil organic matter.  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize ([jones_ceres-maize:_1986]). ]]></MemoText>
+        </Memo>
+        <ExpressionFunction>
+          <Name>InitialCarbon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Microbial].C</Expression>
+        </ExpressionFunction>
+        <ExpressionFunction>
+          <Name>InitialNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>[Humic].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
+        </ExpressionFunction>
+        <CarbonFlow>
+          <Name>Decomposition</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.00015</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The CO2 efficiency for this carbon flow is taken from the original Soil N model ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <destinationNames>
+            <string>Microbial</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>1</double>
+          </destinationFraction>
+        </CarbonFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </NutrientPool>
+      <Solute>
+        <Name>NH4</Name>
+        <NFlow>
+          <Name>Nitrification</Name>
+          <Constant>
+            <Name>NLoss</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[Currently, no loss of N to the atmosphere is assumed to occur during nitrification processes ([probert_apsims_1998]).]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <ExpressionFunction>
+              <Name>MichaelisMenton</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Expression>40/([Nutrient].NH4.ppm+90)</Expression>
+            </ExpressionFunction>
+            <MinimumFunction>
+              <Name>PNI</Name>
+              <LinearInterpolationFunction>
+                <Name>WF</Name>
+                <SoilWaterScale>
+                  <Name>SoilWaterScale</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </SoilWaterScale>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>0</double>
+                    <double>0.25</double>
+                    <double>1</double>
+                    <double>2</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[SoilWaterScale]</XProperty>
+              </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>TF</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+              </VariableReference>
+              <LinearInterpolationFunction>
+                <Name>pHF</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>4.5</double>
+                    <double>6</double>
+                    <double>8</double>
+                    <double>9</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Soil].PH</XProperty>
+              </LinearInterpolationFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </MinimumFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <Constant>
+            <Name>N2OFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <sourceName>NH4</sourceName>
+          <destinationName>NO3</destinationName>
+        </NFlow>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Solute>
+      <MinimumFunction>
+        <Name>TemperatureFactorForMineralisation</Name>
+        <ExpressionFunction>
+          <Name>TF</Name>
+          <Constant>
+            <Name>Topt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>32</FixedValue>
+          </Constant>
+          <MaximumFunction>
+            <Name>AbsT</Name>
+            <Constant>
+              <Name>Zero</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>VariableReference</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Soil].Temperature</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MaximumFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>([AbsT]^2)/([Topt]^2)</Expression>
+        </ExpressionFunction>
+        <Constant>
+          <Name>One</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </MinimumFunction>
+      <StringComparisonFunction>
+        <Name>WaterFactorForMineralisation</Name>
+        <LinearInterpolationFunction>
+          <Name>TrueValue</Name>
+          <SoilWaterScale>
+            <Name>SoilWaterScale</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoilWaterScale>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>0.5</double>
+              <double>1</double>
+              <double>2</double>
+            </X>
+            <Y>
+              <double>0.05</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0.5</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[SoilWaterScale]</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>FalseValue</Name>
+          <SoilWaterScale>
+            <Name>SoilWaterScale</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoilWaterScale>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>0.5</double>
+              <double>1</double>
+              <double>2</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0.5</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[SoilWaterScale]</XProperty>
+        </LinearInterpolationFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <PropertyName>[Soil].SoilType</PropertyName>
+        <StringValue>Sand</StringValue>
+      </StringComparisonFunction>
+      <MinimumFunction>
+        <Name>CNRatioFactorForMineralisation</Name>
+        <Constant>
+          <Name>One</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <ExpressionFunction>
+          <Name>CNRF</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Expression>Exp(-0.693*([Nutrient].FOMCNR-25)/25)</Expression>
+        </ExpressionFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
       </MinimumFunction>
       <ExpressionFunction>
         <Name>ppm2kgha</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+<<<<<<< HEAD
         <Enabled>true</Enabled>
+=======
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
         <Expression>([Soil].BD*[Soil].Thickness)/100</Expression>
       </ExpressionFunction>
       <ExpressionFunction>
         <Name>FOMCx</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+<<<<<<< HEAD
         <Enabled>true</Enabled>
+=======
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
         <Expression>[FOMLignin].C+[FOMCellulose].C+[FOMCarbohydrate].C</Expression>
       </ExpressionFunction>
       <ExpressionFunction>
         <Name>FOMNx</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+<<<<<<< HEAD
         <Enabled>true</Enabled>
         <Expression>[FOMLignin].N+[FOMCellulose].N+[FOMCarbohydrate].N</Expression>
       </ExpressionFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+=======
+        <Expression>[FOMLignin].N+[FOMCellulose].N+[FOMCarbohydrate].N</Expression>
+      </ExpressionFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
       <DirectedGraphInfo>
         <Nodes>
           <Node>
             <Name>Inert</Name>
             <Location>
+<<<<<<< HEAD
               <X>800</X>
               <Y>519</Y>
+=======
+              <X>551</X>
+              <Y>449</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2277,8 +3172,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>SurfaceResidue</Name>
             <Location>
+<<<<<<< HEAD
               <X>383</X>
               <Y>101</Y>
+=======
+              <X>283</X>
+              <Y>69</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2286,8 +3186,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Microbial</Name>
             <Location>
+<<<<<<< HEAD
               <X>224</X>
               <Y>514</Y>
+=======
+              <X>144</X>
+              <Y>437</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2295,8 +3200,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Humic</Name>
             <Location>
+<<<<<<< HEAD
               <X>538</X>
               <Y>529</Y>
+=======
+              <X>374</X>
+              <Y>453</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2304,8 +3214,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>FOMLignin</Name>
             <Location>
+<<<<<<< HEAD
               <X>86</X>
               <Y>323</Y>
+=======
+              <X>80</X>
+              <Y>221</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2313,8 +3228,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>FOMCellulose</Name>
             <Location>
+<<<<<<< HEAD
               <X>367</X>
               <Y>325</Y>
+=======
+              <X>278</X>
+              <Y>227</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2322,8 +3242,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>FOMCarbohydrate</Name>
             <Location>
+<<<<<<< HEAD
               <X>637</X>
               <Y>330</Y>
+=======
+              <X>467</X>
+              <Y>219</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2331,8 +3256,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Urea</Name>
             <Location>
+<<<<<<< HEAD
               <X>753</X>
               <Y>787</Y>
+=======
+              <X>74</X>
+              <Y>666</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2340,8 +3270,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>NO3</Name>
             <Location>
+<<<<<<< HEAD
               <X>300</X>
               <Y>777</Y>
+=======
+              <X>400</X>
+              <Y>672</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2349,8 +3284,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>NH4</Name>
             <Location>
+<<<<<<< HEAD
               <X>526</X>
               <Y>782</Y>
+=======
+              <X>237</X>
+              <Y>673</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2358,8 +3298,13 @@ But their data suggests a value of 0.3]]></MemoText>
           <Node>
             <Name>Atmosphere</Name>
             <Location>
+<<<<<<< HEAD
               <X>84</X>
               <Y>779</Y>
+=======
+              <X>586</X>
+              <Y>673</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
             <OutlineColour />
@@ -2370,8 +3315,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>SurfaceResidue</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>276</X>
               <Y>229</Y>
+=======
+              <X>165</X>
+              <Y>251</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2379,8 +3329,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>SurfaceResidue</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>513</X>
               <Y>352</Y>
+=======
+              <X>420</X>
+              <Y>293</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2388,8 +3343,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Microbial</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>318</X>
               <Y>626</Y>
+=======
+              <X>211</X>
+              <Y>584</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2397,8 +3357,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Microbial</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>380</X>
               <Y>607</Y>
+=======
+              <X>263</X>
+              <Y>529</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2406,8 +3371,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Humic</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>293</X>
               <Y>525</Y>
+=======
+              <X>250</X>
+              <Y>451</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2415,8 +3385,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMLignin</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>33</X>
               <Y>493</Y>
+=======
+              <X>56</X>
+              <Y>396</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2433,8 +3408,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMCellulose</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>337</X>
               <Y>410</Y>
+=======
+              <X>211</X>
+              <Y>391</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2451,8 +3431,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMCarbohydrate</SourceName>
             <DestinationName>Microbial</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>517</X>
               <Y>362</Y>
+=======
+              <X>407</X>
+              <Y>337</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2460,8 +3445,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>FOMCarbohydrate</SourceName>
             <DestinationName>Humic</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>588</X>
               <Y>400</Y>
+=======
+              <X>517</X>
+              <Y>377</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2469,8 +3459,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>Urea</SourceName>
             <DestinationName>NH4</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>768</X>
               <Y>771</Y>
+=======
+              <X>180</X>
+              <Y>665</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2478,8 +3473,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>NO3</SourceName>
             <DestinationName>Atmosphere</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>307</X>
               <Y>765</Y>
+=======
+              <X>507</X>
+              <Y>668</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2487,8 +3487,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <SourceName>NH4</SourceName>
             <DestinationName>NO3</DestinationName>
             <Location>
+<<<<<<< HEAD
               <X>505</X>
               <Y>767</Y>
+=======
+              <X>314</X>
+              <Y>670</Y>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
             </Location>
             <Colour />
           </Arc>
@@ -2665,10 +3670,10 @@ But their data suggests a value of 0.3]]></MemoText>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <Center>
-        <Latitude>44.715513732021336</Latitude>
-        <Longitude>94.833984375</Longitude>
+        <Latitude>4.9158328013131642</Latitude>
+        <Longitude>58.710937500000007</Longitude>
       </Center>
-      <Zoom>3</Zoom>
+      <Zoom>1</Zoom>
     </Map>
     <Folder>
       <Name>Combined Results</Name>
@@ -2730,8 +3735,12 @@ But their data suggests a value of 0.3]]></MemoText>
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+<<<<<<< HEAD
         <Enabled>true</Enabled>
         <MemoText><![CDATA[Insert text here to document the Australian datasets]]></MemoText>
+=======
+        <MemoText><![CDATA[Datasets from Australia have been chosen to test the soil nutrient model across a range of environments and soil types.  Preference was also given to datasets of long enough duration to show changes in soil organic matter status.]]></MemoText>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
       </Memo>
       <Folder>
         <Name>Tarlee</Name>
@@ -2740,8 +3749,12 @@ But their data suggests a value of 0.3]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+<<<<<<< HEAD
             <Enabled>true</Enabled>
             <MemoText><![CDATA[Insert text here to document the Tarlee dataset]]></MemoText>
+=======
+            <MemoText><![CDATA[The Tarlee crop rotation trial was established in 1977 in Tarlee, South Australia to monitor the long term impact of crop rotations on soil properties and crop production ([Schultz1995]).  Rundown in soil organic matter status has been documented and modelled for this data set ([Skjemstad2004]).  The soil is a hard setting red-brown earth with a sandy loam texture. The long term mean annual rainfall for the rainfall is 475 mm.]]></MemoText>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
           </Memo>
           <Factors>
             <Name>Factors</Name>
@@ -8540,8 +9553,235 @@ namespace Models
                   <Enabled>true</Enabled>
                   <ResourceName>Nutrient</ResourceName>
                   <DirectedGraphInfo>
-                    <Nodes />
-                    <Arcs />
+                    <Nodes>
+                      <Node>
+                        <Name>Inert</Name>
+                        <Location>
+                          <X>800</X>
+                          <Y>519</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>SurfaceResidue</Name>
+                        <Location>
+                          <X>383</X>
+                          <Y>101</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Microbial</Name>
+                        <Location>
+                          <X>224</X>
+                          <Y>514</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Humic</Name>
+                        <Location>
+                          <X>538</X>
+                          <Y>529</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMLignin</Name>
+                        <Location>
+                          <X>86</X>
+                          <Y>323</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCellulose</Name>
+                        <Location>
+                          <X>367</X>
+                          <Y>325</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCarbohydrate</Name>
+                        <Location>
+                          <X>637</X>
+                          <Y>330</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Urea</Name>
+                        <Location>
+                          <X>753</X>
+                          <Y>787</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NO3</Name>
+                        <Location>
+                          <X>300</X>
+                          <Y>777</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NH4</Name>
+                        <Location>
+                          <X>526</X>
+                          <Y>782</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Atmosphere</Name>
+                        <Location>
+                          <X>84</X>
+                          <Y>779</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                    </Nodes>
+                    <Arcs>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>276</X>
+                          <Y>229</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>513</X>
+                          <Y>352</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>318</X>
+                          <Y>626</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>380</X>
+                          <Y>607</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Humic</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>293</X>
+                          <Y>525</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>33</X>
+                          <Y>493</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>226</X>
+                          <Y>395</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>337</X>
+                          <Y>410</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>453</X>
+                          <Y>413</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>517</X>
+                          <Y>362</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>588</X>
+                          <Y>400</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Urea</SourceName>
+                        <DestinationName>NH4</DestinationName>
+                        <Location>
+                          <X>768</X>
+                          <Y>771</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NO3</SourceName>
+                        <DestinationName>Atmosphere</DestinationName>
+                        <Location>
+                          <X>307</X>
+                          <Y>765</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NH4</SourceName>
+                        <DestinationName>NO3</DestinationName>
+                        <Location>
+                          <X>505</X>
+                          <Y>767</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                    </Arcs>
                   </DirectedGraphInfo>
                 </Nutrient>
                 <SoilOrganicMatter>
@@ -8766,9 +10006,15 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
               <FactorToVaryLines>Simulation</FactorToVaryLines>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8777,7 +10023,7 @@ namespace Models
               <TableName>HarvestReport</TableName>
               <XFieldName>Clock.Today.Year</XFieldName>
               <YFieldName>Wheat.Grain.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -8790,8 +10036,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8890,8 +10142,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryLines>Simulation</FactorToVaryLines>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8900,7 +10158,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC0_30cm</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -8913,8 +10171,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8964,8 +10228,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9008,8 +10278,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryLines>Simulation</FactorToVaryLines>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -9018,7 +10294,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC0_10cm</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9031,8 +10307,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9082,8 +10364,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9126,8 +10414,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryLines>Simulation</FactorToVaryLines>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -9136,7 +10430,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC10_30cm</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9200,8 +10494,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9244,8 +10544,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryLines>Simulation</FactorToVaryLines>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -9254,7 +10560,7 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TOC30_60cm</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
+              <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
@@ -9318,8 +10624,14 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
+<<<<<<< HEAD
               <FactorToVaryColours>Rotation</FactorToVaryColours>
               <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+=======
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+>>>>>>> a51e9e3f0598817212fc431b4d5baaa0331567a0
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9676,8 +10988,235 @@ namespace Models
                 <Enabled>true</Enabled>
                 <ResourceName>Nutrient</ResourceName>
                 <DirectedGraphInfo>
-                  <Nodes />
-                  <Arcs />
+                  <Nodes>
+                    <Node>
+                      <Name>Inert</Name>
+                      <Location>
+                        <X>800</X>
+                        <Y>519</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>SurfaceResidue</Name>
+                      <Location>
+                        <X>383</X>
+                        <Y>101</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Microbial</Name>
+                      <Location>
+                        <X>224</X>
+                        <Y>514</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Humic</Name>
+                      <Location>
+                        <X>538</X>
+                        <Y>529</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMLignin</Name>
+                      <Location>
+                        <X>86</X>
+                        <Y>323</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCellulose</Name>
+                      <Location>
+                        <X>367</X>
+                        <Y>325</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCarbohydrate</Name>
+                      <Location>
+                        <X>637</X>
+                        <Y>330</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Urea</Name>
+                      <Location>
+                        <X>753</X>
+                        <Y>787</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NO3</Name>
+                      <Location>
+                        <X>300</X>
+                        <Y>777</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NH4</Name>
+                      <Location>
+                        <X>526</X>
+                        <Y>782</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Atmosphere</Name>
+                      <Location>
+                        <X>84</X>
+                        <Y>779</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                  </Nodes>
+                  <Arcs>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>276</X>
+                        <Y>229</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>513</X>
+                        <Y>352</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>318</X>
+                        <Y>626</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>380</X>
+                        <Y>607</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Humic</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>293</X>
+                        <Y>525</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>33</X>
+                        <Y>493</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>226</X>
+                        <Y>395</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>337</X>
+                        <Y>410</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>453</X>
+                        <Y>413</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>517</X>
+                        <Y>362</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>588</X>
+                        <Y>400</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Urea</SourceName>
+                      <DestinationName>NH4</DestinationName>
+                      <Location>
+                        <X>768</X>
+                        <Y>771</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NO3</SourceName>
+                      <DestinationName>Atmosphere</DestinationName>
+                      <Location>
+                        <X>307</X>
+                        <Y>765</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NH4</SourceName>
+                      <DestinationName>NO3</DestinationName>
+                      <Location>
+                        <X>505</X>
+                        <Y>767</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                  </Arcs>
                 </DirectedGraphInfo>
               </Nutrient>
               <SoilOrganicMatter>
@@ -15753,8 +17292,235 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
                 <Enabled>true</Enabled>
                 <ResourceName>Nutrient</ResourceName>
                 <DirectedGraphInfo>
-                  <Nodes />
-                  <Arcs />
+                  <Nodes>
+                    <Node>
+                      <Name>Inert</Name>
+                      <Location>
+                        <X>800</X>
+                        <Y>519</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>SurfaceResidue</Name>
+                      <Location>
+                        <X>383</X>
+                        <Y>101</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Microbial</Name>
+                      <Location>
+                        <X>224</X>
+                        <Y>514</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Humic</Name>
+                      <Location>
+                        <X>538</X>
+                        <Y>529</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMLignin</Name>
+                      <Location>
+                        <X>86</X>
+                        <Y>323</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCellulose</Name>
+                      <Location>
+                        <X>367</X>
+                        <Y>325</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCarbohydrate</Name>
+                      <Location>
+                        <X>637</X>
+                        <Y>330</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Urea</Name>
+                      <Location>
+                        <X>753</X>
+                        <Y>787</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NO3</Name>
+                      <Location>
+                        <X>300</X>
+                        <Y>777</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NH4</Name>
+                      <Location>
+                        <X>526</X>
+                        <Y>782</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Atmosphere</Name>
+                      <Location>
+                        <X>84</X>
+                        <Y>779</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                  </Nodes>
+                  <Arcs>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>276</X>
+                        <Y>229</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>513</X>
+                        <Y>352</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>318</X>
+                        <Y>626</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>380</X>
+                        <Y>607</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Humic</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>293</X>
+                        <Y>525</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>33</X>
+                        <Y>493</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>226</X>
+                        <Y>395</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>337</X>
+                        <Y>410</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>453</X>
+                        <Y>413</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>517</X>
+                        <Y>362</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>588</X>
+                        <Y>400</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Urea</SourceName>
+                      <DestinationName>NH4</DestinationName>
+                      <Location>
+                        <X>768</X>
+                        <Y>771</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NO3</SourceName>
+                      <DestinationName>Atmosphere</DestinationName>
+                      <Location>
+                        <X>307</X>
+                        <Y>765</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NH4</SourceName>
+                      <DestinationName>NO3</DestinationName>
+                      <Location>
+                        <X>505</X>
+                        <Y>767</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                  </Arcs>
                 </DirectedGraphInfo>
               </Nutrient>
               <SoilOrganicMatter>
@@ -17983,8 +19749,235 @@ endif
                 <Enabled>true</Enabled>
                 <ResourceName>Nutrient</ResourceName>
                 <DirectedGraphInfo>
-                  <Nodes />
-                  <Arcs />
+                  <Nodes>
+                    <Node>
+                      <Name>Inert</Name>
+                      <Location>
+                        <X>800</X>
+                        <Y>519</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>SurfaceResidue</Name>
+                      <Location>
+                        <X>383</X>
+                        <Y>101</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Microbial</Name>
+                      <Location>
+                        <X>224</X>
+                        <Y>514</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Humic</Name>
+                      <Location>
+                        <X>538</X>
+                        <Y>529</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMLignin</Name>
+                      <Location>
+                        <X>86</X>
+                        <Y>323</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCellulose</Name>
+                      <Location>
+                        <X>367</X>
+                        <Y>325</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>FOMCarbohydrate</Name>
+                      <Location>
+                        <X>637</X>
+                        <Y>330</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Urea</Name>
+                      <Location>
+                        <X>753</X>
+                        <Y>787</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NO3</Name>
+                      <Location>
+                        <X>300</X>
+                        <Y>777</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>NH4</Name>
+                      <Location>
+                        <X>526</X>
+                        <Y>782</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                    <Node>
+                      <Name>Atmosphere</Name>
+                      <Location>
+                        <X>84</X>
+                        <Y>779</Y>
+                      </Location>
+                      <Colour />
+                      <OutlineColour />
+                    </Node>
+                  </Nodes>
+                  <Arcs>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>276</X>
+                        <Y>229</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>SurfaceResidue</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>513</X>
+                        <Y>352</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>318</X>
+                        <Y>626</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Microbial</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>380</X>
+                        <Y>607</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Humic</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>293</X>
+                        <Y>525</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>33</X>
+                        <Y>493</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMLignin</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>226</X>
+                        <Y>395</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>337</X>
+                        <Y>410</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCellulose</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>453</X>
+                        <Y>413</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Microbial</DestinationName>
+                      <Location>
+                        <X>517</X>
+                        <Y>362</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>FOMCarbohydrate</SourceName>
+                      <DestinationName>Humic</DestinationName>
+                      <Location>
+                        <X>588</X>
+                        <Y>400</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>Urea</SourceName>
+                      <DestinationName>NH4</DestinationName>
+                      <Location>
+                        <X>768</X>
+                        <Y>771</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NO3</SourceName>
+                      <DestinationName>Atmosphere</DestinationName>
+                      <Location>
+                        <X>307</X>
+                        <Y>765</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                    <Arc>
+                      <SourceName>NH4</SourceName>
+                      <DestinationName>NO3</DestinationName>
+                      <Location>
+                        <X>505</X>
+                        <Y>767</Y>
+                      </Location>
+                      <Colour />
+                    </Arc>
+                  </Arcs>
                 </DirectedGraphInfo>
               </Nutrient>
               <SoilOrganicMatter>
@@ -23723,6 +25716,19 @@ namespace Models
         <Name>Pendleton</Name>
         <Experiment>
           <Name>Pendleton</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This dataset describes the long term trial at Pendleton, Oregon.  The experiment design included Winter-wheat / fallow rotations in 9 treatments (2 replications with 2 blocks offset by 1 year).  
+
+The treatments included:
+2 Organic residues: Pea Vines and Manure
+3 N rates: 0, 45 and 90 kgN/ha (Prior to 1966 - only 0 and 34 kgN/ha)
+3 Stubble managements:  No burn, Spring Burn and Fall Burn
+
+Wheat varieties varied over the duration of the trial (1931 to 1966: Medium-tall soft white, 1967+: Semi-dwarf).  Wheat was planted mid-October and harvested after 6-7 months growth.
+]]></MemoText>
+          </Memo>
           <Factors>
             <Name>Factors</Name>
             <Factor>
@@ -32611,8 +34617,235 @@ namespace Models
                   <Enabled>true</Enabled>
                   <ResourceName>Nutrient</ResourceName>
                   <DirectedGraphInfo>
-                    <Nodes />
-                    <Arcs />
+                    <Nodes>
+                      <Node>
+                        <Name>Inert</Name>
+                        <Location>
+                          <X>800</X>
+                          <Y>519</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>SurfaceResidue</Name>
+                        <Location>
+                          <X>383</X>
+                          <Y>101</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Microbial</Name>
+                        <Location>
+                          <X>224</X>
+                          <Y>514</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Humic</Name>
+                        <Location>
+                          <X>538</X>
+                          <Y>529</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMLignin</Name>
+                        <Location>
+                          <X>86</X>
+                          <Y>323</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCellulose</Name>
+                        <Location>
+                          <X>367</X>
+                          <Y>325</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>FOMCarbohydrate</Name>
+                        <Location>
+                          <X>637</X>
+                          <Y>330</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Urea</Name>
+                        <Location>
+                          <X>753</X>
+                          <Y>787</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NO3</Name>
+                        <Location>
+                          <X>300</X>
+                          <Y>777</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>NH4</Name>
+                        <Location>
+                          <X>526</X>
+                          <Y>782</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                      <Node>
+                        <Name>Atmosphere</Name>
+                        <Location>
+                          <X>84</X>
+                          <Y>779</Y>
+                        </Location>
+                        <Colour />
+                        <OutlineColour />
+                      </Node>
+                    </Nodes>
+                    <Arcs>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>276</X>
+                          <Y>229</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>SurfaceResidue</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>513</X>
+                          <Y>352</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>318</X>
+                          <Y>626</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Microbial</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>380</X>
+                          <Y>607</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Humic</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>293</X>
+                          <Y>525</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>33</X>
+                          <Y>493</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMLignin</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>226</X>
+                          <Y>395</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>337</X>
+                          <Y>410</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCellulose</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>453</X>
+                          <Y>413</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Microbial</DestinationName>
+                        <Location>
+                          <X>517</X>
+                          <Y>362</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>FOMCarbohydrate</SourceName>
+                        <DestinationName>Humic</DestinationName>
+                        <Location>
+                          <X>588</X>
+                          <Y>400</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>Urea</SourceName>
+                        <DestinationName>NH4</DestinationName>
+                        <Location>
+                          <X>768</X>
+                          <Y>771</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NO3</SourceName>
+                        <DestinationName>Atmosphere</DestinationName>
+                        <Location>
+                          <X>307</X>
+                          <Y>765</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                      <Arc>
+                        <SourceName>NH4</SourceName>
+                        <DestinationName>NO3</DestinationName>
+                        <Location>
+                          <X>505</X>
+                          <Y>767</Y>
+                        </Location>
+                        <Colour />
+                      </Arc>
+                    </Arcs>
                   </DirectedGraphInfo>
                 </Nutrient>
                 <SoilOrganicMatter>

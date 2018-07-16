@@ -6,7 +6,7 @@ namespace Models.Soils.Nutrients
     using System;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
-
+    using System.Data;
     /// <summary>
     /// # [Name]
     /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
@@ -15,7 +15,7 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
-    public class CarbonFlow : Model
+    public class CarbonFlow : Model, ICustomDocumentation
     {
         private List<NutrientPool> destinations = new List<NutrientPool>();
 
@@ -150,6 +150,43 @@ namespace Models.Soils.Nutrients
             solutes.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, NO3);
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // Write Phase Table
+                tags.Add(new AutoDocumentation.Paragraph("**Destination of C from "+this.Name+"**", indent));
+                DataTable tableData = new DataTable();
+                tableData.Columns.Add("Destination Pool", typeof(string));
+                tableData.Columns.Add("Carbon Fraction", typeof(string));
+
+                for (int j = 0; j < destinationNames.Length; j++)
+                {
+                    DataRow row = tableData.NewRow();
+                    row[0] = destinationNames[j];
+                    row[1] = destinationFraction[j].ToString();
+                    tableData.Rows.Add(row);
+                }
+
+                tags.Add(new AutoDocumentation.Table(tableData, indent));
+
+                // write remaining children
+                foreach (IModel memo in Apsim.Children(this, typeof(IFunction)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+            }
+        }
 
     }
 }
