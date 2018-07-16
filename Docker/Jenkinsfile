@@ -9,12 +9,12 @@ pipeline {
 				additionalBuildArgs '-m 16g --cpu-count %NUMBER_OF_PROCESSORS%'
 			}
             steps {
-                bat call "C:\BuildTools\Common7\Tools\VsDevCmd.bat"
-				bat set apsimx=C:\ApsimX
-				bat cd %apsimx%
-				bat nuget restore
-				bat copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin\
-				bat msbuild /m %apsimx%\ApsimX.sln
+                bat 'call C:\BuildTools\Common7\Tools\VsDevCmd.bat'
+				bat 'set apsimx=C:\ApsimX'
+				bat 'cd %apsimx%'
+				bat 'nuget restore'
+				bat 'copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin\'
+				bat 'msbuild /m %apsimx%\ApsimX.sln'
             }
         }
     }
