@@ -1369,7 +1369,7 @@ namespace Models.Soils.SoilWaterBackend
             foreach (Layer lyr in this)
                 {
                 if (Delta_mm.Length >= lyr.number)
-                    lyr.sw_dep = lyr.sw_dep + Delta_mm[lyr.number - 1];
+                    lyr.sw_dep = lyr.sw_dep - Delta_mm[lyr.number - 1];
                 }
             }
 
@@ -1651,31 +1651,31 @@ namespace Models.Soils.SoilWaterBackend
 
             //summer
 
-            SummerCona = Soil.SoilWater.SummerCona;
-            SummerU = Soil.SoilWater.SummerU;
-            SummerDate = Soil.SoilWater.SummerDate;
+            SummerCona = (Soil.SoilWater as SoilWater).SummerCona;
+            SummerU = (Soil.SoilWater as SoilWater).SummerU;
+            SummerDate = (Soil.SoilWater as SoilWater).SummerDate;
 
             //winter
-            WinterCona = Soil.SoilWater.WinterCona;
-            WinterU = Soil.SoilWater.WinterU;
-            WinterDate = Soil.SoilWater.WinterDate;
+            WinterCona = (Soil.SoilWater as SoilWater).WinterCona;
+            WinterU = (Soil.SoilWater as SoilWater).WinterU;
+            WinterDate = (Soil.SoilWater as SoilWater).WinterDate;
 
 
-            DiffusConst = Soil.SoilWater.DiffusConst;
-            DiffusSlope = Soil.SoilWater.DiffusSlope;
+            DiffusConst = (Soil.SoilWater as SoilWater).DiffusConst;
+            DiffusSlope = (Soil.SoilWater as SoilWater).DiffusSlope;
 
 
-            Salb = Soil.SoilWater.Salb;
+            Salb = (Soil.SoilWater as SoilWater).Salb;
 
 
-            cn2_bare = Soil.SoilWater.CN2Bare;
-            cn_red = Soil.SoilWater.CNRed;
-            cn_cov = Soil.SoilWater.CNCov;
+            cn2_bare = (Soil.SoilWater as SoilWater).CN2Bare;
+            cn_red = (Soil.SoilWater as SoilWater).CNRed;
+            cn_cov = (Soil.SoilWater as SoilWater).CNCov;
 
 
-            slope = Soil.SoilWater.slope;
-            discharge_width = Soil.SoilWater.discharge_width;
-            catchment_area = Soil.SoilWater.catchment_area;
+            slope = (Soil.SoilWater as SoilWater).slope;
+            discharge_width = (Soil.SoilWater as SoilWater).discharge_width;
+            catchment_area = (Soil.SoilWater as SoilWater).catchment_area;
 
             if (Double.IsNaN(slope))
                 slope = 0.0;
@@ -1688,7 +1688,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-            max_pond = Soil.SoilWater.max_pond;
+            max_pond = (Soil.SoilWater as SoilWater).max_pond;
 
 
 

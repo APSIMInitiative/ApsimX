@@ -476,7 +476,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                var mainView = GetMainViewReference(this);
+                MainView mainView = GetMainViewReference(this);
                 if (mainView != null)
                     mainView.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
             }
@@ -760,48 +760,7 @@ namespace UserInterface.Views
             char c;
             return char.TryParse(keyName, out c) && !char.IsControl(c);
         }
-
-        /*
-        /// <summary>
-        /// Show the completion window
-        /// </summary>
-        private void ShowCompletionWindow()
-        {
-            if (ContextItemsNeeded == null)
-                return;
-            try
-            {
-                caretLocation = (editControl as Entry).Position;
-                string cellContents = (editControl as Entry).Text;
-                string contentsToCursor = cellContents.Substring(0, caretLocation);
-                string contentsAfterCursor = cellContents.Substring(caretLocation);
-                string node = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
-
-                intellisense.ContextItemsNeeded += this.ContextItemsNeeded;
-                if (!intellisense.GenerateAutoCompletionOptions(node))
-                    return;
-
-                GetCurrentCell.Value = contentsToCursor + "." + contentsAfterCursor;
-                Gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Gridview.Columns[GetCurrentCell.ColumnIndex], true);
-                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
-
-                // Get the coordinates of the cell 1 row beneath the current one - we don't want the popup to cover the cell we're working on
-                Tuple<int, int> coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1);
-                intellisense.MainWindow = MainWidget.Toplevel as Window;
-                intellisense.SmartShowAtCoordinates(coordinates.Item1, coordinates.Item2);
-
-                while (Gtk.Application.EventsPending())
-                    Gtk.Application.RunIteration();
-            }
-            catch (Exception e)
-            {
-                var mainView = GetMainViewReference(this);
-                if (mainView != null)
-                    mainView.ShowMessage(e.ToString(), Simulation.ErrorLevel.Error);
-            }
-        }
-        */
-
+        
         /// <summary>
         /// Show the completion window
         /// </summary>
@@ -1069,7 +1028,7 @@ namespace UserInterface.Views
             FixedColview.EnableSearch = false;
             //// fixedcolview.SearchColumn = 0;
 
-            Gridview.Show();
+            UpdateControls();
 
             if (mainWindow != null)
                 mainWindow.Cursor = null;
@@ -2221,102 +2180,18 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Called when the window is resized to resize all grid controls.
+        /// Called to handle any needed changes when the model in changed
         /// </summary>
-        public void ResizeControls()
+        private void UpdateControls()
         {
-            if (gridmodel.NColumns == 0)
-                return;
-
-            if (gridmodel.IterNChildren() == 0)
+            if (gridmodel.NColumns > 0)
             {
-                Gridview.Visible = false;
+                if (gridmodel.IterNChildren() == 0)
+                    Gridview.Sensitive = false;
+                else
+                    Gridview.Sensitive = true;
             }
-            else
-                Gridview.Visible = true;
-        }
-
-        /// <summary>
-        /// Trap any grid data errors, usually as a result of cell values not being
-        /// in combo boxes. We'll handle these elsewhere.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnDataError(object sender, /* TBI DataGridViewDataError */ EventArgs e)
-        {
-            // TBI e.Cancel = true;
-        }
-
-        /// <summary>
-        /// User has clicked a cell. 
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnCellMouseDown(object sender, /* TBI DataGridViewCellMouse */ EventArgs e)
-        {
-            // Probably not needed in the Gtk implementation
-            /*
-            if (e.RowIndex == -1)
-            {
-                if (this.ColumnHeaderClicked != null)
-                {
-                    GridHeaderClickedArgs args = new GridHeaderClickedArgs();
-                    args.Column = this.GetColumn(e.ColumnIndex);
-                    args.RightClick = e.Button == System.Windows.Forms.MouseButtons.Right;
-                    this.ColumnHeaderClicked.Invoke(this, args);
-                }
-            }
-            else if (this.Grid[e.ColumnIndex, e.RowIndex] is Utility.ColorPickerCell)
-            {
-                ColorDialog dlg = new ColorDialog();
-
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    this.userEditingCell = true;
-                    this.valueBeforeEdit = this.Grid[e.ColumnIndex, e.RowIndex].Value;
-                    this.Grid[e.ColumnIndex, e.RowIndex].Value = dlg.Color.ToArgb();
-                }
-            }
-            */
-        }
-
-        /// <summary>
-        /// We need to trap the EditingControlShowing event so that we can tweak all combo box
-        /// cells to allow the user to edit the contents.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnEditingControlShowing(object sender, /* TBI DataGridViewEditingControlShowing */ EventArgs e)
-        {
-            // Probably not needed in the Gtk implementation
-            /* TBI
-            if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
-            {
-                DataGridViewComboBoxEditingControl combo = (DataGridViewComboBoxEditingControl)this.Grid.EditingControl;
-                combo.DropDownStyle = ComboBoxStyle.DropDown;
-            }
-            */
-        }
-
-        /// <summary>
-        /// If the cell being validated is a combo cell then always make sure the cell value 
-        /// is in the list of combo items.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnGridCellValidating(object sender, /* TBI DataGridViewCellValidating */ EventArgs e)
-        {
-            // Probably not needed in the Gtk implementation
-            /* 
-            if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
-            {
-                DataGridViewComboBoxEditingControl combo = (DataGridViewComboBoxEditingControl)this.Grid.EditingControl;
-                if (combo != null && !combo.Items.Contains(e.FormattedValue))
-                {
-                    combo.Items.Add(e.FormattedValue);
-                }
-            }
-            */
+            Gridview.Show();
         }
 
         /// <summary>
@@ -2326,10 +2201,21 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnPasteFromClipboard(object sender, EventArgs e)
         {
+            try
             {
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                int rowIndex = popupCell.RowIndex;
-                int columnIndex = popupCell.ColumnIndex;
+                int rowIndex, columnIndex;
+                if (popupCell == null)
+                {
+                    rowIndex = GetCurrentCell.RowIndex;
+                    columnIndex = GetCurrentCell.ColumnIndex;
+                }
+                else
+                {
+                    rowIndex = popupCell.RowIndex;
+                    columnIndex = popupCell.ColumnIndex;
+                }
+                
                 if (this.userEditingCell && this.editControl != null)
                 {
                     (editControl as Entry).PasteClipboard();
@@ -2369,7 +2255,7 @@ namespace UserInterface.Views
                                                     // value into the cell.
                                                     if (words[i] == string.Empty)
                                                     {
-                                                        cell.Value = null;
+                                                        cell.Value = DBNull.Value;
                                                     }
                                                     else
                                                     {
@@ -2408,6 +2294,12 @@ namespace UserInterface.Views
                     Gridview.QueueDraw();
                     this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                 }
+            }
+            catch (Exception err)
+            {
+                MainView mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
             }
         }
 
@@ -2491,16 +2383,6 @@ namespace UserInterface.Views
                 Gridview.QueueDraw();
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
-        }
-
-        /// <summary>
-        /// Handle the resize event
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void GridView_Resize(object sender, EventArgs e)
-        {
-            ResizeControls();
         }
 
         /// <summary>

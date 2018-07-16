@@ -64,7 +64,7 @@ namespace Importer
                                       "Broccoli","ButterflyPea","Canola","CanolaSWIM","Centro",
                                       "Chickpea","Chickpea2","Chicory","cloverseed","Cotton2",
                                       "Cowpea","EGrandis","EMelliodora","EPopulnea","Fababean",
-                                      "Fieldpea","Fieldpea2","FrenchBean","Grassseed","Heliotrope",
+                                      "Fieldpea","Fieldpea2","Soybean","FrenchBean","Grassseed","Heliotrope",
                                       "Horsegram","Itallianryegrass","Kale","Lablab","Lentil",
                                       "Lettuce","Lolium_rigidum","Lucerne","Lucerne2","LucerneSWIM",
                                       "Lupin","Maize","MaizeZ","Millet","Mucuna","Mungbean","Navybean",

@@ -304,8 +304,9 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                foreach (IPostSimulationTool tool in Apsim.Children(storage as Model, typeof(IPostSimulationTool)))
-                    tool.Run(storage);
+                foreach (IPostSimulationTool tool in Apsim.FindAll(explorerPresenter.ApsimXFile, typeof(IPostSimulationTool)))
+                    if ((tool as IModel).Enabled)
+                        tool.Run(storage);
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -624,6 +625,30 @@ namespace UserInterface.Presenters
             explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.CheckpointsPresenter");
+        }
+
+
+        /// <summary>
+        /// Event handler for 'Enabled' menu item.
+        /// </summary>
+        [ContextMenu(MenuName = "Enabled", IsToggle = true)]
+        public void Enabled(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            model.Enabled = !model.Enabled;
+            foreach (IModel child in Apsim.ChildrenRecursively(model))
+                child.Enabled = model.Enabled;
+            explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+            explorerPresenter.Refresh();
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Enabled' menu item.
+        /// </summary>
+        public bool EnabledChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return model.Enabled;
         }
     }
 }

@@ -511,6 +511,14 @@
       <IsCrop>Yes</IsCrop>
     </MetaData>
   </Type>
+  <Type name="soybean">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+      <class>Plant.Soybean</class>
+      <IsCrop>Yes</IsCrop>
+    </MetaData>
+  </Type>
+
   <Type name="floor">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

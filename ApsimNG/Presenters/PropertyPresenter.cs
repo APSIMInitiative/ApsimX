@@ -109,7 +109,6 @@ namespace UserInterface.Presenters
             }
             else
             {
-                this.grid.ResizeControls();
                 this.FormatTestGrid();
             }
 
@@ -145,8 +144,9 @@ namespace UserInterface.Presenters
             IGridCell selectedCell = this.grid.GetCurrentCell;
             this.model = model;
             DataTable table = new DataTable();
-            table.Columns.Add("Description", typeof(string));
-            table.Columns.Add("Value", typeof(object));
+            bool hasData = this.properties.Count > 0;
+            table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
+            table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
             this.grid.PropertyMode = true;
             this.FillTable(table);
@@ -155,8 +155,6 @@ namespace UserInterface.Presenters
             {
                 this.grid.GetCurrentCell = selectedCell;
             }
-
-            this.grid.ResizeControls();
         }
 
         /// <summary>
@@ -400,7 +398,10 @@ namespace UserInterface.Presenters
                     else if (cellValue.GetType().IsEnum)
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = StringUtilities.EnumToStrings(cellValue);
+                        cell.DropDownStrings = VariableProperty.EnumToStrings(cellValue);
+                        Enum cellValueAsEnum = cellValue as Enum;
+                        if (cellValueAsEnum != null)
+                            cell.Value = VariableProperty.GetEnumDescription(cellValueAsEnum);
                     }
                     else if (cellValue.GetType() == typeof(IPlant))
                     {
@@ -610,7 +611,7 @@ namespace UserInterface.Presenters
             }
             else if (property.DataType.IsEnum)
             {
-                value = Enum.Parse(property.DataType, value.ToString());
+                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
             }
             else if (property.Display != null &&
                      property.Display.Type == DisplayType.Model)

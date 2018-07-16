@@ -432,7 +432,7 @@ namespace Models.AgPasture
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
                     if (mySoilWaterUptake.Sum() > Epsilon)
-                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(zone.Water, -1.0);
+                        root.mySoil.SoilWater.RemoveWater(zone.Water);
                 }
             }
         }
@@ -5291,8 +5291,15 @@ namespace Models.AgPasture
                 if (amountToRemove - HarvestableWt > -Epsilon)
                 {
                     // All existing DM is removed
+                    amountToRemove = HarvestableWt;
                     for (int i = 0; i < 5; i++)
-                        fracRemoving[i] = 1.0;
+                    {
+                        fracRemoving[0] = MathUtilities.Divide(leaves.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[1] = MathUtilities.Divide(stems.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[2] = MathUtilities.Divide(stolons.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[3] = MathUtilities.Divide(leaves.DMDeadHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[4] = MathUtilities.Divide(stems.DMDeadHarvestable, HarvestableWt, 0.0);
+                    }
                 }
                 else
                 {

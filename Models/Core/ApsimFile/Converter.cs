@@ -16,6 +16,7 @@ namespace Models.Core.ApsimFile
     using System.Text.RegularExpressions;
     using PMF;
     using System.Data;
+    using Models.Factorial;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -23,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 31; } }
+        public static int LastestVersion { get { return 32; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -895,103 +896,189 @@ namespace Models.Core.ApsimFile
             }
         }
 
+
         /// <summary>
-        /// Upgrades to version 31. Convert SoilN to SoilNutrient
+        /// Upgrades to version 31. Change DisplayAttribute
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion31(XmlNode node, string fileName)
         {
-            ConverterUtilities.RenameVariable(node, "using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
-
-            // Delete all alias children.
-            foreach (XmlNode soilNitrogen in XmlUtilities.FindAllRecursivelyByType(node, "SoilNitrogen"))
-            {
-                XmlUtilities.SetValue(soilNitrogen.ParentNode, "Nutrient/ResourceName", "Nutrient");
-                soilNitrogen.ParentNode.RemoveChild(soilNitrogen);
-            }
-
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
-
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicN", "Humic.N"))
-                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.HumicC", "Humic.C"))
-                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Humic;");
-
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialN", "Microbial.N"))
-                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.MicrobialC", "Microbial.C"))
-                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] NutrientPool Microbial;");
-
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
-                    ConverterUtilities.InsertLink(manager, "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")] CarbonFlow SurfaceResidueDecomposition;");
-
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.urea", "Urea.kgha"))
-                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute Urea;");
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NO3", "NO3.kgha"))
-                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NO3;");
-                if (ConverterUtilities.SearchReplaceManagerCode(manager, "Soil.SoilNitrogen.NH4", "NH4.kgha"))
-                    ConverterUtilities.InsertLink(manager, "[ScopedLinkByName] Solute NH4;");
-
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                ConverterUtilities.SearchReplaceManagerCode(manager, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow", ".SoilWater.Flow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flux", ".SoilWater.Flux", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception", null);
             }
-
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
             {
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Microbial.N");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Microbial.C");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.Decomposition.MineralisedN");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-
-            }
-
-            foreach (XmlNode SOM in XmlUtilities.FindAllRecursivelyByType(node, "SoilOrganicMatter"))
-            {
-                double rootWt = Convert.ToDouble(XmlUtilities.Value(SOM, "RootWt"));
-                XmlUtilities.DeleteValue(SOM, "RootWt");
-                double[] thickness = MathUtilities.StringsToDoubles(XmlUtilities.Values(SOM, "Thickness/double"));
-
-                double profileDepth = MathUtilities.Sum(thickness);
-                double cumDepth = 0;
-                double[] rootWtFraction = new double[thickness.Length];
-
-                for (int layer = 0; layer < thickness.Length; layer++)
-                {
-                    double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
-                    cumDepth += thickness[layer];
-                    rootWtFraction[layer] = fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
-                }
-                // get the actuall FOM distribution through layers (adds up to one)
-                double totFOMfraction = MathUtilities.Sum(rootWtFraction);
-                for (int layer = 0; layer < thickness.Length; layer++)
-                    rootWtFraction[layer] /= totFOMfraction;
-                double[] rootWtVector = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
-
-
-                XmlUtilities.EnsureNodeExists(SOM, "RootWt");
-                XmlUtilities.SetValues(SOM, "RootWt/double", MathUtilities.DoublesToStrings(rootWtVector));
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow", ".SoilWater.Flow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flux", ".SoilWater.Flux");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception");
             }
         }
+		
+		/// <summary>
+        /// Change the VaryByIndex in series from an integer index to a name of a factor.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion32(XmlNode node, string fileName)
+        {
+            foreach (XmlNode series in XmlUtilities.FindAllRecursivelyByType(node, "series"))
+            {
+                string[] parentTypesToMatch = new string[] { "Simulation", "Zone", "Experiment", "Folder", "Simulations" };
+                XmlNode parent = XmlUtilities.ParentOfType(series, parentTypesToMatch);
+                List<KeyValuePair<string, string>> factorNames;
+                do
+                {
+                    factorNames = GetFactorNames(parent);
+                    parent = parent.ParentNode;
+                }
+                while (factorNames.Count == 0 && parent != null);
+
+                var uniqueFactorNames = CalculateDistinctFactorNames(factorNames);
+                string value = XmlUtilities.Value(series, "FactorIndexToVaryColours");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
+                }
+
+                value = XmlUtilities.Value(series, "FactorIndexToVaryMarkers");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
+                }
+
+                value = XmlUtilities.Value(series, "FactorIndexToVaryLines");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create graph definitions for the specified model
+        /// </summary>
+        /// <param name="node"></param>
+        private static List<KeyValuePair<string, string>> GetFactorNames(XmlNode node)
+        {
+            string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
+            var factors = new List<KeyValuePair<string, string>>();
+            if (node.Name == "Simulation" || Array.IndexOf(zoneTypes, node.Name) != -1)
+                factors.AddRange(BuildListFromSimulation(node));
+            else if (node.Name == "Experiment")
+                factors.AddRange(BuildListFromExperiment(node));
+            else
+            {
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (child.Name == "Simulation" || child.Name == "Experiment" || child.Name == "Folder")
+                        factors.AddRange(GetFactorNames(child));
+                }
+            }
+            return factors;
+        }
+
+
+        /// <summary>
+        /// Build a list of simulation / zone pairs from the specified experiment
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private static List<KeyValuePair<string, string>> BuildListFromExperiment(XmlNode node)
+        {
+            string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
+
+            var factors = new List<KeyValuePair<string, string>>();
+
+            Experiment exp = XmlUtilities.Deserialise(node, typeof(Experiment)) as Experiment;
+            Apsim.ParentAllChildren(exp);
+            if (exp != null)
+            {
+                XmlNode baseSimulation = XmlUtilities.FindByType(node, "Simulation");
+                foreach (XmlNode zone in XmlUtilities.FindAllRecursivelyByTypes(baseSimulation, zoneTypes))
+                {
+                    foreach (List<FactorValue> combination in (exp).AllCombinations())
+                    {
+                        string zoneName = XmlUtilities.Value(zone, "Name");
+                        string simulationName = exp.Name;
+                        factors.Add(new KeyValuePair<string, string>("Simulation", simulationName));
+                        factors.Add(new KeyValuePair<string, string>("Zone", zoneName));
+                        foreach (FactorValue value in combination)
+                        {
+                            simulationName += value.Name;
+                            string factorName = value.Factor.Name;
+                            if (value.Factor.Parent is Factor)
+                            {
+                                factorName = value.Factor.Parent.Name;
+                            }
+                            string factorValue = value.Name.Replace(factorName, "");
+                            factors.Add(new KeyValuePair<string, string>(factorName, factorValue));
+                        }
+                        factors.Add(new KeyValuePair<string, string>("Experiment", exp.Name));
+                    }
+                }
+            }
+            return factors;
+        }
+
+        /// <summary>
+        /// Build a list of simulation / zone pairs from the specified simulation
+        /// </summary>
+        /// <param name="node">This can be either a simulation or a zone</param>
+        /// <returns>A list of simulation / zone pairs</returns>
+        private static List<KeyValuePair<string, string>> BuildListFromSimulation(XmlNode node)
+        {
+            var simulationZonePairs = new List<KeyValuePair<string, string>>();
+            simulationZonePairs.Add(new KeyValuePair<string,string>("Simulation", XmlUtilities.Value(node, "Name")));
+            foreach (XmlNode zone in XmlUtilities.ChildNodes(node, "Zone"))
+                simulationZonePairs.Add(new KeyValuePair<string, string>("Zone", XmlUtilities.Value(zone, "Name")));
+            return simulationZonePairs;
+        }
+
+
+        /// <summary>
+        /// Go through all factors and determine which are distict.
+        /// </summary>
+        /// <param name="factors">A list of simulation zones.</param>
+        private static List<string> CalculateDistinctFactorNames(List<KeyValuePair<string, string>> factors)
+        {
+            var factorNamesToReturn = new List<string>();
+            var factorNames = factors.Select(f => f.Key).Distinct();
+            foreach (var factorName in factorNames)
+            {
+                List<string> factorValues = new List<string>();
+                var matchingFactors = factors.FindAll(f => f.Key == factorName);
+                var matchingFactorValues = matchingFactors.Select(f => f.Value);
+
+                if (matchingFactorValues.Distinct().Count() > 1 || matchingFactors.Count() != factors.Count())
+                {
+                    // All factor values are the same so remove the factor.
+                    factorNamesToReturn.Add(factorName);
+                }
+            }
+            return factorNamesToReturn;
+        }
+
+
     }
 }
-

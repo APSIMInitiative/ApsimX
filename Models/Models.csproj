@@ -173,6 +173,7 @@
     <Compile Include="Core\ApsimFile\Format.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\IReferenceExternalFiles.cs" />
@@ -190,7 +191,10 @@
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
+    <Compile Include="Morris\Morris.cs" />
+    <Compile Include="Lifecycle\LifestageImmigrationProcess.cs" />
     <Compile Include="Plant\Functions\AccumulateByDate.cs" />
     <Compile Include="Plant\Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Plant\Functions\StringComparisonFunction.cs" />
@@ -469,10 +473,10 @@
     <Compile Include="Soils\SoilOrganicMatter.cs" />
     <Compile Include="Soils\SoilTemperature.cs" />
     <Compile Include="Soils\SoilTemperature2.cs" />
-    <Compile Include="Soils\Swim.cs" />
-    <Compile Include="Soils\SwimSoluteParameters.cs" />
-    <Compile Include="Soils\SwimSubsurfaceDrain.cs" />
-    <Compile Include="Soils\SwimWaterTable.cs" />
+    <Compile Include="Soils\SWIM\Swim.cs" />
+    <Compile Include="Soils\SWIM\SwimSoluteParameters.cs" />
+    <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />
+    <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
@@ -658,6 +662,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\Morris.R" />
+    <EmbeddedResource Include="Resources\GetPackage.R" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">
       <SubType>Designer</SubType>

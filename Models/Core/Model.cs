@@ -31,6 +31,7 @@ namespace Models.Core
             this.IsHidden = false;
             this.Children = new List<Model>();
             IncludeInDocumentation = true;
+            Enabled = true;
         }
 
         /// <summary>
@@ -231,6 +232,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Struct.ApexStandard))]
         [XmlElement(typeof(Models.PMF.Struct.ApexTiller))]
         [XmlElement(typeof(Alias))]
+        [XmlElement(typeof(Morris))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
         [XmlElement(typeof(Models.Aqua.PondWater))]
@@ -337,7 +339,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.LifeCycle.LifeStage))]
         [XmlElement(typeof(Models.LifeCycle.LifeStageProcess))]
         [XmlElement(typeof(Models.LifeCycle.LifeStageReproductionProcess))]
-		[XmlElement(typeof(Map))]
+        [XmlElement(typeof(Models.LifeCycle.LifeStageImmigrationProcess))]
+        [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
         /// <summary>
@@ -366,6 +369,11 @@ namespace Models.Core
                 child.ClearChildLists();
             Children.Clear();
         }
+
+        /// <summary>
+        /// Gets or sets whether the model is enabled
+        /// </summary>
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Return the current APSIM version number.

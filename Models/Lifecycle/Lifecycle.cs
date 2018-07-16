@@ -1,9 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Core;
+﻿// -----------------------------------------------------------------------
+// <copyright file="LifeCycle.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.LifeCycle
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+
     /// <summary>
     /// # [Name]
     /// A LifeCycle that contains LifeStages. 

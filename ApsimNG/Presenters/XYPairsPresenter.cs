@@ -265,8 +265,6 @@ namespace UserInterface.Presenters
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
-            this.xYPairsView.VariablesGrid.ResizeControls();
-
             // this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
             // this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
             // this.initialWaterView.OnPAWChanged += this.OnPAWChanged;

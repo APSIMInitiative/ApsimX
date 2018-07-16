@@ -508,7 +508,7 @@ namespace Models.PMF.Organs
                 throw new Exception("Cannot find a zone called " + zoneName);
 
             zone.WaterUptake = MathUtilities.Multiply_Value(Amount, -1.0);
-            zone.soil.SoilWater.dlt_sw_dep = zone.WaterUptake;
+            zone.soil.SoilWater.RemoveWater(Amount);
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
