@@ -1,14 +1,16 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
-rem First make sure ApsimX exists.
 
-echo Current date:
-date /t
-set /a validcmd=0
 set apsimx=C:\ApsimX
+
+rem First make sure ApsimX exists.
 if not exist %apsimx% (
     echo %apsimx% does not exist. Aborting...
 	exit 1
+)
+
+if exist %apsimx%\bin.zip (
+	powershell -Command Expand-Archive -Path %apsimx%\bin.zip -DestinationPath %apsimx%\Bin -Force
 )
 
 set bin=%apsimx%\Bin
@@ -16,7 +18,12 @@ if not exist %bin% (
 	echo %bin% does not exist. Aborting...
 	exit 1
 )
-cd %bin%
+
+rem Copy files from DeploymentSupport.
+copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin%
+
+rem Add bin to path.
+set "PATH=%PATH%;%bin%"
 
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
@@ -27,9 +34,7 @@ set validationsyntax=Validation
 set simulationsyntax=Simulation
 
 if "%1"=="%unitsyntax%" (
-	set validcmd=1
-	cd %apsimx%\Tests\UnitTests\bin\Debug
-	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe UnitTests.dll /noshadow
+	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %apsimx%\Tests\UnitTests\bin\Debug\UnitTests.dll /noshadow
 	goto :end
 )
 
@@ -44,7 +49,7 @@ if "%1"=="%uisyntax%" (
 		echo "%bin%\ApsimNG.exe" does not exist. Aborting...
 		exit 1
 	)
-	set validcmd=1
+	
 	echo Running UI Tests...
 	start /wait %bin%\ApsimNG.exe !uitests!\CheckStandardToolBox.cs
 	goto :end
@@ -71,8 +76,14 @@ if "%1"=="%simulationsyntax%" (
 	goto :tests
 )
 
-
-goto :end
+echo Usage: docker run -v Path/To/ApsimX:C:\ApsimX ^<imagename^> ^<testswitch^>
+echo Where imagename is the name of the image ^(should be runapsimx^), and testswitch is one of the following:
+echo     %unitsyntax%
+echo     %uisyntax%
+echo     %prototypesyntax%
+echo     %examplessyntax%
+echo     %validationsyntax%
+echo     %simulationsyntax%
 
 
 :tests
@@ -82,22 +93,8 @@ if not exist "%testdir%" (
 )
 rem Modify registry entry so that DateTime format is dd/MM/yyyy.
 reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
-set validcmd=1
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 cd %bin%
 models.exe %testdir%\*.apsimx /Recurse
 
-
 :end
-set err=%errorlevel%
-if %validcmd% equ 0 (
-	echo Usage: docker run -v Path/To/ApsimX:C:\ApsimX ^<imagename^> ^<testswitch^>
-	echo Where imagename is the name of the image ^(should be runapsimx^), and testswitch is one of the following:
-	echo     %unitsyntax%
-	echo     %uisyntax%
-	echo     %prototypesyntax%
-	echo     %examplessyntax%
-	echo     %validationsyntax%
-	echo     %simulationsyntax%
-)
-exit %err%

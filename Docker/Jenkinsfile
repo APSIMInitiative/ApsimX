@@ -27,7 +27,7 @@ pipeline {
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
-				archiveArtifacts artifacts: 'ApsimX\\Bin\\*', onlyIfSuccessful: true
+				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 			}
 		}
 		stage('RunTests') {
@@ -37,18 +37,21 @@ pipeline {
 						label "windows && docker"
 					}
 					steps {
-						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'master', selector: specific('%BUILD_NUMBER%'), target: 'ApsimX\\Bin\\'
 						bat '''
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('%BUILD_NUMBER%'), target: 'ApsimX\\bin.zip'
+						bat '''
 							cd ApsimX
 							git checkout -- .
 							git clean -f
 							rem I assume the default repo name is origin.
 							git pull origin master
 							cd ..
+							
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
@@ -66,12 +69,14 @@ pipeline {
 						label "windows && docker"
 					}
 					steps {
-						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'master', selector: specific('%BUILD_NUMBER%'), target: 'ApsimX\\Bin\\'
 						bat '''
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('%BUILD_NUMBER%'), target: 'ApsimX\\bin.zip'
+						bat '''
 							cd ApsimX
 							git checkout -- .
 							git clean -f
