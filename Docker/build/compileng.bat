@@ -27,7 +27,7 @@ if %error% equ 0 (
 	rem We need to archive the binaries, but ApsimX\Bin is quite large. First we delete everything from DeploymentSupport,
 	rem then we compress what's left.
 	for /r %%i in (.\ApsimX\DeploymentSupport\Windows\Bin64\*) do del .\ApsimX\Bin\%%~nxi
-	powershell -Command Compress-Archive .\ApsimX\Bin\* -DestinationPath %apsimx%\bin.zip -CompressionLevel Optimal
+	powershell -Command Compress-Archive %apsimx%\Bin\* -DestinationPath %apsimx%\bin.zip -CompressionLevel Optimal
 )
 
 exit %error%
