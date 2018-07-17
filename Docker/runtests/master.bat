@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 SETLOCAL EnableDelayedExpansion
 rem First make sure ApsimX exists.
 
@@ -40,8 +40,13 @@ if "%1"=="%uisyntax%" (
 		echo "!uitests!" does not exist. Aborting...
 		exit 1
 	)
+	if not exist "%bin%\ApsimNG.exe" (
+		echo "%bin%\ApsimNG.exe" does not exist. Aborting...
+		exit 1
+	)
 	set validcmd=1
-	start /wait ApsimNG !uitests!\CheckStandardToolBox.cs
+	echo Running UI Tests...
+	start /wait %bin%\ApsimNG.exe !uitests!\CheckStandardToolBox.cs
 	goto :end
 )
 

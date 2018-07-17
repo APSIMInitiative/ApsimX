@@ -27,6 +27,7 @@ pipeline {
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
+				archiveArtifacts artifacts: 'ApsimX\\Bin\\*', onlyIfSuccessful: true
 			}
 		}
 		stage('RunTests') {
@@ -36,6 +37,7 @@ pipeline {
 						label "windows && docker"
 					}
 					steps {
+						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'Build', selector: [$class: 'MultiJobBuildSelector'], target: 'ApsimX\\Bin\\'
 						bat '''
 							if not exist ApsimX (
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -64,6 +66,7 @@ pipeline {
 						label "windows && docker"
 					}
 					steps {
+						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'Build', selector: [$class: 'MultiJobBuildSelector'], target: 'ApsimX\\Bin\\'
 						bat '''
 							if not exist ApsimX (
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
