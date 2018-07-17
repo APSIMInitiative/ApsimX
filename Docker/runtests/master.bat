@@ -1,6 +1,9 @@
-@echo off
+rem @echo off
 SETLOCAL EnableDelayedExpansion
 rem First make sure ApsimX exists.
+
+echo Current date:
+date /t
 set /a validcmd=0
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
@@ -43,6 +46,7 @@ if "%1"=="%uisyntax%" (
 )
 
 if "%1"=="%prototypesyntax%" (
+	reg add "HKCU\Control Panel\International" /V sShortDate /T REG_SZ /D dd/MM/yy /F
 	set testdir=%apsimx%\Prototypes
 	goto :tests
 )
@@ -71,6 +75,8 @@ if not exist "%testdir%" (
 	echo %testdir% does not exist. Aborting...
 	exit 1
 )
+rem Modify registry entry so that DateTime format is dd/MM/yyyy.
+reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 set validcmd=1
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 cd %bin%
