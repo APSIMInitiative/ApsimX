@@ -43,7 +43,7 @@ pipeline {
 							
 							cd ApsimX
 							git checkout -- .
-							git clean -xfd
+							git clean -f
 							rem I assume the default repo name is origin.
 							git pull origin master
 							cd ..
@@ -71,7 +71,7 @@ pipeline {
 							
 							cd ApsimX
 							git checkout -- .
-							git clean -xfd
+							git clean -f
 							rem I assume the default repo name is origin.
 							git pull origin master
 							cd ..
