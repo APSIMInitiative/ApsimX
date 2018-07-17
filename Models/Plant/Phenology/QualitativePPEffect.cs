@@ -42,7 +42,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            PhotoperiodEffect = Effect(Photoperiod.Value(), OptimumPhotoperiod);
+            PhotoperiodEffect = Effect(Photoperiod.Value());
         }
 
         /// <summary>Initialise everything</summary>
@@ -57,17 +57,19 @@ namespace Models.PMF.Phen
 
         /// <summary>Photoperiod factor</summary>
         /// <param name="Photoperiod">The photoperiod.</param>
-        /// <param name="photop_sens">The photop_sens.</param>
         /// <returns></returns>
-        private double Effect(double Photoperiod, double photop_sens)
+        private double Effect(double Photoperiod)
         {
-            double photop_eff = 1.0;
+            double PS = Math.Pow(Math.Abs(OptimumPhotoperiod - CriticalPhotoperiod), -2);
 
-            double PS = Math.Pow(OptimumPhotoperiod - CriticalPhotoperiod, -2);
-            if (Photoperiod < OptimumPhotoperiod)
-                photop_eff = 1 - PS * Math.Pow(OptimumPhotoperiod - Photoperiod, 2);
+            double photop_eff;
+
+            if (OptimumPhotoperiod > CriticalPhotoperiod && Photoperiod > OptimumPhotoperiod)
+                photop_eff = 1;
+            else if (OptimumPhotoperiod < CriticalPhotoperiod && Photoperiod < OptimumPhotoperiod)
+                photop_eff = 1;
             else
-                photop_eff = 1.0;
+               photop_eff = 1 - PS * Math.Pow(Math.Abs(OptimumPhotoperiod - Photoperiod), 2);
 
             photop_eff = Math.Max(photop_eff, 0.0);
             photop_eff = Math.Min(photop_eff, 1.0);
