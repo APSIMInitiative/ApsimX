@@ -37,7 +37,7 @@ pipeline {
 						label "windows && docker"
 					}
 					steps {
-						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}'), target: 'ApsimX\\Bin\\'
+						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'master', selector: specific('%BUILD_NUMBER%'), target: 'ApsimX\\Bin\\'
 						bat '''
 							if not exist ApsimX (
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -66,7 +66,7 @@ pipeline {
 						label "windows && docker"
 					}
 					steps {
-						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}'), target: 'ApsimX\\Bin\\'
+						copyArtifacts filter: 'ApsimX\\Bin\\*', fingerprintArtifacts: true, projectName: 'master', selector: specific('%BUILD_NUMBER%'), target: 'ApsimX\\Bin\\'
 						bat '''
 							if not exist ApsimX (
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
