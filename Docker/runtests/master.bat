@@ -10,7 +10,14 @@ if not exist %apsimx% (
 )
 
 if exist %apsimx%\bin.zip (
+	echo Unzipping %apsimx%\bin.zip
+	dir C:\
+	dir C:\ApsimX
+	dir C:\ApsimX\Bin
 	powershell -Command Expand-Archive -Path %apsimx%\bin.zip -DestinationPath %apsimx%\Bin -Force
+	dir C:\
+	dir C:\ApsimX
+	dir C:\ApsimX\Bin
 )
 
 set bin=%apsimx%\Bin
