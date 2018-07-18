@@ -42,14 +42,17 @@ pipeline {
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
-								git clone https://github.com/APSIMInitiative/ApsimX W:\\ApsimX
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							) else (
+								cd ApsimX
+								git reset --hard origin/master
+								git clean -fxdq .\Bin
+								cd ..
 							)
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							cd ApsimX
-							git checkout -- .
-							git clean -fxde bin.zip
 							rem I assume the default repo name is origin.
 							git pull origin master
 							cd ..
@@ -63,6 +66,7 @@ pipeline {
 							
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
 							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Prototypes
+							echo Finished prototypes
 						'''
 					}
 				}
@@ -76,13 +80,15 @@ pipeline {
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							) else (
+								cd ApsimX
+								git reset --hard origin/master
+								git clean -fxdq .\Bin
 							)
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							cd ApsimX
-							git checkout -- .
-							git clean -fd
 							rem I assume the default repo name is origin.
 							git pull origin master
 							cd ..
