@@ -46,7 +46,7 @@ pipeline {
 							) else (
 								cd ApsimX
 								git reset --hard origin/master
-								git clean -fxdq .\Bin
+								git clean -fxdq .\\Bin
 								cd ..
 							)
 						'''
@@ -83,7 +83,7 @@ pipeline {
 							) else (
 								cd ApsimX
 								git reset --hard origin/master
-								git clean -fxdq .\Bin
+								git clean -fxdq .\\Bin
 							)
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
