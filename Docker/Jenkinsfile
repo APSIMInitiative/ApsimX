@@ -49,7 +49,7 @@ pipeline {
 						bat '''
 							cd ApsimX
 							git checkout -- .
-							git clean -fd
+							git clean -fxde bin.zip
 							rem I assume the default repo name is origin.
 							git pull origin master
 							cd ..
