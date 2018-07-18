@@ -232,8 +232,7 @@ namespace Models
 
                     if (DoSurfaceOrganicMatterDecomposition != null)
                         DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-                    if (Today.DayOfYear == 16)
-                    { }
+                    
                     if (DoWaterArbitration != null)
                         DoWaterArbitration.Invoke(this, args);
 
