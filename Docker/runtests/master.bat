@@ -57,7 +57,6 @@ if "%1"=="%uisyntax%" (
 )
 
 if "%1"=="%prototypesyntax%" (
-	reg add "HKCU\Control Panel\International" /V sShortDate /T REG_SZ /D dd/MM/yy /F
 	set testdir=%apsimx%\Prototypes
 	goto :tests
 )
@@ -93,9 +92,9 @@ if not exist "%testdir%" (
 	exit 1
 )
 rem Modify registry entry so that DateTime format is dd/MM/yyyy.
+echo Modifying system DateTime format...
 reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
-cd %bin%
 models.exe %testdir%\*.apsimx /Recurse
 
 :end
