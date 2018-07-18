@@ -7,9 +7,6 @@ pipeline {
 			}
 			steps {
 				bat '''
-					subst W: /d || exit 0
-					subst W: "%WORKSPACE%"
-					
 					if not exist ApsimX (
 						git config --system core.longpaths true
 						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -30,7 +27,6 @@ pipeline {
 					
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
-					subst W: /d
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 			}

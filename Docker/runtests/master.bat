@@ -28,7 +28,7 @@ if not exist %bin% (
 )
 
 rem Copy files from DeploymentSupport.
-copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin%
+copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin% >nul
 
 rem Add bin to path.
 set "PATH=%PATH%;%bin%"

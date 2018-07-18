@@ -16,7 +16,7 @@ nuget restore
 
 rem Copy files from deployment support
 echo Copying DeploymentSupport files.
-copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin\
+copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin\ >nul
 
 echo Building ApsimX.
 msbuild /m %apsimx%\ApsimX.sln
@@ -26,6 +26,7 @@ set error=%errorlevel%
 if %error% equ 0 (
 	rem We need to archive the binaries, but ApsimX\Bin is quite large. First we delete everything from DeploymentSupport,
 	rem then we compress what's left.
+	echo Compressing binaries.
 	for /r %%i in (.\ApsimX\DeploymentSupport\Windows\Bin64\*) do del .\ApsimX\Bin\%%~nxi
 	powershell -Command Compress-Archive %apsimx%\Bin\* -DestinationPath %apsimx%\bin.zip -CompressionLevel Optimal
 )
