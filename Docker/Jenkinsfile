@@ -56,7 +56,7 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
-							git -C .\APSIM.Shared pull origin master
+							git -C APSIM.Shared pull origin master
 							
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
 							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Prototypes
