@@ -2,7 +2,6 @@
 SETLOCAL EnableDelayedExpansion
 
 set apsimx=C:\ApsimX
-
 rem First make sure ApsimX exists.
 if not exist %apsimx% (
     echo %apsimx% does not exist. Aborting...
@@ -10,7 +9,7 @@ if not exist %apsimx% (
 )
 
 if exist %apsimx%\bin.zip (
-	echo Unzipping %apsimx%\bin.zip
+	echo Unzipping %apsimx%\bin.zip...
 	powershell -Command Expand-Archive -Path %apsimx%\bin.zip -DestinationPath %apsimx%\Bin -Force
 )
 
@@ -95,6 +94,7 @@ rem Modify registry entry so that DateTime format is dd/MM/yyyy.
 echo Modifying system DateTime format...
 reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
+echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
 
 :end
