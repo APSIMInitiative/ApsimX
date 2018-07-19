@@ -9,8 +9,6 @@
     /// # [Name]
     /// [DocumentType Memo]
     /// 
-    /// This nutrient pool class used for this pool encapsulates the carbon and nitrogen within a soil organic matter pool.  Child functions provide information on its initialisation and flows of C and N from it to other pools, or losses from the system.
-    /// 
     /// ## Initialisation
     /// The initialisation of Carbon and Nutrient contents of this pool is described as follows:
     /// 
