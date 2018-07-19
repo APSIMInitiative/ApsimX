@@ -1,0 +1,3 @@
+FROM 			microsoft/windowsservercore:10.0.14393.206
+COPY 			master.bat master.bat
+ENTRYPOINT 		["master.bat"]
