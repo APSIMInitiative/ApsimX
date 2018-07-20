@@ -207,12 +207,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Gets or sets the treeview object
         /// </summary>
-        public TreeView Gridview { get; set; } = null;
+        public Gtk.TreeView Gridview { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the fixed column treeview
         /// </summary>
-        public TreeView FixedColview { get; set; } = null;
+        public Gtk.TreeView FixedColview { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the name of the associated model.
@@ -410,8 +410,8 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             ScrolledWindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
-            Gridview = (TreeView)builder.GetObject("gridview");
-            FixedColview = (TreeView)builder.GetObject("fixedcolview");
+            Gridview = (Gtk.TreeView)builder.GetObject("gridview");
+            FixedColview = (Gtk.TreeView)builder.GetObject("fixedcolview");
             image1 = (Gtk.Image)builder.GetObject("image1");
             _mainWidget = hbox1;
             Gridview.Model = gridmodel;
@@ -1071,7 +1071,7 @@ namespace UserInterface.Views
                 {
                     activeCol = new List<int> { colNo };
                 }
-                HighlightColumns((sender as Button).Parent as TreeView);
+                HighlightColumns((sender as Button).Parent as Gtk.TreeView);
             }
             if (e.Event.Button == 3 && activeCol.Count >= 1)
             {
@@ -1099,7 +1099,7 @@ namespace UserInterface.Views
         private int GetColNoFromButton(Button btn)
         {
             int colNo = 0;
-            TreeView view = btn.Parent as TreeView;
+            Gtk.TreeView view = btn.Parent as Gtk.TreeView;
             if (view == null)
                 return -1;
             foreach (Widget child in view.AllChildren)
@@ -1118,7 +1118,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Highlights all selected columns and un-highlights all other columns.
         /// </summary>
-        private void HighlightColumns(TreeView view)
+        private void HighlightColumns(Gtk.TreeView view)
         {
             // Reset all columns to default colour.
             FormatColumns?.Invoke(this, new EventArgs());
@@ -1314,7 +1314,7 @@ namespace UserInterface.Views
         /// don't seem to work consistently
         /// </summary>
         /// <param name="view">The treeview for which headings are to be modified</param>
-        private void SetColumnHeaders(TreeView view)
+        private void SetColumnHeaders(Gtk.TreeView view)
         {
             int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
             for (int i = 0; i < numCols; i++)
@@ -1390,7 +1390,7 @@ namespace UserInterface.Views
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             TreePath path = model.GetPath(iter);
-            TreeView view = col.TreeView as TreeView;
+            Gtk.TreeView view = col.TreeView as Gtk.TreeView;
             int rowNo = path.Indices[0];
             int colNo = -1;
             string text = string.Empty;
@@ -2412,14 +2412,14 @@ namespace UserInterface.Views
         private void OnButtonDown(object sender, ButtonPressEventArgs e)
         {
             activeCol = new List<int>();
-            TreeView view = sender is TreeView ? sender as TreeView : Gridview;
+            Gtk.TreeView view = sender is Gtk.TreeView ? sender as Gtk.TreeView : Gridview;
             HighlightColumns(view);
             if (e.Event.Button == 3)
             {
                 if (this.ColumnHeaderClicked != null)
                 {
                     GridHeaderClickedArgs args = new GridHeaderClickedArgs();
-                    if (sender is TreeView)
+                    if (sender is Gtk.TreeView)
                     {
                         TreePath path;
                         TreeViewColumn column;
@@ -2427,7 +2427,7 @@ namespace UserInterface.Views
                         int rowIdx = path.Indices[0];
                         int xpos = (int)e.Event.X;
                         int colIdx = 0;
-                        foreach (Widget child in (sender as TreeView).AllChildren)
+                        foreach (Widget child in (sender as Gtk.TreeView).AllChildren)
                         {
                             if (child.GetType() != typeof(Gtk.Button))
                                 continue;
@@ -2454,7 +2454,7 @@ namespace UserInterface.Views
         /// <param name="colNo">Column number we are looking for</param>
         /// <param name="view">The treeview</param>
         /// <returns>The button object</returns>
-        public Button GetColumnHeaderButton(int colNo, TreeView view = null)
+        public Button GetColumnHeaderButton(int colNo, Gtk.TreeView view = null)
         {
             int i = 0;
             if (view == null)
@@ -2479,7 +2479,7 @@ namespace UserInterface.Views
         /// <param name="colNo">Column number we are looking for</param>
         /// <param name="view">The treeview</param>
         /// <returns>A label object</returns>
-        public Label GetColumnHeaderLabel(int colNo, TreeView view = null)
+        public Label GetColumnHeaderLabel(int colNo, Gtk.TreeView view = null)
         {
             int i = 0;
             if (view == null)
@@ -2573,9 +2573,9 @@ namespace UserInterface.Views
             if (sender is CellEditable)
             {
                 (sender as CellEditable).EditingDone -= Editable_EditingDone;
-                if (sender is Widget && (sender as Widget).Parent is TreeView)
+                if (sender is Widget && (sender as Widget).Parent is Gtk.TreeView)
                 {
-                    TreeView view = (sender as Widget).Parent as TreeView;
+                    Gtk.TreeView view = (sender as Widget).Parent as Gtk.TreeView;
                     view.GrabFocus();
                 }
             }

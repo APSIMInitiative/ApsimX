@@ -420,5 +420,31 @@ namespace UserInterface
                 GLib.Marshaller.Free(ptr);
             }
         }
+
+
+        /// <summary>
+        /// Get whatever text is currently on a specific clipboard.
+        /// </summary>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        /// <returns></returns>
+        public static string GetClipboardText(string clipboardName)
+        {
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Gtk.Clipboard cb = Gtk.Clipboard.Get(modelClipboard);
+
+            return cb.WaitForText();
+        }
+
+        /// <summary>
+        /// Place text on a specific clipboard.
+        /// </summary>
+        /// <param name="text">Text to place on the clipboard.</param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        public static void SetClipboardText(string text, string clipboardName)
+        {
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Gtk.Clipboard cb = Gtk.Clipboard.Get(modelClipboard);
+            cb.Text = text;
+        }
     }
 }

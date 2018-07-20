@@ -83,7 +83,7 @@ namespace UserInterface.Commands
         private void MoveModelDown(CommandHistory CommandHistory, IModel parent, int modelIndex)
         {
             if (explorerView != null)
-                explorerView.MoveDown(Apsim.FullPath(modelToMove));
+                explorerView.Tree.MoveDown(Apsim.FullPath(modelToMove));
             parent.Children.Remove(modelToMove as Model);
             parent.Children.Insert(modelIndex + 1, modelToMove as Model);
             modelWasMoved = true;
@@ -96,7 +96,7 @@ namespace UserInterface.Commands
         private void MoveModelUp(CommandHistory CommandHistory, IModel parent, int modelIndex)
         {
             if (explorerView != null)
-                explorerView.MoveUp(Apsim.FullPath(modelToMove));
+                explorerView.Tree.MoveUp(Apsim.FullPath(modelToMove));
             parent.Children.Remove(modelToMove as Model);
             parent.Children.Insert(modelIndex - 1, modelToMove as Model);
             modelWasMoved = true;

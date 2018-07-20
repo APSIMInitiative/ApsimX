@@ -68,8 +68,8 @@ namespace UserInterface.Views
         VPaned vpaned1 = null;
         Alignment alignment1 = null;
         HBox hbox1 = null;
-        TreeView treeview1 = null;
-        TreeView treeview2 = null;
+        Gtk.TreeView treeview1 = null;
+        Gtk.TreeView treeview2 = null;
 
         private ListStore heightModel = new ListStore(typeof(string));
         private ListStore gridModel = new ListStore(typeof(string));
@@ -83,8 +83,8 @@ namespace UserInterface.Views
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             alignment1 = (Alignment)builder.GetObject("alignment1");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            treeview1 = (TreeView)builder.GetObject("treeview1");
-            treeview2 = (TreeView)builder.GetObject("treeview2");
+            treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
+            treeview2 = (Gtk.TreeView)builder.GetObject("treeview2");
             _mainWidget = vpaned1;
             this.pBelowGround = new OxyPlot.GtkSharp.PlotView();
             this.pAboveGround = new OxyPlot.GtkSharp.PlotView();
@@ -1036,7 +1036,7 @@ namespace UserInterface.Views
             }
         }
 
-        public Label GetColumnHeaderLabel(int colNo, TreeView view)
+        public Label GetColumnHeaderLabel(int colNo, Gtk.TreeView view)
         {
             int i = 0;
             foreach (Widget widget in view.AllChildren)

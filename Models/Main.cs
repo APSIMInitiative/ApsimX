@@ -36,7 +36,9 @@ namespace Models
             Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
-            int exitCode = 0;
+            Simulations.Read(@"C:\Users\DeanH\Repos\ApsimX\Tests\Validation\Wheat\Wheat.apsimx");
+            return 0;
+           /* int exitCode = 0;
             try
             {
                 string fileName = null;
@@ -117,7 +119,7 @@ namespace Models
                 exitCode = 1;
             }
 
-            return exitCode;
+            return exitCode;*/
         }
 
         /// <summary>
