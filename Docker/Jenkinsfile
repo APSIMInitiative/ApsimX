@@ -14,7 +14,7 @@ pipeline {
 					
 					cd ApsimX
 					git checkout -- .
-					git clean -xfd
+					git clean -xfdq
 					rem I assume the default repo name is origin.
 					git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 					git checkout %sha1%
