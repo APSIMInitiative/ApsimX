@@ -36,6 +36,9 @@ namespace Utility
         /// <summary>The previous height of the status panel</summary>
         public int StatusPanelHeight { get; set; }
 
+        /// <summary>Keeps track of whether the dark theme is enabled.</summary>
+        public bool DarkTheme { get; set; }
+
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
         {

@@ -133,6 +133,11 @@ namespace UserInterface.Views
         /// <param name="o">A widget appearing on the tab</param>
         void SelectTabContaining(object o);
 
+        /// <summary>
+        /// Toggles between the default and dark GTK themes.
+        /// </summary>
+        void SetTheme(bool toggle);
+
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<AllowCloseArgs> AllowClose;
 
@@ -221,7 +226,6 @@ namespace UserInterface.Views
         private int numberOfButtons;
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
-
         private Window window1 = null;
         private ProgressBar progressBar = null;
         private TextView StatusWindow = null;
@@ -242,8 +246,7 @@ namespace UserInterface.Views
             numberOfButtons = 0;
             if ((uint)Environment.OSVersion.Platform <= 3)
             {
-                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                      ".gtkrc"));
+                SetTheme(toggle: false);
             }
             baseFont = Gtk.Rc.GetStyle(new Label()).FontDescription.Copy();
             defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
@@ -514,6 +517,28 @@ namespace UserInterface.Views
             int tabPage = GetTabOfWidget(o, ref notebook, ref tabText);
             if (tabPage >= 0 && notebook != null)
                 notebook.CurrentPage = tabPage;
+        }
+
+        /// <summary>
+        /// Toggles between the default and dark GTK themes.
+        /// </summary>
+        public void SetTheme(bool toggle)
+        {
+            if (toggle)
+                Utility.Configuration.Settings.DarkTheme = !Utility.Configuration.Settings.DarkTheme;
+            if (Utility.Configuration.Settings.DarkTheme)
+            {
+                Stream gtkrcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.DarkTheme.gtkrc");
+                if (gtkrcStream != null)
+                {
+                    StreamReader reader = new StreamReader(gtkrcStream);
+                    Gtk.Rc.ParseString(reader.ReadToEnd());
+                }
+            }
+            else
+            {
+                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
+            }
         }
 
         /// <summary>Gets or set the main window position.</summary>

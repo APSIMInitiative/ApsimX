@@ -488,6 +488,10 @@ namespace UserInterface.Presenters
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
+            startPage.AddButton(
+                                "Toggle dark theme",
+                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                        OnToggleTheme);
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -939,6 +943,16 @@ namespace UserInterface.Presenters
                 ShowError("Microsoft Azure functionality is currently only available under Windows.");
             }
             
+        }
+
+        /// <summary>
+        /// Toggles between the default and dark themes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnToggleTheme(object sender, EventArgs e)
+        {
+            view.SetTheme(toggle: true);
         }
 
         /// <summary>
