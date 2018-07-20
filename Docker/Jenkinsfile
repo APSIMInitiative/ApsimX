@@ -52,7 +52,7 @@ pipeline {
 								cd ..
 							)
 						'''
-						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
@@ -83,7 +83,7 @@ pipeline {
 								cd ..
 							)
 						'''
-						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
@@ -113,7 +113,7 @@ pipeline {
 								cd ..
 							)
 						'''
-						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
@@ -142,7 +142,7 @@ pipeline {
 								cd ..
 							)
 						'''
-						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
@@ -172,7 +172,7 @@ pipeline {
 								cd ..
 							)
 						'''
-						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
@@ -202,7 +202,7 @@ pipeline {
 								cd ..
 							)
 						'''
-						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'master', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
