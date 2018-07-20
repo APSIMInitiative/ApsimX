@@ -803,7 +803,7 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>User is trying to stop all currently executing simulations.
+        /// <summary>User is trying to stop all currently executing simulations.</summary>
         /// <param name="e">Event arguments.</param>
         protected void OnStopClicked(object o, EventArgs e)
         {

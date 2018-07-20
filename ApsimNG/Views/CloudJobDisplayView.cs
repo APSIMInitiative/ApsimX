@@ -641,6 +641,7 @@ namespace UserInterface.Views
         /// Event handler for the click event on the download job button. 
         /// Asks the user for confirmation, then downloads the results for each
         /// job the user has selected.
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnDownload_Click(object sender, EventArgs e)
