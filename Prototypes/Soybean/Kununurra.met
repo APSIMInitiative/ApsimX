@@ -1,6 +1,7 @@
 [kununurra.met.weather]
 
-latitude =  -15.7
+latitude = -15.78  (DECIMAL DEGREES)
+longitude = 128.71  (DECIMAL DEGREES)
 tav =  26.83 (oC) ! annual average ambient temperature
 amp =   8.28 (oC) ! annual amplitude in mean monthly temperature
 

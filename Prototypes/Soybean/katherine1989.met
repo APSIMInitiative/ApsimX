@@ -1,6 +1,10 @@
 [standard.met.weather]
 
-latitude=-14 (deg) ! 
+latitude = -14.47  (DECIMAL DEGREES)
+longitude = 132.31  (DECIMAL DEGREES)
+tav =   19.50 (oC)     ! annual average ambient temperature
+amp =   11.80 (oC)     ! annual amplitude in mean monthly temperature
+
 ! day 10 is a copy of day 11
 ! day 120 is a copy of day 119
 
