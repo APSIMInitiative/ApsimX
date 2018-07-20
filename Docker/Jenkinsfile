@@ -29,6 +29,7 @@ pipeline {
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "ghprbPullId=%ghprbPullId%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
+				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true
 			}
 		}
 		stage('RunTests') {
@@ -119,14 +120,16 @@ pipeline {
 							)
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\datetimestamp.txt', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
+							set /P DATETIMESTAMP=<ApsimX\datetimestamp.txt
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "ghprbPullId=%ghprbPullId%" -e "ghprbActualCommitAuthor=%ghprbActualCommitAuthor%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
 						'''
 					}
 				}
