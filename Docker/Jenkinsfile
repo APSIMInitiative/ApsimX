@@ -7,6 +7,7 @@ pipeline {
 			}
 			steps {
 				bat '''
+					@echo off
 					if not exist ApsimX (
 						git config --system core.longpaths true
 						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -38,6 +39,7 @@ pipeline {
 					}
 					steps {
 						bat '''
+							@echo off
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -53,6 +55,7 @@ pipeline {
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
+							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
@@ -69,6 +72,7 @@ pipeline {
 					}
 					steps {
 						bat '''
+							@echo off
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -84,6 +88,7 @@ pipeline {
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
+							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
@@ -99,6 +104,7 @@ pipeline {
 					}
 					steps {
 						bat '''
+							@echo off
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -114,6 +120,7 @@ pipeline {
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
+							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
@@ -129,6 +136,7 @@ pipeline {
 					}
 					steps {
 						bat '''
+							@echo off
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -143,6 +151,7 @@ pipeline {
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
+							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
@@ -158,6 +167,7 @@ pipeline {
 					}
 					steps {
 						bat '''
+							@echo off
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -173,6 +183,7 @@ pipeline {
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
+							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
@@ -188,6 +199,7 @@ pipeline {
 					}
 					steps {
 						bat '''
+							@echo off
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -203,6 +215,7 @@ pipeline {
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
+							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
