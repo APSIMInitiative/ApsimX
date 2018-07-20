@@ -6,6 +6,32 @@ if not exist %apsimx% (
 	exit 1
 )
 
+echo ########### Create an APSIM_VERSION (yyyy.mm.dd.###) environment variable.
+@echo on
+curl -k https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%ghprbPullId% > temp.txt
+@echo off
+type temp.txt
+FOR /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
+FOR /F "tokens=1-6 delims=-" %%I IN ("%FULLRESPONSE%") DO SET BUILD_TIMESTAMP=%%I
+FOR /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
+FOR /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET ISSUE_NUMBER=%%J
+set APSIM_VERSION=%BUILD_TIMESTAMP%.%ISSUE_NUMBER%
+
+echo APSIM_VERSION=%APSIM_VERSION% > ApsimX\Bin\Build.properties
+echo ISSUE_NUMBER=%ISSUE_NUMBER% >> ApsimX\Bin\Build.properties
+echo DATETIMESTAMP=%DATETIMESTAMP% >> ApsimX\Bin\Build.properties
+echo APSIM_VERSION=%APSIM_VERSION%
+echo ISSUE_NUMBER=%ISSUE_NUMBER%
+echo DATETIMESTAMP=%DATETIMESTAMP%
+
+echo ########### Insert the version number into AssemblyVersion.cs
+echo using System.Reflection; > ApsimX\Models\Properties\AssemblyVersion.cs
+echo [assembly: AssemblyTitle("APSIM %APSIM_VERSION%")] >> ApsimX\Models\Properties\AssemblyVersion.cs
+echo [assembly: AssemblyVersion("%APSIM_VERSION%")] >> ApsimX\Models\Properties\AssemblyVersion.cs
+echo [assembly: AssemblyFileVersion("%APSIM_VERSION%")] >> ApsimX\Models\Properties\AssemblyVersion.cs
+echo Done. Version = %APSIM_VERSION%
+echo.
+
 rem Call VS developer command prompt to setup environment
 call "C:\BuildTools\Common7\Tools\VsDevCmd.bat"
 
