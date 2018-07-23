@@ -187,7 +187,7 @@ namespace UserInterface.Presenters
         public void CopyPathToNode(object sender, EventArgs e)
         {
             string nodePath = explorerPresenter.CurrentNodePath;            
-            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.PMF.Functions.IFunction)
+            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.Functions.IFunction)
             {
                 nodePath += ".Value()";
             }
