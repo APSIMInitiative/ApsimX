@@ -50,11 +50,11 @@ namespace Models.Soils.Arbitrator
             Parent = parent;
             foreach (IUptake crop in uptakeModels)
             {
-                List<ZoneWaterAndN> uptake;
+                List<ZoneUptakes> uptake;
                 if (Type == CalcType.Water)
-                    uptake = crop.GetSWUptakes(soilstate);
+                    uptake = crop.GetWaterUptakeEstimatess(soilstate);
                 else
-                    uptake = crop.GetNUptakes(soilstate);
+                    uptake = crop.GetNitrogenUptakeEstimates(soilstate);
 
                 if (uptake != null)
                 {
@@ -74,11 +74,11 @@ namespace Models.Soils.Arbitrator
         /// <param name="crop">Name of the crop.</param>
         /// <param name="ZoneName">Name of the zone.</param>
         /// <returns>The uptakes.</returns>
-        public ZoneWaterAndN UptakeZone(IUptake crop, string ZoneName)
+        public ZoneUptakes UptakeZone(IUptake crop, string ZoneName)
         {
             foreach (CropUptakes U in Values)
                 if (U.Crop == crop)
-                    foreach (ZoneWaterAndN Z in U.Zones)
+                    foreach (ZoneUptakes Z in U.Zones)
                         if (Z.Zone.Name == ZoneName)
                             return Z;
 
@@ -96,9 +96,9 @@ namespace Models.Soils.Arbitrator
             {
                 CropUptakes NewU = new CropUptakes();
                 NewE.Values.Add(NewU);
-                foreach (ZoneWaterAndN Z in U.Zones)
+                foreach (ZoneUptakes Z in U.Zones)
                 {
-                    ZoneWaterAndN NewZ = Z * value;
+                    ZoneUptakes NewZ = Z * value;
                     NewU.Zones.Add(NewZ);
                 }
             }

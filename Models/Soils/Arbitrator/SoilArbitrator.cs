@@ -108,33 +108,33 @@ namespace Models.Soils.Arbitrator
             Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
             Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
 
-            List<ZoneWaterAndN> listOfZoneWaterAndNs = new List<ZoneWaterAndN>();
-            List <CropUptakes> UptakesFinal = new List<CropUptakes>();
+            List<ZoneUptakes> listOfZoneUptakes = new List<ZoneUptakes>();
+            List <CropUptakes> ActualUptakes = new List<CropUptakes>();
             foreach (CropUptakes U in UptakeEstimate1.Values)
             {
-                CropUptakes CWU = new CropUptakes();
-                CWU.Crop = U.Crop;
-                foreach (ZoneWaterAndN ZW1 in U.Zones)
+                CropUptakes CU = new CropUptakes();
+                CU.Crop = U.Crop;
+                foreach (ZoneUptakes ZU in U.Zones)
                 {
-                    ZoneWaterAndN NewZ = UptakeEstimate1.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0)
-                                       + UptakeEstimate2.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate3.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate4.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0);
-                    CWU.Zones.Add(NewZ);
-                    listOfZoneWaterAndNs.Add(NewZ);
+                    ZoneUptakes NewZone = UptakeEstimate1.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0)
+                                        + UptakeEstimate2.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate3.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate4.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0);
+                    CU.Zones.Add(NewZone);
+                    listOfZoneUptakes.Add(NewZone);
                 }
 
-                UptakesFinal.Add(CWU);
+                ActualUptakes.Add(CU);
             }
 
-            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneWaterAndNs);
+            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneUptakes);
 
-            foreach (CropUptakes Uptake in UptakesFinal)
+            foreach (CropUptakes Uptake in ActualUptakes)
             {
                 if (arbitrationType == Estimate.CalcType.Water)
-                    Uptake.Crop.SetSWUptake(Uptake.Zones);
+                    Uptake.Crop.SetActualWaterUptake(Uptake.Zones);
                 else
-                    Uptake.Crop.SetNUptake(Uptake.Zones);
+                    Uptake.Crop.SetActualNitrogenUptakes(Uptake.Zones);
             }
         }
 
@@ -143,14 +143,14 @@ namespace Models.Soils.Arbitrator
         /// </summary>
         /// <param name="zones">List of zones to check.</param>
         /// <param name="uptakes">List of all potential uptakes</param>
-        private static void ScaleWaterAndNIfNecessary(List<ZoneWaterAndN> zones, List<ZoneWaterAndN> uptakes)
+        private static void ScaleWaterAndNIfNecessary(List<ZoneUptakes> zones, List<ZoneUptakes> uptakes)
         {
-            foreach (ZoneWaterAndN uniqueZone in zones)
+            foreach (ZoneUptakes uniqueZone in zones)
             {
                 double[] totalWaterUptake = new double[uniqueZone.Water.Length];
                 double[] totalNO3Uptake = new double[uniqueZone.Water.Length];
                 double[] totalNH4Uptake = new double[uniqueZone.Water.Length];
-                foreach (ZoneWaterAndN zone in uptakes)
+                foreach (ZoneUptakes zone in uptakes)
                 {
                     if (zone.Zone == uniqueZone.Zone)
                     {
@@ -166,7 +166,7 @@ namespace Models.Soils.Arbitrator
                     {
                         // Scale water
                         double scale = uniqueZone.Water[i] / totalWaterUptake[i];
-                        foreach (ZoneWaterAndN zone in uptakes)
+                        foreach (ZoneUptakes zone in uptakes)
                         {
                             if (zone.Zone == uniqueZone.Zone)
                                 zone.Water[i] *= scale;
@@ -177,7 +177,7 @@ namespace Models.Soils.Arbitrator
                     {
                         // Scale NO3
                         double scale = uniqueZone.NO3N[i] / totalNO3Uptake[i];
-                        foreach (ZoneWaterAndN zone in uptakes)
+                        foreach (ZoneUptakes zone in uptakes)
                         {
                             if (zone.Zone == uniqueZone.Zone)
                                 zone.NO3N[i] *= scale;
@@ -188,7 +188,7 @@ namespace Models.Soils.Arbitrator
                     {
                         // Scale NH4
                         double scale = uniqueZone.NH4N[i] / totalNH4Uptake[i];
-                        foreach (ZoneWaterAndN zone in uptakes)
+                        foreach (ZoneUptakes zone in uptakes)
                         {
                             if (zone.Zone == uniqueZone.Zone)
                                 zone.NH4N[i] *= scale;

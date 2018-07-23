@@ -513,9 +513,9 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
+        public void DoNitrogenUptake(List<ZoneUptakes> zonesFromSoilArbitrator)
         {
-            foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
+            foreach (ZoneUptakes thisZone in zonesFromSoilArbitrator)
             {
                 ZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
@@ -666,7 +666,7 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-        public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply, ref double[] NH4Supply)
+        public void CalculateNitrogenSupply(ZoneUptakes zone, ref double[] NO3Supply, ref double[] NH4Supply)
         {
 
             ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
@@ -770,7 +770,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
-        public double[] CalculateWaterSupply(ZoneWaterAndN zone)
+        public double[] CalculateWaterSupply(ZoneUptakes zone)
         {
             ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone == null)

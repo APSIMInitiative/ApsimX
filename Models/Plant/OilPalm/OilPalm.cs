@@ -860,7 +860,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        public List<ZoneUptakes> GetWaterUptakeEstimatess(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -868,7 +868,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneUptakes> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
 
@@ -877,12 +877,12 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneUptakes> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneUptakes> info)
         { }
 
         /// <summary>Does the flower abortion.</summary>

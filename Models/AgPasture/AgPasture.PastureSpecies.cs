@@ -301,7 +301,7 @@ namespace Models.AgPasture
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">The soil state (current water content)</param>
         /// <returns>The potential water uptake (mm)</returns>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        public List<ZoneUptakes> GetWaterUptakeEstimatess(SoilState soilstate)
         {
             if (IsAlive)
             {
@@ -310,7 +310,7 @@ namespace Models.AgPasture
 
                 List<double[]> supplies = new List<double[]>();
                 List<Zone> zones = new List<Zone>();
-                foreach (ZoneWaterAndN zone in soilstate.Zones)
+                foreach (ZoneUptakes zone in soilstate.Zones)
                 {
                     // Find the zone in our root zones.
                     PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
@@ -337,11 +337,11 @@ namespace Models.AgPasture
 
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
-                List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
+                List<ZoneUptakes> ZWNs = new List<ZoneUptakes>();
                 for (int i = 0; i < supplies.Count; i++)
                 {
                     // Just send uptake from my zone
-                    ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
+                    ZoneUptakes uptake = new ZoneUptakes(zones[i]);
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
@@ -357,22 +357,22 @@ namespace Models.AgPasture
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">The soil state (current N contents)</param>
         /// <returns>The potential N uptake (kg/ha)</returns>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneUptakes> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             if (IsAlive)
             {
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                List<ZoneUptakes> zones = new List<ZoneUptakes>();
 
                 // Get the zone this plant is in
                 Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                foreach (ZoneWaterAndN Z in soilstate.Zones)
+                foreach (ZoneUptakes Z in soilstate.Zones)
                 {
                     PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
                     if (root != null)
                     {
-                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(Z.Zone);
+                        ZoneUptakes UptakeDemands = new ZoneUptakes(Z.Zone);
                         zones.Add(UptakeDemands);
 
                         // Get the N amount available in the soil
@@ -404,7 +404,7 @@ namespace Models.AgPasture
                 mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
 
                 //Reduce the PotentialUptakes that we pass to the soil arbitrator
-                foreach (ZoneWaterAndN UptakeDemands in zones)
+                foreach (ZoneUptakes UptakeDemands in zones)
                 {
                     UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, fractionUsed);
                     UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, fractionUsed);
@@ -419,11 +419,11 @@ namespace Models.AgPasture
         /// <summary>Sets the amount of water taken up by this plant (mm).</summary>
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The water uptake from each layer (mm), by zone</param>
-        public void SetSWUptake(List<ZoneWaterAndN> zones)
+        public void SetActualWaterUptake(List<ZoneUptakes> zones)
         {
             Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
 
-            foreach (ZoneWaterAndN zone in zones)
+            foreach (ZoneUptakes zone in zones)
             {
                 // Find the zone in our root zones.
                 PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
@@ -440,12 +440,12 @@ namespace Models.AgPasture
         /// <summary>Sets the amount of N taken up by this plant (kg/ha).</summary>
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The N uptake from each layer (kg/ha), by zone</param>
-        public void SetNUptake(List<ZoneWaterAndN> zones)
+        public void SetActualNitrogenUptakes(List<ZoneUptakes> zones)
         {
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
 
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneUptakes Z in zones)
             {
                 PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
                 if (root != null)

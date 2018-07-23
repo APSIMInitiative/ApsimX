@@ -17,21 +17,21 @@ namespace Models.Interfaces
         /// <summary>
         /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
         /// </summary>
-        List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate);
+        List<ZoneUptakes> GetWaterUptakeEstimatess(SoilState soilstate);
 
         /// <summary>
         /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
         /// </summary>
-        List<ZoneWaterAndN> GetNUptakes(SoilState soilstate);
+        List<ZoneUptakes> GetNitrogenUptakeEstimates(SoilState soilstate);
 
         /// <summary>
         /// Set the sw uptake for today.
         /// </summary>
-        void SetSWUptake(List<ZoneWaterAndN> info);
+        void SetActualWaterUptake(List<ZoneUptakes> info);
         
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        void SetNUptake(List<ZoneWaterAndN> info);
+        void SetActualNitrogenUptakes(List<ZoneUptakes> info);
     }
 }

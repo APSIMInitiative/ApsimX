@@ -23,7 +23,7 @@ namespace Models.Soils.Arbitrator
         public SoilState(IModel parent)
         {
             Parent = parent;
-            Zones = new List<ZoneWaterAndN>();
+            Zones = new List<ZoneUptakes>();
         }
 
         /// <summary>Initialises this instance.</summary>
@@ -34,7 +34,7 @@ namespace Models.Soils.Arbitrator
                 Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
                 if (soil != null)
                 {
-                    ZoneWaterAndN NewZ = new ZoneWaterAndN(Z);
+                    ZoneUptakes NewZ = new ZoneUptakes(Z);
                     NewZ.Water = soil.Water;
                     NewZ.NO3N = soil.NO3N;
                     NewZ.NH4N = soil.NH4N;
@@ -44,7 +44,7 @@ namespace Models.Soils.Arbitrator
         }
 
         /// <summary>Gets all zones in this soil state.</summary>
-        public List<ZoneWaterAndN> Zones { get; private set; }
+        public List<ZoneUptakes> Zones { get; private set; }
 
         /// <summary>Implements the operator -.</summary>
         /// <param name="state">The soil state.</param>
@@ -53,9 +53,9 @@ namespace Models.Soils.Arbitrator
         public static SoilState operator -(SoilState state, Estimate estimate)
         {
             SoilState NewState = new SoilState(state.Parent);
-            foreach (ZoneWaterAndN Z in state.Zones)
+            foreach (ZoneUptakes Z in state.Zones)
             {
-                ZoneWaterAndN NewZ = new ZoneWaterAndN(Z.Zone);
+                ZoneUptakes NewZ = new ZoneUptakes(Z.Zone);
                 NewZ.Water = Z.Water;
                 NewZ.NO3N = Z.NO3N;
                 NewZ.NH4N = Z.NH4N;
@@ -63,8 +63,8 @@ namespace Models.Soils.Arbitrator
             }
 
             foreach (CropUptakes C in estimate.Values)
-                foreach (ZoneWaterAndN Z in C.Zones)
-                    foreach (ZoneWaterAndN NewZ in NewState.Zones)
+                foreach (ZoneUptakes Z in C.Zones)
+                    foreach (ZoneUptakes NewZ in NewState.Zones)
                         if (Z.Zone.Name == NewZ.Zone.Name)
                         {
                             NewZ.Water = MathUtilities.Subtract(NewZ.Water, Z.Water);

@@ -783,7 +783,7 @@ namespace Models.AgPasture
 
         /// <summary>Finds out the amount of plant available water in the soil.</summary>
         /// <param name="myZone">The soil information</param>
-        internal double[] EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
+        internal double[] EvaluateSoilWaterAvailable(ZoneUptakes myZone)
         {
             if (myWaterAvailableMethod == PastureSpecies.PlantAvailableWaterMethod.DefaultAPSIM)
                 return PlantAvailableSoilWaterDefault(myZone);
@@ -799,7 +799,7 @@ namespace Models.AgPasture
         /// <remarks>This is the default APSIM method, with kl representing the daily rate for water extraction</remarks>
         /// <param name="myZone">The soil information</param>
         /// <returns>The amount of available water in each layer (mm)</returns>
-        internal double[] PlantAvailableSoilWaterDefault(ZoneWaterAndN myZone)
+        internal double[] PlantAvailableSoilWaterDefault(ZoneUptakes myZone)
         {
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
@@ -820,7 +820,7 @@ namespace Models.AgPasture
         /// </remarks>
         /// <param name="myZone">The soil information</param>
         /// <returns>The amount of available water in each layer (mm)</returns>
-        internal double[] PlantAvailableSoilWaterAlternativeKL(ZoneWaterAndN myZone)
+        internal double[] PlantAvailableSoilWaterAlternativeKL(ZoneUptakes myZone)
         {
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
@@ -858,7 +858,7 @@ namespace Models.AgPasture
         /// </remarks>
         /// <param name="myZone">The soil information</param>
         /// <returns>The amount of available water in each layer (mm)</returns>
-        internal double[] PlantAvailableSoilWaterAlternativeKS(ZoneWaterAndN myZone)
+        internal double[] PlantAvailableSoilWaterAlternativeKS(ZoneUptakes myZone)
         {
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
@@ -929,7 +929,7 @@ namespace Models.AgPasture
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
         /// <param name="myZone">The soil information</param>
         /// <param name="mySoilWaterUptake">Soil water uptake</param>
-        internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
+        internal void EvaluateSoilNitrogenAvailable(ZoneUptakes myZone, double[] mySoilWaterUptake)
         {
             if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture)
                 PlantAvailableSoilNBasicAgPasture(myZone);
@@ -944,7 +944,7 @@ namespace Models.AgPasture
         /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
         /// <remarks>This is a basic method, used as default in old AgPasture, all N in the root zone is available</remarks>
         /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNBasicAgPasture(ZoneWaterAndN myZone)
+        private void PlantAvailableSoilNBasicAgPasture(ZoneUptakes myZone)
         {
             double layerFrac; // the fraction of layer within the root zone
             for (int layer = 0; layer <= BottomLayer; layer++)
@@ -962,7 +962,7 @@ namespace Models.AgPasture
         /// Uptake is capped for a maximum value plants can take in one day.
         /// </remarks>
         /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNDefaultAPSIM(ZoneWaterAndN myZone)
+        private void PlantAvailableSoilNDefaultAPSIM(ZoneUptakes myZone)
         {
             double layerFrac; // the fraction of layer within the root zone
             double swFac;  // the soil water factor
@@ -1017,7 +1017,7 @@ namespace Models.AgPasture
         /// Uptake is caped for a maximum value plants can take in one day.
         /// </remarks>
         /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNAlternativeRLD(ZoneWaterAndN myZone)
+        private void PlantAvailableSoilNAlternativeRLD(ZoneUptakes myZone)
         {
             double layerFrac; // the fraction of layer within the root zone
             double swFac;  // the soil water factor
@@ -1068,7 +1068,7 @@ namespace Models.AgPasture
         /// </remarks>
         /// <param name="myZone">The soil information</param>
         /// <param name="mySoilWaterUptake">Soil water uptake</param>
-        private void PlantAvailableSoilNAlternativeWup(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
+        private void PlantAvailableSoilNAlternativeWup(ZoneUptakes myZone, double[] mySoilWaterUptake)
         {
             double layerFrac; // the fraction of layer within the root zone
             double potAvailableN; // potential available N
