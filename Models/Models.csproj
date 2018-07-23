@@ -430,7 +430,6 @@
     <Compile Include="Functions\WeightedTemperatureFunction.cs" />
     <Compile Include="Functions\XYPairs.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
-    <Compile Include="Plant\Organs\BaseOrgan.cs" />
     <Compile Include="Plant\Organs\GenericOrgan.cs" />
     <Compile Include="Plant\Organs\HIReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Leaf.cs" />
@@ -439,7 +438,6 @@
     <Compile Include="Plant\Interfaces\IOrgan.cs" />
     <Compile Include="Plant\Organs\ReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Root.cs" />
-    <Compile Include="Plant\Organs\RootSWIM.cs" />
     <Compile Include="Plant\Organs\SimpleLeaf.cs" />
     <Compile Include="Plant\Phenology\EmergingPhase.cs" />
     <Compile Include="Plant\Phenology\EndPhase.cs" />

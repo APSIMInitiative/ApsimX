@@ -3,9 +3,9 @@ using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Interfaces;
-using System.Xml;
 using System.Xml.Serialization;
 using Models.PMF.Library;
+using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -14,12 +14,80 @@ namespace Models.PMF.Organs
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
-    public class ReproductiveOrgan : BaseOrgan, IArbitration, IRemovableBiomass
+    public class ReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
     {
         #region Parameter Input Classes
+        /// <summary>The surface organic matter model</summary>
+        [Link]
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant Plant = null;
+
+        /// <summary>The summary</summary>
+        [Link]
+        public ISummary Summary = null;
+
         /// <summary>The phenology</summary>
         [Link]
         protected Phenology Phenology = null;
+
+        /// <summary>Growth Respiration</summary>
+        /// [Units("CO_2")]
+        public double GrowthRespiration { get; set; }
+
+
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        [XmlIgnore]
+        public Biomass Allocated { get; set; }
+
+        /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
+        [XmlIgnore]
+        public Biomass Senesced { get; set; }
+
+        /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Detached { get; set; }
+
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Removed { get; set; }
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        virtual public double MaintenanceRespiration { get { return 0; } set { } }
+
+        /// <summary>The dry matter demand</summary>
+        protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
+
+        /// <summary>Structural nitrogen demand</summary>
+        protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
+
+        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
+        public BiomassSupplyType CalculateDryMatterSupply()
+        {
+            return new BiomassSupplyType();
+        }
+
+        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
+        public BiomassSupplyType CalculateNitrogenSupply()
+        {
+            return new BiomassSupplyType();
+        }
+
+        /// <summary>Gets or sets the dm demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
+        /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
+
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        [XmlIgnore]
+        public double NFixationCost { get { return 0; } }
+        /// <summary>Gets or sets the n demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
+
+
         /// <summary>The water content</summary>
         [Link]
         [Units("g/g")]
@@ -195,26 +263,25 @@ namespace Models.PMF.Organs
                 Clear();
         }
 
-        /// <summary>
-        /// Execute harvest logic for reproductive organ
-        /// </summary>
-        public override void DoHarvest()
-        {
-                double YieldDW = (Live.Wt + Dead.Wt);
-
-                Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name);
-                Summary.WriteMessage(this, " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-                Summary.WriteMessage(this, " Size: " + Size.ToString("f2") + " (g)");
-                Summary.WriteMessage(this, " Number: " + Number.ToString("f2") + " (/m^2)");
-
-                Live.Clear();
-                Dead.Clear();
-                Number = 0;
-                _ReadyForHarvest = false;
-        }
         #endregion
 
         #region Event handlers
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
+
+            }
+        }
 
         /// <summary>Called when crop is being cut.</summary>
         /// <param name="sender">The sender.</param>
@@ -253,20 +320,32 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public override BiomassPoolType GetDryMatterDemand()
+        public BiomassPoolType GetDryMatterDemand()
         {
             dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
             return dryMatterDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public override BiomassPoolType GetNitrogenDemand()
+        public BiomassPoolType GetNitrogenDemand()
         {
             double demand = NFillingRate.Value();
             demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
             nitrogenDemand.Structural = demand;
 
             return nitrogenDemand;
+        }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Allocated = new PMF.Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
         }
 
 
@@ -291,7 +370,7 @@ namespace Models.PMF.Organs
 
         }
         /// <summary>Sets the dry matter potential allocation.</summary>
-        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
             if (DMDemand.Structural == 0)
                 if (dryMatter.Structural < 0.000000000001) { }//All OK
@@ -301,7 +380,7 @@ namespace Models.PMF.Organs
             // PotentialDailyGrowth = value.Structural;
         }
         /// <summary>Sets the dry matter allocation.</summary>
-        public override void SetDryMatterAllocation(BiomassAllocationType value)
+        public void SetDryMatterAllocation(BiomassAllocationType value)
         {
             // GrowthRespiration with unit CO2 
             // GrowthRespiration is calculated as 
@@ -315,7 +394,7 @@ namespace Models.PMF.Organs
             Allocated.StructuralWt = value.Structural * DMConversionEfficiency.Value();
         }
         /// <summary>Sets the n allocation.</summary>
-        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
+        public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             Live.StructuralN += nitrogen.Structural;
             Allocated.StructuralN = nitrogen.Structural;
@@ -329,7 +408,7 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public override double MinNconc
+        public double MinNconc
         {
             get
             {
