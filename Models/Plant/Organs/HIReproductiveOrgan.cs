@@ -144,7 +144,7 @@ namespace Models.PMF.Organs
         public double N { get { return Total.N; } }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public override BiomassPoolType CalculateDryMatterDemand()
+        public override BiomassPoolType GetDryMatterDemand()
         {
             double currentWt = (Live.Wt + Dead.Wt);
             double newHI = HI + HIIncrement.Value();
@@ -155,7 +155,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public override BiomassPoolType CalculateNitrogenDemand()
+        public override BiomassPoolType GetNitrogenDemand()
         {
             double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
             nitrogenDemand.Structural = demand;

@@ -253,14 +253,14 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public override BiomassPoolType CalculateDryMatterDemand()
+        public override BiomassPoolType GetDryMatterDemand()
         {
             dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
             return dryMatterDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public override BiomassPoolType CalculateNitrogenDemand()
+        public override BiomassPoolType GetNitrogenDemand()
         {
             double demand = NFillingRate.Value();
             demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);

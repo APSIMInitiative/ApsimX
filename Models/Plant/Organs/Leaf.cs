@@ -1333,7 +1333,7 @@ namespace Models.PMF.Organs
         #region Arbitrator methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateDryMatterSupply()
+        public override BiomassSupplyType GetDryMatterSupply()
         {
             // Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)
             double Retranslocation = 0;
@@ -1353,7 +1353,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateNitrogenSupply()
+        public override BiomassSupplyType GetNitrogenSupply()
         {
             double RetransSupply = 0;
             double ReallocationSupply = 0;
@@ -1369,7 +1369,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public override BiomassPoolType CalculateDryMatterDemand()
+        public override BiomassPoolType GetDryMatterDemand()
         {
             double StructuralDemand = 0.0;
             double StorageDemand = 0.0;
@@ -1396,7 +1396,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public override BiomassPoolType CalculateNitrogenDemand()
+        public override BiomassPoolType GetNitrogenDemand()
         {
             double StructuralDemand = 0.0;
             double MetabolicDemand = 0.0;

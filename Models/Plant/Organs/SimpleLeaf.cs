@@ -303,9 +303,9 @@ namespace Models.PMF.Organs
         public double WaterAllocation { get; set; }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateDryMatterSupply()
+        public override BiomassSupplyType GetDryMatterSupply()
         {
-            base.CalculateDryMatterSupply();   // get our base GenericOrgan to fill a supply structure first.
+            base.GetDryMatterSupply();   // get our base GenericOrgan to fill a supply structure first.
             DMSupply.Fixation = Photosynthesis.Value();
             return DMSupply;
         }

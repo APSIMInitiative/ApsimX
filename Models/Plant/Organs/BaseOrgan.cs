@@ -49,25 +49,25 @@ namespace Models.PMF.Organs
         #region Arbitration methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public virtual BiomassSupplyType CalculateDryMatterSupply()
+        public virtual BiomassSupplyType GetDryMatterSupply()
         {
             return dryMatterSupply;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public virtual BiomassSupplyType CalculateNitrogenSupply()
+        public virtual BiomassSupplyType GetNitrogenSupply()
         {
             return nitrogenSupply;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public virtual BiomassPoolType CalculateDryMatterDemand()
+        public virtual BiomassPoolType GetDryMatterDemand()
         {
             return dryMatterDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public virtual BiomassPoolType CalculateNitrogenDemand()
+        public virtual BiomassPoolType GetNitrogenDemand()
         {
             return nitrogenDemand;
         }
