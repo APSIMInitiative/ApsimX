@@ -8,7 +8,7 @@ namespace Models.WaterModel
     using APSIM.Shared.Soils;
     using APSIM.Shared.Utilities;
     using Core;
-    using PMF.Functions;
+    using Functions;
     using System;
     using System.Xml.Serialization;
 

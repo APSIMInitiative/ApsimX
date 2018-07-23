@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.PMF.Functions;
+using Models.Functions;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
@@ -445,9 +445,6 @@ namespace Models.PMF.Phen
                 if (Plant != null)
                     if (Plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
-
-                Util.Debug("Phenology.CurrentPhaseName=%s", CurrentPhase.Name.ToLower());
-                Util.Debug("Phenology.CurrentStage=%f", Stage);
             }
         }
 
