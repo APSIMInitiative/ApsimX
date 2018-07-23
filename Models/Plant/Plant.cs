@@ -10,7 +10,7 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using Models.Interfaces;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;

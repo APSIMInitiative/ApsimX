@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models.Core;
     using Models.Graph;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Views;
 
     /// <summary>
