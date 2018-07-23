@@ -142,7 +142,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Nodule))]
         [XmlElement(typeof(Models.PMF.Organs.ReproductiveOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.Root))]
-        [XmlElement(typeof(Models.PMF.Organs.RootSWIM))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleLeaf))]
         [XmlElement(typeof(Models.PMF.Organs.PerennialLeaf))]
         [XmlElement(typeof(Models.PMF.Phen.BBCH))]
