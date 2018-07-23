@@ -275,7 +275,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         public BiomassSupplyType CalculateDryMatterSupply()
         {
-            throw new NotImplementedException();
+            return new BiomassSupplyType();
         }
     }
 }
