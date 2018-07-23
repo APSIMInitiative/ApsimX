@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ResidueTypesList>
+<ResidueTypes>
   <Name>ResidueTypes</Name>
   <ResidueType>
     <fom_type>base_type</fom_type>
@@ -617,5 +617,5 @@
     <specific_area description="specific area of residue (ha/kg)">0.0001  </specific_area>
     <cf_contrib>1</cf_contrib>
   </ResidueType>
-</ResidueTypesList>
+</ResidueTypes>
 

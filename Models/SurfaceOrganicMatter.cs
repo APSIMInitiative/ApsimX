@@ -11,6 +11,8 @@
     using Models.Soils;
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
+    using System.Text;
+    using System.IO;
 
     /// <summary>
     /// # [Name]
@@ -162,17 +164,19 @@
             DefaultStandingFraction = 0.0;
             StandingExtinctCoeff = 0.5;
             FractionFaecesAdded = 0.5;
-            ResidueTypes = new ResidueTypesList();
             SurfOM = new List<SurfOrganicMatterType>();
             Pools = new List<Pool>();
         }
 
         /// <summary>Gets or sets the residue types.</summary>
         /// <value>The residue types.</value>
+        [XmlElement("ResidueTypes")]
         public ResidueTypesList ResidueTypes { get; set; }
+
         /// <summary>Gets or sets the tillage types.</summary>
         /// <value>The tillage types.</value>
         public TillageTypesList TillageTypes { get; set; }
+
         /// <summary>Gets or sets the pools.</summary>
         /// <value>The pools.</value>
         public List<Pool> Pools { get; set; }
@@ -543,34 +547,36 @@
         [EventSubscribe("Deserialised")]
         private void OnDeserialised(bool xmlSerialisation)
         {
+            string xml = XmlUtilities.Serialise(ResidueTypes, false);
+
             if (xmlSerialisation)
             {
-                if (ResidueTypes == null)
-                    ResidueTypes = new ResidueTypesList();
-                if (!string.IsNullOrEmpty(ResidueTypes.LoadFromResource))
-                {
-                    string xml = Properties.Resources.ResourceManager.GetString(ResidueTypes.LoadFromResource);
-                    if (xml != null)
-                    {
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(xml);
-                        ResidueTypesList ValuesFromResource = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as ResidueTypesList;
-                        if (ValuesFromResource != null)
-                        {
-                            foreach (ResidueType residueType in ValuesFromResource.residues)
-                            {
-                                residueType.IsHidden = true;
-                                ResidueTypes.residues.Add(residueType);
-                            }
-                        }
-                    }
-                }
-                ResidueTypes.FillAllDerived();
+                //if (ResidueTypes == null)
+                //    ResidueTypes = new ResidueTypesList();
+                //if (!string.IsNullOrEmpty(ResidueTypes.LoadFromResource))
+                //{
+                //    string xml = Properties.Resources.ResourceManager.GetString(ResidueTypes.LoadFromResource);
+                //    if (xml != null)
+                //    {
+                //        XmlDocument doc = new XmlDocument();
+                //        doc.LoadXml(xml);
+                //        ResidueTypesList ValuesFromResource = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as ResidueTypesList;
+                //        if (ValuesFromResource != null)
+                //        {
+                //            foreach (ResidueType residueType in ValuesFromResource.ResidueType)
+                //            {
+                //                residueType.IsHidden = true;
+                //                ResidueTypes.ResidueType.Add(residueType);
+                //            }
+                //        }
+                //    }
+                //}
+                //ResidueTypes.FillAllDerived();
             }
         }
 
-        /// <summary>The saved residues</summary>
-        private ResidueType[] savedResidues;
+       // /// <summary>The saved residues</summary>
+        //private ResidueType[] savedResidues;
 
         /// <summary>
         /// We're about to be serialised. Remove residue types from out list
@@ -582,12 +588,12 @@
         {
             if (xmlSerialisation)
             {
-                savedResidues = ResidueTypes.residues.ToArray();
-                for (int i = ResidueTypes.residues.Count - 1; i >= 0; i--)
-                {
-                    if (ResidueTypes.residues[i].IsHidden)
-                        ResidueTypes.residues.RemoveAt(i);
-                }
+                //savedResidues = ResidueTypes.ResidueType.ToArray();
+                //for (int i = ResidueTypes.ResidueType.Count - 1; i >= 0; i--)
+                //{
+                //    if (ResidueTypes.ResidueType[i].IsHidden)
+                //        ResidueTypes.ResidueType.RemoveAt(i);
+                //}
             }
         }
 
@@ -599,18 +605,19 @@
         [EventSubscribe("Serialised")]
         private void OnSerialised(bool xmlSerialisation)
         {
-            if (xmlSerialisation && savedResidues != null)
-            {
-                ResidueTypes.residues = savedResidues.ToList();
-                savedResidues = null;
-            }
+
+            //if (xmlSerialisation && savedResidues != null)
+            //{
+            //    ResidueTypes.ResidueType = savedResidues.ToList();
+            //    savedResidues = null;
+            //}
         }
 
         /// <summary>
         /// 
         /// </summary>
         [Serializable]
-        public class ResidueType : Model
+        public class ResidueType
         {
             /// <summary>Gets or sets the fom_type.</summary>
             /// <value>The fom_type.</value>
@@ -684,12 +691,12 @@
         /// 
         /// </summary>
         [Serializable]
-        public class ResidueTypesList : Model
+        [XmlRoot("ResidueTypes")]
+        public class ResidueTypesList : ModelCollectionFromResource
         {
             /// <summary>Gets or sets the residues.</summary>
             /// <value>The residues.</value>
-            [XmlElement("ResidueType")]
-            public List<ResidueType> residues { get; set; }
+            public List<ResidueType> ResidueType { get; set; }
 
             /// <summary>Gets or sets the load from resource.</summary>
             /// <value>The load from resource.</value>
@@ -698,7 +705,7 @@
             /// <summary>Fills all derived.</summary>
             public void FillAllDerived()
             {
-                for (int i = 0; i < residues.Count; i++)
+                for (int i = 0; i < ResidueType.Count; i++)
                 {
                     FillDerived(i);
                 }
@@ -708,16 +715,16 @@
             /// <param name="i">The i.</param>
             public void FillDerived(int i)
             {
-                ResidueType residue = residues[i];
+                ResidueType residue = ResidueType[i];
                 ResidueType refResidue = null;
                 if (!string.IsNullOrEmpty(residue.derived_from))
                 {
-                    for (int j = 0; j < residues.Count; j++)
+                    for (int j = 0; j < ResidueType.Count; j++)
                     {
-                        if (residues[j].fom_type.Equals(residue.derived_from, StringComparison.CurrentCultureIgnoreCase))
+                        if (ResidueType[j].fom_type.Equals(residue.derived_from, StringComparison.CurrentCultureIgnoreCase))
                         {
                             FillDerived(j); // Make sure the template has itself been filled
-                            refResidue = residues[j];
+                            refResidue = ResidueType[j];
                             break;
                         }
                     }
@@ -767,26 +774,28 @@
             /// <summary>Initializes a new instance of the <see cref="ResidueTypesList"/> class.</summary>
             public ResidueTypesList()
             {
-                if (residues == null)
-                    residues = new List<ResidueType>();
+                //if (Residues == null)
+                //    Residues = new List<ResidueType>();
 
-                residues.Clear();
-                LoadFromResource = "ResidueTypes";
+                //Residues.Clear();
+                //LoadFromResource = "ResidueTypes";
             }
 
-            /// <summary>Gets the residue.</summary>
-            /// <param name="name">The name.</param>
-            /// <returns></returns>
-            public ResidueType getResidue(string name)
-            {
-                if (residues != null)
-                    foreach (ResidueType residueType in residues)
-                    {
-                        if (residueType.fom_type.Equals(name, StringComparison.CurrentCultureIgnoreCase))
-                            return residueType;
-                    }
-                throw new ApsimXException(this, "Could not find residue name " + name);
-            }
+
+        }
+
+        /// <summary>Gets the residue.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public ResidueType getResidue(string name)
+        {
+            //if (ResidueTypes != null)
+            //    foreach (ResidueType residueType in ResidueTypes)
+            //    {
+            //        if (residueType.fom_type.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+            //            return residueType;
+            //    }
+            throw new ApsimXException(this, "Could not find residue name " + name);
         }
 
         /// <summary>
@@ -1066,8 +1075,6 @@
         /// <summary>Called when [reset].</summary>
         public void Reset()
         {
-            if (ResidueTypes == null)
-                ResidueTypes = new ResidueTypesList();
             if (TillageTypes == null)
                 TillageTypes = new TillageTypesList();
             SurfOM = new List<SurfOrganicMatterType>();
@@ -1793,7 +1800,7 @@
         /// <param name="pot_decomp_rate">The pot_decomp_rate.</param>
         private void ReadTypeSpecificConstants(string surfom_type, int i, out double pot_decomp_rate)
         {
-            ResidueType thistype = ResidueTypes.getResidue(surfom_type);
+            ResidueType thistype = getResidue(surfom_type);
             if (thistype == null)
                 throw new ApsimXException(this, "Cannot find residue type description for '" + surfom_type + "'");
 
