@@ -421,7 +421,7 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="soilstate"></param>
         /// <returns></returns>
-        public List<Soils.Arbitrator.ZoneWaterAndN> GetWaterUptakeEstimatess(Soils.Arbitrator.SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetWaterUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
             double Etz = treeZoneWater.Eo; //Eo of Tree Zone
 

@@ -17,7 +17,7 @@ namespace Models.Interfaces
         /// <summary>
         /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
         /// </summary>
-        List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate);
+        List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate);
 
         /// <summary>
         /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.

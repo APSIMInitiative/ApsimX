@@ -182,7 +182,7 @@ namespace Models.PMF
         /// <param name="soilstate"></param>
         /// <returns>list of uptakes</returns>
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
-        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
             foreach (ZoneWaterAndN Z in soilstate.Zones)

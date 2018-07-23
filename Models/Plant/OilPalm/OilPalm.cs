@@ -860,7 +860,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
         }

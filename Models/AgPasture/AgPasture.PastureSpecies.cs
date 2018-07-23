@@ -301,7 +301,7 @@ namespace Models.AgPasture
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">The soil state (current water content)</param>
         /// <returns>The potential water uptake (mm)</returns>
-        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             if (IsAlive)
             {

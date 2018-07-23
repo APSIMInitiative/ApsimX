@@ -12076,7 +12076,7 @@ namespace Models
         /// <param name="soilstate"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)  
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)  
             {
                 throw new NotImplementedException();
             }

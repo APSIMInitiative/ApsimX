@@ -129,7 +129,7 @@ namespace Models.PMF
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             if (Plant.IsAlive)
             {
