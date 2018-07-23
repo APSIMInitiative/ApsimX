@@ -2,7 +2,7 @@ using System;
 using Models.Core;
 using Models.PMF.Struct;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// # [Name]

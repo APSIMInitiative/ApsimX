@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using Models.Core;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>Maximize the values of the children of this node</summary>
     /// \pre All children have to contain a public function "Value"

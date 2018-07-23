@@ -6,7 +6,7 @@ using Models.PMF.Phen;
 using System.IO;
 using APSIM.Shared.Utilities;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.

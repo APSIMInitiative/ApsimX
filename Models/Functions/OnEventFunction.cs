@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Returns the a value depending on whether an event has occurred.

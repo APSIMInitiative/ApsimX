@@ -3,7 +3,7 @@ namespace Models.PMF.Organs
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Models.PMF.Interfaces;
     using Models.PMF.Library;
     using System;

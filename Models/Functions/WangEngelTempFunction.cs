@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// # [Name]

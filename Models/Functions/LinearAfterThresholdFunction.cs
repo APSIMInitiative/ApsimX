@@ -5,7 +5,7 @@ using System.Reflection;
 using Models.Core;
 using APSIM.Shared.Utilities;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Function to return the value for a function with a trigger and slope from it

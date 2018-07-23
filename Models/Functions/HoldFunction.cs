@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Returns the a value which is updated daily until a given stage is reached, beyond which it is held constant

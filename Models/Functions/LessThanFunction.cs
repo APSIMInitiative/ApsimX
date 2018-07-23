@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>Value returned is determined according to given criteria</summary>
     [Serializable]

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Models.Core;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// A constant value function

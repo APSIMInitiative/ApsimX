@@ -6,7 +6,7 @@ using System.Reflection;
 using Models.Core;
 using System.Globalization;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// # [Name]

@@ -8,7 +8,7 @@ using System.Collections;
 using Models.Core;
 using APSIM.Shared.Utilities;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// # [Name]

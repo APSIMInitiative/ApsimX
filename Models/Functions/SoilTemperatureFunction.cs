@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using System.IO;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Returns the temperature of the surface soil layer

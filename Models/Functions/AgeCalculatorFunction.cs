@@ -1,7 +1,7 @@
 ﻿using System;
 using Models.Core;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// # [Name]

@@ -6,7 +6,7 @@ using Models.PMF.Phen;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// # [Name]

@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using System.IO;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Look up a value based upon the current growth phase.

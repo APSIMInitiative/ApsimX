@@ -5,7 +5,7 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// # [Name]

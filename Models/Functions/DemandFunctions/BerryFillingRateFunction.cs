@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
 
-namespace Models.PMF.Functions.DemandFunctions
+namespace Models.Functions.DemandFunctions
 {
     /// <summary>
     /// # [Name]

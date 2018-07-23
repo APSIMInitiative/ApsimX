@@ -5,7 +5,7 @@ using System.Reflection;
 using Models.Core;
 using Models.Interfaces;
 
-namespace Models.PMF.Functions.SupplyFunctions
+namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
     /// # [Name]

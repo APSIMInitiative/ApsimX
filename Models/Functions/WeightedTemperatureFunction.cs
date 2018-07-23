@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.Interfaces;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// This Function calculates a mean daily temperature from Max and Min weighted toward Max according to the specified MaximumTemperatureWeighting factor.  This is then passed into the XY matrix as the x property and the function returns the y value

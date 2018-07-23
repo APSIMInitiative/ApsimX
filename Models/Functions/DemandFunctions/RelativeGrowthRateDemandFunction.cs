@@ -1,8 +1,9 @@
 using System;
 using Models.Core;
 using Models.PMF.Phen;
+using Models.PMF;
 
-namespace Models.PMF.Functions.DemandFunctions
+namespace Models.Functions.DemandFunctions
 {
     /// <summary>
     /// # [Name]

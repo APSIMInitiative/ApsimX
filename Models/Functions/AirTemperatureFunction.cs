@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  

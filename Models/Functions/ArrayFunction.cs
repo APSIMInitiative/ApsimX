@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Models.Core;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Returns the value at the given index. If the index is outside the array, the last value will be returned.

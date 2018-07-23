@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 
-namespace Models.PMF.Functions.DemandFunctions
+namespace Models.Functions.DemandFunctions
 {
     /// <summary>
     /// # [Name]

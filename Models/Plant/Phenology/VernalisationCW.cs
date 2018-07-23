@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.PMF.Functions;
+using Models.Functions;
 using System.Xml.Serialization;
 using Models.Interfaces;
 
@@ -14,7 +14,7 @@ namespace Models.PMF.Phen
     /// The vernalization and photoperiod effects from CERES wheat.
     ///</summary>
     /// \pre A \ref Models.PMF.Phen.Phenology "Phenology" model has to exist.
-    /// \pre A \ref Models.PMF.Functions.PhotoperiodFunction "PhotoperiodFunction" 
+    /// \pre A \ref Models.Functions.PhotoperiodFunction "PhotoperiodFunction" 
     ///     model has to exist to calculate the day length.
     /// \pre A \ref Models.WeatherFile "WeatherFile" model has to exist to 
     /// retrieve the daily minimum and maximum temperature.
@@ -49,13 +49,13 @@ namespace Models.PMF.Phen
     /// Photoperiod
     /// ------------------------
     /// Photoperiod is calculated from day of year and latitude using standard astronomical equations accounting for civil twilight 
-    /// using the parameter \p twilight in \ref Models.PMF.Functions.PhotoperiodFunction. In APSIM, 
+    /// using the parameter \p twilight in \ref Models.Functions.PhotoperiodFunction. In APSIM, 
     /// the photoperiod affects phenology between \p StartStageForEffects and \p EndStageForEffects. During this period, thermal time 
     /// is affected by a photoperiod factor (\f$f_{D}\f$) that is calculated by
     /// \f[
     /// f_{D}=1-0.002R_{p}(20-L_{P})^{2}
     /// \f]
-    /// where \f$L_{P}\f$ is the day length (h) from \ref Models.PMF.Functions.PhotoperiodFunction.
+    /// where \f$L_{P}\f$ is the day length (h) from \ref Models.Functions.PhotoperiodFunction.
     ///</remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

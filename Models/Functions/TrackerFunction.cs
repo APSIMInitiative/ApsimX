@@ -1,4 +1,4 @@
-﻿namespace Models.PMF.Functions
+﻿namespace Models.Functions
 {
     using System;
     using System.Collections.Generic;

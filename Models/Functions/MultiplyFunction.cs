@@ -5,7 +5,7 @@ using System.Reflection;
 using Models.Core;
 using System.IO;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>Multiplies the values of the children of this node</summary>
     /// \pre All children have to contain a public function "Value"

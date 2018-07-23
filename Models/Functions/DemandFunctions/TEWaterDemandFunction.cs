@@ -3,7 +3,7 @@ using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 
-namespace Models.PMF.Functions.DemandFunctions
+namespace Models.Functions.DemandFunctions
 {
     /// <summary>
     /// # [Name]

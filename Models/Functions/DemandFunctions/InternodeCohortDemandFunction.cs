@@ -4,7 +4,7 @@ using Models.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Struct;
 
-namespace Models.PMF.Functions.DemandFunctions
+namespace Models.Functions.DemandFunctions
 {
     /// <summary>
     /// # [Name]

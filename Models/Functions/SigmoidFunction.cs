@@ -5,7 +5,7 @@ using System.Reflection;
 using Models.Core;
 using System.Xml.Serialization;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)

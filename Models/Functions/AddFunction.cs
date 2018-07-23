@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Models.Core;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// A function that adds values from child functions

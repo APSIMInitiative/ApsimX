@@ -14,8 +14,7 @@ namespace Models.Core
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Xml;
     using APSIM.Shared.Utilities;
-    using PMF.Functions;
-    using PMF;
+    using Functions;
     using Factorial;
 
     /// <summary>

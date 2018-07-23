@@ -4,7 +4,7 @@ namespace Models.PMF.Organs
     using Library;
     using Models.Core;
     using Models.Interfaces;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Soils.Arbitrator;

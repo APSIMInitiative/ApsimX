@@ -5,7 +5,7 @@ using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
 
-namespace Models.PMF.Functions
+namespace Models.Functions
 {
     /// <summary>
     /// This function returns the daily delta for its child function
