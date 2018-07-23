@@ -17,6 +17,6 @@ namespace Models.Soils.Arbitrator
         public IUptake Crop;
 
         /// <summary>List of uptakes</summary>
-        public List<ZoneUptakes> Zones = new List<ZoneUptakes>();
+        public List<ZoneWaterAndN> Zones = new List<ZoneWaterAndN>();
     }
 }

@@ -129,7 +129,7 @@ namespace Models.PMF
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        public List<ZoneUptakes> GetWaterUptakeEstimatess(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)
         {
             if (Plant.IsAlive)
             {
@@ -138,7 +138,7 @@ namespace Models.PMF
 
                 List<double[]> supplies = new List<double[]>();
                 List<Zone> zones = new List<Zone>();
-                foreach (ZoneUptakes zone in soilstate.Zones)
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
                     foreach (IOrgan o in Organs)
                         if (o is IWaterNitrogenUptake)
                         {
@@ -164,11 +164,11 @@ namespace Models.PMF
 
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
-                List<ZoneUptakes> ZWNs = new List<ZoneUptakes>();
+                List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
                 for (int i = 0; i < supplies.Count; i++)
                 {
                     // Just send uptake from my zone
-                    ZoneUptakes uptake = new ZoneUptakes(zones[i]);
+                    ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
@@ -183,11 +183,11 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneUptakes> zones)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             // Calculate the total water supply across all zones.
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-            foreach (ZoneUptakes Z in zones)
+            foreach (ZoneWaterAndN Z in zones)
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
 
             // Calculate total plant water demand.
@@ -217,14 +217,14 @@ namespace Models.PMF
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will do pass the uptake to the soil water balance.
-            foreach (ZoneUptakes Z in zones)
+            foreach (ZoneWaterAndN Z in zones)
                 Plant.Root.DoWaterUptake(Z.Water, Z.Zone.Name);
         }
 
         /// <summary>
         /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
         /// </summary>
-        public List<Soils.Arbitrator.ZoneUptakes> GetNitrogenUptakeEstimates(SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             if (Plant.IsEmerged)
             {
@@ -233,10 +233,10 @@ namespace Models.PMF
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
 
-                List<ZoneUptakes> zones = new List<ZoneUptakes>();
-                foreach (ZoneUptakes zone in soilstate.Zones)
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    ZoneUptakes UptakeDemands = new ZoneUptakes(zone.Zone);
+                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
 
                     UptakeDemands.NO3N = new double[zone.NO3N.Length];
                     UptakeDemands.NH4N = new double[zone.NH4N.Length];
@@ -263,7 +263,7 @@ namespace Models.PMF
                 {
                     //Reduce the PotentialUptakes that we pass to the soil arbitrator
                     double ratio = Math.Min(1.0, NDemand / NSupply);
-                    foreach (ZoneUptakes UptakeDemands in zones)
+                    foreach (ZoneWaterAndN UptakeDemands in zones)
                     {
                         UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
                         UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
@@ -277,13 +277,13 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneUptakes> zones)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
             if (Plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
-                foreach (ZoneUptakes Z in zones)
+                foreach (ZoneWaterAndN Z in zones)
                     NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake

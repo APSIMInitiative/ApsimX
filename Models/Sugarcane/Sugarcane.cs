@@ -12076,7 +12076,7 @@ namespace Models
         /// <param name="soilstate"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public List<ZoneUptakes> GetWaterUptakeEstimatess(SoilState soilstate)  
+        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)  
             {
                 throw new NotImplementedException();
             }
@@ -12086,7 +12086,7 @@ namespace Models
         /// <param name="soilstate"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public List<ZoneUptakes> GetNitrogenUptakeEstimates(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -12096,13 +12096,13 @@ namespace Models
         /// Set the sw uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetActualWaterUptake(List<ZoneUptakes> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetActualNitrogenUptakes(List<ZoneUptakes> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         { }
 
 

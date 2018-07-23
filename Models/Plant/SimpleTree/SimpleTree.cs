@@ -135,7 +135,7 @@ namespace Models.PMF
 
         /// <summary>A list of uptakes generated for the soil arbitrator</summary>
         [XmlIgnore]
-        public List<ZoneUptakes> Uptakes;
+        public List<ZoneWaterAndN> Uptakes;
         /// <summary>The actual uptake of the plant</summary>
         /// <value>The uptake.</value>
         [XmlIgnore]
@@ -166,7 +166,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Uptakes = new List<ZoneUptakes>();
+            Uptakes = new List<ZoneWaterAndN>();
             EP = 0;
         }
 
@@ -182,10 +182,10 @@ namespace Models.PMF
         /// <param name="soilstate"></param>
         /// <returns>list of uptakes</returns>
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
-        public List<ZoneUptakes> GetWaterUptakeEstimatess(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimatess(SoilState soilstate)
         {
-            ZoneUptakes MyZone = new ZoneUptakes(this.Parent as Zone);
-            foreach (ZoneUptakes Z in soilstate.Zones)
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Zone.Name == this.Parent.Name)
                     MyZone = Z;
 
@@ -203,8 +203,8 @@ namespace Models.PMF
             for (int j = 0; j < Soil.LL15mm.Length; j++)
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
 
-            List<ZoneUptakes> Uptakes = new List<ZoneUptakes>();
-            ZoneUptakes Uptake = new ZoneUptakes(this.Parent as Zone);
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
             Uptake.Water = SWUptake;
             Uptake.NO3N = new double[SWUptake.Length];
@@ -216,10 +216,10 @@ namespace Models.PMF
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneUptakes> GetNitrogenUptakeEstimates(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
-            ZoneUptakes MyZone = new ZoneUptakes(this.Parent as Zone);
-            foreach (ZoneUptakes Z in soilstate.Zones)
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Zone.Name == this.Parent.Name)
                     MyZone = Z;
 
@@ -240,8 +240,8 @@ namespace Models.PMF
                 NO3Uptake[j] = PotNO3Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
                 NH4Uptake[j] = PotNH4Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
             }
-            List<ZoneUptakes> Uptakes = new List<ZoneUptakes>();
-            ZoneUptakes Uptake = new ZoneUptakes(this.Parent as Zone);
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
             Uptake.NO3N = NO3Uptake;
             Uptake.NH4N = NH4Uptake;
             Uptake.Water = new double[NO3Uptake.Length];
@@ -252,7 +252,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneUptakes> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         {
             SWUptake = info[0].Water;
             EP = MathUtilities.Sum(SWUptake);
@@ -262,7 +262,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneUptakes> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         {
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;

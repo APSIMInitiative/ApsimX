@@ -287,7 +287,7 @@ namespace Models.PMF.Organs
         public double NFixationCost { get { return 0; } }
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
-        public double[] WaterSupply(ZoneUptakes zone) { return null; }
+        public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
@@ -296,7 +296,7 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-        public void CalcNSupply(ZoneUptakes zone, out double[] NO3Supply, out double[] NH4Supply)
+        public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
         {
             NO3Supply = null;
             NH4Supply = null;
@@ -304,7 +304,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        public void DoNitrogenUptake(List<ZoneUptakes> zonesFromSoilArbitrator) { }
+        public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
         /// <summary>Gets the fw.</summary>
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 

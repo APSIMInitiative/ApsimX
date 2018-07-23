@@ -421,7 +421,7 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="soilstate"></param>
         /// <returns></returns>
-        public List<Soils.Arbitrator.ZoneUptakes> GetWaterUptakeEstimatess(Soils.Arbitrator.SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetWaterUptakeEstimatess(Soils.Arbitrator.SoilState soilstate)
         {
             double Etz = treeZoneWater.Eo; //Eo of Tree Zone
 
@@ -431,16 +431,16 @@ namespace Models.Agroforestry
 
             IndividualTreeWaterDemand = SWDemand / NumberOfTrees;
 
-            List<ZoneUptakes> Uptakes = new List<ZoneUptakes>();
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotSWSupply = 0; // Total water supply (L)
             
-            foreach (ZoneUptakes Z in soilstate.Zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
                 foreach (Zone ZI in ZoneList)
                 {
                     if (Z.Zone.Name == ZI.Name)
                     {
-                        ZoneUptakes Uptake = new ZoneUptakes(ZI);
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
@@ -481,7 +481,7 @@ namespace Models.Agroforestry
             WaterStress = Math.Min(1, Math.Max(0, PotSWSupply / SWDemand));
 
             List<double> uptakeList = new List<double>();
-            foreach (ZoneUptakes Z in Uptakes)
+            foreach (ZoneWaterAndN Z in Uptakes)
             {
                 Z.Water = MathUtilities.Multiply_Value(Z.Water, F);
                 uptakeList.Add(Z.TotalWater);
@@ -497,22 +497,22 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="soilstate"></param>
         /// <returns></returns>
-        public List<Soils.Arbitrator.ZoneUptakes> GetNitrogenUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
             Zone treeZone = ZoneList[0] as Zone;
 
-            List<ZoneUptakes> Uptakes = new List<ZoneUptakes>();
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotNO3Supply = 0; // Total N supply (kg)
             
             double NDemandkg = GetNDemandToday()*10 * treeZone.Area * 10000;
 
-            foreach (ZoneUptakes Z in soilstate.Zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
                 foreach (Zone ZI in ZoneList)
                 {
                     if (Z.Zone.Name == ZI.Name)
                     {
-                        ZoneUptakes Uptake = new ZoneUptakes(ZI);
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
@@ -555,7 +555,7 @@ namespace Models.Agroforestry
             NStress = Math.Min(1, Math.Max(0, PotNO3Supply / NDemandkg));
 
             List<double> uptakeList = new List<double>();
-            foreach (ZoneUptakes Z in Uptakes)
+            foreach (ZoneWaterAndN Z in Uptakes)
             {
                 Z.NO3N = MathUtilities.Multiply_Value(Z.NO3N, F);
                 uptakeList.Add(Z.TotalNO3N);
@@ -592,12 +592,12 @@ namespace Models.Agroforestry
         ///  Accepts the actual soil water uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        public void SetActualWaterUptake(List<Soils.Arbitrator.ZoneUptakes> info)
+        public void SetActualWaterUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
             int i = 0;
             foreach (Zone SearchZ in forestryZones)
             {
-                foreach (ZoneUptakes ZI in info)
+                foreach (ZoneWaterAndN ZI in info)
                 {
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
@@ -618,9 +618,9 @@ namespace Models.Agroforestry
         /// Accepts the actual soil Nitrogen uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        public void SetActualNitrogenUptakes(List<Soils.Arbitrator.ZoneUptakes> info)
+        public void SetActualNitrogenUptakes(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
-            foreach (ZoneUptakes ZI in info)
+            foreach (ZoneWaterAndN ZI in info)
             {
                 foreach (Zone SearchZ in forestryZones)
                 {
