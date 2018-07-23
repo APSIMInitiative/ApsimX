@@ -73,18 +73,8 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Removed { get; set; }
 
-        /// <summary>Gets the dm supply photosynthesis.</summary>
-        [Units("g/m^2")]
-        virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
-
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         virtual public double MaintenanceRespiration { get { return 0; } set { } }
-
-        /// <summary>The dry matter supply</summary>
-        protected BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
-
-        /// <summary>The nitrogen supply</summary>
-        protected BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
 
         /// <summary>The dry matter demand</summary>
         protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
@@ -95,12 +85,9 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         public  BiomassSupplyType CalculateNitrogenSupply()
         {
-            return nitrogenSupply;
+            return new BiomassSupplyType();
         }
 
-        /// <summary>Gets or sets the dm supply.</summary>
-        [XmlIgnore]
-         public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
         /// <summary>Sets the dm potential allocation.</summary>
         /// <summary>Sets the dry matter potential allocation.</summary>
          public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter) { }
@@ -109,9 +96,6 @@ namespace Models.PMF.Organs
          public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
         /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
 
-        /// <summary>Gets or sets the n supply.</summary>
-        [XmlIgnore]
-         public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
          public double NFixationCost { get { return 0; } }
@@ -285,9 +269,7 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
             dryMatterDemand.Clear();
-            dryMatterSupply.Clear();
             nitrogenDemand.Clear();
-            nitrogenSupply.Clear();
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
