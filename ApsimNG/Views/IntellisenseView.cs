@@ -17,7 +17,7 @@
         /// <summary>
         /// The TreeView which displays the data.
         /// </summary>
-        private TreeView completionView;
+        private Gtk.TreeView completionView;
 
         /// <summary>
         /// The ListStore which holds the data (suggested completion options).
@@ -60,7 +60,7 @@
             completionFrame.Add(completionScroller);
 
             completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
-            completionView = new TreeView(completionModel);
+            completionView = new Gtk.TreeView(completionModel);
             completionScroller.Add(completionView);
 
             TreeViewColumn column = new TreeViewColumn()
