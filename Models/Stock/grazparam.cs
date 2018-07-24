@@ -317,7 +317,7 @@ namespace Models.GrazPlan
     /// Encoding translation
     /// </summary>
     [Serializable]
-    public struct TTranslation
+    public struct Translation
     {
         /// <summary>
         /// Language
@@ -357,7 +357,7 @@ namespace Models.GrazPlan
         private string FName;
         private string FEnglishName;
         private string[] FLocales = new string[0];
-        private TTranslation[] FTranslations = new TTranslation[0];
+        private Translation[] FTranslations = new Translation[0];
         private TParameterSet FParent;
         private TParameterSet[] FChildren;
 
@@ -735,7 +735,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TTranslation getTranslation(int Idx)
+        public Translation getTranslation(int Idx)
         {
             return FTranslations[Idx];
         }
@@ -1467,7 +1467,7 @@ namespace Models.GrazPlan
         {
             TParameterSet Ancestor, child;
             int Idx, itrans;
-            TTranslation translation;
+            Translation translation;
 
             Ancestor = this;
             if (Ancestor != null)
