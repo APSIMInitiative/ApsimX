@@ -35,8 +35,8 @@ namespace Models.PMF.Phen
         protected Phenology Phenology = null;
 
         /// <summary>The thermal time</summary>
-        //[Link(IsOptional = true)]
-        //public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        [Link(IsOptional = true)]
+        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         /// <summary>The stress</summary>
         [Link(IsOptional = true)]

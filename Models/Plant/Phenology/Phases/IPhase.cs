@@ -11,9 +11,6 @@ namespace Models.PMF.Phen
     /// <summary>Interface for a function</summary>
     public interface IPhase
     {
-        /// <summary>  /// Gets or sets the name of the model  /// </summary>
-        string Name { get; set; }
-
         /// <summary>The start</summary>
         string Start { get; set; }
 

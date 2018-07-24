@@ -511,8 +511,6 @@ namespace Models.PMF.Phen
                         if (CurrentPhaseIndex == -1)
                             throw new Exception("Cannot goto phase: " + GotoP.PhaseNameToGoto + ". Phase not found.");
                     }
-                    if (CurrentPhase.PhaseParallel != null)
-                        PhaseIndexOffset = CurrentPhaseIndex - IndexOfPhase(CurrentPhase.PhaseParallel);
                 }
                 CurrentPhase.ResetPhase();
                 // Send a PhaseChanged event.
@@ -637,11 +635,9 @@ namespace Models.PMF.Phen
                 StartFraction = double.Parse(StartFractionSt.ToString(), 
                                              System.Globalization.CultureInfo.InvariantCulture);
             int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
-            //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
-            if (CurrentPhase.PhaseParallel == null)
-                CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
-            else CurrentPhaseIndex = IndexOfPhase(CurrentPhase.PhaseParallel);
 
+            CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
+            
             if (CurrentPhaseIndex >= StartPhaseIndex)
                 return true;
             else
