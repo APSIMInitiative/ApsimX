@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using Models.Functions;
 using Models.PMF.Struct;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// It continues until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure model) are important for predicting the duration of the crop correctly.

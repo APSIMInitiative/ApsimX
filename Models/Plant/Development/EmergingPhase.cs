@@ -5,7 +5,7 @@ using Models.Core;
 using System.Xml.Serialization;
 using Models.Functions;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// It simulates time to emergence as a function of sowing depth.  A <i>ThermalTime Target</i> from sowing to emergence = SowingDepth (set with sow()

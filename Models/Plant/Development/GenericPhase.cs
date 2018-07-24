@@ -5,7 +5,7 @@ using Models.Functions;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// It uses a <i>ThermalTime Target</i> to determine the duration between development <i>Stages</i>.

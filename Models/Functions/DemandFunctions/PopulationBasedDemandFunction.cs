@@ -25,7 +25,7 @@ namespace Models.Functions.DemandFunctions
 
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
-        private Models.PMF.Phen.Phenology Phenology = null;
+        private Models.PMF.Development.Phenology Phenology = null;
 
         /// <summary>The expansion stress</summary>
         [Link]
