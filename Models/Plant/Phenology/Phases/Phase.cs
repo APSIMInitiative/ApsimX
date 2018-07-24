@@ -45,7 +45,20 @@ namespace Models.PMF.Phen
         /// <summary>The property of day unused</summary>
         protected double PropOfDayUnused = 0;
         /// <summary>The _ tt for today</summary>
-                
+        protected double _TTForToday = 0;
+
+        /// <summary>Gets the tt for today.</summary>
+        /// <value>The tt for today.</value>
+        public double TTForToday
+        {
+            get
+            {
+                if (ThermalTime == null)
+                    return 0;
+                return ThermalTime.Value();
+            }
+        }
+        
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         [XmlIgnore]
