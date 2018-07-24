@@ -226,7 +226,7 @@ namespace Models.PMF
         /// </summary>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
-            if (Plant.IsEmerged)
+            if (Plant.Phenology.Emerged)
             {
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
@@ -279,7 +279,7 @@ namespace Models.PMF
         /// </summary>
         public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
-            if (Plant.IsEmerged)
+            if (Plant.Phenology.Emerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
@@ -333,7 +333,7 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantPartioning")]
         private void OnDoPotentialPlantPartioning(object sender, EventArgs e)
         {
-            if (Plant.IsEmerged)
+            if (Plant.Phenology.Emerged)
             {
                 DM.Clear();
                 // Setup DM supplies from each organ
@@ -402,7 +402,7 @@ namespace Models.PMF
         [EventSubscribe("DoActualPlantPartioning")]
         private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
-            if (Plant.IsEmerged)
+            if (Plant.Phenology.Emerged)
             {
                 AllocateFixation(Organs.ToArray(), N, NArbitrator);               //Allocate supply of fixable Nitrogen to each organ
                 Retranslocation(Organs.ToArray(), N, NArbitrator);        //Allocate supply of retranslocatable N to each organ

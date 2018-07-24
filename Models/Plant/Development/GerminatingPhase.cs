@@ -5,7 +5,7 @@ using Models.Core;
 using System.Xml.Serialization;
 
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// This model assumes that germination will be completed on any day after sowing if the extractable soil water is greater than zero.

@@ -716,7 +716,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Plant.IsEmerged)
+                if (Plant.Phenology.Emerged)
                     if (ExpandedCohortNo < InitialisedCohortNo)
                         if (Leaves[(int)ExpandedCohortNo].Age > 0)
                             if (AppearedCohortNo < InitialisedCohortNo)
@@ -1162,7 +1162,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (!Plant.IsEmerged)
+            if (!Plant.Phenology.Emerged)
                 return;
 
             if (MicroClimatePresent == false)

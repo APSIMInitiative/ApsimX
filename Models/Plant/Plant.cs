@@ -1,68 +1,26 @@
-// -----------------------------------------------------------------------
-// <copyright file="Plant.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.PMF
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
     using Models.Core;
-    using Models.Interfaces;
     using Models.Functions;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
-    using Models.PMF.Phen;
-    using Models.Soils.Arbitrator;
-    using APSIM.Shared.Utilities;
-    using Struct;
+    using Models.PMF.Development;
+    using Models.PMF.Struct;
+    using System;
+    using System.Collections.Generic;
     using System.Data;
+    using System.Xml.Serialization;
 
     ///<summary>
     /// # [Name]
     /// The generic plant model
     /// </summary>
-    /// \pre Summary A Summary model has to exist to write summary message.
-    /// \pre Phenology A \ref Models.PMF.Phen.Phenology Phenology model is 
-    /// optional to check whether plant has emerged.
-    /// \pre OrganArbitrator A OrganArbitrator model is optional (not used currently).
-    /// \pre Structure A Structure model is optional (not used currently).
-    /// \pre Leaf A \ref Models.PMF.Organs.Leaf Leaf model is optional 
-    /// to calculate water supply and demand ratio.
-    /// \pre Root A Models.PMF.Organs.Root Root model is optional 
-    /// to calculate water supply and demand ratio.
-    /// \param CropType Used by several organs to determine the type of crop.
-    /// \retval Population Number of plants per square meter. 
-    /// \retval IsAlive Return true if plant is alive and in the ground.
-    /// \retval IsEmerged Return true if plant has emerged.
-    /// 
-    /// On commencing simulation
-    /// ------------------------
-    /// OnSimulationCommencing is called on commencing simulation. Organs contain 
-    /// all children which derive from model IOrgan. The model variables 
-    /// are reset.
-    /// 
-    /// On sowing 
-    /// -------------------------
-    /// Plant is sown by a manager script in a APSIM model. For example,    
-    /// \code
-    /// 2012-10-23 [Maize].Sow(population:11, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);
-    /// \endcode
-    /// 
-    /// Sowing parameters should be specified, i.e. cultivar, population, depth, rowSpacing,
-    /// maxCover (optional), and budNumber (optional).
-    /// 
-    /// Two events "Sowing" and "PlantSowing" are invoked to notify other models 
-    /// to execute sowing events.
-    /// <remarks>
-    /// </remarks>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
     public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation
     {
-        #region Class links
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
@@ -72,8 +30,9 @@ namespace Models.PMF
         public Zone Zone = null;
 
         /// <summary>The phenology</summary>
-        [Link(IsOptional = true)]
+        [Link]
         public Phenology Phenology = null;
+
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
         public OrganArbitrator Arbitrator = null;
@@ -99,8 +58,6 @@ namespace Models.PMF
         /// </summary>
         [Link]
         public Clock Clock = null;
-
-        #endregion
 
         #region Class properties and fields
         /// <summary>Used by several organs to determine the type of crop.</summary>
@@ -221,20 +178,6 @@ namespace Models.PMF
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
         public bool IsAlive { get { return SowingData != null; } }
-
-        /// <summary>Return true if plant has emerged</summary>
-        public bool IsEmerged
-        {
-            get
-            {
-                if (Phenology != null)
-                    return Phenology.Emerged;
-                    //If the crop model has phenology and the crop is emerged return true
-                else
-                    return IsAlive;
-                    //Else if the crop is in the grown returen true
-            }
-        }
 
         /// <summary>Return true if plant has germinated</summary>
         public bool IsGerminated

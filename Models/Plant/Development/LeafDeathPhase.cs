@@ -6,7 +6,7 @@ using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Struct;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// It proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
