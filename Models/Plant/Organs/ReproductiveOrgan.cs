@@ -64,13 +64,13 @@ namespace Models.PMF.Organs
         protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public BiomassSupplyType CalculateDryMatterSupply()
+        public BiomassSupplyType GetDryMatterSupply()
         {
             return new BiomassSupplyType();
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public BiomassSupplyType CalculateNitrogenSupply()
+        public BiomassSupplyType GetNitrogenSupply()
         {
             return new BiomassSupplyType();
         }
