@@ -169,8 +169,8 @@ namespace Models.GrazPlan
         /// <returns>The paddock index</returns>
         private int PaddockIndexOf(string name)
         {
-            for (int i = 0; i < Paddocks.Length; i++)
-                if (Paddocks[i].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            for (int i = 0; i < this.Paddocks.Length; i++)
+                if (this.Paddocks[i].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                     return i;
             return -1;
         }
@@ -182,8 +182,8 @@ namespace Models.GrazPlan
         /// <returns>The paddock index</returns>
         private int PaddockIndexOf(int id)
         {
-            for (int i = 0; i < Paddocks.Length; i++)
-                if (Paddocks[i].PaddId == id)
+            for (int i = 0; i < this.Paddocks.Length; i++)
+                if (this.Paddocks[i].PaddId == id)
                     return i;
             return -1;
         }
@@ -201,13 +201,13 @@ namespace Models.GrazPlan
         /// <param name="suppKg">Amount (kg fresh weight) of the supplement to be included in the store.</param>
         /// <param name="suppName">Name of the supplement.</param>
         /// <param name="roughage">The roughage.</param>
-        /// <param name="DMP">Proportion of the fresh weight which is dry matter   kg/kg FW</param>
-        /// <param name="DMD">Dry matter digestibility of the supplement           kg/kg DM</param>
-        /// <param name="MEDM">Metabolisable energy content of dry matter          MJ/kg DM</param>
-        /// <param name="CP">Crude protein content                                 kg/kg DM</param>
-        /// <param name="DG">Degradability of the crude protein                    kg/kg CP</param>
-        /// <param name="EE">Ether-extractable content                             kg/kg DM</param>
-        /// <param name="ADIP2CP">Ratio of acid detergent insoluble protein to CP  kg/kg CP</param>
+        /// <param name="dmp">Proportion of the fresh weight which is dry matter   kg/kg FW</param>
+        /// <param name="dmd">Dry matter digestibility of the supplement           kg/kg DM</param>
+        /// <param name="medm">Metabolisable energy content of dry matter          MJ/kg DM</param>
+        /// <param name="cp">Crude protein content                                 kg/kg DM</param>
+        /// <param name="dg">Degradability of the crude protein                    kg/kg CP</param>
+        /// <param name="ee">Ether-extractable content                             kg/kg DM</param>
+        /// <param name="adip2cp">Ratio of acid detergent insoluble protein to CP  kg/kg CP</param>
         /// <param name="phos">Phosphorus content                                  kg/kg DM</param>
         /// <param name="sulf">Sulphur content                                     kg/kg DM</param>
         /// <param name="ashAlk">Ash alkalinity                                    mol/kg DM</param>
@@ -215,8 +215,8 @@ namespace Models.GrazPlan
         /// <returns>
         /// Index of the supplement in the store
         /// </returns>
-        public int AddToStore(double suppKg, string suppName, int roughage = DEFAULT, double DMP = 0.0, double DMD = 0.0,
-                   double MEDM = 0.0, double CP = 0.0, double DG = 0.0, double EE = 0.0, double ADIP2CP = 0.0,
+        public int AddToStore(double suppKg, string suppName, int roughage = DEFAULT, double dmp = 0.0, double dmd = 0.0,
+                   double medm = 0.0, double cp = 0.0, double dg = 0.0, double ee = 0.0, double adip2cp = 0.0,
                    double phos = 0.0, double sulf = 0.0, double ashAlk = 0.0, double maxPass = 0.0)
         {
             int idx = IndexOf(suppName);
@@ -234,20 +234,20 @@ namespace Models.GrazPlan
             else if (roughage != DEFAULT)
                 addSupp.IsRoughage = false;
 
-            if (DMP > 0.0)
-                addSupp.DMPropn = DMP;
-            if (DMD > 0.0)
-                addSupp.DMDigestibility = DMD;
-            if (MEDM > 0.0)
-                addSupp.ME2DM = MEDM;
-            if (CP > 0.0)
-                addSupp.CrudeProt = CP;
-            if (DG > 0.0)
-                addSupp.DegProt = DG;
-            if (EE > 0.0)
-                addSupp.EtherExtract = EE;
-            if (ADIP2CP > 0.0)
-                addSupp.ADIP2CP = ADIP2CP;
+            if (dmp > 0.0)
+                addSupp.DMPropn = dmp;
+            if (dmd > 0.0)
+                addSupp.DMDigestibility = dmd;
+            if (medm > 0.0)
+                addSupp.ME2DM = medm;
+            if (cp > 0.0)
+                addSupp.CrudeProt = cp;
+            if (dg > 0.0)
+                addSupp.DegProt = dg;
+            if (ee > 0.0)
+                addSupp.EtherExtract = ee;
+            if (adip2cp > 0.0)
+                addSupp.ADIP2CP = adip2cp;
             if (phos > 0.0)
                 addSupp.Phosphorus = phos;
             if (sulf > 0.0)
@@ -257,9 +257,9 @@ namespace Models.GrazPlan
             if (maxPass > 0.0)
                 addSupp.MaxPassage = maxPass;
 
-            if (DMD > 0.0 && MEDM == 0.0)
+            if (dmd > 0.0 && medm == 0.0)
                 addSupp.ME2DM = addSupp.DefaultME2DM();
-            else if (DMD == 0.0 && MEDM > 0.0)
+            else if (dmd == 0.0 && medm > 0.0)
                 addSupp.DMDigestibility = addSupp.DefaultDMD();
 
             return AddToStore(suppKg, addSupp);
