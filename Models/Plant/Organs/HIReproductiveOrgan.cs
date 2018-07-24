@@ -83,7 +83,7 @@ namespace Models.PMF.Organs
         protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public  BiomassSupplyType CalculateNitrogenSupply()
+        public  BiomassSupplyType GetNitrogenSupply()
         {
             return new BiomassSupplyType();
         }
@@ -224,7 +224,7 @@ namespace Models.PMF.Organs
         public double N { get { return Total.N; } }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public BiomassPoolType CalculateDryMatterDemand()
+        public BiomassPoolType GetDryMatterDemand()
         {
             double currentWt = (Live.Wt + Dead.Wt);
             double newHI = HI + HIIncrement.Value();
@@ -235,7 +235,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public BiomassPoolType CalculateNitrogenDemand()
+        public BiomassPoolType GetNitrogenDemand()
         {
             double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
             nitrogenDemand.Structural = demand;
@@ -273,7 +273,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public BiomassSupplyType CalculateDryMatterSupply()
+        public BiomassSupplyType GetDryMatterSupply()
         {
             return new BiomassSupplyType();
         }
