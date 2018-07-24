@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
-using Models.PMF.Functions;
+using Models.Functions;
 
 
 namespace Models.PMF.Organs

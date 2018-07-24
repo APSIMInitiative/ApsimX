@@ -6,7 +6,7 @@
 namespace Models.Core
 {
     using PMF;
-    using PMF.Functions;
+    using Functions;
     using System;
     using System.Reflection;
     using System.Xml.Serialization;

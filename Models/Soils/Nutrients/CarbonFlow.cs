@@ -2,7 +2,7 @@
 namespace Models.Soils.Nutrients
 {
     using Core;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using System;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;

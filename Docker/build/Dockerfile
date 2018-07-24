@@ -12,7 +12,8 @@ RUN Install-PackageProvider -Name Chocolatey            -Force -RequiredVersion 
 RUN Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex; 	\
     choco feature disable –name showDownloadProgress;                                        							\
 	choco feature enable -n allowGlobalConfirmation;                                         							\
-    choco install git;
+    choco install git;																									\
+	choco install curl;
 
 # Now install some missing build tools
 ADD https://aka.ms/vs/15/release/vs_buildtools.exe C:/vs_buildtools.exe
