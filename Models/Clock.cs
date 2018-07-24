@@ -89,8 +89,6 @@ namespace Models
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
         /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
-        /// <summary>Occurs when [do plant growth].</summary>
-        public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
         /// <summary> Process stock methods in GrazPlan Stock </summary>
@@ -253,9 +251,6 @@ namespace Models
 
                     if (DoActualPlantGrowth != null)
                         DoActualPlantGrowth.Invoke(this, args);
-
-                    if (DoPlantGrowth != null)
-                        DoPlantGrowth.Invoke(this, args);
 
                     if (DoUpdate != null)
                         DoUpdate.Invoke(this, args);

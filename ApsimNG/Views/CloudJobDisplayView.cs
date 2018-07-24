@@ -16,7 +16,7 @@ namespace UserInterface.Views
         /// <summary>
         /// TreeView to display the data.
         /// </summary>
-        private TreeView tree;
+        private Gtk.TreeView tree;
 
         /// <summary>
         /// ListStore to hold the raw data being displayed.
@@ -133,7 +133,7 @@ namespace UserInterface.Views
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
             Type[] types = new Type[columnTitles.Length];
-            tree = new TreeView() { CanFocus = true, RubberBanding = true, Name = "custom_treeview" };
+            tree = new Gtk.TreeView() { CanFocus = true, RubberBanding = true, Name = "custom_treeview" };
             tree.Selection.Mode = SelectionMode.Multiple;
 
             for (int i = 0; i < columnTitles.Length; i++)

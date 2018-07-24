@@ -64,13 +64,13 @@ namespace Models.PMF.Organs
         protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public BiomassSupplyType CalculateDryMatterSupply()
+        public BiomassSupplyType GetDryMatterSupply()
         {
             return new BiomassSupplyType();
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public BiomassSupplyType CalculateNitrogenSupply()
+        public BiomassSupplyType GetNitrogenSupply()
         {
             return new BiomassSupplyType();
         }
@@ -320,14 +320,14 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public BiomassPoolType CalculateDryMatterDemand()
+        public BiomassPoolType GetDryMatterDemand()
         {
             dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
             return dryMatterDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public BiomassPoolType CalculateNitrogenDemand()
+        public BiomassPoolType GetNitrogenDemand()
         {
             double demand = NFillingRate.Value();
             demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
