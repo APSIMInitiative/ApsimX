@@ -967,7 +967,7 @@ namespace UserInterface.Presenters
             if (info == null)
                 description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
 
-            if (typeof(Models.PMF.Functions.IFunction).IsAssignableFrom(model.GetType()))
+            if (typeof(Models.Functions.IFunction).IsAssignableFrom(model.GetType()))
                 description.ToolTip = model.GetType().Name;
 
             description.Children = new List<TreeViewNode>();
