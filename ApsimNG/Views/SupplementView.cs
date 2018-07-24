@@ -61,7 +61,7 @@ namespace UserInterface.Views
         private Button btnDelete = null;
         private Button btnAdd = null;
         private IconView lbDefaultNames = null;
-        private TreeView lvSupps = null;
+        private Gtk.TreeView lvSupps = null;
 
         private ListStore suppList = new ListStore(typeof(string));
         private ListStore defNameList = new ListStore(typeof(string));
@@ -89,7 +89,7 @@ namespace UserInterface.Views
             btnDelete = (Button)builder.GetObject("btnDelete");
             btnAdd = (Button)builder.GetObject("btnAdd");
             lbDefaultNames = (IconView)builder.GetObject("lbDefaultNames");
-            lvSupps = (TreeView)builder.GetObject("lvSupps");
+            lvSupps = (Gtk.TreeView)builder.GetObject("lvSupps");
             _mainWidget = table1;
 
             entryLookup.Add(tbDM, TSupplement.TSuppAttribute.spaDMP);
