@@ -187,7 +187,7 @@ namespace UserInterface.Presenters
         public void CopyPathToNode(object sender, EventArgs e)
         {
             string nodePath = explorerPresenter.CurrentNodePath;            
-            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.PMF.Functions.IFunction)
+            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.Functions.IFunction)
             {
                 nodePath += ".Value()";
             }
@@ -635,11 +635,14 @@ namespace UserInterface.Presenters
         public void Enabled(object sender, EventArgs e)
         {
             IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-            model.Enabled = !model.Enabled;
-            foreach (IModel child in Apsim.ChildrenRecursively(model))
-                child.Enabled = model.Enabled;
-            explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-            explorerPresenter.Refresh();
+            if (model != null)
+            {
+                model.Enabled = !model.Enabled;
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.Enabled = model.Enabled;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
+            }
         }
 
         /// <summary>

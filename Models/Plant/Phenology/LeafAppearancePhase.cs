@@ -4,7 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
-using Models.PMF.Functions;
+using Models.Functions;
 using Models.PMF.Struct;
 
 namespace Models.PMF.Phen

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using Models.PMF.Functions;
+using Models.Functions;
 using System.Xml.Serialization;
 
 namespace Models.PMF.Phen

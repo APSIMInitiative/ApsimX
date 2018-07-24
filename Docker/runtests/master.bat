@@ -100,5 +100,12 @@ reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-
+if %errorlevel% equ 0 (
+	if "%1"=="%validationsyntax%" (
+		C:\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %ghprbPullId% %DATETIMESTAMP% %ghprbActualCommitAuthor%
+		if %errorlevel% neq 0 (
+			echo APSIM.PerformanceTests.Collector did not run succecssfully!
+		)
+	)
+)
 :end
