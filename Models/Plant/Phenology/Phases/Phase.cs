@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using System.ComponentModel;
+//using System.ComponentModel;
 using Models.Functions;
 using System.IO;
 using System.Xml.Serialization;
@@ -13,60 +13,30 @@ namespace Models.PMF.Phen
     /// <summary>
     /// A base model representing a phenological phase。
     /// </summary>
-    /// \warning Do not use this model in \ref Models.PMF.Phen.Phenology "Phenology" model.
-    /// \pre All Phase models have to be the children of 
-    ///     \ref Models.PMF.Phen.Phenology "Phenology" model.
-    /// \param End The stage name of phase ending, 
-    ///     which should be the same as the Start name 
-    ///     in previous phase except the first phase.
-    /// \param Start The stage name of phase starting, 
-    ///     which should be the same as the End name.
-    ///     in next phase except the last phase.
-    /// \param ThermalTime Optional. The daily thermal time.
-    /// \param Stress Optional. The environmental stress factors.
-    /// \retval TTinPhase The cumulated thermal time in current phase (<sup>o</sup>Cd).
-    /// \retval TTForToday The thermal time for today in current phase (<sup>o</sup>Cd).
-    /// \retval FractionComplete The complete fraction in current phase (from 0 to 1).
-    /// <remarks>
-    /// This is a base model in phenology. \ref Models.PMF.Phen.Phenology "Phenology" model
-    /// will call \a DoTimeStep to calculate phenology development.
-    /// 
-    /// The actual daily thermal time (\f$\Delta TT_{pheno}\f$) is calculated 
-    /// the daily thermal time (\f$\Delta TT\f$) multiply by 
-    /// generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) if child \a Stress exists. 
-    /// \f[
-    ///     \Delta TT_{pheno}=\Delta TT\times f_{s,\, pheno}
-    /// \f]
-    /// if \a Stress no exist.
-    /// \f[
-    ///     \Delta TT_{pheno}=\Delta TT
-    /// \f] 
-    /// The daily thermal time (\f$\Delta TT\f$) gets from the value of \a ThermalTime. 
-    /// The generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) gets from the value of \a Stress. 
-    /// </remarks>
+     
+
+
+
+
     [Serializable]
     [ValidParent(ParentType = typeof(Phenology))]
     abstract public class Phase : Model, ICustomDocumentation
     {
         /// <summary>The start</summary>
-        [Models.Core.Description("Start")]
+        [Description("Start")]
         public string Start { get; set; }
 
         /// <summary>The end</summary>
         [Models.Core.Description("End")]
         public string End { get; set; }
-        /// <summary>The phase that this one is equivelent to</summary>
-        [Models.Core.Description("Phase that this is equivelent to in phenology order")]
-        public string PhaseParallel { get; set; }
 
         /// <summary>The phenology</summary>
         [Link]
         protected Phenology Phenology = null;
 
-        // ThermalTime is optional because GerminatingPhase doesn't require it.
         /// <summary>The thermal time</summary>
-        [Link(IsOptional = true)]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        //[Link(IsOptional = true)]
+        //public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         /// <summary>The stress</summary>
         [Link(IsOptional = true)]
@@ -75,20 +45,7 @@ namespace Models.PMF.Phen
         /// <summary>The property of day unused</summary>
         protected double PropOfDayUnused = 0;
         /// <summary>The _ tt for today</summary>
-        protected double _TTForToday = 0;
-
-        /// <summary>Gets the tt for today.</summary>
-        /// <value>The tt for today.</value>
-        public double TTForToday
-        {
-            get
-            {
-                if (ThermalTime == null)
-                    return 0;
-                return ThermalTime.Value();
-            }
-        }
-        
+                
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         [XmlIgnore]

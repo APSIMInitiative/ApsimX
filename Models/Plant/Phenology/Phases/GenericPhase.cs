@@ -23,7 +23,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class GenericPhase : Phase, ICustomDocumentation
+    public class GenericPhase : IPhase, ICustomDocumentation
     {
         [Link(IsOptional=true)]
         private IFunction Target = null;
@@ -33,6 +33,14 @@ namespace Models.PMF.Phen
 
         [Link]
         Phenology phenology = null;
+
+        /// <summary>The start</summary>
+        [Description("Start")]
+        public string Start { get; set; }
+
+        /// <summary>The end</summary>
+        [Models.Core.Description("End")]
+        public string End { get; set; }
 
         /// <summary>Number of days from sowing to end of this phase.</summary>
         [XmlIgnore]
@@ -124,11 +132,19 @@ namespace Models.PMF.Phen
             }
         }
 
-        internal override void WriteSummary(TextWriter writer)
+        internal void WriteSummary(TextWriter writer)
         {
-            base.WriteSummary(writer);
+            writer.WriteLine("      " + Name);
             if (Target != null)
                 writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
+        }
+
+        /// <summary>Resets the phase.</summary>
+        public void ResetPhase()
+        {
+            _TTForToday = 0;
+            TTinPhase = 0;
+            PropOfDayUnused = 0;
         }
 
         /// <summary>Called when crop is ending</summary>
