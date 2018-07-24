@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml.Serialization;
 using Models.PMF.Struct;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// has all the functionality of generic phase,

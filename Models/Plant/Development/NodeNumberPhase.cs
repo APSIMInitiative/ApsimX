@@ -7,7 +7,7 @@ using Models.Functions;
 using System.Xml.Serialization;
 using Models.PMF.Struct;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// Leaf appearance phenological phase

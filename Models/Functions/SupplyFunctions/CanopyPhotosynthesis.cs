@@ -56,7 +56,7 @@ namespace Models.Functions.SupplyFunctions
 
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (Plant.IsEmerged)
+            if (Plant.Phenology.Emerged)
             {
                 GrossPhotosynthesis = DailyCanopyGrossPhotosythesis(Canopy.LAI,
                                                       Weather.Latitude,

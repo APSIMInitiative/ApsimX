@@ -8,7 +8,7 @@ using System.IO;
 using System.Xml.Serialization;
 
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// A base model representing a phenological phase。

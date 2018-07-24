@@ -686,7 +686,7 @@ namespace Models.PMF.Organs
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
-            if (parentPlant.IsEmerged)
+            if (parentPlant.Phenology.Emerged)
                 startLive = Live;
         }
 

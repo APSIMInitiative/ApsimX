@@ -3,7 +3,7 @@ using Models.Core;
 using Models.Interfaces;
 using Models.Functions;
 using Models.PMF.Interfaces;
-using Models.PMF.Phen;
+using Models.PMF.Development;
 using Models.PMF.Struct;
 using System;
 using System.Xml.Serialization;
@@ -346,7 +346,7 @@ namespace Models.PMF.Organs
         private new void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             base.OnDoPotentialPlantGrowth(sender, e);
-            if (Plant.IsEmerged)
+            if (Plant.Phenology.Emerged)
             {
                 if (MicroClimatePresent == false)
                     throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
