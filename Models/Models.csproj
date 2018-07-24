@@ -264,7 +264,6 @@
     <Compile Include="Plant\Structure\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
-    <Compile Include="Plant\Phenology\Phases\ExpressionPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\NodeNumberPhase.cs" />
     <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
