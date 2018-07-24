@@ -7,10 +7,7 @@ if not exist %apsimx% (
 )
 
 echo ########### Create an APSIM_VERSION (yyyy.mm.dd.###) environment variable.
-@echo on
 curl -k https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%ghprbPullId% > temp.txt
-@echo off
-type temp.txt
 FOR /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
 FOR /F "tokens=1-6 delims=-" %%I IN ("%FULLRESPONSE%") DO SET BUILD_TIMESTAMP=%%I
 FOR /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
@@ -23,6 +20,7 @@ echo DATETIMESTAMP=%DATETIMESTAMP% >> ApsimX\Bin\Build.properties
 echo APSIM_VERSION=%APSIM_VERSION%
 echo ISSUE_NUMBER=%ISSUE_NUMBER%
 echo DATETIMESTAMP=%DATETIMESTAMP%
+echo %DATETIMESTAMP% > ApsimX\datetimestamp.txt
 
 echo ########### Insert the version number into AssemblyVersion.cs
 echo using System.Reflection; > ApsimX\Models\Properties\AssemblyVersion.cs
