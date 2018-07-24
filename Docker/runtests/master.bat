@@ -1,6 +1,10 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
-
+mkdir C:\temp
+echo %temp%
+echo %tmp%
+set temp=C:\temp
+set tmp=C:\temp
 set apsimx=C:\ApsimX
 rem First make sure ApsimX exists.
 if not exist %apsimx% (
