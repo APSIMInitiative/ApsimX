@@ -11,6 +11,4 @@ RUN 			Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.
 
 COPY 			master.bat master.bat
 
-COPY			APSIM.PerformanceTests.Collector APSIM.PerformanceTests.Collector
-
 ENTRYPOINT 		["master.bat"]
