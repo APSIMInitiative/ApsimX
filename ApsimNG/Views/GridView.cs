@@ -139,7 +139,7 @@ namespace UserInterface.Views
         private GridCell popupCell = null;
         
         /// <summary>
-        /// List of active column indexes
+        /// List of active column indices
         /// </summary>
         private List<int> activeCol = new List<int>();
 
@@ -507,6 +507,9 @@ namespace UserInterface.Views
             TreePath path;
             TreeViewColumn column;
             Gridview.GetCursor(out path, out column);
+            if (path == null || column == null)
+                return;
+
             int rowIndex = path.Indices[0];
             int colIndex = Array.IndexOf(Gridview.Columns, column);
             selectedCellRowIndex = rowIndex;
@@ -1511,10 +1514,14 @@ namespace UserInterface.Views
             int rowNo = path.Indices[0];
             int colNo = -1;
             string text = string.Empty;
+            bool cellIsSelected = false;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
-                if (rowNo >= FirstSelectedRow && rowNo <= LastSelectedRow && colNo >= FirstSelectedColumn && colNo <= LastSelectedColumn)
-                    cell.CellBackgroundGdk = new Gdk.Color(255, 0, 0); //Gridview.Style.Base(StateType.Selected);
+                cellIsSelected = rowNo >= FirstSelectedRow && rowNo <= LastSelectedRow && colNo >= FirstSelectedColumn && colNo <= LastSelectedColumn;
+                if (cellIsSelected)
+                {
+                    cell.CellBackgroundGdk = Gridview.Style.Base(StateType.Selected);
+                }
                 else
                     cell.CellBackgroundGdk = Gridview.Style.Base(StateType.Normal);
                 if (view == Gridview)
@@ -1592,15 +1599,26 @@ namespace UserInterface.Views
             {
                 if (categoryRows.Contains(rowNo))
                 {
-                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                    Color bgColor = Color.LightSteelBlue;
-                    textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
+                    if (!cellIsSelected)
+                    {
+                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                        Color bgColor = Color.LightSteelBlue;
+                        textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
+                    }
                     textRenderer.Editable = false;
                 }
                 else
                 {
-                    textRenderer.ForegroundGdk = ColForegroundColor(colNo);
-                    textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    if (!cellIsSelected)
+                    {
+                        textRenderer.ForegroundGdk = ColForegroundColor(colNo);
+                        textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    }
+                    else
+                    {
+                        textRenderer.ForegroundGdk = Gridview.Style.Base(StateType.Normal);
+                        textRenderer.BackgroundGdk = Gridview.Style.Base(StateType.Selected);
+                    }
                     textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
                 }
             }
