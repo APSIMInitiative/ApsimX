@@ -23,7 +23,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class GenericPhase : IPhase, ICustomDocumentation
+    public class GenericPhase : Model, IPhase, ICustomDocumentation
     {
         [Link(IsOptional=true)]
         private IFunction Target = null;
@@ -42,9 +42,28 @@ namespace Models.PMF.Phen
         [Models.Core.Description("End")]
         public string End { get; set; }
 
+        /// <summary>The thermal time</summary>
+        [Link(IsOptional = true)]
+        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+
+        /// <summary>The stress</summary>
+        [Link(IsOptional = true)]
+        public IFunction Stress = null;
+
         /// <summary>Number of days from sowing to end of this phase.</summary>
         [XmlIgnore]
         public int DaysFromSowingToEndPhase { get; set; }
+
+        /// <summary>The _ tt for today</summary>
+        protected double _TTForToday = 0;
+
+        /// <summary>Gets the t tin phase.</summary>
+        /// <value>The t tin phase.</value>
+        [XmlIgnore]
+        public double TTinPhase { get; set; }
+
+        /// <summary>The property of day unused</summary>
+        protected double PropOfDayUnused = 0;
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
@@ -52,10 +71,19 @@ namespace Models.PMF.Phen
         /// the phenology class knows to progress to the next phase and how
         /// much tt to pass it on the first day.
         /// </summary>
-        public override double DoTimeStep(double PropOfDayToUse)
+        public double DoTimeStep(double PropOfDayToUse)
         {
 
-            base.DoTimeStep(PropOfDayToUse);
+            if (ThermalTime != null)
+            {
+                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
+                if (Stress != null)
+                {
+                    _TTForToday *= Stress.Value();
+                }
+                TTinPhase += _TTForToday;
+            }
+            return PropOfDayUnused;
 
             // Get the Target TT
             double Target = CalcTarget();
@@ -86,10 +114,10 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Return the target to caller. Can be overridden by derived classes.
         /// </summary>
-        public virtual double CalcTarget()
+        private double CalcTarget()
         {
             double retVAL = 0;
-            if (Phenology != null)
+            if (phenology != null)
             {
                 if (Target == null)
                     throw new Exception("Cannot find target for phase: " + Name);
@@ -100,7 +128,7 @@ namespace Models.PMF.Phen
         /// <summary>Return proportion of TT unused</summary>
         /// <param name="PropOfDayToUse">The property of day to use.</param>
         /// <returns></returns>
-        public override double AddTT(double PropOfDayToUse)
+        public double AddTT(double PropOfDayToUse)
         {
             TTinPhase += ThermalTime.Value() * PropOfDayToUse;
             double AmountUnusedTT = TTinPhase - CalcTarget();
@@ -112,7 +140,7 @@ namespace Models.PMF.Phen
         /// Return a fraction of phase complete.
         /// </summary>
         [XmlIgnore]
-        public override double FractionComplete
+        public double FractionComplete
         {
             get
             {
@@ -123,16 +151,17 @@ namespace Models.PMF.Phen
             }
             set
             {
-                if (Phenology != null)
+                if (phenology != null)
                 {
                     TTinPhase = CalcTarget() * value;
-                    Phenology.AccumulatedEmergedTT += TTinPhase;
-                    Phenology.AccumulatedTT += TTinPhase;
+                    phenology.AccumulatedEmergedTT += TTinPhase;
+                    phenology.AccumulatedTT += TTinPhase;
                 }
             }
         }
 
-        internal void WriteSummary(TextWriter writer)
+         /// <summary>Writes the summary.</summary>
+        public void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("      " + Name);
             if (Target != null)
@@ -161,7 +190,7 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
