@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 32; } }
+        public static int LastestVersion { get { return 33; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1079,6 +1079,17 @@ namespace Models.Core.ApsimFile
             return factorNamesToReturn;
         }
 
+        /// <summary>
+        /// Change the VaryByIndex in series from an integer index to a name of a factor.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion33(XmlNode node, string fileName)
+        {
+            ConverterUtilities.RenameNode(node, "soil_heat_flux_fraction", "SoilHeatFluxFraction");
+            ConverterUtilities.RenameNode(node, "night_interception_fraction", "NightInterceptionFraction");
+            ConverterUtilities.RenameNode(node, "refheight", "ReferenceHeight");
+        }
 
     }
 }

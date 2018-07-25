@@ -233,6 +233,7 @@ namespace Models.Core
         [XmlElement(typeof(Morris))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
+        [XmlElement(typeof(Models.Zones.StripCropZone))]
         [XmlElement(typeof(Models.Aqua.PondWater))]
         [XmlElement(typeof(Models.Aqua.FoodInPond))]
         [XmlElement(typeof(Models.Aqua.Prawns))]
