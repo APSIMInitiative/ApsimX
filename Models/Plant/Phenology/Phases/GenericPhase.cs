@@ -83,7 +83,6 @@ namespace Models.PMF.Phen
                 }
                 TTinPhase += _TTForToday;
             }
-            return PropOfDayUnused;
 
             // Get the Target TT
             double Target = CalcTarget();
