@@ -1077,7 +1077,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Copy the supplement eaten into a TSupplementEaten[]
+        /// Copy the supplement eaten into a SupplementEaten[]
         /// </summary>
         /// <param name="model">The animal model</param>
         /// <param name="suppValues">The supplement data returned</param>
