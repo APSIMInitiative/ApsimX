@@ -14,11 +14,16 @@ pipeline {
 					)
 					
 					cd ApsimX
+					git fetch origin
 					git checkout -- .
 					git clean -xfdq
+					git pull origin master
 					rem I assume the default repo name is origin.
 					git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 					git checkout %sha1%
+					if %errorlevel% neq 0 (
+						exit 1
+					)
 					cd ..
 					if not exist APSIM.Shared (
 						git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
@@ -47,10 +52,15 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							) else (
 								cd ApsimX
+								git fetch origin
 								git reset --hard origin/master
 								git clean -fxdq .\\Bin
 								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
 								cd ..
 							)
 						'''
@@ -80,10 +90,15 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							) else (
 								cd ApsimX
+								git fetch origin
 								git reset --hard origin/master
 								git clean -fxdq .\\Bin
 								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%								
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
 								cd ..
 							)
 						'''
@@ -112,10 +127,15 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							) else (
 								cd ApsimX
+								git fetch origin
 								git reset --hard origin/master
 								git clean -fxdq .\\Bin
 								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%								
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
 								cd ..
 							)
 						'''
@@ -146,9 +166,15 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							) else (
 								cd ApsimX
+								git fetch origin
 								git reset --hard origin/master
+								git clean -fxdq .\\Bin
 								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
 								cd ..
 							)
 						'''
@@ -177,10 +203,15 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							) else (
 								cd ApsimX
+								git fetch origin
 								git reset --hard origin/master
 								git clean -fxdq .\\Bin
 								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%								
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
 								cd ..
 							)
 						'''
