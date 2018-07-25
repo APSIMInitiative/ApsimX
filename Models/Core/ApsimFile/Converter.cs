@@ -29,7 +29,7 @@ namespace Models.Core.ApsimFile
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Returns true if something was changed.</returns>
-        public static bool ConvertToLatestVersion(string fileName)
+        public static Stream ConvertToLatestVersion(string fileName)
         {
             // Load the file.
             XmlDocument doc = new XmlDocument();
@@ -40,15 +40,13 @@ namespace Models.Core.ApsimFile
 
             if (changed)
             {
-                // Make a backup or original file.
-                string bakFileName = Path.ChangeExtension(fileName, ".bak");
-                if (!File.Exists(bakFileName))
-                    File.Copy(fileName, bakFileName);
-
-                // Save file.
-                doc.Save(fileName);
+                MemoryStream memStream = new MemoryStream();
+                doc.Save(memStream);
+                memStream.Seek(0, SeekOrigin.Begin);
+                return memStream;
             }
-            return changed;
+            else
+                return File.OpenRead(fileName);
         }
 
         /// <summary>Converts XML to the latest version.</summary>
