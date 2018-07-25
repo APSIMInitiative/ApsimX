@@ -50,6 +50,9 @@ namespace Models.PMF.Phen
         /// <summary>The _ tt for today</summary>
         protected double _TTForToday = 0;
 
+        /// <summary>Adds the specified DLT_TT.</summary>
+        public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
+
         /// <summary>Gets the tt for today.</summary>
         /// <value>The tt for today.</value>
         public double TTForToday

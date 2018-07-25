@@ -62,6 +62,9 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
+        /// <summary>Adds the specified DLT_TT.</summary>
+        public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
+
         /// <summary>The property of day unused</summary>
         protected double PropOfDayUnused = 0;
 

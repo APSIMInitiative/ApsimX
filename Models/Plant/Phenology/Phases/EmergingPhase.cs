@@ -82,12 +82,16 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         public IFunction Stress = null;
 
+        /// <summary>Adds the specified DLT_TT.</summary>
+        public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
+
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
         /// and returns a non-zero value if the phase target is met today so
         /// the phenology class knows to progress to the next phase and how
         /// much tt to pass it on the first day.
         /// </summary>
+
         public double DoTimeStep(double PropOfDayToUse)
         {
 

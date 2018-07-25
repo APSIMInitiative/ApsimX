@@ -40,6 +40,9 @@ namespace Models.PMF.Phen
         /// <value>The cumulative value.</value>
         public double CumulativeValue { get { return _CumulativeValue; } }
 
+        /// <summary>Adds the specified DLT_TT.</summary>
+        public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
+
         /// <summary>Do our timestep development</summary>
         /// <param name="PropOfDayToUse">The property of day to use.</param>
         /// <returns></returns>
