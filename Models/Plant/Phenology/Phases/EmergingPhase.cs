@@ -4,37 +4,15 @@ using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
 using Models.Functions;
+using System.IO;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>
-    /// It simulates time to emergence as a function of sowing depth.  A <i>ThermalTime Target</i> from sowing to emergence = SowingDepth (set with sow()
-    /// method called from the manager)  x ShootRate + ShootLag.
-    /// </summary>
-    /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
-    /// provide the sowing depth (\f$D_{seed}\f$).
-    /// \param ShootLag An initial period of fixed thermal time during 
-    /// which shoot elongation is slow (the "lag" phase, \f$T_{lag}\f$, deg;Cd)
-    /// \param ShootRate The rate of shoot elongation (\f$r_{e}\f$, 
-    /// deg;Cd mm<sup>-1</sup>) towards the soil surface is 
-    /// linearly related to air temperature.
-    /// <remarks>
-    /// The thermal time target in the emerging phase includes 
-    /// an effect of the depth of sowing (\f$D_{seed}\f$), an 
-    /// initial period of fixed thermal time during which 
-    /// shoot elongation is slow (the "lag" phase, \f$T_{lag}\f$, \p ShootLag)
-    /// and a linear period, where the rate of shoot elongation (\f$r_{e}\f$, 
-    /// \p ShootRate) towards the soil surface is linearly related to 
-    /// air temperature. Then, the thermal time target (\f$T_{emer}\f$) 
-    /// is calculated by 
-    /// \f[
-    /// T_{emer}=T_{lag}+r_{e}D_{seed}
-    /// \f]
-    /// </remarks>
+    /// <summary></summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EmergingPhase : GenericPhase, ICustomDocumentation
+    public class EmergingPhase : Model, IPhase, ICustomDocumentation
     {
         /// <summary>The plant</summary>
         [Link]
@@ -53,21 +31,107 @@ namespace Models.PMF.Phen
         [Description("ShootRate")]
         public double ShootRate { get; set; }
 
-        /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
+        /// <summary>The start</summary>
+        [Description("Start")]
+        public string Start { get; set; }
+
+        /// <summary>The end</summary>
+        [Models.Core.Description("End")]
+        public string End { get; set; }
+
+        /// <summary>The thermal time</summary>
+        [Link(IsOptional = true)]
+        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+
+        /// <summary>Gets the fraction complete.</summary>
+        /// <value>The fraction complete.</value>
+        [XmlIgnore]
+        public double FractionComplete { get; set; }
+        
+        /// <summary>The property of day unused</summary>
+        protected double PropOfDayUnused = 0;
+        
+        /// <summary>The _ tt for today</summary>
+        protected double _TTForToday = 0;
+
+        /// <summary>Gets the tt for today.</summary>
+        /// <value>The tt for today.</value>
+        public double TTForToday
+        {
+            get
+            {
+                if (ThermalTime == null)
+                    return 0;
+                return ThermalTime.Value();
+            }
+        }
+
+        /// <summary>Gets the t tin phase.</summary>
+        /// <value>The t tin phase.</value>
+        [XmlIgnore]
+        public double TTinPhase { get; set; }
+
+        /// <summary>The stress</summary>
+        [Link(IsOptional = true)]
+        public IFunction Stress = null;
+
+        /// <summary>
+        /// This function increments thermal time accumulated in each phase
+        /// and returns a non-zero value if the phase target is met today so
+        /// the phenology class knows to progress to the next phase and how
+        /// much tt to pass it on the first day.
+        /// </summary>
+        /// <param name="PropOfDayToUse">The property of day to use.</param>
         /// <returns></returns>
-        public override double CalcTarget()
+        virtual public double DoTimeStep(double PropOfDayToUse)
+        {
+            // Calculate the TT for today and Accumulate.      
+            if (ThermalTime != null)
+            {
+                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
+                if (Stress != null)
+                {
+                    _TTForToday *= Stress.Value();
+                }
+                TTinPhase += _TTForToday;
+            }
+            return PropOfDayUnused;
+        }
+
+        /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
+        private double CalcTarget()
         {
             double retVAl = 0;
             if (Plant != null)
                 retVAl = ShootLag + Plant.SowingData.Depth * ShootRate;
             return retVAl;
         }
-        
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        { ResetPhase(); }
+        /// <summary>Resets the phase.</summary>
+        public virtual void ResetPhase()
+        {
+            _TTForToday = 0;
+            TTinPhase = 0;
+            PropOfDayUnused = 0;
+        }
+
+        /// <summary>Writes the summary.</summary>
+        /// <param name="writer">The writer.</param>
+        public void WriteSummary(TextWriter writer)
+        {
+            writer.WriteLine("      " + Name);
+        }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
