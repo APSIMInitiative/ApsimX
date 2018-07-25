@@ -277,29 +277,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <SetEvent>Maturity</SetEvent>
       <ReSetEvent>never</ReSetEvent>
     </OnEventFunction>
-    <DivideFunction>
-      <Name>MeanTemp</Name>
-      <AddFunction>
-        <Name>TempSum</Name>
-        <VariableReference>
-          <Name>MaxT</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[IWeather].MaxT</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MinT</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[IWeather].MinT</VariableName>
-        </VariableReference>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </AddFunction>
-      <Constant>
-        <Name>Two</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>2</FixedValue>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </DivideFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <DaysAfterSowing>0</DaysAfterSowing>
 	<BBCH>
@@ -1458,7 +1435,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+          <XProperty>[IWeather].MeanT</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NitrogenStressEffect</Name>
@@ -2130,7 +2107,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+          <XProperty>[IWeather].MeanT</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NitrogenStressEffect</Name>
@@ -2398,7 +2375,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+          <XProperty>[IWeather].MeanT</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NitrogenStressEffect</Name>
