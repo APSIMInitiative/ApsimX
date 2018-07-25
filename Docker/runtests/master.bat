@@ -89,6 +89,7 @@ echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
 if %errorlevel% equ 0 (
 	if "%1"=="%validationsyntax%" (
+		echo Running performance tests collector...
 		C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %ghprbPullId% %DATETIMESTAMP% %ghprbActualCommitAuthor%
 		if %errorlevel% neq 0 (
 			echo APSIM.PerformanceTests.Collector did not run succecssfully!
@@ -96,3 +97,4 @@ if %errorlevel% equ 0 (
 	)
 )
 :end
+echo Errorlevel inside docker container: %errorlevel%
