@@ -167,6 +167,13 @@ namespace Models.PMF.Phen
             if (Target != null)
                 writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
         }
+        
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        { ResetPhase(); }
 
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
