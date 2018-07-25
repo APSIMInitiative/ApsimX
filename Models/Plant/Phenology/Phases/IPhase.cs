@@ -16,7 +16,17 @@ namespace Models.PMF.Phen
 
         /// <summary>The end</summary>
         string End { get; set; }
-       
+
+        /// <summary>
+        /// This function increments thermal time accumulated in each phase
+        /// and returns a non-zero value if the phase target is met today so
+        /// the phenology class knows to progress to the next phase and how
+        /// much tt to pass it on the first day.
+        /// </summary>
+        /// <param name="PropOfDayToUse"></param>
+        /// <returns></returns>
+        double DoTimeStep(double PropOfDayToUse);
+
         /// <summary> Fraction of progress through the phase  /// </summary>
         double FractionComplete { get; set; }
 
