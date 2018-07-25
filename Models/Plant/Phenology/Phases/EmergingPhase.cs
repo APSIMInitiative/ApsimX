@@ -18,6 +18,9 @@ namespace Models.PMF.Phen
         [Link]
         Plant Plant = null;
 
+        [Link]
+        Phenology phenology = null;
+
         /// <summary>Gets or sets the shoot lag.</summary>
         /// <value>The shoot lag.</value>
         [Units("oCd")]
@@ -47,7 +50,11 @@ namespace Models.PMF.Phen
         /// <value>The fraction complete.</value>
         [XmlIgnore]
         public double FractionComplete { get; set; }
-        
+
+        /// <summary>Number of days from sowing to end of this phase.</summary>
+        [XmlIgnore]
+        public int DaysFromSowingToEndPhase { get; set; }
+
         /// <summary>The property of day unused</summary>
         protected double PropOfDayUnused = 0;
         
@@ -76,16 +83,14 @@ namespace Models.PMF.Phen
         public IFunction Stress = null;
 
         /// <summary>
-        /// This function increments thermal time accumulated in each phase
+        /// This function increments thermal time accumulated in each phase 
         /// and returns a non-zero value if the phase target is met today so
         /// the phenology class knows to progress to the next phase and how
         /// much tt to pass it on the first day.
         /// </summary>
-        /// <param name="PropOfDayToUse">The property of day to use.</param>
-        /// <returns></returns>
-        virtual public double DoTimeStep(double PropOfDayToUse)
+        public double DoTimeStep(double PropOfDayToUse)
         {
-            // Calculate the TT for today and Accumulate.      
+
             if (ThermalTime != null)
             {
                 _TTForToday = ThermalTime.Value() * PropOfDayToUse;
@@ -95,6 +100,36 @@ namespace Models.PMF.Phen
                 }
                 TTinPhase += _TTForToday;
             }
+            
+            // Get the Target TT
+            double Target = CalcTarget();
+
+            if (DaysFromSowingToEndPhase > 0)
+            {
+                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
+                    PropOfDayUnused = 1.0;
+                else
+                    PropOfDayUnused = 0.0;
+            }
+            else if (TTinPhase > Target)
+            {
+                double LeftOverValue = TTinPhase - Target;
+                if (_TTForToday > 0.0)
+                {
+                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
+                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
+                }
+                else
+                    PropOfDayUnused = 1.0;
+                TTinPhase = Target;
+            }
+
+            if (PropOfDayUnused > 0)
+            {
+                Plant.SendEmergingEvent();
+                phenology.Emerged = true;
+            }
+
             return PropOfDayUnused;
         }
 
