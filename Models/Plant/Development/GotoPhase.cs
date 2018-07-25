@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// A special phase that jumps to another phase.

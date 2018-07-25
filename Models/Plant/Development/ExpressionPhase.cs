@@ -6,7 +6,7 @@ using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.Functions;
 
-namespace Models.PMF.Phen
+namespace Models.PMF.Development
 {
     /// <summary>
     /// This phase extends from the end of the previous phase until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate and the final main stem node number.  
