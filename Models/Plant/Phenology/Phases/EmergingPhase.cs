@@ -46,10 +46,29 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
-        /// <summary>Gets the fraction complete.</summary>
-        /// <value>The fraction complete.</value>
+        /// <summary>
+        /// Return a fraction of phase complete.
+        /// </summary>
         [XmlIgnore]
-        public double FractionComplete { get; set; }
+        public double FractionComplete
+        {
+            get
+            {
+                if (CalcTarget() == 0)
+                    return 1;
+                else
+                    return TTinPhase / CalcTarget();
+            }
+            set
+            {
+                if (phenology != null)
+                {
+                    TTinPhase = CalcTarget() * value;
+                    phenology.AccumulatedEmergedTT += TTinPhase;
+                    phenology.AccumulatedTT += TTinPhase;
+                }
+            }
+        }
 
         /// <summary>Number of days from sowing to end of this phase.</summary>
         [XmlIgnore]
