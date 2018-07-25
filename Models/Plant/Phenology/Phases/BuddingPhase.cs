@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class BuddingPhase : Phase, ICustomDocumentation
+    public class BuddingPhase : Model, IPhase, ICustomDocumentation
     {
         [Link(IsOptional = true)]
         private IFunction Target = null;
@@ -51,11 +51,18 @@ namespace Models.PMF.Phen
         /// the phenology class knows to progress to the next phase and how
         /// much tt to pass it on the first day.
         /// </summary>
-        public override double DoTimeStep(double PropOfDayToUse)
+        public double DoTimeStep(double PropOfDayToUse)
         {
 
-            base.DoTimeStep(PropOfDayToUse);
-
+            if (ThermalTime != null)
+            {
+                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
+                if (Stress != null)
+                {
+                    _TTForToday *= Stress.Value();
+                }
+                TTinPhase += _TTForToday;
+            }
             // Get the Target TT
             double Target = CalcTarget();
             structure.PrimaryBudNo = plant.SowingData.BudNumber;
@@ -109,7 +116,7 @@ namespace Models.PMF.Phen
         /// <summary>Return proportion of TT unused</summary>
         /// <param name="PropOfDayToUse">The property of day to use.</param>
         /// <returns></returns>
-        public override double AddTT(double PropOfDayToUse)
+        public double AddTT(double PropOfDayToUse)
         {
             TTinPhase += ThermalTime.Value() * PropOfDayToUse;
             double AmountUnusedTT = TTinPhase - CalcTarget();
@@ -121,7 +128,7 @@ namespace Models.PMF.Phen
         /// Return a fraction of phase complete.
         /// </summary>
         [XmlIgnore]
-        public override double FractionComplete
+        public double FractionComplete
         {
             get
             {
@@ -141,9 +148,10 @@ namespace Models.PMF.Phen
             }
         }
 
-        internal override void WriteSummary(TextWriter writer)
+        /// <summary> Write Summary  /// </summary>
+        public void WriteSummary(TextWriter writer)
         {
-            base.WriteSummary(writer);
+            writer.WriteLine("      " + Name);
             if (Target != null)
                 writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
         }
@@ -162,7 +170,7 @@ namespace Models.PMF.Phen
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public new void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -186,6 +194,70 @@ namespace Models.PMF.Phen
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
+        }
+
+        /// <summary>The start</summary>
+        [Models.Core.Description("Start")]
+        public string Start { get; set; }
+
+        /// <summary>The end</summary>
+        [Models.Core.Description("End")]
+        public string End { get; set; }
+        /// <summary>The phase that this one is equivelent to</summary>
+        [Models.Core.Description("Phase that this is equivelent to in phenology order")]
+        public string PhaseParallel { get; set; }
+
+        /// <summary>The phenology</summary>
+        [Link]
+        protected Phenology Phenology = null;
+
+        // ThermalTime is optional because GerminatingPhase doesn't require it.
+        /// <summary>The thermal time</summary>
+        [Link(IsOptional = true)]
+        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+
+        /// <summary>The stress</summary>
+        [Link(IsOptional = true)]
+        public IFunction Stress = null;
+
+        /// <summary>The property of day unused</summary>
+        protected double PropOfDayUnused = 0;
+        /// <summary>The _ tt for today</summary>
+        protected double _TTForToday = 0;
+
+        /// <summary>Gets the tt for today.</summary>
+        /// <value>The tt for today.</value>
+        public double TTForToday
+        {
+            get
+            {
+                if (ThermalTime == null)
+                    return 0;
+                return ThermalTime.Value();
+            }
+        }
+
+        /// <summary>Gets the t tin phase.</summary>
+        /// <value>The t tin phase.</value>
+        [XmlIgnore]
+        public double TTinPhase { get; set; }
+
+        /// <summary>Adds the specified DLT_TT.</summary>
+        /// <param name="dlt_tt">The DLT_TT.</param>
+        virtual public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        { ResetPhase(); }
+        /// <summary>Resets the phase.</summary>
+        public virtual void ResetPhase()
+        {
+            _TTForToday = 0;
+            TTinPhase = 0;
+            PropOfDayUnused = 0;
         }
     }
 }
