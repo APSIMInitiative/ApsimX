@@ -373,14 +373,14 @@ namespace Importer
                     if (this.soilWaterExists && !this.surfOMExists)
                     {
                         Console.WriteLine("Added SurfaceOM to " + XmlUtilities.FullPathUsingName(newPaddockNode));
-                        Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
+                        Models.Surface.SurfaceOrganicMatter mysom = new Models.Surface.SurfaceOrganicMatter();
 
                         mysom.PoolName = "wheat_stubble";
-                        mysom.type = "wheat";
-                        mysom.mass = "0";
-                        mysom.cnr = "80";
-                        mysom.cpr = "0";
-                        mysom.standing_fraction = "0.0";
+                        mysom.Type = "wheat";
+                        mysom.Mass = 0;
+                        mysom.CNR = 80;
+                        mysom.CPR = 0;
+                        mysom.StandingFraction = 0.0;
 
                         newNode = ImportObject(newPaddockNode, newNode, mysom, "SurfaceOrganicMatter");
                     }
@@ -545,14 +545,14 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportSurfaceOM(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
+            Models.Surface.SurfaceOrganicMatter mysom = new Models.Surface.SurfaceOrganicMatter();
 
             mysom.PoolName = this.GetInnerText(compNode, "PoolName");
-            mysom.type = this.GetInnerText(compNode, "type");
-            mysom.mass = this.GetInnerText(compNode, "mass");
-            mysom.cnr = this.GetInnerText(compNode, "cnr");
-            mysom.cpr = this.GetInnerText(compNode, "cpr");
-            mysom.standing_fraction = this.GetInnerText(compNode, "standing_fraction");
+            mysom.Type = this.GetInnerText(compNode, "type");
+            mysom.Mass = Convert.ToDouble(this.GetInnerText(compNode, "mass"));
+            mysom.CNR = Convert.ToDouble(this.GetInnerText(compNode, "cnr"));
+            mysom.CPR = Convert.ToDouble(this.GetInnerText(compNode, "cpr"));
+            mysom.StandingFraction = Convert.ToDouble(this.GetInnerText(compNode, "standing_fraction"));
 
             newNode = ImportObject(destParent, newNode, mysom, XmlUtilities.NameAttr(compNode));
 

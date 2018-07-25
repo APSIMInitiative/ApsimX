@@ -32,6 +32,7 @@
     <pot_decomp_rate>0.0</pot_decomp_rate>
   </ResidueType>
   <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>manure</fom_type>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
     <pot_decomp_rate>0.1</pot_decomp_rate>
@@ -57,6 +58,7 @@
     <cf_contrib>1</cf_contrib>
   </ResidueType>
   <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>RuminantDung_PastureFed</fom_type>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.4     </fraction_C>
     <po4ppm description="labile P concentration(ppm)">5.0     </po4ppm>
@@ -90,6 +92,7 @@
     <cf_contrib>1</cf_contrib>
   </ResidueType>
   <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>fym</fom_type>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
     <pot_decomp_rate>0.1</pot_decomp_rate>
@@ -115,6 +118,7 @@
     <cf_contrib>1</cf_contrib>
   </ResidueType>
   <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>goatmanure</fom_type>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
     <pot_decomp_rate>0.1</pot_decomp_rate>
@@ -140,6 +144,7 @@
     <cf_contrib>1</cf_contrib>
   </ResidueType>
   <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>chickenmanure_base</fom_type>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.374    </fraction_C>
     <pot_decomp_rate>0.1</pot_decomp_rate>
@@ -186,6 +191,7 @@
     <no3ppm description="nitrate N concentration (ppm)">36.0     </no3ppm>
   </ResidueType>
   <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>manB</fom_type>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
     <pot_decomp_rate>0.1</pot_decomp_rate>
@@ -593,6 +599,7 @@
     </fr_n>
   </ResidueType>
   <ResidueType>
+    <derived_from>base_type</derived_from>
     <fom_type>fyn</fom_type>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
     <pot_decomp_rate>0.1</pot_decomp_rate>

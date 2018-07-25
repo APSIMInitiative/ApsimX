@@ -11,7 +11,7 @@ namespace Models.GrazPlan
     using Models.Core;
     using Models.PMF.Interfaces;
     using Models.Soils;
-    using Models.SurfaceOM;
+    using Models.Surface;
     using StdUnits;
 
     /// <summary>
