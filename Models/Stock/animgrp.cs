@@ -1067,11 +1067,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// The ration being fed
         /// </summary>
-        protected TSupplementRation TheRation;
+        protected SupplementRation TheRation;
         /// <summary>
         /// 
         /// </summary>
-        protected TSupplement FIntakeSupp;
+        protected FoodSupplement FIntakeSupp;
         /// <summary>
         /// 
         /// </summary>
@@ -1195,9 +1195,9 @@ namespace Models.GrazPlan
             {
                 for (Idx = 0; Idx <= TheRation.Count - 1; Idx++)                                      // The supplements must be treated       
                 {                                                                    //   separately because of the non-      
-                    suppInput.Digestibility = TheRation[Idx].DM_Digestibility;            //   linearity in the gut passage term   
+                    suppInput.Digestibility = TheRation[Idx].DMDigestibility;            //   linearity in the gut passage term   
                     suppInput.CrudeProtein = TheRation[Idx].CrudeProt;
-                    suppInput.Degradability = TheRation[Idx].DgProt;
+                    suppInput.Degradability = TheRation[Idx].DegProt;
                     suppInput.PhosContent = TheRation[Idx].Phosphorus;
                     suppInput.SulfContent = TheRation[Idx].Sulphur;
                     suppInput.AshAlkalinity = TheRation[Idx].AshAlkalinity;
@@ -1206,10 +1206,10 @@ namespace Models.GrazPlan
                         fGutPassage = TheRation[Idx].MaxPassage * StdMath.RAMP(TheRation.TotalAmount / IntakeLimit, 0.20, 0.75);
                     else
                         fGutPassage = 0.0;
-                    TimeStepNetSupp_DMI[Idx] = (1.0 - fGutPassage) * TheRation.getFWFract(Idx) * (IntakeLimit * SuppRI);
+                    TimeStepNetSupp_DMI[Idx] = (1.0 - fGutPassage) * TheRation.GetFWFract(Idx) * (IntakeLimit * SuppRI);
 
                     AddDietElement(ref suppInput, TimeStepNetSupp_DMI[Idx], ref timeStepState.SuppIntake);
-                    fSupp_ME2DM = fSupp_ME2DM + TimeStepNetSupp_DMI[Idx] * TheRation[Idx].ME_2_DM;
+                    fSupp_ME2DM = fSupp_ME2DM + TimeStepNetSupp_DMI[Idx] * TheRation[Idx].ME2DM;
                 }
 
                 SummariseIntakeRecord(ref timeStepState.SuppIntake);
@@ -2194,7 +2194,7 @@ namespace Models.GrazPlan
             double dUrineLongAxis;          // metres
             double dVolumePerUrination;     // m^3
             double dDailyUrineVolume;       // m^3
-            TSupplement tempSuppt;
+            FoodSupplement tempSuppt;
 
             TExcretionInfo Result = new TExcretionInfo();
 
@@ -2211,10 +2211,10 @@ namespace Models.GrazPlan
 
             // Faecal moisture content seems to be lower when animals are not at pasture,
             // so estimate it separately for herbage and supplement components of the diet
-            tempSuppt = new TSupplement();
+            tempSuppt = new FoodSupplement();
             TheRation.AverageSuppt(out tempSuppt);
             dFaecalMoistureHerbage = dFaecalMoistureHerbageMin[(int)Animal] + (dFaecalMoistureMax[(int)Animal] - dFaecalMoistureHerbageMin[(int)Animal]) * AnimalState.Digestibility.Herbage;
-            dFaecalMoistureSupp = dFaecalMoistureSuppMin[(int)Animal] + (dFaecalMoistureMax[(int)Animal] - dFaecalMoistureSuppMin[(int)Animal]) * (1.0 - tempSuppt.DM_Propn);
+            dFaecalMoistureSupp = dFaecalMoistureSuppMin[(int)Animal] + (dFaecalMoistureMax[(int)Animal] - dFaecalMoistureSuppMin[(int)Animal]) * (1.0 - tempSuppt.DMPropn);
             dFaecalFreshWeight = AnimalState.DM_Intake.Herbage * (1.0 - AnimalState.Digestibility.Herbage) * (1.0 + dFaecalMoistureHerbage)
                                       + AnimalState.DM_Intake.Supp * (1.0 - AnimalState.Digestibility.Supp) * (1.0 + dFaecalMoistureSupp);
             tempSuppt = null;
@@ -2474,8 +2474,8 @@ namespace Models.GrazPlan
             Ages = new TAgeList(RandFactory);
             Ages.Input(AgeD, NoMales, NoFemales);
 
-            TheRation = new TSupplementRation();
-            FIntakeSupp = new TSupplement();
+            TheRation = new SupplementRation();
+            FIntakeSupp = new FoodSupplement();
 
             MateCycle = -1;                                                          // Not recently mated                       
 
@@ -3080,7 +3080,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
-        public TSupplementRation RationFed { get { return TheRation; } }
+        public SupplementRation RationFed { get { return TheRation; } }
         /// <summary>
         /// Animals per hectare
         /// </summary>
@@ -3470,7 +3470,7 @@ namespace Models.GrazPlan
                 AnimalState.ME_2_DM.Solid = StdMath.XDiv(AnimalState.ME_Intake.Solid, AnimalState.DM_Intake.Solid);
             }   //_ WITH FullState _
 
-            Supp_FWI = Supp_FWI + SuppTS * StdMath.XDiv(IntakeLimit * SuppRI, IntakeSuppt.DM_Propn);
+            Supp_FWI = Supp_FWI + SuppTS * StdMath.XDiv(IntakeLimit * SuppRI, IntakeSuppt.DMPropn);
             for (int Idx = 0; Idx < NetSupp_DMI.Length; Idx++)
                 NetSupp_DMI[Idx] = NetSupp_DMI[Idx] + SuppTS * TimeStepNetSupp_DMI[Idx];
         }
@@ -3520,7 +3520,7 @@ namespace Models.GrazPlan
 
             pastIntakeRate.CopyFrom(this.TimeStepState.IntakePerHead);
 
-            fSuppIntakeRate = StdMath.XDiv(IntakeLimit * SuppRI, IntakeSuppt.DM_Propn);
+            fSuppIntakeRate = StdMath.XDiv(IntakeLimit * SuppRI, IntakeSuppt.DMPropn);
         }
         /// <summary>
         /// 
@@ -3676,8 +3676,8 @@ namespace Models.GrazPlan
                 DUDP.Supp = DUDP.Supp + StdMath.XDiv(NetSupp_DMI[Idx], AnimalState.DM_Intake.Supp)                  // Fraction of net supplement intake        
                                           * DUDPFunc(TheRation[Idx].IsRoughage,                                     // DUDP of this part of the ration          
                                                       TheRation[Idx].CrudeProt,
-                                                      TheRation[Idx].DgProt * dgCorrect,
-                                                      TheRation[Idx].ADIP_2_CP);
+                                                      TheRation[Idx].DegProt * dgCorrect,
+                                                      TheRation[Idx].ADIP2CP);
 
             AnimalState.DPLS_MCP = AParams.ProtC[7] * AnimalState.MicrobialCP;                                      // DPLS from microbial crude protein        
             AnimalState.DPLS_Milk = DUDP.Milk * UDPIntakes.Milk;                                                    // Store DPLS from milk separately          
@@ -4774,7 +4774,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Intake of supplement
         /// </summary>
-        public TSupplement IntakeSuppt { get { return FIntakeSupp; } }
+        public FoodSupplement IntakeSuppt { get { return FIntakeSupp; } }
         /// <summary>
         /// Methane energy
         /// </summary>
@@ -4922,7 +4922,7 @@ namespace Models.GrazPlan
         private void EatSupplement(TAnimalGroup TheAnimals,
                                     double fTimeStepLength,
                                     double fSuppDWPerHead,
-                                    TSupplement aSupp,
+                                    FoodSupplement aSupp,
                                     double fSuppRQ,
                                     bool bEatenFirst,
                                     ref double fSuppRI,
@@ -4941,12 +4941,12 @@ namespace Models.GrazPlan
                     fSuppRelFill = Math.Min(fFracUnsat,
                                           fSuppDWPerHead / (TheAnimals.IntakeLimit * fTimeStepLength * fSuppRQ));
 
-                if ((aSupp.ME_2_DM > 0.0) && (!aSupp.IsRoughage))
+                if ((aSupp.ME2DM > 0.0) && (!aSupp.IsRoughage))
                 {
                     if (TheAnimals.LactStatus == GrazType.LactType.Lactating)
-                        fSuppRelFill = Math.Min(fSuppRelFill, TheAnimals.AParams.GrazeC[20] / aSupp.ME_2_DM);
+                        fSuppRelFill = Math.Min(fSuppRelFill, TheAnimals.AParams.GrazeC[20] / aSupp.ME2DM);
                     else
-                        fSuppRelFill = Math.Min(fSuppRelFill, TheAnimals.AParams.GrazeC[11] / aSupp.ME_2_DM);
+                        fSuppRelFill = Math.Min(fSuppRelFill, TheAnimals.AParams.GrazeC[11] / aSupp.ME2DM);
                 }
             }
 
@@ -5101,7 +5101,7 @@ namespace Models.GrazPlan
 
             TheAnimals.TheRation.AverageSuppt(out TheAnimals.FIntakeSupp);
             fSuppFWPerHead = TheAnimals.TheRation.TotalAmount;
-            fSuppDWPerHead = fSuppFWPerHead * TheAnimals.FIntakeSupp.DM_Propn;
+            fSuppDWPerHead = fSuppFWPerHead * TheAnimals.FIntakeSupp.DMPropn;
 
             fHerbageRI = new double[GrazType.DigClassNo + 1];                               // Sundry initializations                
             fSeedRI = new double[GrazType.MaxPlantSpp + 1, GrazType.RIPE + 1];
@@ -5117,14 +5117,14 @@ namespace Models.GrazPlan
             if (bSuppRemains)                                                        //    supplement (if present)            
             {
                 fSuppRelQ = Math.Min(TheAnimals.AParams.GrazeC[14],
-                                   1.0 - TheAnimals.AParams.GrazeC[3] * (TheAnimals.AParams.GrazeC[1] - TheAnimals.FIntakeSupp.DM_Digestibility));
+                                   1.0 - TheAnimals.AParams.GrazeC[3] * (TheAnimals.AParams.GrazeC[1] - TheAnimals.FIntakeSupp.DMDigestibility));
 
                 if (TheAnimals.LactStatus == GrazType.LactType.Lactating)
                     fMilkFactor = TheAnimals.AParams.GrazeC[15] * Math.Exp(-StdMath.Sqr(TheAnimals.DaysLactating / TheAnimals.AParams.GrazeC[8]));
                 else
                     fMilkFactor = 0.0;
 
-                fOMD_Supp = Math.Min(1.0, 1.05 * TheAnimals.FIntakeSupp.DM_Digestibility - 0.01);
+                fOMD_Supp = Math.Min(1.0, 1.05 * TheAnimals.FIntakeSupp.DMDigestibility - 0.01);
                 if (fOMD_Supp > 0.0)
                     fProteinFactor = TheAnimals.AParams.GrazeC[16] * StdMath.RAMP(TheAnimals.FIntakeSupp.CrudeProt / fOMD_Supp, TheAnimals.AParams.GrazeC[9], TheAnimals.AParams.GrazeC[10]);
                 else

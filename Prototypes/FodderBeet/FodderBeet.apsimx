@@ -1968,7 +1968,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <string>[FodderBeet].Phenology.FlagLeafDAS</string>
         <string>[FodderBeet].Phenology.FloweringDAS</string>
         <string>[FodderBeet].Phenology.MaturityDAS</string>
-        <string>[FodderBeet].Phenology.MeanTemp.Value()</string>
         <string>[FodderBeet].Phenology.Photoperiod.Value()</string>
         <string>[FodderBeet].Phenology.PhotoPeriodDeltaFunction</string>
         <string>[FodderBeet].Phenology.SoilTemperatureFunction.Value()</string>
@@ -12544,7 +12543,6 @@ namespace Models
                   <string>[FodderBeet].Phenology.CurrentPhaseName</string>
                   <string>[FodderBeet].Phenology.CurrentStageName</string>
                   <string>[FodderBeet].Phenology.DailyVernalisation.Value()</string>
-                  <string>[FodderBeet].Phenology.MeanTemp.Value()</string>
                   <string>[FodderBeet].Phenology.Photoperiod.Value()</string>
                   <string>[FodderBeet].Phenology.Stage</string>
                   <string>[FodderBeet].Phenology.ThermalTime.Value()</string>
