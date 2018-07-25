@@ -330,7 +330,7 @@
             if (table != null)
             {
                 Table.Column column = table.Columns.Find(c => c.Name == columnHeading);
-                if (column != null)
+                if (column != null && !String.IsNullOrEmpty(column.Units))
                     return "(" + column.Units + ")";
             }
             return null;
