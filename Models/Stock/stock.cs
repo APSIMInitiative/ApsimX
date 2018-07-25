@@ -179,7 +179,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The supplement used
         /// </summary>
-        private TSupplement suppFed;
+        private FoodSupplement suppFed;
 
         /// <summary>
         /// The excretion info
@@ -235,7 +235,7 @@ namespace Models.GrazPlan
 
             Array.Resize(ref this.genotypeInits, 0);
             Array.Resize(ref this.animalInits, 0);
-            this.suppFed = new TSupplement();
+            this.suppFed = new FoodSupplement();
             this.excretionInfo = new TExcretionInfo();
             this.paddocksGiven = false;
             this.isFirstStep = true;

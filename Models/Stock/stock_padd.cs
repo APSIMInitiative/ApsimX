@@ -1377,7 +1377,7 @@ namespace Models.GrazPlan
         /// CAREFUL - FForages does not own its members
         /// </summary>
         private ForageList FForages;                                       
-        private TSupplementRation FSuppInPadd;                                                  
+        private SupplementRation FSuppInPadd;                                                  
         private bool FUseHerbageAmt;
 
         private void SetSlope(double fValue)
@@ -1421,7 +1421,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Supplement that is in the paddock
         /// </summary>
-        public TSupplementRation SuppInPadd
+        public SupplementRation SuppInPadd
         {
             get { return FSuppInPadd; }
         }
@@ -1438,7 +1438,7 @@ namespace Models.GrazPlan
         public PaddockInfo()
         {
             FForages = new ForageList(false);
-            FSuppInPadd = new TSupplementRation();
+            FSuppInPadd = new SupplementRation();
             this.fArea = 1.0;
             FSlope = 0.0;
             iExcretionID = NOTTHERE;
@@ -1496,9 +1496,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="fNewAmount"></param>
         /// <param name="NewSupp"></param>
-        public void FeedSupplement(double fNewAmount, TSupplement NewSupp)
+        public void FeedSupplement(double fNewAmount, FoodSupplement NewSupp)
         {
-            TSupplement aSupp;
+            FoodSupplement aSupp;
             bool bFound;
             int Idx;
 
@@ -1508,7 +1508,7 @@ namespace Models.GrazPlan
                 bFound = false;
                 while (!bFound && (Idx < SuppInPadd.Count))
                 {
-                    bFound = NewSupp.isSameAs(SuppInPadd[Idx]);
+                    bFound = NewSupp.IsSameAs(SuppInPadd[Idx]);
                     if (!bFound)
                         Idx++;
                 }
@@ -1516,7 +1516,7 @@ namespace Models.GrazPlan
                     SuppInPadd[Idx].Amount = SuppInPadd[Idx].Amount + fNewAmount;    
                 else
                 {
-                    aSupp = new TSupplement();
+                    aSupp = new FoodSupplement();
                     aSupp.Assign(NewSupp);
                     SuppInPadd.Add(aSupp, fNewAmount);
                 }

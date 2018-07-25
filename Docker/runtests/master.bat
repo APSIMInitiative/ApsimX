@@ -1,6 +1,5 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
-
 set apsimx=C:\ApsimX
 rem First make sure ApsimX exists.
 if not exist %apsimx% (
@@ -31,7 +30,6 @@ set uisyntax=UI
 set prototypesyntax=Prototypes
 set examplessyntax=Examples
 set validationsyntax=Validation
-set simulationsyntax=Simulation
 
 if "%1"=="%unitsyntax%" (
 	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %apsimx%\Tests\UnitTests\bin\Debug\UnitTests.dll /noshadow
@@ -66,12 +64,7 @@ if "%1"=="%examplessyntax%" (
 )
 
 if "%1"=="%validationsyntax%" (
-	set testdir=%apsimx%\Tests\Validation
-	goto :tests
-)
-
-if "%1"=="%simulationsyntax%" (
-	set testdir=%apsimx%\Tests\Simulation
+	set testdir=%apsimx%\Tests
 	goto :tests
 )
 
@@ -82,8 +75,6 @@ echo     %uisyntax%
 echo     %prototypesyntax%
 echo     %examplessyntax%
 echo     %validationsyntax%
-echo     %simulationsyntax%
-
 
 :tests
 if not exist "%testdir%" (
@@ -96,5 +87,12 @@ reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-
+if %errorlevel% equ 0 (
+	if "%1"=="%validationsyntax%" (
+		C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %ghprbPullId% %DATETIMESTAMP% %ghprbActualCommitAuthor%
+		if %errorlevel% neq 0 (
+			echo APSIM.PerformanceTests.Collector did not run succecssfully!
+		)
+	)
+)
 :end
