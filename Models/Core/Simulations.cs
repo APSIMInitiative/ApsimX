@@ -154,11 +154,14 @@ namespace Models.Core
         /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(string FileName)
         {
+            if (!File.Exists(FileName))
+                throw new Exception("Cannot read file: " + FileName + ". File does not exist.");
+
             // Run the converter.
-            ApsimFile.Converter.ConvertToLatestVersion(FileName);
+            Stream inStream = ApsimFile.Converter.ConvertToLatestVersion(FileName);
 
             // Deserialise
-            Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
+            Simulations simulations = XmlUtilities.Deserialise(inStream, Assembly.GetExecutingAssembly()) as Simulations;
 
             if (simulations != null)
             {
