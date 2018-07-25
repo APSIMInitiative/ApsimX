@@ -163,6 +163,8 @@ namespace Models.Core
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(inStream, Assembly.GetExecutingAssembly()) as Simulations;
 
+            inStream.Close();
+
             if (simulations != null)
             {
                 // Set the filename
