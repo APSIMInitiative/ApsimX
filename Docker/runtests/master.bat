@@ -96,3 +96,4 @@ if %errorlevel% equ 0 (
 	)
 )
 :end
+exit 1
