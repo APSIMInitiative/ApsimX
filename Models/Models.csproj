@@ -447,7 +447,6 @@
     <Compile Include="Plant\Phenology\Phases\LeafAppearancePhase.cs" />
     <Compile Include="Plant\Phenology\Phases\LeafDeathPhase.cs" />
     <Compile Include="Plant\Phenology\MolecularPhenology.cs" />
-    <Compile Include="Plant\Phenology\Phases\Phase.cs" />
     <Compile Include="Plant\Phenology\Phenology.cs" />
     <Compile Include="Plant\Phenology\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\VernalisationCW.cs" />
