@@ -21,6 +21,10 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         private IFunction Target = null;
 
+        /// <summary>The plant</summary>
+        [Link]
+        Plant Plant = null;
+
         [Link]
         ISummary summary = null;
 
@@ -81,6 +85,8 @@ namespace Models.PMF.Phen
 
                 structure.PrimaryBudNo = BudNumberBurst;
                 structure.TotalStemPopn = structure.MainStemPopn;
+                Plant.SendEmergingEvent();
+                phenology.Emerged = true;
             }
 
             return PropOfDayUnused;
