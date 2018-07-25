@@ -162,7 +162,19 @@ namespace Models.PMF.Phen
             }
         }
 
-         /// <summary>Writes the summary.</summary>
+        /// <summary>Gets the tt for today.</summary>
+        /// <value>The tt for today.</value>
+        public double TTForToday
+        {
+            get
+            {
+                if (ThermalTime == null)
+                    return 0;
+                return ThermalTime.Value();
+            }
+        }
+
+        /// <summary>Writes the summary.</summary>
         public void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("      " + Name);

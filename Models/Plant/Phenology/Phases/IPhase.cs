@@ -11,6 +11,9 @@ namespace Models.PMF.Phen
     /// <summary>Interface for a function</summary>
     public interface IPhase
     {
+        /// <summary>The plases name</summary>
+        string Name { get; }
+        
         /// <summary>The start</summary>
         string Start { get; set; }
 
@@ -42,6 +45,9 @@ namespace Models.PMF.Phen
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         double TTinPhase { get; set; }
+
+        /// <summary>The tt for today</summary>
+        double TTForToday { get; }
 
     }
 }
