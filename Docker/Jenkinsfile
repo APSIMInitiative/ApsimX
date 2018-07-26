@@ -16,6 +16,8 @@ pipeline {
 					git checkout -- .
 					git clean -fxdq .\\Bin
 					git pull origin master
+					git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+					git checkout %sha1%
 					if %errorlevel% neq 0 (
 						exit 1
 					)
@@ -50,6 +52,8 @@ pipeline {
 							git checkout -- .
 							git clean -fxdq .\\Bin
 							git pull origin master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
 							if %errorlevel% neq 0 (
 								exit 1
 							)
@@ -84,6 +88,8 @@ pipeline {
 							git checkout -- .
 							git clean -fxdq .\\Bin
 							git pull origin master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
 							if %errorlevel% neq 0 (
 								exit 1
 							)
@@ -117,6 +123,8 @@ pipeline {
 							git checkout -- .
 							git clean -fxdq .\\Bin
 							git pull origin master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
 							if %errorlevel% neq 0 (
 								exit 1
 							)
@@ -152,6 +160,8 @@ pipeline {
 							git checkout -- .
 							git clean -fxdq .\\Bin
 							git pull origin master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
 							if %errorlevel% neq 0 (
 								exit 1
 							)
@@ -185,6 +195,8 @@ pipeline {
 							git checkout -- .
 							git clean -fxdq .\\Bin
 							git pull origin master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
 							if %errorlevel% neq 0 (
 								exit 1
 							)
