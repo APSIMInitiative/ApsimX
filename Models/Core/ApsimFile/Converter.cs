@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 32; } }
+        public static int LastestVersion { get { return 33; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1079,6 +1079,32 @@ namespace Models.Core.ApsimFile
             return factorNamesToReturn;
         }
 
+        /// <summary>
+        /// Upgrades to version 33. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion33(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, @"Models.SurfaceOM.", "Models.Surface.");
+            }
+            foreach (XmlNode surfaceOrganicMatter in XmlUtilities.FindAllRecursivelyByType(node, "SurfaceOrganicMatter"))
+            {
+                XmlUtilities.DeleteValue(surfaceOrganicMatter, "ResidueTypes");
+                XmlUtilities.SetValue(surfaceOrganicMatter, "ResourceName", "SurfaceOrganicMatter");
+                XmlUtilities.Rename(surfaceOrganicMatter, "PoolName", "InitialResidueName");
+                XmlUtilities.Rename(surfaceOrganicMatter, "type", "InitialResidueType");
+                XmlUtilities.Rename(surfaceOrganicMatter, "mass", "InitialResidueMass");
+                XmlUtilities.Rename(surfaceOrganicMatter, "standing_fraction", "InitialStandingFraction");
+                XmlUtilities.Rename(surfaceOrganicMatter, "cnr", "InitialCNR");
+                XmlUtilities.Rename(surfaceOrganicMatter, "cpr", "InitialCPR");
+                if (XmlUtilities.Value(surfaceOrganicMatter, "InitialCPR") == string.Empty)
+                    XmlUtilities.DeleteValue(surfaceOrganicMatter, "InitialCPR");
+            }
+
+        }
 
     }
 }

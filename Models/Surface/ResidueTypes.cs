@@ -11,7 +11,7 @@
     /// Encapsulates a list of residue types for SurfaceOrganicMatter model
     /// </summary>
     [Serializable]
-    public class ResidueTypes : ModelCollectionFromResource
+    public class ResidueTypes : Model
     {
         /// <summary>Gets or sets the residues.</summary>
         [XmlElement("ResidueType")]
@@ -33,7 +33,7 @@
                     return residueType;
                 }
             }
-            throw new ApsimXException(this, "Could not find residue type " + name);
+            throw new Exception("Could not find residue type " + name);
         }
 
         /// <summary>Looks at a residue type and copies properties from the base type if one was specified.</summary>
@@ -62,7 +62,7 @@
                     residueType.specific_area = baseType.specific_area;
                 if (residueType.pot_decomp_rate == 0)
                     residueType.pot_decomp_rate = baseType.pot_decomp_rate;
-                if (residueType.cf_contrib < 0)
+                if (residueType.cf_contrib == 0)
                     residueType.cf_contrib = baseType.cf_contrib;
                 if (residueType.fr_c == null)
                     residueType.fr_c = (double[])baseType.fr_c.Clone();

@@ -682,7 +682,7 @@
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />
     <None Include="Resources\Plantain.xml" />
-    <Content Include="Resources\ResidueTypes.xml">
+    <Content Include="Resources\SurfaceOrganicMatter.xml">
       <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\SCRUM.xml" />

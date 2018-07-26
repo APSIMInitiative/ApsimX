@@ -18,7 +18,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter
+    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter
     {
         /// <summary>Link to the soil component</summary>
         [Link]
@@ -112,47 +112,42 @@
             SurfOM = new List<SurfOrganicMatterType>();
         }
 
-        /// <summary>Gets or sets the name of the pool.</summary>
+        /// <summary>Gets or sets the name of initial residue pool</summary>
         [Summary]
-        [Description("Surface organic matter pool name")]
+        [Description("Name of initial residue pool")]
         [Units("")]
-        public string PoolName { get; set; }
+        public string InitialResidueName { get; set; }
 
-        /// <summary>Gets or sets the type of surface organic matter.</summary>
-        /// <value>The type.</value>
+        /// <summary>Gets or sets the type of initial residue pool</summary>
         [Summary]
-        [Description("Surface organic matter pool type")]
+        [Description("Type of initial residue pool")]
         [Display(Type = DisplayType.ResidueName)]
         [Units("")]
-        public string Type { get; set; }
-      
-        /// <summary>Gets or sets the mass of surface organic matter.</summary>
-        /// <value>The mass of surface organic matter.</value>
-        [Summary]
-        [Description("Mass of surface residue (kg/ha)")]
-        [Units("kg/ha")]
-        public double Mass { get; set; }
+        public string InitialResidueType { get; set; }
 
-        /// <summary>Gets or sets the standing_fraction.</summary>
-        /// <value>The standing_fraction.</value>
+        /// <summary>Gets or sets the mass of initial residue pool</summary>
+        [Summary]
+        [Description("Mass of initial surface residue (kg/ha)")]
+        [Units("kg/ha")]
+        public double InitialResidueMass { get; set; }
+
+        /// <summary>Gets or sets the standing fraction of initial residue pool</summary>
         [Summary]
         [Description("Standing fraction (0-1)")]
         [Units("0-1")]
-        public double StandingFraction { get; set; }
+        public double InitialStandingFraction { get; set; }
 
         /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
-        /// <value>The Carbon:Phosphorus ratio.</value>
         [Summary]
         [Description("Carbon:Phosphorus ratio")]
         [Units("g/g")]
-        public double CPR { get; set; }
+        public double InitialCPR { get; set; }
 
-        /// <summary>Gets or sets the Carbon:Nitrogen ratio.</summary>
-        /// <value>The Carbon:Nitrogen ratio.</value>
+        /// <summary>Gets or sets the initial Carbon:Nitrogen ratio.</summary>
         [Summary]
         [Description("Carbon:Nitrogen ratio (g/g)")]
         [Units("g/g")]
-        public double CNR { get; set; }
+        public double InitialCNR { get; set; }
 
         /// <summary>critical residue weight below which Thorburn"s cover factor equals one</summary>
         /// <value>The critical residue weight.</value>
@@ -296,6 +291,12 @@
         /// <summary>Return a list of known residue types names</summary>
         public List<string> ResidueTypeNames()
         {
+            if (ResidueTypes == null && Children.Count > 0)
+            {
+                // This happens when user clicks on SurfaceOrganicMatter in tree.
+                // Links haven't been resolved yet
+                ResidueTypes = Children[0] as ResidueTypes;
+            }
             return ResidueTypes.Names;
         }
 
@@ -549,6 +550,15 @@
                 DecomposeSurfom(ActualSOMDecomp);
         }
 
+        /// <summary>Model has been loaded.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The event data</param>
+        [EventSubscribe("Loaded")]
+        private void OnLoaded(object sender, EventArgs args)
+        {
+            Children.ForEach(child => child.IsHidden = true);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -628,39 +638,39 @@
             double totN = 0;  // total N in residue;
             double totP = 0;  // total P in residue;
 
-            if (Mass > 0.0)
+            if (InitialResidueMass > 0.0)
             {
                 // Normally the residue shouldn't already exist, and we
                 // will need to add it, and normally this should result in SOMNo == i
                 // but it's safest not to assume this
-                int SOMNo = GetResidueNumber(PoolName);
+                int SOMNo = GetResidueNumber(InitialResidueName);
                 if (SOMNo < 0)
                 {
-                    SOMNo = AddNewSurfOM(PoolName, Type);
+                    SOMNo = AddNewSurfOM(InitialResidueName, InitialResidueType);
                 }
 
                 // convert the ppm figures into kg/ha;
-                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * Mass;
-                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * Mass;
-                SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * Mass;
+                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * InitialResidueMass;
+                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * InitialResidueMass;
+                SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * InitialResidueMass;
 
-                totC = Mass * C_fract[SOMNo];
-                totN = MathUtilities.Divide(totC, CNR, 0.0);
+                totC = InitialResidueMass * C_fract[SOMNo];
+                totN = MathUtilities.Divide(totC, InitialCNR, 0.0);
 
                 // If a C:P ratio is not provided, use the default
-                double cpr = double.IsNaN(CPR) ? DefaultCPRatio : CPR;
+                double cpr = double.IsNaN(InitialCPR) ? DefaultCPRatio : InitialCPR;
                 totP = MathUtilities.Divide(totC, cpr, 0.0);
 
-                double standFract = double.IsNaN(StandingFraction) ? DefaultCPRatio : StandingFraction;
+                double standFract = double.IsNaN(InitialStandingFraction) ? DefaultCPRatio : InitialStandingFraction;
 
                 for (int j = 0; j < maxFr; j++)
                 {
-                    SurfOM[SOMNo].Standing[j].amount += Mass * frPoolC[j, SOMNo] * standFract;
+                    SurfOM[SOMNo].Standing[j].amount += InitialResidueMass * frPoolC[j, SOMNo] * standFract;
                     SurfOM[SOMNo].Standing[j].C += totC * frPoolC[j, SOMNo] * standFract;
                     SurfOM[SOMNo].Standing[j].N += totN * frPoolN[j, SOMNo] * standFract;
                     SurfOM[SOMNo].Standing[j].P += totP * frPoolP[j, SOMNo] * standFract;
 
-                    SurfOM[SOMNo].Lying[j].amount += Mass * frPoolC[j, SOMNo] * (1.0 - standFract);
+                    SurfOM[SOMNo].Lying[j].amount += InitialResidueMass * frPoolC[j, SOMNo] * (1.0 - standFract);
                     SurfOM[SOMNo].Lying[j].C += totC * frPoolC[j, SOMNo] * (1.0 - standFract);
                     SurfOM[SOMNo].Lying[j].N += totN * frPoolN[j, SOMNo] * (1.0 - standFract);
                     SurfOM[SOMNo].Lying[j].P += totP * frPoolP[j, SOMNo] * (1.0 - standFract);
