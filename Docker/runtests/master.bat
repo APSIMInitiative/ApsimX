@@ -10,6 +10,10 @@ if not exist %apsimx% (
 if exist %apsimx%\bin.zip (
 	echo Unzipping %apsimx%\bin.zip...
 	powershell -Command Expand-Archive -Path %apsimx%\bin.zip -DestinationPath %apsimx%\Bin -Force
+	if %errorlevel% neq 0 (
+		echo Error unzipping %apsimx%\bin.zip
+		exit %errorlevel%
+	)
 )
 
 set bin=%apsimx%\Bin
@@ -32,7 +36,8 @@ set examplessyntax=Examples
 set validationsyntax=Validation
 
 if "%1"=="%unitsyntax%" (
-	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %apsimx%\Tests\UnitTests\bin\Debug\UnitTests.dll /noshadow
+	echo Running Unit Tests...
+	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %bin%\UnitTests.dll /noshadow
 	goto :end
 )
 
