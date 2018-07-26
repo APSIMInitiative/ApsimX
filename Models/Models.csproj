@@ -473,9 +473,12 @@
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />
+    <Compile Include="Surface\AddFaecesType.cs" />
+    <Compile Include="Surface\OMFractionType.cs" />
     <Compile Include="Surface\SurfaceOrganicMatter.cs" />
     <Compile Include="Surface\ResidueType.cs" />
     <Compile Include="Surface\ResidueTypes.cs" />
+    <Compile Include="Surface\SurfOrganicMatterType.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\Model.cs" />
