@@ -79,7 +79,6 @@ namespace Models
         /// <summary>Constructor</summary>
         public MicroClimate()
         {
-            Reset();
         }
 
         /// <summary>This is the length of time within the day during which evaporation will take place</summary>
@@ -141,7 +140,6 @@ namespace Models
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Reset();
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
                 CreateMCZone(newZone);
             if (microClimateZones.Count == 0)
@@ -185,19 +183,6 @@ namespace Models
                 CalculateOmega(MCZone);
                 SetCanopyEnergyTerms(MCZone);
             }
-        }
-
-        /// <summary>Reset the MicroClimate model back to its original state.</summary>
-        private void Reset()
-        {
-            a_interception = 0.0;
-            b_interception = 1.0;
-            c_interception = 0.0;
-            d_interception = 0.0;
-            soil_albedo = 0.23;
-            SoilHeatFluxFraction = 0.4;
-            NightInterceptionFraction = 0.5;
-            ReferenceHeight = 2.0;
         }
 
         /// <summary>Calculate the canopy conductance for system compartments</summary>
