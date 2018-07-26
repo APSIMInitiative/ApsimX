@@ -17,7 +17,7 @@
         /// <summary>
         /// The TreeView which displays the data.
         /// </summary>
-        private TreeView completionView;
+        private Gtk.TreeView completionView;
 
         /// <summary>
         /// The ListStore which holds the data (suggested completion options).
@@ -60,7 +60,7 @@
             completionFrame.Add(completionScroller);
 
             completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
-            completionView = new TreeView(completionModel);
+            completionView = new Gtk.TreeView(completionModel);
             completionScroller.Add(completionView);
 
             TreeViewColumn column = new TreeViewColumn()
@@ -291,7 +291,9 @@
             completionModel.Clear();
             foreach (CompletionData item in items)
             {
-                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y), item.CompletionText);
+                IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
+                string description = descriptionLines.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines.Aggregate((x, y) => x + Environment.NewLine + y);
+                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText);
             }
         }
 

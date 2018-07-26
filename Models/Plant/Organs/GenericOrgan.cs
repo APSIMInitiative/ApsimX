@@ -306,7 +306,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public virtual BiomassSupplyType CalculateDryMatterSupply()
+        public virtual BiomassSupplyType GetDryMatterSupply()
         {
             dryMatterSupply.Reallocation = AvailableDMReallocation();
             dryMatterSupply.Retranslocation = AvailableDMRetranslocation();         
@@ -316,7 +316,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public virtual BiomassSupplyType CalculateNitrogenSupply()
+        public virtual BiomassSupplyType GetNitrogenSupply()
         {
             nitrogenSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
             if (nitrogenSupply.Reallocation < -BiomassToleranceValue)
@@ -332,7 +332,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public virtual BiomassPoolType CalculateDryMatterDemand()
+        public virtual BiomassPoolType GetDryMatterDemand()
         {
             dryMatterDemand.Structural = DemandedDMStructural() + remobilisationCost.Value();
             dryMatterDemand.Storage = DemandedDMStorage();
@@ -341,7 +341,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public virtual BiomassPoolType CalculateNitrogenDemand()
+        public virtual BiomassPoolType GetNitrogenDemand()
         {
             double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocating) - Live.N);
             NDeficit *= nitrogenDemandSwitch.Value();
