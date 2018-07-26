@@ -1,10 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using Classes;
+    using EventArguments;
+    using Gtk;
+    using Interfaces;
+    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -14,13 +14,6 @@ namespace UserInterface.Views
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using Classes;
-    ////using DataGridViewAutoFilter;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using Models.Core;
-    using System.Linq;
 
     /// <summary>
     /// A grid control that implements the grid view interface.
@@ -821,7 +814,7 @@ namespace UserInterface.Views
                     // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
                     // before the period is inserted by the Gtk event handler. Therefore, we insert it manually now, and stop
                     // this signal from propagating further.
-                    //editable.Text += ".";
+                    // editable.Text += ".";
                     editable.InsertText(".", ref caretLocation);
                     editable.Position = caretLocation;
                 }
@@ -2776,7 +2769,7 @@ namespace UserInterface.Views
         protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
         {
             base.Render(window, widget, background_area, cell_area, expose_area, flags);
-            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, "", ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
+            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, string.Empty, ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
         }
 
         protected override void OnEditingStarted(CellEditable editable, string path)
