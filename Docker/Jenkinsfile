@@ -24,7 +24,7 @@ pipeline {
 					)
 					cd ApsimX
 					git checkout -- .
-					git clean -fxdq .\\Bin
+					git clean -fxdq
 					git pull origin master
 					git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 					git checkout %sha1%
@@ -72,7 +72,7 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq .\\Bin
+							git clean -fxdq
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -118,7 +118,7 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq .\\Bin
+							git clean -fxdq
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -163,7 +163,7 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq .\\Bin
+							git clean -fxdq
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -210,7 +210,7 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq .\\Bin
+							git clean -fxdq
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -257,7 +257,7 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq .\\Bin
+							git clean -fxdq
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
