@@ -388,10 +388,10 @@ namespace Models.Soils.SoilWaterBackend
     [Serializable]
     public class IrrigData
         {
-
-            /// <summary>
-            /// The amount
-            /// </summary>
+        
+        /// <summary>
+        /// The amount
+        /// </summary>
         public double amount;           //amount of irrigation (mm)  
         /// <summary>
         /// The is sub surface
@@ -425,16 +425,7 @@ namespace Models.Soils.SoilWaterBackend
         /// </summary>
         public IrrigData()
             {
-            //all the other values should already be initialised to zero (or false) which is what you want them to be.
             layer = 1;
-            }
-
-
-        /// <summary>
-        /// Zeroes the irrigation.
-        /// </summary>
-        public void ZeroIrrigation()
-            {
             amount = 0.0;
             isSubSurface = false;
             willRunoff = false;
