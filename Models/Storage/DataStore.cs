@@ -837,11 +837,9 @@
         /// <summary>Refresh our tables structure and simulation Ids</summary>
         private void Refresh()
         {
-            // TODO: generalise this
-
             // Get a list of table names.
-            DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
-            foreach (string tableName in DataTableUtilities.GetColumnAsStrings(tableData, "Name"))
+            List<string> tableNames = connection.GetTableNames();
+            foreach (string tableName in tableNames)
             {
                 Table table = tables.Find(t => t.Name == tableName);
                 if (table == null)
