@@ -270,13 +270,16 @@ namespace Models.PMF.Phen
 
             int StartPhaseIndex = -1;
             int EndPhaseIndex = -1;
-            for (int i = 0; i < phases.Count; i++)
+            int i= 0;
+            while ((EndPhaseIndex == -1) || (i<phases.Count()))
             {
                 if (phases[i].Start == Start)
                     StartPhaseIndex = i;
                 if (phases[i].End == End)
                     EndPhaseIndex = i;
+                i += 1;
             }
+            
             if (StartPhaseIndex == -1)
                 throw new Exception("Cannot find phase: " + Start);
             if (EndPhaseIndex == -1)
@@ -329,6 +332,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Loaded")]
         private void OnLoaded(object sender, LoadedEventArgs args)
         {
+            if (phases.Count() == 0)
             foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
             {
                 phases.Add(phase);
