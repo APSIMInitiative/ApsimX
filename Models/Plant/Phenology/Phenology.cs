@@ -262,12 +262,6 @@ namespace Models.PMF.Phen
             if (phases == null)
                 return false;
 
-            string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
-            double StartFraction = 0;
-            if (StartFractionSt != "")
-                StartFraction = Convert.ToDouble(StartFractionSt,
-                                                 System.Globalization.CultureInfo.InvariantCulture);
-
             int StartPhaseIndex = -1;
             int EndPhaseIndex = -1;
             int i= 0;
@@ -287,29 +281,13 @@ namespace Models.PMF.Phen
             if (StartPhaseIndex > EndPhaseIndex)
                 throw new Exception("Start phase " + Start + " is after phase " + End);
 
-            if (StartPhaseIndex == -1 || EndPhaseIndex == -1)
-                throw new Exception("Cannot test between stages " + Start + " " + End);
-
-            if (CurrentPhaseIndex == StartPhaseIndex && StartFraction > 0)
-                return Stage >= Math.Truncate(Stage) + StartFraction;
-
-            else
-                return CurrentPhaseIndex >= StartPhaseIndex && CurrentPhaseIndex <= EndPhaseIndex;
+            return CurrentPhaseIndex >= StartPhaseIndex && CurrentPhaseIndex <= EndPhaseIndex;
         }
 
         /// <summary> A utility function to return true if the simulation is at or past the specified startstage.</summary>
         public bool Beyond(String Start)
         {
-            string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
-            double StartFraction = 0;
-            if (StartFractionSt != "")
-                StartFraction = double.Parse(StartFractionSt.ToString(),
-                                             System.Globalization.CultureInfo.InvariantCulture);
-            int StartPhaseIndex = phases.IndexOf(PhaseStartingWith(Start));
-
-            CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
-
-            if (CurrentPhaseIndex >= StartPhaseIndex)
+            if (CurrentPhaseIndex >= phases.IndexOf(PhaseStartingWith(Start)))
                 return true;
             else
                 return false;
@@ -332,7 +310,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Loaded")]
         private void OnLoaded(object sender, LoadedEventArgs args)
         {
-            if (phases.Count() == 0)
+            if (phases.Count() == 0) //Need this test to ensure the phases are colated only once
             foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
             {
                 phases.Add(phase);
