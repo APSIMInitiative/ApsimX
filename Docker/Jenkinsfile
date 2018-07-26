@@ -12,11 +12,11 @@ pipeline {
 						git config --system core.longpaths true
 						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 					)
-					
+					dir
 					cd ApsimX
-					git fetch origin
 					git checkout -- .
 					git clean -xfdq
+					git checkout master
 					git pull origin master
 					rem I assume the default repo name is origin.
 					git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
@@ -50,19 +50,19 @@ pipeline {
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
-							) else (
-								cd ApsimX
-								git fetch origin
-								git reset --hard origin/master
-								git clean -fxdq .\\Bin
-								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%
-								git pull origin master
-								if %errorlevel% neq 0 (
-									exit 1
-								)
-								cd ..
 							)
+							dir
+							cd ApsimX
+							git checkout -- .
+							git clean -fxdq .\\Bin
+							git checkout master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
+							git pull origin master
+							if %errorlevel% neq 0 (
+								exit 1
+							)
+							cd ..
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
@@ -89,19 +89,19 @@ pipeline {
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
-							) else (
-								cd ApsimX
-								git fetch origin
-								git reset --hard origin/master
-								git clean -fxdq .\\Bin
-								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%
-								git pull origin master
-								if %errorlevel% neq 0 (
-									exit 1
-								)
-								cd ..
 							)
+							dir
+							cd ApsimX
+							git checkout -- .
+							git clean -fxdq .\\Bin
+							git checkout master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
+							git pull origin master
+							if %errorlevel% neq 0 (
+								exit 1
+							)
+							cd ..
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
@@ -126,19 +126,19 @@ pipeline {
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
-							) else (
-								cd ApsimX
-								git fetch origin
-								git reset --hard origin/master
-								git clean -fxdq .\\Bin
-								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%
-								git pull origin master
-								if %errorlevel% neq 0 (
-									exit 1
-								)
-								cd ..
 							)
+							dir
+							cd ApsimX
+							git checkout -- .
+							git clean -fxdq .\\Bin
+							git checkout master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
+							git pull origin master
+							if %errorlevel% neq 0 (
+								exit 1
+							)
+							cd ..
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						copyArtifacts filter: 'ApsimX\\datetimestamp.txt', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
@@ -165,19 +165,19 @@ pipeline {
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
-							) else (
-								cd ApsimX
-								git fetch origin
-								git reset --hard origin/master
-								git clean -fxdq .\\Bin
-								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%
-								git pull origin master
-								if %errorlevel% neq 0 (
-									exit 1
-								)
-								cd ..
 							)
+							dir
+							cd ApsimX
+							git checkout -- .
+							git clean -fxdq .\\Bin
+							git checkout master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
+							git pull origin master
+							if %errorlevel% neq 0 (
+								exit 1
+							)
+							cd ..
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
@@ -202,19 +202,19 @@ pipeline {
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
-							) else (
-								cd ApsimX
-								git fetch origin
-								git reset --hard origin/master
-								git clean -fxdq .\\Bin
-								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-								git checkout %sha1%
-								git pull origin master
-								if %errorlevel% neq 0 (
-									exit 1
-								)
-								cd ..
 							)
+							dir
+							cd ApsimX
+							git checkout -- .
+							git clean -fxdq .\\Bin
+							git checkout master
+							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+							git checkout %sha1%
+							git pull origin master
+							if %errorlevel% neq 0 (
+								exit 1
+							)
+							cd ..
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
 						bat '''
