@@ -532,26 +532,26 @@
             string now = connection.AsSQLString(DateTime.Now);
             connection.ExecuteNonQuery("INSERT INTO _Checkpoints (ID, Name, Version, Date) VALUES (" + newCheckpointID + ", '" + name + "', '" + version + "', '" + now + "')");
 
-            // TODO: generalise this code
-
             if (filesToCheckpoint != null)
             {
-                IntPtr insertQuery = connection.Prepare("INSERT INTO _CheckpointFiles (CheckpointID, FileName, Contents) VALUES (?, ?, ?)");
-
                 // Add in all referenced files.
                 Simulations sims = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                object[] values = new object[3];
-                values[0] = newCheckpointID;
+
+                List<object[]> valueList = new List<object[]>();
                 foreach (string fileName in filesToCheckpoint)
                 {
+                    object[] values = new object[3];
                     if (File.Exists(fileName))
                     {
+                        values[0] = newCheckpointID;
                         values[1] = fileName;
                         values[2] = File.ReadAllBytes(fileName);
-                        connection.BindParametersAndRunQuery(insertQuery, values);
+                        valueList.Add(values);
                     }
                 }
-                connection.Finalize(insertQuery);
+
+                List<string> colNames = new List<string>(new string[] { "CheckpointID", "FileName", "Contents" });
+                connection.InsertRows("_CheckpointFiles", colNames, valueList);
             }
 
             connection.ExecuteNonQuery("END");
@@ -746,7 +746,6 @@
                     foundTable.MergeColumns(table);
             }
             dataToWrite.Clear();
-
         }
 
         /// <summary>Write a _units table to .db</summary>
@@ -774,7 +773,6 @@
                 }
             }
             connection.ExecuteNonQuery("END");
-
         }
 
         /// <summary>Open the database.</summary>
