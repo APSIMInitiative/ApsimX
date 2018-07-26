@@ -88,6 +88,11 @@
             private List<ISimulationGenerator> modelsToRun;
             private Simulation currentSimulation;
 
+            /// <summary>
+            /// List of simulation clocks - allows us to monitor progress of the runs.
+            /// </summary>
+            public List<IClock> simClocks { get; private set; } = new List<IClock>();
+
             /// <summary>Simulation names being run</summary>
             public List<string> SimulationNamesBeingRun { get; private set; }
 
@@ -127,6 +132,11 @@
                                 currentSimulation = modelsToRun[0].NextSimulationToRun(false);
                         }
                     }
+                    if (currentSimulation != null)
+                    {
+                        IClock simClock = (IClock)Apsim.ChildrenRecursively(currentSimulation).Find(m => typeof(IClock).IsAssignableFrom(m.GetType()));
+                        simClocks.Add(simClock);
+                    }
                     return currentSimulation != null;
                 }
             }
@@ -134,6 +144,7 @@
             /// <summary>Reset the enumerator</summary>
             void IEnumerator.Reset()
             {
+                simClocks.Clear();
                 FindListOfModelsToRun();
             }
 

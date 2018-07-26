@@ -24,12 +24,12 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 32; } }
+        public static int LastestVersion { get { return 33; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Returns true if something was changed.</returns>
-        public static bool ConvertToLatestVersion(string fileName)
+        public static Stream ConvertToLatestVersion(string fileName)
         {
             // Load the file.
             XmlDocument doc = new XmlDocument();
@@ -40,15 +40,13 @@ namespace Models.Core.ApsimFile
 
             if (changed)
             {
-                // Make a backup or original file.
-                string bakFileName = Path.ChangeExtension(fileName, ".bak");
-                if (!File.Exists(bakFileName))
-                    File.Copy(fileName, bakFileName);
-
-                // Save file.
-                doc.Save(fileName);
+                MemoryStream memStream = new MemoryStream();
+                doc.Save(memStream);
+                memStream.Seek(0, SeekOrigin.Begin);
+                return memStream;
             }
-            return changed;
+            else
+                return File.OpenRead(fileName);
         }
 
         /// <summary>Converts XML to the latest version.</summary>
@@ -118,29 +116,29 @@ namespace Models.Core.ApsimFile
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion1(XmlNode node, string fileName)
-    {
-        foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
         {
-            XmlUtilities.Rename(seriesNode, "Title", "Name");
-            XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
-            XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
-            XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
-            XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
-            XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
+            foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
+            {
+                XmlUtilities.Rename(seriesNode, "Title", "Name");
+                XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
+                XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
+                XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
+                XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
+                XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
 
-            bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
-            if (showRegression)
-                seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
+                bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
+                if (showRegression)
+                    seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
 
-            string seriesType = XmlUtilities.Value(seriesNode, "Type");
-            if (seriesType == "Line")
-                XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
+                string seriesType = XmlUtilities.Value(seriesNode, "Type");
+                if (seriesType == "Line")
+                    XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
 
-            XmlUtilities.DeleteValue(seriesNode, "X");
-            XmlUtilities.DeleteValue(seriesNode, "Y");
+                XmlUtilities.DeleteValue(seriesNode, "X");
+                XmlUtilities.DeleteValue(seriesNode, "Y");
 
+            }
         }
-    }
 
         /// <summary>Upgrades to version 2.</summary>
         /// <remarks>
@@ -744,7 +742,7 @@ namespace Models.Core.ApsimFile
                 }
                 manager.Write(managerNode);
             }
-                
+
         }
 
         /// <summary>
@@ -925,8 +923,8 @@ namespace Models.Core.ApsimFile
                 ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception");
             }
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Change the VaryByIndex in series from an integer index to a name of a factor.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
@@ -1049,7 +1047,7 @@ namespace Models.Core.ApsimFile
         private static List<KeyValuePair<string, string>> BuildListFromSimulation(XmlNode node)
         {
             var simulationZonePairs = new List<KeyValuePair<string, string>>();
-            simulationZonePairs.Add(new KeyValuePair<string,string>("Simulation", XmlUtilities.Value(node, "Name")));
+            simulationZonePairs.Add(new KeyValuePair<string, string>("Simulation", XmlUtilities.Value(node, "Name")));
             foreach (XmlNode zone in XmlUtilities.ChildNodes(node, "Zone"))
                 simulationZonePairs.Add(new KeyValuePair<string, string>("Zone", XmlUtilities.Value(zone, "Name")));
             return simulationZonePairs;
@@ -1079,6 +1077,20 @@ namespace Models.Core.ApsimFile
             return factorNamesToReturn;
         }
 
+        /// <summary>
+        /// Change the stores object array in Supplement components to Stores
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion33(XmlNode node, string fileName)
+        {
+            // Find all the Supplement components
+            List<XmlNode> nodeList = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(node, "Supplement"));
 
+            foreach (XmlNode supplementNode in nodeList)
+            {
+                ConverterUtilities.RenameNode(supplementNode, "stores", "Stores");
+            }
+        }
     }
 }

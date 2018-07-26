@@ -111,7 +111,12 @@ namespace UserInterface.Views
         /// The cell at the popup locations
         /// </summary>
         private GridCell popupCell = null;
-        
+
+        /// <summary>
+        /// The splitter between the fixed and non-fixed grids
+        /// </summary>
+        private HPaned splitter = null;
+
         /// <summary>
         /// List of active column indexes
         /// </summary>
@@ -413,6 +418,7 @@ namespace UserInterface.Views
             Gridview = (Gtk.TreeView)builder.GetObject("gridview");
             FixedColview = (Gtk.TreeView)builder.GetObject("fixedcolview");
             image1 = (Gtk.Image)builder.GetObject("image1");
+            splitter = (HPaned)builder.GetObject("hpaned1");
             _mainWidget = hbox1;
             Gridview.Model = gridmodel;
             Gridview.Selection.Mode = SelectionMode.Multiple;
@@ -428,9 +434,12 @@ namespace UserInterface.Views
             Gridview.FocusOutEvent += FocusOutEvent;
             Gridview.KeyPressEvent += Gridview_KeyPressEvent;
             Gridview.EnableSearch = false;
+            Gridview.ExposeEvent += Gridview_Exposed;
             FixedColview.FocusInEvent += FocusInEvent;
             FixedColview.FocusOutEvent += FocusOutEvent;
             FixedColview.EnableSearch = false;
+            splitter.Child1.Hide();
+            splitter.Child1.NoShowAll = true;
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -489,7 +498,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            if (numberLockedCols > 0)
+            if (splitter.Child1.Visible)
             {
                 Gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
                 Gridview.Selection.Changed -= Gridview_CursorChanged;
@@ -503,6 +512,7 @@ namespace UserInterface.Views
             Gridview.KeyPressEvent -= Gridview_KeyPressEvent;
             FixedColview.FocusInEvent -= FocusInEvent;
             FixedColview.FocusOutEvent -= FocusOutEvent;
+            Gridview.ExposeEvent -= Gridview_Exposed;
 
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -1821,8 +1831,14 @@ namespace UserInterface.Views
         /// <param name="number">The number of columns</param>
         public void LockLeftMostColumns(int number)
         {
-            if (number == numberLockedCols || !Gridview.IsMapped)
+            // If we've already set this, or if the widgets haven't yet been mapped
+            // (we can't determine widths until then), then just save the number of fixed
+            // columns we want, so we can try again when the widgets appear on screen
+            if ((FixedColview.Visible && number == numberLockedCols) || !Gridview.IsMapped)
+            {
+                numberLockedCols = number;
                 return;
+            }
             for (int i = 0; i < gridmodel.NColumns; i++)
             {
                 if (FixedColview.Columns.Length > i)
@@ -1832,7 +1848,7 @@ namespace UserInterface.Views
             }
             if (number > 0)
             {
-                if (numberLockedCols == 0)
+                if (!splitter.Child1.Visible)
                 {
                     Gridview.Vadjustment.ValueChanged += Gridview_Vadjustment_Changed;
                     Gridview.Selection.Changed += Gridview_CursorChanged;
@@ -1843,6 +1859,14 @@ namespace UserInterface.Views
                 }
                 FixedColview.Model = gridmodel;
                 FixedColview.Visible = true;
+                splitter.Child1.NoShowAll = false;
+                splitter.ShowAll();
+                splitter.PositionSet = true;
+                int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
+                if (splitter.Allocation.Width > 1)
+                    splitter.Position = Math.Min(FixedColview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                else
+                    splitter.Position = FixedColview.SizeRequest().Width + splitterWidth;
             }
             else
             {
@@ -1851,6 +1875,7 @@ namespace UserInterface.Views
                 FixedColview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
                 FixedColview.Selection.Changed -= Fixedcolview_CursorChanged;
                 FixedColview.Visible = false;
+                splitter.Position = 0;
             }
             numberLockedCols = number;
         }
@@ -2445,6 +2470,22 @@ namespace UserInterface.Views
                 e.RetVal = true;
             }
         }
+
+        /// <summary>
+        /// Called when the sender is first exposed on screen
+        /// We may not have been able to set the fixed columns earlier,
+        /// but we should be able to now. Once we've done so, we no longer
+        /// need to handle this event
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void Gridview_Exposed(object sender, ExposeEventArgs e)
+        {
+            if (numberLockedCols > 0)
+                LockLeftMostColumns(numberLockedCols);
+            Gridview.ExposeEvent -= Gridview_Exposed;
+        }
+
 
         /// <summary>
         /// Gets the Gtk Button which displays a column header
