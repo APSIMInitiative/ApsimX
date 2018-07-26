@@ -15,7 +15,7 @@
 
     /// <summary>
     /// # [Name]
-    /// A storage service for reading and writing to/from a SQLITE database.
+    /// A storage service for reading and writing to/from a database.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
@@ -23,7 +23,7 @@
     [ValidParent(ParentType = typeof(Simulations))]
     public class DataStore : Model, IStorageReader, IStorageWriter, IDisposable
     {
-        /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
+        /// <summary>A database connection</summary>
         [NonSerialized]
         private SQLite connection = null;
 
@@ -75,7 +75,10 @@
         public DataStore() { }
 
         /// <summary>Constructor</summary>
-        public DataStore(string fileNameToUse) { FileName = fileNameToUse; }
+        public DataStore(string fileNameToUse)
+        {
+            FileName = fileNameToUse;
+        }
 
         /// <summary>
         /// Use C# destructor syntax for finalization code.
@@ -84,7 +87,8 @@
         /// It gives your base class the opportunity to finalize.
         /// Do not provide destructors in types derived from this class.
         /// </summary>
-        ~DataStore() {
+        ~DataStore()
+        {
             // Do not re-create Dispose clean-up code here.
             // Calling Dispose(false) is optimal in terms of
             // readability and maintainability.
@@ -140,7 +144,6 @@
 
                 // Note disposing has been done.
                 disposed = true;
-
             }
         }
 
@@ -169,7 +172,7 @@
                     dataToWrite.Add(t);
                 }
             }
-            t.AddRow(checkpointID, simulationID, columnNames, columnUnits, valuesToWrite);
+            t.AddRow(connection, checkpointID, simulationID, columnNames, columnUnits, valuesToWrite);
         }
 
         /// <summary>Simulation runs are about to begin.</summary>
@@ -242,7 +245,7 @@
             else
                 fieldList = fieldNames.ToList();
 
-            bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName !=  null;
+            bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
 
             sql.Append("SELECT C.Name AS CheckpointName, C.ID AS CheckpointID");
             if (hasSimulationName)
@@ -251,7 +254,7 @@
             fieldList.Remove("CheckpointID");
             fieldList.Remove("SimulationName");
             fieldList.Remove("SimulationID");
-            
+
             foreach (string fieldName in fieldList)
             {
                 if (table.HasColumn(fieldName))
@@ -357,17 +360,13 @@
 
             connection.ExecuteNonQuery("DELETE FROM _Units WHERE TableName = '" + tableName + "'");
 
-            string sql = "INSERT INTO _Units (TableName, ColumnHeading, Units) " +
-                           "VALUES (?, ?, ?)";
-            IntPtr statement = connection.Prepare(sql);
+            List<object[]> values = new List<object[]>();
             for (int i = 0; i < columnNames.Count; i++)
             {
-                connection.BindParametersAndRunQuery(statement, new object[] {
-                                                     tableName,
-                                                     columnNames[i],
-                                                     columnUnits[i]});
+                values.Add(new object[] { tableName, columnNames[i], columnUnits[i] });
             }
-            connection.Finalize(statement);
+            List<string> unitsColumns = new List<string>(new string[] { "TableName", "ColumnHeading", "Units" });
+            connection.InsertRows("_Units", unitsColumns, values);
         }
 
         /// <summary>
@@ -379,7 +378,6 @@
         {
             Open(readOnly: false);
             SortedSet<string> simulationNames = new SortedSet<string>();
-
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in data.Columns)
@@ -397,7 +395,6 @@
                 WriteRow(simulationName, data.TableName, columnNames, units, values);
                 simulationNames.Add(simulationName);
             }
-
 
             bool startWriteThread = writeTask == null || writeTask.IsCompleted;
             if (startWriteThread)
@@ -437,6 +434,7 @@
         }
 
         /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
+        /// <param name="tableName">The table name</param>
         public IEnumerable<string> ColumnNames(string tableName)
         {
             Table table = tables.Find(t => t.Name == tableName);
@@ -513,7 +511,7 @@
             {
                 List<string> columnNames = t.Columns.Select(column => column.Name).ToList();
                 if (t.Name != "_CheckpointFiles" && columnNames.Contains("CheckpointID"))
-                { 
+                {
                     columnNames.Remove("CheckpointID");
 
                     string csvFieldNames = null;
@@ -531,8 +529,10 @@
                 }
             }
             string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            string now = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+            string now = connection.AsSQLString(DateTime.Now);
             connection.ExecuteNonQuery("INSERT INTO _Checkpoints (ID, Name, Version, Date) VALUES (" + newCheckpointID + ", '" + name + "', '" + version + "', '" + now + "')");
+
+            // TODO: generalise this code
 
             if (filesToCheckpoint != null)
             {
@@ -777,7 +777,7 @@
 
         }
 
-        /// <summary>Open the SQLite database.</summary>
+        /// <summary>Open the database.</summary>
         /// <param name="readOnly">Open for readonly access?</param>
         /// <returns>True if file was successfully opened</returns>
         public bool Open(bool readOnly)
@@ -796,11 +796,14 @@
                 if (simulations != null)
                     FileName = Path.ChangeExtension(simulations.FileName, ".db");
                 else
-                    throw new Exception("Cannot find a filename for the SQLite database.");
+                    throw new Exception("Cannot find a filename for the DataStore database.");
             }
 
             Close();
             connection = new SQLite();
+
+            // TODO: generalise the following
+
             if (!File.Exists(FileName))
             {
                 connection.OpenDatabase(FileName, readOnly: false);
@@ -836,6 +839,8 @@
         /// <summary>Refresh our tables structure and simulation Ids</summary>
         private void Refresh()
         {
+            // TODO: generalise this
+
             // Get a list of table names.
             DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
             foreach (string tableName in DataTableUtilities.GetColumnAsStrings(tableData, "Name"))
@@ -851,7 +856,7 @@
 
             // Get a list of simulation names
             simulationIDs.Clear();
-            
+
             bool haveSimulationTable = tables.Find(table => table.Name == "_Simulations") != null;
             if (haveSimulationTable)
             {
@@ -907,7 +912,6 @@
                     if (table.Columns.Find(c => c.Name == "SimulationID") != null)
                         ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", simulationNamesBeingRun, ") AND CheckpointID=" + currentCheckpointID);
             }
-            
 
             // Make sure each known simulation name has an ID in the simulations table in the .db
             ExecuteInsertQuery("_Simulations", "Name", knownSimulationNames);
@@ -959,7 +963,7 @@
                         sql.Append(',');
                     sql.AppendFormat("('{0}')", simulationNames.ElementAt(i));
                 }
-
+                //TODO: generalise this
                 // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
                 // so we will run the query on batches of ~100 values at a time.
                 if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
@@ -985,7 +989,7 @@
                 if (sql.Length > 0)
                     sql.Append(',');
                 sql.AppendFormat("'{0}'", simulationNames.ElementAt(i));
-
+                // TODO: generalise this
                 // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
                 // so we will run the query on batches of ~100 values at a time.
                 if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
@@ -1015,10 +1019,10 @@
                         sql.Append(',');
                     sql.Append(simulationIDs[simulationName]);
                 }
-
+                // TODO: generalise this
                 // It appears that SQLite can't handle lots of values in SQL DELETE statements
                 // so we will run the query on batches of ~100 values at a time.
-                if (sql.Length > 0 && ((i+1) % 100 == 0 || i == simulationNames.Count() - 1))
+                if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
                 {
                     connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
                     sql.Clear();
@@ -1048,6 +1052,16 @@
                         row["SimulationID"] = id;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the table column names
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <returns>List of table names</returns>
+        public List<string> GetTableColumns(string tableName)
+        {
+            return connection.GetTableColumns(tableName);
         }
 
         /// <summary>Encapsulates a file that has been checkpointed</summary>
