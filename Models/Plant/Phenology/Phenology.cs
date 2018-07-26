@@ -24,10 +24,6 @@ namespace Models.PMF.Phen
         [Link]
         private Plant Plant = null;
 
-        /// <summary>The clock</summary>
-        [Link]
-        private Clock Clock = null;
-
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
@@ -35,10 +31,6 @@ namespace Models.PMF.Phen
         /// <summary>The thermal time</summary>
         [Link]
         public IFunction ThermalTime = null;
-
-        /// <summary>The rewind due to biomass removed</summary>
-        [ChildLinkByName(IsOptional = true)]
-        private IFunction RewindDueToBiomassRemoved = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -59,17 +51,11 @@ namespace Models.PMF.Phen
         /// <summary>The just initialised</summary>
         private bool JustInitialised = true;
 
-        /// <summary>The sow date</summary>
-        private DateTime SowDate = DateTime.MinValue;
-
-        //Fixme.  This currently wont be working because the phases are all IPhase types now.  Each phase needs a property to say if it can be rewound
-        /// <summary> Phases that can't be rewound (e.g. due to grazing)   /// </summary>
-        private static Type[] phasesThatWontRewind = new Type[] { typeof(NodeNumberPhase), typeof(LeafDeathPhase), typeof(LeafAppearancePhase), typeof(GotoPhase), typeof(GerminatingPhase), typeof(EndPhase) };
-
 
         ///3.  The constructor
         /// -------------------------------------------------------------------------------------------------
         /// <summary>Constructor</summary>
+
         public Phenology() { }
 
 
@@ -354,72 +340,6 @@ namespace Models.PMF.Phen
             throw new Exception("Unable to find phase starting with " + Start);
         }
 
-        /// <summary>Biomass has been removed. Optionally rewind phenology.</summary>
-        public void BiomassRemoved(double fractionRemoved)
-        {
-            int existingPhaseIndex = CurrentPhaseIndex;
-            if (RewindDueToBiomassRemoved != null && !phasesThatWontRewind.Contains(CurrentPhase.GetType()))
-            {
-                FractionBiomassRemoved = fractionRemoved; // The RewindDueToBiomassRemoved function will use this.
-
-                double ttCritical = TTInAboveGroundPhase;
-                double removeFractPheno = RewindDueToBiomassRemoved.Value();
-                double removeTTPheno = ttCritical * removeFractPheno;
-
-                //string msg;
-                //msg = "Phenology change:-\r\n";
-                //msg += "    Fraction DM removed  = " + fractionRemoved.ToString() + "\r\n";
-                //msg += "    Fraction TT removed  = " + removeFractPheno.ToString() + "\r\n";
-                //msg += "    Critical TT          = " + ttCritical.ToString() + "\r\n";
-                //msg += "    Remove TT            = " + removeTTPheno.ToString() + "\r\n";
-                //Summary.WriteMessage(this, msg);
-                double ttRemaining = removeTTPheno;
-                for (int i = Phases.Count - 1; i >= 0; i--)
-                {
-                    IPhase Phase = Phases[i];
-                    if (Phase.TTinPhase > 0 && !phasesThatWontRewind.Contains(Phase.GetType()))
-                    {
-                        double ttCurrentPhase = Phase.TTinPhase;
-                        if (ttRemaining > ttCurrentPhase)
-                        {
-                            Phase.ResetPhase();
-                            ttRemaining -= ttCurrentPhase;
-                            CurrentPhaseIndex -= 1;
-                            if (CurrentPhaseIndex < 4)  //FIXME - hack to stop onEmergence being fired which initialises biomass parts
-                            {
-                                CurrentPhaseIndex = 4;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            Phase.Add(-ttRemaining);
-                            // Return fraction of thermal time we are through the current
-                            // phenological phase (0-1)
-                            double frac = Phase.FractionComplete;
-                            //if (frac > 0.0 && frac < 1.0)  // Don't skip out of this stage - some have very low targets, eg 1.0 in "maturity"
-                            //    currentStage = frac + floor(currentStage);
-
-                            break;
-                        }
-                    }
-                    else
-                    { // phase is empty - not interested in it
-                    }
-                }
-                Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
-
-                if (existingPhaseIndex != CurrentPhaseIndex)
-                {
-                    PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                    PhaseChangedData.OldPhaseName = Phases[existingPhaseIndex].Name;
-                    PhaseChangedData.NewPhaseName = Phases[CurrentPhaseIndex].Name;
-                    PhaseChanged.Invoke(Plant, PhaseChangedData);
-                    //Fixme MyPaddock.Publish(CurrentPhase.Start);
-                }
-            }
-        }
-
 
         ///7. Private methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -582,7 +502,6 @@ namespace Models.PMF.Phen
             JustInitialised = true;
             Emerged = false;
             Germinated = false;
-            SowDate = Clock.Today;
             CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
             FractionBiomassRemoved = 0;
