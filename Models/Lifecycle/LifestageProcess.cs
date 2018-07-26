@@ -8,7 +8,7 @@ namespace Models.LifeCycle
     using System;
     using System.Collections.Generic;
     using Models.Core;
-    using Models.PMF.Functions;
+    using Models.Functions;
 
     /// <summary>
     /// # [Name]

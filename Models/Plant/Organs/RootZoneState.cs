@@ -1,7 +1,7 @@
 ﻿using Models.Soils;
 using Models.Core;
 using System;
-using Models.PMF.Functions;
+using Models.Functions;
 
 namespace Models.PMF.Organs
 {

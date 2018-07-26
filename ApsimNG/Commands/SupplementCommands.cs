@@ -15,7 +15,7 @@ namespace UserInterface.Commands
         private Supplement parent;
 
         /// <summary>The supplement we're to add</summary>
-        private TSupplementItem supplementToAdd = null;
+        private SupplementItem supplementToAdd = null;
 
         /// <summary>True if model was added</summary>
         private bool supplementAdded;
@@ -34,12 +34,12 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
-            int iSuppNo = TSupplementLibrary.DefaultSuppConsts.IndexOf(this.supplementName);
+            int iSuppNo = SupplementLibrary.DefaultSuppConsts.IndexOf(this.supplementName);
             if (iSuppNo >= 0)
             {
-                this.supplementToAdd = TSupplementLibrary.DefaultSuppConsts[iSuppNo];
-                this.prevSuppIdx = this.parent.curIndex;
-                this.parent.curIndex = this.parent.Add(this.supplementName);
+                this.supplementToAdd = SupplementLibrary.DefaultSuppConsts[iSuppNo];
+                this.prevSuppIdx = this.parent.CurIndex;
+                this.parent.CurIndex = this.parent.Add(this.supplementName);
                 this.supplementAdded = true;
                 commandHistory.InvokeModelChanged(this.parent);
             }
@@ -54,7 +54,7 @@ namespace UserInterface.Commands
                 int suppIdx = this.parent.IndexOf(this.supplementToAdd.Name);
                 if (suppIdx >= 0)
                     this.parent.Delete(suppIdx);
-                this.parent.curIndex = Math.Min(this.prevSuppIdx, parent.NoStores - 1);
+                this.parent.CurIndex = Math.Min(this.prevSuppIdx, parent.NoStores - 1);
                 commandHistory.InvokeModelChanged(this.parent);
             }
         }
@@ -67,14 +67,14 @@ namespace UserInterface.Commands
         private Supplement parent;
 
         /// <summary>The supplement we're to add</summary>
-        private TSupplementItem supplementToDelete = null;
+        private SupplementItem supplementToDelete = null;
 
         /// <summary>True if model was Deleted</summary>
         private bool supplementDeleted;
 
         private int prevSuppIdx;
 
-        public DeleteSupplementCommand(Supplement parent, TSupplementItem supplementItem)
+        public DeleteSupplementCommand(Supplement parent, SupplementItem supplementItem)
         {
             this.parent = parent;
             this.supplementToDelete = supplementItem;
@@ -85,9 +85,9 @@ namespace UserInterface.Commands
         public void Do(CommandHistory commandHistory)
         {
             int iSuppNo = parent.IndexOf(this.supplementToDelete);
-            this.prevSuppIdx = this.parent.curIndex;
+            this.prevSuppIdx = this.parent.CurIndex;
             this.parent.Delete(iSuppNo);
-            this.parent.curIndex = Math.Min(this.prevSuppIdx, parent.NoStores - 1);
+            this.parent.CurIndex = Math.Min(this.prevSuppIdx, parent.NoStores - 1);
             this.supplementDeleted = true;
             commandHistory.InvokeModelChanged(this.parent);
         }
@@ -98,7 +98,7 @@ namespace UserInterface.Commands
         {
             if (this.supplementDeleted && this.supplementToDelete != null)
             {
-                this.parent.curIndex = this.parent.Add(supplementToDelete);
+                this.parent.CurIndex = this.parent.Add(supplementToDelete);
                 commandHistory.InvokeModelChanged(this.parent);
             }
         }
@@ -132,7 +132,7 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
-            this.parent.curIndex = newSuppIdx;
+            this.parent.CurIndex = newSuppIdx;
             commandHistory.InvokeModelChanged(this.parent);
         }
 
@@ -140,7 +140,7 @@ namespace UserInterface.Commands
         /// <param name="CommandHistory">The command history.</param>
         public void Undo(CommandHistory commandHistory)
         {
-            this.parent.curIndex = prevSuppIdx;
+            this.parent.CurIndex = prevSuppIdx;
             commandHistory.InvokeModelChanged(this.parent);
         }
     }
@@ -153,12 +153,12 @@ namespace UserInterface.Commands
         /// <summary>
         /// The active list of supplements
         /// </summary>
-        private List<TSupplementItem> suppList;
+        private List<SupplementItem> suppList;
 
         /// <summary>
         /// The list of supplements prior to the reset
         /// </summary>
-        private List<TSupplementItem> prevList;
+        private List<SupplementItem> prevList;
 
         /// <summary>True if model was Deleted</summary>
         private bool supplementsReset = false;
@@ -166,7 +166,7 @@ namespace UserInterface.Commands
         /// <summary>Constructor.</summary>
         /// <param name="parent">The old index.</param>
         /// <param name="supplements">List of supplements to reset</param>
-        public ResetSupplementCommand(Supplement parent, List<TSupplementItem> supplements)
+        public ResetSupplementCommand(Supplement parent, List<SupplementItem> supplements)
         {
             this.parent = parent;
             this.suppList = supplements;
@@ -178,29 +178,29 @@ namespace UserInterface.Commands
         {
             if (!supplementsReset) // First call; store a copy of the original values
             {
-                prevList = new List<TSupplementItem>(this.suppList.Count);
+                prevList = new List<SupplementItem>(this.suppList.Count);
                 for (int i = 0; i < this.suppList.Count; i++)
                 {
-                    TSupplementItem newItem = new TSupplementItem();
+                    SupplementItem newItem = new SupplementItem();
                     newItem.Assign(suppList[i]);
                     prevList.Add(newItem);
                 }
             }
-            foreach (TSupplementItem supp in suppList)
+            foreach (SupplementItem supp in suppList)
             {
-                int suppNo = TSupplementLibrary.DefaultSuppConsts.IndexOf(supp.Name);
+                int suppNo = SupplementLibrary.DefaultSuppConsts.IndexOf(supp.Name);
                 if (suppNo >= 0)
                 {
                     string name = supp.Name;
                     double amount = supp.Amount;
-                    supp.Assign(TSupplementLibrary.DefaultSuppConsts[suppNo]);
+                    supp.Assign(SupplementLibrary.DefaultSuppConsts[suppNo]);
                     supp.Name = name;
                     supp.Amount = amount;
                 }
             }
             supplementsReset = true;
-            if (this.parent.curIndex > 0)
-                commandHistory.InvokeModelChanged(this.parent[this.parent.curIndex]);
+            if (this.parent.CurIndex > 0)
+                commandHistory.InvokeModelChanged(this.parent[this.parent.CurIndex]);
         }
 
         /// <summary>Undo the command</summary>
@@ -212,8 +212,8 @@ namespace UserInterface.Commands
                 for (int i = 0; i < this.prevList.Count; i++)
                     suppList[i].Assign(prevList[i]);
             }
-            if (this.parent.curIndex > 0)
-                commandHistory.InvokeModelChanged(this.parent[this.parent.curIndex]);
+            if (this.parent.CurIndex > 0)
+                commandHistory.InvokeModelChanged(this.parent[this.parent.CurIndex]);
         }
     }
 }

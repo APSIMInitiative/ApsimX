@@ -59,7 +59,7 @@ namespace UserInterface.Forms
         private Label label1 = null;
         private Alignment HTMLalign = null;
         private CheckButton checkbutton1 = null;
-        private TreeView listview1 = null;
+        private Gtk.TreeView listview1 = null;
         private Alignment alignment3 = null;
         private Alignment alignment4 = null;
         private Alignment alignment5 = null;
@@ -93,7 +93,7 @@ namespace UserInterface.Forms
             label1 = (Label)builder.GetObject("label1");
             HTMLalign = (Alignment)builder.GetObject("HTMLalign");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
-            listview1 = (TreeView)builder.GetObject("listview1");
+            listview1 = (Gtk.TreeView)builder.GetObject("listview1");
             alignment3 = (Alignment)builder.GetObject("alignment3");
             alignment4 = (Alignment)builder.GetObject("alignment4");
             alignment5 = (Alignment)builder.GetObject("alignment5");

@@ -1,0 +1,233 @@
+pipeline {
+	agent none
+    stages {
+        stage('Build') {
+			agent {
+				label "windows && docker"
+			}
+			steps {
+				bat '''
+					@echo off
+					if not exist ApsimX (
+						git config --system core.longpaths true
+						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+					)
+					
+					cd ApsimX
+					git fetch origin
+					git checkout -- .
+					git clean -xfdq
+					git pull origin master
+					rem I assume the default repo name is origin.
+					git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+					git checkout %sha1%
+					if %errorlevel% neq 0 (
+						exit 1
+					)
+					cd ..
+					if not exist APSIM.Shared (
+						git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+					)
+					git -C APSIM.Shared pull origin master
+					
+					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "ghprbPullId=%ghprbPullId%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+				'''
+				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
+				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true
+			}
+		}
+		stage('RunTests') {
+			parallel {
+				stage('Prototypes') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							) else (
+								cd ApsimX
+								git fetch origin
+								git reset --hard origin/master
+								git clean -fxdq .\\Bin
+								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
+								cd ..
+							)
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							@echo off
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							
+							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Prototypes
+						'''
+					}
+				}
+				stage('UI') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							) else (
+								cd ApsimX
+								git fetch origin
+								git reset --hard origin/master
+								git clean -fxdq .\\Bin
+								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
+								cd ..
+							)
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							@echo off
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests UI
+						'''
+					}
+				}
+				stage('Validation') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							) else (
+								cd ApsimX
+								git fetch origin
+								git reset --hard origin/master
+								git clean -fxdq .\\Bin
+								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
+								cd ..
+							)
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\datetimestamp.txt', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							@echo off
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							set /P DATETIMESTAMP=<ApsimX\\datetimestamp.txt
+							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "ghprbPullId=%ghprbPullId%" -e "ghprbActualCommitAuthor=%ghprbActualCommitAuthor%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+						'''
+					}
+				}
+				stage('Unit Tests') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							) else (
+								cd ApsimX
+								git fetch origin
+								git reset --hard origin/master
+								git clean -fxdq .\\Bin
+								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
+								cd ..
+							)
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							@echo off
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Unit
+						'''
+					}
+				}
+				stage('Run Examples') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							) else (
+								cd ApsimX
+								git fetch origin
+								git reset --hard origin/master
+								git clean -fxdq .\\Bin
+								git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
+								git checkout %sha1%
+								git pull origin master
+								if %errorlevel% neq 0 (
+									exit 1
+								)
+								cd ..
+							)
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'PullRequest', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							@echo off
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Examples
+						'''
+					}
+				}
+			}
+		}
+    }
+}

@@ -32,16 +32,16 @@ namespace Models.PMF.Interfaces
     public interface IArbitration
     {
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        BiomassPoolType CalculateDryMatterDemand();
+        BiomassPoolType GetDryMatterDemand();
 
         /// <summary>Calculate and return dry matter supply (g/m2)</summary>
-        BiomassSupplyType CalculateDryMatterSupply();
+        BiomassSupplyType GetDryMatterSupply();
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        BiomassPoolType CalculateNitrogenDemand();
+        BiomassPoolType GetNitrogenDemand();
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        BiomassSupplyType CalculateNitrogenSupply();
+        BiomassSupplyType GetNitrogenSupply();
 
         /// <summary>Sets the dry matter potential allocation.</summary>
         void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter);

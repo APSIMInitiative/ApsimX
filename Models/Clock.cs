@@ -89,8 +89,6 @@ namespace Models
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
         /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
-        /// <summary>Occurs when [do plant growth].</summary>
-        public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
         /// <summary> Process stock methods in GrazPlan Stock </summary>
@@ -165,6 +163,25 @@ namespace Models
         [XmlIgnore]
         public DateTime Today { get; private set; }
 
+        /// <summary>
+        /// Returns the current fraction of the overall simulation which has been completed
+        /// </summary>
+        [XmlIgnore]
+        public double FractionComplete
+        {
+            get
+            {
+                TimeSpan fullSim = EndDate - StartDate;
+                if (fullSim.Equals(TimeSpan.Zero))
+                    return 1.0;
+                else
+                {
+                    TimeSpan completedSpan = Today - StartDate;
+                    return completedSpan.TotalDays / fullSim.TotalDays;
+                }
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -232,7 +249,7 @@ namespace Models
 
                     if (DoSurfaceOrganicMatterDecomposition != null)
                         DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-                    
+
                     if (DoWaterArbitration != null)
                         DoWaterArbitration.Invoke(this, args);
 
@@ -253,9 +270,6 @@ namespace Models
 
                     if (DoActualPlantGrowth != null)
                         DoActualPlantGrowth.Invoke(this, args);
-
-                    if (DoPlantGrowth != null)
-                        DoPlantGrowth.Invoke(this, args);
 
                     if (DoUpdate != null)
                         DoUpdate.Invoke(this, args);
@@ -334,6 +348,7 @@ namespace Models
 
                     Today = Today.AddDays(1);
                 }
+                Today = EndDate;
                 Summary.WriteMessage(this, "Simulation terminated normally");
             }
 

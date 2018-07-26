@@ -78,7 +78,7 @@ This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225],
         <string>[Oats].Phenology.CurrentPhaseName</string>
         <string>[Oats].Phenology.CurrentStageName</string>
         <string>[Oats].Phenology.DailyVernalisation.Value()</string>
-        <string>[Oats].Phenology.MeanTemp.Value()</string>
+        <string>[Weather].MeanT</string>
         <string>[Oats].Phenology.Photoperiod.Value()</string>
         <string>[Oats].Phenology.Stage</string>
         <string>[Oats].Phenology.ThermalTime.Value()</string>
@@ -200,29 +200,6 @@ FLN = MinLeafNumber + VernalLeaves + PhotoLeaves
 
 Where MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.]]></MemoText>
         </Memo>
-        <DivideFunction>
-          <Name>MeanTemp</Name>
-          <AddFunction>
-            <Name>TempSum</Name>
-            <VariableReference>
-              <Name>MaxT</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Weather].MaxT</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>MinT</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Weather].MinT</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </AddFunction>
-          <Constant>
-            <Name>Two</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>2</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </DivideFunction>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
           <XYPairs>
@@ -3589,7 +3566,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+              <XProperty>[IWeather].MeanT</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NitrogenStressFactor</Name>
@@ -8019,7 +7996,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+              <XProperty>[IWeather].MeanT</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NitrogenStressFactor</Name>
@@ -16359,7 +16336,7 @@ Layer  Depth (cm)
                 <string>[Oats].Phenology.CurrentStageName</string>
                 <string>[Oats].Phenology.DailyVernalisation.Value()</string>
                 <string>[Oats].Phenology.MeanTemp.Value()</string>
-                <string>[Oats].Phenology.Photoperiod.Value()</string>
+                <string>[Weather].MeanT</string>
                 <string>[Oats].Phenology.Stage</string>
                 <string>[Oats].Phenology.ThermalTime.Value()</string>
                 <string>[Oats].Phenology.ThermalTime.Value()  </string>
