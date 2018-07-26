@@ -68,9 +68,6 @@ namespace Models.PMF.Phen
         /// <summary>Occurs when phase is rewound.</summary>
         public event EventHandler PhaseRewind;
 
-        /// <summary>Occurs when [growth stage].</summary>
-        public event NullTypeDelegate GrowthStage;
-
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
 
@@ -85,10 +82,6 @@ namespace Models.PMF.Phen
         /// <summary>The Thermal time accumulated tt following emergence</summary>
         [XmlIgnore]
         public double AccumulatedEmergedTT { get; set; }
-        
-        /// <summary>The fraction biomass removed</summary>
-        [XmlIgnore]
-        public double FractionBiomassRemoved { get; set; }
 
         /// <summary>The emerged</summary>
         [XmlIgnore]
@@ -405,8 +398,6 @@ namespace Models.PMF.Phen
                             Germinated = true;
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
-                        if (GrowthStage != null)
-                            GrowthStage.Invoke();
 
                         // run the next phase with the left over time step from the phase we have just completed
                         FractionOfDayLeftOver = CurrentPhase.DoTimeStep(FractionOfDayLeftOver);
@@ -504,7 +495,6 @@ namespace Models.PMF.Phen
             Germinated = false;
             CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
-            FractionBiomassRemoved = 0;
             foreach (IPhase phase in Phases)
                 phase.ResetPhase();
         }

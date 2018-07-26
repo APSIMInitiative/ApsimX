@@ -70,10 +70,6 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Number of days from sowing to end of this phase.</summary>
-        [XmlIgnore]
-        public int DaysFromSowingToEndPhase { get; set; }
-
         /// <summary>The property of day unused</summary>
         protected double PropOfDayUnused = 0;
         
@@ -111,12 +107,12 @@ namespace Models.PMF.Phen
         /// much tt to pass it on the first day.
         /// </summary>
 
-        public double DoTimeStep(double PropOfDayToUse)
+        public double DoTimeStep(double propOfDayToUse)
         {
 
             if (ThermalTime != null)
             {
-                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
+                _TTForToday = ThermalTime.Value() * propOfDayToUse;
                 if (Stress != null)
                 {
                     _TTForToday *= Stress.Value();
@@ -127,20 +123,13 @@ namespace Models.PMF.Phen
             // Get the Target TT
             double Target = CalcTarget();
 
-            if (DaysFromSowingToEndPhase > 0)
-            {
-                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
-                    PropOfDayUnused = 1.0;
-                else
-                    PropOfDayUnused = 0.0;
-            }
-            else if (TTinPhase > Target)
+            if (TTinPhase > Target)
             {
                 double LeftOverValue = TTinPhase - Target;
                 if (_TTForToday > 0.0)
                 {
                     double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
-                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
+                    PropOfDayUnused = PropOfValueUnused * propOfDayToUse;
                 }
                 else
                     PropOfDayUnused = 1.0;
