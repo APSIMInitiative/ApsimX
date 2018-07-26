@@ -87,7 +87,6 @@ reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-echo Errorlevel after running simulations: %errorlevel%
 if %errorlevel% equ 0 (
 	if "%1"=="%validationsyntax%" (
 		echo Running performance tests collector...
@@ -98,5 +97,4 @@ if %errorlevel% equ 0 (
 	)
 )
 :end
-echo Errorlevel inside docker container: %errorlevel%
 exit %errorlevel%
