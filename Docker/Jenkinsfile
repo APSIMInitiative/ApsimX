@@ -15,12 +15,8 @@ pipeline {
 					dir
 					cd ApsimX
 					git checkout -- .
-					git clean -xfdq
-					git checkout master
+					git clean -fxdq .\\Bin
 					git pull origin master
-					rem I assume the default repo name is origin.
-					git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-					git checkout %sha1%
 					if %errorlevel% neq 0 (
 						exit 1
 					)
@@ -55,9 +51,6 @@ pipeline {
 							cd ApsimX
 							git checkout -- .
 							git clean -fxdq .\\Bin
-							git checkout master
-							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-							git checkout %sha1%
 							git pull origin master
 							if %errorlevel% neq 0 (
 								exit 1
@@ -94,9 +87,6 @@ pipeline {
 							cd ApsimX
 							git checkout -- .
 							git clean -fxdq .\\Bin
-							git checkout master
-							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-							git checkout %sha1%
 							git pull origin master
 							if %errorlevel% neq 0 (
 								exit 1
@@ -131,9 +121,6 @@ pipeline {
 							cd ApsimX
 							git checkout -- .
 							git clean -fxdq .\\Bin
-							git checkout master
-							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-							git checkout %sha1%
 							git pull origin master
 							if %errorlevel% neq 0 (
 								exit 1
@@ -170,9 +157,6 @@ pipeline {
 							cd ApsimX
 							git checkout -- .
 							git clean -fxdq .\\Bin
-							git checkout master
-							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-							git checkout %sha1%
 							git pull origin master
 							if %errorlevel% neq 0 (
 								exit 1
@@ -207,9 +191,6 @@ pipeline {
 							cd ApsimX
 							git checkout -- .
 							git clean -fxdq .\\Bin
-							git checkout master
-							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-							git checkout %sha1%
 							git pull origin master
 							if %errorlevel% neq 0 (
 								exit 1
