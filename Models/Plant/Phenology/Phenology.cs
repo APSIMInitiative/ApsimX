@@ -37,7 +37,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The phases</summary>
         //public IPhase[] Phases { get; private set; }
-        private List<IPhase> Phases = new List<IPhase>();
+        private List<IPhase> phases = new List<IPhase>();
         
         /// <summary>The current phase index</summary>
         private int CurrentPhaseIndex;
@@ -111,7 +111,7 @@ namespace Models.PMF.Phen
                 int PhaseIndex = IndexOfPhase(value);
                 if (PhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
-                CurrentPhase = Phases[PhaseIndex];
+                CurrentPhase = phases[PhaseIndex];
                 Summary.WriteMessage(this, string.Format(this + " has set phase to " + CurrentPhase.Name));
             }
         }
@@ -121,7 +121,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (OnDayOf(CurrentPhase.Start))
+                if (OnStartDayOf(CurrentPhase.Start))
                     return CurrentPhase.Start;
                 else
                     return "?";
@@ -133,7 +133,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return Stage - (int)Stage;
+                return CurrentPhase.FractionComplete;
             }
         }
 
@@ -141,28 +141,16 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public int DaysAfterSowing { get; set; }
 
-        /// <summary>Gets the tt in above ground phase.</summary>
-        public double TTInAboveGroundPhase
-        {
-            get
-            {
-                double TTInPhase = 0.0;
-                for (int i = IndexOfFirstAboveGroundPhase(); i < Phases.Count; i++)
-                    TTInPhase += Phases[i].TTinPhase;
-                return TTInPhase;
-            }
-        }
-
         /// <summary>A utility property to return the current phase.</summary>
         [XmlIgnore]
         public IPhase CurrentPhase
         {
             get
             {
-                if (Phases == null || CurrentPhaseIndex >= Phases.Count)
+                if (phases == null || CurrentPhaseIndex >= phases.Count)
                     return null;
                 else
-                    return Phases[CurrentPhaseIndex];
+                    return phases[CurrentPhaseIndex];
             }
 
             private set
@@ -170,10 +158,10 @@ namespace Models.PMF.Phen
                 string oldPhaseName = CurrentPhase.Name;
                 string stageOnEvent = CurrentPhase.End;
                 //double TTRewound;
-                double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
+                double OldPhaseIndex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
                 bool HarvestCall = false;
-                if (CurrentPhaseIndex == Phases.Count - 1)
+                if (CurrentPhaseIndex == phases.Count - 1)
                     HarvestCall = true;
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
@@ -183,12 +171,12 @@ namespace Models.PMF.Phen
 
                 // If the new phase is a rewind or going ahead more that one phase(comming from a GoToPhase or PhaseSet Function), then reinitialise 
                 // all phases that are being wound back over.
-                if (((CurrentPhaseIndex <= OldPhaseINdex) && HarvestCall == false) || (CurrentPhaseIndex - OldPhaseINdex > 1) || (Phases[CurrentPhaseIndex] is GotoPhase))
+                if (((CurrentPhaseIndex <= OldPhaseIndex) && HarvestCall == false) || (CurrentPhaseIndex - OldPhaseIndex > 1) || (phases[CurrentPhaseIndex] is GotoPhase))
                 {
-                    foreach (IPhase P in Phases)
+                    foreach (IPhase P in phases)
                     {
                         //Work out how much tt was accumulated at the stage we are resetting to and adjust accumulated TT accordingly
-                        if (Phases[CurrentPhaseIndex] is GotoPhase)
+                        if (phases[CurrentPhaseIndex] is GotoPhase)
                         { //Dont rewind thermal time for Goto phase.  Although it is moving phenology back it is a ongoing progression in phenology of the plant so TT accumulates
                         }
                         else if (IndexOfPhase(P.Name) >= CurrentPhaseIndex)
@@ -202,9 +190,9 @@ namespace Models.PMF.Phen
                         if (IndexOfPhase(P.Name) >= CurrentPhaseIndex)
                             P.ResetPhase();
                     }
-                    if (Phases[CurrentPhaseIndex] is GotoPhase)
+                    if (phases[CurrentPhaseIndex] is GotoPhase)
                     {
-                        GotoPhase GotoP = (GotoPhase)Phases[CurrentPhaseIndex];
+                        GotoPhase GotoP = (GotoPhase)phases[CurrentPhaseIndex];
                         CurrentPhaseIndex = IndexOfPhase(GotoP.PhaseNameToGoto);
                         if (CurrentPhaseIndex == -1)
                             throw new Exception("Cannot goto phase: " + GotoP.PhaseNameToGoto + ". Phase not found.");
@@ -231,8 +219,8 @@ namespace Models.PMF.Phen
         /// <summary>Look for a particular phase and return it's index or -1 if not found.</summary>
         public int IndexOfPhase(string Name)
         {
-            for (int P = 0; P < Phases.Count; P++)
-                if (String.Equals(Phases[P].Name, Name, StringComparison.OrdinalIgnoreCase))
+            for (int P = 0; P < phases.Count; P++)
+                if (String.Equals(phases[P].Name, Name, StringComparison.OrdinalIgnoreCase))
                     return P;
             return -1;
         }
@@ -243,8 +231,8 @@ namespace Models.PMF.Phen
             if (NewStage == 0)
                 throw new Exception(this + "Must pass positive stage to set to");
             int SetPhaseIndex = Convert.ToInt32(Math.Floor(NewStage)) - 1;
-            CurrentPhase = Phases[SetPhaseIndex];
-            IPhase Current = Phases[CurrentPhaseIndex];
+            CurrentPhase = phases[SetPhaseIndex];
+            IPhase Current = phases[CurrentPhaseIndex];
             double proportionOfPhase = NewStage - CurrentPhaseIndex - 1;
             Current.FractionComplete = proportionOfPhase;
             if (PhaseRewind != null)
@@ -252,7 +240,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>
-        public bool OnDayOf(String StageName)
+        public bool OnStartDayOf(String StageName)
         {
             bool StageToday = false;
             for (int i = 0; i < CurrentlyOnFirstDayOfPhase.Length; i++)
@@ -271,7 +259,7 @@ namespace Models.PMF.Phen
         /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
         public bool Between(String Start, String End)
         {
-            if (Phases == null)
+            if (phases == null)
                 return false;
 
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
@@ -282,11 +270,11 @@ namespace Models.PMF.Phen
 
             int StartPhaseIndex = -1;
             int EndPhaseIndex = -1;
-            for (int i = 0; i < Phases.Count; i++)
+            for (int i = 0; i < phases.Count; i++)
             {
-                if (Phases[i].Start == Start)
+                if (phases[i].Start == Start)
                     StartPhaseIndex = i;
-                if (Phases[i].End == End)
+                if (phases[i].End == End)
                     EndPhaseIndex = i;
             }
             if (StartPhaseIndex == -1)
@@ -314,7 +302,7 @@ namespace Models.PMF.Phen
             if (StartFractionSt != "")
                 StartFraction = double.Parse(StartFractionSt.ToString(),
                                              System.Globalization.CultureInfo.InvariantCulture);
-            int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
+            int StartPhaseIndex = phases.IndexOf(PhaseStartingWith(Start));
 
             CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
 
@@ -327,7 +315,7 @@ namespace Models.PMF.Phen
         /// <summary>A utility function to return the phenological phase that starts with the specified start stage name.</summary>
         public IPhase PhaseStartingWith(String Start)
         {
-            foreach (IPhase P in Phases)
+            foreach (IPhase P in phases)
                 if (P.Start == Start)
                     return P;
             throw new Exception("Unable to find phase starting with " + Start);
@@ -341,14 +329,10 @@ namespace Models.PMF.Phen
         [EventSubscribe("Loaded")]
         private void OnLoaded(object sender, LoadedEventArgs args)
         {
-            List<IPhase> phases = new List<IPhase>();
-
             foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
             {
                 phases.Add(phase);
             }
-
-            Phases = phases;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -375,29 +359,29 @@ namespace Models.PMF.Phen
                 if (ThermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
                 // If this is the first time through here then setup some variables.
-                if (Phases == null || Phases.Count == 0)
-                    OnSimulationCommencing(null, null);
-
+                
                 if (CurrentlyOnFirstDayOfPhase[0] == "")
                     if (JustInitialised)
                     {
-                        CurrentlyOnFirstDayOfPhase[0] = Phases[0].Start;
+                        CurrentlyOnFirstDayOfPhase[0] = phases[0].Start;
                         JustInitialised = false;
                     }
 
+                // Calculate how much of todays progress will not be consumed by current phase
                 double FractionOfDayLeftOver = CurrentPhase.DoTimeStep(1.0);
 
+                // If it is more than zero then we need to transition phases
                 if (FractionOfDayLeftOver > 0)
                 {
-                    while (FractionOfDayLeftOver > 0)// Transition to the next phase.
+                    while (FractionOfDayLeftOver > 0)// It is possible more than one phase will be passed in a day so keep doing this until complete.
                     {
-                        if (CurrentPhaseIndex + 1 >= Phases.Count)
+                        if (CurrentPhaseIndex + 1 >= phases.Count)
                             throw new Exception("Cannot transition to the next phase. No more phases exist");
 
                         if (Stage >= 1)
                             Germinated = true;
 
-                        CurrentPhase = Phases[CurrentPhaseIndex + 1];
+                        CurrentPhase = phases[CurrentPhaseIndex + 1];
 
                         // run the next phase with the left over time step from the phase we have just completed
                         FractionOfDayLeftOver = CurrentPhase.DoTimeStep(FractionOfDayLeftOver);
@@ -428,8 +412,7 @@ namespace Models.PMF.Phen
             if (sender == Plant)
             {
                 //Jump phenology to the end
-                int EndPhase = Phases.Count;
-                CurrentPhaseName = Phases[EndPhase - 1].Name;
+                CurrentPhaseName = phases[phases.Count - 1].Name;
             }
         }
 
@@ -472,17 +455,7 @@ namespace Models.PMF.Phen
                 return false;
             }
         }
-        
-        /// <summary> /// Find the first phase that is beyond germination i.e. plant is above ground.  /// </summary>
-        private int IndexOfFirstAboveGroundPhase()
-        {
-            int index = Phases.FindIndex(p => p.End == "Germination");
-            if (index == -1)
-                return 0;
-            else
-                return index + 1;
-        }
-        
+                
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
@@ -495,7 +468,7 @@ namespace Models.PMF.Phen
             Germinated = false;
             CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
-            foreach (IPhase phase in Phases)
+            foreach (IPhase phase in phases)
                 phase.ResetPhase();
         }
        
@@ -503,7 +476,7 @@ namespace Models.PMF.Phen
         internal void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("   Phases:");
-            foreach (IPhase P in Phases)
+            foreach (IPhase P in phases)
                 P.WriteSummary(writer);
         }
         
