@@ -31,13 +31,6 @@ set prototypesyntax=Prototypes
 set examplessyntax=Examples
 set validationsyntax=Validation
 
-cd %apsimx%
-nuget restore
-if %errorlevel% neq 0 (
-	exit %errorlevel%
-)
-cd\
-
 if "%1"=="%unitsyntax%" (
 	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %apsimx%\Tests\UnitTests\bin\Debug\UnitTests.dll /noshadow
 	goto :end

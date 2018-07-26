@@ -72,7 +72,8 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq
+							rem Don't cleanup nuget packages for now....this will be a problem in the long run!!
+							git clean -fxdq -e packages
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -118,7 +119,8 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq
+							rem Don't cleanup nuget packages for now....this will be a problem in the long run!!
+							git clean -fxdq -e packages
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -163,7 +165,8 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq
+							rem Don't cleanup nuget packages for now....this will be a problem in the long run!!
+							git clean -fxdq -e packages
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -210,7 +213,8 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq
+							rem Don't cleanup nuget packages for now....this will be a problem in the long run!!
+							git clean -fxdq -e packages
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
@@ -257,7 +261,8 @@ pipeline {
 							)
 							cd ApsimX
 							git checkout -- .
-							git clean -fxdq
+							rem Don't cleanup nuget packages for now....this will be a problem in the long run!!
+							git clean -fxdq -e packages
 							git pull origin master
 							git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 							git checkout %sha1%
