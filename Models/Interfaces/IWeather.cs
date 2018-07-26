@@ -25,6 +25,9 @@ namespace Models.Interfaces
         /// <summary>Gets or sets the minimum temperature (oc)</summary>
         double MinT { get; }
 
+        /// <summary>Mean temperature  /// </summary>
+        double MeanT { get; }
+
         /// <summary>Gets or sets the rainfall (mm)</summary>
         double Rain { get; }
 

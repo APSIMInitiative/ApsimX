@@ -1702,7 +1702,7 @@ namespace Models.GrazPlan
         /// <param name="paddName">Paddock name</param>
         /// <param name="suppKG">The amount of supplement</param>
         /// <param name="supplement">The supplement to use</param>
-        public void PlaceSuppInPadd(string paddName, double suppKG, TSupplement supplement)
+        public void PlaceSuppInPadd(string paddName, double suppKG, FoodSupplement supplement)
         {
             PaddockInfo thePadd;
 

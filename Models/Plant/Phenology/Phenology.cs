@@ -147,8 +147,9 @@ namespace Models.PMF.Phen
         public IFunction ThermalTime = null;
 
         /// <summary>The phases</summary>
-        private List<Phase> Phases;
-
+        [XmlIgnore]
+        //public IPhase[] Phases { get; private set; }
+        private List<IPhase> Phases = new List<IPhase>();
         #endregion
 
         #region States
@@ -205,7 +206,7 @@ namespace Models.PMF.Phen
             CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
             FractionBiomassRemoved = 0;
-            foreach (Phase phase in Phases)
+            foreach (IPhase phase in Phases)
                 phase.ResetPhase();
         }
 
@@ -273,12 +274,14 @@ namespace Models.PMF.Phen
         [EventSubscribe("Loaded")]
         private void OnLoaded(object sender, LoadedEventArgs args)
         {
-            Phases = new List<Phase>();
-            foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
-                Phases.Add(phase);
+            List<IPhase> phases = new List<IPhase>();
 
-       
+            foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
+            {
+                phases.Add(phase);
+            }
 
+            Phases = phases;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -416,12 +419,6 @@ namespace Models.PMF.Phen
                         if (Stage >= 1)
                             Germinated = true;
 
-                        if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
-                        {
-                            Plant.SendEmergingEvent();
-                            Emerged = true;
-                        }
-
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
                         if (GrowthStage != null)
                             GrowthStage.Invoke();
@@ -456,7 +453,7 @@ namespace Models.PMF.Phen
         /// Cannot goto phase:  + GotoP.PhaseNameToGoto + . Phase not found.
         /// </exception>
         [XmlIgnore]
-        public Phase CurrentPhase
+        public IPhase CurrentPhase
         {
             get
             {
@@ -487,7 +484,7 @@ namespace Models.PMF.Phen
                 // all phases that are being wound back over.
                 if (((CurrentPhaseIndex <= OldPhaseINdex)&&HarvestCall==false)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
                 {
-                    foreach (Phase P in Phases)
+                    foreach (IPhase P in Phases)
                     {
                         //Work out how much tt was accumulated at the stage we are resetting to and adjust accumulated TT accordingly
                         if (Phases[CurrentPhaseIndex] is GotoPhase)
@@ -511,8 +508,6 @@ namespace Models.PMF.Phen
                         if (CurrentPhaseIndex == -1)
                             throw new Exception("Cannot goto phase: " + GotoP.PhaseNameToGoto + ". Phase not found.");
                     }
-                    if (CurrentPhase.PhaseParallel != null)
-                        PhaseIndexOffset = CurrentPhaseIndex - IndexOfPhase(CurrentPhase.PhaseParallel);
                 }
                 CurrentPhase.ResetPhase();
                 // Send a PhaseChanged event.
@@ -541,7 +536,7 @@ namespace Models.PMF.Phen
                 throw new Exception(this + "Must pass positive stage to set to");
             int SetPhaseIndex = Convert.ToInt32(Math.Floor(NewStage))-1;
             CurrentPhase = Phases[SetPhaseIndex];
-            Phase Current = Phases[CurrentPhaseIndex];
+            IPhase Current = Phases[CurrentPhaseIndex];
             double proportionOfPhase = NewStage - CurrentPhaseIndex - 1;
             Current.FractionComplete = proportionOfPhase;
             if(PhaseRewind != null)
@@ -637,11 +632,9 @@ namespace Models.PMF.Phen
                 StartFraction = double.Parse(StartFractionSt.ToString(), 
                                              System.Globalization.CultureInfo.InvariantCulture);
             int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
-            //Set the index of the current phase, if it is a parallel phase set the index to that of its parallel
-            if (CurrentPhase.PhaseParallel == null)
-                CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
-            else CurrentPhaseIndex = IndexOfPhase(CurrentPhase.PhaseParallel);
 
+            CurrentPhaseIndex = IndexOfPhase(CurrentPhase.Name);
+            
             if (CurrentPhaseIndex >= StartPhaseIndex)
                 return true;
             else
@@ -655,9 +648,9 @@ namespace Models.PMF.Phen
         /// <param name="Start">The start.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Unable to find phase starting with  + Start</exception>
-        public Phase PhaseStartingWith(String Start)
+        public IPhase PhaseStartingWith(String Start)
         {
-            foreach (Phase P in Phases)
+            foreach (IPhase P in Phases)
                 if (P.Start == Start)
                     return P;
             throw new Exception("Unable to find phase starting with " + Start);
@@ -670,9 +663,9 @@ namespace Models.PMF.Phen
         /// <param name="End">The end.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Unable to find phase ending with  + End</exception>
-        public Phase PhaseEndingWith(String End)
+        public IPhase PhaseEndingWith(String End)
         {
-            foreach (Phase P in Phases)
+            foreach (IPhase P in Phases)
                 if (P.End == End)
                     return P;
             throw new Exception("Unable to find phase ending with " + End);
@@ -683,7 +676,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool IsValidPhase(String Start)
         {
-            foreach (Phase P in Phases)
+            foreach (IPhase P in Phases)
                 if (P.Start == Start)
                     return true;
             return false;
@@ -694,7 +687,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool IsValidPhase2(String PhaseName)
         {
-            foreach (Phase P in Phases)
+            foreach (IPhase P in Phases)
                 if (P.Name == PhaseName)
                     return true;
             return false;
@@ -705,7 +698,7 @@ namespace Models.PMF.Phen
         internal void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("   Phases:");
-            foreach (Phase P in Phases)
+            foreach (IPhase P in Phases)
                 P.WriteSummary(writer);
         }
 
@@ -732,7 +725,7 @@ namespace Models.PMF.Phen
                 double ttRemaining = removeTTPheno;
                 for (int i = Phases.Count - 1; i >= 0; i--)
                 {
-                    Phase Phase = Phases[i];
+                    IPhase Phase = Phases[i];
                     if (Phase.TTinPhase > 0 && !phasesThatWontRewind.Contains(Phase.GetType()))
                     {
                         double ttCurrentPhase = Phase.TTinPhase;
@@ -829,7 +822,7 @@ namespace Models.PMF.Phen
                 tableData.Columns.Add("Phase Name", typeof(string));
 
                 int N = 0;
-                foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                foreach (IModel child in Apsim.Children(this, typeof(IPhase)))
                 {
                     DataRow row;
                     if (N == 0)
@@ -837,7 +830,7 @@ namespace Models.PMF.Phen
                         N++;
                         row = tableData.NewRow();
                         row[0] = N;
-                        row[1] = (child as Phase).Start;
+                        row[1] = (child as IPhase).Start;
                         tableData.Rows.Add(row);
                     }
                     row = tableData.NewRow();
@@ -846,7 +839,7 @@ namespace Models.PMF.Phen
                     N++;
                     row = tableData.NewRow();
                     row[0] = N;
-                    row[1] = (child as Phase).End;
+                    row[1] = (child as IPhase).End;
                     tableData.Rows.Add(row);
                 }
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
@@ -855,12 +848,12 @@ namespace Models.PMF.Phen
 
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
-                foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                foreach (IModel child in Apsim.Children(this, typeof(IPhase)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                    if (child.GetType() != typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
+                    if (child.GetType() != typeof(Memo) && !typeof(IPhase).IsAssignableFrom(child.GetType()))
                         AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }

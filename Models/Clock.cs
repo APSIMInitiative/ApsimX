@@ -163,6 +163,25 @@ namespace Models
         [XmlIgnore]
         public DateTime Today { get; private set; }
 
+        /// <summary>
+        /// Returns the current fraction of the overall simulation which has been completed
+        /// </summary>
+        [XmlIgnore]
+        public double FractionComplete
+        {
+            get
+            {
+                TimeSpan fullSim = EndDate - StartDate;
+                if (fullSim.Equals(TimeSpan.Zero))
+                    return 1.0;
+                else
+                {
+                    TimeSpan completedSpan = Today - StartDate;
+                    return completedSpan.TotalDays / fullSim.TotalDays;
+                }
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -329,6 +348,7 @@ namespace Models
 
                     Today = Today.AddDays(1);
                 }
+                Today = EndDate;
                 Summary.WriteMessage(this, "Simulation terminated normally");
             }
 

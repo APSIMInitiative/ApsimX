@@ -113,6 +113,14 @@ namespace Models
         }
 
         /// <summary>
+        /// Daily Mean temperature (oC)
+        /// </summary>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [Units("°C")]
+        [XmlIgnore]
+        public double MeanT { get { return (MaxT + MinT) / 2; } }
+
+        /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
         [Description("Rainfall (mm)")]        
