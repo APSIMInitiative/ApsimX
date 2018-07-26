@@ -144,7 +144,7 @@ namespace Models.Core
         {
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
-                storage.RevertCheckpoint(checkpointName);asdf
+                storage.RevertCheckpoint(checkpointName);
             return Read(FileName);
         }
 
