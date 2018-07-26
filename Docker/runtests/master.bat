@@ -99,3 +99,4 @@ if %errorlevel% equ 0 (
 )
 :end
 echo Errorlevel inside docker container: %errorlevel%
+exit %errorlevel%
