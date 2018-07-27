@@ -54,60 +54,10 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the value number of days under temporary vernalisation.</summary>
         [XmlIgnore]
-        public double DaysVernalising
-        {
-            get { return DaysVernalising; }
-        }
-        private double DaysVernalising = 0.0;
+        public double DaysVernalising { get; set; }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            if (vernalisingDays == null)
-                throw new ApsimXException(this, "Cannot find VernalisingDays");
-
-            vernalisingRecord = new double[(int)DaysToStabilise.FixedValue];
-            DaysVernalised = 0.0;
-        }
-
-        /// <summary>Trap the DoDailyInitialisation event.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (phenology.Between(StartStage, EndStage))
-                DoVernalisation();
-        }
-
-        /// <summary>Called when [phase changed].</summary>
-        /// <param name="phaseChange">The phase change.</param>
-        /// <param name="sender">Sender plant.</param>
-        [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
-        {
-            if (phaseChange.EventStageName == EndStage)
-                TodaysVernalisation = 0.0;
-
-            if (phaseChange.EventStageName == ResetStage)
-            {
-                DaysVernalised = 0.0;
-                DaysVernalising = 0.0;
-            }
-        }
-        
-
-
+ 
         /// <summary>Compute the vernalisation</summary>
-        /// <remarks>
-        /// This is the sum of days the plant experienced vernalising temperatures minus the
-        /// days experienced at devernalising temperatures, providing that devernalising temperatures
-        /// occured within a given stabilising period. At the end of the stabilising period the
-        /// vernalisation effect is permanent.
-        /// </remarks>
         public void DoVernalisation()
         {
             // get today's vernalisation
@@ -115,8 +65,7 @@ namespace Models.PMF.Phen
             DaysVernalised += TodaysVernalisation;
 
             // get today's devernalisation
-            double todaysDevernalisation = 0.0;
-            todaysDevernalisation = DevernalisingDays.Value();
+            double todaysDevernalisation = DevernalisingDays.Value();
 
             // update the temporary vernalisation record
             int i;
@@ -151,6 +100,36 @@ namespace Models.PMF.Phen
                         todaysDevernalisation = 0.0;
                     }
                 }
+            }
+        }
+
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            if (vernalisingDays == null)
+                throw new ApsimXException(this, "Cannot find VernalisingDays");
+
+            vernalisingRecord = new double[(int)DaysToStabilise.FixedValue];
+            DaysVernalised = 0.0;
+        }
+
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (phenology.Between(StartStage, EndStage))
+                DoVernalisation();
+        }
+
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.EventStageName == EndStage)
+                TodaysVernalisation = 0.0;
+
+            if (phaseChange.EventStageName == ResetStage)
+            {
+                DaysVernalised = 0.0;
+                DaysVernalising = 0.0;
             }
         }
     }
