@@ -25,7 +25,12 @@
     {
         /// <summary>A database connection</summary>
         [NonSerialized]
-        private SQLite connection = null;
+        private IDatabaseConnection connection = null;
+
+        /// <summary>
+        /// Selector for the database type. Set in the constructors.
+        /// </summary>
+        private bool useFirebird;
 
         /// <summary>A List of tables that needs writing.</summary>
         private List<Table> tables = new List<Table>();
@@ -72,12 +77,17 @@
         public string FileName { get; private set; }
 
         /// <summary>Constructor</summary>
-        public DataStore() { }
+        public DataStore()
+        {
+            useFirebird = false;    // select Firebird or SQLite
+        }
 
         /// <summary>Constructor</summary>
         public DataStore(string fileNameToUse)
         {
             FileName = fileNameToUse;
+            if (string.Compare(Path.GetExtension(FileName), ".fdb", true) == 0)
+                useFirebird = true; 
         }
 
         /// <summary>
@@ -792,24 +802,48 @@
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null)
-                    FileName = Path.ChangeExtension(simulations.FileName, ".db");
+                {
+                    if (!useFirebird)
+                        FileName = Path.ChangeExtension(simulations.FileName, ".db");
+                    else
+                        FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
+                }
                 else
                     throw new Exception("Cannot find a filename for the DataStore database.");
             }
 
             Close();
-            connection = new SQLite();
 
-            // TODO: generalise the following
+            if (useFirebird)
+            {
+                connection = new Firebird();
+            }
+            else
+            {
+                connection = new SQLite();
+            }
 
             if (!File.Exists(FileName))
             {
                 connection.OpenDatabase(FileName, readOnly: false);
-                connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
-                connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
-                connection.ExecuteNonQuery("CREATE TABLE _Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
-                connection.ExecuteNonQuery("CREATE TABLE _Messages (CheckpointID INTEGER, ComponentID INTEGER, SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
-                connection.ExecuteNonQuery("CREATE TABLE _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
+                // ## would be great to find a nicer place to describe this. The Firebird and SQLite objects need to remain generic
+                // and not contain Apsim specific table designs, but the separating the 
+                if (useFirebird)
+                {
+                    connection.ExecuteNonQuery("CREATE TABLE _Checkpoints (ID INTEGER PRIMARY KEY ASC, Name TEXT, Version TEXT, Date TEXT)");
+                    connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles (CheckpointID INTEGER, FileName TEXT, Contents BLOB)");
+                    connection.ExecuteNonQuery("CREATE TABLE _Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
+                    connection.ExecuteNonQuery("CREATE TABLE _Messages (CheckpointID INTEGER, ComponentID INTEGER, SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                    connection.ExecuteNonQuery("CREATE TABLE _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
+                }
+                else
+                {
+                    connection.ExecuteNonQuery("CREATE TABLE _Checkpoints(ID INTEGER PRIMARY KEY NOT NULL ASC, Name VARCHAR(50), Version VARCHAR(50), \"Date\" TIMESTAMP)");
+                    connection.ExecuteNonQuery("CREATE TABLE _CheckpointFiles(CheckpointID INTEGER, FileName VARCHAR(50), Contents BLOB BINARY)");
+                    connection.ExecuteNonQuery("CREATE TABLE _Simulations(ID INTEGER PRIMARY KEY NOT NULL ASC, Name VARCHAR(50) COLLATE UNICODE_CI)");
+                    connection.ExecuteNonQuery("CREATE TABLE _Messages(CheckpointID INTEGER, ComponentID INTEGER, SimulationID INTEGER, ComponentName VARCHAR(50), \"Date\" TIMESTAMP, Message VARCHAR(100), MessageType INTEGER)");
+                    connection.ExecuteNonQuery("CREATE TABLE _Units(TableName VARCHAR(50), ColumnHeading VARCHAR(50), Units VARCHAR(15)");
+                }
                 connection.ExecuteNonQuery("INSERT INTO [_Checkpoints] (Name) VALUES (\"Current\")");
                 connection.CloseDatabase();
             }
@@ -821,7 +855,7 @@
             return true;
         }
 
-        /// <summary>Close the SQLite database.</summary>
+        /// <summary>Close the database.</summary>
         private void Close()
         {
             if (connection != null)
@@ -888,12 +922,13 @@
         {
             // Get a list of simulation names that are in the .db but we know nothing about them
             // i.e. they are old and no longer needed.
-            var unknownSimulationNames = simulationIDs.Keys.Where(simName => !knownSimulationNames.Contains(simName));
+            List<string> unknownSimulationNames = simulationIDs.Keys.Where(simName => !knownSimulationNames.Contains(simName)).Cast<string>().ToList();
 
             if (unknownSimulationNames.Count() > 0)
             {
-                // Delete the unknown simulation names from the simulations table.
-                ExecuteDeleteQuery("DELETE FROM _Simulations WHERE [Name] IN (", unknownSimulationNames, ")");
+                unknownSimulationNames = unknownSimulationNames.ConvertAll(s=> s.ToUpper());
+                // Delete the unknown simulation names from the simulations table. Case insensitive check.
+                ExecuteDeleteQuery("DELETE FROM _Simulations WHERE UPPER([Name]) IN (", unknownSimulationNames, ")");
 
                 // Delete all data for simulations we know nothing about - even from checkpoints
                 foreach (Table table in tables)
