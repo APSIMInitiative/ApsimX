@@ -26,9 +26,6 @@ namespace Models.PMF.Phen
         Plant Plant = null;
 
         [Link]
-        ISummary summary = null;
-
-        [Link]
         Phenology phenology = null;
 
         [Link]
@@ -36,10 +33,6 @@ namespace Models.PMF.Phen
         /// <summary>The plant</summary>
         [Link]
         Plant plant = null;
-
-        /// <summary>Number of days from sowing to end of this phase.</summary>
-        [XmlIgnore]
-        public int DaysFromSowingToEndPhase { get; set; }
 
         /// <summary>fraction of bud burst in relation to bud number.</summary>
         [Link]
@@ -66,14 +59,8 @@ namespace Models.PMF.Phen
             // Get the Target TT
             double Target = CalcTarget();
             structure.PrimaryBudNo = plant.SowingData.BudNumber;
-            if (DaysFromSowingToEndPhase > 0)
-            {
-                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
-                    PropOfDayUnused = 1.0;
-                else
-                    PropOfDayUnused = 0.0;
-            }
-            else if (TTinPhase > Target)
+
+            if (TTinPhase > Target)
             {
                 double LeftOverValue = TTinPhase - Target;
                 if (_TTForToday > 0.0)
@@ -154,16 +141,6 @@ namespace Models.PMF.Phen
             writer.WriteLine("      " + Name);
             if (Target != null)
                 writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            if (DaysFromSowingToEndPhase > 0)
-                summary.WriteMessage(this, "FIXED number of days from sowing to " + Name + " = " + DaysFromSowingToEndPhase);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

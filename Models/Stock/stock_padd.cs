@@ -1137,7 +1137,6 @@ namespace Models.GrazPlan
                         removal.FractionDeadToRemove = prpnToRemove;
                         removal.FractionLiveToRemove = prpnToRemove;
                         organ.RemoveBiomass("Graze", removal);
-                        ((IPlant)this.ForageObj).BiomassRemovalComplete(prpnToRemove);
                     }
                 }
                 
