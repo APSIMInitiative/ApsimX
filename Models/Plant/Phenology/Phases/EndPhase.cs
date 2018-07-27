@@ -13,9 +13,8 @@ namespace Models.PMF.Phen
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class EndPhase : Model, IPhase
     {
-        /// <summary>The thermal time</summary>
         [Link]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        private Phenology phenology = null;
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -34,7 +33,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get { return ThermalTime.Value(); } }
+        public double TTForToday { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
         [XmlIgnore]
@@ -44,31 +43,24 @@ namespace Models.PMF.Phen
             set { throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it"); }
         }
 
-        //6. Public methode
+        //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
         public double DoTimeStep(double PropOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value();
+            TTForToday = phenology.ThermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForToday;
             return 0;
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase() { TTinPhase = 0; }
+        public void ResetPhase()  { TTinPhase += 0; }
+        
 
         /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer)
-        { writer.WriteLine("      " + Name); }
+        public void WriteSummary(TextWriter writer)  { writer.WriteLine("      " + Name); }
         
-        //7. Private methods
-        //-----------------------------------------------------------------------------------------------------------------
-        
-        /// <summary>Called when [simulation commencing].</summary>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
     }
 }
 

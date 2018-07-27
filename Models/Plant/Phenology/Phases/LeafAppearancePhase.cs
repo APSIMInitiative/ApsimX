@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
-using Models.Functions;
 using Models.PMF.Struct;
 using System.IO;
+using Models.Interfaces;
 
 namespace Models.PMF.Phen
 {
@@ -19,14 +19,10 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        Leaf Leaf = null;
+        Leaf leaf = null;
 
         [Link]
-        Structure Structure = null;
-
-        [Link]
-        private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
+        Structure structure = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -48,7 +44,8 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Gets the tt for today.</summary>
-        public double TTForToday { get { return ThermalTime.Value(); } }
+        [XmlIgnore]
+        public double TTForToday { get; set; }
         
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -61,7 +58,7 @@ namespace Models.PMF.Phen
             get
             {
                 double F = 0;
-                F = (Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
+                F = (leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
@@ -72,22 +69,24 @@ namespace Models.PMF.Phen
             }
         }
 
-        //6. Public methode
+        //6. Public method
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
         public double DoTimeStep(double PropOfDayToUse)
         {
+            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForToday;
             if (First)
             {
-                LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                TargetLeafForCompletion = Structure.FinalLeafNumber.Value()  - LeafNoAtStart;
+                LeafNoAtStart = leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion;
+                TargetLeafForCompletion = structure.FinalLeafNumber.Value()  - LeafNoAtStart;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (Leaf.InitialisedCohortNo))
+            if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
                     return 0.00001;
                 else
                     return 0;

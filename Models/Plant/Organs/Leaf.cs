@@ -432,7 +432,7 @@ namespace Models.PMF.Organs
         IFunction FRGRFunction = null;
         /// <summary>The thermal time</summary>
         [Link]
-        IFunction ThermalTime = null;
+        public IFunction ThermalTime = null;
         /// <summary>The extinction coeff</summary>
         [Link]
         IFunction ExtinctionCoeff = null;

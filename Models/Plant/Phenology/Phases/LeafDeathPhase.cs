@@ -21,15 +21,10 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        private Leaf Leaf = null;
+        private Leaf leaf = null;
 
         [Link]
-        Structure Structure = null;
-
-        /// <summary>The thermal time</summary>
-        [Link]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
+        private Structure structure = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -54,7 +49,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Leaf.DeadCohortNo - DeadNodeNoAtStart) / (Structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
+                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return F;
@@ -66,7 +61,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Gets the tt for today.</summary>
-        public double TTForToday { get { return ThermalTime.Value(); } }
+        public double TTForToday { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
@@ -74,21 +69,22 @@ namespace Models.PMF.Phen
         public double TTinPhase { get; set; }
 
 
-        //6. Public methode
+        //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
         public double DoTimeStep(double PropOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
-            
+            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForToday;
+
             if (First)
             {
-                DeadNodeNoAtStart = Leaf.DeadCohortNo;
+                DeadNodeNoAtStart = leaf.DeadCohortNo;
                 First = false;
             }
 
-            if ((Leaf.DeadCohortNo >= Structure.FinalLeafNumber.Value()) || (Leaf.CohortsInitialised == false))
+            if ((leaf.DeadCohortNo >= structure.FinalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
                 return 0.00001;
             else
                 return 0;
@@ -104,11 +100,8 @@ namespace Models.PMF.Phen
 
         /// <summary>Writes the summary.</summary>
         /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-        }
-      
+        public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }
+              
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)

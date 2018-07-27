@@ -29,11 +29,6 @@ namespace Models.PMF.Phen
         [Link]
         private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
-        /// <summary>The stress</summary>
-        [Link(IsOptional = true)]
-        public IFunction Stress = null;  //Fixme This should be calculated in the progression function not in this class.  And it shouldnt' be called Stress
-
-       
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -73,15 +68,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday
-        {
-            get
-            {
-                if (ThermalTime == null)
-                    return 0;
-                return ThermalTime.Value();
-            }
-        }
+        public double TTForToday { get; set; }
 
 
         //6. Public methode
@@ -92,12 +79,8 @@ namespace Models.PMF.Phen
         /// </summary>
         public double DoTimeStep(double PropOfDayToUse)
         {
-            double tTForToday = ThermalTime.Value() * PropOfDayToUse;
-            if (Stress != null)
-            {
-                tTForToday *= Stress.Value();
-            }
-            TTinPhase += tTForToday;
+            TTForToday = ThermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForToday;
 
             // Get the Target TT
             double Target = CalcTarget();
@@ -106,17 +89,15 @@ namespace Models.PMF.Phen
             double PropOfDayUnused = 0;
             if (TTinPhase > Target)
             {
-                double LeftOverValue = TTinPhase - Target;
-                if (tTForToday > 0.0)
+                if (TTForToday > 0.0)
                 {
-                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
+                    double PropOfValueUnused = (TTinPhase - Target) / ThermalTime.Value();
                     PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
                 }
                 else
                     PropOfDayUnused = 1.0;
                 TTinPhase = Target;
             }
-
             return PropOfDayUnused;
         }
 
@@ -126,11 +107,8 @@ namespace Models.PMF.Phen
         { ResetPhase(); }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase()
-        {
-            TTinPhase = 0;
-        }
-
+        public void ResetPhase() { TTinPhase = 0; }
+        
         /// <summary>Writes the summary.</summary>
         public void WriteSummary(TextWriter writer)
         {
@@ -167,9 +145,6 @@ namespace Models.PMF.Phen
 
                 // get description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                if (Stress != null)
-                    tags.Add(new AutoDocumentation.Paragraph("Development is slowed in this phase by multiplying <i>ThermalTime</i> by the value of the <i>Stress</i> function.", indent));
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))

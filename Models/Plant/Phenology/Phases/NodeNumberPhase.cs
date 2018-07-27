@@ -21,16 +21,11 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        Structure Structure = null;
+        Structure structure = null;
 
         [Link]
         private IFunction CompletionNodeNumber = null;
 
-        /// <summary>The thermal time</summary>
-        [Link]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
-        
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -59,7 +54,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Structure.LeafTipsAppeared - NodeNoAtStart) / (CompletionNodeNumber.Value() - NodeNoAtStart);
+                double F = (structure.LeafTipsAppeared - NodeNoAtStart) / (CompletionNodeNumber.Value() - NodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
@@ -72,9 +67,8 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday
-        { get { return ThermalTime.Value(); } }
-        
+        public double TTForToday { get; set; }
+
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
         public double TTinPhase { get; set; }
@@ -85,17 +79,18 @@ namespace Models.PMF.Phen
         /// <summary>Do our timestep development</summary>
         public double DoTimeStep(double PropOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
+            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForToday;
 
             if (First)
             {
-                NodeNoAtStart = Structure.LeafTipsAppeared;
+                NodeNoAtStart = structure.LeafTipsAppeared;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Structure.LeafTipsAppeared >= CompletionNodeNumber.Value())
+            if (structure.LeafTipsAppeared >= CompletionNodeNumber.Value())
                 return 0.00001;
             else
                 return 0;
@@ -111,8 +106,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Writes the summary.</summary>
-        public void WriteSummary(TextWriter writer)
-        { writer.WriteLine("      " + Name); }
+        public void WriteSummary(TextWriter writer)  { writer.WriteLine("      " + Name); }
 
 
         //7. Private methods
@@ -120,8 +114,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e)  { ResetPhase(); }
         
         
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

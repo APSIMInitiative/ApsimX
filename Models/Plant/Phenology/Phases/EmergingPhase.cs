@@ -24,9 +24,6 @@ namespace Models.PMF.Phen
         [Link]
         Phenology phenology = null;
 
-        [Link]
-        private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
         //3. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -79,7 +76,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Gets the tt for today.</summary>
-        public double TTForToday { get { return ThermalTime.Value(); } }
+        public double TTForToday { get; set; } 
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
@@ -93,7 +90,8 @@ namespace Models.PMF.Phen
         /// the phenology class knows to progress to the next phase and how much tt to pass it on the first day. </summary>
         public double DoTimeStep(double propOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value();
+            TTForToday = phenology.ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForToday;
 
             // Get the Target TT
             double Target = CalcTarget();
@@ -101,9 +99,9 @@ namespace Models.PMF.Phen
             double PropOfDayUnused = 0;
             if (TTinPhase > Target)
             {
-                if (ThermalTime.Value() > 0.0)
+                if (TTForToday > 0.0)
                 {
-                    double PropOfValueUnused = (TTinPhase - Target) / ThermalTime.Value();
+                    double PropOfValueUnused = (TTinPhase - Target) / TTForToday;
                     PropOfDayUnused = PropOfValueUnused * propOfDayToUse;
                 }
                 else
@@ -121,11 +119,8 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase()
-        {
-            TTinPhase = 0;
-        }
-
+        public virtual void ResetPhase() { TTinPhase = 0; }
+        
         /// <summary>Writes the summary.</summary>
         /// <param name="writer">The writer.</param>
         public void WriteSummary(TextWriter writer)

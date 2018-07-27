@@ -25,10 +25,7 @@ namespace Models.PMF.Phen
         [Link]
         private Phenology phenology = null;
 
-        [Link]
-        private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
         
-
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -48,7 +45,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get { return ThermalTime.Value(); } }
+        public double TTForToday { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -74,6 +71,9 @@ namespace Models.PMF.Phen
         /// <summary> Do our timestep development </summary>
         public double DoTimeStep(double PropOfDayToUse)
         {
+            TTForToday = phenology.ThermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForToday;
+
             bool CanGerminate = true;
             if (Soil != null)
             {
@@ -87,11 +87,8 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase()
-        {
-            TTinPhase = 0;
-        }
-
+        public virtual void ResetPhase() { TTinPhase = 0; }
+        
         /// <summary>Writes the summary.</summary>
         public void WriteSummary(TextWriter writer)
         {
