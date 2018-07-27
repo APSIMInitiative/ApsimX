@@ -10,123 +10,46 @@ namespace Models.PMF.Phen
     /// <summary>
     /// It uses a <i>ThermalTime Target</i> to determine the duration between development <i>Stages</i>.
     ///   <i>ThermalTime</i> is accumulated until the <i>Target</i> is met and remaining <i>ThermalTime</i> is forwarded to the next phase.
-    /// 
     /// </summary>
-    /// \param Target The thermal time target in this phase.
-    /// <remarks>
-    /// Generic phase increments daily thermal time accumulated in this phase
-    /// to met the \p Target.
-    /// The remainder thermal time will pass into the first day of 
-    /// next phase by \ref Models.PMF.Phen.Phenology "Phenology" 
-    /// function if the phase target is met today.
-    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class GenericPhase : Model, IPhase, ICustomDocumentation
     {
-        [Link(IsOptional=true)]
-        private IFunction Target = null;
+
+        // 1. Links
+        //----------------------------------------------------------------------------------------------------------------
 
         [Link]
         Phenology phenology = null;
+
+        [Link]
+        private IFunction Target = null;
+
+        [Link]
+        private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+
+        /// <summary>The stress</summary>
+        [Link(IsOptional = true)]
+        public IFunction Stress = null;  //Fixme This should be calculated in the progression function not in this class.  And it shouldnt' be called Stress
+
+       
+        //5. Public properties
+        //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
 
         /// <summary>The end</summary>
-        [Models.Core.Description("End")]
+        [Description("End")]
         public string End { get; set; }
 
-        /// <summary>The thermal time</summary>
-        [Link(IsOptional = true)]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
-        /// <summary>The stress</summary>
-        [Link(IsOptional = true)]
-        public IFunction Stress = null;
-
-        /// <summary>The _ tt for today</summary>
-        protected double _TTForToday = 0;
-
         /// <summary>Gets the t tin phase.</summary>
-        /// <value>The t tin phase.</value>
         [XmlIgnore]
         public double TTinPhase { get; set; }
-
-        /// <summary>Adds the specified DLT_TT.</summary>
-        public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
-
-        /// <summary>The property of day unused</summary>
-        protected double PropOfDayUnused = 0;
-
-        /// <summary>
-        /// This function increments thermal time accumulated in each phase 
-        /// and returns a non-zero value if the phase target is met today so
-        /// the phenology class knows to progress to the next phase and how
-        /// much tt to pass it on the first day.
-        /// </summary>
-        public double DoTimeStep(double PropOfDayToUse)
-        {
-
-            if (ThermalTime != null)
-            {
-                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
-                if (Stress != null)
-                {
-                    _TTForToday *= Stress.Value();
-                }
-                TTinPhase += _TTForToday;
-            }
-
-            // Get the Target TT
-            double Target = CalcTarget();
-
-            if (TTinPhase > Target)
-            {
-                double LeftOverValue = TTinPhase - Target;
-                if (_TTForToday > 0.0)
-                {
-                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
-                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
-                }
-                else
-                    PropOfDayUnused = 1.0;
-                TTinPhase = Target;
-            }
-
-            return PropOfDayUnused;
-        }
-
-        /// <summary>
-        /// Return the target to caller. Can be overridden by derived classes.
-        /// </summary>
-        private double CalcTarget()
-        {
-            double retVAL = 0;
-            if (phenology != null)
-            {
-                if (Target == null)
-                    throw new Exception("Cannot find target for phase: " + Name);
-                retVAL = Target.Value();
-            }
-            return retVAL;
-        }
-        /// <summary>Return proportion of TT unused</summary>
-        /// <param name="PropOfDayToUse">The property of day to use.</param>
-        /// <returns></returns>
-        public double AddTT(double PropOfDayToUse)
-        {
-            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
-            double AmountUnusedTT = TTinPhase - CalcTarget();
-            if (AmountUnusedTT > 0)
-                return AmountUnusedTT / ThermalTime.Value();
-            return 0;
-        }
-        /// <summary>
-        /// Return a fraction of phase complete.
-        /// </summary>
+        
+        /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
         public double FractionComplete
         {
@@ -149,7 +72,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Gets the tt for today.</summary>
-        /// <value>The tt for today.</value>
+        [XmlIgnore]
         public double TTForToday
         {
             get
@@ -160,17 +83,44 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Writes the summary.</summary>
-        public void WriteSummary(TextWriter writer)
+
+        //6. Public methode
+        //-----------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
+        /// the phenology class knows to progress to the next phase and how much tt to pass it on the first day.
+        /// </summary>
+        public double DoTimeStep(double PropOfDayToUse)
         {
-            writer.WriteLine("      " + Name);
-            if (Target != null)
-                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
+            double tTForToday = ThermalTime.Value() * PropOfDayToUse;
+            if (Stress != null)
+            {
+                tTForToday *= Stress.Value();
+            }
+            TTinPhase += tTForToday;
+
+            // Get the Target TT
+            double Target = CalcTarget();
+
+            // Calculte proportion of day unused.  If greater than zero this triggers transition to next phase
+            double PropOfDayUnused = 0;
+            if (TTinPhase > Target)
+            {
+                double LeftOverValue = TTinPhase - Target;
+                if (tTForToday > 0.0)
+                {
+                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
+                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
+                }
+                else
+                    PropOfDayUnused = 1.0;
+                TTinPhase = Target;
+            }
+
+            return PropOfDayUnused;
         }
-        
+
         /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         { ResetPhase(); }
@@ -178,15 +128,33 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            _TTForToday = 0;
             TTinPhase = 0;
-            PropOfDayUnused = 0;
         }
 
+        /// <summary>Writes the summary.</summary>
+        public void WriteSummary(TextWriter writer)
+        {
+            writer.WriteLine("      " + Name);
+            if (Target != null)
+                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
+        }
+
+        //7. Private methode
+        //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary> Return the target to caller. Can be overridden by derived classes. </summary>
+        private double CalcTarget()
+        {
+            double retVAL = 0;
+            if (phenology != null)
+            {
+                retVAL = Target.Value();
+            }
+            return retVAL;
+        }
+
+        
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
