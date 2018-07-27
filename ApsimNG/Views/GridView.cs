@@ -475,9 +475,8 @@
             splitter = (HPaned)builder.GetObject("hpaned1");
             _mainWidget = hbox1;
             Gridview.Model = gridmodel;
-            Gridview.Selection.Mode = SelectionMode.Multiple;
             FixedColview.Model = gridmodel;
-            FixedColview.Selection.Mode = SelectionMode.Multiple;
+            FixedColview.Selection.Mode = SelectionMode.None;
             popupMenu.AttachToWidget(Gridview, null);
             AddContextActionWithAccel("Copy", OnCopyToClipboard, "Ctrl+C");
             AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
@@ -2588,7 +2587,7 @@
 
             TreePath path;
             TreeViewColumn column;
-            Gridview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
+            view.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
             if (e.Event.Button == 1)
             {
                 if (path != null && column != null)
@@ -2597,21 +2596,21 @@
                     {
                         if ((e.Event.State & Gdk.ModifierType.ShiftMask) != 0)
                         {
-                            selectionColMax = Array.IndexOf(Gridview.Columns, column);
+                            selectionColMax = Array.IndexOf(view.Columns, column);
                             selectionRowMax = path.Indices[0];
                             e.RetVal = true;
-                            Gridview.QueueDraw();
+                            view.QueueDraw();
                         }
                         else
                         {
-                            selectedCellColumnIndex = Array.IndexOf(Gridview.Columns, column);
+                            selectedCellColumnIndex = Array.IndexOf(view.Columns, column);
                             selectedCellRowIndex = path.Indices[0];
                         }
 
                         if (e.Event.Type == Gdk.EventType.TwoButtonPress)
                         {
                             while (GLib.MainContext.Iteration()) ;
-                            Gridview.SetCursor(path, Gridview.Columns[selectedCellColumnIndex], true);
+                            view.SetCursor(path, view.Columns[selectedCellColumnIndex], true);
                             userEditingCell = true;
                             e.RetVal = true;
                         }
