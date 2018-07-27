@@ -36,10 +36,8 @@ set examplessyntax=Examples
 set validationsyntax=Validation
 
 if "%1"=="%unitsyntax%" (
-	dir %bin%
-	dir %apsimx%\packages\NUnit.Runners.2.6.3\tools
 	echo Running Unit Tests...
-	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %bin%\UnitTests.dll /noshadow
+	call %apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %bin%\UnitTests.dll /noshadow
 	goto :end
 )
 
