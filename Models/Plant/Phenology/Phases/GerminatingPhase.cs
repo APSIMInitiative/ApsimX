@@ -26,12 +26,6 @@ namespace Models.PMF.Phen
         Soils.Soil Soil = null;
 
         [Link]
-        ISummary summary = null;
-
-        [Link]
-        Phenology phenology = null;
-
-        [Link]
         private Plant Plant = null;
 
         /// <summary>The start</summary>
@@ -84,10 +78,6 @@ namespace Models.PMF.Phen
         /// </summary>
         private int SowLayer = 0;
 
-        /// <summary>Number of days from sowing to end of this phase.</summary>
-        [XmlIgnore]
-        public int DaysFromSowingToEndPhase { get; set; }
-
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -108,8 +98,6 @@ namespace Models.PMF.Phen
                     layerfound = true;
                 }
             }
-            if (DaysFromSowingToEndPhase > 0)
-                summary.WriteMessage(this, "FIXED number of days from sowing to " + Name + " = " + DaysFromSowingToEndPhase);
         }
         /// <summary>
         /// Do our timestep development
@@ -119,18 +107,13 @@ namespace Models.PMF.Phen
             bool CanGerminate = true;
             if (Soil != null)
             {
-                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer];
+                CanGerminate = !Phenology.OnStartDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer];
             }
 
-            if (DaysFromSowingToEndPhase > 0)
-            {
-                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
-                    return 0.999;
-            }
-            else if (CanGerminate)
+            if (CanGerminate)
                 return 0.999;
-
-            return 0;
+            else
+                return 0;
         }
 
         /// <summary>

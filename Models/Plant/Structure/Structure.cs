@@ -277,7 +277,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Phenology != null && Phenology.OnDayOf("Emergence"))
+            if (Phenology != null && Phenology.OnStartDayOf("Emergence"))
                      LeafTipsAppeared = 1.0;
         }
 
