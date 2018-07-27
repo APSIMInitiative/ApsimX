@@ -265,7 +265,11 @@
                 {
                     // Add new rows
                     for (int i = RowCount; i < value; i++)
+                    {
                         gridmodel.Append(); // Will this suffice?
+                        if (DataSource != null)
+                            DataSource.Rows.Add(DataSource.NewRow());
+                    }
                 }
                 else if (value < RowCount)
                 {
