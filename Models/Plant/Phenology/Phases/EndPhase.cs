@@ -55,7 +55,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase()  { TTinPhase += 0; }
+        public void ResetPhase()  { TTinPhase = 0; }
         
 
         /// <summary>Writes the summary.</summary>
