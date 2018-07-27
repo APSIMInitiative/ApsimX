@@ -56,7 +56,6 @@ namespace UnitTests
                                                                         "..",
                                                                         "..",
                                                                         "..",
-                                                                        "..",
                                                                         "ApsimNG",
                                                                         "Resources",
                                                                         "Toolboxes",
