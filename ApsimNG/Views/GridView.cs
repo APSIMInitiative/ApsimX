@@ -514,6 +514,13 @@
 
             int rowIndex = path.Indices[0];
             int colIndex = Array.IndexOf(Gridview.Columns, column);
+            // If we've clicked on the bottom row of populated data, all cells 
+            // below the current cell will also be selected. To overcome this,
+            // we add a new row to the datasource. Not a great solution, but 
+            // it works.
+            if (rowIndex >= DataSource.Rows.Count - 1)
+                DataSource.Rows.Add(DataSource.NewRow());
+            
             selectedCellRowIndex = rowIndex;
             selectedCellColumnIndex = colIndex;
             selectionColMax = -1;
