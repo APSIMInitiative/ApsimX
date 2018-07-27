@@ -39,9 +39,6 @@ namespace Models.PMF.Phen
         /// <summary> Write summary to file each time a phase completes  /// </summary>
         void WriteSummary(TextWriter writer);
 
-        /// <summary> Adds the specified DLT_TT./// </summary>
-        void Add(double dlt_tt);
-
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         double TTinPhase { get; set; }
