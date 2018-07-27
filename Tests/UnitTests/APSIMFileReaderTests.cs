@@ -54,8 +54,6 @@ namespace UnitTests
         {
             string toolboxFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                                                         "..",
-                                                                        "..",
-                                                                        "..",
                                                                         "ApsimNG",
                                                                         "Resources",
                                                                         "Toolboxes",
