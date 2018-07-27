@@ -17,58 +17,38 @@ namespace Models.PMF.Phen
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafDeathPhase : Model, IPhase
     {
-        /// <summary>The leaf</summary>
+        // 1. Links
+        //----------------------------------------------------------------------------------------------------------------
+
         [Link]
         private Leaf Leaf = null;
 
-        /// <summary>The structure</summary>
         [Link]
         Structure Structure = null;
 
-        /// <summary>The dead node no at start</summary>
+        /// <summary>The thermal time</summary>
+        [Link]
+        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+
+
+        //2. Private and protected fields
+        //-----------------------------------------------------------------------------------------------------------------
         private double DeadNodeNoAtStart = 0;
-        /// <summary>The first</summary>
         private bool First = true;
 
-        /// <summary>Resets the phase.</summary>
-        public void ResetPhase()
-        {
-            _TTForToday = 0;
-            TTinPhase = 0;
-            PropOfDayUnused = 0;
-            DeadNodeNoAtStart = 0;
-            First = true;
-        }
-        /// <summary>Do our timestep development</summary>
-        /// <param name="PropOfDayToUse">The property of day to use.</param>
-        /// <returns></returns>
-        public double DoTimeStep(double PropOfDayToUse)
-        {
-            // Calculate the TT for today and Accumulate.      
-            if (ThermalTime != null)
-            {
-                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
-                if (Stress != null)
-                {
-                    _TTForToday *= Stress.Value();
-                }
-                TTinPhase += _TTForToday;
-            }
 
-            if (First)
-            {
-                DeadNodeNoAtStart = Leaf.DeadCohortNo;
-                First = false;
-            }
+        //5. Public properties
+        //-----------------------------------------------------------------------------------------------------------------
+  
+        /// <summary>The start</summary>
+        [Description("Start")]
+        public string Start { get; set; }
 
-            if ((Leaf.DeadCohortNo >= Structure.FinalLeafNumber.Value()) || (Leaf.CohortsInitialised == false))
-                return 0.00001;
-            else
-                return 0;
-        }
+        /// <summary>The end</summary>
+        [Description("End")]
+        public string End { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
-        /// <value>The fraction complete.</value>
         [XmlIgnore]
         public double FractionComplete
         {
@@ -81,73 +61,46 @@ namespace Models.PMF.Phen
             }
             set
             {
-                throw new Exception("Not possible to set phenology into "+ this + " phase (at least not at the moment because there is no code to do it");
+                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
             }
         }
-
-        /// <summary>The start</summary>
-        [Description("Start")]
-        public string Start { get; set; }
-
-        /// <summary>The end</summary>
-        [Models.Core.Description("End")]
-        public string End { get; set; }
-
-        /// <summary>The phenology</summary>
-        [Link]
-        protected Phenology Phenology = null;
-
-        /// <summary>The thermal time</summary>
-        [Link(IsOptional = true)]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
-        /// <summary>The stress</summary>
-        [Link(IsOptional = true)]
-        public IFunction Stress = null;
-
-        /// <summary>The property of day unused</summary>
-        protected double PropOfDayUnused = 0;
-        /// <summary>The _ tt for today</summary>
-        protected double _TTForToday = 0;
 
         /// <summary>Gets the tt for today.</summary>
-        /// <value>The tt for today.</value>
-        public double TTForToday
-        {
-            get
-            {
-                if (ThermalTime == null)
-                    return 0;
-                return ThermalTime.Value();
-            }
-        }
+        public double TTForToday { get { return ThermalTime.Value(); } }
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
-        // Return proportion of TT unused
-        /// <summary>Adds the tt.</summary>
-        /// <param name="PropOfDayToUse">The property of day to use.</param>
-        /// <returns></returns>
-        virtual public double AddTT(double PropOfDayToUse)
+
+        //6. Public methode
+        //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Do our timestep development</summary>
+        public double DoTimeStep(double PropOfDayToUse)
         {
             TTinPhase += ThermalTime.Value() * PropOfDayToUse;
-            return 0;
+            
+            if (First)
+            {
+                DeadNodeNoAtStart = Leaf.DeadCohortNo;
+                First = false;
+            }
+
+            if ((Leaf.DeadCohortNo >= Structure.FinalLeafNumber.Value()) || (Leaf.CohortsInitialised == false))
+                return 0.00001;
+            else
+                return 0;
         }
-        /// <summary>Adds the specified DLT_TT.</summary>
-        /// <param name="dlt_tt">The DLT_TT.</param>
-        virtual public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
-
-
+        /// <summary>Resets the phase.</summary>
+        public void ResetPhase()
+        {
+            TTinPhase = 0;
+            DeadNodeNoAtStart = 0;
+            First = true;
+        }
 
         /// <summary>Writes the summary.</summary>
         /// <param name="writer">The writer.</param>
@@ -155,7 +108,11 @@ namespace Models.PMF.Phen
         {
             writer.WriteLine("      " + Name);
         }
-
+      
+        /// <summary>Called when [simulation commencing].</summary>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        { ResetPhase(); }
     }
 }
 
