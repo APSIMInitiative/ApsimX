@@ -71,6 +71,7 @@
           <string>sum([Soil].SoilWater.SWmm[2:6]) as SW110</string>
           <string>sum([Soil].SoilWater.SWmm[7:11]) as SW210</string>
           <string>sum([Soil].SoilWater.SWmm[12:16]) as SW310</string>
+          <string>[Soil].Swim3.psi</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -249,65 +250,25 @@
             <double>0.48</double>
             <double>0.48</double>
           </SAT>
+          <KS>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+          </KS>
         </Water>
-        <SoilWater>
-          <Name>SoilWater</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <SummerDate>1-Nov</SummerDate>
-          <SummerU>9</SummerU>
-          <SummerCona>5</SummerCona>
-          <WinterDate>1-Apr</WinterDate>
-          <WinterU>9</WinterU>
-          <WinterCona>5</WinterCona>
-          <DiffusConst>40</DiffusConst>
-          <DiffusSlope>16</DiffusSlope>
-          <Salb>0.13</Salb>
-          <CN2Bare>72</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <slope>NaN</slope>
-          <discharge_width>NaN</discharge_width>
-          <catchment_area>NaN</catchment_area>
-          <max_pond>0</max_pond>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-          </Thickness>
-          <SWCON>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-          </SWCON>
-          <ResidueInterception>0</ResidueInterception>
-        </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -604,6 +565,112 @@
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
         </CERESSoilTemperature>
+        <Swim3>
+          <Name>Swim3</Name>
+          <Model xsi:type="SwimSoluteParameters">
+            <Name>SwimSoluteParameters</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Dis>15</Dis>
+            <Disp>1</Disp>
+            <A>1</A>
+            <DTHC>0</DTHC>
+            <DTHP>1</DTHP>
+            <WaterTableCl>0</WaterTableCl>
+            <WaterTableNO3>0</WaterTableNO3>
+            <WaterTableNH4>0</WaterTableNH4>
+            <WaterTableUrea>0</WaterTableUrea>
+            <WaterTableTracer>0</WaterTableTracer>
+            <WaterTableMineralisationInhibitor>0</WaterTableMineralisationInhibitor>
+            <WaterTableUreaseInhibitor>0</WaterTableUreaseInhibitor>
+            <WaterTableNitrificationInhibitor>0</WaterTableNitrificationInhibitor>
+            <WaterTableDenitrificationInhibitor>0</WaterTableDenitrificationInhibitor>
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+            </Thickness>
+            <NO3Exco>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NO3Exco>
+            <NO3FIP>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </NO3FIP>
+            <NH4Exco>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+            </NH4Exco>
+            <NH4FIP>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </NH4FIP>
+            <UreaExco>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </UreaExco>
+            <UreaFIP>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </UreaFIP>
+            <ClExco>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </ClExco>
+            <ClFIP>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </ClFIP>
+          </Model>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Salb>0.13</Salb>
+          <CN2Bare>72</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <KDul>0.1</KDul>
+          <PSIDul>-300</PSIDul>
+          <VC>true</VC>
+          <DTMin>0</DTMin>
+          <DTMax>60</DTMax>
+          <MaxWaterIncrement>1</MaxWaterIncrement>
+          <SpaceWeightingFactor>0</SpaceWeightingFactor>
+          <SoluteSpaceWeightingFactor>0</SoluteSpaceWeightingFactor>
+          <Diagnostics>true</Diagnostics>
+        </Swim3>
+        <LayerStructure>
+          <Name>LayerStructure</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Thickness>
+            <double>10</double>
+            <double>20</double>
+            <double>30</double>
+            <double>40</double>
+            <double>200</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+          </Thickness>
+        </LayerStructure>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <RecordNumber>0</RecordNumber>
