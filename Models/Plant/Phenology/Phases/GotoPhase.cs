@@ -17,11 +17,7 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link]
-        private Phenology phenology = null;
-
-
-         //5. Public properties
+        //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>The start</summary>
         [Description("Start")]
@@ -37,7 +33,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get { return 0; } }
+        public double TTForToday { get; set; }
 
         /// <summary>Gets the tt in phase.</summary>
         [XmlIgnore]
@@ -45,45 +41,18 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the fraction complete.</summary>
         [XmlIgnore]
-        public double FractionComplete
-        {
-            get
-            {
-                if (phenology != null)
-                    throw new Exception("Cannot call rewind class");
-                else return 0;
-            }
+        public double FractionComplete { get; set; }
 
-            set
-            {
-                if (phenology != null)
-                    throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
-        }
-
-        //6. Public methode
+        //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Should not be called in this class</summary>
         public double DoTimeStep(double PropOfDayToUse) { throw new Exception("Cannot call rewind class"); }
 
         /// <summary>Writes the summary.</summary>
-        public void WriteSummary(TextWriter writer)
-        { writer.WriteLine("      " + Name); }
+        public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase()
-        {
-            TTinPhase = 0;
-        }
-
-
-        //7. Private methode
-        //-----------------------------------------------------------------------------------------------------------------
-
-        /// <summary>Called when [simulation commencing].</summary>
-         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        public virtual void ResetPhase() {}
     }
 }
