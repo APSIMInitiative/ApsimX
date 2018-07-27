@@ -37,7 +37,7 @@ set validationsyntax=Validation
 
 if "%1"=="%unitsyntax%" (
 	echo Running Unit Tests...
-	call %apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %bin%\UnitTests.dll /noshadow
+	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %bin%\UnitTests.dll /noshadow
 	goto :end
 )
 
