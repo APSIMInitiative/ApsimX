@@ -33,7 +33,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the tt in phase.</summary>
         [XmlIgnore]
@@ -47,7 +47,7 @@ namespace Models.PMF.Phen
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Should not be called in this class</summary>
-        public double DoTimeStep(double PropOfDayToUse) { throw new Exception("Cannot call rewind class"); }
+        public bool DoTimeStep(ref double PropOfDayToUse) { throw new Exception("Cannot call rewind class"); }
 
         /// <summary>Writes the summary.</summary>
         public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }

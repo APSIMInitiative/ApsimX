@@ -75,7 +75,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Gets the tt for today.</summary>
-        public double TTForToday { get; set; } 
+        public double TTForTimeStep { get; set; } 
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
@@ -84,37 +84,33 @@ namespace Models.PMF.Phen
 
         //6. Public methode
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary> This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
         /// the phenology class knows to progress to the next phase and how much tt to pass it on the first day. </summary>
-        public double DoTimeStep(double propOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = phenology.ThermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForToday;
-
-            // Get the Target TT
+            bool proceedToNextPhase = false;
+            TTForTimeStep = phenology.ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
+            
             double Target = CalcTarget();
-
-            double PropOfDayUnused = 0;
             if (TTinPhase > Target)
             {
-                if (TTForToday > 0.0)
+                if (TTForTimeStep > 0.0)
                 {
-                    double PropOfValueUnused = (TTinPhase - Target) / TTForToday;
-                    PropOfDayUnused = PropOfValueUnused * propOfDayToUse;
+                    proceedToNextPhase = true;
+                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
                 }
-                else
-                    PropOfDayUnused = 1.0;
                 TTinPhase = Target;
             }
 
-            if (PropOfDayUnused > 0)
+            if (proceedToNextPhase)
             {
                 Plant.SendEmergingEvent();
                 phenology.Emerged = true;
             }
 
-            return PropOfDayUnused;
+            return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>

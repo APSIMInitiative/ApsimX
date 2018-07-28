@@ -45,7 +45,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
         
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -73,23 +73,28 @@ namespace Models.PMF.Phen
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
+            bool proceedToNextPhase = false;
+            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
+            
             if (First)
             {
                 LeafNoAtStart = leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion;
-                TargetLeafForCompletion = structure.FinalLeafNumber.Value()  - LeafNoAtStart;
+                TargetLeafForCompletion = structure.FinalLeafNumber.Value() - LeafNoAtStart;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
             if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
-                    return 0.00001;
-                else
-                    return 0;
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.00001; ; //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+            }
+
+            return proceedToNextPhase;
         }
                 
         /// <summary>Reset phase</summary>

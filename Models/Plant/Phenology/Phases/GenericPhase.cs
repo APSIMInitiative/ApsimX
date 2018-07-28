@@ -43,7 +43,7 @@ namespace Models.PMF.Phen
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
         public double TTinPhase { get; set; }
-        
+
         /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
         public double FractionComplete
@@ -68,7 +68,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
 
         //6. Public methode
@@ -77,28 +77,24 @@ namespace Models.PMF.Phen
         /// This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
         /// the phenology class knows to progress to the next phase and how much tt to pass it on the first day.
         /// </summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-
-            // Get the Target TT
+            bool proceedToNextPhase = false;
+            TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
+            
             double Target = CalcTarget();
-
-            // Calculte proportion of day unused.  If greater than zero this triggers transition to next phase
-            double PropOfDayUnused = 0;
             if (TTinPhase > Target)
             {
-                if (TTForToday > 0.0)
+                if (TTForTimeStep > 0.0)
                 {
-                    double PropOfValueUnused = (TTinPhase - Target) / ThermalTime.Value();
-                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
+                    proceedToNextPhase = true;
+                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
                 }
-                else
-                    PropOfDayUnused = 1.0;
                 TTinPhase = Target;
             }
-            return PropOfDayUnused;
+
+            return proceedToNextPhase;
         }
 
         /// <summary>Called when [simulation commencing].</summary>

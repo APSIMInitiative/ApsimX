@@ -333,8 +333,8 @@ namespace Models.PMF.Phen
             {
                 if (ThermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
+               
                 // If this is the first time through here then setup some variables.
-                
                 if (CurrentlyOnFirstDayOfPhase[0] == "")
                     if (JustInitialised)
                     {
@@ -342,39 +342,25 @@ namespace Models.PMF.Phen
                         JustInitialised = false;
                     }
 
-                // Calculate how much of todays progress will not be consumed by current phase
-                double FractionOfDayLeftOver = CurrentPhase.DoTimeStep(1.0);
+                // Calculate progression through current phase
+                double propOfDayToUse = 1;
+                bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+                AccumulateTT(CurrentPhase.TTForTimeStep);
 
-                // If it is more than zero then we need to transition phases
-                if (FractionOfDayLeftOver > 0)
+                while (incrementPhase)
                 {
-                    while (FractionOfDayLeftOver > 0)// It is possible more than one phase will be passed in a day so keep doing this until complete.
-                    {
-                        if (CurrentPhaseIndex + 1 >= phases.Count)
-                            throw new Exception("Cannot transition to the next phase. No more phases exist");
+                    if (CurrentPhaseIndex + 1 >= phases.Count)
+                        throw new Exception("Cannot transition to the next phase. No more phases exist");
 
-                        if (Stage >= 1)
-                            Germinated = true;
+                    CurrentPhase = phases[CurrentPhaseIndex + 1];
 
-                        CurrentPhase = phases[CurrentPhaseIndex + 1];
-
-                        // run the next phase with the left over time step from the phase we have just completed
-                        FractionOfDayLeftOver = CurrentPhase.DoTimeStep(FractionOfDayLeftOver);
-
-                        Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
-                    }
+                    incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+                    AccumulateTT(CurrentPhase.TTForTimeStep);
                 }
-                else
-                {
-                    Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
-                }
+                
+               Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
 
-                AccumulatedTT += CurrentPhase.TTForToday;
-
-                if (Emerged)
-                    AccumulatedEmergedTT += CurrentPhase.TTForToday;
-
-                if (Plant != null)
+               if (Plant != null)
                     if (Plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
             }
@@ -430,9 +416,15 @@ namespace Models.PMF.Phen
                 return false;
             }
         }
+        
+        private void AccumulateTT(double TTinTimeStep)
+        {
+            AccumulatedTT += TTinTimeStep;
+            if (Emerged)
+                AccumulatedEmergedTT += TTinTimeStep;
+        }
                 
-        /// <summary>Clears this instance.</summary>
-        private void Clear()
+         private void Clear()
         {
             DaysAfterSowing = 0;
             Stage = 1;

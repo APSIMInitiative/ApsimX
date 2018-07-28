@@ -33,7 +33,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
         [XmlIgnore]
@@ -47,11 +47,12 @@ namespace Models.PMF.Phen
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double PropOfDayToUse)
         {
-            TTForToday = phenology.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-            return 0;
+            TTForTimeStep = phenology.ThermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForTimeStep;
+            
+            return false;
         }
 
         /// <summary>Resets the phase.</summary>

@@ -45,7 +45,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -69,21 +69,20 @@ namespace Models.PMF.Phen
         //6. Public methode
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary> Do our timestep development </summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = phenology.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-
-            bool CanGerminate = true;
-            if (Soil != null)
+            bool proceedToNextPhase = false;
+            TTForTimeStep = phenology.ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
+            
+            if (!phenology.OnStartDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer])
             {
-                CanGerminate = !phenology.OnStartDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer];
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.999;
+                phenology.Germinated = true;
             }
-
-            if (CanGerminate)
-                return 0.999;
-            else
-                return 0;
+            
+            return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>

@@ -30,7 +30,7 @@ namespace Models.PMF.Phen
         private IFunction FractionOfBudBurst = null;
 
         [Link]
-        private IFunction Target = null;
+        private IFunction target = null;
 
         [Link]
         private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
@@ -53,16 +53,16 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Target.Value() == 0)
+                if (target.Value() == 0)
                     return 1;
                 else
-                    return TTinPhase / Target.Value();
+                    return TTinPhase / target.Value();
             }
             set
             {
                 if (phenology != null)
                 {
-                    TTinPhase = Target.Value() * value;
+                    TTinPhase = target.Value() * value;
                     phenology.AccumulatedEmergedTT += TTinPhase;
                     phenology.AccumulatedTT += TTinPhase;
                 }
@@ -71,7 +71,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get { return ThermalTime.Value(); } }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -79,49 +79,46 @@ namespace Models.PMF.Phen
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary> This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
         /// the phenology class knows to progress to the next phase and howmuch tt to pass it on the first day.</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            double tTForToday = ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += tTForToday;
+            bool proceedToNextPhase = false;
+            TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
 
-            // Get the Target TT
+            // Fixme, check why this is needed
             structure.PrimaryBudNo = Plant.SowingData.BudNumber;
-
-            double PropOfDayUnused = 0;
-            if (TTinPhase > Target.Value())
+            double Target = target.Value();
+            if (TTinPhase > Target)
             {
-                if (tTForToday > 0.0)
+                if (TTForTimeStep > 0.0)
                 {
-                    double PropOfValueUnused = (TTinPhase - Target.Value()) / ThermalTime.Value();
-                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
+                    proceedToNextPhase = true;
+                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
                 }
-                else
-                    PropOfDayUnused = 1.0;
-                TTinPhase = Target.Value();
+                TTinPhase = Target;
             }
 
-            if (PropOfDayUnused > 0.0)
+            if (proceedToNextPhase)
             {
                 double BudNumberBurst = Plant.SowingData.BudNumber * FractionOfBudBurst.Value();
-
                 structure.PrimaryBudNo = BudNumberBurst;
                 structure.TotalStemPopn = structure.MainStemPopn;
                 Plant.SendEmergingEvent();
                 phenology.Emerged = true;
             }
 
-            return PropOfDayUnused;
+            return proceedToNextPhase;
         }
         
         /// <summary> Write Summary  /// </summary>
         public void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("      " + Name);
-            if (Target != null)
-                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
+            if (target != null)
+                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", target.Value()));
         }
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()

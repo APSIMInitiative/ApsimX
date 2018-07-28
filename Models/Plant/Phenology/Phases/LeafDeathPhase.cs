@@ -61,7 +61,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Gets the tt for today.</summary>
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
@@ -73,11 +73,12 @@ namespace Models.PMF.Phen
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-
+            bool proceedToNextPhase = false;
+            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
+            
             if (First)
             {
                 DeadNodeNoAtStart = leaf.DeadCohortNo;
@@ -85,9 +86,12 @@ namespace Models.PMF.Phen
             }
 
             if ((leaf.DeadCohortNo >= structure.FinalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
-                return 0.00001;
-            else
-                return 0;
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.00001;
+            }
+
+           return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
