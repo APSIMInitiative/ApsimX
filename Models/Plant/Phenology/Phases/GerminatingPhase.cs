@@ -66,6 +66,10 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get { return 0.999; } }
+
         //6. Public methode
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary> Do our timestep development </summary>

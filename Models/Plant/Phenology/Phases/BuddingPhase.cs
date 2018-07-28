@@ -77,6 +77,11 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get { return target.Value(); } }
+
+
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 

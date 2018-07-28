@@ -69,6 +69,11 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get; set; }
+
+
         //6. Public method
         //-----------------------------------------------------------------------------------------------------------------
 

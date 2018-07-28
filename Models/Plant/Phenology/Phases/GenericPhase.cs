@@ -24,7 +24,7 @@ namespace Models.PMF.Phen
         Phenology phenology = null;
 
         [Link]
-        private IFunction Target = null;
+        private IFunction target = null;
 
         [Link]
         private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
@@ -50,21 +50,25 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (CalcTarget() == 0)
+                if (Target == 0)
                     return 1;
                 else
-                    return TTinPhase / CalcTarget();
+                    return TTinPhase / Target;
             }
             set
             {
                 if (phenology != null)
                 {
-                    TTinPhase = CalcTarget() * value;
+                    TTinPhase = Target * value;
                     phenology.AccumulatedEmergedTT += TTinPhase;
                     phenology.AccumulatedTT += TTinPhase;
                 }
             }
         }
+
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get { return target.Value(); } }
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
@@ -83,7 +87,6 @@ namespace Models.PMF.Phen
             TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
             TTinPhase += TTForTimeStep;
             
-            double Target = CalcTarget();
             if (TTinPhase > Target)
             {
                 if (TTForTimeStep > 0.0)
@@ -109,25 +112,12 @@ namespace Models.PMF.Phen
         public void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("      " + Name);
-            if (Target != null)
-                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
+            writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target));
         }
 
-        //7. Private methode
+        //7. Private method
         //-----------------------------------------------------------------------------------------------------------------
 
-        /// <summary> Return the target to caller. Can be overridden by derived classes. </summary>
-        private double CalcTarget()
-        {
-            double retVAL = 0;
-            if (phenology != null)
-            {
-                retVAL = Target.Value();
-            }
-            return retVAL;
-        }
-
-        
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {

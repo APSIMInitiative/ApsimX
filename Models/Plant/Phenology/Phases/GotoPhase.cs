@@ -17,6 +17,10 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
+        [Link]
+        private Phenology phenology = null;
+
+
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>The start</summary>
@@ -43,11 +47,21 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double FractionComplete { get; set; }
 
+
+        /// <summary>Thermal time target</summary>
+        [XmlIgnore]
+        public double Target { get; set; }
+
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Should not be called in this class</summary>
-        public bool DoTimeStep(ref double PropOfDayToUse) { throw new Exception("Cannot call rewind class"); }
+        public bool DoTimeStep(ref double PropOfDayToUse)
+        {
+            PropOfDayToUse = 0;
+            phenology.ReSetToStage((double)phenology.IndexOfPhase(PhaseNameToGoto)+1,false);
+            return false;
+        }
 
         /// <summary>Writes the summary.</summary>
         public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }

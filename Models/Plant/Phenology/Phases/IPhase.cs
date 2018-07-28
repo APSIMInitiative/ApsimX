@@ -26,11 +26,14 @@ namespace Models.PMF.Phen
         /// <summary> Fraction of progress through the phase</summary>
         double FractionComplete { get; set; }
 
+        /// <summary> ThermalTimeTarget</summary>
+        double Target { get; }
+
         /// <summary> The amount of TT accumulated today </summary>
-        double TTForTimeStep { get;}
+        double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
-        double TTinPhase { get;}
+        double TTinPhase { get; set; }
 
         /// <summary>Resets the phase.</summary>
         void ResetPhase();

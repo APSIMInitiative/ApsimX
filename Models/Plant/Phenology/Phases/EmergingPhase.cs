@@ -74,6 +74,10 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get { return CalcTarget(); } }
+
         /// <summary>Gets the tt for today.</summary>
         public double TTForTimeStep { get; set; } 
 
@@ -82,7 +86,7 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
-        //6. Public methode
+        //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary> This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
