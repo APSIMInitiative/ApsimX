@@ -1,10 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using Classes;
+    using EventArguments;
+    using Gtk;
+    using Interfaces;
+    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -14,18 +14,17 @@ namespace UserInterface.Views
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using Classes;
-    ////using DataGridViewAutoFilter;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using Models.Core;
 
     /// <summary>
     /// A grid control that implements the grid view interface.
     /// </summary>
     public class GridView : ViewBase, IGridView
     {
+        /// <summary>
+        /// The main window.
+        /// </summary>
+        private Window window1;
+
         /// <summary>
         /// Is the user currently editing a cell?
         /// </summary>
@@ -88,6 +87,26 @@ namespace UserInterface.Views
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
 
         /// <summary>
+        /// Row index of the selected celll.
+        /// </summary>
+        private int selectedCellRowIndex = -1;
+
+        /// <summary>
+        /// Column index of the selected cell.
+        /// </summary>
+        private int selectedCellColumnIndex = -1;
+
+        /// <summary>
+        /// Index of the last row in the selected cells range.
+        /// </summary>
+        private int selectionRowMax = -1;
+
+        /// <summary>
+        /// Index of the last column in the selected cells range.
+        /// </summary>
+        private int selectionColMax = -1;
+
+        /// <summary>
         /// Dictionary of combobox lookups 
         /// </summary>
         public Dictionary<Tuple<int, int>, ListStore> ComboLookup = new Dictionary<Tuple<int, int>, ListStore>();
@@ -118,7 +137,7 @@ namespace UserInterface.Views
         private HPaned splitter = null;
 
         /// <summary>
-        /// List of active column indexes
+        /// List of active column indices
         /// </summary>
         private List<int> activeCol = new List<int>();
 
@@ -246,7 +265,11 @@ namespace UserInterface.Views
                 {
                     // Add new rows
                     for (int i = RowCount; i < value; i++)
+                    {
                         gridmodel.Append(); // Will this suffice?
+                        if (DataSource != null)
+                            DataSource.Rows.Add(DataSource.NewRow());
+                    }
                 }
                 else if (value < RowCount)
                 {
@@ -405,6 +428,37 @@ namespace UserInterface.Views
                 this.PopulateGrid();
             }
         }
+        public int FirstSelectedColumn
+        {
+            get
+            {
+                return selectionColMax >= 0 ? Math.Min(selectionColMax, selectedCellColumnIndex) : selectedCellColumnIndex;
+            }
+        }
+
+        public int LastSelectedColumn
+        {
+            get
+            {
+                return selectionColMax >= 0 ? Math.Max(selectionColMax, selectedCellColumnIndex) : selectedCellColumnIndex;
+            }
+        }
+
+        public int FirstSelectedRow
+        {
+            get
+            {
+                return selectionRowMax >= 0 ? Math.Min(selectionRowMax, selectedCellRowIndex) : selectedCellRowIndex;
+            }
+        }
+
+        public int LastSelectedRow
+        {
+            get
+            {
+                return selectionRowMax >= 0 ? Math.Max(selectionRowMax, selectedCellRowIndex) : selectedCellRowIndex;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
@@ -421,14 +475,15 @@ namespace UserInterface.Views
             splitter = (HPaned)builder.GetObject("hpaned1");
             _mainWidget = hbox1;
             Gridview.Model = gridmodel;
-            Gridview.Selection.Mode = SelectionMode.Multiple;
             FixedColview.Model = gridmodel;
-            FixedColview.Selection.Mode = SelectionMode.Multiple;
+            FixedColview.Selection.Mode = SelectionMode.None;
             popupMenu.AttachToWidget(Gridview, null);
             AddContextActionWithAccel("Copy", OnCopyToClipboard, "Ctrl+C");
             AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
             AddContextActionWithAccel("Delete", OnDeleteClick, "Delete");
             Gridview.ButtonPressEvent += OnButtonDown;
+            Gridview.Selection.Mode = SelectionMode.None;
+            Gridview.CursorChanged += OnMoveCursor;
             FixedColview.ButtonPressEvent += OnButtonDown;
             Gridview.FocusInEvent += FocusInEvent;
             Gridview.FocusOutEvent += FocusOutEvent;
@@ -443,6 +498,37 @@ namespace UserInterface.Views
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+            window1 = GetMainViewReference(this).MainWidget as Window;
+        }
+
+        private void OnMoveCursor(object sender, EventArgs args)
+        {
+            UpdateSelectedCell();
+        }
+
+        private void UpdateSelectedCell()
+        {
+            while (GLib.MainContext.Iteration()) ;
+            TreePath path;
+            TreeViewColumn column;
+            Gridview.GetCursor(out path, out column);
+            if (path == null || column == null)
+                return;
+
+            int rowIndex = path.Indices[0];
+            int colIndex = Array.IndexOf(Gridview.Columns, column);
+            // If we've clicked on the bottom row of populated data, all cells 
+            // below the current cell will also be selected. To overcome this,
+            // we add a new row to the datasource. Not a great solution, but 
+            // it works.
+            if (rowIndex >= DataSource.Rows.Count - 1)
+                DataSource.Rows.Add(DataSource.NewRow());
+            
+            selectedCellRowIndex = rowIndex;
+            selectedCellColumnIndex = colIndex;
+            selectionColMax = -1;
+            selectionRowMax = -1;
+            Gridview.QueueDraw();
         }
 
         /// <summary>
@@ -634,78 +720,76 @@ namespace UserInterface.Views
 
             if (keyName == "ISO_Left_Tab")
                 keyName = "Tab";
+            bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
             if (keyName == "Return" || keyName == "Tab")
             {
-                if (userEditingCell)
+                int nextRow = rowIdx;
+                int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                int nextCol = colIdx;
+                if (shifted)
                 {
-                    bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
-                    int nextRow = rowIdx;
-                    int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
-                    int nextCol = colIdx;
-                    if (shifted)
+                    // Move backwards
+                    do
                     {
-                        // Move backwards
-                        do
+                        if (keyName == "Tab")
                         {
-                            if (keyName == "Tab")
+                            // Move horizontally
+                            if (--nextCol < 0)
                             {
-                                // Move horizontally
-                                if (--nextCol < 0)
-                                {
-                                    if (--nextRow < 0)
-                                        nextRow = RowCount - 1;
-                                    nextCol = numCols - 1;
-                                }
-                            }
-                            else if (keyName == "Return")
-                            {
-                                // Move vertically
                                 if (--nextRow < 0)
-                                {
-                                    if (--nextCol < 0)
-                                        nextCol = numCols - 1;
                                     nextRow = RowCount - 1;
-                                }
+                                nextCol = numCols - 1;
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
-                    }
-                    else
-                    {
-                        do
+                        else if (keyName == "Return")
                         {
-                            if (keyName == "Tab")
+                            // Move vertically
+                            if (--nextRow < 0)
                             {
-                                // Move horizontally
-                                if (++nextCol >= numCols)
-                                {
-                                    if (++nextRow >= RowCount)
-                                        nextRow = 0;
-                                    nextCol = 0;
-                                }
-                            }
-                            else if (keyName == "Return")
-                            {
-                                // Move vertically
-                                if (++nextRow >= RowCount)
-                                {
-                                    if (++nextCol >= numCols)
-                                        nextCol = 0;
-                                    nextRow = 0;
-                                }
+                                if (--nextCol < 0)
+                                    nextCol = numCols - 1;
+                                nextRow = RowCount - 1;
                             }
                         }
-                        while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                     }
-
-                    EndEdit();
-                    while (GLib.MainContext.Iteration())
-                    {
-                    }
-                    if (nextRow != rowIdx || nextCol != colIdx)
-                        Gridview.SetCursor(new TreePath(new int[1] { nextRow }), Gridview.GetColumn(nextCol), true);
-                    args.RetVal = true;
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                 }
+                else
+                {
+                    do
+                    {
+                        if (keyName == "Tab")
+                        {
+                            // Move horizontally
+                            if (++nextCol >= numCols)
+                            {
+                                if (++nextRow >= RowCount)
+                                    nextRow = 0;
+                                nextCol = 0;
+                            }
+                        }
+                        else if (keyName == "Return")
+                        {
+                            // Move vertically
+                            if (++nextRow >= RowCount)
+                            {
+                                if (++nextCol >= numCols)
+                                    nextCol = 0;
+                                nextRow = 0;
+                            }
+                        }
+                    }
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                }
+
+                EndEdit();
+                while (GLib.MainContext.Iteration())
+                {
+                }
+                if (nextRow != rowIdx || nextCol != colIdx)
+                    Gridview.SetCursor(new TreePath(new int[1] { nextRow }), Gridview.GetColumn(nextCol), userEditingCell);
+                while (GLib.MainContext.Iteration()) ;
+                args.RetVal = true;
             }
             else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && (activeCol == null || activeCol.Count < 1) && IsPrintableChar(args.Event.Key))
             {
@@ -740,7 +824,7 @@ namespace UserInterface.Views
                     // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
                     // before the period is inserted by the Gtk event handler. Therefore, we insert it manually now, and stop
                     // this signal from propagating further.
-                    //editable.Text += ".";
+                    // editable.Text += ".";
                     editable.InsertText(".", ref caretLocation);
                     editable.Position = caretLocation;
                 }
@@ -757,6 +841,34 @@ namespace UserInterface.Views
                 // Stop the Gtk signal from propagating any further.
                 args.RetVal = true;
             }
+            else if (shifted)
+            {
+                bool isArrowKey = args.Event.Key == Gdk.Key.Up || args.Event.Key == Gdk.Key.Down || args.Event.Key == Gdk.Key.Left || args.Event.Key == Gdk.Key.Right;
+                if (isArrowKey)
+                {
+                    selectionRowMax = selectionRowMax < 0 ? selectedCellRowIndex : selectionRowMax;
+                    selectionColMax = selectionColMax < 0 ? selectedCellColumnIndex : selectionColMax;
+                    args.RetVal = true;
+                }
+                if (args.Event.Key == Gdk.Key.Up)
+                {
+                    selectionRowMax -= 1;
+                }
+                else if (args.Event.Key == Gdk.Key.Down)
+                {
+                    selectionRowMax += 1;
+                }
+                else if (args.Event.Key == Gdk.Key.Left)
+                {
+                    selectionColMax -= 1;
+                }
+                else if (args.Event.Key == Gdk.Key.Right)
+                {
+                    selectionColMax += 1;
+                }
+                if (isArrowKey)
+                    Gridview.QueueDraw();
+            }
         }
 
         /// <summary>
@@ -771,6 +883,17 @@ namespace UserInterface.Views
             return char.TryParse(keyName, out c) && !char.IsControl(c);
         }
         
+        /// <summary>
+        /// Calcualtes the number of selected cells.
+        /// </summary>
+        /// <returns>The number of selected cells.</returns>
+        private int NumSelectedCells()
+        {
+            if (selectionColMax < 0 || selectionRowMax < 0 || selectedCellRowIndex < 0 || selectedCellColumnIndex < 0)
+                return 0;
+            return (LastSelectedRow - FirstSelectedRow + 1) * (LastSelectedColumn - FirstSelectedColumn + 1);
+        }
+
         /// <summary>
         /// Show the completion window
         /// </summary>
@@ -1404,8 +1527,16 @@ namespace UserInterface.Views
             int rowNo = path.Indices[0];
             int colNo = -1;
             string text = string.Empty;
+            bool cellIsSelected = false;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
+                cellIsSelected = rowNo >= FirstSelectedRow && rowNo <= LastSelectedRow && colNo >= FirstSelectedColumn && colNo <= LastSelectedColumn;
+                if (cellIsSelected)
+                {
+                    cell.CellBackgroundGdk = Gridview.Style.Base(StateType.Selected);
+                }
+                else
+                    cell.CellBackgroundGdk = Gridview.Style.Base(StateType.Normal);
                 if (view == Gridview)
                 {
                     col.CellRenderers[1].Visible = false;
@@ -1481,15 +1612,26 @@ namespace UserInterface.Views
             {
                 if (categoryRows.Contains(rowNo))
                 {
-                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                    Color bgColor = Color.LightSteelBlue;
-                    textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
+                    if (!cellIsSelected)
+                    {
+                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                        Color bgColor = Color.LightSteelBlue;
+                        textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
+                    }
                     textRenderer.Editable = false;
                 }
                 else
                 {
-                    textRenderer.ForegroundGdk = ColForegroundColor(colNo);
-                    textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    if (!cellIsSelected)
+                    {
+                        textRenderer.ForegroundGdk = ColForegroundColor(colNo);
+                        textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    }
+                    else
+                    {
+                        textRenderer.ForegroundGdk = Gridview.Style.Base(StateType.Normal);
+                        textRenderer.BackgroundGdk = Gridview.Style.Base(StateType.Selected);
+                    }
                     textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
                 }
             }
@@ -2229,18 +2371,6 @@ namespace UserInterface.Views
             try
             {
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                int rowIndex, columnIndex;
-                if (popupCell == null)
-                {
-                    rowIndex = GetCurrentCell.RowIndex;
-                    columnIndex = GetCurrentCell.ColumnIndex;
-                }
-                else
-                {
-                    rowIndex = popupCell.RowIndex;
-                    columnIndex = popupCell.ColumnIndex;
-                }
-                
                 if (this.userEditingCell && this.editControl != null)
                 {
                     (editControl as Entry).PasteClipboard();
@@ -2248,11 +2378,24 @@ namespace UserInterface.Views
                 }
                 else
                 {
+                    int rowIndex = FirstSelectedRow;
+                    int columnIndex = FirstSelectedColumn;
                     Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
                     string text = cb.WaitForText();
                     if (text != null)
                     {
                         string[] lines = text.Split('\n');
+                        int numCellsToPaste = 0;
+                        lines.ToList().ForEach(line => line.Split('\t').ToList().ForEach(cell => { if (!string.IsNullOrEmpty(cell)) numCellsToPaste += 1; }));
+                    
+                        int numberSelectedCells = NumSelectedCells();
+                        if (numCellsToPaste > numberSelectedCells && numberSelectedCells > 1)
+                        {
+                            // The number of selected cells is less than the number of cells that the user is attempting to paste.
+                            // In this scenario, we ask for confirmation before proceeding with the paste operation.
+                            if ((Gtk.ResponseType)ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", MessageType.Question, ButtonsType.YesNo, window1) != Gtk.ResponseType.Yes)
+                                return;
+                        }
                         foreach (string line in lines)
                         {
                             if (rowIndex < this.RowCount && line.Length > 0)
@@ -2341,28 +2484,30 @@ namespace UserInterface.Views
             }
             else
             {
-                TreeSelection selection = Gridview.Selection;
-                if (selection.CountSelectedRows() > 0)
+                StringBuilder textToCopy = new StringBuilder();
+                if (selectionColMax >= 0 && selectionRowMax >= 0)
                 {
-                    StringBuilder buffer = new StringBuilder();
-                    int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
-                    TreePath[] selRows = selection.GetSelectedRows();
-                    foreach (TreePath row in selRows)
+                    for (int i = FirstSelectedRow; i <= LastSelectedRow; i++)
                     {
-                        int rowIdx = row.Indices[0];
-                        for (int colIdx = 0; colIdx < numCols; colIdx++)
+                        for (int j = FirstSelectedColumn; j <= LastSelectedColumn; j++)
                         {
-                            object dataVal = this.DataSource.Rows[rowIdx][colIdx];
-                            buffer.Append(AsString(dataVal));
-                            if (colIdx == numCols - 1)
-                                buffer.Append('\n');
-                            else
-                                buffer.Append('\t');
+                            textToCopy.Append(GetCell(j, i).Value.ToString());
+                            if (j != LastSelectedColumn)
+                                textToCopy.Append('\t');
                         }
+                        textToCopy.AppendLine();
                     }
-                    Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
-                    cb.Text = buffer.ToString();
                 }
+                else
+                {
+                    // Copy contents of current cell.
+                    IGridCell cell = GetCurrentCell;
+                    if (cell == null)
+                        throw new Exception("Unable to get selected cell for copy.");
+                    textToCopy.Append(GetCurrentCell.Value.ToString());
+                }
+                Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+                cb.Text = textToCopy.ToString();
             }
         }
 
@@ -2439,16 +2584,50 @@ namespace UserInterface.Views
             activeCol = new List<int>();
             Gtk.TreeView view = sender is Gtk.TreeView ? sender as Gtk.TreeView : Gridview;
             HighlightColumns(view);
-            if (e.Event.Button == 3)
+
+            TreePath path;
+            TreeViewColumn column;
+            view.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
+            if (e.Event.Button == 1)
+            {
+                if (path != null && column != null)
+                {
+                    try
+                    {
+                        if ((e.Event.State & Gdk.ModifierType.ShiftMask) != 0)
+                        {
+                            selectionColMax = Array.IndexOf(view.Columns, column);
+                            selectionRowMax = path.Indices[0];
+                            e.RetVal = true;
+                            view.QueueDraw();
+                        }
+                        else
+                        {
+                            selectedCellColumnIndex = Array.IndexOf(view.Columns, column);
+                            selectedCellRowIndex = path.Indices[0];
+                        }
+
+                        if (e.Event.Type == Gdk.EventType.TwoButtonPress)
+                        {
+                            while (GLib.MainContext.Iteration()) ;
+                            view.SetCursor(path, view.Columns[selectedCellColumnIndex], true);
+                            userEditingCell = true;
+                            e.RetVal = true;
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        Console.WriteLine(err.ToString());
+                    }
+                }
+            }
+            else if (e.Event.Button == 3)
             {
                 if (this.ColumnHeaderClicked != null)
                 {
                     GridHeaderClickedArgs args = new GridHeaderClickedArgs();
                     if (sender is Gtk.TreeView)
                     {
-                        TreePath path;
-                        TreeViewColumn column;
-                        Gridview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
                         int rowIdx = path.Indices[0];
                         int xpos = (int)e.Event.X;
                         int colIdx = 0;
@@ -2600,7 +2779,7 @@ namespace UserInterface.Views
         protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
         {
             base.Render(window, widget, background_area, cell_area, expose_area, flags);
-            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, "", ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
+            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, string.Empty, ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
         }
 
         protected override void OnEditingStarted(CellEditable editable, string path)
