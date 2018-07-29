@@ -178,7 +178,7 @@ namespace Models.PMF.Phen
                 List<IPhase> PhasesToRewind = new List<IPhase>();
                 foreach (IPhase P in phases)
                 {
-                    if (IndexOfPhase(P.Name) >= CurrentPhaseIndex)
+                    if ((IndexOfPhase(P.Name) >= CurrentPhaseIndex)&&(IndexOfPhase(P.Name)<=oldPhaseIndex))
                         PhasesToRewind.Add(P);
                 }
 
