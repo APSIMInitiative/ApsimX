@@ -94,6 +94,9 @@ echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
 if %errorlevel% equ 0 (
 	if "%1"=="%validationsyntax%" (
+		echo Pull request ID: 	"%ghprbPullId%"
+		echo DateTime stamp: 	"%DATETIMESTAMP%"
+		echo Commit author:		"%ghprbActualCommitAuthor%"
 		echo Running performance tests collector...
 		C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %ghprbPullId% %DATETIMESTAMP% %ghprbActualCommitAuthor%
 		set err=%errorlevel%
