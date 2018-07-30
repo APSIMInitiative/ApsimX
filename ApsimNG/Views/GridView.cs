@@ -23,7 +23,7 @@
         /// <summary>
         /// The main window.
         /// </summary>
-        private Window window1;
+        private Window primaryWindow;
 
         /// <summary>
         /// Is the user currently editing a cell?
@@ -47,12 +47,7 @@
         private bool isAutoFilterOn = false;
 
         /// <summary>
-        /// The default numeric format
-        /// </summary>
-        private string defaultNumericFormat = "F2";
-
-        /// <summary>
-        /// Flag to keep track of whether a cursor move was initiated internally
+        /// Flag to keep track of whether a cursor move was initiated internally.
         /// </summary>
         private bool selfCursorMove = false;
 
@@ -64,25 +59,25 @@
         /// <summary>
         /// The box container 
         /// </summary>
-        private HBox hbox1 = null;
+        private HBox hboxContainer = null;
 
         /// <summary>
-        /// The image object
+        /// Widget used to display the model's image.
         /// </summary>
-        private Gtk.Image image1 = null;
+        private Gtk.Image modelImage = null;
 
         /// <summary>
-        /// The image pixbuf object
+        /// Pixbuf of the model's image.
         /// </summary>
-        private Gdk.Pixbuf imagePixbuf;
+        private Gdk.Pixbuf modelImagePixbuf;
 
         /// <summary>
-        /// List of grid model names
+        /// List of grid model names.
         /// </summary>
-        private ListStore gridmodel = new ListStore(typeof(string));
+        private ListStore gridModel = new ListStore(typeof(string));
 
         /// <summary>
-        /// The dictionary of cell renderers
+        /// The dictionary of cell renderers. Maps a cell renderer to a column index.
         /// </summary>
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
 
@@ -107,71 +102,43 @@
         private int selectionColMax = -1;
 
         /// <summary>
-        /// Dictionary of combobox lookups 
-        /// </summary>
-        public Dictionary<Tuple<int, int>, ListStore> ComboLookup = new Dictionary<Tuple<int, int>, ListStore>();
-
-        /// <summary>
-        /// List of buttons
-        /// </summary>
-        public List<Tuple<int, int>> ButtonList = new List<Tuple<int, int>>();
-
-        /// <summary>
-        /// The popup menu object
+        /// The popup menu object.
         /// </summary>
         private Menu popupMenu = new Menu();
 
         /// <summary>
-        /// The key accelerator group
+        /// The key accelerator group.
         /// </summary>
         private AccelGroup accel = new AccelGroup();
 
         /// <summary>
-        /// The cell at the popup locations
+        /// The cell at the popup locations.
         /// </summary>
         private GridCell popupCell = null;
 
         /// <summary>
-        /// The splitter between the fixed and non-fixed grids
+        /// The splitter between the fixed and non-fixed grids.
         /// </summary>
         private HPaned splitter = null;
 
         /// <summary>
-        /// List of active column indices
+        /// List of active column indices.
+        /// TODO : refactor column selection to work with the new cell selection.
         /// </summary>
         private List<int> activeCol = new List<int>();
 
         /// <summary>
-        /// List of "category" row numbers - uneditable rows used as separators
+        /// List of "category" row numbers - uneditable rows used as separators.
         /// </summary>
         private List<int> categoryRows = new List<int>();
 
         /// <summary>
-        /// Small data structure to hold information about how a column should be rendered
-        /// </summary>
-        private class ColRenderAttributes
-        {
-            /// <summary>
-            /// Whether the column data are read-only
-            /// </summary>
-            internal bool readOnly = false;
-            /// <summary>
-            /// Background colour for normal text rendering
-            /// </summary>
-            internal Gdk.Color backgroundColor;
-            /// <summary>
-            /// Foreground colour for normal text rendering
-            /// </summary>
-            internal Gdk.Color foregroundColor;
-        }
-
-        /// <summary>
-        /// Dictionary for looking up the rendering attributes for each column
+        /// Dictionary for looking up the rendering attributes for each column.
         /// </summary>
         private Dictionary<int, ColRenderAttributes> colAttributes = new Dictionary<int, ColRenderAttributes>();
 
         /// <summary>
-        /// Is used as a property editor
+        /// Is used as a property editor.
         /// </summary>
         private bool isPropertyMode = false;
 
@@ -181,71 +148,96 @@
         private bool isReadOnly = false;
 
         /// <summary>
-        /// Number of locked columns
+        /// Number of locked columns.
         /// </summary>
         private int numberLockedCols = 0;
 
         /// <summary>
         /// The edit control currently in use (if any).
-        /// We keep track of this to facilitate handling "partial" edits (e.g., when the user moves to a different component
+        /// We keep track of this to facilitate handling "partial" edits (e.g., when the user moves to a different component.
         /// </summary>
         private CellEditable editControl = null;
 
         /// <summary>
-        /// The tree path for the row currently being edited
+        /// The tree path for the row currently being edited.
         /// </summary>
         private string editPath;
 
         /// <summary>
-        /// The widget which sent the EditingStarted event
+        /// The widget which sent the EditingStarted event.
         /// </summary>
         private object editSender;
 
         /// <summary>
-        /// This event is invoked when the values of 1 or more cells have changed.
+        /// The fixed column treeview.
         /// </summary>
-        public event EventHandler<GridCellsChangedArgs> CellsChanged;
+        private Gtk.TreeView fixedColView = null;
 
         /// <summary>
-        /// Invoked when a grid cell header is clicked.
+        /// The scrolled window object. This handles scrolling in the gridview.
         /// </summary>
-        public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
-
-        /// <summary>Occurs when user clicks a button on the cell.</summary>
-        public event EventHandler<GridCellsChangedArgs> ButtonClick;
-
-        /// <summary>Invoked when the editor needs context items (after user presses '.')</summary>
-        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+        private ScrolledWindow scrollingWindow = null;
 
         /// <summary>
-        /// Invoked when the columns need to be reset to their default colours.
-        /// If this event handler is null, the default colours are assumed to be white.
+        /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
-        public event EventHandler<EventArgs> FormatColumns;
+        /// <param name="owner">The owning view</param>
+        public GridView(ViewBase owner) : base(owner)
+        {
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
+            hboxContainer = (HBox)builder.GetObject("hbox1");
+            scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
+            Grid = (Gtk.TreeView)builder.GetObject("gridview");
+            fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
+            modelImage = (Gtk.Image)builder.GetObject("image1");
+            splitter = (HPaned)builder.GetObject("hpaned1");
+            _mainWidget = hboxContainer;
+            Grid.Model = gridModel;
+            fixedColView.Model = gridModel;
+            fixedColView.Selection.Mode = SelectionMode.None;
+            popupMenu.AttachToWidget(Grid, null);
+            AddContextActionWithAccel("Copy", OnCopyToClipboard, "Ctrl+C");
+            AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
+            AddContextActionWithAccel("Delete", OnDeleteClick, "Delete");
+            Grid.ButtonPressEvent += OnButtonDown;
+            Grid.Selection.Mode = SelectionMode.None;
+            Grid.CursorChanged += OnMoveCursor;
+            fixedColView.ButtonPressEvent += OnButtonDown;
+            Grid.FocusInEvent += FocusInEvent;
+            Grid.FocusOutEvent += FocusOutEvent;
+            Grid.KeyPressEvent += GridviewKeyPressEvent;
+            Grid.EnableSearch = false;
+            Grid.ExposeEvent += GridviewExposed;
+            fixedColView.FocusInEvent += FocusInEvent;
+            fixedColView.FocusOutEvent += FocusOutEvent;
+            fixedColView.EnableSearch = false;
+            splitter.Child1.Hide();
+            splitter.Child1.NoShowAll = true;
+            modelImage.Pixbuf = null;
+            modelImage.Visible = false;
+            _mainWidget.Destroyed += MainWidgetDestroyed;
+            primaryWindow = GetMainViewReference(this).MainWidget as Window;
+        }
 
         /// <summary>
-        /// Gets or sets the scrolled window object
+        /// Gets or sets the treeview object which displays the data.
         /// </summary>
-        public ScrolledWindow ScrolledWindow1 { get; set; } = null;
+        public Gtk.TreeView Grid { get; set; } = null;
 
         /// <summary>
-        /// Gets or sets the treeview object
+        /// List of buttons in the grid.
         /// </summary>
-        public Gtk.TreeView Gridview { get; set; } = null;
+        public List<Tuple<int, int>> ButtonList { get; set; } = new List<Tuple<int, int>>();
 
         /// <summary>
-        /// Gets or sets the fixed column treeview
+        /// Dictionary of combobox lookups.
         /// </summary>
-        public Gtk.TreeView FixedColview { get; set; } = null;
+        public Dictionary<Tuple<int, int>, ListStore> ComboLookup { get; set; } = new Dictionary<Tuple<int, int>, ListStore>();
 
         /// <summary>
         /// Gets or sets the name of the associated model.
         /// </summary>
-        public string ModelName
-        {
-            get;
-            set;
-        }
+        public string ModelName { get; set; }
 
         /// <summary>
         /// Gets or sets the number of rows in grid.
@@ -254,7 +246,7 @@
         {
             get
             {
-                return gridmodel.IterNChildren();
+                return gridModel.IterNChildren();
             }
 
             set
@@ -266,7 +258,7 @@
                     // Add new rows
                     for (int i = RowCount; i < value; i++)
                     {
-                        gridmodel.Append(); // Will this suffice?
+                        gridModel.Append();
                         if (DataSource != null)
                             DataSource.Rows.Add(DataSource.NewRow());
                     }
@@ -284,26 +276,15 @@
         /// <summary>
         /// Gets or sets the numeric grid format e.g. N3
         /// </summary>
-        public string NumericFormat
-        {
-            get
-            {
-                return this.defaultNumericFormat;
-            }
-
-            set
-            {
-                this.defaultNumericFormat = value;
-            }
-        }
+        public string NumericFormat { get; set; } = "F2";
 
         /// <summary>
         /// Marks the cell as readonly.
         /// </summary>
-        /// <param name="gridCell">The grid cell to change</param>
-        internal void SetReadOnly(GridCell gridCell)
+        /// <param name="gridCell">The grid cell to change.</param>
+        public void SetReadOnly(GridCell gridCell)
         {
-            CellRendererText renderer = Gridview.Columns[gridCell.ColumnIndex].CellRenderers[gridCell.RowIndex] as CellRendererText;
+            CellRendererText renderer = Grid.Columns[gridCell.ColumnIndex].CellRenderers[gridCell.RowIndex] as CellRendererText;
             if (renderer != null)
                 renderer.Editable = false;
         }
@@ -312,8 +293,9 @@
         /// Changes the cell background colour
         /// </summary>
         /// <param name="gridCell">The grid cell to change</param>
-        internal void SetBackgroundColour(GridCell gridCell, Color colour)
+        public void SetBackgroundColour(GridCell gridCell, Color colour)
         {
+            // TODO : I will fix this - DH 7/18
         }
 
         /// <summary>
@@ -330,7 +312,7 @@
             {
                 if (value != isPropertyMode)
                 {
-                    this.PopulateGrid();
+                    PopulateGrid();
                 }
                 isPropertyMode = value;
             }
@@ -350,7 +332,7 @@
             {
                 if (value != isReadOnly)
                 {
-                    foreach (TreeViewColumn col in Gridview.Columns)
+                    foreach (TreeViewColumn col in Grid.Columns)
                         foreach (CellRenderer render in col.CellRenderers)
                             if (render is CellRendererText)
                                 (render as CellRendererText).Editable = !value;
@@ -358,29 +340,7 @@
                 isReadOnly = value;
             }
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the grid has an auto filter
-        /// </summary>
-        public bool AutoFilterOn
-        {
-            get
-            {
-                return this.isAutoFilterOn;
-            }
-
-            set
-            {
-                // MONO doesn't seem to like the auto filter option.
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                    Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                {
-                    this.isAutoFilterOn = value;
-                    this.PopulateGrid();
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Gets or sets the currently selected cell. Null if none selected.
         /// </summary>
@@ -390,13 +350,13 @@
             {
                 TreePath path;
                 TreeViewColumn col;
-                Gridview.GetCursor(out path, out col);
+                Grid.GetCursor(out path, out col);
                 if (path != null && col != null && col.Cells.Length > 0)
                 {
                     int colNo, rowNo;
                     rowNo = path.Indices[0];
                     if (colLookup.TryGetValue(col.Cells[0], out colNo))
-                        return this.GetCell(colNo, rowNo);
+                        return GetCell(colNo, rowNo);
                 }
                 return null;
             }
@@ -406,7 +366,7 @@
                 if (value != null)
                 {
                     TreePath row = new TreePath(new int[1] { value.RowIndex });
-                    Gridview.SetCursor(row, Gridview.GetColumn(value.ColumnIndex), false);
+                    Grid.SetCursor(row, Grid.GetColumn(value.ColumnIndex), false);
                 }
             }
         }
@@ -414,93 +374,92 @@
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
-        public System.Data.DataTable DataSource
+        public DataTable DataSource
         {
             get
             {
-                return this.table;
+                return table;
             }
 
             set
             {
-                this.table = value;
+                table = value;
                 LockLeftMostColumns(0);
-                this.PopulateGrid();
-            }
-        }
-        public int FirstSelectedColumn
-        {
-            get
-            {
-                return selectionColMax >= 0 ? Math.Min(selectionColMax, selectedCellColumnIndex) : selectedCellColumnIndex;
-            }
-        }
-
-        public int LastSelectedColumn
-        {
-            get
-            {
-                return selectionColMax >= 0 ? Math.Max(selectionColMax, selectedCellColumnIndex) : selectedCellColumnIndex;
-            }
-        }
-
-        public int FirstSelectedRow
-        {
-            get
-            {
-                return selectionRowMax >= 0 ? Math.Min(selectionRowMax, selectedCellRowIndex) : selectedCellRowIndex;
-            }
-        }
-
-        public int LastSelectedRow
-        {
-            get
-            {
-                return selectionRowMax >= 0 ? Math.Max(selectionRowMax, selectedCellRowIndex) : selectedCellRowIndex;
+                PopulateGrid();
             }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GridView" /> class.
+        /// This event is invoked when the values of 1 or more cells have changed.
         /// </summary>
-        /// <param name="owner">The owning view</param>
-        public GridView(ViewBase owner) : base(owner)
+        public event EventHandler<GridCellsChangedArgs> CellsChanged;
+
+        /// <summary>
+        /// Invoked when a grid cell header is clicked.
+        /// </summary>
+        public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
+
+        /// <summary>
+        /// Occurs when user clicks a button on the cell.
+        /// </summary>
+        public event EventHandler<GridCellsChangedArgs> ButtonClick;
+
+        /// <summary>
+        /// Invoked when the editor needs context items (after user presses '.')
+        /// </summary>
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when the columns need to be reset to their default colours.
+        /// If this event handler is null, the default colours are assumed to be white.
+        /// </summary>
+        public event EventHandler<EventArgs> FormatColumns;
+
+        /// <summary>
+        /// Column index of the left-most selected cell.
+        /// </summary>
+        private int FirstSelectedColumn()
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
-            hbox1 = (HBox)builder.GetObject("hbox1");
-            ScrolledWindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
-            Gridview = (Gtk.TreeView)builder.GetObject("gridview");
-            FixedColview = (Gtk.TreeView)builder.GetObject("fixedcolview");
-            image1 = (Gtk.Image)builder.GetObject("image1");
-            splitter = (HPaned)builder.GetObject("hpaned1");
-            _mainWidget = hbox1;
-            Gridview.Model = gridmodel;
-            FixedColview.Model = gridmodel;
-            FixedColview.Selection.Mode = SelectionMode.None;
-            popupMenu.AttachToWidget(Gridview, null);
-            AddContextActionWithAccel("Copy", OnCopyToClipboard, "Ctrl+C");
-            AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
-            AddContextActionWithAccel("Delete", OnDeleteClick, "Delete");
-            Gridview.ButtonPressEvent += OnButtonDown;
-            Gridview.Selection.Mode = SelectionMode.None;
-            Gridview.CursorChanged += OnMoveCursor;
-            FixedColview.ButtonPressEvent += OnButtonDown;
-            Gridview.FocusInEvent += FocusInEvent;
-            Gridview.FocusOutEvent += FocusOutEvent;
-            Gridview.KeyPressEvent += GridviewKeyPressEvent;
-            Gridview.EnableSearch = false;
-            Gridview.ExposeEvent += GridviewExposed;
-            FixedColview.FocusInEvent += FocusInEvent;
-            FixedColview.FocusOutEvent += FocusOutEvent;
-            FixedColview.EnableSearch = false;
-            splitter.Child1.Hide();
-            splitter.Child1.NoShowAll = true;
-            image1.Pixbuf = null;
-            image1.Visible = false;
-            _mainWidget.Destroyed += MainWidgetDestroyed;
-            window1 = GetMainViewReference(this).MainWidget as Window;
+            return selectionColMax >= 0 ? Math.Min(selectionColMax, selectedCellColumnIndex) : selectedCellColumnIndex;
         }
 
+        /// <summary>
+        /// Column index of the right-most selected cell.
+        /// </summary>
+        private int LastSelectedColumn()
+        {
+            return selectionColMax >= 0 ? Math.Max(selectionColMax, selectedCellColumnIndex) : selectedCellColumnIndex;
+        }
+
+        /// <summary>
+        /// Row index of the top-most selected cell.
+        /// </summary>
+        private int FirstSelectedRow()
+        {
+            return selectionRowMax >= 0 ? Math.Min(selectionRowMax, selectedCellRowIndex) : selectedCellRowIndex;
+        }
+
+        /// <summary>
+        /// Row index of the bottom-most selected cell.
+        /// </summary>
+        private int LastSelectedRow()
+        {
+            return selectionRowMax >= 0 ? Math.Max(selectionRowMax, selectedCellRowIndex) : selectedCellRowIndex;
+        }
+
+        /// <summary>
+        /// Checks if any cells are selected.
+        /// </summary>
+        private bool AnyCellIsSelected()
+        {
+            return selectedCellRowIndex >= 0 && selectedCellColumnIndex >= 0;
+        }
+
+        /// <summary>
+        /// Called when the cursor is moved.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
         private void OnMoveCursor(object sender, EventArgs args)
         {
             UpdateSelectedCell();
@@ -514,12 +473,12 @@
             while (GLib.MainContext.Iteration()) ;
             TreePath path;
             TreeViewColumn column;
-            Gridview.GetCursor(out path, out column);
+            Grid.GetCursor(out path, out column);
             if (path == null || column == null)
                 return;
 
             int rowIndex = path.Indices[0];
-            int colIndex = Array.IndexOf(Gridview.Columns, column);
+            int colIndex = Array.IndexOf(Grid.Columns, column);
             // If we've clicked on the bottom row of populated data, all cells 
             // below the current cell will also be selected. To overcome this,
             // we add a new row to the datasource. Not a great solution, but 
@@ -531,7 +490,7 @@
             selectedCellColumnIndex = colIndex;
             selectionColMax = -1;
             selectionRowMax = -1;
-            Gridview.QueueDraw();
+            Grid.QueueDraw();
         }
 
         /// <summary>
@@ -542,7 +501,7 @@
         /// <returns>True if the cell is selected. False otherwise.</returns>
         private bool CellIsSelected(int rowNo, int colNo)
         {
-            return rowNo >= FirstSelectedRow && rowNo <= LastSelectedRow && colNo >= FirstSelectedColumn && colNo <= LastSelectedColumn;
+            return rowNo >= FirstSelectedRow() && rowNo <= LastSelectedRow() && colNo >= FirstSelectedColumn() && colNo <= LastSelectedColumn();
         }
 
         /// <summary>
@@ -562,36 +521,6 @@
         }
 
         /// <summary>
-        /// Inserts text into the current cell at the cursor position.
-        /// </summary>
-        /// <param name="text">Text to be inserted.</param>
-        public void InsertText(string text)
-        {
-            try
-            {
-                if (GetCurrentCell == null)
-                    return;
-
-                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
-                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
-
-                GetCurrentCell.Value = beforeCaret + text + afterCaret;
-                Gridview.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Gridview.GetColumn(GetCurrentCell.ColumnIndex), true);
-                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
-                while (GLib.MainContext.Iteration())
-                {
-                }
-                valueBeforeEdit = string.Empty;
-            }
-            catch (Exception ex)
-            {
-                MainView mainView = GetMainViewReference(this);
-                if (mainView != null)
-                    mainView.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
-            }
-        }
-
-        /// <summary>
         /// Does cleanup when the main widget is destroyed
         /// </summary>
         /// <param name="sender">The sending object</param>
@@ -600,19 +529,19 @@
         {
             if (splitter.Child1.Visible)
             {
-                Gridview.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
-                Gridview.Selection.Changed -= GridviewCursorChanged;
-                FixedColview.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
-                FixedColview.Selection.Changed -= FixedcolviewCursorChanged;
+                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
+                Grid.Selection.Changed -= GridviewCursorChanged;
+                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
+                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
             }
-            Gridview.ButtonPressEvent -= OnButtonDown;
-            FixedColview.ButtonPressEvent -= OnButtonDown;
-            Gridview.FocusInEvent -= FocusInEvent;
-            Gridview.FocusOutEvent -= FocusOutEvent;
-            Gridview.KeyPressEvent -= GridviewKeyPressEvent;
-            FixedColview.FocusInEvent -= FocusInEvent;
-            FixedColview.FocusOutEvent -= FocusOutEvent;
-            Gridview.ExposeEvent -= GridviewExposed;
+            Grid.ButtonPressEvent -= OnButtonDown;
+            fixedColView.ButtonPressEvent -= OnButtonDown;
+            Grid.FocusInEvent -= FocusInEvent;
+            Grid.FocusOutEvent -= FocusOutEvent;
+            Grid.KeyPressEvent -= GridviewKeyPressEvent;
+            fixedColView.FocusInEvent -= FocusInEvent;
+            fixedColView.FocusOutEvent -= FocusOutEvent;
+            Grid.ExposeEvent -= GridviewExposed;
 
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -637,13 +566,13 @@
                 }
             }
             ClearGridColumns();
-            gridmodel.Dispose();
+            gridModel.Dispose();
             popupMenu.Dispose();
             accel.Dispose();
-            if (imagePixbuf != null)
-                imagePixbuf.Dispose();
-            if (image1 != null)
-                image1.Dispose();
+            if (modelImagePixbuf != null)
+                modelImagePixbuf.Dispose();
+            if (modelImage != null)
+                modelImage.Dispose();
             if (table != null)
                 table.Dispose();
             _mainWidget.Destroyed -= MainWidgetDestroyed;
@@ -656,9 +585,9 @@
         private void ClearGridColumns()
         {
             colAttributes.Clear();
-            while (Gridview.Columns.Length > 0)
+            while (Grid.Columns.Length > 0)
             {
-                TreeViewColumn col = Gridview.GetColumn(0);
+                TreeViewColumn col = Grid.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
                 {
                     if (render is CellRendererText)
@@ -690,11 +619,11 @@
                 }
                 if (w != null)
                     w.ButtonPressEvent -= HeaderClicked;
-                Gridview.RemoveColumn(col);
+                Grid.RemoveColumn(col);
             }
-            while (FixedColview.Columns.Length > 0)
+            while (fixedColView.Columns.Length > 0)
             {
-                TreeViewColumn col = FixedColview.GetColumn(0);
+                TreeViewColumn col = fixedColView.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
                     if (render is CellRendererText)
                     {
@@ -711,7 +640,7 @@
                 }
                 if (w != null)
                     w.ButtonPressEvent -= HeaderClicked;
-                FixedColview.RemoveColumn(col);
+                fixedColView.RemoveColumn(col);
             }
         }
 
@@ -738,7 +667,7 @@
             if (keyName == "Return" || keyName == "Tab")
             {
                 int nextRow = rowIdx;
-                int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                int numCols = DataSource != null ? DataSource.Columns.Count : 0;
                 int nextCol = colIdx;
                 if (shifted)
                 {
@@ -766,7 +695,7 @@
                             }
                         }
                     }
-                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                    while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                 }
                 else
                 {
@@ -793,7 +722,7 @@
                             }
                         }
                     }
-                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                    while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
                 }
 
                 EndEdit();
@@ -802,7 +731,7 @@
                 }
                 if (nextRow != rowIdx || nextCol != colIdx)
                 {
-                    Gridview.SetCursor(new TreePath(new int[1] { nextRow }), Gridview.GetColumn(nextCol), userEditingCell);
+                    Grid.SetCursor(new TreePath(new int[1] { nextRow }), Grid.GetColumn(nextCol), userEditingCell);
                     selectedCellRowIndex = nextRow;
                     selectedCellColumnIndex = nextCol;
                     selectionRowMax = -1;
@@ -815,7 +744,7 @@
             else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && (activeCol == null || activeCol.Count < 1) && IsPrintableChar(args.Event.Key))
             {
                 // Initiate cell editing when user starts typing.
-                Gridview.SetCursor(new TreePath(new int[1] { rowIdx }), Gridview.GetColumn(colIdx), true);
+                Grid.SetCursor(new TreePath(new int[1] { rowIdx }), Grid.GetColumn(colIdx), true);
                 if (new GridCell(this, colIdx, rowIdx).EditorType == EditorTypeEnum.TextBox)
                 {
                     Gdk.EventHelper.Put(args.Event);
@@ -888,7 +817,7 @@
                     selectionColMax += 1;
                 }
                 if (isArrowKey)
-                    Gridview.QueueDraw();
+                    Grid.QueueDraw();
             }
             else if (args.Event.Key == Gdk.Key.Delete)
             {
@@ -916,16 +845,7 @@
         {
             if (selectionColMax < 0 || selectionRowMax < 0 || selectedCellRowIndex < 0 || selectedCellColumnIndex < 0)
                 return 0;
-            return (LastSelectedRow - FirstSelectedRow + 1) * (LastSelectedColumn - FirstSelectedColumn + 1);
-        }
-
-        /// <summary>
-        /// Show the completion window
-        /// </summary>
-        /// <param name="context">Contents of the cell, which is used to generate the completion options.</param>
-        private void ShowCompletionWindow(string context)
-        {
-
+            return (LastSelectedRow() - FirstSelectedRow() + 1) * (LastSelectedColumn() - FirstSelectedColumn() + 1);
         }
 
         /// <summary>
@@ -953,7 +873,7 @@
         {
             int cellHeight, offsetX, offsetY, cellWidth;
             Gdk.Rectangle rectangle = new Gdk.Rectangle();
-            TreeViewColumn column = Gridview.GetColumn(col);
+            TreeViewColumn column = Grid.GetColumn(col);
 
             // Getting dimensions from TreeViewColumn
             column.CellGetSize(rectangle, out offsetX, out offsetY, out cellWidth, out cellHeight);
@@ -999,7 +919,7 @@
         {
             int frameX, frameY, containerX, containerY;
             mainWindow.GetOrigin(out frameX, out frameY);
-            Gridview.GdkWindow.GetOrigin(out containerX, out containerY);
+            Grid.GdkWindow.GetOrigin(out containerX, out containerY);
             Tuple<int, int> relCoordinates = GetCellPosition(col, row + 1);
             return new Tuple<int, int>(relCoordinates.Item1 + containerX, relCoordinates.Item2 + containerY);
         }
@@ -1028,10 +948,10 @@
             if (!selfCursorMove)
             {
                 selfCursorMove = true;
-                TreeSelection fixedSel = FixedColview.Selection;
+                TreeSelection fixedSel = fixedColView.Selection;
                 TreePath[] selPaths = fixedSel.GetSelectedRows();
 
-                TreeSelection gridSel = Gridview.Selection;
+                TreeSelection gridSel = Grid.Selection;
                 gridSel.UnselectAll();
                 foreach (TreePath path in selPaths)
                     gridSel.SelectPath(path);
@@ -1047,13 +967,13 @@
         /// <param name="e">The event arguments</param>
         private void GridviewCursorChanged(object sender, EventArgs e)
         {
-            if (FixedColview.Visible && !selfCursorMove)
+            if (fixedColView.Visible && !selfCursorMove)
             {
                 selfCursorMove = true;
-                TreeSelection gridSel = Gridview.Selection;
+                TreeSelection gridSel = Grid.Selection;
                 TreePath[] selPaths = gridSel.GetSelectedRows();
 
-                TreeSelection fixedSel = FixedColview.Selection;
+                TreeSelection fixedSel = fixedColView.Selection;
                 fixedSel.UnselectAll();
                 foreach (TreePath path in selPaths)
                     fixedSel.SelectPath(path);
@@ -1077,29 +997,29 @@
             if (mainWindow != null)
                 mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             ClearGridColumns();
-            FixedColview.Visible = false;
+            fixedColView.Visible = false;
             colLookup.Clear();
 
             // Begin by creating a new ListStore with the appropriate number of
             // columns. Use the string column type for everything.
-            int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+            int numCols = DataSource != null ? DataSource.Columns.Count : 0;
             Type[] colTypes = new Type[numCols];
             for (int i = 0; i < numCols; i++)
                 colTypes[i] = typeof(string);
-            gridmodel = new ListStore(colTypes);
-            Gridview.ModifyBase(StateType.Active, FixedColview.Style.Base(StateType.Selected));
-            Gridview.ModifyText(StateType.Active, FixedColview.Style.Text(StateType.Selected));
-            FixedColview.ModifyBase(StateType.Active, Gridview.Style.Base(StateType.Selected));
-            FixedColview.ModifyText(StateType.Active, Gridview.Style.Text(StateType.Selected));
+            gridModel = new ListStore(colTypes);
+            Grid.ModifyBase(StateType.Active, fixedColView.Style.Base(StateType.Selected));
+            Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
+            fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
+            fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
 
-            image1.Visible = false;
+            modelImage.Visible = false;
 
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
                 ColRenderAttributes attrib = new ColRenderAttributes();
-                attrib.foregroundColor = Gridview.Style.Foreground(StateType.Normal);
-                attrib.backgroundColor = Gridview.Style.Base(StateType.Normal);
+                attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
                 colAttributes.Add(i, attrib);
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
@@ -1126,7 +1046,7 @@
                 textRender.Xalign = ((i == 0) || ((i == 1) && isPropertyMode)) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
                 TreeViewColumn column = new TreeViewColumn();
-                column.Title = this.DataSource.Columns[i].Caption;
+                column.Title = DataSource.Columns[i].Caption;
                 column.PackStart(textRender, true);     // 0
                 column.PackStart(toggleRender, true);   // 1
                 column.PackStart(comboRender, true);    // 2
@@ -1141,49 +1061,49 @@
                     column.Alignment = 0.0f;
                 else
                     column.Alignment = 0.5f; // For centered alignment of the column header
-                Gridview.AppendColumn(column);
+                Grid.AppendColumn(column);
 
                 // Gtk Treeview doesn't support "frozen" columns, so we fake it by creating a second, identical, TreeView to display
                 // the columns we want frozen
                 // For now, these frozen columns will be treated as read-only text
-                TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
+                TreeViewColumn fixedColumn = new TreeViewColumn(DataSource.Columns[i].ColumnName, textRender, "text", i);
                 fixedColumn.Sizing = TreeViewColumnSizing.Autosize;
                 fixedColumn.Resizable = true;
                 fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
                 fixedColumn.Alignment = 0.5f; // For centered alignment of the column header
                 fixedColumn.Visible = false;
-                FixedColview.AppendColumn(fixedColumn);
+                fixedColView.AppendColumn(fixedColumn);
             }
 
             if (!isPropertyMode)
             {
                 // Add an empty column at the end; auto-sizing will give this any "leftover" space
                 TreeViewColumn fillColumn = new TreeViewColumn();
-                Gridview.AppendColumn(fillColumn);
+                Grid.AppendColumn(fillColumn);
                 fillColumn.Sizing = TreeViewColumnSizing.Autosize;
             }
 
-            int numRows = DataSource != null ? this.DataSource.Rows.Count : 0;
+            int numRows = DataSource != null ? DataSource.Rows.Count : 0;
 
-            Gridview.Model = null;
-            FixedColview.Model = null;
+            Grid.Model = null;
+            fixedColView.Model = null;
             for (int row = 0; row < numRows; row++)
             {
                 // We could store data into the grid model, but we don't.
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
-                gridmodel.Append();
+                gridModel.Append();
 
                 // DataRow dataRow = this.DataSource.Rows[row];
                 // gridmodel.AppendValues(dataRow.ItemArray);
             }
-            Gridview.Model = gridmodel;
+            Grid.Model = gridModel;
 
-            SetColumnHeaders(Gridview);
-            SetColumnHeaders(FixedColview);
+            SetColumnHeaders(Grid);
+            SetColumnHeaders(fixedColView);
 
-            Gridview.EnableSearch = false;
+            Grid.EnableSearch = false;
             //// gridview.SearchColumn = 0;
-            FixedColview.EnableSearch = false;
+            fixedColView.EnableSearch = false;
             //// fixedcolview.SearchColumn = 0;
 
             UpdateControls();
@@ -1204,7 +1124,7 @@
                 activeCol = new List<int>();
             if (e.Event.Button == 1)
             {
-                Gridview.Selection.UnselectAll();
+                Grid.Selection.UnselectAll();
                 int colNo = GetColNoFromButton(sender as Button);
 
                 if ((e.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask && activeCol.Count > 0)
@@ -1287,7 +1207,7 @@
                 try
                 {
                     // Attempt to get default highlighting colour from the user's selected theme.
-                    backgroundColour = Gridview.Style.Base(StateType.Selected);
+                    backgroundColour = Grid.Style.Base(StateType.Selected);
                 }
                 catch
                 {
@@ -1296,7 +1216,7 @@
                 }
                 foregroundColour = new Gdk.Color(255, 255, 255);
 
-                Gridview.Columns[n].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                Grid.Columns[n].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
                 {
                     cell.BackgroundGdk = backgroundColour;
                     cell.ForegroundGdk = foregroundColour;
@@ -1304,13 +1224,13 @@
             }
             if (FormatColumns == null)
             {
-                foreach (int i in Enumerable.Range(0, Gridview.Columns.Length).Where(n => !activeCol.Contains(n)))
+                foreach (int i in Enumerable.Range(0, Grid.Columns.Length).Where(n => !activeCol.Contains(n)))
                 {
-                    backgroundColour = Gridview.Style.Base(StateType.Normal);
+                    backgroundColour = Grid.Style.Base(StateType.Normal);
                     foregroundColour = new Gdk.Color(0, 0, 0);
-                    if (i < Gridview.Columns.Length && i >= 0)
+                    if (i < Grid.Columns.Length && i >= 0)
                     {
-                        Gridview.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
+                        Grid.Columns[i].Cells.OfType<CellRendererText>().ToList().ForEach(cell =>
                         {
                             cell.BackgroundGdk = backgroundColour;
                             cell.ForegroundGdk = foregroundColour;
@@ -1319,29 +1239,11 @@
                 }
             }
 
-            Gridview.QueueDraw();
+            Grid.QueueDraw();
             if (view != null)
                 view.QueueDraw();
         }
-
-        /// <summary>
-        /// Calculates the index of the column which a given x-coordinate falls indside.
-        /// </summary>
-        /// <param name="x">x-coordinate relative to the <see cref="Gridview"/>.</param>
-        /// <returns>The column number</returns>
-        private int GetColumn(double x)
-        {
-            int width = 0;
-            int i;
-            for (i = 0; i < Gridview.Columns.Length; i++)
-            {
-                width += Gridview.Columns[i].Width;
-                if (width > x)
-                    break;
-            }
-            return i;
-        }
-
+        
         /// <summary>
         /// Copies data from all selected columns to the clipboard.
         /// </summary>
@@ -1393,37 +1295,37 @@
                 {
                     columnIndices = activeCol;
                 }
-                else if (Gridview.Columns.Length - activeCol.Aggregate((x, y) => Math.Min(x, y)) - 1 > firstLine.Length)
+                else if (Grid.Columns.Length - activeCol.Aggregate((x, y) => Math.Min(x, y)) - 1 > firstLine.Length)
                 {
                     // Paste into contiguous columns starting at earliest selected column.
                     columnIndices = Enumerable.Range(activeCol.Aggregate((x, y) => Math.Min(x, y)), firstLine.Length).ToList();
                 }
-                else if (firstLine.Length < Gridview.Columns.Length - 1)
+                else if (firstLine.Length < Grid.Columns.Length - 1)
                 {
                     // Paste into contiguous columns starting from the first column in the gridview.
                     columnIndices = Enumerable.Range(0, firstLine.Length).ToList();
                 }
                 else
                 {
-                    throw new Exception("Unable to paste " + firstLine.Length + " columns of data into a grid with " + Gridview.Columns.Length + " columns.");
+                    throw new Exception("Unable to paste " + firstLine.Length + " columns of data into a grid with " + Grid.Columns.Length + " columns.");
                 }
 
                 for (int i = 0; i < lines.Length; i++)
                 {
-                    if (i < this.RowCount && lines[i].Length > 0)
+                    if (i < RowCount && lines[i].Length > 0)
                     {
                         string[] words = lines[i].Split('\t');
 
                         for (int j = 0; j < columnIndices.Count; j++)
                         {
                             // Make sure there are enough rows in the data source.
-                            while (this.DataSource.Rows.Count <= i)
+                            while (DataSource.Rows.Count <= i)
                             {
-                                this.DataSource.Rows.Add(this.DataSource.NewRow());
+                                DataSource.Rows.Add(DataSource.NewRow());
                             }
 
-                            IGridCell cell = this.GetCell(columnIndices[j], i);
-                            IGridColumn column = this.GetColumn(columnIndices[j]);
+                            IGridCell cell = GetCell(columnIndices[j], i);
+                            IGridColumn column = GetColumn(columnIndices[j]);
                             if (!column.ReadOnly)
                             {
                                 try
@@ -1438,11 +1340,11 @@
                                         }
                                         else
                                         {
-                                            cell.Value = Convert.ChangeType(words[j], this.DataSource.Columns[j].DataType);
+                                            cell.Value = Convert.ChangeType(words[j], DataSource.Columns[j].DataType);
                                         }
 
                                         // Put a cell into the cells changed member.
-                                        cellsChanged.Add(this.GetCell(columnIndices[j], i));
+                                        cellsChanged.Add(GetCell(columnIndices[j], i));
                                     }
                                 }
                                 catch (FormatException)
@@ -1455,11 +1357,11 @@
             }
 
             // If some cells were changed then send out an event.
-            if (cellsChanged.Count > 0 && this.CellsChanged != null)
+            if (cellsChanged.Count > 0 && CellsChanged != null)
             {
-                FixedColview.QueueDraw();
-                Gridview.QueueDraw();
-                this.CellsChanged?.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+                fixedColView.QueueDraw();
+                Grid.QueueDraw();
+                CellsChanged?.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
         }
 
@@ -1474,7 +1376,7 @@
         /// <param name="view">The treeview for which headings are to be modified</param>
         private void SetColumnHeaders(Gtk.TreeView view)
         {
-            int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+            int numCols = DataSource != null ? DataSource.Columns.Count : 0;
             for (int i = 0; i < numCols; i++)
             {
                 Label newLabel = new Label();
@@ -1484,9 +1386,9 @@
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
                     (newLabel.Parent as Alignment).LeftPadding = 2;
                 newLabel.UseMarkup = true;
-                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Gridview.Columns[i].Title) + "</b>";
-                if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
-                    newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
+                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Grid.Columns[i].Title) + "</b>";
+                if (DataSource.Columns[i].Caption != DataSource.Columns[i].ColumnName)
+                    newLabel.Parent.Parent.Parent.TooltipText = DataSource.Columns[i].ColumnName;
                 newLabel.Show();
 
                 // By default, it's difficult to trap a right-click event on a TreeViewColumn (on the header of a column).
@@ -1512,10 +1414,10 @@
         /// <param name="e">The event arguments</param>
         private void TextRenderEditingCanceled(object sender, EventArgs e)
         {
-            this.userEditingCell = false;
-            (this.editControl as Widget).KeyPressEvent -= GridviewKeyPressEvent;
-            (this.editControl as Widget).FocusOutEvent -= GridViewCellFocusOutEvent;
-            this.editControl = null;
+            userEditingCell = false;
+            (editControl as Widget).KeyPressEvent -= GridviewKeyPressEvent;
+            (editControl as Widget).FocusOutEvent -= GridViewCellFocusOutEvent;
+            editControl = null;
         }
 
         /// <summary>
@@ -1525,7 +1427,7 @@
         /// <param name="e">The event arguments</param>
         private void FixedcolviewVadjustmentChanged(object sender, EventArgs e)
         {
-            Gridview.Vadjustment.Value = FixedColview.Vadjustment.Value;
+            Grid.Vadjustment.Value = fixedColView.Vadjustment.Value;
         }
 
         /// <summary>
@@ -1535,7 +1437,98 @@
         /// <param name="e">The event arguments</param>
         private void GridviewVadjustmentChanged(object sender, EventArgs e)
         {
-            FixedColview.Vadjustment.Value = Gridview.Vadjustment.Value;
+            fixedColView.Vadjustment.Value = Grid.Vadjustment.Value;
+        }
+
+        /// <summary>
+        /// Inserts text into the current cell at the cursor position.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        public void InsertText(string text)
+        {
+            try
+            {
+                if (GetCurrentCell == null)
+                    return;
+
+                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
+                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
+
+                GetCurrentCell.Value = beforeCaret + text + afterCaret;
+                Grid.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Grid.GetColumn(GetCurrentCell.ColumnIndex), true);
+                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
+                while (GLib.MainContext.Iteration())
+                {
+                }
+                valueBeforeEdit = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MainView mainView = GetMainViewReference(this);
+                if (mainView != null)
+                    mainView.ShowMessage(ex.ToString(), Simulation.ErrorLevel.Error);
+            }
+        }
+
+        /// <summary>
+        /// Add an action (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        /// <param name="shortcut">The shortcut keys</param>
+        private void AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
+        {
+            ImageMenuItem item = new ImageMenuItem(menuItemText);
+            if (!string.IsNullOrEmpty(shortcut))
+            {
+                string keyName = string.Empty;
+                Gdk.ModifierType modifier = Gdk.ModifierType.None;
+                string[] keyNames = shortcut.Split(new char[] { '+' });
+                foreach (string name in keyNames)
+                {
+                    if (name == "Ctrl")
+                        modifier |= Gdk.ModifierType.ControlMask;
+                    else if (name == "Shift")
+                        modifier |= Gdk.ModifierType.ShiftMask;
+                    else if (name == "Alt")
+                        modifier |= Gdk.ModifierType.Mod1Mask;
+                    else if (name == "Del")
+                        keyName = "Delete";
+                    else
+                        keyName = name;
+                }
+                try
+                {
+                    Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
+                    item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
+                }
+                catch
+                {
+                }
+            }
+            item.Activated += onClick;
+            popupMenu.Append(item);
+            popupMenu.ShowAll();
+        }
+
+        /// <summary>
+        /// Handle loss of focus by removing the accelerators from the popup menu
+        /// </summary>
+        /// <param name="o">The calling object</param>
+        /// <param name="args">The event arguments</param>
+        private void FocusOutEvent(object o, FocusOutEventArgs args)
+        {
+            ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
+        }
+
+        /// <summary>
+        /// Handle receiving focus by adding accelerators for the popup menu
+        /// </summary>
+        /// <param name="o">The calling object</param>
+        /// <param name="args">The event arguments</param>
+        private void FocusInEvent(object o, FocusInEventArgs args)
+        {
+            ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
         }
 
         /// <summary>
@@ -1556,17 +1549,17 @@
             // This is used later on.
             bool currentCellIsSelected = false;
 
-            if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
+            if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 currentCellIsSelected = CellIsSelected(rowNo, colNo);
-                cell.CellBackgroundGdk = currentCellIsSelected ? Gridview.Style.Base(StateType.Selected) : Gridview.Style.Base(StateType.Normal);
-                if (view == Gridview)
+                cell.CellBackgroundGdk = currentCellIsSelected ? Grid.Style.Base(StateType.Selected) : Grid.Style.Base(StateType.Normal);
+                if (view == Grid)
                 {
                     col.CellRenderers[1].Visible = false;
                     col.CellRenderers[2].Visible = false;
                     col.CellRenderers[3].Visible = false;
                 }
-                object dataVal = this.DataSource.Rows[rowNo][colNo];
+                object dataVal = DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType();
                 if (dataType == typeof(DBNull))
                     text = string.Empty;
@@ -1575,7 +1568,7 @@
                     text = string.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = string.Format("{0:d}", dataVal);
-                else if (view == Gridview)
+                else if (view == Grid)
                 {
                     // Currently not handling booleans and lists in the "fixed" column grid
                     if (dataType == typeof(bool))
@@ -1652,8 +1645,8 @@
                     }
                     else
                     {
-                        textRenderer.ForegroundGdk = Gridview.Style.Base(StateType.Normal);
-                        textRenderer.BackgroundGdk = Gridview.Style.Base(StateType.Selected);
+                        textRenderer.ForegroundGdk = Grid.Style.Base(StateType.Normal);
+                        textRenderer.BackgroundGdk = Grid.Style.Base(StateType.Selected);
                     }
                     textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
                 }
@@ -1722,7 +1715,7 @@
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
             {
-                colAttr.readOnly = isReadonly;
+                colAttr.ReadOnly = isReadonly;
             }
         }
 
@@ -1735,7 +1728,7 @@
         {
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
-                return colAttr.readOnly;
+                return colAttr.ReadOnly;
             else
                 return false;
         }
@@ -1750,7 +1743,7 @@
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
             {
-                colAttr.foregroundColor = color;
+                colAttr.ForegroundColor = color;
             }
         }
 
@@ -1763,9 +1756,9 @@
         {
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
-                return colAttr.foregroundColor;
+                return colAttr.ForegroundColor;
             else
-                return Gridview.Style.Foreground(StateType.Normal);
+                return Grid.Style.Foreground(StateType.Normal);
         }
 
         /// <summary>
@@ -1778,7 +1771,7 @@
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
             {
-                colAttr.backgroundColor = color;
+                colAttr.BackgroundColor = color;
             }
         }
 
@@ -1791,11 +1784,10 @@
         {
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
-                return colAttr.backgroundColor;
+                return colAttr.BackgroundColor;
             else
-                return Gridview.Style.Base(StateType.Normal);
+                return Grid.Style.Base(StateType.Normal);
         }
-
 
         /// <summary>
         /// Add a separator (on context menu) on the series grid.
@@ -1804,81 +1796,7 @@
         {
             popupMenu.Append(new SeparatorMenuItem());
         }
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
-        /// <param name="onClick">The event handler to call when menu is selected</param>
-        public void AddContextAction(string menuItemText, System.EventHandler onClick)
-        {
-            ImageMenuItem item = new ImageMenuItem(menuItemText);
-            item.Activated += onClick;
-            popupMenu.Append(item);
-            popupMenu.ShowAll();
-        }
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
-        /// <param name="onClick">The event handler to call when menu is selected</param>
-        /// <param name="shortcut">The shortcut keys</param>
-        public void AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
-        {
-            ImageMenuItem item = new ImageMenuItem(menuItemText);
-            if (!string.IsNullOrEmpty(shortcut))
-            {
-                string keyName = string.Empty;
-                Gdk.ModifierType modifier = Gdk.ModifierType.None;
-                string[] keyNames = shortcut.Split(new char[] { '+' });
-                foreach (string name in keyNames)
-                {
-                    if (name == "Ctrl")
-                        modifier |= Gdk.ModifierType.ControlMask;
-                    else if (name == "Shift")
-                        modifier |= Gdk.ModifierType.ShiftMask;
-                    else if (name == "Alt")
-                        modifier |= Gdk.ModifierType.Mod1Mask;
-                    else if (name == "Del")
-                        keyName = "Delete";
-                    else
-                        keyName = name;
-                }
-                try
-                {
-                    Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
-                    item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
-                }
-                catch
-                {
-                }
-            }
-            item.Activated += onClick;
-            popupMenu.Append(item);
-            popupMenu.ShowAll();
-        }
-
-        /// <summary>
-        /// Handle loss of focus by removing the accelerators from the popup menu
-        /// </summary>
-        /// <param name="o">The calling object</param>
-        /// <param name="args">The event arguments</param>
-        private void FocusOutEvent(object o, FocusOutEventArgs args)
-        {
-            ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
-        }
-
-        /// <summary>
-        /// Handle receiving focus by adding accelerators for the popup menu
-        /// </summary>
-        /// <param name="o">The calling object</param>
-        /// <param name="args">The event arguments</param>
-        private void FocusInEvent(object o, FocusInEventArgs args)
-        {
-            ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
-        }
-
+        
         /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
@@ -1914,13 +1832,13 @@
         /// <param name="bitmap">The image to display.</param>
         public void LoadImage(Bitmap bitmap)
         {
-            imagePixbuf = ImageToPixbuf(bitmap);
+            modelImagePixbuf = ImageToPixbuf(bitmap);
 
             // We should do a better job of rescaling the image. Any ideas?
-            double scaleFactor = Math.Min(250.0 / imagePixbuf.Height, 250.0 / imagePixbuf.Width);
-            image1.Pixbuf = imagePixbuf.ScaleSimple((int)(imagePixbuf.Width * scaleFactor), (int)(imagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
-            image1.Visible = true;
-            ScrolledWindow1.HscrollbarPolicy = PolicyType.Never;
+            double scaleFactor = Math.Min(250.0 / modelImagePixbuf.Height, 250.0 / modelImagePixbuf.Width);
+            modelImage.Pixbuf = modelImagePixbuf.ScaleSimple((int)(modelImagePixbuf.Width * scaleFactor), (int)(modelImagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
+            modelImage.Visible = true;
+            scrollingWindow.HscrollbarPolicy = PolicyType.Never;
         }
 
         /// <summary>
@@ -1931,16 +1849,16 @@
             System.Reflection.Assembly thisExe = System.Reflection.Assembly.GetExecutingAssembly();
             System.IO.Stream file = thisExe.GetManifestResourceStream("ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
             if (file == null)
-                image1.Visible = false;
+                modelImage.Visible = false;
             else
             {
-                imagePixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
+                modelImagePixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
 
                 // We should do a better job of rescaling the image. Any ideas?
-                double scaleFactor = Math.Min(250.0 / imagePixbuf.Height, 250.0 / imagePixbuf.Width);
-                image1.Pixbuf = imagePixbuf.ScaleSimple((int)(imagePixbuf.Width * scaleFactor), (int)(imagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
-                image1.Visible = true;
-                ScrolledWindow1.HscrollbarPolicy = PolicyType.Never;
+                double scaleFactor = Math.Min(250.0 / modelImagePixbuf.Height, 250.0 / modelImagePixbuf.Width);
+                modelImage.Pixbuf = modelImagePixbuf.ScaleSimple((int)(modelImagePixbuf.Width * scaleFactor), (int)(modelImagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
+                modelImage.Visible = true;
+                scrollingWindow.HscrollbarPolicy = PolicyType.Never;
             }
         }
 
@@ -1955,11 +1873,11 @@
             // They should be synchronized, but....
             // The Windows.Forms version looked at the grid data, so let's do the same here.
             TreeIter iter;
-            if (gridmodel.IterNthChild(out iter, rowIndex))
+            if (gridModel.IterNthChild(out iter, rowIndex))
             {
-                for (int i = 0; i < gridmodel.NColumns; i++)
+                for (int i = 0; i < gridModel.NColumns; i++)
                 {
-                    string contents = gridmodel.GetValue(iter, i) as string;
+                    string contents = gridModel.GetValue(iter, i) as string;
                     if (!string.IsNullOrEmpty(contents))
                         return false;
                 }
@@ -1986,7 +1904,7 @@
                     OnCellValueChanged(editSender, args);
                 }
                 else // A fallback procedure
-                    ViewBase.SendKeyEvent(Gridview, Gdk.Key.Return);
+                    ViewBase.SendKeyEvent(Grid, Gdk.Key.Return);
             }
         }
 
@@ -1999,47 +1917,47 @@
             // If we've already set this, or if the widgets haven't yet been mapped
             // (we can't determine widths until then), then just save the number of fixed
             // columns we want, so we can try again when the widgets appear on screen
-            if ((FixedColview.Visible && number == numberLockedCols) || !Gridview.IsMapped)
+            if ((fixedColView.Visible && number == numberLockedCols) || !Grid.IsMapped)
             {
                 numberLockedCols = number;
                 return;
             }
-            for (int i = 0; i < gridmodel.NColumns; i++)
+            for (int i = 0; i < gridModel.NColumns; i++)
             {
-                if (FixedColview.Columns.Length > i)
-                    FixedColview.Columns[i].Visible = i < number;
-                if (Gridview.Columns.Length > i)
-                    Gridview.Columns[i].Visible = i >= number;
+                if (fixedColView.Columns.Length > i)
+                    fixedColView.Columns[i].Visible = i < number;
+                if (Grid.Columns.Length > i)
+                    Grid.Columns[i].Visible = i >= number;
             }
             if (number > 0)
             {
                 if (!splitter.Child1.Visible)
                 {
-                    Gridview.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
-                    Gridview.Selection.Changed += GridviewCursorChanged;
-                    FixedColview.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
-                    FixedColview.Selection.Changed += FixedcolviewCursorChanged;
+                    Grid.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
+                    Grid.Selection.Changed += GridviewCursorChanged;
+                    fixedColView.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
+                    fixedColView.Selection.Changed += FixedcolviewCursorChanged;
                     GridviewCursorChanged(this, EventArgs.Empty);
                     GridviewVadjustmentChanged(this, EventArgs.Empty);
                 }
-                FixedColview.Model = gridmodel;
-                FixedColview.Visible = true;
+                fixedColView.Model = gridModel;
+                fixedColView.Visible = true;
                 splitter.Child1.NoShowAll = false;
                 splitter.ShowAll();
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
-                    splitter.Position = Math.Min(FixedColview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                    splitter.Position = Math.Min(fixedColView.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
                 else
-                    splitter.Position = FixedColview.SizeRequest().Width + splitterWidth;
+                    splitter.Position = fixedColView.SizeRequest().Width + splitterWidth;
             }
             else
             {
-                Gridview.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
-                Gridview.Selection.Changed -= GridviewCursorChanged;
-                FixedColview.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
-                FixedColview.Selection.Changed -= FixedcolviewCursorChanged;
-                FixedColview.Visible = false;
+                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
+                Grid.Selection.Changed -= GridviewCursorChanged;
+                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
+                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
+                fixedColView.Visible = false;
                 splitter.Position = 0;
             }
             numberLockedCols = number;
@@ -2054,7 +1972,7 @@
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
-            Gdk.Window gridWindow = hbox1.GdkWindow;  // Should we draw from hbox1 or from gridview?
+            Gdk.Window gridWindow = hboxContainer.GdkWindow;  // Should we draw from hbox1 or from gridview?
             gridWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
@@ -2070,12 +1988,12 @@
         /// <param name="e">The event arguments</param>
         private void OnCellBeginEdit(object sender, EditingStartedArgs e)
         {
-            this.userEditingCell = true;
-            this.editPath = e.Path;
-            this.editControl = e.Editable;
-            (this.editControl as Widget).KeyPressEvent += GridviewKeyPressEvent;
-            (this.editControl as Widget).FocusOutEvent += GridViewCellFocusOutEvent;
-            this.editSender = sender;
+            userEditingCell = true;
+            editPath = e.Path;
+            editControl = e.Editable;
+            (editControl as Widget).KeyPressEvent += GridviewKeyPressEvent;
+            (editControl as Widget).FocusOutEvent += GridViewCellFocusOutEvent;
+            editSender = sender;
             IGridCell where = GetCurrentCell;
             if (where.RowIndex >= DataSource.Rows.Count)
             {
@@ -2085,13 +2003,13 @@
                     DataSource.Rows.Add(row);
                 }
             }
-            this.valueBeforeEdit = this.DataSource.Rows[where.RowIndex][where.ColumnIndex];
-            Type dataType = this.valueBeforeEdit.GetType();
+            valueBeforeEdit = DataSource.Rows[where.RowIndex][where.ColumnIndex];
+            Type dataType = valueBeforeEdit.GetType();
             if (dataType == typeof(DateTime))
             {
                 Window dialog = new Window("Select date")
                 {
-                    TransientFor = Gridview.Toplevel as Window,
+                    TransientFor = Grid.Toplevel as Window,
                     SkipPagerHint = true,
                     SkipTaskbarHint = true,
                     KeepBelow = true
@@ -2110,7 +2028,7 @@
                 calendar.DisplayOptions = CalendarDisplayOptions.ShowHeading |
                                      CalendarDisplayOptions.ShowDayNames |
                                      CalendarDisplayOptions.ShowWeekNumbers;
-                calendar.Date = (DateTime)this.valueBeforeEdit;
+                calendar.Date = (DateTime)valueBeforeEdit;
 
                 topArea.PackStart(calendar, true, true, 0);
                 dialog.Add(topArea);
@@ -2121,10 +2039,10 @@
                     // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
                     // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
                     // let the user enter a value manually.
-                    if (calendar.Date != (DateTime)this.valueBeforeEdit)
+                    if (calendar.Date != (DateTime)valueBeforeEdit)
                     {
                         DateTime date = calendar.GetDate();
-                        this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
+                        DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
                         CellRendererText render = sender as CellRendererText;
                         if (render != null)
                         {
@@ -2133,24 +2051,24 @@
                             {
                                 (e.Editable as Entry).Text = render.Text;
                                 (e.Editable as Entry).Destroy();
-                                this.userEditingCell = false;
-                                if (this.CellsChanged != null)
+                                userEditingCell = false;
+                                if (CellsChanged != null)
                                 {
                                     GridCellsChangedArgs cellsChangedArgs = new GridCellsChangedArgs();
                                     cellsChangedArgs.ChangedCells = new List<IGridCell>();
-                                    cellsChangedArgs.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
-                                    this.CellsChanged(this, cellsChangedArgs);
+                                    cellsChangedArgs.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                                    CellsChanged(this, cellsChangedArgs);
                                 }
                             }
                         }
                     }
                     dialog.Destroy();
-                    Gridview.QueueDraw();
+                    Grid.QueueDraw();
                 };
 
                 // The new dialog will have focus by default. Switch focus back to the main window so that
                 // the Entry widget will be immediately editable.
-                (Gridview.Toplevel as Window).Present();
+                (Grid.Toplevel as Window).Present();
 
                 // When the calendar dialog first appears, the Entry widget will briefly lose focus. We don't want
                 // the custom focus out event handler below to fire when this occurs, so we process all events in 
@@ -2184,17 +2102,17 @@
         private void ToggleRenderToggled(object sender, ToggledArgs r)
         {
             IGridCell where = GetCurrentCell;
-            while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
+            while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
             {
-                this.DataSource.Rows.Add(this.DataSource.NewRow());
+                DataSource.Rows.Add(DataSource.NewRow());
             }
-            this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)this.DataSource.Rows[where.RowIndex][where.ColumnIndex];
-            if (this.CellsChanged != null)
+            DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)DataSource.Rows[where.RowIndex][where.ColumnIndex];
+            if (CellsChanged != null)
             {
                 GridCellsChangedArgs args = new GridCellsChangedArgs();
                 args.ChangedCells = new List<IGridCell>();
-                args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
-                this.CellsChanged(this, args);
+                args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                CellsChanged(this, args);
             }
         }
 
@@ -2230,31 +2148,31 @@
         /// <param name="newText">The new text</param>
         private void UpdateCellText(IGridCell where, string newText)
         {
-            while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
+            while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
             {
-                this.DataSource.Rows.Add(this.DataSource.NewRow());
+                DataSource.Rows.Add(DataSource.NewRow());
             }
 
             // Put the new value into the table on the correct row.
-            if (this.DataSource != null)
+            if (DataSource != null)
             {
-                string oldtext = AsString(this.DataSource.Rows[where.RowIndex][where.ColumnIndex]);
+                string oldtext = AsString(DataSource.Rows[where.RowIndex][where.ColumnIndex]);
                 if (oldtext != newText && newText != null)
                 {
                     try
                     {
-                        this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = newText;
+                        DataSource.Rows[where.RowIndex][where.ColumnIndex] = newText;
                     }
                     catch (Exception)
                     {
                     }
 
-                    if (this.CellsChanged != null)
+                    if (CellsChanged != null)
                     {
                         GridCellsChangedArgs args = new GridCellsChangedArgs();
                         args.ChangedCells = new List<IGridCell>();
-                        args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
-                        this.CellsChanged(this, args);
+                        args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                        CellsChanged(this, args);
                     }
                 }
             }
@@ -2267,15 +2185,15 @@
         /// <param name="e">The event arguments</param>
         private void OnCellValueChanged(object sender, EditedArgs e)
         {
-            if (this.userEditingCell)
+            if (userEditingCell)
             {
                 IGridCell where = GetCurrentCell;
                 if (where == null)
                     return;
 
-                object oldValue = this.valueBeforeEdit;
+                object oldValue = valueBeforeEdit;
 
-                this.userEditingCell = false;
+                userEditingCell = false;
 
                 // Make sure our table has enough rows.
                 string newtext = e.NewText;
@@ -2291,7 +2209,7 @@
                 {
                     if (string.IsNullOrEmpty(newtext))
                         return; // If the old value was null, and we've nothing meaningfull to add, pack up and go home
-                    dataType = this.DataSource.Columns[where.ColumnIndex].DataType;
+                    dataType = DataSource.Columns[where.ColumnIndex].DataType;
                 }
                 if (dataType == typeof(string))
                     newValue = newtext;
@@ -2336,35 +2254,35 @@
                     newValue = dateval;
                 }
 
-                while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
+                while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
                 {
-                    this.DataSource.Rows.Add(this.DataSource.NewRow());
+                    DataSource.Rows.Add(DataSource.NewRow());
                 }
 
                 // Put the new value into the table on the correct row.
-                if (this.DataSource != null)
+                if (DataSource != null)
                 {
                     try
                     {
-                        this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
+                        DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
                     }
                     catch (Exception)
                     {
                     }
                 }
 
-                if (this.valueBeforeEdit != null && this.valueBeforeEdit.GetType() == typeof(string) && newValue == null)
+                if (valueBeforeEdit != null && valueBeforeEdit.GetType() == typeof(string) && newValue == null)
                 {
                     newValue = string.Empty;
                 }
 
-                if (this.CellsChanged != null && this.valueBeforeEdit.ToString() != newValue.ToString())
+                if (CellsChanged != null && valueBeforeEdit.ToString() != newValue.ToString())
                 {
                     GridCellsChangedArgs args = new GridCellsChangedArgs();
                     args.ChangedCells = new List<IGridCell>();
-                    args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                    args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
                     args.invalidValue = isInvalid;
-                    this.CellsChanged(this, args);
+                    CellsChanged(this, args);
                 }
             }
         }
@@ -2374,14 +2292,14 @@
         /// </summary>
         private void UpdateControls()
         {
-            if (gridmodel.NColumns > 0)
+            if (gridModel.NColumns > 0)
             {
-                if (gridmodel.IterNChildren() == 0)
-                    Gridview.Sensitive = false;
+                if (gridModel.IterNChildren() == 0)
+                    Grid.Sensitive = false;
                 else
-                    Gridview.Sensitive = true;
+                    Grid.Sensitive = true;
             }
-            Gridview.Show();
+            Grid.Show();
         }
 
         /// <summary>
@@ -2394,15 +2312,15 @@
             try
             {
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                if (this.userEditingCell && this.editControl != null)
+                if (userEditingCell && editControl != null)
                 {
                     (editControl as Entry).PasteClipboard();
                     cellsChanged.Add(popupCell);
                 }
                 else
                 {
-                    int rowIndex = FirstSelectedRow;
-                    int columnIndex = FirstSelectedColumn;
+                    int rowIndex = FirstSelectedRow();
+                    int columnIndex = FirstSelectedColumn();
                     Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
                     string text = cb.WaitForText();
                     if (text != null)
@@ -2416,26 +2334,26 @@
                         {
                             // The number of selected cells is less than the number of cells that the user is attempting to paste.
                             // In this scenario, we ask for confirmation before proceeding with the paste operation.
-                            if ((Gtk.ResponseType)ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", MessageType.Question, ButtonsType.YesNo, window1) != Gtk.ResponseType.Yes)
+                            if ((Gtk.ResponseType)ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", MessageType.Question, ButtonsType.YesNo, primaryWindow) != Gtk.ResponseType.Yes)
                                 return;
                         }
                         foreach (string line in lines)
                         {
-                            if (rowIndex < this.RowCount && line.Length > 0)
+                            if (rowIndex < RowCount && line.Length > 0)
                             {
                                 string[] words = line.Split('\t');
                                 for (int i = 0; i < words.GetLength(0); ++i)
                                 {
-                                    if (columnIndex + i < this.DataSource.Columns.Count)
+                                    if (columnIndex + i < DataSource.Columns.Count)
                                     {
                                         // Make sure there are enough rows in the data source.
-                                        while (this.DataSource.Rows.Count <= rowIndex)
+                                        while (DataSource.Rows.Count <= rowIndex)
                                         {
-                                            this.DataSource.Rows.Add(this.DataSource.NewRow());
+                                            DataSource.Rows.Add(DataSource.NewRow());
                                         }
 
-                                        IGridCell cell = this.GetCell(columnIndex + i, rowIndex);
-                                        IGridColumn column = this.GetColumn(columnIndex + i);
+                                        IGridCell cell = GetCell(columnIndex + i, rowIndex);
+                                        IGridColumn column = GetColumn(columnIndex + i);
                                         if (!column.ReadOnly)
                                         {
                                             try
@@ -2450,11 +2368,11 @@
                                                     }
                                                     else
                                                     {
-                                                        cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
+                                                        cell.Value = Convert.ChangeType(words[i], DataSource.Columns[columnIndex + i].DataType);
                                                     }
 
                                                     // Put a cell into the cells changed member.
-                                                    cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
+                                                    cellsChanged.Add(GetCell(columnIndex + i, rowIndex));
                                                 }
                                             }
                                             catch (FormatException)
@@ -2479,11 +2397,11 @@
                 }
 
                 // If some cells were changed then send out an event.
-                if (cellsChanged.Count > 0 && this.CellsChanged != null)
+                if (cellsChanged.Count > 0 && CellsChanged != null)
                 {
-                    FixedColview.QueueDraw();
-                    Gridview.QueueDraw();
-                    this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+                    fixedColView.QueueDraw();
+                    Grid.QueueDraw();
+                    CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                 }
             }
             catch (Exception err)
@@ -2501,7 +2419,7 @@
         /// <param name="e">The event arguments</param>
         private void OnCopyToClipboard(object sender, EventArgs e)
         {
-            if (this.userEditingCell && this.editControl != null)
+            if (userEditingCell && editControl != null)
             {
                 (editControl as Entry).CopyClipboard();
             }
@@ -2510,12 +2428,12 @@
                 StringBuilder textToCopy = new StringBuilder();
                 if (selectionColMax >= 0 && selectionRowMax >= 0)
                 {
-                    for (int i = FirstSelectedRow; i <= LastSelectedRow; i++)
+                    for (int i = FirstSelectedRow(); i <= LastSelectedRow(); i++)
                     {
-                        for (int j = FirstSelectedColumn; j <= LastSelectedColumn; j++)
+                        for (int j = FirstSelectedColumn(); j <= LastSelectedColumn(); j++)
                         {
                             textToCopy.Append(GetCell(j, i).Value.ToString());
-                            if (j != LastSelectedColumn)
+                            if (j != LastSelectedColumn())
                                 textToCopy.Append('\t');
                         }
                         textToCopy.AppendLine();
@@ -2542,53 +2460,32 @@
         private void OnDeleteClick(object sender, EventArgs e)
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
-            if (this.userEditingCell && this.editControl != null)
+            if (userEditingCell && editControl != null)
             {
                 (editControl as Entry).DeleteSelection();
                 cellsChanged.Add(popupCell);
             }
-            else
+            else if (AnyCellIsSelected())
             {
-                TreeSelection selection = Gridview.Selection;
-                if (selection.CountSelectedRows() > 0)
+                for (int row = FirstSelectedRow(); row <= LastSelectedRow(); row++)
                 {
-                    int numCols = DataSource != null ? this.DataSource.Columns.Count : 0;
-                    TreePath[] selRows = selection.GetSelectedRows();
-                    foreach (TreePath row in selRows)
+                    for (int column = FirstSelectedColumn(); column <= LastSelectedColumn(); column++)
                     {
-                        int rowIdx = row.Indices[0];
-                        for (int colIdx = 0; colIdx < numCols; colIdx++)
+                        if (!GetColumn(column).ReadOnly)
                         {
-                            if (!this.GetColumn(colIdx).ReadOnly)
-                            {
-                                DataSource.Rows[rowIdx][colIdx] = DBNull.Value;
-                                cellsChanged.Add(this.GetCell(colIdx, rowIdx));
-                            }
-                        }
-                    }
-                }
-                else if (selectedCellRowIndex >= 0 && selectedCellColumnIndex >= 0)
-                {
-                    for (int row = FirstSelectedRow; row <= LastSelectedRow; row++)
-                    {
-                        for (int column = FirstSelectedColumn; column <= LastSelectedColumn; column++)
-                        {
-                            if (!this.GetColumn(column).ReadOnly)
-                            {
-                                DataSource.Rows[row][column] = DBNull.Value;
-                                cellsChanged.Add(GetCell(column, row));
-                            }
+                            DataSource.Rows[row][column] = DBNull.Value;
+                            cellsChanged.Add(GetCell(column, row));
                         }
                     }
                 }
             }
 
             // If some cells were changed then send out an event.
-            if (cellsChanged.Count > 0 && this.CellsChanged != null)
+            if (cellsChanged.Count > 0 && CellsChanged != null)
             {
-                FixedColview.QueueDraw();
-                Gridview.QueueDraw();
-                this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+                fixedColView.QueueDraw();
+                Grid.QueueDraw();
+                CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
         }
 
@@ -2619,7 +2516,7 @@
         private void OnButtonDown(object sender, ButtonPressEventArgs e)
         {
             activeCol = new List<int>();
-            Gtk.TreeView view = sender is Gtk.TreeView ? sender as Gtk.TreeView : Gridview;
+            Gtk.TreeView view = sender is Gtk.TreeView ? sender as Gtk.TreeView : Grid;
             HighlightColumns(view);
 
             TreePath path;
@@ -2660,7 +2557,7 @@
             }
             else if (e.Event.Button == 3)
             {
-                if (this.ColumnHeaderClicked != null)
+                if (ColumnHeaderClicked != null)
                 {
                     GridHeaderClickedArgs args = new GridHeaderClickedArgs();
                     if (sender is Gtk.TreeView)
@@ -2676,11 +2573,11 @@
                                 break;
                             colIdx++;
                         }
-                        args.Column = this.GetColumn(colIdx);
+                        args.Column = GetColumn(colIdx);
                         popupCell = new GridCell(this, colIdx, rowIdx);
                     }
                     args.RightClick = true;
-                    this.ColumnHeaderClicked.Invoke(this, args);
+                    ColumnHeaderClicked.Invoke(this, args);
                 }
                 popupMenu.Popup();
                 e.RetVal = true;
@@ -2699,7 +2596,7 @@
         {
             if (numberLockedCols > 0)
                 LockLeftMostColumns(numberLockedCols);
-            Gridview.ExposeEvent -= GridviewExposed;
+            Grid.ExposeEvent -= GridviewExposed;
         }
 
 
@@ -2715,7 +2612,7 @@
         {
             int i = 0;
             if (view == null)
-                view = Gridview;
+                view = Grid;
             foreach (Widget widget in view.AllChildren)
             {
                 if (widget.GetType() != typeof(Gtk.Button))
@@ -2740,7 +2637,7 @@
         {
             int i = 0;
             if (view == null)
-                view = Gridview;
+                view = Grid;
             foreach (Widget widget in view.AllChildren)
             {
                 if (widget.GetType() != typeof(Gtk.Button))

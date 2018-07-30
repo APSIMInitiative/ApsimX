@@ -60,12 +60,7 @@ namespace UserInterface.Interfaces
         /// Gets or sets a value indicating whether "property" mode is enabled
         /// </summary>
         bool PropertyMode { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the grid has an auto filter
-        /// </summary>
-        bool AutoFilterOn { get; set; }
-
+        
         /// <summary>
         /// The name of the associated model.
         /// </summary>
@@ -95,14 +90,7 @@ namespace UserInterface.Interfaces
         /// Add a separator line to the context menu
         /// </summary>
         void AddContextSeparator();
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
-        /// <param name="onClick">The event handler to call when menu is selected</param>
-        void AddContextAction(string menuItemText, System.EventHandler onClick);
-
+        
         /// <summary>
         /// Add an option (on context menu) on the series grid.
         /// </summary>

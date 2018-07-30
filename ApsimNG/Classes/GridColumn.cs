@@ -45,23 +45,23 @@ namespace UserInterface.Classes
         {
             get
             {
-                if (this.gridView.Gridview.Columns[this.ColumnIndex].Sizing == Gtk.TreeViewColumnSizing.Autosize)
+                if (this.gridView.Grid.Columns[this.ColumnIndex].Sizing == Gtk.TreeViewColumnSizing.Autosize)
                     return -1;
                 else
-                    return this.gridView.Gridview.Columns[this.ColumnIndex].Width;
+                    return this.gridView.Grid.Columns[this.ColumnIndex].Width;
             }
 
             set
             {
                 if (value == -1)
                 {
-                    this.gridView.Gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
-                    this.gridView.Gridview.Columns[this.ColumnIndex].Resizable = true;
+                    this.gridView.Grid.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
+                    this.gridView.Grid.Columns[this.ColumnIndex].Resizable = true;
                 }
                 else
                 {
-                    this.gridView.Gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Fixed;
-                    this.gridView.Gridview.Columns[this.ColumnIndex].FixedWidth = value;
+                    this.gridView.Grid.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Fixed;
+                    this.gridView.Grid.Columns[this.ColumnIndex].FixedWidth = value;
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace UserInterface.Classes
         {
             get
             {
-                CellRendererText render = this.gridView.Gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                CellRendererText render = this.gridView.Grid.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
                 if (render != null)
                     return render.Alignment == Pango.Alignment.Left;
                 else
@@ -82,10 +82,10 @@ namespace UserInterface.Classes
 
             set
             {
-                CellRendererText render = this.gridView.Gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                CellRendererText render = this.gridView.Grid.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
                 if (render != null)
                     render.Alignment = value ? Pango.Alignment.Left : Pango.Alignment.Right;
-                this.gridView.Gridview.Columns[this.ColumnIndex].Alignment = value ? 0.5F : 0.95F;
+                this.gridView.Grid.Columns[this.ColumnIndex].Alignment = value ? 0.5F : 0.95F;
             }
         }
 
@@ -242,12 +242,12 @@ namespace UserInterface.Classes
         {
             get
             {
-                return this.gridView.Gridview.Columns[this.ColumnIndex].Title;
+                return this.gridView.Grid.Columns[this.ColumnIndex].Title;
             }
 
             set
             {
-                this.gridView.Gridview.Columns[this.ColumnIndex].Title = value;
+                this.gridView.Grid.Columns[this.ColumnIndex].Title = value;
             }
         }
     }
