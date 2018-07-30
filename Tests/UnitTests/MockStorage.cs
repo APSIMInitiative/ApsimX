@@ -130,5 +130,15 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Get a list of the table columns
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <returns></returns>
+        public List<string> GetTableColumns(string tableName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
