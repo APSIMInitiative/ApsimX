@@ -26,7 +26,7 @@ rem Copy files from DeploymentSupport.
 copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin% >nul
 
 rem Add bin to path.
-set "PATH=%PATH%;%bin%"
+set "PATH=%PATH%;%bin%;C:\ProgramData\chocolatey\bin"
 
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
@@ -37,7 +37,7 @@ set validationsyntax=Validation
 
 if "%1"=="%unitsyntax%" (
 	echo Running Unit Tests...
-	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %bin%\UnitTests.dll /noshadow
+	nunit3-console.exe %bin%\UnitTests.dll
 	goto :end
 )
 
