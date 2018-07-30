@@ -144,7 +144,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Weather used by the model
         /// </summary>
-        private TAnimalWeather localWeather;
+        private AnimalWeather localWeather;
 
         /// <summary>
         /// True if at the first step of the run
@@ -174,7 +174,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The random number host
         /// </summary>
-        private TMyRandom randFactory;
+        private MyRandom randFactory;
 
         /// <summary>
         /// The supplement used
@@ -184,7 +184,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The excretion info
         /// </summary>
-        private TExcretionInfo excretionInfo;
+        private ExcretionInfo excretionInfo;
 
         /// <summary>
         /// The current time value
@@ -230,13 +230,13 @@ namespace Models.GrazPlan
         {
             this.userForages = new List<string>();
             this.userPaddocks = new List<string>();
-            this.randFactory = new TMyRandom(this.randSeed);       // random number generator
+            this.randFactory = new MyRandom(this.randSeed);       // random number generator
             this.stockModel = new StockList(this.randFactory);
 
             Array.Resize(ref this.genotypeInits, 0);
             Array.Resize(ref this.animalInits, 0);
             this.suppFed = new FoodSupplement();
-            this.excretionInfo = new TExcretionInfo();
+            this.excretionInfo = new ExcretionInfo();
             this.paddocksGiven = false;
             this.isFirstStep = true;
             this.randSeed = 0;
@@ -4252,7 +4252,6 @@ namespace Models.GrazPlan
             }
         }
 
-
         // ............................................................................
         // Management methods                                                         
         // ............................................................................
@@ -4639,7 +4638,7 @@ namespace Models.GrazPlan
         /// <param name="genoInits">The list of genotypes</param>
         /// <param name="genoIdx">The index of the item in the list to use</param>
         /// <returns>The animal parameter set for this genotype</returns>
-        public TAnimalParamSet ParamsFromGenotypeInits(TAnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
+        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
         {
             SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
             for (int idx = 0; idx < genoInits.Length; idx++)

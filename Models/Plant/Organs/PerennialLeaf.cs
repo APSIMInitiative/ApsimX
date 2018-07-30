@@ -440,7 +440,7 @@ namespace Models.PMF.Organs
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Phenology != null)
-                if (Phenology.OnDayOf("Emergence"))
+                if (Phenology.OnStartDayOf("Emergence"))
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
         }

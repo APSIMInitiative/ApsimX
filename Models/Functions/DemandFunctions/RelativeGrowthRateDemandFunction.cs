@@ -42,7 +42,7 @@ namespace Models.Functions.DemandFunctions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (Phenology.OnDayOf(InitialStageName) && StartWt == 0)
+            if (Phenology.OnStartDayOf(InitialStageName) && StartWt == 0)
                 StartWt = InitialWt;                                   //This is to initiate mass so relative growth rate can kick in
             double CurrentOrganWt = Math.Max(StartWt, Live.Wt / OrganNumber.Value(arrayIndex));
             double OrganDemand = CurrentOrganWt * RelativeGrowthRate.Value(arrayIndex);

@@ -1,21 +1,19 @@
-
-
 namespace Models.GrazPlan
 {
+    using StdUnits;
     using System;
     using System.Collections.Generic;
-    using StdUnits;
 
     /// <summary>
     /// Record containing the different sources from which an animal acquires energy, protein etc                                
     /// </summary>
     [Serializable]
-    public struct TDietRecord                                                             
-    {                                                                                   
+    public struct DietRecord
+    {
         /// <summary>
         /// 
         /// </summary>
-        public double Herbage;                                                                                         
+        public double Herbage;
         /// <summary>
         /// 
         /// </summary>
@@ -27,39 +25,39 @@ namespace Models.GrazPlan
         /// <summary>
         /// "Solid" is herbage and supplement taken together
         /// </summary>
-        public double Solid;                                                                
+        public double Solid;
         /// <summary>
         /// 
         /// </summary>
-        public double Total;                                                                                          
+        public double Total;
     }
 
     /// <summary>
     /// Allocation of energy, protein etc for:
     /// </summary>
     [Serializable]
-    public struct TPhysiolRecord
-    {                       
+    public struct PhysiolRecord
+    {
         /// <summary>
         /// Basal metab.+movement+digestion+cold
         /// </summary>
-        public double Maint;                                                             
+        public double Maint;
         /// <summary>
         /// Pregnancy
         /// </summary>
-        public double Preg;                                                              
+        public double Preg;
         /// <summary>
         /// Lactation
         /// </summary>
-        public double Lact;                                                                  
+        public double Lact;
         /// <summary>
         /// Wool growth (sheep only)
         /// </summary>
-        public double Wool;                                                                                
+        public double Wool;
         /// <summary>
         /// Weight gain (after efficiency losses)
         /// </summary>
-        public double Gain;                                                              
+        public double Gain;
         /// <summary>
         /// Basal metabolism
         /// </summary>
@@ -67,7 +65,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Heat production in the cold
         /// </summary>
-        public double Cold;                                                              
+        public double Cold;
         /// <summary>
         /// 
         /// </summary>
@@ -78,78 +76,78 @@ namespace Models.GrazPlan
     /// 
     /// </summary>
     [Serializable]
-    public class TAnimalOutput                                                                                               
+    public class AnimalOutput
     {
         /// <summary>
         /// Potential intake, after correction for legume content of the diet
         /// </summary>
-        public double IntakeLimitLegume;           
+        public double IntakeLimitLegume;
         /// <summary>
         /// Intakes for interface with pasture model
         /// </summary>
-        public GrazType.TGrazingOutputs IntakePerHead = new GrazType.TGrazingOutputs();
+        public GrazType.GrazingOutputs IntakePerHead = new GrazType.GrazingOutputs();
         // ...... Intake-related values - exclude grain that passes the gut undamaged. ......
         /// <summary>
         /// Intakes summarised for use in the nutrition model
         /// </summary>
-        public GrazType.IntakeRecord PaddockIntake = new GrazType.IntakeRecord();                  
+        public GrazType.IntakeRecord PaddockIntake = new GrazType.IntakeRecord();
         /// <summary>
         /// Intakes summarised for use in the nutrition model
         /// </summary>
-        public GrazType.IntakeRecord SuppIntake = new GrazType.IntakeRecord();                                        
+        public GrazType.IntakeRecord SuppIntake = new GrazType.IntakeRecord();
         /// <summary>
         /// Daily dry matter intake (kg) - not milk
         /// </summary>
-        public TDietRecord DM_Intake = new TDietRecord();                                  
+        public DietRecord DM_Intake = new DietRecord();
         /// <summary>
         /// Daily crude protein intake (kg)
         /// </summary>
-        public TDietRecord CP_Intake = new TDietRecord();                                  
+        public DietRecord CP_Intake = new DietRecord();
         /// <summary>
         /// Daily phosphorus intake (kg)
         /// </summary>
-        public TDietRecord Phos_Intake = new TDietRecord();                                
+        public DietRecord Phos_Intake = new DietRecord();
         /// <summary>
         /// Daily sulphur intake (kg)
         /// </summary>
-        public TDietRecord Sulf_Intake = new TDietRecord();                                                
+        public DietRecord Sulf_Intake = new DietRecord();
         /// <summary>
         /// Metabolizable energy intake (MJ)
         /// </summary>
-        public TDietRecord ME_Intake = new TDietRecord();                                  
+        public DietRecord ME_Intake = new DietRecord();
         /// <summary>
         /// Digestibility of diet components (0-1)
         /// </summary>
-        public TDietRecord Digestibility = new TDietRecord();                                 
+        public DietRecord Digestibility = new DietRecord();
         /// <summary>
         /// Crude protein concentrations (0-1)
         /// </summary>
-        public TDietRecord ProteinConc = new TDietRecord();                                       
+        public DietRecord ProteinConc = new DietRecord();
         /// <summary>
         /// ME:dry matter ratios (MJ/kg)
         /// </summary>
-        public TDietRecord ME_2_DM = new TDietRecord();                                                 
+        public DietRecord ME_2_DM = new DietRecord();
         /// <summary>
         /// Proportion of each component in the diet 
         /// </summary>
-        public TDietRecord DietPropn = new TDietRecord();                                  
+        public DietRecord DietPropn = new DietRecord();
         /// <summary>
         /// Degradability of protein in diet (0-1), corrected 
         /// </summary>
-        public TDietRecord CorrDgProt = new TDietRecord();                                 
+        public DietRecord CorrDgProt = new DietRecord();
         //..................................................................}
         /// <summary>
         /// Microbial crude protein (kg)
         /// </summary>
-        public double MicrobialCP;                                                                      
+        public double MicrobialCP;
         /// <summary>
         /// Digestible protein leaving the stomach (kg): total
         /// </summary>
-        public double DPLS;                                                                   
+        public double DPLS;
         /// <summary>
         /// Digestible protein leaving the stomach (kg): from milk
         /// </summary>
-        public double DPLS_Milk;                                                             
+        public double DPLS_Milk;
         /// <summary>
         /// Digestible protein leaving the stomach (kg): from MCP
         /// </summary>
@@ -157,23 +155,23 @@ namespace Models.GrazPlan
         /// <summary>
         /// DPLS available for wool growth (kg)
         /// </summary>
-        public double DPLS_Avail_Wool;                                                           
+        public double DPLS_Avail_Wool;
         /// <summary>
         /// Intake of undegradable protein (kg)
         /// </summary>
-        public double UDP_Intake;                                                                
+        public double UDP_Intake;
         /// <summary>
         /// Digestibility of UDP (0-1)
         /// </summary>
-        public double UDP_Dig;        
+        public double UDP_Dig;
         /// <summary>
         /// Requirement for UDP (kg)
         /// </summary>
-        public double UDP_Reqd;                                                                             
+        public double UDP_Reqd;
         /// <summary>
         /// Daily intake for RDP (kg)
         /// </summary>
-        public double RDP_Intake;                                                            
+        public double RDP_Intake;
         /// <summary>
         /// Daily requirement for RDP (kg)
         /// </summary>
@@ -182,44 +180,44 @@ namespace Models.GrazPlan
         /// <summary>
         /// Allocation of energy
         /// </summary>
-        public TPhysiolRecord EnergyUse = new TPhysiolRecord();                                   
+        public PhysiolRecord EnergyUse = new PhysiolRecord();
         /// <summary>
         /// Allocation of protein
         /// </summary>
-        public TPhysiolRecord ProteinUse = new TPhysiolRecord();                                                        
+        public PhysiolRecord ProteinUse = new PhysiolRecord();
         /// <summary>
         /// 
         /// </summary>
-        public TPhysiolRecord Phos_Use = new TPhysiolRecord();
+        public PhysiolRecord Phos_Use = new PhysiolRecord();
         /// <summary>
         /// 
         /// </summary>
-        public TPhysiolRecord Sulf_Use = new TPhysiolRecord();
+        public PhysiolRecord Sulf_Use = new PhysiolRecord();
         /// <summary>
         /// Efficiencies of ME use (0-1)
         /// </summary>
-        public TPhysiolRecord Efficiency = new TPhysiolRecord();                                        
+        public PhysiolRecord Efficiency = new PhysiolRecord();
 
         /// <summary>
         /// Endogenous faecal losses      (N,S,P)
         /// </summary>
-        public GrazType.DM_Pool EndoFaeces = new GrazType.DM_Pool();                           
+        public GrazType.DM_Pool EndoFaeces = new GrazType.DM_Pool();
         /// <summary>
         /// Total organic faecal losses   (DM,N,S,P)
         /// </summary>
-        public GrazType.DM_Pool OrgFaeces = new GrazType.DM_Pool();                        
+        public GrazType.DM_Pool OrgFaeces = new GrazType.DM_Pool();
         /// <summary>
         /// Total inorganic faecal losses (N,S,P)
         /// </summary>
-        public GrazType.DM_Pool InOrgFaeces = new GrazType.DM_Pool();                      
+        public GrazType.DM_Pool InOrgFaeces = new GrazType.DM_Pool();
         /// <summary>
         /// Total urinary losses of       (N,S,P)
         /// </summary>
-        public GrazType.DM_Pool Urine = new GrazType.DM_Pool();                            
+        public GrazType.DM_Pool Urine = new GrazType.DM_Pool();
         /// <summary>
         /// N in dermal losses (kg)
         /// </summary>
-        public double DermalNLoss;                                                                           
+        public double DermalNLoss;
 
         /// <summary>
         /// 
@@ -232,19 +230,19 @@ namespace Models.GrazPlan
         /// <summary>
         /// Increase in conceptus weight (kg/d)
         /// </summary>
-        public double ConceptusGrowth;                                                     
+        public double ConceptusGrowth;
         /// <summary>
         /// Net energy retained in wool (MJ)
         /// </summary>
-        public double TotalWoolEnergy;                                                     
+        public double TotalWoolEnergy;
         /// <summary>
         /// Thermoneutral heat production (MJ)
         /// </summary>
-        public double Therm0HeatProdn;                                                     
+        public double Therm0HeatProdn;
         /// <summary>
         /// Lower critical temperature from the chilling submodel (oC)      
         /// </summary>
-        public double LowerCritTemp;                                                       
+        public double LowerCritTemp;
 
         /// <summary>
         /// 
@@ -252,10 +250,10 @@ namespace Models.GrazPlan
         public double RDP_IntakeEffect;
 
         /// <summary>
-        /// Copy a TAnimalOutput object
+        /// Copy a AnimalOutput object
         /// </summary>
         /// <returns></returns>
-        public TAnimalOutput Copy()
+        public AnimalOutput Copy()
         {
             return ObjectCopier.Clone(this);
         }
@@ -265,7 +263,7 @@ namespace Models.GrazPlan
     /// An age list item
     /// </summary>
     [Serializable]
-    public struct TAgeListElement
+    public struct AgeListElement
     {
         /// <summary>
         /// Age in days
@@ -280,36 +278,36 @@ namespace Models.GrazPlan
         /// </summary>
         public int iNoFemales;
     }
-    #region TAgeList
+    #region AgeList
     // ======================================================================
     /// <summary>
     /// An agelist
     /// </summary>
     [Serializable]
-    public class TAgeList
+    public class AgeList
     {
-        private TAgeListElement[] FData;
+        private AgeListElement[] FData;
         private void setCount(int iValue)
         {
             Array.Resize(ref FData, iValue);
         }
 
         /// <summary>
-        /// Gets rid of empty elements of a TAgeList                                  
+        /// Gets rid of empty elements of a AgeList                                  
         /// </summary>
         public void Pack()
         {
-            int Idx, Jdx;
+            int idx, jdx;
 
-            Idx = 0;
-            while (Idx < Count)
+            idx = 0;
+            while (idx < Count)
             {
-                if ((FData[Idx].iNoMales > 0) || (FData[Idx].iNoFemales > 0))
-                    Idx++;
+                if ((FData[idx].iNoMales > 0) || (FData[idx].iNoFemales > 0))
+                    idx++;
                 else
                 {
-                    for (Jdx = Idx + 1; Jdx <= Count - 1; Jdx++)
-                        FData[Jdx - 1] = FData[Jdx];
+                    for (jdx = idx + 1; jdx <= Count - 1; jdx++)
+                        FData[jdx - 1] = FData[jdx];
                     setCount(Count - 1);
                 }
             }
@@ -317,12 +315,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Random number factory instance
         /// </summary>
-        public TMyRandom RandFactory;
+        public MyRandom RandFactory;
         /// <summary>
-        /// TAgeList constructor
+        /// AgeList constructor
         /// </summary>
         /// <param name="RandomFactory">An instance of a random number object</param>
-        public TAgeList(TMyRandom RandomFactory)
+        public AgeList(MyRandom RandomFactory)
         {
             RandFactory = RandomFactory;
             setCount(0);
@@ -332,7 +330,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="srcList"></param>
         /// <param name="RandomFactory"></param>
-        public TAgeList(TAgeList srcList, TMyRandom RandomFactory)
+        public AgeList(AgeList srcList, MyRandom RandomFactory)
         {
             int Idx;
 
@@ -343,7 +341,7 @@ namespace Models.GrazPlan
         }
         /* constructor Load(  Stream    : TStream;
                            bUseSmall : Boolean;
-                           RandomFactory: TMyRandom );
+                           RandomFactory: MyRandom );
         procedure   Store( Stream    : TStream  ); */
         /// <summary>
         /// Items in the age list
@@ -455,11 +453,11 @@ namespace Models.GrazPlan
             setCount(0);
         }
         /// <summary>
-        /// Add all elements of OtherAges into the object.  Unlike TAnimalGroup.Merge,
-        /// TAgeList.Merge does not free OtherAges.                                   
+        /// Add all elements of OtherAges into the object.  Unlike AnimalGroup.Merge,
+        /// AgeList.Merge does not free OtherAges.                                   
         /// </summary>
         /// <param name="OtherAges"></param>
-        public void Merge(TAgeList OtherAges)
+        public void Merge(AgeList OtherAges)
         {
             int Idx;
 
@@ -478,7 +476,7 @@ namespace Models.GrazPlan
         /// <param name="NF"></param>
         /// <param name="ByAge">Split by age</param>
         /// <returns></returns>
-        public TAgeList Split(int NM, int NF, bool ByAge)
+        public AgeList Split(int NM, int NF, bool ByAge)
         {
             int[,] TransferNo;                                          // 0,x =male, 1,x =female                         
             int[] TotalNo = new int[2];
@@ -486,11 +484,11 @@ namespace Models.GrazPlan
             int[] TransfersDone = new int[2];
             double[] TransferPropn = new double[2];
             int iAnimal, iFirst, iLast;
-            int Idx, Jdx;
+            int idx, Jdx;
 
-            TAgeList Result = new TAgeList(RandFactory);                // Create a list with the same age          
-            for (Idx = 0; Idx <= Count - 1; Idx++)                      //   structure but no animals               
-                Result.Input(this.FData[Idx].iAgeDays, 0, 0);
+            AgeList Result = new AgeList(RandFactory);                // Create a list with the same age          
+            for (idx = 0; idx <= Count - 1; idx++)                      //   structure but no animals               
+                Result.Input(this.FData[idx].iAgeDays, 0, 0);
 
             TransfersReqd[0] = NM;
             TransfersReqd[1] = NF;
@@ -501,12 +499,12 @@ namespace Models.GrazPlan
 
             if (ByAge)                                                  // If ByAge=TRUE, oldest animals are placed 
             {                                                           //   in Result                           
-                for (Idx = Count - 1; Idx >= 0; Idx--)
+                for (idx = Count - 1; idx >= 0; idx--)
                 {
-                    TransferNo[0, Idx] = Math.Min(TransfersReqd[0] - TransfersDone[0], FData[Idx].iNoMales);
-                    TransferNo[1, Idx] = Math.Min(TransfersReqd[1] - TransfersDone[1], FData[Idx].iNoFemales);
+                    TransferNo[0, idx] = Math.Min(TransfersReqd[0] - TransfersDone[0], FData[idx].iNoMales);
+                    TransferNo[1, idx] = Math.Min(TransfersReqd[1] - TransfersDone[1], FData[idx].iNoFemales);
                     for (Jdx = 0; Jdx <= 1; Jdx++)
-                        TransfersDone[Jdx] += TransferNo[Jdx, Idx];
+                        TransfersDone[Jdx] += TransferNo[Jdx, idx];
                 }
             }
             else                                                                  // If ByAge=FALSE, the age structures are   
@@ -519,63 +517,63 @@ namespace Models.GrazPlan
                     TransferPropn[Jdx] = StdMath.XDiv(TransfersReqd[Jdx], TotalNo[Jdx]);
                 }
 
-                for (Idx = 0; Idx <= Count - 1; Idx++)
+                for (idx = 0; idx <= Count - 1; idx++)
                 {
-                    TransferNo[0, Idx] = Convert.ToInt32(Math.Round(TransferPropn[0] * FData[Idx].iNoMales));
-                    TransferNo[1, Idx] = Convert.ToInt32(Math.Round(TransferPropn[1] * FData[Idx].iNoFemales));
+                    TransferNo[0, idx] = Convert.ToInt32(Math.Round(TransferPropn[0] * FData[idx].iNoMales));
+                    TransferNo[1, idx] = Convert.ToInt32(Math.Round(TransferPropn[1] * FData[idx].iNoFemales));
                     for (Jdx = 0; Jdx <= 1; Jdx++)
-                        TransfersDone[Jdx] += TransferNo[Jdx, Idx];
+                        TransfersDone[Jdx] += TransferNo[Jdx, idx];
                 }
 
                 for (Jdx = 0; Jdx <= 1; Jdx++)                                          // Randomly allocate roundoff errors        
                 {
                     while (TransfersDone[Jdx] < TransfersReqd[Jdx])                     // Too few transfers                        
                     {
-                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.MyRandom() * (TotalNo[Jdx] - TransfersDone[Jdx])),
+                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.RandomValue() * (TotalNo[Jdx] - TransfersDone[Jdx])),
                                         (TotalNo[Jdx] - TransfersDone[Jdx]) - 1));
-                        Idx = -1;
+                        idx = -1;
                         iLast = 0;
                         do
                         {
-                            Idx++;
+                            idx++;
                             iFirst = iLast;
                             if (Jdx == 0)
-                                iLast = iFirst + (FData[Idx].iNoMales - TransferNo[Jdx, Idx]);
+                                iLast = iFirst + (FData[idx].iNoMales - TransferNo[Jdx, idx]);
                             else
-                                iLast = iFirst + (FData[Idx].iNoFemales - TransferNo[Jdx, Idx]);
+                                iLast = iFirst + (FData[idx].iNoFemales - TransferNo[Jdx, idx]);
                             //until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
-                        } while ((Idx != Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
+                        } while ((idx != Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
 
-                        TransferNo[Jdx, Idx]++;
+                        TransferNo[Jdx, idx]++;
                         TransfersDone[Jdx]++;
                     }
 
                     while (TransfersDone[Jdx] > TransfersReqd[Jdx])           // Too many transfers                       
                     {
-                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.MyRandom() * TransfersDone[Jdx]),
+                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.RandomValue() * TransfersDone[Jdx]),
                                         TransfersDone[Jdx] - 1));
-                        Idx = -1;
+                        idx = -1;
                         iLast = 0;
                         do
                         {
-                            Idx++;
+                            idx++;
                             iFirst = iLast;
-                            iLast = iFirst + TransferNo[Jdx, Idx];
+                            iLast = iFirst + TransferNo[Jdx, idx];
                             //until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
-                        } while ((Idx != Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
+                        } while ((idx != Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
 
-                        TransferNo[Jdx, Idx]--;
+                        TransferNo[Jdx, idx]--;
                         TransfersDone[Jdx]--;
                     }
                 }
             }
 
-            for (Idx = 0; Idx <= Count - 1; Idx++)                                                // Carry out transfers                      
+            for (idx = 0; idx <= Count - 1; idx++)                                                // Carry out transfers                      
             {
-                this.FData[Idx].iNoMales -= TransferNo[0, Idx];
-                Result.FData[Idx].iNoMales += TransferNo[0, Idx];
-                this.FData[Idx].iNoFemales -= TransferNo[1, Idx];
-                Result.FData[Idx].iNoFemales += TransferNo[1, Idx];
+                this.FData[idx].iNoMales -= TransferNo[0, idx];
+                Result.FData[idx].iNoMales += TransferNo[0, idx];
+                this.FData[idx].iNoFemales -= TransferNo[1, idx];
+                Result.FData[idx].iNoFemales += TransferNo[1, idx];
             }
 
             this.Pack();                                                                // Clear away empty entries in both lists   
@@ -652,14 +650,14 @@ namespace Models.GrazPlan
             }
         }
     }
-    #endregion TAgeList
+    #endregion AgeList
 
     /// <summary>
     /// Set of differences between two sub-groups of animals.  Used in the Split  
     /// method of AnimalGroup                                                     
     /// </summary>
     [Serializable]
-    public struct TDifferenceRecord
+    public struct DifferenceRecord
     {
         /// <summary>
         /// Standard reference weight
@@ -679,47 +677,47 @@ namespace Models.GrazPlan
     /// Climatic inputs to the animal model                                       
     /// </summary>
     [Serializable]
-    public struct TAnimalWeather
+    public struct AnimalWeather
     {
         /// <summary>
         /// Latitude (degrees, +ve=north)
         /// </summary>
-        public double Latitude;                             
+        public double Latitude;
         /// <summary>
         /// Date at which environment prevails
         /// </summary>
-        public int TheDay;                                         
+        public int TheDay;
         /// <summary>
         /// Maximum air temperature (deg C)
         /// </summary>
-        public double MaxTemp;                                         
+        public double MaxTemp;
         /// <summary>
         /// Minimum air temperature (deg C)
         /// </summary>
-        public double MinTemp;                                         
+        public double MinTemp;
         /// <summary>
         /// Mean of MaxTemp and MinTemp
         /// </summary>
-        public double MeanTemp;                                            
+        public double MeanTemp;
         /// <summary>
         /// Precipitation (mm)
         /// </summary>
-        public double Precipitation;                                                
+        public double Precipitation;
         /// <summary>
         /// Average daily windspeed (m/s)
         /// </summary>
-        public double WindSpeed;                                         
+        public double WindSpeed;
         /// <summary>
         /// Daylength including civil twilight (hr)
         /// </summary>
-        public double DayLength;                               
+        public double DayLength;
     }
 
     /// <summary>
-    /// TStateInfo type. Information required to reset the state in the case of RDP insufficiency                                                                
+    /// AnimalStateInfo type. Information required to reset the state in the case of RDP insufficiency                                                                
     /// </summary>
     [Serializable]
-    public struct TStateInfo
+    public struct AnimalStateInfo
     {
         /// <summary>
         /// Base weight without wool
@@ -760,10 +758,10 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// TExcretionInfo type. Totalled amounts of excretion                           
+    /// ExcretionInfo type. Totalled amounts of excretion                           
     /// </summary>
     [Serializable]
-    public class TExcretionInfo
+    public class ExcretionInfo
     {
         /// <summary>
         /// Organic faeces pool
@@ -781,47 +779,47 @@ namespace Models.GrazPlan
         /// <summary>
         /// Number in the time step by all animals (not including unweaned young)
         /// </summary>
-        public double dDefaecations;   
+        public double dDefaecations;
         /// <summary>
         /// Volume per defaecation, m^3 (fresh basis)
         /// </summary>
-        public double dDefaecationVolume;   
+        public double dDefaecationVolume;
         /// <summary>
         /// Area per defaecation, m^2 (fresh basis)
         /// </summary>
-        public double dDefaecationArea;   
+        public double dDefaecationArea;
         /// <summary>
         /// Eccentricity of faeces
         /// </summary>
-        public double dDefaecationEccentricity;   
+        public double dDefaecationEccentricity;
         /// <summary>
         /// Proportion of faecal inorganic N that is nitrate
         /// </summary>
-        public double dFaecalNO3Propn;   
+        public double dFaecalNO3Propn;
         /// <summary>
         /// Number in the time step by all animals (not including unweaned young)
         /// </summary>
-        public double dUrinations;   
+        public double dUrinations;
         /// <summary>
         /// Fluid volume per urination, m^3
         /// </summary>
-        public double dUrinationVolume;   
+        public double dUrinationVolume;
         /// <summary>
         /// Area covered by each urination at the soil surface, m^2
         /// </summary>
-        public double dUrinationArea;   
+        public double dUrinationArea;
         /// <summary>
         /// Eccentricity of urinations
         /// </summary>
-        public double dUrinationEccentricity;   
+        public double dUrinationEccentricity;
     }
-    #region TAnimalGroup
+    #region AnimalGroup
     // =============================================================================================
     /// <summary>
-    /// TAnimalGroup class
+    /// AnimalGroup class
     /// </summary>
     [Serializable]
-    public class TAnimalGroup
+    public class AnimalGroup
     {
         /// <summary>
         /// AnimalsDynamicGlb differentiates between the "static" version of the      
@@ -831,7 +829,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Represents no difference
         /// </summary>
-        public TDifferenceRecord NODIFF = new TDifferenceRecord() { StdRefWt = 0, BaseWeight = 0, FleeceWt = 0 };
+        public DifferenceRecord NODIFF = new DifferenceRecord() { StdRefWt = 0, BaseWeight = 0, FleeceWt = 0 };
         /// <summary>
         /// 
         /// </summary>
@@ -839,51 +837,51 @@ namespace Models.GrazPlan
         /// <summary>
         /// Depth of wool left after shearing (cm)
         /// </summary>
-        public const double STUBBLE_MM = 0.5;                                                        
+        public const double STUBBLE_MM = 0.5;
         /// <summary>
         /// This animal's parameters
         /// </summary>
-        protected TAnimalParamSet AParams;
+        protected AnimalParamSet AParams;
         /// <summary>
         /// Paramters of the animal mated to
         /// </summary>
-        protected TAnimalParamSet FMatedTo;
+        protected AnimalParamSet FMatedTo;
         /// <summary>
         /// Distribution of ages
         /// </summary>
-        protected TAgeList Ages;                                                                 
+        protected AgeList Ages;
         /// <summary>
         /// Mean age of all animals (days)
         /// </summary>
-        protected int MeanAge;                                                         
+        protected int MeanAge;
         /// <summary>
         /// Number of male animals in the group 
         /// </summary>
-        protected int NoMales;                  
+        protected int NoMales;
         /// <summary>
         /// Number of female animals in the group
         /// </summary>
-        protected int NoFemales;                                                                              
+        protected int NoFemales;
         /// <summary>
         /// All weights in kg
         /// </summary>
-        protected double TotalWeight;                                                               
+        protected double TotalWeight;
         /// <summary>
         /// Greasy fleece weight (including stubble)
         /// </summary>
-        protected double WoolWt;                                             
+        protected double WoolWt;
         /// <summary>
         /// Growth of greasy fleece (kg/d)           
         /// </summary>
-        protected double DeltaWoolWt;                                       
+        protected double DeltaWoolWt;
         /// <summary>
         /// Average fibre diameter (microns)         
         /// </summary>
-        protected double WoolMicron;                                        
+        protected double WoolMicron;
         /// <summary>
         /// Diameter of new wool (microns)           
         /// </summary>
-        protected double DeltaWoolMicron;   
+        protected double DeltaWoolMicron;
         /// <summary>
         /// Reproduction status
         /// </summary>
@@ -913,89 +911,89 @@ namespace Models.GrazPlan
         /// <summary>
         /// The mothers animal group
         /// </summary>
-        protected TAnimalGroup Mothers;
+        protected AnimalGroup Mothers;
 
         /// <summary>
         /// Day in the mating cycle; -1 if not mating
         /// </summary>
-        protected int MateCycle;                                        
+        protected int MateCycle;
         /// <summary>
         /// Days left in joining period
         /// </summary>
-        protected int DaysToMate;                                                      
+        protected int DaysToMate;
         /// <summary>
         /// Days since conception
         /// </summary>
-        protected int FoetalAge;                                                            
+        protected int FoetalAge;
         /// <summary>
         /// Weight of foetus 
         /// </summary>
-        protected double FoetalWt;                                                              
+        protected double FoetalWt;
         /// <summary>
         /// Base weight 42 days before parturition   
         /// </summary>
-        protected double MidLatePregWt;                                 
+        protected double MidLatePregWt;
 
         /// <summary>
         /// Fleece-free, conceptus-free weight (kg)
         /// </summary>
-        protected double BasalWeight;                                     
+        protected double BasalWeight;
         /// <summary>
         /// Change in BaseWeight (kg/d)
         /// </summary>
-        protected double DeltaBaseWeight;                                              
+        protected double DeltaBaseWeight;
         /// <summary>
         /// Highest previous weight (kg)
         /// </summary>
-        protected double MaxPrevWt;                                                   
+        protected double MaxPrevWt;
         /// <summary>
         /// Hair or fleece depth (cm)
         /// </summary>
-        protected double FCoatDepth;                                                    
+        protected double FCoatDepth;
         /// <summary>
         /// Value of Condition at parturition
         /// </summary>
-        protected double ConditionAtBirthing;                                    
+        protected double ConditionAtBirthing;
         /// <summary>
         /// Phosphorus in base weight (kg)
         /// </summary>
-        protected double BasePhos;                                                 
+        protected double BasePhos;
         /// <summary>
         /// Sulphur in base weight (kg)
         /// </summary>
-        protected double BaseSulf;                                                    
+        protected double BaseSulf;
         /// <summary>
         /// Relative size
         /// </summary>
-        protected double Size;                                                                      
+        protected double Size;
         /// <summary>
         /// Relative condition
         /// </summary>
-        protected double Condition;                                                            
+        protected double Condition;
         /// <summary>
         /// Weight of these animals at birth (kg)
         /// </summary>
-        protected double BirthWt;                                            
+        protected double BirthWt;
         /// <summary>
         /// Standard reference weight of the group
         /// </summary>
-        protected double StdRefWt;                                          
+        protected double StdRefWt;
         /// <summary>
         /// Normal weight (kg)
         /// </summary>
-        protected double NormalWt;                                                              
+        protected double NormalWt;
         /// <summary>
         /// Days since parturition (if lactating)
         /// </summary>
-        protected int DaysLactating;                                         
+        protected int DaysLactating;
         /// <summary>
         /// Milk production (MJ)
         /// </summary>
-        protected double Milk_MJProdn;                                                       
+        protected double Milk_MJProdn;
         /// <summary>
         /// Protein in milk production (kg)
         /// </summary>
-        protected double Milk_ProtProdn;                                          
+        protected double Milk_ProtProdn;
         /// <summary>
         /// 
         /// </summary>
@@ -1007,19 +1005,19 @@ namespace Models.GrazPlan
         /// <summary>
         /// Weight of milk (4% fat equiv.)
         /// </summary>
-        protected double Milk_Weight;                                               
+        protected double Milk_Weight;
         /// <summary>
         /// Proportion of potential milk production  
         /// </summary>
-        protected double PropnOfMaxMilk;                                
+        protected double PropnOfMaxMilk;
         /// <summary>
         /// Scales max. intake etc for underweight in lactating animals  
         /// </summary>
-        protected double LactAdjust;                                    
+        protected double LactAdjust;
         /// <summary>
         /// 
         /// </summary>
-        protected double LactRatio;                                                          
+        protected double LactRatio;
         /// <summary>
         /// 
         /// </summary>
@@ -1027,7 +1025,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Potential intake (uncorrected for legume)
         /// </summary>
-        protected double IntakeLimit;                                   
+        protected double IntakeLimit;
         /// <summary>
         /// 
         /// </summary>
@@ -1039,15 +1037,15 @@ namespace Models.GrazPlan
         /// <summary>
         /// Fraction of base weight gain from solid intake. 
         /// </summary>
-        protected double BWGain_Solid;                                  
+        protected double BWGain_Solid;
         /// <summary>
         /// Additional distance walked -dairy cattle
         /// </summary>
-        protected double FDistanceWalked;                                
+        protected double FDistanceWalked;
         /// <summary>
         /// Overall stocking pressure
         /// </summary>
-        protected double FAnimalsPerHa;                                                 
+        protected double FAnimalsPerHa;
         /// <summary>
         /// 
         /// </summary>
@@ -1055,11 +1053,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// The grazing inputs
         /// </summary>
-        protected GrazType.TGrazingInputs Inputs = new GrazType.TGrazingInputs();
+        protected GrazType.GrazingInputs Inputs = new GrazType.GrazingInputs();
         /// <summary>
         /// The animal's environment
         /// </summary>
-        protected TAnimalWeather TheEnv;
+        protected AnimalWeather TheEnv;
         /// <summary>
         /// 
         /// </summary>
@@ -1161,7 +1159,7 @@ namespace Models.GrazPlan
         protected void DescribeTheDiet(ref double[] HerbageRI,      // "Relative intakes" of each herbage       
                                    ref double[,] SeedRI,            //   digestibility class, seeds &           
                                    ref double SuppRI,               //   supplement                             
-                                   ref TAnimalOutput timeStepState)
+                                   ref AnimalOutput timeStepState)
         {
 
             GrazType.IntakeRecord suppInput = new GrazType.IntakeRecord();
@@ -1187,7 +1185,7 @@ namespace Models.GrazPlan
 
             SummariseIntakeRecord(ref timeStepState.PaddockIntake);
             if (timeStepState.PaddockIntake.Biomass == 0.0) // i.e. less than fTrivialIntake
-                timeStepState.IntakePerHead = new GrazType.TGrazingOutputs();
+                timeStepState.IntakePerHead = new GrazType.GrazingOutputs();
 
             timeStepState.SuppIntake = new GrazType.IntakeRecord();                             // Summarise supplement intake           
             fSupp_ME2DM = 0.0;
@@ -1295,11 +1293,11 @@ namespace Models.GrazPlan
                                      int Day,
                                      double IntakeScale,            // Assumed scaling factor for intake        
                                      double FL,                     // Assumed feeding level                    
-                                     ref TDietRecord CorrDg,
+                                     ref DietRecord CorrDg,
                                      ref double RDPI, ref double RDPR,
-                                     ref TDietRecord UDPIs)
+                                     ref DietRecord UDPIs)
         {
-            TDietRecord RDPIs;
+            DietRecord RDPIs;
             double SuppFME_Intake;                                                 // Fermentable ME intake of supplement      
             int Idx;
 
@@ -1410,7 +1408,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         protected double MaxNormWtFunc(double SRW, double BW,
                                 int AgeDays,
-                                TAnimalParamSet Params)
+                                AnimalParamSet Params)
         {
             double GrowthRate;
 
@@ -1532,15 +1530,15 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="ConceptionRate"></param>
         /// <param name="NewGroups"></param>
-        protected void makePregnantAnimals(double[] ConceptionRate, ref TAnimalList NewGroups)
+        protected void makePregnantAnimals(double[] ConceptionRate, ref AnimalList NewGroups)
         {
             int iInitialNumber;
-            TDifferenceRecord FertileDiff;
-            TAnimalGroup PregGroup;
+            DifferenceRecord FertileDiff;
+            AnimalGroup PregGroup;
             int NPreg, N;
 
             // A weight differential between conceiving and barren animals
-            FertileDiff = new TDifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };            
+            FertileDiff = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
             FertileDiff.BaseWeight = AParams.FertWtDiff;
 
             iInitialNumber = NoAnimals;
@@ -1562,9 +1560,9 @@ namespace Models.GrazPlan
         /// or calves that are about to be born/created.                              
         /// </summary>
         /// <returns></returns>
-        protected TAnimalParamSet constructOffspringParams()
+        protected AnimalParamSet constructOffspringParams()
         {
-            TAnimalParamBlend[] mateBlend = new TAnimalParamBlend[1];
+            AnimalParamBlend[] mateBlend = new AnimalParamBlend[1];
 
             if (FMatedTo != null)
             {
@@ -1574,17 +1572,17 @@ namespace Models.GrazPlan
                 mateBlend[1].Breed = FMatedTo;
                 mateBlend[1].fPropn = 0.5;
 
-                return TAnimalParamSet.CreateFactory("", mateBlend);
+                return AnimalParamSet.CreateFactory("", mateBlend);
             }
             else
-                return new TAnimalParamSet(null, AParams);
+                return new AnimalParamSet(null, AParams);
         }
 
         /// <summary>
         ///  Carry out one cycle's worth of conceptions                                
         /// </summary>
         /// <param name="NewGroups"></param>
-        private void Conceive(ref TAnimalList NewGroups)
+        private void Conceive(ref AnimalList NewGroups)
         {
             if ((ReproStatus == GrazType.ReproType.Empty)
                && (!((AParams.Animal == GrazType.AnimalType.Sheep) && (LactStatus == GrazType.LactType.Lactating)))
@@ -1632,19 +1630,19 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Chill"></param>
         /// <param name="NewGroups"></param>
-        protected void Kill(double Chill, ref  TAnimalList NewGroups)
+        protected void Kill(double Chill, ref AnimalList NewGroups)
         {
             double DeathRate;
-            TDifferenceRecord Diffs;
+            DifferenceRecord Diffs;
             int MaleLosses;
             int FemaleLosses;
             int NoLosses;
             int YoungLosses;
             int YoungToKill;
-            TAnimalGroup DeadGroup;
-            TAnimalGroup SplitGroup;
+            AnimalGroup DeadGroup;
+            AnimalGroup SplitGroup;
 
-            Diffs = new TDifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };            
+            Diffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
             Diffs.BaseWeight = -AParams.MortWtDiff * BaseWeight;
 
             DeathRate = DeathRateFunc();
@@ -1690,9 +1688,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="aGroup"></param>
         /// <param name="N"></param>
-        protected void LoseYoung(TAnimalGroup aGroup, int N)
+        protected void LoseYoung(AnimalGroup aGroup, int N)
         {
-            TDifferenceRecord YoungDiffs;
+            DifferenceRecord YoungDiffs;
             int iMaleYoung;
             int iFemaleYoung;
             int iYoungToLose;
@@ -1706,7 +1704,7 @@ namespace Models.GrazPlan
             }
             else if (N > 0)
             {
-                YoungDiffs = new TDifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };            
+                YoungDiffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
                 YoungDiffs.BaseWeight = -aGroup.Young.AParams.MortWtDiff * aGroup.Young.BaseWeight;
 
                 iMaleYoung = aGroup.Young.NoMales;
@@ -1733,11 +1731,11 @@ namespace Models.GrazPlan
         /// Pregnancy toxaemia and dystokia                                           
         /// </summary>
         /// <param name="NewGroups"></param>
-        protected void KillEndPreg(ref TAnimalList NewGroups)
+        protected void KillEndPreg(ref AnimalList NewGroups)
         {
             double DystokiaRate;
             double ToxaemiaRate;
-            TAnimalGroup DystGroup;
+            AnimalGroup DystGroup;
             int NoLosses;
 
             if ((Animal == GrazType.AnimalType.Sheep) && (FoetalAge == AParams.Gestation - 1))
@@ -1794,7 +1792,7 @@ namespace Models.GrazPlan
         }
 
         //TODO: check that this function returns changed values
-        private void AdjustRecords(TAnimalGroup AG, double X, TDifferenceRecord Diffs)
+        private void AdjustRecords(AnimalGroup AG, double X, DifferenceRecord Diffs)
         {
             AG.BaseWeight = AG.BaseWeight + X * Diffs.BaseWeight;
             if (AParams.Animal == GrazType.AnimalType.Sheep)
@@ -1815,14 +1813,14 @@ namespace Models.GrazPlan
         /// <param name="ByAge"></param>
         /// <param name="Diffs"></param>
         /// <returns></returns>
-        protected TAnimalGroup SplitSex(int NMale, int NFemale, bool ByAge, TDifferenceRecord Diffs)
+        protected AnimalGroup SplitSex(int NMale, int NFemale, bool ByAge, DifferenceRecord Diffs)
         {
             double PropnGoing;
 
             if ((NMale > NoMales) || (NFemale > NoFemales))
-                throw new Exception("TAnimalGroup: Error in SplitSex method");
+                throw new Exception("AnimalGroup: Error in SplitSex method");
 
-            TAnimalGroup Result = Copy();                                                           // Create the new animal group              
+            AnimalGroup Result = Copy();                                                           // Create the new animal group              
             if ((NMale == NoMales) && (NFemale == NoFemales))
             {
                 NoMales = 0;
@@ -1852,9 +1850,9 @@ namespace Models.GrazPlan
         /// Set the genotype
         /// </summary>
         /// <param name="aValue"></param>
-        protected void setGenotype(TAnimalParamSet aValue)
+        protected void setGenotype(AnimalParamSet aValue)
         {
-            AParams = new TAnimalParamSet(null, aValue);
+            AParams = new AnimalParamSet(null, aValue);
         }
         /// <summary>
         /// Get the total number of females and males
@@ -1954,13 +1952,13 @@ namespace Models.GrazPlan
         /// Set the animal to be mated to
         /// </summary>
         /// <param name="aValue"></param>
-        protected void setMatedTo(TAnimalParamSet aValue)
+        protected void setMatedTo(AnimalParamSet aValue)
         {
             FMatedTo = null;
             if (aValue == null)
                 FMatedTo = null;
             else
-                FMatedTo = new TAnimalParamSet(aValue);
+                FMatedTo = new AnimalParamSet(aValue);
         }
         /// <summary>
         /// Set the pregnancy progress
@@ -2006,7 +2004,7 @@ namespace Models.GrazPlan
                         LiveWeight = OldLiveWt;
                         Calc_Weights();
                     }
-                    if (P >= AParams.Gestation - LatePregLength / 2) 
+                    if (P >= AParams.Gestation - LatePregLength / 2)
                         MidLatePregWt = BaseWeight;
                 }
             }
@@ -2020,7 +2018,7 @@ namespace Models.GrazPlan
         /// <param name="Repr"></param>
         /// <param name="Params"></param>
         /// <returns></returns>
-        protected double GrowthCurve(int iAgeDays, GrazType.ReproType Repr, TAnimalParamSet Params)
+        protected double GrowthCurve(int iAgeDays, GrazType.ReproType Repr, AnimalParamSet Params)
         {
             double SRW;
 
@@ -2036,7 +2034,7 @@ namespace Models.GrazPlan
         /// <param name="L"></param>
         protected void SetLactation(int L)
         {
-            //TAnimalGroup MyClass;
+            //AnimalGroup MyClass;
 
             if (L != DaysLactating)
             {
@@ -2065,7 +2063,7 @@ namespace Models.GrazPlan
                     FPrevOffspring = 0;
                     Young = null;
                     //MyClass = this;                                                         //TODO: not 100% sure this is right
-                    Young = new TAnimalGroup(this, 0.5 * (GrowthCurve(L, GrazType.ReproType.Male, AParams)
+                    Young = new AnimalGroup(this, 0.5 * (GrowthCurve(L, GrazType.ReproType.Male, AParams)
                                                         + GrowthCurve(L, GrazType.ReproType.Empty, AParams)));
                 }
                 Milk_MJProdn = 0.0;
@@ -2167,7 +2165,7 @@ namespace Models.GrazPlan
         /// Get excretion parameters
         /// </summary>
         /// <returns></returns>
-        protected TExcretionInfo getExcretion()
+        protected ExcretionInfo getExcretion()
         {
             // these will have to go into the parameter set eventually...
             double[] dFaecesDensity = { 1000.0, 1000.0 };       // kg/m^3
@@ -2196,7 +2194,7 @@ namespace Models.GrazPlan
             double dDailyUrineVolume;       // m^3
             FoodSupplement tempSuppt;
 
-            TExcretionInfo Result = new TExcretionInfo();
+            ExcretionInfo Result = new ExcretionInfo();
 
             Result.OrgFaeces = MultiplyDMPool(AnimalState.OrgFaeces, NoAnimals);
             Result.InOrgFaeces = MultiplyDMPool(AnimalState.InOrgFaeces, NoAnimals);
@@ -2264,13 +2262,13 @@ namespace Models.GrazPlan
         protected GrazType.AgeType GetAgeClass()
         {
             //Array[AnimalType,0..3] of AgeType
-            GrazType.AgeType[,] AgeClassMap = new GrazType.AgeType[2, 4] 
+            GrazType.AgeType[,] AgeClassMap = new GrazType.AgeType[2, 4]
                                 { {GrazType.AgeType.Weaner, GrazType.AgeType.Yearling, GrazType.AgeType.Mature, GrazType.AgeType.Mature},         //sheep
                                 {GrazType.AgeType.Weaner, GrazType.AgeType.Yearling, GrazType.AgeType.TwoYrOld, GrazType.AgeType.Mature} };       //cattle
             if ((Mothers != null) || (LactStatus == GrazType.LactType.Suckling))
                 return GrazType.AgeType.LambCalf;
             else
-                return AgeClassMap[(int)AParams.Animal, Math.Min(MeanAge / 365, 3)]; 
+                return AgeClassMap[(int)AParams.Animal, Math.Min(MeanAge / 365, 3)];
         }
         /// <summary>
         /// Get the weight of the male
@@ -2394,15 +2392,15 @@ namespace Models.GrazPlan
         /// <summary>
         /// ptr to the hosts random number factory
         /// </summary>
-        public TMyRandom RandFactory;  
+        public MyRandom RandFactory;
         /// <summary>
         /// Pointers to the young of lactating animals, or the mothers of suckling ones
         /// </summary>
-        public TAnimalGroup Young;                                      
+        public AnimalGroup Young;
         /// <summary>
         /// Animal output
         /// </summary>
-        public TAnimalOutput AnimalState = new TAnimalOutput();
+        public AnimalOutput AnimalState = new AnimalOutput();
 
         /// <summary>
         /// Animal group constructor
@@ -2415,13 +2413,13 @@ namespace Models.GrazPlan
         /// <param name="GFW"></param>
         /// <param name="RandomFactory"></param>
         /// <param name="bTakeParams"></param>
-        public TAnimalGroup(TAnimalParamSet Params,
+        public AnimalGroup(AnimalParamSet Params,
                                  GrazType.ReproType Repro,
                                  int Number,
                                  int AgeD,
                                  double LiveWt,
                                  double GFW,                   // NB this is a *fleece* weight             
-                                 TMyRandom RandomFactory,
+                                 MyRandom RandomFactory,
                                  bool bTakeParams = false)
         {
             Construct(Params, Repro, Number, AgeD, LiveWt, GFW, RandomFactory, bTakeParams);
@@ -2438,13 +2436,13 @@ namespace Models.GrazPlan
         /// <param name="GFW"></param>
         /// <param name="RandomFactory"></param>
         /// <param name="bTakeParams"></param>
-        public void Construct(TAnimalParamSet Params,
+        public void Construct(AnimalParamSet Params,
                                  GrazType.ReproType Repro,
                                  int Number,
                                  int AgeD,
                                  double LiveWt,
                                  double GFW,                   // NB this is a *fleece* weight             
-                                 TMyRandom RandomFactory,
+                                 MyRandom RandomFactory,
                                  bool bTakeParams = false)
         {
             double fWoolAgeFactor;
@@ -2454,7 +2452,7 @@ namespace Models.GrazPlan
             if (bTakeParams)
                 AParams = Params;
             else
-                AParams = new TAnimalParamSet(null, Params);
+                AParams = new AnimalParamSet(null, Params);
 
             if ((Repro == GrazType.ReproType.Male) || (Repro == GrazType.ReproType.Castrated))
             {
@@ -2471,7 +2469,7 @@ namespace Models.GrazPlan
             FIntakeModifier = 1.0;
 
             MeanAge = AgeD;                                                          // Age of the animals                       
-            Ages = new TAgeList(RandFactory);
+            Ages = new AgeList(RandFactory);
             Ages.Input(AgeD, NoMales, NoFemales);
 
             TheRation = new SupplementRation();
@@ -2514,18 +2512,18 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Parents"></param>
         /// <param name="LiveWt"></param>
-        public TAnimalGroup(TAnimalGroup Parents, double LiveWt)
+        public AnimalGroup(AnimalGroup Parents, double LiveWt)
         {
             int Number, iAgeDays;
             double YoungWoolWt;
-            TAnimalParamSet youngParams;
+            AnimalParamSet youngParams;
 
             RandFactory = Parents.RandFactory;
             youngParams = Parents.constructOffspringParams();
             Number = Parents.NoOffspring * Parents.FemaleNo;
             iAgeDays = Parents.DaysLactating;
-            YoungWoolWt = 0.5 * (TAnimalParamSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Male, iAgeDays)
-                                  + TAnimalParamSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Empty, iAgeDays));
+            YoungWoolWt = 0.5 * (AnimalParamSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Male, iAgeDays)
+                                  + AnimalParamSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Empty, iAgeDays));
 
             Construct(youngParams, GrazType.ReproType.Male, Number, iAgeDays, LiveWt, YoungWoolWt, RandFactory, true);
 
@@ -2533,7 +2531,7 @@ namespace Models.GrazPlan
             NoFemales = Number - NoMales;
 
             Ages = null;
-            Ages = new TAgeList(RandFactory);
+            Ages = new AgeList(RandFactory);
             Ages.Input(iAgeDays, NoMales, NoFemales);
 
             LactStatus = GrazType.LactType.Suckling;
@@ -2545,15 +2543,15 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Copy a TAnimalGroup
+        /// Copy a AnimalGroup
         /// </summary>
         /// <returns></returns>
-        public TAnimalGroup Copy()
+        public AnimalGroup Copy()
         {
-            TAnimalGroup theCopy = ObjectCopier.Clone(this);
+            AnimalGroup theCopy = ObjectCopier.Clone(this);
             theCopy.RandFactory = this.RandFactory;
             if (this.Ages != null)
-               theCopy.Ages.RandFactory = this.RandFactory;
+                theCopy.Ages.RandFactory = this.RandFactory;
             if (this.Young != null)
             {
                 theCopy.Young.RandFactory = this.RandFactory;
@@ -2579,7 +2577,7 @@ namespace Models.GrazPlan
         /// Merge two animal groups
         /// </summary>
         /// <param name="OtherGrp"></param>
-        public void Merge(ref TAnimalGroup OtherGrp)
+        public void Merge(ref AnimalGroup OtherGrp)
         {
             double fWoodFactor;
             double fWoodOther;
@@ -2591,7 +2589,7 @@ namespace Models.GrazPlan
                || (NoOffspring != OtherGrp.NoOffspring)
                || ((Mothers == null) && (ReproStatus != OtherGrp.ReproStatus))
                || (LactStatus != OtherGrp.LactStatus))
-                throw new Exception("TAnimalGroup: Error in Merge method");
+                throw new Exception("AnimalGroup: Error in Merge method");
 
             Total1 = NoAnimals;
             Total2 = OtherGrp.NoAnimals;
@@ -2618,7 +2616,7 @@ namespace Models.GrazPlan
             {
                 FoetalAge = (FoetalAge * Total1 + OtherGrp.FoetalAge * Total2)
                              / (Total1 + Total2);
-                AverageField(Total1, Total2, ref  FoetalWt, OtherGrp.FoetalWt);
+                AverageField(Total1, Total2, ref FoetalWt, OtherGrp.FoetalWt);
                 AverageField(Total1, Total2, ref MidLatePregWt, OtherGrp.MidLatePregWt);
             }
 
@@ -2671,9 +2669,9 @@ namespace Models.GrazPlan
         /// <param name="Diffs"></param>
         /// <param name="YngDiffs"></param>
         /// <returns></returns>
-        public TAnimalGroup Split(int Number, bool ByAge, TDifferenceRecord Diffs, TDifferenceRecord YngDiffs)
+        public AnimalGroup Split(int Number, bool ByAge, DifferenceRecord Diffs, DifferenceRecord YngDiffs)
         {
-            TAnimalGroup Result;
+            AnimalGroup Result;
             int SplitM, SplitF;
             string msg = "";
 
@@ -2683,7 +2681,7 @@ namespace Models.GrazPlan
                     msg = "Number of animals to split off should be > 0";
                 if (Number > NoAnimals)
                     msg = "Trying to split off more than " + NoAnimals.ToString() + " animals that exist in the " + GrazType.AgeText[(int)this.AgeClass] + " age class";
-                throw new Exception("TAnimalGroup: Error in Split method: " + msg);
+                throw new Exception("AnimalGroup: Error in Split method: " + msg);
             }
 
             if (Mothers != null)
@@ -2728,15 +2726,15 @@ namespace Models.GrazPlan
         /// <param name="NF"></param>
         /// <param name="NYM"></param>
         /// <param name="NYF"></param>
-        private void SplitNumbers(ref TAnimalList NewGroups, int NF, int NYM, int NYF)
+        private void SplitNumbers(ref AnimalList NewGroups, int NF, int NYM, int NYF)
         {
-            TAnimalGroup TempYoung;
-            TAnimalGroup SplitGroup;
-            TAnimalGroup SplitYoung;
+            AnimalGroup TempYoung;
+            AnimalGroup SplitGroup;
+            AnimalGroup SplitYoung;
             double DiffRatio;
-            TDifferenceRecord YngDiffs;
+            DifferenceRecord YngDiffs;
 
-            YngDiffs = new TDifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };            
+            YngDiffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
             //WITH Young DO
             if ((Young.MaleNo > 0) && (Young.FemaleNo > 0))
             {
@@ -2764,7 +2762,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <param name="NewGroups"></param>
-        public void SplitYoung(ref TAnimalList NewGroups)
+        public void SplitYoung(ref AnimalList NewGroups)
         {
             int NoToSplit;
 
@@ -2792,7 +2790,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="AG"></param>
         /// <returns></returns>
-        public bool Similar(TAnimalGroup AG)
+        public bool Similar(AnimalGroup AG)
         {
             bool Result = ((Genotype.sName == AG.Genotype.sName)
                   && (ReproStatus == AG.ReproStatus)
@@ -2819,7 +2817,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The animals genotype
         /// </summary>
-        public TAnimalParamSet Genotype
+        public AnimalParamSet Genotype
         {
             get { return AParams; }
             set { setGenotype(value); }
@@ -2915,7 +2913,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Animal parameters for the animal mated to
         /// </summary>
-        public TAnimalParamSet MatedTo { get { return FMatedTo; } set { setMatedTo(value); } }
+        public AnimalParamSet MatedTo { get { return FMatedTo; } set { setMatedTo(value); } }
         /// <summary>
         /// Stage of pregnancy
         /// </summary>
@@ -2949,21 +2947,21 @@ namespace Models.GrazPlan
         /// The daily deaths
         /// </summary>
         public int Deaths { get { return FDeaths; } set { FDeaths = value; } }
-        
+
         /// <summary>
         /// Condition score
         /// </summary>
         /// <param name="System"></param>
         /// <returns></returns>
-        public double fConditionScore(TAnimalParamSet.TCond_System System) { return TAnimalParamSet.Condition2CondScore(Condition, System); }
+        public double fConditionScore(AnimalParamSet.Cond_System System) { return AnimalParamSet.Condition2CondScore(Condition, System); }
         /// <summary>
         /// Set the condition score
         /// </summary>
         /// <param name="fValue"></param>
         /// <param name="System"></param>
-        public void setConditionScore(double fValue, TAnimalParamSet.TCond_System System)
+        public void setConditionScore(double fValue, AnimalParamSet.Cond_System System)
         {
-            BaseWeight = NormalWt * TAnimalParamSet.CondScore2Condition(fValue, System);
+            BaseWeight = NormalWt * AnimalParamSet.CondScore2Condition(fValue, System);
             Calc_Weights();
         }
 
@@ -3067,11 +3065,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// The animals environment
         /// </summary>
-        public TAnimalWeather Weather { get { return TheEnv; } set { TheEnv = value; } }
+        public AnimalWeather Weather { get { return TheEnv; } set { TheEnv = value; } }
         /// <summary>
         /// The herbage being eaten
         /// </summary>
-        public GrazType.TGrazingInputs Herbage { get { return Inputs; } set { Inputs = value; } }
+        public GrazType.GrazingInputs Herbage { get { return Inputs; } set { Inputs = value; } }
         /// <summary>
         /// 
         /// </summary>
@@ -3099,7 +3097,7 @@ namespace Models.GrazPlan
         /// value must be known in order to get today's calculation                   
         /// </summary>
         /// <param name="PrevGroup"></param>
-        public void SetUpForYesterday(TAnimalGroup PrevGroup)
+        public void SetUpForYesterday(AnimalGroup PrevGroup)
         {
             IntakeLimit = PrevGroup.IntakeLimit;
             FeedingLevel = PrevGroup.FeedingLevel;
@@ -3118,7 +3116,7 @@ namespace Models.GrazPlan
         /// <param name="AG"></param>
         /// <param name="NoDays"></param>
         /// <param name="NewGroups"></param>
-        private void AdvanceAge(TAnimalGroup AG, int NoDays, ref TAnimalList NewGroups)
+        private void AdvanceAge(AnimalGroup AG, int NoDays, ref AnimalList NewGroups)
         {
             AG.MeanAge += NoDays;
             AG.Ages.AgeBy(NoDays);
@@ -3135,7 +3133,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="NoDays"></param>
         /// <param name="NewGroups"></param>
-        public void Age(int NoDays, ref TAnimalList NewGroups)
+        public void Age(int NoDays, ref AnimalList NewGroups)
         {
             int NewOffset, I;
 
@@ -3161,7 +3159,8 @@ namespace Models.GrazPlan
 
             switch (ReproStatus)
             {
-                case GrazType.ReproType.Empty: if (MateCycle >= 0)
+                case GrazType.ReproType.Empty:
+                    if (MateCycle >= 0)
                     {
                         DaysToMate--;
                         if (DaysToMate <= 0)
@@ -3202,7 +3201,7 @@ namespace Models.GrazPlan
         public void Grow()
         {
             double fRDPScalar;
-            TStateInfo initState = new TStateInfo();
+            AnimalStateInfo initState = new AnimalStateInfo();
 
             storeStateInfo(ref initState);
             Calc_IntakeLimit();
@@ -3310,7 +3309,7 @@ namespace Models.GrazPlan
         /// </summary>
         public void Reset_Grazing()
         {
-            AnimalState = new TAnimalOutput();
+            AnimalState = new AnimalOutput();
             Supp_FWI = 0.0;
             Start_FU = 1.0;
             Array.Resize(ref NetSupp_DMI, TheRation.Count);
@@ -3322,7 +3321,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Output at this step
         /// </summary>
-        public TAnimalOutput TimeStepState;
+        public AnimalOutput TimeStepState;
 
         /// <summary>
         /// Update the value for the timestep
@@ -3352,7 +3351,7 @@ namespace Models.GrazPlan
         /// <param name="TimeStep"></param>
         /// <param name="full"></param>
         /// <param name="TS"></param>
-        private void UpdateGrazingOutputs(double TimeStep, ref GrazType.TGrazingOutputs full, GrazType.TGrazingOutputs TS)
+        private void UpdateGrazingOutputs(double TimeStep, ref GrazType.GrazingOutputs full, GrazType.GrazingOutputs TS)
         {
             int I, Sp;
 
@@ -3394,7 +3393,7 @@ namespace Models.GrazPlan
         /// <param name="SuppFullDay"></param>
         /// <param name="full"></param>
         /// <param name="TS"></param>
-        private void UpdateDietRecord(double TimeStep, bool SuppFullDay, ref TDietRecord full, TDietRecord TS)
+        private void UpdateDietRecord(double TimeStep, bool SuppFullDay, ref DietRecord full, DietRecord TS)
         {
             full.Herbage = full.Herbage + TimeStep * TS.Herbage;
             if (SuppFullDay)
@@ -3414,7 +3413,7 @@ namespace Models.GrazPlan
         /// <param name="TSDenom"></param>
         /// <param name="HerbDT"></param>
         /// <param name="SuppDT"></param>
-        private void UpdateDietAve(ref TDietRecord full, TDietRecord FullDenom, TDietRecord TS, TDietRecord TSDenom, double HerbDT, double SuppDT)
+        private void UpdateDietAve(ref DietRecord full, DietRecord FullDenom, DietRecord TS, DietRecord TSDenom, double HerbDT, double SuppDT)
         {
             UpdateAve(ref full.Herbage, FullDenom.Herbage, TS.Herbage, TSDenom.Herbage, HerbDT);
             UpdateAve(ref full.Supp, FullDenom.Supp, TS.Supp, TSDenom.Supp, SuppDT);
@@ -3435,7 +3434,7 @@ namespace Models.GrazPlan
                 SuppTS = TimeStep;
 
             if (TimeStep == 1)
-                AnimalState = this.TimeStepState.Copy(); 
+                AnimalState = this.TimeStepState.Copy();
             else
             {
                 UpdateGrazingOutputs(TimeStep, ref AnimalState.IntakePerHead, this.TimeStepState.IntakePerHead);
@@ -3485,7 +3484,7 @@ namespace Models.GrazPlan
         public void Grazing(double DeltaT,
                              bool Reset,
                              bool FeedSuppFirst,
-                             ref GrazType.TGrazingOutputs pastIntakeRate,
+                             ref GrazType.GrazingOutputs pastIntakeRate,
                              ref double fSuppIntakeRate)
         {
             double[] HerbageRI = new double[GrazType.DigClassNo + 1];
@@ -3510,7 +3509,7 @@ namespace Models.GrazPlan
             if (Reset)                                                             // First time step of the day?              
                 Reset_Grazing();
 
-            this.TimeStepState = new TAnimalOutput();
+            this.TimeStepState = new AnimalOutput();
 
             CalculateRelIntake(this, DeltaT, FeedSuppFirst,
                                 WaterLogScalar,                                       // The published model assumes WaterLog=0   
@@ -3530,7 +3529,7 @@ namespace Models.GrazPlan
         /// <param name="FeedSuppFirst"></param>
         public void Grazing(double DeltaT, bool Reset, bool FeedSuppFirst)
         {
-            GrazType.TGrazingOutputs dummyPastIntake = new GrazType.TGrazingOutputs();
+            GrazType.GrazingOutputs dummyPastIntake = new GrazType.GrazingOutputs();
             double fDummySuppIntake = 0.0;
 
             Grazing(DeltaT, Reset, FeedSuppFirst, ref dummyPastIntake, ref fDummySuppIntake);
@@ -3656,8 +3655,8 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_DPLS()
         {
-            TDietRecord UDPIntakes = new TDietRecord();
-            TDietRecord DUDP = new TDietRecord();
+            DietRecord UDPIntakes = new DietRecord();
+            DietRecord DUDP = new DietRecord();
             double dgCorrect;
             int Idx;
 
@@ -4224,8 +4223,8 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public double RDP_IntakeFactor()
         {
-            TDietRecord TempCorrDg = new TDietRecord();
-            TDietRecord TempUDP = new TDietRecord();
+            DietRecord TempCorrDg = new DietRecord();
+            DietRecord TempUDP = new DietRecord();
             double TempRDPI = 0.0;
             double TempRDPR = 0.0;
             double TempFL;
@@ -4286,7 +4285,7 @@ namespace Models.GrazPlan
         /// so that it can be restored if there is an RDP insufficiency.                
         /// </summary>
         /// <param name="Info"></param>
-        public void storeStateInfo(ref TStateInfo Info)
+        public void storeStateInfo(ref AnimalStateInfo Info)
         {
             Info.fBaseWeight = BasalWeight;
             Info.fWoolWt = WoolWt;
@@ -4303,7 +4302,7 @@ namespace Models.GrazPlan
         /// Restores state information about animal groups if there is an RDP insufficiency.                                                              
         /// </summary>
         /// <param name="Info"></param>
-        public void revertStateInfo(TStateInfo Info)
+        public void revertStateInfo(AnimalStateInfo Info)
         {
             BasalWeight = Info.fBaseWeight;
             WoolWt = Info.fWoolWt;
@@ -4344,7 +4343,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <param name="GO"></param>
-        public void AddGrazingOutputs(ref GrazType.TGrazingOutputs GO)
+        public void AddGrazingOutputs(ref GrazType.GrazingOutputs GO)
         {
             int Clss, Sp, Rp;
 
@@ -4371,7 +4370,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Excretion information
         /// </summary>
-        public TExcretionInfo Excretion
+        public ExcretionInfo Excretion
         {
             get { return getExcretion(); }
         }
@@ -4383,14 +4382,14 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="MaleParams"></param>
         /// <param name="MatingPeriod"></param>
-        public void Join(TAnimalParamSet MaleParams, int MatingPeriod)
+        public void Join(AnimalParamSet MaleParams, int MatingPeriod)
         {
             if ((ReproStatus == GrazType.ReproType.Empty) && (MeanAge > AParams.Puberty[0]))
             {
                 if (MaleParams.Animal != AParams.Animal)
                     throw new Exception("Attempt to mate female " + GrazType.AnimalText[(int)AParams.Animal].ToLower() + " with male " + GrazType.AnimalText[(int)MaleParams.Animal].ToLower());
 
-                FMatedTo = new TAnimalParamSet(null, MaleParams);
+                FMatedTo = new AnimalParamSet(null, MaleParams);
                 DaysToMate = MatingPeriod;
                 if (DaysToMate > 0)
                     MateCycle = AParams.OvulationPeriod / 2;
@@ -4398,24 +4397,24 @@ namespace Models.GrazPlan
                     MateCycle = -1;
             }
         }
-        /*procedure Mate(     MaleParams    : TAnimalParamSet;
+        /*procedure Mate(     MaleParams    : AnimalParamSet;
                             fPregRate     : Single;
-                            var NewGroups : TAnimalList ); */
+                            var NewGroups : AnimalList ); */
         /// <summary>
         /// 
         /// </summary>
         /// <param name="AL"></param>
-        private void CheckAnimList(ref TAnimalList AL)
+        private void CheckAnimList(ref AnimalList AL)
         {
             if (AL == null)
-                AL = new TAnimalList();
+                AL = new AnimalList();
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="WeanedGroup"></param>
         /// <param name="WeanedOff"></param>
-        private void ExportWeaners(ref TAnimalGroup WeanedGroup, ref TAnimalList WeanedOff)
+        private void ExportWeaners(ref AnimalGroup WeanedGroup, ref AnimalList WeanedOff)
         {
             if (WeanedGroup != null)
             {
@@ -4433,7 +4432,7 @@ namespace Models.GrazPlan
         /// <param name="YoungGroup"></param>
         /// <param name="NYoung"></param>
         /// <param name="NewGroups"></param>
-        private void ExportWithYoung(ref TAnimalGroup MotherGroup, ref TAnimalGroup YoungGroup, int NYoung, ref TAnimalList NewGroups)
+        private void ExportWithYoung(ref AnimalGroup MotherGroup, ref AnimalGroup YoungGroup, int NYoung, ref AnimalList NewGroups)
         {
             MotherGroup.Young = YoungGroup;
             MotherGroup.FNoOffspring = NYoung;
@@ -4466,7 +4465,7 @@ namespace Models.GrazPlan
         /// <param name="iTotalYoung"></param>
         /// <param name="GroupPropn"></param>
         /// <param name="NewGroups"></param>
-        protected void SplitMothers(ref TAnimalGroup YoungGroup, int iTotalYoung, double GroupPropn, ref TAnimalList NewGroups)
+        protected void SplitMothers(ref AnimalGroup YoungGroup, int iTotalYoung, double GroupPropn, ref AnimalList NewGroups)
         {
             // becoming : single twin triplet
 
@@ -4480,8 +4479,8 @@ namespace Models.GrazPlan
             int iKeptLambs;
             int[] iLambsByParity = new int[4];
             int[] iEwesByParity = new int[4];
-            TAnimalGroup StillMothers;
-            TAnimalGroup StillYoung;
+            AnimalGroup StillMothers;
+            AnimalGroup StillYoung;
             int NY;
 
             if ((this.NoOffspring > 3) || (this.NoOffspring < 0))
@@ -4532,14 +4531,14 @@ namespace Models.GrazPlan
         /// <param name="WeanMales"></param>
         /// <param name="NewGroups"></param>
         /// <param name="WeanedOff"></param>
-        public void Wean(bool WeanFemales, bool WeanMales, ref TAnimalList NewGroups, ref TAnimalList WeanedOff)
+        public void Wean(bool WeanFemales, bool WeanMales, ref AnimalList NewGroups, ref AnimalList WeanedOff)
         {
             int TotalYoung;
             int MalePropn;
             double FemaleDiff;
-            TDifferenceRecord Diffs;
-            TAnimalGroup MaleYoung;
-            TAnimalGroup FemaleYoung;
+            DifferenceRecord Diffs;
+            AnimalGroup MaleYoung;
+            AnimalGroup FemaleYoung;
 
 
             if (NoAnimals == 0)
@@ -4568,7 +4567,7 @@ namespace Models.GrazPlan
                 {
                     // TODO: this code had a nasty With block. It may need testing
                     FemaleDiff = StdMath.XDiv(Young.FemaleWeight - Young.MaleWeight, Young.LiveWeight);
-                    Diffs = new TDifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };            
+                    Diffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
                     Diffs.BaseWeight = FemaleDiff * Young.BaseWeight;
                     Diffs.FleeceWt = FemaleDiff * Young.WoolWt;
                     Diffs.StdRefWt = Young.StdRefWt * StdMath.XDiv(Young.NoAnimals, AParams.SRWScalars[(int)Young.ReproStatus] * Young.MaleNo + Young.FemaleNo)
@@ -4677,7 +4676,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The mother's group
         /// </summary>
-        public TAnimalGroup MotherGroup { get { return Mothers; } }
+        public AnimalGroup MotherGroup { get { return Mothers; } }
         /// <summary>
         /// Relative size of the animal
         /// </summary>
@@ -4699,12 +4698,12 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="System"></param>
         /// <returns></returns>
-        public double ConditionScoreChange(TAnimalParamSet.TCond_System System = TAnimalParamSet.TCond_System.csSYSTEM1_5)
+        public double ConditionScoreChange(AnimalParamSet.Cond_System System = AnimalParamSet.Cond_System.csSYSTEM1_5)
         {
             double fNewCondition;
 
             fNewCondition = BaseWeight / NormalWeightFunc(MeanAge + 1, Math.Max(BaseWeight, MaxPrevWt), AParams.GrowthC[3]);
-            return TAnimalParamSet.Condition2CondScore(fNewCondition, System) - TAnimalParamSet.Condition2CondScore(Condition, System);
+            return AnimalParamSet.Condition2CondScore(fNewCondition, System) - AnimalParamSet.Condition2CondScore(Condition, System);
         }
 
         /// <summary>
@@ -4919,7 +4918,7 @@ namespace Models.GrazPlan
         /// <param name="bEatenFirst"></param>
         /// <param name="fSuppRI"></param>
         /// <param name="fFracUnsat"></param>
-        private void EatSupplement(TAnimalGroup TheAnimals,
+        private void EatSupplement(AnimalGroup TheAnimals,
                                     double fTimeStepLength,
                                     double fSuppDWPerHead,
                                     FoodSupplement aSupp,
@@ -4963,7 +4962,7 @@ namespace Models.GrazPlan
         /// <param name="TotalFeed"></param>
         /// <param name="HR"></param>
         /// <returns></returns>
-        private double fRelativeFill(TAnimalGroup TheAnimals, double FU, double ClassFeed, double TotalFeed, double HR)
+        private double fRelativeFill(AnimalGroup TheAnimals, double FU, double ClassFeed, double TotalFeed, double HR)
         {
 
             double fHeightFactor,
@@ -4997,7 +4996,7 @@ namespace Models.GrazPlan
         /// <param name="RelQ"></param>
         /// <param name="RI"></param>
         /// <param name="FU"></param>
-        private void EatPasture(TAnimalGroup TheAnimals, double ClassFeed,
+        private void EatPasture(AnimalGroup TheAnimals, double ClassFeed,
                                     double TotalFeed,
                                     double HR,
                                     double RelQ,
@@ -5032,7 +5031,7 @@ namespace Models.GrazPlan
         /// <param name="fHerbageRI"></param>
         /// <param name="fSeedRI"></param>
         /// <param name="fSuppRelIntake"></param>
-        public void CalculateRelIntake(TAnimalGroup TheAnimals,
+        public void CalculateRelIntake(AnimalGroup TheAnimals,
                               double fTimeStepLength,
                               bool bFeedSuppFirst,
                               double fWaterLogScalar,
@@ -5198,7 +5197,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Feasible range of weights for a given age and (relative) body condition   
         /// This weight range is a consequence of the normal weight function          
-        /// (TAnimalGroup.NormalWeightFunc)                                           
+        /// (AnimalGroup.NormalWeightFunc)                                           
         /// </summary>
         /// <param name="Repr"></param>
         /// <param name="iAgeDays"></param>
@@ -5209,7 +5208,7 @@ namespace Models.GrazPlan
         public void WeightRangeForCond(GrazType.ReproType Repr,
                                       int iAgeDays,
                                       double fBodyCond,
-                                      TAnimalParamSet Params,
+                                      AnimalParamSet Params,
                                       ref double fLowBaseWt,
                                       ref double fHighBaseWt)
         {
@@ -5236,40 +5235,40 @@ namespace Models.GrazPlan
                                + 418 * (1.0 - Math.Exp(-0.04 * Math.Min(80, R)));
         }
     }
-    #endregion TAnimalGroup
+    #endregion AnimalGroup
 
-    #region TAnimalList
+    #region AnimalList
     /// <summary>
     /// The animal list of animal groups
     /// </summary>
-    public class TAnimalList : List<TAnimalGroup>
+    public class AnimalList : List<AnimalGroup>
     {
         /// <summary>
         /// Days of weight gain
         /// </summary>
-        public const int GAINDAYCOUNT = 28;       //for the TAnimalList
+        public const int GAINDAYCOUNT = 28;       //for the AnimalList
         /// <summary>
         /// keep count of how many valid entries have been made
         /// </summary>
-        private int FValidGainsCount; 
+        private int FValidGainsCount;
         private double[] FGains = new double[GAINDAYCOUNT - 1];
-        private TAnimalGroup GetAt(int Posn)
+        private AnimalGroup GetAt(int Posn)
         {
             return base[Posn];
         }
         /// <summary>
         /// Random number container
         /// </summary>
-        public TMyRandom RandFactory;
+        public MyRandom RandFactory;
         /// <summary>
-        /// Copy an TAnimalList
+        /// Copy an AnimalList
         /// </summary>
         /// <returns></returns>
-        public TAnimalList Copy()
+        public AnimalList Copy()
         {
             int I;
 
-            TAnimalList Result = new TAnimalList();
+            AnimalList Result = new AnimalList();
             for (I = 0; I <= Count - 1; I++)
                 Result.Add(At(I).Copy());
             return Result;
@@ -5292,11 +5291,11 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Remove empty TAnimalGroups and unite similar ones
+        /// Remove empty AnimalGroups and unite similar ones
         /// </summary>
         public void Merge()
         {
-            TAnimalGroup AG;
+            AnimalGroup AG;
             int I, J;
 
             for (I = 0; I <= Count - 1; I++)                                                  // Remove empty groups                      
@@ -5316,14 +5315,14 @@ namespace Models.GrazPlan
                         }
                 }
             }
-            throw new Exception("Pack() not implemented int TAnimalList.Merge() yet!");
+            throw new Exception("Pack() not implemented int AnimalList.Merge() yet!");
         }
         /// <summary>
         /// Get the animal group at this position
         /// </summary>
         /// <param name="Posn"></param>
         /// <returns></returns>
-        public TAnimalGroup At(int Posn)
+        public AnimalGroup At(int Posn)
         {
             return GetAt(Posn);
         }
@@ -5332,7 +5331,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Posn"></param>
         /// <param name="AG"></param>
-        public void SetAt(int Posn, TAnimalGroup AG)
+        public void SetAt(int Posn, AnimalGroup AG)
         {
             base[Posn] = AG;
         }
@@ -5385,5 +5384,5 @@ namespace Models.GrazPlan
             return sum / iCount;
         }
     }
-    #endregion TAnimalList
+    #endregion AnimalList
 }
