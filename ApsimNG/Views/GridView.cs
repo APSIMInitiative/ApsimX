@@ -506,6 +506,9 @@
             UpdateSelectedCell();
         }
 
+        /// <summary>
+        /// Selects (highlights) the cell which has focus.
+        /// </summary>
         private void UpdateSelectedCell()
         {
             while (GLib.MainContext.Iteration()) ;
@@ -787,7 +790,14 @@
                 {
                 }
                 if (nextRow != rowIdx || nextCol != colIdx)
+                {
                     Gridview.SetCursor(new TreePath(new int[1] { nextRow }), Gridview.GetColumn(nextCol), userEditingCell);
+                    selectedCellRowIndex = nextRow;
+                    selectedCellColumnIndex = nextCol;
+                    selectionRowMax = -1;
+                    selectionColMax = -1;
+                }
+
                 while (GLib.MainContext.Iteration()) ;
                 args.RetVal = true;
             }
