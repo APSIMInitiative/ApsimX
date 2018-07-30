@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.Functions;
-using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.Interfaces;
-using Models.PMF.Interfaces;
 
 namespace Models.PMF.Struct
 {
@@ -91,7 +87,7 @@ namespace Models.PMF.Struct
 
         /// <summary>The thermal time</summary>
         [Link]
-        IFunction ThermalTime = null;
+        public IFunction ThermalTime = null;
         /// <summary>The main stem node appearance rate</summary>
         [Link]
         public IFunction Phyllochron = null;
