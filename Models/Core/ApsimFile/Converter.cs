@@ -1019,7 +1019,7 @@ namespace Models.Core.ApsimFile
                     {
                         string zoneName = XmlUtilities.Value(zone, "Name");
                         string simulationName = exp.Name;
-                        factors.Add(new KeyValuePair<string, string>("Simulation", simulationName));
+                        factors.Add(new KeyValuePair<string, string>("Simulation", null));
                         factors.Add(new KeyValuePair<string, string>("Zone", zoneName));
                         foreach (FactorValue value in combination)
                         {
