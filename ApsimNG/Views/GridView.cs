@@ -535,6 +535,17 @@
         }
 
         /// <summary>
+        /// Checks if a cell is selected.
+        /// </summary>
+        /// <param name="rowNo">0-indexed row number.</param>
+        /// <param name="colNo">0-indexed column number.</param>
+        /// <returns>True if the cell is selected. False otherwise.</returns>
+        private bool CellIsSelected(int rowNo, int colNo)
+        {
+            return rowNo >= FirstSelectedRow && rowNo <= LastSelectedRow && colNo >= FirstSelectedColumn && colNo <= LastSelectedColumn;
+        }
+
+        /// <summary>
         /// Convert the image
         /// </summary>
         /// <param name="image">The image object to convert</param>
@@ -878,6 +889,10 @@
                 }
                 if (isArrowKey)
                     Gridview.QueueDraw();
+            }
+            else if (args.Event.Key == Gdk.Key.Delete)
+            {
+                Console.WriteLine("Delete!");
             }
         }
 
@@ -1537,16 +1552,14 @@
             int rowNo = path.Indices[0];
             int colNo = -1;
             string text = string.Empty;
-            bool cellIsSelected = false;
+
+            // This is used later on.
+            bool currentCellIsSelected = false;
+
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
-                cellIsSelected = rowNo >= FirstSelectedRow && rowNo <= LastSelectedRow && colNo >= FirstSelectedColumn && colNo <= LastSelectedColumn;
-                if (cellIsSelected)
-                {
-                    cell.CellBackgroundGdk = Gridview.Style.Base(StateType.Selected);
-                }
-                else
-                    cell.CellBackgroundGdk = Gridview.Style.Base(StateType.Normal);
+                currentCellIsSelected = CellIsSelected(rowNo, colNo);
+                cell.CellBackgroundGdk = currentCellIsSelected ? Gridview.Style.Base(StateType.Selected) : Gridview.Style.Base(StateType.Normal);
                 if (view == Gridview)
                 {
                     col.CellRenderers[1].Visible = false;
@@ -1622,7 +1635,7 @@
             {
                 if (categoryRows.Contains(rowNo))
                 {
-                    if (!cellIsSelected)
+                    if (!currentCellIsSelected)
                     {
                         textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
                         Color bgColor = Color.LightSteelBlue;
@@ -1632,7 +1645,7 @@
                 }
                 else
                 {
-                    if (!cellIsSelected)
+                    if (!currentCellIsSelected)
                     {
                         textRenderer.ForegroundGdk = ColForegroundColor(colNo);
                         textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
@@ -2550,6 +2563,20 @@
                             {
                                 DataSource.Rows[rowIdx][colIdx] = DBNull.Value;
                                 cellsChanged.Add(this.GetCell(colIdx, rowIdx));
+                            }
+                        }
+                    }
+                }
+                else if (selectedCellRowIndex >= 0 && selectedCellColumnIndex >= 0)
+                {
+                    for (int row = FirstSelectedRow; row <= LastSelectedRow; row++)
+                    {
+                        for (int column = FirstSelectedColumn; column <= LastSelectedColumn; column++)
+                        {
+                            if (!this.GetColumn(column).ReadOnly)
+                            {
+                                DataSource.Rows[row][column] = DBNull.Value;
+                                cellsChanged.Add(GetCell(column, row));
                             }
                         }
                     }
