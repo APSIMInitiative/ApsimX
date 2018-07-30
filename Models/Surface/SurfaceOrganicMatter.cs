@@ -252,8 +252,8 @@
             Incorp(fraction, depth);
 
             summary.WriteMessage(this, string.Format(@"Residue removed " + Environment.NewLine +
-                                                      "Fraction Incorporated = {1:0.0##}" + Environment.NewLine +
-                                                      "Incorporated Depth    = {2:0.0##}",
+                                                      "Fraction Incorporated = {0:0.0##}" + Environment.NewLine +
+                                                      "Incorporated Depth    = {1:0.0##}",
                                                       fraction, depth));
         }
 

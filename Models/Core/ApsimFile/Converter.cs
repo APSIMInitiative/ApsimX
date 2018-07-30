@@ -1102,7 +1102,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
-                ConverterUtilities.SearchReplaceManagerCode(manager, @"Models.SurfaceOM.", "Models.Surface.");
+                ConverterUtilities.SearchReplaceManagerCode(manager, @"Models.SurfaceOM", "Models.Surface");
             }
             foreach (XmlNode surfaceOrganicMatter in XmlUtilities.FindAllRecursivelyByType(node, "SurfaceOrganicMatter"))
             {
