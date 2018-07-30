@@ -92,7 +92,8 @@ reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-if %errorlevel% equ 0 (
+echo errorlevel: "%errorlevel%"
+if not errorlevel 1 (
 	if "%1"=="%validationsyntax%" (
 		echo Pull request ID: 	"%ghprbPullId%"
 		echo DateTime stamp: 	"%DATETIMESTAMP%"
@@ -109,6 +110,8 @@ if %errorlevel% equ 0 (
 		type C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\PerformanceCollector.txt
 		exit %err%
 	)
+) else (
+	echo Errors found!
 )
 :end
 exit %errorlevel%
