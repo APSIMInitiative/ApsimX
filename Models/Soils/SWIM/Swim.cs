@@ -5831,7 +5831,7 @@ namespace Models.Soils
 
             if (subsurfaceDrain != null && subsurfaceDrain.Trim() == "on")
             {
-                int drain_node = FindLayerNo(drain_depth);
+                int drain_node = Soil.LayerIndexOfDepth(drain_depth, soil.Thickness);
 
                 double d = imperm_depth - drain_depth;
                 if (_psi[drain_node] > 0)
@@ -5881,21 +5881,6 @@ namespace Models.Soils
             }
 
             return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
-        }
-
-        private int FindLayerNo(double depth)
-        {
-            // Find the soil layer in which the indicated depth is located
-            // NOTE: The returned layer number is 0-based
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < soil.Thickness.Length; i++)
-            {
-                depth_cum = depth_cum + soil.Thickness[i];
-                if (depth_cum >= depth)
-                    return i;
-            }
-            return soil.Thickness.Length - 1;
         }
 
         ///// <summary>

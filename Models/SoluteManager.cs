@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
+    using Models.Soils;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,6 +22,9 @@
         /// <summary>List of all models that have solutes.</summary>
         [Link]
         private List<ISolute> soluteModels = null;
+
+        /// <summary>The soil</summary>
+        [Link] private ISoil soil = null;
 
         /// <summary>The known types of solute setters.</summary>
         public enum SoluteSetterType
@@ -89,18 +93,21 @@
         /// <summary>
         /// Add a delta value to the top layer of a solute. Will throw if solute not found.
         /// </summary>
-        /// <param name="name">Name of solute</param>
-        /// <param name="callingModelType">Type of calling model</param>
-        /// <param name="layerIndex">Layer index to add delta to</param>
-        /// <param name="delta">Value to be added to top layer of solute</param>
-        public void AddToLayer(int layerIndex, string name, SoluteSetterType callingModelType, double delta)
+        /// <param name="name">Name of solute.</param>
+        /// <param name="depth">Depth to which delta is added (mm).</param>
+        /// <param name="callingModelType">Type of calling model.</param>
+        /// <param name="delta">Value to be added to top layer of solute.</param>
+        public void AddToDepth(double depth, string name, SoluteSetterType callingModelType, double delta)
         {
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
 
+            // find the layer that the fertilizer is to be added to.
+            int layer = Soil.LayerIndexOfDepth(depth, soil.Thickness);
+
             double[] values = foundSolute.GetValue();
-            values[layerIndex] += delta;
+            values[layer] += delta;
             foundSolute.SetValue(callingModelType, values);
         }
 

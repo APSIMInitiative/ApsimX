@@ -1,6 +1,4 @@
-﻿
-
-namespace UnitTests
+﻿namespace UnitTests
 {
     using Models;
     using Models.Core;
