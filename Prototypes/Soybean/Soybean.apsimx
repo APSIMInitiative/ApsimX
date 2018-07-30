@@ -3654,7 +3654,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.20</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.59, 17.6</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>PioneerP22T69R_MG22</Name>
@@ -3664,7 +3664,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.075</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.59, 17.6</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Trial_MG00</Name>
@@ -3674,7 +3674,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 76</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 432</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 14.43, 21.19</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 14.43, 21.19</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Lambert_MG0</Name>
@@ -3684,7 +3684,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 81</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 442</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 14.29, 20.14</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 14.29, 20.14</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>IA1006_MG10</Name>
@@ -3694,7 +3694,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 118</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 518</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 14.37, 19.30</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 14.37, 19.30</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>IA2008_MG20</Name>
@@ -3704,7 +3704,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 150</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.92, 17.93</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.92, 17.93</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Macon_MG30</Name>
@@ -3714,7 +3714,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 163</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.175</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 607</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 14.05, 17.56</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 14.05, 17.56</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Pioneer94B01_MG40</Name>
@@ -3724,7 +3724,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 143</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 567</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.05, 16.46</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.05, 16.46</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Hutcheson_MG50</Name>
@@ -3734,7 +3734,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 12.58, 15.88</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 12.58, 15.88</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>NK622_MG60</Name>
@@ -3744,7 +3744,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 93</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 12.39, 15.61</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 12.39, 15.61</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Becks367NRR_MG37</Name>
@@ -3754,7 +3754,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.26</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 506</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.27, 16.70</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.27, 16.70</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>AsgrowAG4403_MG40</Name>
@@ -3764,7 +3764,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 123</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.09, 16.49</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.09, 16.49</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>HornbeckHBK4891_MG40</Name>
@@ -3774,7 +3774,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 123</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.09, 16.49</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.09, 16.49</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>AsgrowAG5701_MG50</Name>
@@ -3784,7 +3784,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 131</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 549</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 12.83, 16.13</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>PioneerP9504_MG50</Name>
@@ -3794,7 +3794,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 112</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 12.83, 16.13</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 12.83, 16.13</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Pioneer92MGI_MG26</Name>
@@ -3804,7 +3804,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 120</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.125</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 529</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.77, 17.57</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.77, 17.57</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Becks321NRR_MG32</Name>
@@ -3814,7 +3814,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 117</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.20</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 522</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.45, 18.0</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.45, 18.0</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Hooper_MG40</Name>
@@ -3824,7 +3824,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.26, 16.67</Command>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 21500</Command>
 			</Cultivar>
 			<Cultivar>
@@ -3835,7 +3835,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.26, 16.67</Command>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 23000</Command>
 			</Cultivar>
 			<Cultivar>
@@ -3852,7 +3852,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 93</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 12.39, 15.61</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 12.39, 15.61</Command>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 23000</Command>
 				<Command>[Grain].MaximumNConc.FixedValue = 0.067</Command>
 			</Cultivar>
@@ -3864,7 +3864,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.14</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.59, 17.6</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>PioneerP22T61_MG22</Name>
@@ -3874,7 +3874,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 106</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.075</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.59, 17.6</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.59, 17.6</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Buchanan</Name>
@@ -3884,7 +3884,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.26, 16.67</Command>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 21500</Command>
 			</Cultivar>
 			<Cultivar>
@@ -3895,7 +3895,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 				<Command>[Phenology].EarlyFlowering.Target.FixedValue = 80</Command>
 				<Command>[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05</Command>
 				<Command>[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.XYPairs.X = 13.26, 16.67</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.XYPairs.X = 13.26, 16.67</Command>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 17000</Command>
 			</Cultivar>
 			<IncludeInDocumentation>true</IncludeInDocumentation>

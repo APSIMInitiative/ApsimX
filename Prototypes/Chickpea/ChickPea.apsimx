@@ -2652,14 +2652,14 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
 				<Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
 				<Command>[Phenology].Vegetative.Target.FixedValue = 550</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.CriticalPhotoperiod = 10.5</Command>
 			</Cultivar>
 			<Cultivar>
 				<Name>Ayaz</Name>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
 				<Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
 				<Command>[Phenology].Vegetative.Target.FixedValue = 550</Command>
-				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
+				<Command>[Phenology].Vegetative.ThermalTime.PhotoperiodModifier.CriticalPhotoperiod = 10.5</Command>
 			</Cultivar>
 			<CropType>Chickpea</CropType>
 			<SowingDate>0001-01-01T00:00:00</SowingDate>
