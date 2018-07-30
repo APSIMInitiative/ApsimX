@@ -180,11 +180,8 @@ namespace Models.Core
                 // different. I'm not sure how to fix this yet. A brute force way is to recompile all manager 
                 // scripts after cloning.
                 // https://github.com/APSIMInitiative/ApsimX/issues/2603
-                Events events = new Events(simulationToRun);
-                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
 
-                simulationEngine.MakeSubstitutions(simulationToRun);
+                simulationEngine.MakeSubsAndLoad(simulationToRun);
             }
             return simulationToRun;
         }

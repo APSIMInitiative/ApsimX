@@ -429,7 +429,7 @@ namespace Models.GrazPlan
         /// <param name="genoValues">The genotypes returned</param>
         public static void MakeGenotypesValue(StockList model, ref StockGeno[] genoValues)
         {
-            TAnimalParamSet parameters;
+            AnimalParamSet parameters;
             string damBreed = string.Empty;
             string sireBreed = string.Empty;
             int generation = 0;
@@ -495,7 +495,7 @@ namespace Models.GrazPlan
         /// <param name="initValue">The sheep data</param>
         public static void MakeSheepValue(StockList model, GrazType.AnimalType animal, ref SheepInit[] initValue)
         {
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             int count;
             int idx, jdx;
 
@@ -575,7 +575,7 @@ namespace Models.GrazPlan
         /// <param name="initValue">The cattle init value</param>
         public static void MakeCattleValue(StockList model, GrazType.AnimalType animal, ref CattleInit[] initValue)
         {
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             int count;
             int idx, jdx;
 
@@ -730,7 +730,7 @@ namespace Models.GrazPlan
         public static bool PopulateNumberValue(StockList model, CountType code, bool useYoung, bool useAll, bool useTag, ref int[] numbers)
         {
             int numPasses;
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             int value;
             int total;
             int p, idx;
@@ -804,7 +804,7 @@ namespace Models.GrazPlan
         public static bool PopulateRealValue(StockList model, int varCode, bool useYoung, bool useAll, bool useTag, ref double[] arrayValues)
         {
             int numPasses;
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             double value;
             double total;
             int denom;
@@ -848,7 +848,7 @@ namespace Models.GrazPlan
                                     break;
                                 case StockProps.prpBASE_WT: value = animalGroup.BaseWeight;
                                     break;
-                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(TAnimalParamSet.TCond_System.csSYSTEM1_5);
+                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(AnimalParamSet.Cond_System.csSYSTEM1_5);
                                     break;
                                 case StockProps.prpMAX_PREV_WT: value = animalGroup.MaxPrevWeight;
                                     break;
@@ -974,7 +974,7 @@ namespace Models.GrazPlan
         public static bool PopulateDMPoolValue(StockList model, int propCode, bool useYoung, bool useAll, bool useTag, ref DMPoolHead[] poolValues)
         {
             int numPasses;
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             GrazType.DM_Pool pool = new GrazType.DM_Pool();
             GrazType.DM_Pool totalPool = new GrazType.DM_Pool();
             int denom;
@@ -1120,7 +1120,7 @@ namespace Models.GrazPlan
 
             for (idx = 1; idx <= model.Count(); idx++)
             {
-                TAnimalGroup group = model.At(idx);
+                AnimalGroup group = model.At(idx);
                 ME_Metab = group.AnimalState.EnergyUse.Metab / group.AnimalState.Efficiency.Maint;
                 ME_MoveGraze = group.AnimalState.EnergyUse.Maint - ME_Metab - group.AnimalState.EnergyUse.Cold;
 

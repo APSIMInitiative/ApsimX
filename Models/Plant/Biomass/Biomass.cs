@@ -1,19 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.PMF.Interfaces;
+using System;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
-    /*!
-        <summary>
-        The biomass of plant organs.
-        </summary>
-
-    */
     /// <summary>
     /// # [Name]
     /// Biomass of plant organs
@@ -25,19 +17,17 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     public class Biomass: Model
     {
-        /// <summary>The _ structural wt</summary>
+        /// <summary>The structural wt</summary>
         protected double _StructuralWt = 0;
-        /// <summary>The _ non structural wt</summary>
+        /// <summary>The non structural wt</summary>
         protected double _StorageWt = 0;
-        /// <summary>The _ structural n</summary>
+        /// <summary>The structural n</summary>
         protected double _StructuralN = 0;
-        /// <summary>The _ non structural n</summary>
+        /// <summary>The non structural n</summary>
         protected double _StorageN = 0;
-        /// <summary>The _ potential dm allocation</summary>
-        protected double _PotentialDMAllocation = 0;
-        /// <summary>The _ metabolic wt</summary>
+        /// <summary>The metabolic wt</summary>
         protected double _MetabolicWt = 0;
-        /// <summary>The _ metabolic n</summary>
+        /// <summary>The metabolic n</summary>
         protected double _MetabolicN = 0;
         /// <summary>Dry matter digestibility. 0.7 for live, 0.4 for dead </summary>
         protected double _DMDOfStructural = 0.6;
@@ -53,7 +43,6 @@ namespace Models.PMF
             set
             {
                 _StorageN = MathUtilities.RoundToZero(value);
-
             }
         }
 
@@ -95,19 +84,6 @@ namespace Models.PMF
                 _StructuralWt = MathUtilities.RoundToZero(value);
             }
         }
-
-        /// <summary>Gets or sets the potential dm allocation.</summary>
-        /// <value>The potential dm allocation.</value>
-        [XmlIgnore]
-        [Units("g/m^2")]
-        public double PotentialDMAllocation
-        {
-            get { return _PotentialDMAllocation; }
-            set
-            {
-                _PotentialDMAllocation = MathUtilities.RoundToZero(value);
-            }
-        } //FIXME  This was only added because it was the only way I could get potential DM allocation values into a root layer array.  need to pull back to the root module
 
         /// <summary>Gets or sets the metabolic wt.</summary>
         /// <value>The metabolic wt.</value>
@@ -347,28 +323,6 @@ namespace Models.PMF
                 StorageN = a.StorageN * Fraction,
                 MetabolicN = a.MetabolicN * Fraction
             };
-
-        }
-
-        /// <summary>The _ empty</summary>
-        private static Biomass _Empty = new Biomass();
-        /// <summary>Gets the none.</summary>
-        /// <value>The none.</value>
-        public static Biomass None { get { return _Empty; } }
-        /// <summary>Gets a value indicating whether this instance is empty.</summary>
-        /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
-        public bool IsEmpty
-        {
-            get
-            {
-                return StructuralWt == 0 &&
-                        StorageWt == 0 &&
-                        MetabolicWt == 0 &&
-                        StructuralN == 0 &&
-                        StorageN == 0 &&
-                        MetabolicN == 0;
-            }
         }
     }
-
 }
