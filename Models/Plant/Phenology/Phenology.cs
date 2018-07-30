@@ -53,7 +53,7 @@ namespace Models.PMF.Phen
         public event EventHandler<PhaseChangedType> PhaseChanged;
 
         /// <summary>Occurs when phase is set externally.</summary>
-        public event EventHandler ExternalPhaseSet;
+        public event EventHandler StageWasReset;
 
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
@@ -145,7 +145,6 @@ namespace Models.PMF.Phen
             }
         }
 
-
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -159,18 +158,18 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>A function that resets phenology to a specified stage</summary>
-        public void ReSetToStage(double NewStage, bool RewindAccumTT)
+        public void SetToStage(double NewStage)
         {
             string stageOnEvent = CurrentPhase.End;
             double oldPhaseIndex = IndexOfPhase(CurrentPhase.Name);
+            StagesPassedToday.Clear();
 
             if (NewStage <= 0)
                 throw new Exception(this + "Must pass positive stage to set to");
             if (NewStage > phases.Count()+1)
                 throw new Exception(this + " Trying to set to non-existant stage");
 
-            int NewPhaseIndex = Convert.ToInt32(Math.Floor(NewStage)) - 1;
-            CurrentPhase = phases[NewPhaseIndex];
+            CurrentPhase = phases[Convert.ToInt32(Math.Floor(NewStage)) - 1];
 
             if (CurrentPhaseIndex <= oldPhaseIndex)
             {
@@ -184,14 +183,11 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase P in PhasesToRewind)
                 {
-                    if (RewindAccumTT)
-                    {
-                        AccumulatedTT -= P.TTinPhase;
-                        if (IndexOfPhase(P.Name) >= 2)
-                            AccumulatedEmergedTT -= P.TTinPhase;
-                    }
+                    AccumulatedTT -= P.TTinPhase;
+                    AccumulatedEmergedTT -= P.TTinPhase;
                     P.ResetPhase();
                 }
+                AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
             }
             else
             {
@@ -204,6 +200,7 @@ namespace Models.PMF.Phen
                 }
                 foreach (IPhase P in PhasesToFastForward)
                 {
+                    StagesPassedToday.Add(P.End);
                     if (PhaseChanged != null)
                     {
                         PhaseChangedType PhaseChangedData = new PhaseChangedType();
@@ -214,11 +211,12 @@ namespace Models.PMF.Phen
             }
 
             IPhase currentPhase = phases[CurrentPhaseIndex];
-            currentPhase.FractionComplete = NewStage - CurrentPhaseIndex - 1;
-            currentPhase.TTinPhase = currentPhase.Target * currentPhase.FractionComplete;
+            currentPhase.TTinPhase = currentPhase.Target * (NewStage - CurrentPhaseIndex - 1);
+            if (currentPhase.TTinPhase == 0)
+                StagesPassedToday.Add(currentPhase.Start);
 
-            if (ExternalPhaseSet != null)
-                ExternalPhaseSet.Invoke(this, new EventArgs());
+            if (StageWasReset != null)
+                StageWasReset.Invoke(this, new EventArgs());
         }
 
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>

@@ -45,7 +45,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the fraction complete.</summary>
         [XmlIgnore]
-        public double FractionComplete { get; set; }
+        public double FractionComplete { get;}
 
 
         /// <summary>Thermal time target</summary>
@@ -59,7 +59,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
             PropOfDayToUse = 0;
-            phenology.ReSetToStage((double)phenology.IndexOfPhase(PhaseNameToGoto)+1,false);
+            phenology.SetToStage((double)phenology.IndexOfPhase(PhaseNameToGoto)+1);
             return false;
         }
 

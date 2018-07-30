@@ -59,10 +59,6 @@ namespace Models.PMF.Phen
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
-            set
-            {
-                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
         }
 
         /// <summary>Thermal time target.</summary>
@@ -85,8 +81,7 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
             TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForTimeStep;
-
+            
             if (First)
             {
                 NodeNoAtStart = structure.LeafTipsAppeared;
@@ -98,8 +93,11 @@ namespace Models.PMF.Phen
             if (structure.LeafTipsAppeared >= CompletionNodeNumber.Value())
             {
                 proceedToNextPhase = true;
-                propOfDayToUse = 0.00001;
+                propOfDayToUse = 0.00001; //assumes we use most of the Tt today to get to specified node number.  Should be calculated as a function of the phyllochron
+                TTForTimeStep *= (1 - propOfDayToUse);
             }
+
+            TTinPhase += TTForTimeStep;
 
             return proceedToNextPhase;
         }

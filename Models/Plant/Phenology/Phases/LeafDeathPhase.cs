@@ -54,10 +54,6 @@ namespace Models.PMF.Phen
                 if (F > 1) F = 1;
                 return F;
             }
-            set
-            {
-                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
         }
 
         /// <summary>Thermal time target.</summary>
@@ -81,8 +77,7 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
             TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForTimeStep;
-            
+                        
             if (First)
             {
                 DeadNodeNoAtStart = leaf.DeadCohortNo;
@@ -93,9 +88,12 @@ namespace Models.PMF.Phen
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
+                TTForTimeStep *= (1 - propOfDayToUse);
             }
 
-           return proceedToNextPhase;
+            TTinPhase += TTForTimeStep;
+
+            return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>

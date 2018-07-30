@@ -21,9 +21,6 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        Phenology phenology = null;
-
-        [Link]
         private IFunction target = null;
 
         [Link]
@@ -55,15 +52,6 @@ namespace Models.PMF.Phen
                 else
                     return TTinPhase / Target;
             }
-            set
-            {
-                if (phenology != null)
-                {
-                    TTinPhase = Target * value;
-                    phenology.AccumulatedEmergedTT += TTinPhase;
-                    phenology.AccumulatedTT += TTinPhase;
-                }
-            }
         }
 
         /// <summary>Thermal time target.</summary>
@@ -86,17 +74,18 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
             TTinPhase += TTForTimeStep;
-            
+
             if (TTinPhase > Target)
             {
                 if (TTForTimeStep > 0.0)
                 {
                     proceedToNextPhase = true;
                     propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
+                    TTForTimeStep *= (1 - propOfDayToUse);
                 }
                 TTinPhase = Target;
             }
-
+            
             return proceedToNextPhase;
         }
 

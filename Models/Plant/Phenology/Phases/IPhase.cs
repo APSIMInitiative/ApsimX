@@ -24,7 +24,7 @@ namespace Models.PMF.Phen
         bool DoTimeStep(ref double PropOfDayToUse);
 
         /// <summary> Fraction of progress through the phase</summary>
-        double FractionComplete { get; set; }
+        double FractionComplete { get;}
 
         /// <summary> ThermalTimeTarget</summary>
         double Target { get; }

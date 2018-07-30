@@ -435,7 +435,7 @@ namespace Models.PMF
 
             // Reset the phenology if SetPhenologyStage specified.
             if (removalData != null && removalData.SetPhenologyStage != 0)
-                Phenology.ReSetToStage(removalData.SetPhenologyStage, true);
+                Phenology.SetToStage(removalData.SetPhenologyStage);
 
             // Reduce plant and stem population if thinning proportion specified
             if (removalData != null && removalData.SetThinningProportion != 0 && Structure != null)

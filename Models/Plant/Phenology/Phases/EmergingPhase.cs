@@ -63,15 +63,6 @@ namespace Models.PMF.Phen
                 else
                     return TTinPhase / CalcTarget();
             }
-            set
-            {
-                if (phenology != null)
-                {
-                    TTinPhase = CalcTarget() * value;
-                    phenology.AccumulatedEmergedTT += TTinPhase;
-                    phenology.AccumulatedTT += TTinPhase;
-                }
-            }
         }
 
         /// <summary>Thermal time target.</summary>
@@ -96,7 +87,7 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             TTForTimeStep = phenology.ThermalTime.Value() * propOfDayToUse;
             TTinPhase += TTForTimeStep;
-            
+
             double Target = CalcTarget();
             if (TTinPhase > Target)
             {
@@ -104,10 +95,11 @@ namespace Models.PMF.Phen
                 {
                     proceedToNextPhase = true;
                     propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
+                    TTForTimeStep *= (1 - propOfDayToUse);
                 }
                 TTinPhase = Target;
             }
-
+            
             if (proceedToNextPhase)
             {
                 Plant.SendEmergingEvent();

@@ -40,7 +40,6 @@ namespace Models.PMF.Phen
         public double FractionComplete
         {
             get { return 0.0; }
-            set { throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it"); }
         }
 
         /// <summary>Thermal time target.</summary>

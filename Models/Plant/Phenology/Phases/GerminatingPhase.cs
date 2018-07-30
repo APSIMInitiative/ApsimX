@@ -59,11 +59,6 @@ namespace Models.PMF.Phen
             {
                 return 0.999;
             }
-            set
-            {
-                if (phenology != null)
-                    throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
         }
 
         /// <summary>Thermal time target.</summary>
@@ -77,15 +72,17 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
             TTForTimeStep = phenology.ThermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForTimeStep;
             
             if (!phenology.OnStartDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer])
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.999;
+                TTForTimeStep *= (1-propOfDayToUse);
                 phenology.Germinated = true;
             }
-            
+
+            TTinPhase += TTForTimeStep;
+
             return proceedToNextPhase;
         }
 

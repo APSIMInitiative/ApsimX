@@ -35,6 +35,10 @@ namespace Models.PMF.Phen
         [Link]
         private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
+        //2. private fields
+        //-----------------------------------------------------------------------------------------------------------------
+
+        private bool firstStep = true;
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -57,15 +61,6 @@ namespace Models.PMF.Phen
                     return 1;
                 else
                     return TTinPhase / target.Value();
-            }
-            set
-            {
-                if (phenology != null)
-                {
-                    TTinPhase = target.Value() * value;
-                    phenology.AccumulatedEmergedTT += TTinPhase;
-                    phenology.AccumulatedTT += TTinPhase;
-                }
             }
         }
 
@@ -93,8 +88,13 @@ namespace Models.PMF.Phen
             TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
             TTinPhase += TTForTimeStep;
 
-            // Fixme, check why this is needed
-            structure.PrimaryBudNo = Plant.SowingData.BudNumber;
+            if (firstStep)
+            {
+                structure.PrimaryBudNo = Plant.SowingData.BudNumber;
+                phenology.Germinated = true;
+                firstStep = false;
+            }
+
             double Target = target.Value();
             if (TTinPhase > Target)
             {
@@ -102,9 +102,12 @@ namespace Models.PMF.Phen
                 {
                     proceedToNextPhase = true;
                     propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
+                    TTForTimeStep *= (1 - propOfDayToUse);
                 }
                 TTinPhase = Target;
             }
+
+            
 
             if (proceedToNextPhase)
             {
@@ -127,7 +130,10 @@ namespace Models.PMF.Phen
         }
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
-        { TTinPhase = 0; }
+        {
+            TTinPhase = 0;
+            firstStep = true;
+        }
 
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
