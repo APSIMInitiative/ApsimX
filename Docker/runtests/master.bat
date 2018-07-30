@@ -10,6 +10,10 @@ if not exist %apsimx% (
 if exist %apsimx%\bin.zip (
 	echo Unzipping %apsimx%\bin.zip...
 	powershell -Command Expand-Archive -Path %apsimx%\bin.zip -DestinationPath %apsimx%\Bin -Force
+	if %errorlevel% neq 0 (
+		echo Error unzipping %apsimx%\bin.zip
+		exit %errorlevel%
+	)
 )
 
 set bin=%apsimx%\Bin
@@ -22,7 +26,7 @@ rem Copy files from DeploymentSupport.
 copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin% >nul
 
 rem Add bin to path.
-set "PATH=%PATH%;%bin%"
+set "PATH=%PATH%;%bin%;C:\ProgramData\chocolatey\bin"
 
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
@@ -32,7 +36,8 @@ set examplessyntax=Examples
 set validationsyntax=Validation
 
 if "%1"=="%unitsyntax%" (
-	%apsimx%\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe %apsimx%\Tests\UnitTests\bin\Debug\UnitTests.dll /noshadow
+	echo Running Unit Tests...
+	nunit3-console.exe %bin%\UnitTests.dll
 	goto :end
 )
 
@@ -87,12 +92,27 @@ reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-if %errorlevel% equ 0 (
+echo errorlevel: "%errorlevel%"
+set err=0
+if not errorlevel 1 (
 	if "%1"=="%validationsyntax%" (
+		echo Pull request ID: 	"%ghprbPullId%"
+		echo DateTime stamp: 	"%DATETIMESTAMP%"
+		echo Commit author:		"%ghprbActualCommitAuthor%"
+		echo Running performance tests collector...
 		C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %ghprbPullId% %DATETIMESTAMP% %ghprbActualCommitAuthor%
-		if %errorlevel% neq 0 (
+		set err=%errorlevel%
+		if %err% neq 0 (
 			echo APSIM.PerformanceTests.Collector did not run succecssfully!
+		) else (
+			echo APSIM.PerformanceTests.Collector ran successfully!
 		)
+		echo Log file:
+		type C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\PerformanceCollector.txt
+		exit %err%
 	)
+) else (
+	echo Errors found!
 )
 :end
+exit %errorlevel%
