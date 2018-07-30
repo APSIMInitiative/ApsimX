@@ -487,9 +487,9 @@
             FixedColview.ButtonPressEvent += OnButtonDown;
             Gridview.FocusInEvent += FocusInEvent;
             Gridview.FocusOutEvent += FocusOutEvent;
-            Gridview.KeyPressEvent += Gridview_KeyPressEvent;
+            Gridview.KeyPressEvent += GridviewKeyPressEvent;
             Gridview.EnableSearch = false;
-            Gridview.ExposeEvent += Gridview_Exposed;
+            Gridview.ExposeEvent += GridviewExposed;
             FixedColview.FocusInEvent += FocusInEvent;
             FixedColview.FocusOutEvent += FocusOutEvent;
             FixedColview.EnableSearch = false;
@@ -497,7 +497,7 @@
             splitter.Child1.NoShowAll = true;
             image1.Pixbuf = null;
             image1.Visible = false;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            _mainWidget.Destroyed += MainWidgetDestroyed;
             window1 = GetMainViewReference(this).MainWidget as Window;
         }
 
@@ -585,23 +585,23 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidgetDestroyed(object sender, EventArgs e)
         {
             if (splitter.Child1.Visible)
             {
-                Gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
-                Gridview.Selection.Changed -= Gridview_CursorChanged;
-                FixedColview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
-                FixedColview.Selection.Changed -= Fixedcolview_CursorChanged;
+                Gridview.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
+                Gridview.Selection.Changed -= GridviewCursorChanged;
+                FixedColview.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
+                FixedColview.Selection.Changed -= FixedcolviewCursorChanged;
             }
             Gridview.ButtonPressEvent -= OnButtonDown;
             FixedColview.ButtonPressEvent -= OnButtonDown;
             Gridview.FocusInEvent -= FocusInEvent;
             Gridview.FocusOutEvent -= FocusOutEvent;
-            Gridview.KeyPressEvent -= Gridview_KeyPressEvent;
+            Gridview.KeyPressEvent -= GridviewKeyPressEvent;
             FixedColview.FocusInEvent -= FocusInEvent;
             FixedColview.FocusOutEvent -= FocusOutEvent;
-            Gridview.ExposeEvent -= Gridview_Exposed;
+            Gridview.ExposeEvent -= GridviewExposed;
 
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -635,7 +635,7 @@
                 image1.Dispose();
             if (table != null)
                 table.Dispose();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            _mainWidget.Destroyed -= MainWidgetDestroyed;
             _owner = null;
         }
 
@@ -654,21 +654,21 @@
                     {
                         CellRendererText textRender = render as CellRendererText;
                         textRender.EditingStarted -= OnCellBeginEdit;
-                        textRender.EditingCanceled -= TextRender_EditingCanceled;
+                        textRender.EditingCanceled -= TextRenderEditingCanceled;
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
                     else if (render is CellRendererActiveButton)
                     {
-                        (render as CellRendererActiveButton).Toggled -= PixbufRender_Toggled;
+                        (render as CellRendererActiveButton).Toggled -= PixbufRenderToggled;
                     }
                     else if (render is CellRendererToggle)
                     {
-                        (render as CellRendererToggle).Toggled -= ToggleRender_Toggled;
+                        (render as CellRendererToggle).Toggled -= ToggleRenderToggled;
                     }
                     else if (render is CellRendererCombo)
                     {
-                        (render as CellRendererCombo).Edited -= ComboRender_Edited;
+                        (render as CellRendererCombo).Edited -= ComboRenderEdited;
                     }
                     render.Destroy();
                 }
@@ -689,7 +689,7 @@
                     {
                         CellRendererText textRender = render as CellRendererText;
                         textRender.EditingStarted -= OnCellBeginEdit;
-                        textRender.EditingCanceled -= TextRender_EditingCanceled;
+                        textRender.EditingCanceled -= TextRenderEditingCanceled;
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
@@ -712,7 +712,7 @@
         /// <param name="o">The calling object</param>
         /// <param name="args">The event arguments</param>
         [GLib.ConnectBefore]
-        private void Gridview_KeyPressEvent(object o, KeyPressEventArgs args)
+        private void GridviewKeyPressEvent(object o, KeyPressEventArgs args)
         {
             string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
             IGridCell cell = GetCurrentCell;
@@ -997,7 +997,7 @@
         /// <param name="o">The calling object</param>
         /// <param name="args">The event arguments</param>
         [GLib.ConnectBefore]
-        private void GridViewCell_FocusOutEvent(object o, FocusOutEventArgs args)
+        private void GridViewCellFocusOutEvent(object o, FocusOutEventArgs args)
         {
             EndEdit();
         }
@@ -1008,7 +1008,7 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void Fixedcolview_CursorChanged(object sender, EventArgs e)
+        private void FixedcolviewCursorChanged(object sender, EventArgs e)
         {
             if (!selfCursorMove)
             {
@@ -1030,7 +1030,7 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void Gridview_CursorChanged(object sender, EventArgs e)
+        private void GridviewCursorChanged(object sender, EventArgs e)
         {
             if (FixedColview.Visible && !selfCursorMove)
             {
@@ -1090,23 +1090,23 @@
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
                 toggleRender.Visible = false;
-                toggleRender.Toggled += ToggleRender_Toggled;
+                toggleRender.Toggled += ToggleRenderToggled;
                 toggleRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 0.5f; // Left of center align, as appropriate
                 CellRendererCombo comboRender = new CellRendererDropDown();
-                comboRender.Edited += ComboRender_Edited;
+                comboRender.Edited += ComboRenderEdited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
-                comboRender.EditingStarted += ComboRender_Editing;
+                comboRender.EditingStarted += ComboRenderEditing;
                 CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
-                pixbufRender.Toggled += PixbufRender_Toggled;
+                pixbufRender.Toggled += PixbufRenderToggled;
 
                 colLookup.Add(textRender, i);
 
                 textRender.FixedHeightFromFont = 1; // 1 line high
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
-                textRender.EditingCanceled += TextRender_EditingCanceled;
+                textRender.EditingCanceled += TextRenderEditingCanceled;
                 textRender.Edited += OnCellValueChanged;
                 textRender.Xalign = ((i == 0) || ((i == 1) && isPropertyMode)) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
@@ -1495,11 +1495,11 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void TextRender_EditingCanceled(object sender, EventArgs e)
+        private void TextRenderEditingCanceled(object sender, EventArgs e)
         {
             this.userEditingCell = false;
-            (this.editControl as Widget).KeyPressEvent -= Gridview_KeyPressEvent;
-            (this.editControl as Widget).FocusOutEvent -= GridViewCell_FocusOutEvent;
+            (this.editControl as Widget).KeyPressEvent -= GridviewKeyPressEvent;
+            (this.editControl as Widget).FocusOutEvent -= GridViewCellFocusOutEvent;
             this.editControl = null;
         }
 
@@ -1508,7 +1508,7 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
+        private void FixedcolviewVadjustmentChanged(object sender, EventArgs e)
         {
             Gridview.Vadjustment.Value = FixedColview.Vadjustment.Value;
         }
@@ -1518,7 +1518,7 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void Gridview_Vadjustment_Changed(object sender, EventArgs e)
+        private void GridviewVadjustmentChanged(object sender, EventArgs e)
         {
             FixedColview.Vadjustment.Value = Gridview.Vadjustment.Value;
         }
@@ -2002,12 +2002,12 @@
             {
                 if (!splitter.Child1.Visible)
                 {
-                    Gridview.Vadjustment.ValueChanged += Gridview_Vadjustment_Changed;
-                    Gridview.Selection.Changed += Gridview_CursorChanged;
-                    FixedColview.Vadjustment.ValueChanged += Fixedcolview_Vadjustment_Changed1;
-                    FixedColview.Selection.Changed += Fixedcolview_CursorChanged;
-                    Gridview_CursorChanged(this, EventArgs.Empty);
-                    Gridview_Vadjustment_Changed(this, EventArgs.Empty);
+                    Gridview.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
+                    Gridview.Selection.Changed += GridviewCursorChanged;
+                    FixedColview.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
+                    FixedColview.Selection.Changed += FixedcolviewCursorChanged;
+                    GridviewCursorChanged(this, EventArgs.Empty);
+                    GridviewVadjustmentChanged(this, EventArgs.Empty);
                 }
                 FixedColview.Model = gridmodel;
                 FixedColview.Visible = true;
@@ -2022,10 +2022,10 @@
             }
             else
             {
-                Gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
-                Gridview.Selection.Changed -= Gridview_CursorChanged;
-                FixedColview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
-                FixedColview.Selection.Changed -= Fixedcolview_CursorChanged;
+                Gridview.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
+                Gridview.Selection.Changed -= GridviewCursorChanged;
+                FixedColview.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
+                FixedColview.Selection.Changed -= FixedcolviewCursorChanged;
                 FixedColview.Visible = false;
                 splitter.Position = 0;
             }
@@ -2060,8 +2060,8 @@
             this.userEditingCell = true;
             this.editPath = e.Path;
             this.editControl = e.Editable;
-            (this.editControl as Widget).KeyPressEvent += Gridview_KeyPressEvent;
-            (this.editControl as Widget).FocusOutEvent += GridViewCell_FocusOutEvent;
+            (this.editControl as Widget).KeyPressEvent += GridviewKeyPressEvent;
+            (this.editControl as Widget).FocusOutEvent += GridViewCellFocusOutEvent;
             this.editSender = sender;
             IGridCell where = GetCurrentCell;
             if (where.RowIndex >= DataSource.Rows.Count)
@@ -2103,7 +2103,7 @@
                 dialog.Add(topArea);
 
                 dialog.ShowAll();
-                calendar.DaySelectedDoubleClick += (_, __) =>
+                calendar.DaySelectedDoubleClick += (o, args) =>
                 {
                     // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
                     // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
@@ -2123,10 +2123,10 @@
                                 this.userEditingCell = false;
                                 if (this.CellsChanged != null)
                                 {
-                                    GridCellsChangedArgs args = new GridCellsChangedArgs();
-                                    args.ChangedCells = new List<IGridCell>();
-                                    args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
-                                    this.CellsChanged(this, args);
+                                    GridCellsChangedArgs cellsChangedArgs = new GridCellsChangedArgs();
+                                    cellsChangedArgs.ChangedCells = new List<IGridCell>();
+                                    cellsChangedArgs.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                                    this.CellsChanged(this, cellsChangedArgs);
                                 }
                             }
                         }
@@ -2145,7 +2145,7 @@
                 while (GLib.MainContext.Iteration())
                 {
                 }
-                (e.Editable as Widget).FocusOutEvent += (_, __) =>
+                (e.Editable as Widget).FocusOutEvent += (o, args) =>
                 {
                     // Process all events in the events queue, so we can accurately test if the
                     // calendar has the focus.
@@ -2168,7 +2168,7 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="r">The event arguments</param>
-        private void ToggleRender_Toggled(object sender, ToggledArgs r)
+        private void ToggleRenderToggled(object sender, ToggledArgs r)
         {
             IGridCell where = GetCurrentCell;
             while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
@@ -2190,7 +2190,7 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void ComboRender_Editing(object sender, EditingStartedArgs e)
+        private void ComboRenderEditing(object sender, EditingStartedArgs e)
         {
             (e.Editable as ComboBox).Changed += (o, _) =>
             {
@@ -2205,7 +2205,7 @@
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void ComboRender_Edited(object sender, EditedArgs e)
+        private void ComboRenderEdited(object sender, EditedArgs e)
         {
             UpdateCellText(GetCurrentCell, e.NewText);
         }
@@ -2570,7 +2570,7 @@
         /// </summary>
         /// <param name="o">The calling object</param>
         /// <param name="args">The event arguments</param>
-        private void PixbufRender_Toggled(object o, ToggledArgs args)
+        private void PixbufRenderToggled(object o, ToggledArgs args)
         {
             IGridCell cell = GetCurrentCell;
             if (cell != null && cell.EditorType == EditorTypeEnum.Button)
@@ -2668,11 +2668,11 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void Gridview_Exposed(object sender, ExposeEventArgs e)
+        private void GridviewExposed(object sender, ExposeEventArgs e)
         {
             if (numberLockedCols > 0)
                 LockLeftMostColumns(numberLockedCols);
-            Gridview.ExposeEvent -= Gridview_Exposed;
+            Gridview.ExposeEvent -= GridviewExposed;
         }
 
 
@@ -2795,14 +2795,14 @@
         protected override void OnEditingStarted(CellEditable editable, string path)
         {
             base.OnEditingStarted(editable, path);
-            editable.EditingDone += Editable_EditingDone;
+            editable.EditingDone += EditableEditingDone;
         }
 
-        private void Editable_EditingDone(object sender, EventArgs e)
+        private void EditableEditingDone(object sender, EventArgs e)
         {
             if (sender is CellEditable)
             {
-                (sender as CellEditable).EditingDone -= Editable_EditingDone;
+                (sender as CellEditable).EditingDone -= EditableEditingDone;
                 if (sender is Widget && (sender as Widget).Parent is Gtk.TreeView)
                 {
                     Gtk.TreeView view = (sender as Widget).Parent as Gtk.TreeView;
