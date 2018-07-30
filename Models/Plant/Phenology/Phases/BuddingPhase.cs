@@ -12,7 +12,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class BuddingPhase : Model, IPhase, ICustomDocumentation
+    public class BuddingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------

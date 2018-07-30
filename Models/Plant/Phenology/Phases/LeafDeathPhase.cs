@@ -56,10 +56,6 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Thermal time target.</summary>
-        [XmlIgnore]
-        public double Target { get; set; }
-
         /// <summary>Gets the tt for today.</summary>
         public double TTForTimeStep { get; set; }
 

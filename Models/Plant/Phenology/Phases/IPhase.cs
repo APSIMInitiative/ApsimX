@@ -26,9 +26,6 @@ namespace Models.PMF.Phen
         /// <summary> Fraction of progress through the phase</summary>
         double FractionComplete { get;}
 
-        /// <summary> ThermalTimeTarget</summary>
-        double Target { get; }
-
         /// <summary> The amount of TT accumulated today </summary>
         double TTForTimeStep { get; set; }
 

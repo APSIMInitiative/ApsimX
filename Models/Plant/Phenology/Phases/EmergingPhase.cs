@@ -11,7 +11,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EmergingPhase : Model, IPhase, ICustomDocumentation
+    public class EmergingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
 
         // 1. Links
@@ -22,14 +22,6 @@ namespace Models.PMF.Phen
 
         [Link]
         Phenology phenology = null;
-
-        //3. Public properties
-        //-----------------------------------------------------------------------------------------------------------------
-
-
-        //4. Public events
-        //-----------------------------------------------------------------------------------------------------------------
-
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------

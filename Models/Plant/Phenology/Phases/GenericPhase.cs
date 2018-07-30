@@ -14,7 +14,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class GenericPhase : Model, IPhase, ICustomDocumentation
+    public class GenericPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
 
         // 1. Links

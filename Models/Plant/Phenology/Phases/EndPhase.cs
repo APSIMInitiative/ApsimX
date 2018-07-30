@@ -11,7 +11,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EndPhase : Model, IPhase
+    public class EndPhase : Model, IPhase, IPhaseWithTarget
     {
         [Link]
         private Phenology phenology = null;

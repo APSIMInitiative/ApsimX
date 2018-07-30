@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Xml.Serialization;
 using System.IO;
+using Models.Soils;
 using Models.Functions;
 
 
@@ -17,10 +18,10 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        Soils.Soil Soil = null;
+        private Soils.Soil soil = null;
 
         [Link]
-        private Plant Plant = null;
+        private Plant plant = null;
 
         [Link]
         private Phenology phenology = null;
@@ -61,10 +62,6 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Thermal time target.</summary>
-        [XmlIgnore]
-        public double Target { get { return 0.999; } }
-
         //6. Public methode
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary> Do our timestep development </summary>
@@ -73,7 +70,7 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
             
-            if (!phenology.OnStartDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer])
+            if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.999;
@@ -103,20 +100,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            double SowDepth = 0;
-            double accumDepth = 0;
-            if (Plant != null)
-                SowDepth = Plant.SowingData.Depth;
-            bool layerfound = false;
-            for (int layer = 0; layerfound; layer++)
-            {
-                accumDepth += Soil.Thickness[layer];
-                if (SowDepth <= accumDepth)
-                {
-                    SowLayer = layer;
-                    layerfound = true;
-                }
-            }
+            SowLayer = Soil.LayerIndexOfDepth(plant.SowingData.Depth, soil.Thickness);
         }
 
         /// <summary>Called when [simulation commencing].</summary>
