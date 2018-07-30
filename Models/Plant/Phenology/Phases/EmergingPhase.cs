@@ -50,16 +50,16 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (CalcTarget() == 0)
+                if (Target == 0)
                     return 1;
                 else
-                    return TTinPhase / CalcTarget();
+                    return TTinPhase / Target;
             }
         }
 
         /// <summary>Thermal time target.</summary>
         [XmlIgnore]
-        public double Target { get { return CalcTarget(); } }
+        public double Target { get; set; } 
 
         /// <summary>Gets the tt for today.</summary>
         public double TTForTimeStep { get; set; } 
@@ -80,7 +80,6 @@ namespace Models.PMF.Phen
             TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
             TTinPhase += TTForTimeStep;
 
-            double Target = CalcTarget();
             if (TTinPhase > Target)
             {
                 if (TTForTimeStep > 0.0)
@@ -102,7 +101,11 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { TTinPhase = 0; }
+        public virtual void ResetPhase()
+        {
+            TTinPhase = 0;
+            Target = 0;
+        }
         
         /// <summary>Writes the summary.</summary>
         /// <param name="writer">The writer.</param>
@@ -111,15 +114,15 @@ namespace Models.PMF.Phen
             writer.WriteLine("      " + Name);
         }
 
+        
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
-        /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
-        private double CalcTarget()
+
+        /// <summary>Called when crop is ending</summary>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            double retVAl = 0;
-            if (Plant != null)
-                retVAl = ShootLag + Plant.SowingData.Depth * ShootRate;
-            return retVAl;
+        Target = ShootLag + Plant.SowingData.Depth * ShootRate;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
