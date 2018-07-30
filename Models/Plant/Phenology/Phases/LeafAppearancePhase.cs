@@ -5,7 +5,8 @@ using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Struct;
 using System.IO;
-using Models.Interfaces;
+using APSIM.Shared;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Phen
 {
@@ -59,8 +60,7 @@ namespace Models.PMF.Phen
             {
                 double F = 0;
                 F = (leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
-                if (F < 0) F = 0;
-                if (F > 1) F = 1;
+                F = MathUtilities.Bound(F,0,1);
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
         }

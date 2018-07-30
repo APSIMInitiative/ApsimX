@@ -24,7 +24,7 @@ namespace Models.PMF.Phen
         private IFunction target = null;
 
         [Link]
-        private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        private IFunction thermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace Models.PMF.Phen
         [Description("End")]
         public string End { get; set; }
 
-        /// <summary>Gets the t tin phase.</summary>
+        /// <summary>Gets the tt in phase.</summary>
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
@@ -72,7 +72,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
+            TTForTimeStep = thermalTime.Value() * propOfDayToUse;
             TTinPhase += TTForTimeStep;
 
             if (TTinPhase > Target)

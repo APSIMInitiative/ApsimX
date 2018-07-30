@@ -52,7 +52,7 @@ namespace Models.PMF.Phen
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
-            TTForTimeStep = phenology.ThermalTime.Value() * PropOfDayToUse;
+            TTForTimeStep = phenology.thermalTime.Value() * PropOfDayToUse;
             TTinPhase += TTForTimeStep;
             
             return false;

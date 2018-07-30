@@ -59,7 +59,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
             PropOfDayToUse = 0;
-            phenology.SetToStage((double)phenology.IndexOfPhase(PhaseNameToGoto)+1);
+            phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto)+1);
             return false;
         }
 

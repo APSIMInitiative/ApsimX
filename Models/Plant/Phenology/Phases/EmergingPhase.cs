@@ -85,7 +85,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = phenology.ThermalTime.Value() * propOfDayToUse;
+            TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
             TTinPhase += TTForTimeStep;
 
             double Target = CalcTarget();

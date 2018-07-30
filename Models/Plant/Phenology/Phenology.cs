@@ -4,7 +4,6 @@ using Models.Core;
 using Models.Functions;
 using System.Xml.Serialization;
 using System.IO;
-using APSIM.Shared.Utilities;
 using System.Data;
 using System.Linq;
 
@@ -22,21 +21,20 @@ namespace Models.PMF.Phen
         ///------------------------------------------------------------------------------------------------
         
         [Link]
-        private Plant Plant = null;
+        private Plant plant = null;
 
         /// <summary>The summary</summary>
         [Link]
-        ISummary Summary = null;
+        private ISummary summary = null;
 
         /// <summary>The thermal time</summary>
         [Link]
-        public IFunction ThermalTime = null;
+        public IFunction thermalTime = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>The phases</summary>
-        //public IPhase[] Phases { get; private set; }
         private List<IPhase> phases = new List<IPhase>();
         
         /// <summary>The current phase index</summary>
@@ -95,10 +93,10 @@ namespace Models.PMF.Phen
             }
             private set
             {
-                CurrentPhaseIndex = IndexOfPhase(value);
+                CurrentPhaseIndex = IndexFromPhaseName(value);
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
-                Summary.WriteMessage(this, string.Format(this + " has set phase to " + CurrentPhase.Name));
+                summary.WriteMessage(this, string.Format(this + " has set phase to " + CurrentPhase.Name));
             }
         }
 
@@ -110,7 +108,7 @@ namespace Models.PMF.Phen
                 if (OnStartDayOf(CurrentPhase.Start))
                     return CurrentPhase.Start;
                 else
-                    return "?";
+                    return "";
             }
         }
         
@@ -141,7 +139,7 @@ namespace Models.PMF.Phen
 
             private set
             {
-                CurrentPhaseIndex = IndexOfPhase(value.Name);
+                CurrentPhaseIndex = IndexFromPhaseName(value.Name);
             }
         }
 
@@ -149,69 +147,69 @@ namespace Models.PMF.Phen
         /// -----------------------------------------------------------------------------------------------------------
 
         /// <summary>Look for a particular phase and return it's index or -1 if not found.</summary>
-        public int IndexOfPhase(string Name)
+        public int IndexFromPhaseName(string name)
         {
-            for (int P = 0; P < phases.Count; P++)
-                if (String.Equals(phases[P].Name, Name, StringComparison.OrdinalIgnoreCase))
-                    return P;
+            for (int phaseIndex = 0; phaseIndex < phases.Count; phaseIndex++)
+                if (String.Equals(phases[phaseIndex].Name, name, StringComparison.OrdinalIgnoreCase))
+                    return phaseIndex;
             return -1;
         }
 
         /// <summary>A function that resets phenology to a specified stage</summary>
-        public void SetToStage(double NewStage)
+        public void SetToStage(double newStage)
         {
             string stageOnEvent = CurrentPhase.End;
-            double oldPhaseIndex = IndexOfPhase(CurrentPhase.Name);
+            double oldPhaseIndex = IndexFromPhaseName(CurrentPhase.Name);
             StagesPassedToday.Clear();
 
-            if (NewStage <= 0)
+            if (newStage <= 0)
                 throw new Exception(this + "Must pass positive stage to set to");
-            if (NewStage > phases.Count()+1)
+            if (newStage > phases.Count()+1)
                 throw new Exception(this + " Trying to set to non-existant stage");
 
-            CurrentPhase = phases[Convert.ToInt32(Math.Floor(NewStage)) - 1];
+            CurrentPhase = phases[Convert.ToInt32(Math.Floor(newStage)) - 1];
 
             if (CurrentPhaseIndex <= oldPhaseIndex)
             {
                 //Make a list of phases to rewind
-                List<IPhase> PhasesToRewind = new List<IPhase>();
-                foreach (IPhase P in phases)
+                List<IPhase> phasesToRewind = new List<IPhase>();
+                foreach (IPhase phase in phases)
                 {
-                    if ((IndexOfPhase(P.Name) >= CurrentPhaseIndex)&&(IndexOfPhase(P.Name)<=oldPhaseIndex))
-                        PhasesToRewind.Add(P);
+                    if ((IndexFromPhaseName(phase.Name) >= CurrentPhaseIndex)&&(IndexFromPhaseName(phase.Name)<=oldPhaseIndex))
+                        phasesToRewind.Add(phase);
                 }
 
-                foreach (IPhase P in PhasesToRewind)
+                foreach (IPhase phase in phasesToRewind)
                 {
-                    AccumulatedTT -= P.TTinPhase;
-                    AccumulatedEmergedTT -= P.TTinPhase;
-                    P.ResetPhase();
+                    AccumulatedTT -= phase.TTinPhase;
+                    AccumulatedEmergedTT -= phase.TTinPhase;
+                    phase.ResetPhase();
                 }
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
             }
             else
             {
                 //Make a list of phases fast forward
-                List<IPhase> PhasesToFastForward = new List<IPhase>();
-                foreach (IPhase P in phases)
+                List<IPhase> phasesToFastForward = new List<IPhase>();
+                foreach (IPhase phase in phases)
                 {
-                    if (IndexOfPhase(P.Name) >= oldPhaseIndex)
-                        PhasesToFastForward.Add(P);
+                    if (IndexFromPhaseName(phase.Name) >= oldPhaseIndex)
+                        phasesToFastForward.Add(phase);
                 }
-                foreach (IPhase P in PhasesToFastForward)
+                foreach (IPhase phase in phasesToFastForward)
                 {
-                    StagesPassedToday.Add(P.End);
+                    StagesPassedToday.Add(phase.End);
                     if (PhaseChanged != null)
                     {
                         PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                        PhaseChangedData.StageName = P.End;
-                        PhaseChanged.Invoke(Plant, PhaseChangedData);
+                        PhaseChangedData.StageName = phase.End;
+                        PhaseChanged.Invoke(plant, PhaseChangedData);
                     }
                 }
             }
 
             IPhase currentPhase = phases[CurrentPhaseIndex];
-            currentPhase.TTinPhase = currentPhase.Target * (NewStage - CurrentPhaseIndex - 1);
+            currentPhase.TTinPhase = currentPhase.Target * (newStage - CurrentPhaseIndex - 1);
             if (currentPhase.TTinPhase == 0)
                 StagesPassedToday.Add(currentPhase.Start);
 
@@ -220,64 +218,64 @@ namespace Models.PMF.Phen
         }
 
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>
-        public bool OnStartDayOf(String StageName)
+        public bool OnStartDayOf(String stageName)
         {
-            if (StagesPassedToday.Contains(StageName))
+            if (StagesPassedToday.Contains(stageName))
                 return true;
             else
                 return false;
         }
 
         /// <summary> A utility function to return true if the simulation is currently in the specified phase. </summary>
-        public bool InPhase(String PhaseName)
+        public bool InPhase(String phaseName)
         {
-            return String.Equals(CurrentPhase.Name, PhaseName, StringComparison.OrdinalIgnoreCase);
+            return String.Equals(CurrentPhase.Name, phaseName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
-        public bool Between(String Start, String End)
+        public bool Between(String start, String end)
         {
             if (phases == null)
                 return false;
 
-            int StartPhaseIndex = -1;
-            int EndPhaseIndex = -1;
+            int startPhaseIndex = -1;
+            int endPhaseIndex = -1;
             int i= 0;
-            while ((EndPhaseIndex == -1) || (i<phases.Count()))
+            while (endPhaseIndex == -1 || i<phases.Count())
             {
-                if (phases[i].Start == Start)
-                    StartPhaseIndex = i;
-                if (phases[i].End == End)
-                    EndPhaseIndex = i;
+                if (phases[i].Start == start)
+                    startPhaseIndex = i;
+                if (phases[i].End == end)
+                    endPhaseIndex = i;
                 i += 1;
             }
             
-            if (StartPhaseIndex == -1)
-                throw new Exception("Cannot find phase: " + Start);
-            if (EndPhaseIndex == -1)
-                throw new Exception("Cannot find phase: " + End);
-            if (StartPhaseIndex > EndPhaseIndex)
-                throw new Exception("Start phase " + Start + " is after phase " + End);
+            if (startPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + start);
+            if (endPhaseIndex == -1)
+                throw new Exception("Cannot find phase: " + end);
+            if (startPhaseIndex > endPhaseIndex)
+                throw new Exception("Start phase " + start + " is after phase " + end);
 
-            return CurrentPhaseIndex >= StartPhaseIndex && CurrentPhaseIndex <= EndPhaseIndex;
+            return CurrentPhaseIndex >= startPhaseIndex && CurrentPhaseIndex <= endPhaseIndex;
         }
 
         /// <summary> A utility function to return true if the simulation is at or past the specified startstage.</summary>
-        public bool Beyond(String Start)
+        public bool Beyond(String start)
         {
-            if (CurrentPhaseIndex >= phases.IndexOf(PhaseStartingWith(Start)))
+            if (CurrentPhaseIndex >= phases.IndexOf(PhaseStartingWith(start)))
                 return true;
             else
                 return false;
         }
 
         /// <summary>A utility function to return the phenological phase that starts with the specified start stage name.</summary>
-        public IPhase PhaseStartingWith(String Start)
+        public IPhase PhaseStartingWith(String start)
         {
             foreach (IPhase P in phases)
-                if (P.Start == Start)
+                if (P.Start == start)
                     return P;
-            throw new Exception("Unable to find phase starting with " + Start);
+            throw new Exception("Unable to find phase starting with " + start);
         }
 
 
@@ -289,10 +287,10 @@ namespace Models.PMF.Phen
         private void OnLoaded(object sender, LoadedEventArgs args)
         {
             if (phases.Count() == 0) //Need this test to ensure the phases are colated only once
-            foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
-            {
-                phases.Add(phase);
-            }
+                foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
+                {
+                    phases.Add(phase);
+                }
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -306,7 +304,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
+            if (data.Plant == plant)
                 Clear();
             StagesPassedToday.Add(phases[0].Start);
         }
@@ -317,7 +315,7 @@ namespace Models.PMF.Phen
         {
             if (PlantIsAlive)
             {
-                if (ThermalTime.Value() < 0)
+                if (thermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
                
                 // Calculate progression through current phase
@@ -337,7 +335,7 @@ namespace Models.PMF.Phen
                     {
                         PhaseChangedType PhaseChangedData = new PhaseChangedType();
                         PhaseChangedData.StageName = CurrentPhase.Start;
-                        PhaseChanged.Invoke(Plant, PhaseChangedData);
+                        PhaseChanged.Invoke(plant, PhaseChangedData);
                     }
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
@@ -346,8 +344,8 @@ namespace Models.PMF.Phen
                 
                Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
 
-               if (Plant != null)
-                    if (Plant.IsAlive && PostPhenology != null)
+               if (plant != null)
+                    if (plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
             }
         }
@@ -356,10 +354,10 @@ namespace Models.PMF.Phen
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-            if (sender == Plant)
+            if (sender == plant)
             {
                 //Jump phenology to the end
-                CurrentPhaseName = phases[phases.Count - 1].Name;
+                SetToStage((double)(phases.Count - 1));
             }
         }
 
@@ -375,7 +373,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (sender == Plant)
+            if (sender == plant)
                 Clear();
         }
   
@@ -394,7 +392,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Plant != null && Plant.IsAlive)
+                if (plant != null && plant.IsAlive)
                     return true;
                 return false;
             }
