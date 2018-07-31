@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="TabbedExplorerView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
     using Gtk;
@@ -25,24 +20,15 @@ namespace UserInterface.Views
     /// </summary>
     public class MainView : ViewBase, IMainView
     {
+        /// <summary>
+        /// List of resources embedded in this assembly.
+        /// </summary>
+        private static string[] resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static string indexTabText = "Home";
-
-        /// <summary>Get the list and button view</summary>
-        public IListButtonView StartPage1 { get { return listButtonView1; } }
-
-        /// <summary>Get the list and button view</summary>
-        public IListButtonView StartPage2 { get { return listButtonView2; } }
-
-        /// <summary>Invoked when application tries to close</summary>
-        public event EventHandler<AllowCloseArgs> AllowClose;
-
-        /// <summary>Invoked when a tab is closing.</summary>
-        public event EventHandler<TabClosingEventArgs> TabClosing;
-
-        /// <summary>Invoked when application tries to close</summary>
-        public event EventHandler<EventArgs> StopSimulation;
-                
-        public event EventHandler ShowDetailedError;
 
         /// <summary>
         /// Stores the size, in points, of the "default" base font
@@ -64,68 +50,89 @@ namespace UserInterface.Views
         /// </summary>
         private double scrollSizeStep = 0.5;
 
-        public int StatusPanelHeight
-        {
-            get
-            {
-                return hbox1.Allocation.Height;
-            }
-            set
-            {
-                hbox1.HeightRequest = value;                
-            }
-        }
+        /// <summary>
+        /// Number of buttons in the status panel.
+        /// </summary>
+        private int numberOfButtons;
 
         /// <summary>
-        /// The size, in pointer, of our base font
+        /// Button panel for the left hand view's start page.
         /// </summary>
-        public double FontSize
-        {
-            get
-            {
-                return baseFontSize;
-            }
-            set
-            {
-                double newSize = Math.Min(40.0, Math.Max(4.0, value));
-                if (newSize != baseFontSize)
-                {
-                    baseFontSize = value;
-                    SetFontSize(baseFontSize);
-                }
-            }
-        }
-
-
-        private int numberOfButtons;
         private ListButtonView listButtonView1;
+
+        /// <summary>
+        /// Button panel for the right hand view's start page.
+        /// </summary>
         private ListButtonView listButtonView2;
 
+        /// <summary>
+        /// Main Gtk window.
+        /// </summary>
         private Window window1 = null;
+
+        /// <summary>
+        /// Progress bar which displays simulation progress.
+        /// </summary>
         private ProgressBar progressBar = null;
+
+        /// <summary>
+        /// Status window used to display error messages and other information.
+        /// </summary>
         private TextView StatusWindow = null;
+
+        /// <summary>
+        /// Button to stop a simulation.
+        /// </summary>
         private Button stopButton = null;
+
+        /// <summary>
+        /// Primary widget for tabs on the left side of the screen.
+        /// </summary>
         private Notebook notebook1 = null;
+
+        /// <summary>
+        /// Primary widget for tabs on the right side of the screen.
+        /// </summary>
         private Notebook notebook2 = null;
+
+        /// <summary>
+        /// Gtk box which holds <see cref="listButtonView1"/>.
+        /// </summary>
         private VBox vbox1 = null;
+
+        /// <summary>
+        /// Gtk box which holds <see cref="listButtonView2"/>.
+        /// </summary>
         private VBox vbox2 = null;
+
+        /// <summary>
+        /// Gtk widget which holds the two sets of tabs.
+        /// </summary>
         private HPaned hpaned1 = null;
+
+        /// <summary>
+        /// Gtk widget which holds the status panel.
+        /// </summary>
         private HBox hbox1 = null;
 
-        private RcStyle rcStyle = new RcStyle();
+        /// <summary>
+        /// Keeps track of the font size (and, in theory, other font attributes).
+        /// </summary>
         private Pango.FontDescription baseFont;
 
-        /// <summary>Constructor</summary>
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
             MasterView = this;
             numberOfButtons = 0;
             if ((uint)Environment.OSVersion.Platform <= 3)
             {
-                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                       ".gtkrc"));
             }
-            baseFont = Gtk.Rc.GetStyle(new Label()).FontDescription.Copy();
+            baseFont = Rc.GetStyle(new Label()).FontDescription.Copy();
             defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
             FontSize = Utility.Configuration.Settings.BaseFontSize;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
@@ -175,10 +182,78 @@ namespace UserInterface.Views
             listButtonView1.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
-            if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
+            if (ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
         }
 
+        /// <summary>
+        /// Invoked when application tries to close
+        /// </summary>
+        public event EventHandler<AllowCloseArgs> AllowClose;
+
+        /// <summary>
+        /// Invoked when a tab is closing.
+        /// </summary>
+        public event EventHandler<TabClosingEventArgs> TabClosing;
+
+        /// <summary>
+        /// Invoked when application tries to close
+        /// </summary>
+        public event EventHandler<EventArgs> StopSimulation;
+
+        /// <summary>
+        /// Show a detailed error message.
+        /// </summary>
+        public event EventHandler ShowDetailedError;
+
+        /// <summary>
+        /// Get the list and button view
+        /// </summary>
+        public IListButtonView StartPage1 { get { return listButtonView1; } }
+
+        /// <summary>
+        /// Get the list and button view
+        /// </summary>
+        public IListButtonView StartPage2 { get { return listButtonView2; } }
+
+        /// <summary>
+        /// Controls the height of the status panel.
+        /// </summary>
+        public int StatusPanelHeight
+        {
+            get
+            {
+                return hbox1.Allocation.Height;
+            }
+            set
+            {
+                hbox1.HeightRequest = value;
+            }
+        }
+
+        /// <summary>
+        /// The size, in pointer, of our base font
+        /// </summary>
+        public double FontSize
+        {
+            get
+            {
+                return baseFontSize;
+            }
+            set
+            {
+                double newSize = Math.Min(40.0, Math.Max(4.0, value));
+                if (newSize != baseFontSize)
+                {
+                    baseFontSize = value;
+                    SetFontSize(baseFontSize);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The main Gdk window. This is the window which is exposed to the window manager.
+        /// </summary>
         public Gdk.Window MainWindow
         {
             get
@@ -243,13 +318,8 @@ namespace UserInterface.Views
         /// </summary>
         private void InitMac()
         {
-            MonoMac.AppKit.NSApplication.Init();
+            NSApplication.Init();
         }
-
-        /// <summary>
-        /// List of resources embedded in this assembly.
-        /// </summary>
-        static string[] resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
 
         /// <summary>
         /// Checks if the current assembly contains a given resource.
@@ -789,8 +859,7 @@ namespace UserInterface.Views
 
             // Reset the style machinery to apply the new base font to all
             // newly created Widgets.
-            rcStyle.FontDesc = baseFont;
-            Rc.ReparseAllForSettings(Gtk.Settings.Default, true);
+            Rc.ReparseAllForSettings(Settings.Default, true);
         }
 
         /// <summary>
@@ -1091,27 +1160,7 @@ namespace UserInterface.Views
                 return path;
             }
         }
-
-        /// <summary>
-        /// "Native" structure for a key press event
-        /// </summary>
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-        public struct EventKeyStruct
-        {
-            public Gdk.EventType type;
-            public IntPtr window;
-            public sbyte send_event;
-
-            public uint time;
-            public uint state;
-            public uint keyval;
-            public uint length;
-            public string str;
-            public ushort hardware_keycode;
-            public byte group;
-            public uint is_modifier;
-        }
-
+        
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
