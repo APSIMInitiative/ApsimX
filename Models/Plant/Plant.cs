@@ -220,7 +220,18 @@ namespace Models.PMF
         }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
-        public bool IsAlive { get { return SowingData != null; } }
+        public bool IsAlive
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.Emerged;
+                //If the crop model has phenology and the crop is emerged return true
+                else
+                    return IsAlive;
+                //Else if the crop is in the grown returen true
+            }
+        }
 
         /// <summary>Return true if plant has emerged</summary>
         public bool IsEmerged
