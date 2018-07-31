@@ -1068,7 +1068,7 @@ namespace Models.Core.ApsimFile
                 var matchingFactors = factors.FindAll(f => f.Key == factorName);
                 var matchingFactorValues = matchingFactors.Select(f => f.Value);
 
-                if (matchingFactorValues.Distinct().Count() > 1 || matchingFactors.Count() != factors.Count())
+                if (matchingFactorValues.Distinct().Count() > 1)
                 {
                     // All factor values are the same so remove the factor.
                     factorNamesToReturn.Add(factorName);
