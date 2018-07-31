@@ -319,6 +319,15 @@ namespace Models.PMF.Phen
 
                     currentPhaseIndex = currentPhaseIndex + 1;
 
+                    if (Stage >= 1 && !Germinated)
+                        Germinated = true;
+
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
+                    {
+                        plant.SendEmergingEvent();
+                        Emerged = true;
+                    }
+
                     if (PhaseChanged != null)
                     {
                         PhaseChangedType PhaseChangedData = new PhaseChangedType();

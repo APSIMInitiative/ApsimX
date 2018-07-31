@@ -75,7 +75,6 @@ namespace Models.PMF.Phen
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.999;
                 TTForTimeStep *= (1-propOfDayToUse);
-                phenology.Germinated = true;
             }
 
             TTinPhase += TTForTimeStep;

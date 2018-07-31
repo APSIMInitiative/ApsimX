@@ -21,9 +21,6 @@ namespace Models.PMF.Phen
         Plant Plant = null;
 
         [Link]
-        Phenology phenology = null;
-
-        [Link]
         Structure structure = null;
 
         [Link]
@@ -91,7 +88,6 @@ namespace Models.PMF.Phen
             if (firstStep)
             {
                 structure.PrimaryBudNo = Plant.SowingData.BudNumber;
-                phenology.Germinated = true;
                 firstStep = false;
             }
 
@@ -115,7 +111,6 @@ namespace Models.PMF.Phen
                 structure.PrimaryBudNo = BudNumberBurst;
                 structure.TotalStemPopn = structure.MainStemPopn;
                 Plant.SendEmergingEvent();
-                phenology.Emerged = true;
             }
 
             return proceedToNextPhase;

@@ -18,9 +18,6 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
        
         [Link]
-        Plant Plant = null;
-
-        [Link]
         Phenology phenology = null;
 
         //5. Public properties
@@ -91,12 +88,6 @@ namespace Models.PMF.Phen
                 TTinPhase = Target;
             }
             
-            if (proceedToNextPhase)
-            {
-                Plant.SendEmergingEvent();
-                phenology.Emerged = true;
-            }
-
             return proceedToNextPhase;
         }
 
@@ -122,7 +113,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-        Target = ShootLag + Plant.SowingData.Depth * ShootRate;
+        Target = ShootLag + data.Depth * ShootRate;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
