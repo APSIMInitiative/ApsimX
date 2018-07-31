@@ -9,7 +9,7 @@ using Models;
 using System.Xml.Serialization;
 using Models.PMF;
 using System.Runtime.Serialization;
-using Models.SurfaceOM;
+using Models.Surface;
 using Models.Soils;
 using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;

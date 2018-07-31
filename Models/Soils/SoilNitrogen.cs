@@ -6,7 +6,7 @@ using System.Xml;
 using System.Linq;
 using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.SurfaceOM;
+using Models.Surface;
 using Models.Interfaces;
 
 namespace Models.Soils
