@@ -557,13 +557,11 @@ namespace UserInterface.Presenters
 
             foreach (IGridCell cell in e.ChangedCells)
             {
-                if (e.invalidValue)
-                {
-                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
-                }
                 try
                 {
-                    this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+                    if (e.invalidValue)
+                        throw new Exception("The value you entered was not valid for its datatype.");
+                    SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
                 }
                 catch (Exception ex)
                 {

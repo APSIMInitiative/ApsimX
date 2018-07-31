@@ -700,7 +700,6 @@ namespace UserInterface.Presenters
                 // store credentials
                 storageAuth = StorageCredentials.FromConfiguration();
                 batchAuth = BatchCredentials.FromConfiguration();
-                poolOptions = PoolSettings.FromConfiguration();
 
                 storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
                 uploader = new FileUploader(storageAccount);
