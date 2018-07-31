@@ -432,6 +432,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <ShootRate>4</ShootRate>
           <Start>Germination</Start>
           <End>Emergence</End>
+          <TTForToday>0</TTForToday>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
@@ -1079,8 +1080,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </OnEventFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <FractionBiomassRemoved>0</FractionBiomassRemoved>
-        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -9064,6 +9063,7 @@ assumed to be 0°C ([Chakwizira_etal_2016a]).]]></MemoText>
           <ShootRate>12.5</ShootRate>
           <Start>Germination</Start>
           <End>PreEmerge</End>
+          <TTForToday>0</TTForToday>
         </EmergingPhase>
         <GenericPhase>
           <Name>Emerging</Name>
@@ -9257,8 +9257,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         </PhotoperiodFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <FractionBiomassRemoved>0</FractionBiomassRemoved>
-        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
