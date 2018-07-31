@@ -51,14 +51,7 @@ namespace Models.PMF.Phen
         /// <summary>The just initialised</summary>
         private bool JustInitialised = true;
 
-
-        ///3.  The constructor
-        /// -------------------------------------------------------------------------------------------------
-        /// <summary>Constructor</summary>
-
-        public Phenology() { }
-
-
+        
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
 

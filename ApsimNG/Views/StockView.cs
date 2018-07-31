@@ -17,8 +17,8 @@ namespace UserInterface.Views
         private const int MAX_GENOTYPES = 20;
         private int FCurrGenotype;
         private GrazType.AnimalType[] FGenotypeAnimals = new GrazType.AnimalType[20];
-        private TAnimalParamSet paramSet;
-        private TAnimalParamSet genotypeSet;
+        private AnimalParamSet paramSet;
+        private AnimalParamSet genotypeSet;
         private bool FILLING = false;
 
         private const double MINSHEEPSRW = 5.0;
@@ -159,7 +159,7 @@ namespace UserInterface.Views
         /// Responds after a GetGenoParams event is called
         /// </summary>
         /// <param name="animalParams"></param>
-        public void SetGenoParams(TAnimalParamSet animalParams)
+        public void SetGenoParams(AnimalParamSet animalParams)
         {
             this.genotypeSet = animalParams;
         }
@@ -609,7 +609,7 @@ namespace UserInterface.Views
         /// <param name="sBreedName"></param>
         private void SetGenotypeDefaults(int idx, string sBreedName)
         {
-            TAnimalParamSet breedParams;
+            AnimalParamSet breedParams;
             StockGeno theGenoType;
 
             breedParams = paramSet.Match(sBreedName);

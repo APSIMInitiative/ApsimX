@@ -202,6 +202,7 @@
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
     <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
+    <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
     <Compile Include="Soils\Nutrient\Chloride.cs" />
     <Compile Include="Storage\DataStore.cs" />

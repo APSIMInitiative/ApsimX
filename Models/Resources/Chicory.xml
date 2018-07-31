@@ -94,7 +94,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Twilight>-6</Twilight>
       <DayLength>0</DayLength>
     </PhotoperiodFunction>
-    <VernalisationC>
+    <Vernalisation>
       <Name>Vernalisation</Name>
       <Memo>
         <Name>Description</Name>
@@ -155,7 +155,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <StartStage>Emergence</StartStage>
       <EndStage>Bolting</EndStage>
       <ResetStage>Ripening</ResetStage>
-    </VernalisationC>
+    </Vernalisation>
     <GerminatingPhase>
       <Name>Germinating</Name>
       <Memo>
