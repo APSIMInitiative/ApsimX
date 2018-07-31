@@ -5,7 +5,7 @@ namespace Models.WaterModel
     using Core;
     using Interfaces;
     using Models.Functions;
-    using SurfaceOM;
+    using Models.Surface;
     using System;
     using System.Collections.Generic;
     using System.Linq;
