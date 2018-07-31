@@ -90,6 +90,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Return current stage name.</summary>
+        [XmlIgnore]
         public string CurrentStageName
         {
             get
@@ -354,7 +355,7 @@ namespace Models.PMF.Phen
             if (sender == plant)
             {
                 //Jump phenology to the end
-                SetToStage((double)(phases.Count - 1));
+                SetToStage((double)(phases.Count));
             }
         }
 
