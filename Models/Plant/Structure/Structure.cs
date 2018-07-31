@@ -45,26 +45,8 @@ namespace Models.PMF.Struct
     [ValidParent(ParentType = typeof(Plant))]
     public class Structure : Model
     {
-        /// <summary>Occurs when plant Germinates.</summary>
-        public event EventHandler InitialiseLeafCohorts;
-        /// <summary>Occurs when ever an new vegetative leaf cohort is initiated on the stem apex.</summary>
-        public event EventHandler<CohortInitParams> AddLeafCohort;
-        /// <summary>The Leaf Appearance Data </summary>
-        [XmlIgnore]
-        public CohortInitParams InitParams { get; set; }
-        /// <summary>Occurs when ever an new leaf tip appears.</summary>
-        public event EventHandler<ApparingLeafParams> LeafTipAppearance;
-        /// <summary>The Leaf Appearance DAta </summary>
-        [XmlIgnore]
-        public ApparingLeafParams CohortParams { get; set; }
-        /// <summary>The arguments</summary>
-        private EventArgs args = new EventArgs();
-        /// <summary>CohortToInitialise</summary>
-        public int CohortToInitialise { get; set; }
-        /// <summary>TipToAppear</summary>
-        public int TipToAppear { get; set; }
-        //private double FinalLeafDeltaTipNumberonDayOfAppearance { get; set; }
-        #region Links
+        // 1. Links
+        //-------------------------------------------------------------------------------------------
         /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
@@ -75,44 +57,61 @@ namespace Models.PMF.Struct
         [Link]
         Phenology Phenology = null;
 
-        #endregion
-
-        #region Parameters
-        /// <summary>Gets or sets the primary bud no.</summary>
-        /// <value>The primary bud no.</value>
-        [Description("Number of mainstem units per plant")]
-        [Units("/plant")]
-        [XmlIgnore]
-        public double PrimaryBudNo {get; set;}
-
         /// <summary>The thermal time</summary>
         [Link]
         public IFunction ThermalTime = null;
         /// <summary>The main stem node appearance rate</summary>
         [Link]
         public IFunction Phyllochron = null;
-        
+
         /// <summary>The main stem final node number</summary>
         [Link]
         public IFunction FinalLeafNumber = null;
+        
         /// <summary>The height model</summary>
         [Link]
         [Units("mm")]
         IFunction HeightModel = null;
+        
         /// <summary>The branching rate</summary>
         [Link]
         [Units("/node")]
         IFunction BranchingRate = null;
+        
         /// <summary>The branch mortality (in ratio of total branching)</summary>
         [Link]
         [Units("/d")]
         IFunction BranchMortality = null;
+        
         /// <summary>The maximum age of stem senescence</summary>
         [Link]
         public IFunction StemSenescenceAge = null;
-        #endregion
 
-        #region States
+
+        // 2. Private fields
+        //-------------------------------------------------------------------------------------------
+
+        /// <summary>The arguments</summary>
+        private EventArgs args = new EventArgs();
+
+
+        // 3. Constructor
+        //-------------------------------------------------------------------------------------------
+
+        // 4. Public Events And Enums
+        //-------------------------------------------------------------------------------------------
+        
+            /// <summary>Occurs when plant Germinates.</summary>
+        public event EventHandler InitialiseLeafCohorts;
+        
+        /// <summary>Occurs when ever an new vegetative leaf cohort is initiated on the stem apex.</summary>
+        public event EventHandler<CohortInitParams> AddLeafCohort;
+        
+        /// <summary>Occurs when ever an new leaf tip appears.</summary>
+        public event EventHandler<ApparingLeafParams> LeafTipAppearance;
+
+        // 5. Public properties
+        //-------------------------------------------------------------------------------------------
         /// <summary>Test if Initialisation done</summary>
         public bool Initialised;
         /// <summary>Test if Initialisation done</summary>
@@ -124,6 +123,25 @@ namespace Models.PMF.Struct
         public double ApexNum { get; set; }
 
         private double _Height;
+
+        /// <summary>The Leaf Appearance Data </summary>
+        [XmlIgnore]
+        public CohortInitParams InitParams { get; set; }
+
+        /// <summary>CohortToInitialise</summary>
+        public int CohortToInitialise { get; set; }
+        /// <summary>TipToAppear</summary>
+        public int TipToAppear { get; set; }
+
+        /// <summary>The Leaf Appearance DAta </summary>
+        [XmlIgnore]
+        public ApparingLeafParams CohortParams { get; set; }
+
+        /// <summary>Gets or sets the primary bud no.</summary>
+        [Description("Number of mainstem units per plant")]
+        [Units("/plant")]
+        [XmlIgnore]
+        public double PrimaryBudNo { get; set; }
 
         /// <summary>Gets or sets the total stem popn.</summary>
         /// <value>The total stem popn.</value>
@@ -190,7 +208,48 @@ namespace Models.PMF.Struct
         /// </summary>
         [XmlIgnore]
         public double DeltaPlantPopulation { get; set; }
-        
+
+        /// <summary>Gets the main stem popn.</summary>
+        [XmlIgnore]
+        [Description("Number of mainstems per meter")]
+        [Units("/m2")]
+        public double MainStemPopn { get { return Plant.Population * PrimaryBudNo; } }
+
+        /// <summary>Gets the remaining node no.</summary>
+        /// <value>The remaining node no.</value>
+        [XmlIgnore]
+        [Description("Number of leaves yet to appear")]
+        public double RemainingNodeNo { get { return FinalLeafNumber.Value() - LeafTipsAppeared; } }
+
+        /// <summary>Gets the height.</summary>
+        /// <value>The height.</value>
+        [XmlIgnore]
+        [Units("mm")]
+        public double Height { get { return _Height; } }
+
+        /// <summary>Gets the primary bud total node no.</summary>
+        /// <value>The primary bud total node no.</value>
+
+        [Units("/PrimaryBud")]
+        [Description("Number of appeared leaves per primary bud unit including all main stem and branch leaves")]
+        [XmlIgnore]
+        public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
+
+        /// <summary>Gets the relative node apperance.</summary>
+        /// <value>The relative node apperance.</value>
+        [Units("0-1")]
+        [XmlIgnore]
+        [Description("Relative progress toward final leaf")]
+        public double RelativeNodeApperance
+        {
+            get
+            {
+                return LeafTipsAppeared / FinalLeafNumber.Value();
+            }
+        }
+
+        // 6. Public methods
+        //-------------------------------------------------------------------------------------------
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -212,48 +271,17 @@ namespace Models.PMF.Struct
             DeltaPlantPopulation = 0;
         }
 
-        #endregion
+        // 7. Private methods
+        //-------------------------------------------------------------------------------------------
+
+
+
+
+
+
 
         #region Outputs
-        /// <summary>Gets the main stem popn.</summary>
-        /// <value>The main stem popn.</value>
-        [XmlIgnore]
-        [Description("Number of mainstems per meter")]
-        [Units("/m2")]
-        public double MainStemPopn { get { return Plant.Population * PrimaryBudNo; } }
-
-        /// <summary>Gets the remaining node no.</summary>
-        /// <value>The remaining node no.</value>
-        [XmlIgnore]
-        [Description("Number of leaves yet to appear")]
-        public double RemainingNodeNo { get { return FinalLeafNumber.Value() - LeafTipsAppeared; } }
-
-        /// <summary>Gets the height.</summary>
-        /// <value>The height.</value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double Height { get { return _Height; } } 
-
-        /// <summary>Gets the primary bud total node no.</summary>
-        /// <value>The primary bud total node no.</value>
         
-        [Units("/PrimaryBud")]
-        [Description("Number of appeared leaves per primary bud unit including all main stem and branch leaves")]
-        [XmlIgnore]
-        public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
-
-        /// <summary>Gets the relative node apperance.</summary>
-        /// <value>The relative node apperance.</value>
-        [Units("0-1")]
-        [XmlIgnore]
-        [Description("Relative progress toward final leaf")]
-        public double RelativeNodeApperance
-        {
-            get
-            {
-                return LeafTipsAppeared / FinalLeafNumber.Value();
-            }
-        }
         #endregion
 
         #region Top level timestep Functions
