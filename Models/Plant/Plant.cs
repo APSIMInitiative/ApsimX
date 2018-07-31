@@ -225,7 +225,7 @@ namespace Models.PMF
             get
             {
                 if (Phenology != null)
-                    return Phenology.Emerged;
+                    return Phenology.Germinated;
                 //If the crop model has phenology and the crop is emerged return true
                 else
                     return IsAlive;
