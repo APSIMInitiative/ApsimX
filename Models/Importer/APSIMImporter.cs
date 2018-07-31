@@ -551,7 +551,9 @@ namespace Importer
             mysom.InitialResidueType = this.GetInnerText(compNode, "type");
             mysom.InitialResidueMass = Convert.ToDouble(this.GetInnerText(compNode, "mass"));
             mysom.InitialCNR = Convert.ToDouble(this.GetInnerText(compNode, "cnr"));
-            mysom.InitialCPR = Convert.ToDouble(this.GetInnerText(compNode, "cpr"));
+            string cpr = this.GetInnerText(compNode, "cpr");
+            if (cpr != string.Empty)
+                mysom.InitialCPR = Convert.ToDouble(cpr);
             mysom.InitialStandingFraction = Convert.ToDouble(this.GetInnerText(compNode, "standing_fraction"));
 
             newNode = ImportObject(destParent, newNode, mysom, XmlUtilities.NameAttr(compNode));

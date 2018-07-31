@@ -306,6 +306,18 @@
             return 1.0 - bare;
         }
 
+        /// <summary>Get the weight of the given SOM pool</summary>
+        /// <param name="pool">Name of the pool to get the weight from.</param>
+        /// <returns>The weight of the given pool</returns>
+        public double GetWeightFromPool(string pool)
+        {
+            var SomType = SurfOM.Find(x => x.name.Equals(pool, StringComparison.CurrentCultureIgnoreCase));
+            if (SomType == null)
+                return 0;
+            return SumOMFractionType(SomType.Standing, y => y.amount) +
+                SumOMFractionType(SomType.Lying, y => y.amount);
+        }
+
         /// <summary>Sums the surf om standing lying.</summary>
         /// <param name="var">The variable.</param>
         /// <param name="func">The function.</param>
