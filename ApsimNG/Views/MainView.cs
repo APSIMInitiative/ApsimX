@@ -5,145 +5,19 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    using APSIM.Shared.Utilities;
+    using Gtk;
+    using Models.Core;
+    using MonoMac.AppKit;
     using System;
     using System.Drawing;
     using System.IO;
-    using Gtk;
     using System.Reflection;
-    using Models.Core;
-    using System.Collections.Generic;
     using System.Linq;
+    using Interfaces;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
-
-    public interface IMainView
-    {
-        /// <summary>Get the start page 1 view</summary>
-        IListButtonView StartPage1 { get; }
-
-        /// <summary>Get the start page 2 view</summary>
-        IListButtonView StartPage2 { get; }
-
-        /// <summary>Add a tab form to the tab control. Optionally select the tab if SelectTab is true.</summary>
-        /// <param name="text">Text for tab.</param>
-        /// <param name="image">Image for tab.</param>
-        /// <param name="control">Control for tab.</param>
-        /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
-        void AddTab(string text, Gtk.Image image, Widget control, bool onLeftTabControl);
-
-        /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
-        /// <param name="newTabName">New text of the tab.</param>
-        void ChangeTabText(object ownerView, string newTabName, string tooltip);
-
-        Point WindowLocation { get; set; }
-
-        /// <summary>Gets or set the main window size.</summary>
-        Size WindowSize { get; set; }
-
-        /// <summary>Gets or set the main window size.</summary>
-        bool WindowMaximised { get; set; }
-
-        /// <summary>Gets or set the main window size.</summary>
-        string WindowCaption { get; set; }
-
-        /// <summary>Turn split window on/off</summary>
-        bool SplitWindowOn { get; set; }
-
-        /// <summary>Height of the status panel</summary>
-        int StatusPanelHeight { get; set; }
-
-        /// <summary>
-        ///  Default font size, in points.
-        /// </summary>
-        double FontSize { get; set; }
-
-        /// <summary>
-        /// Returns true if the object is a control on the left side
-        /// </summary>
-        bool IsControlOnLeft(object control);
-
-        string GetMenuItemFileName(object obj);
-
-        /// <summary>Ask user for a filename to open.</summary>
-        /// <param name="fileSpec">The file specification to use to filter the files.</param>
-        /// <param name="initialDirectory">Optional Initial starting directory</param>
-        string AskUserForOpenFileName(string fileSpec, string initialDirectory = "");
-
-        /// <summary>
-        /// A helper function that asks user for a SaveAs name and returns their new choice.
-        /// </summary>
-        /// <param name="fileSpec">The file specification to filter the files.</param>
-        /// <param name="OldFilename">The current file name.</param>
-        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
-        string AskUserForSaveFileName(string fileSpec, string OldFilename);
-
-        /// <summary>Ask the user a question</summary>
-        /// <param name="message">The message to show the user.</param>
-        QuestionResponseEnum AskQuestion(string message);
-
-        /// <summary>
-        /// Add a status message. A message of null will clear the status message.
-        /// </summary>
-        /// <param name="Message">Message to be displayed.</param>
-        /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
-        /// <param name="overwrite">
-        /// If true, all existing messages will be overridden.
-        /// If false, message will be appended to the status window.
-        /// </param>
-        /// <param name="addSeparator">If true, a 'separator' (several dashes) will also be written to the status window.</param>
-        /// <param name="withButton">
-        /// Whether or not a 'more info' button should be drawn under the message. 
-        /// If the message is not an error, this parameter has no effect.
-        /// </param>
-        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
-        
-        /// <summary>Show a message in a dialog box</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="errorLevel">The error level.</param>
-        int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType);
-
-        /// <summary>
-        /// Show progress bar with the specified percent.
-        /// </summary>
-        /// <param name="percent"></param>
-        void ShowProgress(int percent, bool showStopButton = true);
-
-        /// <summary>Set the wait cursor (or not)/</summary>
-        /// <param name="wait">Shows wait cursor if true, normal cursor if false.</param>
-        void ShowWaitCursor(bool wait);
-
-        /// <summary>
-        /// Display the window.
-        /// </summary>
-        void Show();
-
-        /// <summary>Close the application.</summary>
-        /// <param name="askToSave">If true, will ask user whether they want to save.</param>
-        void Close(bool askToSave = true);
-
-        /// <summary>Close a tab.</summary>
-        /// <param name="o">A widget appearing on the tab</param>
-        void CloseTabContaining(object o);
-
-        /// <summary>
-        /// Select a tab.
-        /// </summary>
-        /// <param name="o">A widget appearing on the tab</param>
-        void SelectTabContaining(object o);
-
-        /// <summary>Invoked when application tries to close</summary>
-        event EventHandler<AllowCloseArgs> AllowClose;
-
-        /// <summary>Invoked when a tab is closing.</summary>
-        event EventHandler<TabClosingEventArgs> TabClosing;
-
-        /// <summary>Invoked when application tries to close</summary>
-        event EventHandler<EventArgs> StopSimulation;
-
-        event EventHandler ShowDetailedError;
-    }
 
     /// <summary>
     /// TabbedExplorerView maintains multiple explorer views in a tabbed interface. It also
@@ -174,6 +48,11 @@ namespace UserInterface.Views
         /// Stores the size, in points, of the "default" base font
         /// </summary>
         private double defaultBaseSize;
+
+        /// <summary>
+        /// Keeps track of whether or not the waiting cursor is being used.
+        /// </summary>
+        private bool waiting = false;
 
         /// <summary>
         /// The size, in points, of our base font
@@ -219,8 +98,8 @@ namespace UserInterface.Views
 
 
         private int numberOfButtons;
-        private Views.ListButtonView listButtonView1;
-        private Views.ListButtonView listButtonView2;
+        private ListButtonView listButtonView1;
+        private ListButtonView listButtonView2;
 
         private Window window1 = null;
         private ProgressBar progressBar = null;
@@ -233,12 +112,13 @@ namespace UserInterface.Views
         private HPaned hpaned1 = null;
         private HBox hbox1 = null;
 
-        private Gtk.RcStyle rcStyle = new Gtk.RcStyle();
+        private RcStyle rcStyle = new RcStyle();
         private Pango.FontDescription baseFont;
 
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
+            MasterView = this;
             numberOfButtons = 0;
             if ((uint)Environment.OSVersion.Platform <= 3)
             {
@@ -297,6 +177,14 @@ namespace UserInterface.Views
             //window1.ShowAll();
             if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
+        }
+
+        public Gdk.Window MainWindow
+        {
+            get
+            {
+                return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow;
+            }
         }
 
         /// <summary>
@@ -358,6 +246,20 @@ namespace UserInterface.Views
             MonoMac.AppKit.NSApplication.Init();
         }
 
+        /// <summary>
+        /// List of resources embedded in this assembly.
+        /// </summary>
+        static string[] resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+
+        /// <summary>
+        /// Checks if the current assembly contains a given resource.
+        /// </summary>
+        /// <param name="name">Name of the resource.</param>
+        /// <returns>True if this assembly contains the resource. False otherwise.</returns>
+        public bool HasResource(string name)
+        {
+            return resources.Contains(name);
+        }
         /// <summary>
         /// Handles button press event on the "tab" part of a tabbed page.
         /// Currently responds by closing the tab if the middle button was pressed
@@ -668,10 +570,10 @@ namespace UserInterface.Views
             md.Title = "Save changes";
             int result = md.Run();
             md.Destroy();
-            switch ((Gtk.ResponseType)result)
+            switch ((ResponseType)result)
             {
-                case Gtk.ResponseType.Yes: return QuestionResponseEnum.Yes;
-                case Gtk.ResponseType.No: return QuestionResponseEnum.No;
+                case ResponseType.Yes: return QuestionResponseEnum.Yes;
+                case ResponseType.No: return QuestionResponseEnum.No;
                 default: return QuestionResponseEnum.Cancel;
             }
         }
@@ -681,7 +583,7 @@ namespace UserInterface.Views
         /// <param name="errorLevel">The error level.</param>
         public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
         {
-            Gtk.Application.Invoke(delegate
+            Application.Invoke(delegate
             {
                 StatusWindow.Visible = message != null;
                 if (overwrite || message == null)
@@ -753,19 +655,6 @@ namespace UserInterface.Views
             ShowDetailedError?.Invoke(sender, args);
         }
 
-        /// <summary>Show a message in a dialog box</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="errorLevel">The error level.</param>
-        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
-        {
-            Gtk.MessageDialog md = new Gtk.MessageDialog(MainWidget.Toplevel as Window, Gtk.DialogFlags.Modal,
-                msgType, buttonType, message);
-            md.Title = title;
-            int result = md.Run();
-            md.Destroy();
-            return result;
-        }
-
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
@@ -776,7 +665,7 @@ namespace UserInterface.Views
             // different thread. That means we can use either
             // System.Timers.Timer or Windows.Forms.Timer in 
             // RunCommand.cs
-            Gtk.Application.Invoke(delegate
+            Application.Invoke(delegate
             {
                 progressBar.Visible = true;
                 progressBar.Fraction = percent / 100.0;
@@ -821,7 +710,7 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void ListView_ScrollEvent(object o, ScrollEventArgs args)
         {
-            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+            Gdk.ModifierType ctlModifier = !ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
                 //Mac window manager already uses control-scroll, so use command
                 //Command might be either meta or mod1, depending on GTK version
                 : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
@@ -845,7 +734,7 @@ namespace UserInterface.Views
         private void ListView_KeyPressEvent(object o, KeyPressEventArgs args)
         {
             args.RetVal = false;
-            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+            Gdk.ModifierType ctlModifier = !ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
                 //Mac window manager already uses control-scroll, so use command
                 //Command might be either meta or mod1, depending on GTK version
                 : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
@@ -901,10 +790,365 @@ namespace UserInterface.Views
             // Reset the style machinery to apply the new base font to all
             // newly created Widgets.
             rcStyle.FontDesc = baseFont;
-            bool result = Gtk.Rc.ReparseAllForSettings(Gtk.Settings.Default, true);
-            Gtk.Rc.AddWidgetClassStyle(rcStyle, "*.<GtkWidget>.*");
+            Rc.ReparseAllForSettings(Gtk.Settings.Default, true);
         }
 
+        /// <summary>
+        /// Used to modify the cursor. If set to true, the waiting cursor will be displayed.
+        /// If set to false, the default cursor will be used.
+        /// </summary>
+        public bool WaitCursor
+        {
+            get
+            {
+                return waiting;
+            }
+            set
+            {
+                if (MainWindow != null)
+                {
+                    MainWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    waiting = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns a new Builder object generated by parsing the glade 
+        /// text found in the indicated resource.
+        /// </summary>
+        /// <param name="resourceName">Name of the resouce.</param>
+        /// <returns>A new Builder object, or null on failure.</returns>
+        public Builder BuilderFromResource(string resourceName)
+        {
+            Stream resStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            if (resStream == null)
+                return null;
+            StreamReader reader = new StreamReader(resStream);
+            string gladeString = reader.ReadToEnd();
+            Builder result = new Builder();
+            result.AddFromString(gladeString);
+            return result;
+        }
+
+        /// <summary>Ask user for a filename to open on Windows.</summary>
+        /// <param name="prompt">String to use as dialog heading.</param>
+        /// <param name="fileSpec">The file specification used to filter the files.</param>
+        /// <param name="action">Action to perform (currently either "Open" or "Save").</param>
+        /// <param name="initialPath">Optional Initial starting filename or directory.</param>      
+        private string WindowsFileDialog(string prompt, string fileSpec, FileChooserAction action, string initialPath)
+        {
+            string fileName = null;
+            System.Windows.Forms.FileDialog dialog;
+            if (action == FileChooserAction.Open)
+                dialog = new System.Windows.Forms.OpenFileDialog();
+            else
+                dialog = new System.Windows.Forms.SaveFileDialog();
+            dialog.Title = prompt;
+            if (!String.IsNullOrEmpty(fileSpec))
+                dialog.Filter = fileSpec + "|All files (*.*)|*.*";
+
+            if (!String.IsNullOrWhiteSpace(initialPath) && (File.Exists(initialPath) || action == FileChooserAction.Save))
+            {
+                dialog.InitialDirectory = Path.GetDirectoryName(initialPath);
+                dialog.FileName = null;
+                // This almost works, but Windows is buggy.
+                // If the file name is long, it doesn't display in a sensible way
+                // dialog.FileName = Path.GetFileName(initialPath);
+            }
+            else if (Directory.Exists(initialPath))
+                dialog.InitialDirectory = initialPath;
+            else
+                dialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
+
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                fileName = dialog.FileName;
+            dialog = null;
+            return fileName;
+        }
+
+        /// <summary>Ask user for a filename to open on Windows.</summary>
+        /// <param name="prompt">String to use as dialog heading</param>
+        /// <param name="fileSpec">The file specification used to filter the files.</param>
+        /// <param name="action">Action to perform (currently either "Open" or "Save")</param>
+        /// <param name="initialPath">Optional Initial starting filename or directory</param>      
+        private string OSXFileDialog(string prompt, string fileSpec, FileChooserAction action, string initialPath)
+        {
+            string fileName = null;
+            int result = 0;
+            NSSavePanel panel;
+            if (action == FileChooserAction.Open)
+                panel = new NSOpenPanel();
+            else
+                panel = new NSSavePanel();
+            panel.Title = prompt;
+
+            if (!String.IsNullOrEmpty(fileSpec))
+            {
+                string[] specParts = fileSpec.Split(new Char[] { '|' });
+                int nExts = 0;
+                string[] allowed = new string[specParts.Length / 2];
+                for (int i = 0; i < specParts.Length; i += 2)
+                {
+                    string pattern = Path.GetExtension(specParts[i + 1]);
+                    if (!String.IsNullOrEmpty(pattern))
+                    {
+                        pattern = pattern.Substring(1); // Get rid of leading "."
+                        if (!String.IsNullOrEmpty(pattern))
+                            allowed[nExts++] = pattern;
+                    }
+                }
+                if (nExts > 0)
+                {
+                    Array.Resize(ref allowed, nExts);
+                    panel.AllowedFileTypes = allowed;
+                }
+            }
+            panel.AllowsOtherFileTypes = true;
+
+            if (File.Exists(initialPath))
+            {
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Path.GetDirectoryName(initialPath));
+                panel.NameFieldStringValue = Path.GetFileName(initialPath);
+            }
+            else if (Directory.Exists(initialPath))
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(initialPath);
+            else
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Utility.Configuration.Settings.PreviousFolder);
+
+            result = panel.RunModal();
+            if (result == 1 /*NSFileHandlingPanelOKButton*/)
+            {
+                fileName = panel.Url.Path;
+            }
+            return fileName;
+        }
+
+        /// <summary>Ask user for a filename to open.</summary>
+        /// <param name="prompt">String to use as dialog heading</param>
+        /// <param name="fileSpec">The file specification used to filter the files.</param>
+        /// <param name="action">Action to perform (currently either "Open" or "Save")</param>
+        /// <param name="initialPath">Optional Initial starting filename or directory</param>      
+        public string AskUserForFileName(string prompt, string fileSpec, FileChooserAction action = FileChooserAction.Open, string initialPath = "")
+        {
+
+            string fileName = null;
+
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                return WindowsFileDialog(prompt, fileSpec, action, initialPath);
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                return OSXFileDialog(prompt, fileSpec, action, initialPath);
+            else
+            {
+                string btnText = "Open";
+                if (action == FileChooserAction.Save)
+                    btnText = "Save";
+                FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, action, "Cancel", ResponseType.Cancel, btnText, ResponseType.Accept);
+
+                if (!String.IsNullOrEmpty(fileSpec))
+                {
+                    string[] specParts = fileSpec.Split(new Char[] { '|' });
+                    for (int i = 0; i < specParts.Length; i += 2)
+                    {
+                        FileFilter fileFilter = new FileFilter();
+                        fileFilter.Name = specParts[i];
+                        fileFilter.AddPattern(specParts[i + 1]);
+                        fileChooser.AddFilter(fileFilter);
+                    }
+                }
+
+                FileFilter allFilter = new FileFilter();
+                allFilter.AddPattern("*");
+                allFilter.Name = "All files";
+                fileChooser.AddFilter(allFilter);
+
+                if (File.Exists(initialPath))
+                    fileChooser.SetFilename(initialPath);
+                else if (Directory.Exists(initialPath))
+                    fileChooser.SetCurrentFolder(initialPath);
+                else
+                    fileChooser.SetCurrentFolder(Utility.Configuration.Settings.PreviousFolder);
+                if (fileChooser.Run() == (int)ResponseType.Accept)
+                    fileName = fileChooser.Filename;
+                fileChooser.Destroy();
+            }
+            return fileName;
+        }
+
+        /// <summary>Ask user for a directory on Windows.</summary>
+        /// <param name="prompt">String to use as dialog heading</param>        
+        /// <param name="initialPath">Optional Initial starting filename or directory</param>
+        /// <returns>string containing the path to the chosen directory.</returns>
+        private string WindowsDirectoryDialog(string prompt, string initialPath = "")
+        {
+            string fileName = null;
+            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog()
+            {
+                Description = prompt
+            };
+
+            if (!String.IsNullOrWhiteSpace(initialPath) && (File.Exists(initialPath)))
+            {
+                dialog.SelectedPath = Path.GetDirectoryName(initialPath);
+                // This almost works, but Windows is buggy.
+                // If the file name is long, it doesn't display in a sensible way
+                // dialog.FileName = Path.GetFileName(initialPath);
+            }
+            else if (Directory.Exists(initialPath))
+                dialog.SelectedPath = initialPath;
+            else
+                dialog.SelectedPath = Utility.Configuration.Settings.PreviousFolder;
+            /*
+            if (!string.IsNullOrEmpty(initialPath))
+            {
+                timer.Tick += new EventHandler(WindowsWorkaround);
+                timer.Interval = 50;
+                timer.Tag = dialog;
+                timer.Start();
+            }*/
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                fileName = dialog.SelectedPath;
+            dialog = null;
+            return fileName;
+        }
+
+        /// <summary>Ask user for a directory on OSX.</summary>
+        /// <param name="prompt">String to use as dialog heading.</param>
+        /// <param name="initialPath">Optional initial starting filename or directory.</param>
+        /// <returns>string containing the path to the chosen directory.</returns>
+        private string OsxDirectoryDialog(string prompt, string initialPath = "")
+        {
+            NSOpenPanel panel = new NSOpenPanel
+            {
+                Title = prompt,
+                CanChooseDirectories = true,
+                CanChooseFiles = false
+            };
+
+            if (File.Exists(initialPath))
+            {
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Path.GetDirectoryName(initialPath));
+                panel.NameFieldStringValue = Path.GetFileName(initialPath);
+            }
+            else if (Directory.Exists(initialPath))
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(initialPath);
+            else
+                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Utility.Configuration.Settings.PreviousFolder);
+
+            string dir = "";
+            if (panel.RunModal() == 1 /*NSFileHandlingPanelOKButton*/)
+            {
+                dir = panel.Url.Path;
+            }
+            return dir;
+        }
+
+        /// <summary>
+        /// Ask the user for a directory. Returns the path to that directory, or null if they did not choose a directory.
+        /// </summary>
+        /// <param name="prompt">String to use as dialog heading.</param>
+        /// <param name="initialPath">Optional initial starting filename or directory.</param>
+        /// <returns>string containing the path to the chosen directory.</returns>
+        public string AskUserForDirectory(string prompt, string initialPath = "")
+        {
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                return WindowsDirectoryDialog(prompt, initialPath);
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                return OsxDirectoryDialog(prompt, initialPath);
+            else
+            {
+                string path = null;
+                FileChooserDialog fc = new FileChooserDialog(
+                    prompt,
+                    null,
+                    FileChooserAction.SelectFolder,
+                    "Cancel", ResponseType.Cancel,
+                    "Select Folder", ResponseType.Accept);
+                try
+                {
+                    int response = (int)ResponseType.Cancel;
+                    Application.Invoke(delegate
+                    {
+                        response = fc.Run();
+                    });
+                    // The issue here is that if this method is called from the main UI thread, the 
+                    // Application.Invoke delegate will not be called until the main thread is idle.
+                    while (GLib.MainContext.Iteration()) ;
+                    if (response == (int)ResponseType.Accept)
+                    {
+                        path = fc.Filename;
+                    }
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    fc.Destroy();
+                }
+
+                return path;
+            }
+        }
+
+        /// <summary>
+        /// "Native" structure for a key press event
+        /// </summary>
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        public struct EventKeyStruct
+        {
+            public Gdk.EventType type;
+            public IntPtr window;
+            public sbyte send_event;
+
+            public uint time;
+            public uint state;
+            public uint keyval;
+            public uint length;
+            public string str;
+            public ushort hardware_keycode;
+            public byte group;
+            public uint is_modifier;
+        }
+
+        /// <summary>Show a message in a dialog box</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="errorLevel">The error level.</param>
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType, Window masterWindow)
+        {
+            MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
+                msgType, buttonType, message);
+            md.Title = title;
+            int result = md.Run();
+            md.Destroy();
+            return result;
+        }
+
+        /// <summary>
+        /// Get whatever text is currently on a specific clipboard.
+        /// </summary>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        /// <returns></returns>
+        public string GetClipboardText(string clipboardName)
+        {
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+
+            return cb.WaitForText();
+        }
+
+        /// <summary>
+        /// Place text on a specific clipboard.
+        /// </summary>
+        /// <param name="text">Text to place on the clipboard.</param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        public void SetClipboardText(string text, string clipboardName)
+        {
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            cb.Text = text;
+        }
     }
 
     /// <summary>An event argument structure with a string.</summary>

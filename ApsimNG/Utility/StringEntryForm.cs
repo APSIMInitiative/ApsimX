@@ -3,7 +3,7 @@
 namespace Utility
 {
     using Gtk;
-    using UserInterface;
+    using UserInterface.Views;
     using UserInterface.Presenters;
 
     public class StringEntryForm
@@ -13,7 +13,7 @@ namespace Utility
         {
             Gtk.Window topLevelWindow = explorerPresenter.GetView().MainWidget.Toplevel as Gtk.Window;
 
-            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.StringEntryForm.glade");
+            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.StringEntryForm.glade");
             Dialog dialog = (Dialog)builder.GetObject("dialog");
             Label prompt = (Label)builder.GetObject("prompt");
             Button okButton = (Button)builder.GetObject("okButton");

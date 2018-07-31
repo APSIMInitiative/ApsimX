@@ -643,7 +643,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = ViewBase.AskUserForFileName("Select file path", string.Empty, Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
+            string fileName = ViewBase.MasterView.AskUserForFileName("Select file path", string.Empty, Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
             if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
             {
                 e.ChangedCells[0].Value = fileName;
