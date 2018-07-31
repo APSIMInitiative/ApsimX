@@ -790,6 +790,7 @@ namespace UserInterface.Views
             // Reset the style machinery to apply the new base font to all
             // newly created Widgets.
             rcStyle.FontDesc = baseFont;
+            Rc.ReparseAllForSettings(Gtk.Settings.Default, true);
         }
 
         /// <summary>
