@@ -124,7 +124,7 @@ namespace UserInterface.Classes
         /// <summary>
         /// Gets or sets the background color
         /// </summary>
-        public System.Drawing.Color BackgroundColour
+        public Color BackgroundColour
         {
             get
             {
@@ -141,7 +141,7 @@ namespace UserInterface.Classes
         /// <summary>
         /// Gets or sets the foreground color
         /// </summary>
-        public System.Drawing.Color ForegroundColour
+        public Color ForegroundColour
         {
             get
             {
