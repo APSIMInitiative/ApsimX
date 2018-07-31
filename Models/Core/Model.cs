@@ -102,6 +102,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.InitialWater))]
         [XmlElement(typeof(Soils.Phosphorus))]
         [XmlElement(typeof(Soils.Swim3))]
+        [XmlElement(typeof(Soils.SwimSoluteParameters))]
         [XmlElement(typeof(Soils.LayerStructure))]
         [XmlElement(typeof(Soils.CERESSoilTemperature))]
         [XmlElement(typeof(Soils.SoilTemperature))]

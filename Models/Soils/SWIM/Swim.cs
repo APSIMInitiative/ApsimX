@@ -34,13 +34,13 @@ namespace Models.Soils
         private Soil soil = null;
 
         [Link]
+        private SoluteManager soluteManager = null;
+
+        [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         [Link]
         private List<ICanopy> canopies = null;
-
-        [ChildLink(IsOptional = true)]
-        private SwimSoluteParameters SwimSoluteParameters = null;
 
         const double effpar = 0.184;
         const double psi_ll15 = -15000.0;
@@ -429,10 +429,16 @@ namespace Models.Soils
         //int num_canopy_fact = 0;          // number of canopy factors read ()
 
         // [Param(MinVal = 0.0, MaxVal = 10.0)]
-        //double negative_conc_warn = 0;
+        /// <summary>
+        /// Negative solute concentration below which a warning error is thrown
+        /// </summary>
+        private double negative_conc_warn = 0;
 
         //[Param(MinVal = 0.0, MaxVal = 10.0)]
-        // double negative_conc_fatal = 0;
+        /// <summary>
+        /// Negative solute concentration below which a fatal error is thrown
+        /// </summary>
+        private double negative_conc_fatal = 0;
 
         /// <summary>
         /// number of iterations before timestep is halved
@@ -579,50 +585,6 @@ namespace Models.Soils
         ///// </summary>
         //private double ureaseinhibitorslos = 0.61;
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double no3d0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double nh4d0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double uread0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double cld0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double tracerd0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double nitrificationinhibitord0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double denitrificationinhibitord0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double mineralisationinhibitord0 = 0.05;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private double ureaseinhibitord0 = 0.05;
 
         /// <summary>
         /// 
@@ -945,6 +907,27 @@ namespace Models.Soils
         [Description("Solute space weighting factor")]
         public double SoluteSpaceWeightingFactor { get; set; }
 
+        /// <summary>Gets or sets the dis.</summary>
+        [Description("Dispersivity - dis ((cm^2/h)/(cm/h)^p)")]
+        public double Dis { get; set; }
+
+        /// <summary>Gets or sets the disp.</summary>
+        [Description("Dispersivity Power - disp")]
+        public double Disp { get; set; }
+
+        /// <summary>Gets or sets a.</summary>
+        [Description("Tortuosity Constant - a")]
+        public double A { get; set; }
+
+        /// <summary>Gets or sets the DTHC.</summary>
+        [Description("Tortuoisty Offset - dthc")]
+        public double DTHC { get; set; }
+
+        /// <summary>Gets or sets the DTHP.</summary>
+        [Description("Tortuoisty Power - dthp")]
+        public double DTHP { get; set; }
+
+
         /// <summary>
         /// Gets or sets a value indicating whether Diagnostic Information? is shown
         /// </summary>
@@ -1135,15 +1118,6 @@ namespace Models.Soils
         ///// </summary>
         //public event RunoffEventDelegate RunoffEvent;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public event CohortWaterSupplyDelegate CohortWaterSupply;
 
         #endregion
 
@@ -2380,9 +2354,18 @@ namespace Models.Soils
 
         private void ReadSoluteParams()
         {
-            // Obtains parameter values for
-            // dis, disp, a, dthc, and dthp.
-            // Handled automatically in the .Net version
+            ResizeSoluteArrays(soluteManager.SoluteNames.Length);
+            for (int i = 0; i < soluteManager.SoluteNames.Length; i++)
+            {
+                solute_names[i] = soluteManager.SoluteNames[i];
+                SwimSoluteParameters soluteParam = Apsim.Get(this, solute_names[i],true) as SwimSoluteParameters;
+                if (soluteParam == null)
+                    throw new Exception("Could not find parameters for solute called " + solute_names[i]);
+                fip[i] = soil.Map(soluteParam.FIP, soluteParam.Thickness,soil.Thickness, Soil.MapType.Concentration);
+                exco[i] = soil.Map(soluteParam.Exco, soluteParam.Thickness, soil.Thickness, Soil.MapType.Concentration);
+                cslgw[i] = soluteParam.WaterTableConcentration;
+                d0[i] = soluteParam.D0;
+            }
         }
 
         private void GetOtherVariables()
@@ -2394,6 +2377,8 @@ namespace Models.Soils
             //    IssueWarning("Value for maxt outside expected range");
             //if (mint < -50.0 || mint > 50.0)
             //    IssueWarning("Value for mint outside expected range");
+
+
         }
 
         private void GetRainVariables()
@@ -2667,22 +2652,8 @@ namespace Models.Soils
 
         private void SetSoluteVariables()
         {
-            //+  Purpose
-            //      Set the values of solute variables from other modules
-
-            //+  Changes
-            //   21-6-96 NIH - Changed set_double_array to post construct
-            //   RCichota - 26/01/2010 - Add test to make sure SWIM will not send a -ve value
-            //   RCichota - 12/Jul/2010 - add simple test for -ve solution concentration
-
-            NitrogenChangedType ndata = new NitrogenChangedType();
             double[] solute_n = new double[n + 1];     // solute concn in layers(kg/ha)
             double[] dlt_solute_s = new double[n + 1]; // solute concn in layers(kg/ha)
-
-            // initialise the NitrogenChanged data to zero
-            ndata.DeltaUrea = new double[n + 1];
-            ndata.DeltaNH4 = new double[n + 1];
-            ndata.DeltaNO3 = new double[n + 1];
 
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
@@ -2739,26 +2710,8 @@ namespace Models.Soils
                     solute_n[node] = Ctot;
                     dlt_solute_s[node] = Ctot - cslstart[solnum][node];
                 }
-
-                // Added by RCichota - using NitrogenChanged event to modify dlt_N's
-                if (solute_names[solnum] == "urea")
-                    Array.Copy(dlt_solute_s, ndata.DeltaUrea, n + 1);
-                else if (solute_names[solnum] == "nh4")
-                    Array.Copy(dlt_solute_s, ndata.DeltaNH4, n + 1);
-                else if (solute_names[solnum] == "no3")
-                    Array.Copy(dlt_solute_s, ndata.DeltaNO3, n + 1);
-                else
-                {
-                    //string compName = Paddock.SiblingNameFromId(solute_owners[solnum]);
-                    //My.Set(compName + ".dlt_" + solute_names[solnum], dlt_solute_s);
-                    throw new NotImplementedException("Solutes not being set from SWIM");
-                }
+                soluteManager.SetSolute(solute_names[solnum], SoluteManager.SoluteSetterType.Soil, solute_n);
             }
-
-            // Send a NitrogenChanged event to the system
-            ndata.Sender = "SWIM";
-            ndata.SenderType = "WaterModule";
-            NitrogenChanged.Invoke(ndata);
         }
 
         private void PublishUptakes()
@@ -4138,8 +4091,8 @@ namespace Models.Soils
                     double w1;
                     double thav = 0.5 * (th[i - 1] + th[i]);
                     double aq = Math.Abs(q[i]);
-                    dc[solnum][i] = dcon[solnum] * Math.Pow(thav - SwimSoluteParameters.DTHC, SwimSoluteParameters.DTHP) +
-                                    SwimSoluteParameters.Dis * Math.Pow(aq / thav, SwimSoluteParameters.Disp);
+                    dc[solnum][i] = dcon[solnum] * Math.Pow(thav - DTHC, DTHP) +
+                                    Dis * Math.Pow(aq / thav, Disp);
                     double dfac = thav * dc[solnum][i] / (x[i] - x[i - 1]);
                     if (SoluteSpaceWeightingFactor >= 0.5 && SoluteSpaceWeightingFactor <= 1.0)
                     {
@@ -4448,7 +4401,7 @@ namespace Models.Soils
 
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
-                ConcWaterSolute(solute_names[solnum], ref solute_n);
+                ConcWaterSolute(solnum, ref solute_n);
                 for (int node = 0; node <= n; node++)
                     csl[solnum][node] = solute_n[node];
             }
@@ -4487,95 +4440,61 @@ namespace Models.Soils
             }
         }
 
-        private void ConcWaterSolute(string solname, ref double[] concWaterSolute)
+        private void ConcWaterSolute(int solnum, ref double[] concWaterSolute)
         {
-            //+  Changes
-            //     30-01-2010 - RCichota - added test for -ve values, causes a fatal error if so
+            concWaterSolute = new double[n + 1]; // Init with zeroes
+            double[] solute_n = new double[n + 1]; // solute at each node
 
+            if (solnum >= 0)
+            {
+                solute_n = soluteManager.GetSolute(solute_names[solnum]);
 
-            //+  Purpose
-            //      Calculate the concentration of solute in water (ug/l).  Note that
-            //      this routine is used to calculate output variables and input
-            //      variablesand so can be called at any time during the simulation.
-            //      It therefore must use a solute profile obtained from the solute's
-            //      owner module.  It therefore also follows that this routine cannot
-            //      be used for internal calculations of solute concentration during
-            //      the process stage etc.
+                for (int node = 0; node <= n; node++)
+                {
+                    // Note: Sometimes small numerical errors can leave -ve concentrations.
+                    // This will check for -ve or very small values being passed by other modules
+                    //  and define the appropriate response:
+                    if (solute_n[node] < -(negative_conc_fatal))
+                    {
+                        string mess = String.Format("   Total {0}({1,3}) = {2,12:G6}",
+                                        solute_names[solnum],
+                                        node,
+                                        solute_n[node]);
+                        solute_n[node] = 0.0;
+                        throw new Exception("-ve value for solute was passed to SWIM" + mess);
+                    }
+                    else if (solute_n[node] < -(negative_conc_warn))
+                    {
+                        string mess = String.Format("   Total {0}({1,3}) = {2,12:G6} - Value will be set to zero",
+                                        solute_names[solnum],
+                                        node,
+                                        solute_n[node]);
+                        IssueWarning("'-ve value for solute was passed to SWIM" + mess);
 
+                        solute_n[node] = 0.0;
+                    }
+                    else if (solute_n[node] < 1e-100)
+                    {
+                        // Value is REALLY small, no need to tell user,
+                        // set value to zero to avoid underflow with reals
+                        solute_n[node] = 0.0;
+                    }
 
-            //*+  Initial Data Values
-            //concWaterSolute = new double[n + 1]; // Init with zeroes
-            //double[] solute_n = new double[n + 1]; // solute at each node
+                    // convert solute from kg/ha to ug/cc soil
+                    // ug Sol    kg Sol    ug   ha(node)
+                    // ------- = ------- * -- * -------
+                    // cc soil   ha(node)  kg   cc soil
 
-            //int solnum = SoluteNumber(solname);
+                    cslstart[solnum][node] = solute_n[node];
+                    solute_n[node] = solute_n[node]
+                                     * 1.0e9               // ug/kg
+                                     / (dx[node] * 1.0e8); // cc soil/ha
 
-            //if (solnum >= 0)
-            //{
-            //    // only continue if solute exists.
-            //    if (solute_owners[solnum] != 0)
-            //    {
-            //        string compName = Paddock.SiblingNameFromId(solute_owners[solnum]);
-            //        if (!My.Get(compName + "." + solname, out solute_n))
-            //            throw new Exception("No module has registered ownership for solute: " + solname);
-            //    }
-
-            //    for (int node = 0; node <= n; node++)
-            //    {
-            //        //````````````````````````````````````````````````````````````````````````````````
-            //        //RC            Changes by RCichota, 30/Jan/2010
-            //        // Note: Sometimes small numerical errors can leave -ve concentrations.
-            //        // This will check for -ve or very small values being passed by other modules
-            //        //  and define the appropriate response:
-
-            //        if (solute_n[node] < -(negative_conc_fatal))
-            //        {
-
-            //            string mess = String.Format("   Total {0}({1,3}) = {2,12:G6}",
-            //                            solute_names[solnum],
-            //                            node,
-            //                            solute_n[node]);
-            //            throw new Exception("-ve value for solute was passed to SWIM" + mess);
-
-            //            solute_n[node] = 0.0;
-            //        }
-
-            //        else if (solute_n[node] < -(negative_conc_warn))
-            //        {
-            //            string mess = String.Format("   Total {0}({1,3}) = {2,12:G6} - Value will be set to zero",
-            //                            solute_names[solnum],
-            //                            node,
-            //                            solute_n[node]);
-            //            IssueWarning("'-ve value for solute was passed to SWIM" + mess);
-
-            //            solute_n[node] = 0.0;
-            //        }
-            //        else if (solute_n[node] < 1e-100)
-            //        {
-            //            // Value is REALLY small, no need to tell user,
-            //            // set value to zero to avoid underflow with reals
-
-            //            solute_n[node] = 0.0;
-            //        }
-            //        // else value is positive and considerable
-
-            //        //````````````````````````````````````````````````````````````````````````````````
-
-            //        // convert solute from kg/ha to ug/cc soil
-            //        // ug Sol    kg Sol    ug   ha(node)
-            //        // ------- = ------- * -- * -------
-            //        // cc soil   ha(node)  kg   cc soil
-
-            //        cslstart[solnum][node] = solute_n[node];
-            //        solute_n[node] = solute_n[node]
-            //                         * 1.0e9               // ug/kg
-            //                         / (dx[node] * 1.0e8); // cc soil/ha
-
-            //        concWaterSolute[node] = SolveFreundlich(node, solnum, solute_n[node]);
-            //    }
-            //}
-
-            //else
-            //    throw new Exception("You have asked apswim to use a solute that it does not know about :-" + solname);
+                    concWaterSolute[node] = SolveFreundlich(node, solnum, solute_n[node]);
+                }
+            }
+            else
+                throw new Exception("You have asked apswim to use a solute that it does not know about. Number = " + solnum);
         }
 
         private void ConcAdsorbSolute(string solname, ref double[] concAdsorbSolute)
