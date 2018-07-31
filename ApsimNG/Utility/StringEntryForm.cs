@@ -16,8 +16,6 @@ namespace Utility
             Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.StringEntryForm.glade");
             Dialog dialog = (Dialog)builder.GetObject("dialog");
             Label prompt = (Label)builder.GetObject("prompt");
-            Button okButton = (Button)builder.GetObject("okButton");
-            Button cancelButton = (Button)builder.GetObject("cancelButton");
             Entry entryBox = (Entry)builder.GetObject("entryBox");
 
             dialog.TransientFor = topLevelWindow;

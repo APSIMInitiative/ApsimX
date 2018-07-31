@@ -208,6 +208,32 @@
         }
 
         /// <summary>
+        /// This event is invoked when the values of 1 or more cells have changed.
+        /// </summary>
+        public event EventHandler<GridCellsChangedArgs> CellsChanged;
+
+        /// <summary>
+        /// Invoked when a grid cell header is clicked.
+        /// </summary>
+        public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
+
+        /// <summary>
+        /// Occurs when user clicks a button on the cell.
+        /// </summary>
+        public event EventHandler<GridCellsChangedArgs> ButtonClick;
+
+        /// <summary>
+        /// Invoked when the editor needs context items (after user presses '.').
+        /// </summary>
+        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when the columns need to be reset to their default colours.
+        /// If this event handler is null, the default colours are assumed to be white.
+        /// </summary>
+        public event EventHandler<EventArgs> FormatColumns;
+
+        /// <summary>
         /// Gets or sets the treeview object which displays the data.
         /// </summary>
         public Gtk.TreeView Grid { get; set; } = null;
@@ -267,26 +293,6 @@
         public string NumericFormat { get; set; } = "F2";
 
         /// <summary>
-        /// Marks the cell as readonly.
-        /// </summary>
-        /// <param name="gridCell">The grid cell to change.</param>
-        public void SetReadOnly(GridCell gridCell)
-        {
-            CellRendererText renderer = Grid.Columns[gridCell.ColumnIndex].CellRenderers[gridCell.RowIndex] as CellRendererText;
-            if (renderer != null)
-                renderer.Editable = false;
-        }
-
-        /// <summary>
-        /// Changes the cell background colour.
-        /// </summary>
-        /// <param name="gridCell">The grid cell to change.</param>
-        public void SetBackgroundColour(GridCell gridCell, Color colour)
-        {
-            // TODO : I will fix this - DH 7/18
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether "property" mode is enabled.
         /// </summary>
         public bool PropertyMode
@@ -315,7 +321,6 @@
             {
                 return isReadOnly;
             }
-
             set
             {
                 if (value != isReadOnly)
@@ -328,7 +333,7 @@
                 isReadOnly = value;
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the currently selected cell. Null if none selected.
         /// </summary>
@@ -348,7 +353,6 @@
                 }
                 return null;
             }
-
             set
             {
                 if (value != null)
@@ -378,30 +382,524 @@
         }
 
         /// <summary>
-        /// This event is invoked when the values of 1 or more cells have changed.
+        /// Marks the cell as readonly.
         /// </summary>
-        public event EventHandler<GridCellsChangedArgs> CellsChanged;
+        /// <param name="gridCell">The grid cell to change.</param>
+        public void SetReadOnly(GridCell gridCell)
+        {
+            CellRendererText renderer = Grid.Columns[gridCell.ColumnIndex].CellRenderers[gridCell.RowIndex] as CellRendererText;
+            if (renderer != null)
+                renderer.Editable = false;
+        }
 
         /// <summary>
-        /// Invoked when a grid cell header is clicked.
+        /// Changes the cell background colour.
         /// </summary>
-        public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
+        /// <param name="gridCell">The grid cell to change.</param>
+        /// <param name="colour">The desired background colour of the cell.</param>
+        public void SetBackgroundColour(GridCell gridCell, Color colour)
+        {
+            // TODO : I will fix this - DH 7/18
+        }
 
         /// <summary>
-        /// Occurs when user clicks a button on the cell.
+        /// Sets the contents of a cell being display on a grid.
         /// </summary>
-        public event EventHandler<GridCellsChangedArgs> ButtonClick;
+        /// <param name="col">The column.</param>
+        /// <param name="cell">The cell.</param>
+        /// <param name="model">The tree model.</param>
+        /// <param name="iter">The tree iterator.</param>
+        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+        {
+            TreePath path = model.GetPath(iter);
+            Gtk.TreeView view = col.TreeView as Gtk.TreeView;
+            int rowNo = path.Indices[0];
+            int colNo = -1;
+            string text = string.Empty;
+
+            // This is used later on.
+            bool currentCellIsSelected = false;
+
+            if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
+            {
+                currentCellIsSelected = CellIsSelected(rowNo, colNo);
+                cell.CellBackgroundGdk = currentCellIsSelected ? Grid.Style.Base(StateType.Selected) : Grid.Style.Base(StateType.Normal);
+                if (view == Grid)
+                {
+                    col.CellRenderers[1].Visible = false;
+                    col.CellRenderers[2].Visible = false;
+                    col.CellRenderers[3].Visible = false;
+                }
+                object dataVal = DataSource.Rows[rowNo][colNo];
+                Type dataType = dataVal.GetType();
+                if (dataType == typeof(DBNull))
+                    text = string.Empty;
+                else if (NumericFormat != null && ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
+                    (dataType == typeof(double) && !double.IsNaN((double)dataVal))))
+                    text = string.Format("{0:" + NumericFormat + "}", dataVal);
+                else if (dataType == typeof(DateTime))
+                    text = string.Format("{0:d}", dataVal);
+                else if (view == Grid)
+                {
+                    // Currently not handling booleans and lists in the "fixed" column grid
+                    if (dataType == typeof(bool))
+                    {
+                        CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
+                        if (toggleRend != null)
+                        {
+                            toggleRend.Active = (bool)dataVal;
+                            toggleRend.Activatable = true;
+                            cell.Visible = false;
+                            col.CellRenderers[2].Visible = false;
+                            toggleRend.Visible = true;
+                            return;
+                        }
+                    }
+                    else
+                    {   // This assumes that combobox grid cells are based on the "string" type
+                        Tuple<int, int> location = new Tuple<int, int>(rowNo, colNo);
+                        ListStore store;
+                        if (ComboLookup.TryGetValue(location, out store))
+                        {
+                            CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
+                            if (comboRend != null)
+                            {
+                                comboRend.Model = store;
+                                comboRend.TextColumn = 0;
+                                comboRend.Editable = true;
+                                comboRend.HasEntry = false;
+                                cell.Visible = false;
+                                col.CellRenderers[1].Visible = false;
+                                comboRend.Visible = true;
+                                comboRend.Text = AsString(dataVal);
+                                return;
+                            }
+                        }
+                        if (ButtonList.Contains(location))
+                        {
+                            CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
+                            if (buttonRend != null)
+                            {
+                                buttonRend.Visible = true;
+                            }
+                        }
+                        text = AsString(dataVal);
+                    }
+                }
+                else
+                {
+                    text = AsString(dataVal);
+                }
+            }
+
+            // We have a "text" cell. Set the text, and other properties for the cell
+            cell.Visible = true;
+            CellRendererText textRenderer = cell as CellRendererText;
+            textRenderer.Text = text;
+            if (!activeCol.Contains(colNo))
+            {
+                if (categoryRows.Contains(rowNo))
+                {
+                    if (!currentCellIsSelected)
+                    {
+                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                        Color backgroundColor = Color.LightSteelBlue;
+                        textRenderer.BackgroundGdk = new Gdk.Color(backgroundColor.R, backgroundColor.G, backgroundColor.B);
+                    }
+                    textRenderer.Editable = false;
+                }
+                else
+                {
+                    if (!currentCellIsSelected)
+                    {
+                        textRenderer.ForegroundGdk = ColForegroundColor(colNo);
+                        textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
+                    }
+                    else
+                    {
+                        textRenderer.ForegroundGdk = Grid.Style.Base(StateType.Normal);
+                        textRenderer.BackgroundGdk = Grid.Style.Base(StateType.Selected);
+                    }
+                    textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
+                }
+            }
+        }
 
         /// <summary>
-        /// Invoked when the editor needs context items (after user presses '.').
+        /// Return a particular cell of the grid.
         /// </summary>
-        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+        /// <param name="columnIndex">The column index.</param>
+        /// <param name="rowIndex">The row index.</param>
+        /// <returns>The cell.</returns>
+        public IGridCell GetCell(int columnIndex, int rowIndex)
+        {
+            return new GridCell(this, columnIndex, rowIndex);
+        }
 
         /// <summary>
-        /// Invoked when the columns need to be reset to their default colours.
-        /// If this event handler is null, the default colours are assumed to be white.
+        /// Return a particular column of the grid.
         /// </summary>
-        public event EventHandler<EventArgs> FormatColumns;
+        /// <param name="columnIndex">The column index</param>
+        /// <returns>The column</returns>
+        public IGridColumn GetColumn(int columnIndex)
+        {
+            return new GridColumn(this, columnIndex);
+        }
+
+        /// <summary>
+        /// Indicates that a row should be treated as a separator line.
+        /// </summary>
+        /// <param name="row">The row number.</param>
+        /// <param name="isSep">Added as a separator if true; removed as a separator if false.</param>
+        public void SetRowAsSeparator(int row, bool isSep = true)
+        {
+            bool present = categoryRows.Contains(row);
+            if (isSep && !present)
+                categoryRows.Add(row);
+            else if (!isSep && present)
+                categoryRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Sets whether a column is readonly.
+        /// </summary>
+        /// <param name="col">The column index.</param>
+        /// <param name="isReadonly">True if the column should be readonly.</param>
+        public void SetColAsReadonly(int col, bool isReadonly)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.ReadOnly = isReadonly;
+            }
+        }
+
+        /// <summary>
+        /// Returns whether a column is set as readonly.
+        /// </summary>
+        /// <param name="col">the column number.</param>
+        /// <returns>true if readonly.</returns>
+        public bool ColIsReadonly(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.ReadOnly;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Sets the normal foreground colour of a column.
+        /// </summary>
+        /// <param name="col">the column number.</param>
+        /// <param name="color">Gdk.Color to be used.</param>
+        public void SetColForegroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.ForegroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal foreground colour of a column.
+        /// </summary>
+        /// <param name="col">the column number.</param>
+        /// <returns>Gdk.Color to be used as the foreground colour.</returns>
+        public Gdk.Color ColForegroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.ForegroundColor;
+            else
+                return Grid.Style.Foreground(StateType.Normal);
+        }
+
+        /// <summary>
+        /// Sets the normal background colour of a column.
+        /// </summary>
+        /// <param name="col">the column number.</param>
+        /// <param name="color">Gdk.Color to be used.</param>
+        public void SetColBackgroundColor(int col, Gdk.Color color)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+            {
+                colAttr.BackgroundColor = color;
+            }
+        }
+
+        /// <summary>
+        /// Returns the normal background colour of a column.
+        /// </summary>
+        /// <param name="col">the column number.</param>
+        /// <returns>Gdk.Color to be used as the background colour.</returns>
+        public Gdk.Color ColBackgroundColor(int col)
+        {
+            ColRenderAttributes colAttr;
+            if (colAttributes.TryGetValue(col, out colAttr))
+                return colAttr.BackgroundColor;
+            else
+                return Grid.Style.Base(StateType.Normal);
+        }
+
+        /// <summary>
+        /// Add a separator (on context menu) on the series grid.
+        /// </summary>
+        public void AddContextSeparator()
+        {
+            popupMenu.Append(new SeparatorMenuItem());
+        }
+
+        /// <summary>
+        /// Add an action (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="itemName">The name of the item.</param>
+        /// <param name="menuItemText">The text of the menu item - may include spaces or other "special" characters (if empty, the itemName is used).</param>
+        /// <param name="onClick">The event handler to call when menu is selected.</param>
+        /// <param name="active">Indicates whether the option is current selected.</param>
+        public void AddContextOption(string itemName, string menuItemText, System.EventHandler onClick, bool active)
+        {
+            if (string.IsNullOrEmpty(menuItemText))
+                menuItemText = itemName;
+            CheckMenuItem item = new CheckMenuItem(menuItemText);
+            item.Name = itemName;
+            item.DrawAsRadio = true;
+            item.Active = active;
+            item.Activated += onClick;
+            popupMenu.Append(item);
+            popupMenu.ShowAll();
+        }
+
+        /// <summary>
+        /// Clear all presenter defined context items.
+        /// </summary>
+        public void ClearContextActions()
+        {
+            while (popupMenu.Children.Length > 3)
+                popupMenu.Remove(popupMenu.Children[3]);
+        }
+
+        /// <summary>
+        /// Loads an image from a supplied bitmap.
+        /// </summary>
+        /// <param name="bitmap">The image to display.</param>
+        public void LoadImage(Bitmap bitmap)
+        {
+            modelImagePixbuf = ImageToPixbuf(bitmap);
+
+            // We should do a better job of rescaling the image. Any ideas?
+            double scaleFactor = Math.Min(250.0 / modelImagePixbuf.Height, 250.0 / modelImagePixbuf.Width);
+            modelImage.Pixbuf = modelImagePixbuf.ScaleSimple((int)(modelImagePixbuf.Width * scaleFactor), (int)(modelImagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
+            modelImage.Visible = true;
+            scrollingWindow.HscrollbarPolicy = PolicyType.Never;
+        }
+
+        /// <summary>
+        /// Loads an image from a manifest resource.
+        /// </summary>
+        public void LoadImage()
+        {
+            Stream file = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
+            if (file == null)
+                modelImage.Visible = false;
+            else
+            {
+                modelImagePixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
+
+                // We should do a better job of rescaling the image. Any ideas?
+                double scaleFactor = Math.Min(250.0 / modelImagePixbuf.Height, 250.0 / modelImagePixbuf.Width);
+                modelImage.Pixbuf = modelImagePixbuf.ScaleSimple((int)(modelImagePixbuf.Width * scaleFactor), (int)(modelImagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
+                modelImage.Visible = true;
+                scrollingWindow.HscrollbarPolicy = PolicyType.Never;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the grid row is empty.
+        /// </summary>
+        /// <param name="rowIndex">The row index.</param>
+        /// <returns>True if the row is empty.</returns>
+        public bool RowIsEmpty(int rowIndex)
+        {
+            // What should we look at here? "DataSource" or "gridModel"
+            // They should be synchronized, but....
+            // The Windows.Forms version looked at the grid data, so let's do the same here.
+            TreeIter iter;
+            if (gridModel.IterNthChild(out iter, rowIndex))
+            {
+                for (int i = 0; i < gridModel.NColumns; i++)
+                {
+                    string contents = gridModel.GetValue(iter, i) as string;
+                    if (!string.IsNullOrEmpty(contents))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// End the user editing the cell.
+        /// </summary>
+        public void EndEdit()
+        {
+            if (userEditingCell)
+            {
+                // NB - this assumes that the editing control is a Gtk.Entry control
+                // This may change in future versions of Gtk
+                if (editControl is Entry)
+                {
+                    string text = (editControl as Entry).Text;
+                    EditedArgs args = new EditedArgs();
+                    args.Args = new object[2];
+                    args.Args[0] = editPath; // Path
+                    args.Args[1] = text;     // NewText
+                    OnCellValueChanged(editSender, args);
+                }
+                else
+                    ShowError(new Exception("Unable to finish editing cell."));
+            }
+        }
+
+        /// <summary>
+        /// Lock the left most number of columns.
+        /// </summary>
+        /// <param name="number">The number of columns to be locked.</param>
+        public void LockLeftMostColumns(int number)
+        {
+            // If we've already set this, or if the widgets haven't yet been mapped
+            // (we can't determine widths until then), then just save the number of fixed
+            // columns we want, so we can try again when the widgets appear on screen
+            if ((fixedColView.Visible && number == numberLockedCols) || !Grid.IsMapped)
+            {
+                numberLockedCols = number;
+                return;
+            }
+            for (int i = 0; i < gridModel.NColumns; i++)
+            {
+                if (fixedColView.Columns.Length > i)
+                    fixedColView.Columns[i].Visible = i < number;
+                if (Grid.Columns.Length > i)
+                    Grid.Columns[i].Visible = i >= number;
+            }
+            if (number > 0)
+            {
+                if (!splitter.Child1.Visible)
+                {
+                    Grid.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
+                    Grid.Selection.Changed += GridviewCursorChanged;
+                    fixedColView.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
+                    fixedColView.Selection.Changed += FixedcolviewCursorChanged;
+                    GridviewCursorChanged(this, EventArgs.Empty);
+                    GridviewVadjustmentChanged(this, EventArgs.Empty);
+                }
+                fixedColView.Model = gridModel;
+                fixedColView.Visible = true;
+                splitter.Child1.NoShowAll = false;
+                splitter.ShowAll();
+                splitter.PositionSet = true;
+                int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
+                if (splitter.Allocation.Width > 1)
+                    splitter.Position = Math.Min(fixedColView.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                else
+                    splitter.Position = fixedColView.SizeRequest().Width + splitterWidth;
+            }
+            else
+            {
+                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
+                Grid.Selection.Changed -= GridviewCursorChanged;
+                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
+                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
+                fixedColView.Visible = false;
+                splitter.Position = 0;
+            }
+            numberLockedCols = number;
+        }
+
+        /// <summary>
+        /// Get screenshot of grid.
+        /// </summary>
+        /// <returns>A bitmap object.</returns>
+        public System.Drawing.Image GetScreenshot()
+        {
+            // Create a Bitmap and draw the DataGridView on it.
+            int width;
+            int height;
+            Gdk.Window gridWindow = hboxContainer.GdkWindow;  // Should we draw from hbox1 or from gridview?
+            gridWindow.GetSize(out width, out height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            MemoryStream stream = new MemoryStream(buffer);
+            Bitmap bitmap = new Bitmap(stream);
+            return bitmap;
+        }
+
+        /// <summary>
+        /// Gets the Gtk Button which displays a column header
+        /// This assumes that we can get access to the Button widgets via the grid's AllChildren
+        /// iterator.
+        /// </summary>
+        /// <param name="colNo">Column number we are looking for.</param>
+        /// <param name="view">The treeview.</param>
+        /// <returns>The button object.</returns>
+        public Button GetColumnHeaderButton(int colNo, Gtk.TreeView view = null)
+        {
+            int i = 0;
+            if (view == null)
+                view = Grid;
+            foreach (Widget widget in view.AllChildren)
+            {
+                if (widget.GetType() != typeof(Gtk.Button))
+                    continue;
+                else if (i++ == colNo)
+                    return widget as Button;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the Label widget rendering the text in the Gtk Button which displays a column header
+        /// This is pretty much a hack, but it works. However, it may break in future versions of Gtk.
+        /// This assumes that (a) we can get access to the Button widgets via the grid's AllChildren
+        /// iterator, and (b) the Button holds an HBox, which holds an Alignment as its first child,
+        /// which in turn holds the Label widget.
+        /// </summary>
+        /// <param name="colNo">Column number we are looking for.</param>
+        /// <param name="view">The treeview.</param>
+        /// <returns>A label object.</returns>
+        public Label GetColumnHeaderLabel(int colNo, Gtk.TreeView view = null)
+        {
+            int i = 0;
+            if (view == null)
+                view = Grid;
+            foreach (Widget widget in view.AllChildren)
+            {
+                if (widget.GetType() != typeof(Gtk.Button))
+                    continue;
+                else if (i++ == colNo)
+                {
+                    foreach (Widget child in ((Gtk.Button)widget).AllChildren)
+                    {
+                        if (child.GetType() != typeof(Gtk.HBox))
+                            continue;
+                        foreach (Widget grandChild in ((Gtk.HBox)child).AllChildren)
+                        {
+                            if (grandChild.GetType() != typeof(Gtk.Alignment))
+                                continue;
+                            foreach (Widget greatGrandChild in ((Gtk.Alignment)grandChild).AllChildren)
+                            {
+                                if (greatGrandChild.GetType() != typeof(Gtk.Label))
+                                    continue;
+                                else
+                                    return greatGrandChild as Label;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// Column index of the left-most selected cell.
@@ -467,6 +965,7 @@
 
             int rowIndex = path.Indices[0];
             int colIndex = Array.IndexOf(Grid.Columns, column);
+
             // If we've clicked on the bottom row of populated data, all cells 
             // below the current cell will also be selected. To overcome this,
             // we add a new row to the datasource. Not a great solution, but 
@@ -497,7 +996,7 @@
         /// </summary>
         /// <param name="image">The image object to convert.</param>
         /// <returns>A Pixbuf type object.</returns>
-        private static Gdk.Pixbuf ImageToPixbuf(System.Drawing.Image image)
+        private Gdk.Pixbuf ImageToPixbuf(System.Drawing.Image image)
         {
             using (MemoryStream stream = new MemoryStream())
             {
@@ -1009,6 +1508,7 @@
                 attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
                 attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
                 colAttributes.Add(i, attrib);
+
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
@@ -1184,6 +1684,7 @@
         /// <summary>
         /// Highlights all selected columns and un-highlights all other columns.
         /// </summary>
+        /// <param name="view">The treeview whose columns should be highlighted.</param>
         private void HighlightColumns(Gtk.TreeView view)
         {
             // Reset all columns to default colour.
@@ -2152,504 +2653,6 @@
             else
                 result = obj.ToString();
             return result;
-        }
-
-        /// <summary>
-        /// Sets the contents of a cell being display on a grid.
-        /// </summary>
-        /// <param name="col">The column.</param>
-        /// <param name="cell">The cell.</param>
-        /// <param name="model">The tree model.</param>
-        /// <param name="iter">The tree iterator.</param>
-        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
-        {
-            TreePath path = model.GetPath(iter);
-            Gtk.TreeView view = col.TreeView as Gtk.TreeView;
-            int rowNo = path.Indices[0];
-            int colNo = -1;
-            string text = string.Empty;
-
-            // This is used later on.
-            bool currentCellIsSelected = false;
-
-            if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
-            {
-                currentCellIsSelected = CellIsSelected(rowNo, colNo);
-                cell.CellBackgroundGdk = currentCellIsSelected ? Grid.Style.Base(StateType.Selected) : Grid.Style.Base(StateType.Normal);
-                if (view == Grid)
-                {
-                    col.CellRenderers[1].Visible = false;
-                    col.CellRenderers[2].Visible = false;
-                    col.CellRenderers[3].Visible = false;
-                }
-                object dataVal = DataSource.Rows[rowNo][colNo];
-                Type dataType = dataVal.GetType();
-                if (dataType == typeof(DBNull))
-                    text = string.Empty;
-                else if (NumericFormat != null && ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
-                    (dataType == typeof(double) && !double.IsNaN((double)dataVal))))
-                    text = string.Format("{0:" + NumericFormat + "}", dataVal);
-                else if (dataType == typeof(DateTime))
-                    text = string.Format("{0:d}", dataVal);
-                else if (view == Grid)
-                {
-                    // Currently not handling booleans and lists in the "fixed" column grid
-                    if (dataType == typeof(bool))
-                    {
-                        CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
-                        if (toggleRend != null)
-                        {
-                            toggleRend.Active = (bool)dataVal;
-                            toggleRend.Activatable = true;
-                            cell.Visible = false;
-                            col.CellRenderers[2].Visible = false;
-                            toggleRend.Visible = true;
-                            return;
-                        }
-                    }
-                    else
-                    {   // This assumes that combobox grid cells are based on the "string" type
-                        Tuple<int, int> location = new Tuple<int, int>(rowNo, colNo);
-                        ListStore store;
-                        if (ComboLookup.TryGetValue(location, out store))
-                        {
-                            CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
-                            if (comboRend != null)
-                            {
-                                comboRend.Model = store;
-                                comboRend.TextColumn = 0;
-                                comboRend.Editable = true;
-                                comboRend.HasEntry = false;
-                                cell.Visible = false;
-                                col.CellRenderers[1].Visible = false;
-                                comboRend.Visible = true;
-                                comboRend.Text = AsString(dataVal);
-                                return;
-                            }
-                        }
-                        if (ButtonList.Contains(location))
-                        {
-                            CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
-                            if (buttonRend != null)
-                            {
-                                buttonRend.Visible = true;
-                            }
-                        }
-                        text = AsString(dataVal);
-                    }
-                }
-                else
-                {
-                    text = AsString(dataVal);
-                }
-            }
-            // We have a "text" cell. Set the text, and other properties for the cell
-            cell.Visible = true;
-            CellRendererText textRenderer = cell as CellRendererText;
-            textRenderer.Text = text;
-            if (!activeCol.Contains(colNo))
-            {
-                if (categoryRows.Contains(rowNo))
-                {
-                    if (!currentCellIsSelected)
-                    {
-                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                        Color bgColor = Color.LightSteelBlue;
-                        textRenderer.BackgroundGdk = new Gdk.Color(bgColor.R, bgColor.G, bgColor.B);
-                    }
-                    textRenderer.Editable = false;
-                }
-                else
-                {
-                    if (!currentCellIsSelected)
-                    {
-                        textRenderer.ForegroundGdk = ColForegroundColor(colNo);
-                        textRenderer.BackgroundGdk = ColBackgroundColor(colNo);
-                    }
-                    else
-                    {
-                        textRenderer.ForegroundGdk = Grid.Style.Base(StateType.Normal);
-                        textRenderer.BackgroundGdk = Grid.Style.Base(StateType.Selected);
-                    }
-                    textRenderer.Editable = !isReadOnly && !ColIsReadonly(colNo);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Return a particular cell of the grid.
-        /// </summary>
-        /// <param name="columnIndex">The column index.</param>
-        /// <param name="rowIndex">The row index.</param>
-        /// <returns>The cell.</returns>
-        public IGridCell GetCell(int columnIndex, int rowIndex)
-        {
-            return new GridCell(this, columnIndex, rowIndex);
-        }
-
-        /// <summary>
-        /// Return a particular column of the grid.
-        /// </summary>
-        /// <param name="columnIndex">The column index</param>
-        /// <returns>The column</returns>
-        public IGridColumn GetColumn(int columnIndex)
-        {
-            return new GridColumn(this, columnIndex);
-        }
-
-        /// <summary>
-        /// Indicates that a row should be treated as a separator line.
-        /// </summary>
-        /// <param name="row">The row number.</param>
-        /// <param name="isSep">Added as a separator if true; removed as a separator if false.</param>
-        public void SetRowAsSeparator(int row, bool isSep = true)
-        {
-            bool present = categoryRows.Contains(row);
-            if (isSep && !present)
-                categoryRows.Add(row);
-            else if (!isSep && present)
-                categoryRows.Remove(row);
-        }
-
-        /// <summary>
-        /// Sets whether a column is readonly.
-        /// </summary>
-        /// <param name="col">The column index.</param>
-        /// <param name="isReadonly">True if the column should be readonly.</param>
-        public void SetColAsReadonly(int col, bool isReadonly)
-        {
-            ColRenderAttributes colAttr;
-            if (colAttributes.TryGetValue(col, out colAttr))
-            {
-                colAttr.ReadOnly = isReadonly;
-            }
-        }
-
-        /// <summary>
-        /// Returns whether a column is set as readonly.
-        /// </summary>
-        /// <param name="col">the column number.</param>
-        /// <returns>true if readonly.</returns>
-        public bool ColIsReadonly(int col)
-        {
-            ColRenderAttributes colAttr;
-            if (colAttributes.TryGetValue(col, out colAttr))
-                return colAttr.ReadOnly;
-            else
-                return false;
-        }
-
-        /// <summary>
-        /// Sets the normal foreground colour of a column.
-        /// </summary>
-        /// <param name="col">the column number.</param>
-        /// <param name="color">Gdk.Color to be used.</param>
-        public void SetColForegroundColor(int col, Gdk.Color color)
-        {
-            ColRenderAttributes colAttr;
-            if (colAttributes.TryGetValue(col, out colAttr))
-            {
-                colAttr.ForegroundColor = color;
-            }
-        }
-
-        /// <summary>
-        /// Returns the normal foreground colour of a column.
-        /// </summary>
-        /// <param name="col">the column number.</param>
-        /// <returns>Gdk.Color to be used as the foreground colour.</returns>
-        public Gdk.Color ColForegroundColor(int col)
-        {
-            ColRenderAttributes colAttr;
-            if (colAttributes.TryGetValue(col, out colAttr))
-                return colAttr.ForegroundColor;
-            else
-                return Grid.Style.Foreground(StateType.Normal);
-        }
-
-        /// <summary>
-        /// Sets the normal background colour of a column.
-        /// </summary>
-        /// <param name="col">the column number.</param>
-        /// <param name="color">Gdk.Color to be used.</param>
-        public void SetColBackgroundColor(int col, Gdk.Color color)
-        {
-            ColRenderAttributes colAttr;
-            if (colAttributes.TryGetValue(col, out colAttr))
-            {
-                colAttr.BackgroundColor = color;
-            }
-        }
-
-        /// <summary>
-        /// Returns the normal background colour of a column.
-        /// </summary>
-        /// <param name="col">the column number.</param>
-        /// <returns>Gdk.Color to be used as the background colour.</returns>
-        public Gdk.Color ColBackgroundColor(int col)
-        {
-            ColRenderAttributes colAttr;
-            if (colAttributes.TryGetValue(col, out colAttr))
-                return colAttr.BackgroundColor;
-            else
-                return Grid.Style.Base(StateType.Normal);
-        }
-
-        /// <summary>
-        /// Add a separator (on context menu) on the series grid.
-        /// </summary>
-        public void AddContextSeparator()
-        {
-            popupMenu.Append(new SeparatorMenuItem());
-        }
-        
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        /// <param name="itemName">The name of the item.</param>
-        /// <param name="menuItemText">The text of the menu item - may include spaces or other "special" characters (if empty, the itemName is used).</param>
-        /// <param name="onClick">The event handler to call when menu is selected.</param>
-        /// <param name="active">Indicates whether the option is current selected.</param>
-        public void AddContextOption(string itemName, string menuItemText, System.EventHandler onClick, bool active)
-        {
-            if (string.IsNullOrEmpty(menuItemText))
-                menuItemText = itemName;
-            CheckMenuItem item = new CheckMenuItem(menuItemText);
-            item.Name = itemName;
-            item.DrawAsRadio = true;
-            item.Active = active;
-            item.Activated += onClick;
-            popupMenu.Append(item);
-            popupMenu.ShowAll();
-        }
-
-        /// <summary>
-        /// Clear all presenter defined context items.
-        /// </summary>
-        public void ClearContextActions()
-        {
-            while (popupMenu.Children.Length > 3)
-                popupMenu.Remove(popupMenu.Children[3]);
-        }
-
-        /// <summary>
-        /// Loads an image from a supplied bitmap.
-        /// </summary>
-        /// <param name="bitmap">The image to display.</param>
-        public void LoadImage(Bitmap bitmap)
-        {
-            modelImagePixbuf = ImageToPixbuf(bitmap);
-
-            // We should do a better job of rescaling the image. Any ideas?
-            double scaleFactor = Math.Min(250.0 / modelImagePixbuf.Height, 250.0 / modelImagePixbuf.Width);
-            modelImage.Pixbuf = modelImagePixbuf.ScaleSimple((int)(modelImagePixbuf.Width * scaleFactor), (int)(modelImagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
-            modelImage.Visible = true;
-            scrollingWindow.HscrollbarPolicy = PolicyType.Never;
-        }
-
-        /// <summary>
-        /// Loads an image from a manifest resource.
-        /// </summary>
-        public void LoadImage()
-        {
-            Stream file = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
-            if (file == null)
-                modelImage.Visible = false;
-            else
-            {
-                modelImagePixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
-
-                // We should do a better job of rescaling the image. Any ideas?
-                double scaleFactor = Math.Min(250.0 / modelImagePixbuf.Height, 250.0 / modelImagePixbuf.Width);
-                modelImage.Pixbuf = modelImagePixbuf.ScaleSimple((int)(modelImagePixbuf.Width * scaleFactor), (int)(modelImagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
-                modelImage.Visible = true;
-                scrollingWindow.HscrollbarPolicy = PolicyType.Never;
-            }
-        }
-
-        /// <summary>
-        /// Returns true if the grid row is empty.
-        /// </summary>
-        /// <param name="rowIndex">The row index.</param>
-        /// <returns>True if the row is empty.</returns>
-        public bool RowIsEmpty(int rowIndex)
-        {
-            // What should we look at here? "DataSource" or "gridModel"
-            // They should be synchronized, but....
-            // The Windows.Forms version looked at the grid data, so let's do the same here.
-            TreeIter iter;
-            if (gridModel.IterNthChild(out iter, rowIndex))
-            {
-                for (int i = 0; i < gridModel.NColumns; i++)
-                {
-                    string contents = gridModel.GetValue(iter, i) as string;
-                    if (!string.IsNullOrEmpty(contents))
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// End the user editing the cell.
-        /// </summary>
-        public void EndEdit()
-        {
-            if (userEditingCell)
-            {
-                // NB - this assumes that the editing control is a Gtk.Entry control
-                // This may change in future versions of Gtk
-                if (editControl is Entry)
-                {
-                    string text = (editControl as Entry).Text;
-                    EditedArgs args = new EditedArgs();
-                    args.Args = new object[2];
-                    args.Args[0] = editPath; // Path
-                    args.Args[1] = text;     // NewText
-                    OnCellValueChanged(editSender, args);
-                }
-                else
-                    ShowError(new Exception("Unable to finish editing cell."));
-            }
-        }
-
-        /// <summary>
-        /// Lock the left most number of columns.
-        /// </summary>
-        /// <param name="number">The number of columns to be locked.</param>
-        public void LockLeftMostColumns(int number)
-        {
-            // If we've already set this, or if the widgets haven't yet been mapped
-            // (we can't determine widths until then), then just save the number of fixed
-            // columns we want, so we can try again when the widgets appear on screen
-            if ((fixedColView.Visible && number == numberLockedCols) || !Grid.IsMapped)
-            {
-                numberLockedCols = number;
-                return;
-            }
-            for (int i = 0; i < gridModel.NColumns; i++)
-            {
-                if (fixedColView.Columns.Length > i)
-                    fixedColView.Columns[i].Visible = i < number;
-                if (Grid.Columns.Length > i)
-                    Grid.Columns[i].Visible = i >= number;
-            }
-            if (number > 0)
-            {
-                if (!splitter.Child1.Visible)
-                {
-                    Grid.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
-                    Grid.Selection.Changed += GridviewCursorChanged;
-                    fixedColView.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
-                    fixedColView.Selection.Changed += FixedcolviewCursorChanged;
-                    GridviewCursorChanged(this, EventArgs.Empty);
-                    GridviewVadjustmentChanged(this, EventArgs.Empty);
-                }
-                fixedColView.Model = gridModel;
-                fixedColView.Visible = true;
-                splitter.Child1.NoShowAll = false;
-                splitter.ShowAll();
-                splitter.PositionSet = true;
-                int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
-                if (splitter.Allocation.Width > 1)
-                    splitter.Position = Math.Min(fixedColView.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
-                else
-                    splitter.Position = fixedColView.SizeRequest().Width + splitterWidth;
-            }
-            else
-            {
-                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
-                Grid.Selection.Changed -= GridviewCursorChanged;
-                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
-                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
-                fixedColView.Visible = false;
-                splitter.Position = 0;
-            }
-            numberLockedCols = number;
-        }
-
-        /// <summary>
-        /// Get screenshot of grid.
-        /// </summary>
-        /// <returns>A bitmap object.</returns>
-        public System.Drawing.Image GetScreenshot()
-        {
-            // Create a Bitmap and draw the DataGridView on it.
-            int width;
-            int height;
-            Gdk.Window gridWindow = hboxContainer.GdkWindow;  // Should we draw from hbox1 or from gridview?
-            gridWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
-        }
-
-        /// <summary>
-        /// Gets the Gtk Button which displays a column header
-        /// This assumes that we can get access to the Button widgets via the grid's AllChildren
-        /// iterator.
-        /// </summary>
-        /// <param name="colNo">Column number we are looking for.</param>
-        /// <param name="view">The treeview.</param>
-        /// <returns>The button object.</returns>
-        public Button GetColumnHeaderButton(int colNo, Gtk.TreeView view = null)
-        {
-            int i = 0;
-            if (view == null)
-                view = Grid;
-            foreach (Widget widget in view.AllChildren)
-            {
-                if (widget.GetType() != typeof(Gtk.Button))
-                    continue;
-                else if (i++ == colNo)
-                    return widget as Button;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the Label widget rendering the text in the Gtk Button which displays a column header
-        /// This is pretty much a hack, but it works. However, it may break in future versions of Gtk.
-        /// This assumes that (a) we can get access to the Button widgets via the grid's AllChildren
-        /// iterator, and (b) the Button holds an HBox, which holds an Alignment as its first child,
-        /// which in turn holds the Label widget.
-        /// </summary>
-        /// <param name="colNo">Column number we are looking for.</param>
-        /// <param name="view">The treeview.</param>
-        /// <returns>A label object.</returns>
-        public Label GetColumnHeaderLabel(int colNo, Gtk.TreeView view = null)
-        {
-            int i = 0;
-            if (view == null)
-                view = Grid;
-            foreach (Widget widget in view.AllChildren)
-            {
-                if (widget.GetType() != typeof(Gtk.Button))
-                    continue;
-                else if (i++ == colNo)
-                {
-                    foreach (Widget child in ((Gtk.Button)widget).AllChildren)
-                    {
-                        if (child.GetType() != typeof(Gtk.HBox))
-                            continue;
-                        foreach (Widget grandChild in ((Gtk.HBox)child).AllChildren)
-                        {
-                            if (grandChild.GetType() != typeof(Gtk.Alignment))
-                                continue;
-                            foreach (Widget greatGrandChild in ((Gtk.Alignment)grandChild).AllChildren)
-                            {
-                                if (greatGrandChild.GetType() != typeof(Gtk.Label))
-                                    continue;
-                                else
-                                    return greatGrandChild as Label;
-                            }
-                        }
-                    }
-                }
-            }
-            return null;
         }
     }
 }

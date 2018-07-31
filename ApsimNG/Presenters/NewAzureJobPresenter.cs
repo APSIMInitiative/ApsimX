@@ -53,11 +53,6 @@ namespace UserInterface.Presenters
         private BatchCredentials batchAuth;
 
         /// <summary>
-        /// The pool settings for the Azure VM pool.
-        /// </summary>
-        private PoolSettings poolOptions;
-
-        /// <summary>
         /// The worker which will submit the job.
         /// </summary>
         private BackgroundWorker submissionWorker;

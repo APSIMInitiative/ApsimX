@@ -182,7 +182,6 @@
     <Compile Include="Cloud\PoolSettings.cs" />
     <Compile Include="Cloud\StorageConstants.cs" />
     <Compile Include="Cloud\StorageCredentials.cs" />
-    <Compile Include="Cloud\TaskDetails.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
