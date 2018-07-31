@@ -10,7 +10,7 @@ namespace Models
     using System.Linq;
     using System.Xml.Serialization;
     using Models.Core;
-
+    using Soils;
     /// <summary>
     /// This model controls the irrigation events, which can be triggered using the Apply() method.
     /// </summary>
@@ -55,11 +55,7 @@ namespace Models
         [Link] private ISummary summary = null;
 
         /// <summary>Access the soil model.</summary>
-        [Link] private Soils.Soil soil = null;
-
-        /// <summary>Gets the total irrigation resource required (mm).</summary>
-        [XmlIgnore]
-        public double IrrigationTotal { get; private set; }
+        [Link] private Soil soil = null;
 
         /// <summary>Gets the amount of irrigation actually applied (mm).</summary>
         [XmlIgnore]
@@ -69,10 +65,6 @@ namespace Models
         [XmlIgnore]
         public double Depth { get; set; }
 
-        /// <summary>Gets or sets the time, since midnight, to start irrigation (minutes).</summary>
-        [XmlIgnore]
-        public double StartTime { get; set; }
-
         /// <summary>Gets or sets the duration of the irrigation event (minutes).</summary>
         [XmlIgnore]
         public double Duration { get; set; }
@@ -80,10 +72,6 @@ namespace Models
         /// <summary>Gets or sets the efficiency of the irrigation system (mm/mm).</summary>
         [XmlIgnore]
         public double Efficiency { get; set; }
-
-        /// <summary>Gets or sets the flag for whether the irrigation can be intercepted by canopy (true/false).</summary>
-        [XmlIgnore]
-        public bool WillIntercept { get; set; }
 
         /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
         [XmlIgnore]
@@ -93,93 +81,46 @@ namespace Models
         /// <remarks>
         /// Advertises an irrigation and passes its parameters, thus allowing other models to respond accordingly.
         /// </remarks>
-        public event EventHandler<Models.Soils.IrrigationApplicationType> Irrigated;
-
-        /// <summary>Default value for depth (mm).</summary>
-        private double defaultDepth = 0.0;
-
-        /// <summary>Default value for start time of irrigation (minutes).</summary>
-        private double defaultStartTime = 0.0;
-
-        /// <summary>Default value for duration of irrigation (minutes).</summary>
-        private double defaultDuration = 1440.0;
-
-        /// <summary>Default value for irrigation efficiency (mm/mm).</summary>
-        private double defaultEfficiency = 1.0;
+        public event EventHandler<IrrigationApplicationType> Irrigated;
 
         /// <summary>Apply some irrigation.</summary>
         /// <param name="amount">The amount to apply (mm).</param>
         /// <param name="depth">The depth of application (mm).</param>
-        /// <param name="startTime">The time to start the irrigation (minutes).</param>
         /// <param name="duration">The duration of the irrigation event (minutes).</param>
         /// <param name="efficiency">The irrigation efficiency (mm/mm).</param>
-        /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
         /// <param name="no3">Amount of NO3 in irrigation water</param>
         /// <param name="nh4">Amount of NH4 in irrigation water</param>
-        public void Apply(double amount, double depth = -1.0, double startTime = -1.0, double duration = -1.0, double efficiency = -1.0, bool willIntercept = false, bool willRunoff = false,
+        public void Apply(double amount, double depth = 0.0, double duration = 1440.0, double efficiency = 1.0, bool willRunoff = false,
                           double no3 = -1.0, double nh4 = -1.0)
         {
             if (Irrigated != null && amount > 0.0)
             {
-                // Check the parameters given
-                if (depth < 0.0)
-                { Depth = defaultDepth; }
-                else
-                {
-                    if (depth > soil.Thickness.Sum())
-                        throw new ApsimXException(this, "Check the depth for irrigation, it cannot be deeper than the soil depth");
-                    Depth = depth;
-                }
+                if (depth > soil.Thickness.Sum())
+                    throw new ApsimXException(this, "Check the depth for irrigation, it cannot be deeper than the soil depth");
+                Depth = depth;
+ 
+                if (duration > 1440.0)
+                    throw new ApsimXException(this, "Check the duration for the irrigation, it must be less than 1440 minutes");
+                Duration = duration;
 
-                if (startTime < 0.0)
-                { StartTime = defaultStartTime; }
-                else
-                {
-                    if (startTime >= 1440.0)
-                        throw new ApsimXException(this, "Check the start time for irrigation, it must be less than 1440 minutes");
-                    StartTime = startTime;
-                }
-
-                if (duration < 0.0)
-                { Duration = defaultDuration; }
-                else
-                {
-                    if (duration > 1440.0)
-                        throw new ApsimXException(this, "Check the duration for the irrigation, it must be less than 1440 minutes");
-                    Duration = duration;
-                }
-
-                if (StartTime + Duration > 1440.0)
-                    throw new ApsimXException(this, "Check the start time and duration of irrigation, the sum must be smaller than 1440 minutes");
-
-                if (efficiency < 0.0)
-                { Efficiency = defaultEfficiency; }
-                else
-                {
-                    if (efficiency > 1.0)
-                        throw new ApsimXException(this, "Check the value of irrigation efficiency, it must be between 0 and 1");
-                    Efficiency = efficiency;
-                }
+                if (efficiency > 1.0)
+                   throw new ApsimXException(this, "Check the value of irrigation efficiency, it must be between 0 and 1");
+                Efficiency = efficiency;
 
                 if (Depth > 0.0)
                 { // Sub-surface irrigation: it cannot be intercepted nor run off directly
-                    willIntercept = false;
                     willRunoff = false;
                 }
 
-                IrrigationTotal = amount;
-                IrrigationApplied = IrrigationTotal * Efficiency;
+                IrrigationApplied = amount;
                 WillRunoff = willRunoff;
-                WillIntercept = willIntercept;
 
                 // Prepare the irrigation data
-                Models.Soils.IrrigationApplicationType irrigData = new Models.Soils.IrrigationApplicationType();
+                IrrigationApplicationType irrigData = new IrrigationApplicationType();
                 irrigData.Amount = IrrigationApplied;
                 irrigData.Depth = Depth;
-                irrigData.StartTime = StartTime;
                 irrigData.Duration = Duration;
-                irrigData.WillIntercept = WillIntercept;
                 irrigData.WillRunoff = WillRunoff;
                 if (no3 != -1)
                     irrigData.NO3 = no3;
@@ -197,44 +138,15 @@ namespace Models
             }
         }
 
-        /// <summary>Set the default parameters of Apply irrigation.</summary>
-        /// <param name="depth">The new default value for depth of application (mm).</param>
-        /// <param name="startTime">The new default value for time to start the irrigation (minutes).</param>
-        /// <param name="duration">The new default value for duration of irrigation event (minutes).</param>
-        /// <param name="efficiency">The new default value for irrigation efficiency (mm/mm).</param>
-        /// <param name="willIntercept">Whether irrigation can be intercepted by canopy (<c>true</c>/<c>false</c>).</param>
-        /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
-        public void SetParameter(double depth = -1.0, double startTime = -1.0, double duration = -1.0, double efficiency = -1.0, bool willIntercept = false, bool willRunoff = false)
-        {
-            if (depth >= 0.0)
-                defaultDepth = depth;
-
-            if (startTime >= 0.0)
-                defaultStartTime = startTime;
-
-            if (duration >= 0.0)
-                defaultDuration = duration;
-
-            if (efficiency >= 0.0)
-                defaultEfficiency = efficiency;
-
-            ////TODO: come up with a way to manipulate the boolean parameters
-        }
-
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            // Set values to zero or defaults
-            IrrigationTotal = 0.0;
             IrrigationApplied = 0.0;
-            Depth = defaultDepth;
-            StartTime = defaultStartTime;
-            Duration = defaultDuration;
-            Efficiency = defaultEfficiency;
-            WillIntercept = false;
+            Depth = 0.0;
+            Duration = 1440.0;
             WillRunoff = false;
         }
     }
