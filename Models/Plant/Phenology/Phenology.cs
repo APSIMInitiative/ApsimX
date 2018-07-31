@@ -311,22 +311,22 @@ namespace Models.PMF.Phen
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 AccumulateTT(CurrentPhase.TTForTimeStep);
 
+                if (Stage >= 1 && !Germinated)
+                    Germinated = true;
+
                 while (incrementPhase)
                 {
-                    stagesPassedToday.Add(CurrentPhase.End);
-                    if (currentPhaseIndex + 1 >= phases.Count)
-                        throw new Exception("Cannot transition to the next phase. No more phases exist");
-
-                    currentPhaseIndex = currentPhaseIndex + 1;
-
-                    if (Stage >= 1 && !Germinated)
-                        Germinated = true;
-
                     if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
                     {
                         plant.SendEmergingEvent();
                         Emerged = true;
                     }
+
+                    stagesPassedToday.Add(CurrentPhase.End);
+                    if (currentPhaseIndex + 1 >= phases.Count)
+                        throw new Exception("Cannot transition to the next phase. No more phases exist");
+
+                    currentPhaseIndex = currentPhaseIndex + 1;
 
                     if (PhaseChanged != null)
                     {
