@@ -731,14 +731,6 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
             <Operations>
               <Name>NRate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Operation>
-                <Date>1985-11-08T00:00:00</Date>
-                <Action> [Fertiliser].Apply(50, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1985-11-29T00:00:00</Date>
-                <Action> [Fertiliser].Apply(30, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
             </Operations>
             <Manager>
               <Name>ExtraVariables</Name>
@@ -1847,14 +1839,6 @@ namespace Models
             <Operations>
               <Name>NRate</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Operation>
-                <Date>1985-11-08T00:00:00</Date>
-                <Action> [Fertiliser].Apply(50, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
-              <Operation>
-                <Date>1985-11-29T00:00:00</Date>
-                <Action> [Fertiliser].Apply(30, Fertiliser.Types.NH4NO3N, 10);</Action>
-              </Operation>
             </Operations>
             <Manager>
               <Name>ExtraVariables</Name>

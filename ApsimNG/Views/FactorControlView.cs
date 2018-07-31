@@ -35,7 +35,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Tree view to layout the data.
         /// </summary>
-        private TreeView tree;
+        private Gtk.TreeView tree;
 
         /// <summary>
         /// List holding the tree columns.
@@ -133,7 +133,7 @@ namespace UserInterface.Views
             //_mainWidget = primaryContainer;
 
             Type[] types = new Type[columnNames.Count];
-            tree = new TreeView();
+            tree = new Gtk.TreeView();
             tree.ButtonPressEvent += TreeClicked;
             columns = new List<TreeViewColumn>();
             cells = new List<CellRendererText>();

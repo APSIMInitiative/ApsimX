@@ -33,7 +33,7 @@
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun()
         {
             Initialise();
         }
@@ -59,13 +59,8 @@
             newSimulation.FileName = parentSimulations.FileName;
             Apsim.ParentAllChildren(newSimulation);
 
-            // Make substitutions.
-            parentSimulations.MakeSubstitutions(newSimulation);
-
-            // Call OnLoaded in all models.
-            Events events = new Events(newSimulation);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
+            // Make substitutions and issue Loaded event
+            parentSimulations.MakeSubsAndLoad(newSimulation);
 
             foreach (FactorValue value in combination)
                 value.ApplyToSimulation(newSimulation);
@@ -94,6 +89,7 @@
                 sim = NextSimulationToRun();
             }
         }
+        
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
@@ -109,6 +105,37 @@
                 names.Add(newSimulationName);
             }
             return names;
+        }
+
+        /// <summary>Gets a list of factors</summary>
+        public List<ISimulationGeneratorFactors> GetFactors()
+        {
+            if (serialisedBase == null || allCombinations.Count == 0)
+                Initialise(true);
+
+            List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
+
+            List<string> simulationNames = new List<string>();
+            foreach (List<FactorValue> combination in allCombinations)
+            {
+                // Work out a simulation name for this combination
+                string simulationName = Name;
+                foreach (FactorValue value in combination)
+                    simulationName += value.Name;
+                SimulationGeneratorFactors simulationFactors = new SimulationGeneratorFactors("SimulationName", simulationName);
+                factors.Add(simulationFactors);
+                simulationFactors.AddFactor("Experiment", Name);
+
+                foreach (FactorValue value in combination)
+                {
+                    string factorName = value.Factor.Name;
+                    if (value.Factor.Parent is Factor)
+                        factorName = value.Factor.Parent.Name;
+                    string factorValue = value.Name.Replace(factorName, "");
+                    simulationFactors.AddFactor(factorName, factorValue);
+                }
+            }
+            return factors;
         }
 
         /// <summary>
@@ -234,13 +261,8 @@
                     newSimulation.FileName = parentSimulations.FileName;
                     Apsim.ParentAllChildren(newSimulation);
 
-                    // Make substitutions.
-                    parentSimulations.MakeSubstitutions(newSimulation);
-
-                    // Connect events and links in our new  simulation.
-                    Events events = new Events(newSimulation);
-                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                    events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
+                    // Make substitutions and issue "Loaded" event
+                    parentSimulations.MakeSubsAndLoad(newSimulation);
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);
@@ -268,9 +290,12 @@
                 bool doFullFactorial = false;
                 foreach (Factor factor in Factors.factors)
                 {
-                    List<FactorValue> factorValues = factor.CreateValues();
-                    allValues.Add(factorValues);
-                    doFullFactorial = doFullFactorial || factorValues.Count > 1;
+                    if (factor.Enabled)
+                    {
+                        List<FactorValue> factorValues = factor.CreateValues();
+                        allValues.Add(factorValues);
+                        doFullFactorial = doFullFactorial || factorValues.Count > 1;
+                    }
                 }
                 if (doFullFactorial)
                     return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());

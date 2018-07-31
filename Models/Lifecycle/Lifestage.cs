@@ -1,10 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Core;
-using System.Xml.Serialization;
+﻿// -----------------------------------------------------------------------
+// <copyright file="LifeStage.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.LifeCycle
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// # [Name]
     /// A lifestage is a developmental segment of a lifecycle. It contains cohorts.
@@ -13,7 +19,7 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCycle))]
-    public class LifeStage: Model
+    public class LifeStage : Model
     {
         /// <summary>
         /// Reference to the current cohort
@@ -40,7 +46,7 @@ namespace Models.LifeCycle
         /// </summary>
         public LifeStage()
         {
-            
+
         }
 
         /// <summary>
@@ -88,7 +94,7 @@ namespace Models.LifeCycle
             get
             {
                 double[] populations = new double[CohortList.Count];
-                for (int i = 0; i< CohortList.Count; i++)
+                for (int i = 0; i < CohortList.Count; i++)
                 {
                     populations[i] = CohortList[i].Count;
                 }
@@ -109,10 +115,37 @@ namespace Models.LifeCycle
         }
 
         /// <summary>
+        /// Add the number of immigrants to this LifeStage
+        /// </summary>
+        /// <param name="number"></param>
+        public void AddImmigrants(double number)
+        {
+            //create a new cohort
+            Cohort immigrants = NewCohort();
+            immigrants.Count = number;
+            //get the state for a new cohort based on any pre-existing ones in this LifeStage
+            if (CohortList != null)
+            {
+                if (CohortCount > 1)
+                {
+                    immigrants.ChronoAge = CohortList[0].ChronoAge;
+                    immigrants.PhysiologicalAge = CohortList[0].PhysiologicalAge;
+                    immigrants.PhenoAge = CohortList[0].PhenoAge;
+                }
+            }
+        }
+
+        /// <summary>
         /// Process the lifestage which involves configured functions and promoting cohorts to linked stages.
         /// </summary>
         public void Process()
         {
+            foreach (ILifeStageProcess proc in ProcessList)
+            {
+
+                proc.Process(this);     // any pre processing/immigration
+            }
+
             if (CohortList != null)
             {
                 Cohort aCohort;
@@ -123,6 +156,7 @@ namespace Models.LifeCycle
                 for (int i = 0; i < count; i++)
                 {
                     aCohort = CohortList[i];
+                    aCohort.Mortality = 0;              // can have multiple mortality processes in this stage
                     //apply functions to cohort
                     CurrentCohort = aCohort;
                     //iterate throught the process children of this lifestage

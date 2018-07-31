@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.Core;
-using Models.PMF.Functions;
+﻿// -----------------------------------------------------------------------
+// <copyright file="LifeStageReproductionProcess.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.LifeCycle
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using Models.Functions;
+
     /// <summary>
     /// # [Name]
     /// A Reproduction process within a Lifestage.
@@ -42,6 +45,14 @@ namespace Models.LifeCycle
 
         [NonSerialized]
         private List<IFunction> FunctionList;
+
+        /// <summary>
+        /// Process this lifestage before cohorts are processed
+        /// </summary>
+        public void Process(LifeStage host)
+        {
+
+        }
 
         /// <summary>
         /// Applies each function in this Lifestage process to a cohort item that is owned by a Lifestage

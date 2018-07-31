@@ -173,7 +173,7 @@ namespace StdUnits
     /// 
     /// </summary>
     [Serializable]
-    public class TMyRandom
+    public class MyRandom
     {
         private Random SysRandom;
         private int FNextRandom;
@@ -214,7 +214,7 @@ namespace StdUnits
         /// numbers. Code moved from global implementation in StdMATH.pas and System.pas.
         /// </summary>
         /// <param name="SeedVal"></param>
-        public TMyRandom(int SeedVal)
+        public MyRandom(int SeedVal)
         {
             FRandomBuffer = new double[97];
             FSeed = 0;
@@ -243,7 +243,7 @@ namespace StdUnits
         /// 
         /// </summary>
         /// <returns></returns>
-        public double MyRandom()
+        public double RandomValue()
         {
             if (FNextRandom < 0)                                                   // Initialises automatically on first use   }
             {
@@ -264,7 +264,7 @@ namespace StdUnits
         public int RndRound(double X)
         {
             int result;
-            if (MyRandom() > (Math.Abs(X) - Math.Floor(Math.Abs(X))) )
+            if (RandomValue() > (Math.Abs(X) - Math.Floor(Math.Abs(X))) )
                 result = (int)Math.Truncate(X);
             else if (X >= 0.0)
             {

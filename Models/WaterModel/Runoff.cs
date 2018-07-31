@@ -9,8 +9,8 @@ namespace Models.WaterModel
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
-    using PMF.Functions;
-    using SurfaceOM;
+    using Functions;
+    using Surface;
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;

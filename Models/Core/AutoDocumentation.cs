@@ -13,7 +13,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using System.Xml;
     using System.IO;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using System.Data;
 
     /// <summary>
@@ -64,9 +64,13 @@ namespace Models.Core
         /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
         /// <param name="documentAllChildren">Document all children?</param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true)
+        /// <param name="force">
+        /// Whether or not to force the generation of documentation, 
+        /// regardless of the model's IncludeInDocumentation status.
+        /// </param>
+        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true, bool force = false)
         {
-            if (model.IncludeInDocumentation)
+            if (force || (model.IncludeInDocumentation && model.Enabled) )
             {
                 if (model is ICustomDocumentation)
                     (model as ICustomDocumentation).Document(tags, headingLevel, indent);

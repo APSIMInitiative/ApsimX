@@ -7,6 +7,7 @@
 namespace UserInterface.EventArguments
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -280,9 +281,8 @@ namespace UserInterface.EventArguments
         /// <param name="objectName">Name of the object or model for which we want completion options.</param>
         /// <returns></returns>
         private static object GetNodeFromPath(Model relativeTo, string objectName)
-        {
-            
-            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
+        {       
+            string modelNamePattern = @"\[[A-Za-z\s]+[A-Za-z0-9\s_]*\]";
             var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
             if (matches.Count <= 0)
                 return null;
@@ -302,11 +302,22 @@ namespace UserInterface.EventArguments
 
             // Iterate over the 'child' models/properties.
             // childName is the next child we're looking for. e.g. in "[Wheat].Leaf", the first childName will be "Leaf".
-            foreach (string childName in APSIM.Shared.Utilities.StringUtilities.SplitStringHonouringBrackets(objectName, '.', '[', ']'))
+            string[] namePathBits = APSIM.Shared.Utilities.StringUtilities.SplitStringHonouringBrackets(objectName, '.', '[', ']');
+            for (int i = 0; i < namePathBits.Length; i++)
             {
                 if (node == null)
                     return null;
+                string childName = namePathBits[i];
 
+                int squareBracketIndex = childName.IndexOf('[');
+                if (squareBracketIndex == 0)
+                {
+                    // User has typed something like [Wheat].[...]
+                    throw new Exception("Unable to parse child or property " + childName);
+                }
+                if (squareBracketIndex > 0) // childName contains square brackets - it may be an IList element
+                    childName = childName.Substring(0, squareBracketIndex);
+                
                 // First, check the child models. 
                 if (node is IModel)
                     node = (node as IModel).Children.FirstOrDefault(c => c.Name == childName) ?? node;
@@ -326,13 +337,18 @@ namespace UserInterface.EventArguments
                         if (property == null)
                             return null;
 
-                        // This property has the correct name. If the property's type provides a parameterless constructor, we can use 
-                        // reflection to instantiate an object of that type and assign it to the node variable. 
-                        // Otherwise, we assign the type itself to node.
-                        if (property.PropertyType.GetConstructor(Type.EmptyTypes) == null)
-                            node = property.PropertyType;
-                        else
-                            node = Activator.CreateInstance(property.PropertyType);
+                        // Try to set node to the value of the property.
+                        node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        if (node == null)
+                        {
+                            // This property has the correct name. If the property's type provides a parameterless constructor, we can use 
+                            // reflection to instantiate an object of that type and assign it to the node variable. 
+                            // Otherwise, we assign the type itself to node.
+                            if (property.PropertyType.GetConstructor(Type.EmptyTypes) == null)
+                                node = property.PropertyType;
+                            else
+                                node = Activator.CreateInstance(property.PropertyType);
+                        }
                     }
                     catch
                     {
@@ -343,6 +359,38 @@ namespace UserInterface.EventArguments
                         return null;
                     }
                 }
+
+                if (squareBracketIndex > 0)
+                {
+                    // We have found the node, but the node is an IList of some sort, and we are actually interested in a specific element.
+
+                    int closingBracketIndex = namePathBits[i].IndexOf(']');
+                    if (closingBracketIndex <= 0 || (closingBracketIndex - squareBracketIndex) < 1)
+                        return null;
+
+                    string textBetweenBrackets = namePathBits[i].Substring(squareBracketIndex + 1, closingBracketIndex - squareBracketIndex - 1);
+                    if (node is IList)
+                    {
+                        int index = -1;
+                        if (Int32.TryParse(textBetweenBrackets, out index))
+                        {
+                            IList nodeList = node as IList;
+                            if (index > nodeList.Count || index <= 0)
+                                node = node.GetType().GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEnumerable<>)).Select(x => x.GetGenericArguments()[0]).FirstOrDefault();
+                            else
+                                node = nodeList[index - 1];
+                        }
+                        else
+                            throw new Exception("Unable to access element \"" + textBetweenBrackets + "\" of list \"" + namePathBits[i] + "\"");
+                    }
+                    else if (node is IDictionary)
+                    {
+                        node = (node as IDictionary)[textBetweenBrackets];
+                    }
+                    else
+                        throw new Exception("Unable to parse child or property name " + namePathBits[i]);
+                }
+                squareBracketIndex = -1;
             }
              return node;
         }

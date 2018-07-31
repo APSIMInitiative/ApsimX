@@ -63,7 +63,7 @@ namespace UserInterface.Interfaces
 
         string[] DefaultSuppNames { set; }
 
-        TSupplementItem SelectedSupplementValues { set; }
+        SupplementItem SelectedSupplementValues { set; }
 
         string SelectedSupplementName { get; set; }
 

@@ -4,7 +4,7 @@ namespace Models.PMF.Organs
     using Library;
     using Models.Core;
     using Models.Interfaces;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Soils.Arbitrator;
@@ -64,6 +64,9 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
     {
+        /// <summary>Tolerance for biomass comparisons</summary>
+        private double BiomassToleranceValue = 0.0000000001;
+
         /// <summary>The plant</summary>
         [Link]
         protected Plant Plant = null;
@@ -508,7 +511,7 @@ namespace Models.PMF.Organs
                 throw new Exception("Cannot find a zone called " + zoneName);
 
             zone.WaterUptake = MathUtilities.Multiply_Value(Amount, -1.0);
-            zone.soil.SoilWater.dlt_sw_dep = zone.WaterUptake;
+            zone.soil.SoilWater.RemoveWater(Amount);
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
@@ -529,7 +532,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public BiomassSupplyType CalculateDryMatterSupply()
+        public BiomassSupplyType GetDryMatterSupply()
         {
             dryMatterSupply.Fixation = 0.0;
             dryMatterSupply.Retranslocation = dmRetranslocationSupply;
@@ -538,7 +541,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public BiomassSupplyType CalculateNitrogenSupply()
+        public BiomassSupplyType GetNitrogenSupply()
         {
             nitrogenSupply.Fixation = 0.0;
             nitrogenSupply.Uptake = 0.0;
@@ -549,7 +552,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public BiomassPoolType CalculateDryMatterDemand()
+        public BiomassPoolType GetDryMatterDemand()
         {
             if (Plant.SowingData.Depth < PlantZone.Depth)
             {
@@ -567,7 +570,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public BiomassPoolType CalculateNitrogenDemand()
+        public BiomassPoolType GetNitrogenDemand()
         {
             // This is basically the old/original function with added metabolicN.
             // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
@@ -587,8 +590,8 @@ namespace Models.PMF.Organs
                 double NDeficit = 0.0;
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * minimumNConc.Value() * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, maximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minimumNConc.Value() * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, maximumNConc.Value() * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
                     structuralNDemand += Z.StructuralNDemand[i];
@@ -604,6 +607,7 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
+
             if (PlantZone.WaterUptake == null)
                 throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
 
@@ -626,8 +630,10 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                 {
                     double[] RAw = Z.CalculateRootActivityValues();
+                    Z.PotentialDMAllocated = new double[Z.soil.Thickness.Length];
+
                     for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
-                        Z.LayerLive[layer].PotentialDMAllocation = dryMatter.Structural * RAw[layer] / TotalRAw;
+                        Z.PotentialDMAllocated[layer] = dryMatter.Structural * RAw[layer] / TotalRAw;
                 }
                 needToRecalculateLiveDead = true;
             }
@@ -877,7 +883,7 @@ namespace Models.PMF.Organs
                         rootLiveStorageWt += Z.LayerLive[i].StorageWt;
 
                 double availableDM = rootLiveStorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
-                if (availableDM < -Util.BiomassToleranceValue)
+                if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
                 return availableDM;
             }
@@ -897,7 +903,7 @@ namespace Models.PMF.Organs
                         labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minimumNConc.Value());
 
                 double availableN = Math.Max(0.0, labileN - nReallocationSupply) * nRetranslocationFactor.Value();
-                if (availableN < -Util.BiomassToleranceValue)
+                if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
                 return availableN;
@@ -919,7 +925,7 @@ namespace Models.PMF.Organs
                         rootLiveStorageN += Z.LayerLive[i].StorageN;
 
                 double availableN = rootLiveStorageN * senescenceRate.Value() * nReallocationFactor.Value();
-                if (availableN < -Util.BiomassToleranceValue)
+                if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N reallocation value computed for " + Name);
 
                 return availableN;
@@ -981,7 +987,7 @@ namespace Models.PMF.Organs
                         rootLiveStorageWt += Z.LayerLive[i].StorageWt;
 
                 double availableDM = Math.Max(0.0, rootLiveStorageWt - dmMReallocationSupply) * dmRetranslocationFactor.Value();
-                if (availableDM < -Util.BiomassToleranceValue)
+                if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
                 return availableDM;

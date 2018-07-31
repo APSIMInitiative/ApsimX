@@ -56,6 +56,14 @@ namespace UserInterface.Views
 
         public bool ButtonsAreToolbar { get; set; }
 
+        public ListBoxView ListView
+        {
+            get
+            {
+                return listboxView;
+            }
+        }
+
         private Toolbar btnToolbar = null;
 
         /// <summary>Add a button to the button bar</summary>

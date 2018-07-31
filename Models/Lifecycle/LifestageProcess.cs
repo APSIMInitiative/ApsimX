@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.Core;
-using Models.PMF.Functions;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="LifeStageProcess.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models.LifeCycle
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+    using Models.Functions;
+
     /// <summary>
     /// # [Name]
     /// Specifies the type of lifestage process
@@ -33,6 +35,7 @@ namespace Models.LifeCycle
     /// </summary>
     interface ILifeStageProcess 
     {
+        void Process(LifeStage host);
         void ProcessCohort(Cohort cohortItem);
     }
 
@@ -46,19 +49,27 @@ namespace Models.LifeCycle
     public class LifeStageProcess : Model, ILifeStageProcess
     {
         /// <summary>
-        /// 
+        /// The process type of this Process
         /// </summary>
         [Description("Lifestage Process type")]
         public ProcessType ProcessAction { get; set; }
 
         /// <summary>
-        /// 
+        /// The name of the LifeStage to transfer cohorts to
         /// </summary>
         [Description("Transfer to Lifestage")]
         public string TransferTo { get; set; }
 
         [NonSerialized]
         private List<IFunction> FunctionList;
+
+        /// <summary>
+        /// Process this lifestage before cohorts are processed
+        /// </summary>
+        public void Process(LifeStage host)
+        {
+
+        }
 
         /// <summary>
         /// Applies each function in this Lifestage process to a cohort item that is owned by a Lifestage
@@ -88,7 +99,7 @@ namespace Models.LifeCycle
                     //kill some creatures
                     double mortality = cohortItem.Count - cohortItem.Count * (1 - func.Value());
                     cohortItem.Count = cohortItem.Count * (1 - func.Value());
-                    cohortItem.Mortality = mortality;
+                    cohortItem.Mortality += mortality;      // can be multiple mortality events in a lifestage step
                 }
             }
         }
@@ -96,8 +107,8 @@ namespace Models.LifeCycle
         /// <summary>
         /// At the start of the simulation get the functions required
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event parameters</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {

@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using Models.Surface;
     using Views;
 
     /// <summary>
@@ -109,7 +110,6 @@ namespace UserInterface.Presenters
             }
             else
             {
-                this.grid.ResizeControls();
                 this.FormatTestGrid();
             }
 
@@ -145,8 +145,9 @@ namespace UserInterface.Presenters
             IGridCell selectedCell = this.grid.GetCurrentCell;
             this.model = model;
             DataTable table = new DataTable();
-            table.Columns.Add("Description", typeof(string));
-            table.Columns.Add("Value", typeof(object));
+            bool hasData = this.properties.Count > 0;
+            table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
+            table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
             this.grid.PropertyMode = true;
             this.FillTable(table);
@@ -155,8 +156,6 @@ namespace UserInterface.Presenters
             {
                 this.grid.GetCurrentCell = selectedCell;
             }
-
-            this.grid.ResizeControls();
         }
 
         /// <summary>
@@ -368,7 +367,7 @@ namespace UserInterface.Presenters
                 }
                 else if (this.properties[i].Display != null && 
                          this.properties[i].Display.Type == DisplayType.ResidueName &&
-                         this.model is Models.SurfaceOM.SurfaceOrganicMatter)
+                         this.model is Models.Surface.SurfaceOrganicMatter)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     string[] fieldNames = GetResidueNames();
@@ -400,7 +399,10 @@ namespace UserInterface.Presenters
                     else if (cellValue.GetType().IsEnum)
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = StringUtilities.EnumToStrings(cellValue);
+                        cell.DropDownStrings = VariableProperty.EnumToStrings(cellValue);
+                        Enum cellValueAsEnum = cellValue as Enum;
+                        if (cellValueAsEnum != null)
+                            cell.Value = VariableProperty.GetEnumDescription(cellValueAsEnum);
                     }
                     else if (cellValue.GetType() == typeof(IPlant))
                     {
@@ -518,15 +520,12 @@ namespace UserInterface.Presenters
 
         private string[] GetResidueNames()
         {
-            if (this.model is Models.SurfaceOM.SurfaceOrganicMatter)
+            if (this.model is Models.Surface.SurfaceOrganicMatter)
             {
-                List<Models.SurfaceOM.SurfaceOrganicMatter.ResidueType> types = (this.model as Models.SurfaceOM.SurfaceOrganicMatter).ResidueTypes.residues;
-                string[] result = new string[types.Count];
-                for (int i = 0; i < types.Count; i++)
-                    result[i] = types[i].fom_type;
-                Array.Sort(result, StringComparer.InvariantCultureIgnoreCase);
-
-                return result;
+                List<string> names = new List<string>();
+                names = (this.model as SurfaceOrganicMatter).ResidueTypeNames();
+                names.Sort();
+                return names.ToArray();
             }
             return null;
         }
@@ -610,7 +609,7 @@ namespace UserInterface.Presenters
             }
             else if (property.DataType.IsEnum)
             {
-                value = Enum.Parse(property.DataType, value.ToString());
+                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
             }
             else if (property.Display != null &&
                      property.Display.Type == DisplayType.Model)

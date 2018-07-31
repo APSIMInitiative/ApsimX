@@ -301,7 +301,7 @@ namespace Models.AgPasture
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">The soil state (current water content)</param>
         /// <returns>The potential water uptake (mm)</returns>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             if (IsAlive)
             {
@@ -357,7 +357,7 @@ namespace Models.AgPasture
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">The soil state (current N contents)</param>
         /// <returns>The potential N uptake (kg/ha)</returns>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             if (IsAlive)
             {
@@ -419,7 +419,7 @@ namespace Models.AgPasture
         /// <summary>Sets the amount of water taken up by this plant (mm).</summary>
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The water uptake from each layer (mm), by zone</param>
-        public void SetSWUptake(List<ZoneWaterAndN> zones)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
 
@@ -432,7 +432,7 @@ namespace Models.AgPasture
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
                     if (mySoilWaterUptake.Sum() > Epsilon)
-                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(zone.Water, -1.0);
+                        root.mySoil.SoilWater.RemoveWater(zone.Water);
                 }
             }
         }
@@ -440,7 +440,7 @@ namespace Models.AgPasture
         /// <summary>Sets the amount of N taken up by this plant (kg/ha).</summary>
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The N uptake from each layer (kg/ha), by zone</param>
-        public void SetNUptake(List<ZoneWaterAndN> zones)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
@@ -3172,6 +3172,20 @@ namespace Models.AgPasture
 
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+        /// <summary>Get above ground biomass</summary>
+        public Biomass AboveGround
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt = leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.StructuralN = leaves.NLive + leaves.NDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead;
+                mass.DMDOfStructural = leaves.DigestibilityLive;
+                return mass;
+            }
+        }
+
+
         /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
         [Description("Dry matter weight available for harvesting")]
         [Units("kg/ha")]
@@ -4068,8 +4082,8 @@ namespace Models.AgPasture
         /// <summary>Performs the calculations for actual growth.</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (isAlive && !isSwardControlled)
             {
@@ -5270,8 +5284,15 @@ namespace Models.AgPasture
                 if (amountToRemove - HarvestableWt > -Epsilon)
                 {
                     // All existing DM is removed
+                    amountToRemove = HarvestableWt;
                     for (int i = 0; i < 5; i++)
-                        fracRemoving[i] = 1.0;
+                    {
+                        fracRemoving[0] = MathUtilities.Divide(leaves.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[1] = MathUtilities.Divide(stems.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[2] = MathUtilities.Divide(stolons.DMLiveHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[3] = MathUtilities.Divide(leaves.DMDeadHarvestable, HarvestableWt, 0.0);
+                        fracRemoving[4] = MathUtilities.Divide(stems.DMDeadHarvestable, HarvestableWt, 0.0);
+                    }
                 }
                 else
                 {

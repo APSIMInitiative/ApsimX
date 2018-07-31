@@ -10,7 +10,7 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using Models.Interfaces;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
@@ -89,8 +89,11 @@ namespace Models.PMF
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
+
+        /// <summary>Above ground weight</summary>
         [Link(IsOptional = true)]
-        Biomass AboveGround = null;
+        public Biomass AboveGround { get; set; }
+
         /// <summary>
         /// Clock
         /// </summary>
@@ -441,16 +444,6 @@ namespace Models.PMF
             // Remove nodes from the main-stem
             if (removalData != null && removalData.NodesToRemove > 0)
                 Structure.doNodeRemoval(removalData.NodesToRemove);
-        }
-
-        /// <summary>
-        /// Biomass has been removed from the plant by animals
-        /// </summary>
-        /// <param name="fractionRemoved">The fraction of biomass removed</param>
-        public void BiomassRemovalComplete(double fractionRemoved)
-        {
-            if (Phenology != null)
-                Phenology.BiomassRemoved(fractionRemoved);
         }
 
         /// <summary>End the crop.</summary>
