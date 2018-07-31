@@ -1938,7 +1938,7 @@ namespace Models.PMF.Organs
             Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
             Structure.TipToAppear =  0;
-            Structure.Emerged = false;
+            Structure.LeafAppearanceStarted = false;
             Structure.Clear();
             Structure.ResetStemPopn();
             Structure.LeafTipsAppeared = 0;
@@ -1948,7 +1948,7 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.Germinated = false;            
+            Structure.CohortsInitialised = false;            
 
         }
 
