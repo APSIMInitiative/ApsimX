@@ -12,6 +12,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class GotoPhase : Model, IPhase, IPhaseWithTarget
     {
         // 1. Links

@@ -12,6 +12,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class BuddingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
         // 1. Links
