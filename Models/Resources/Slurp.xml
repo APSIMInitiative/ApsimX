@@ -38,6 +38,38 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
 ]]>
     </MemoText>
   </Memo>
+  <Phenology>
+    <Name>Phenology</Name>
+    <Constant>
+      <Name>ThermalTime</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>1</FixedValue>
+      <Units>days</Units>
+    </Constant>
+    <GenericPhase>
+      <Name>Ongoing</Name>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+      </VariableReference>
+      <Constant>
+        <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <FixedValue>1E+15</FixedValue>
+        <Units>d</Units>
+      </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <Start>Sowing</Start>
+      <End>Never</End>
+    </GenericPhase>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+  </Phenology>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
     <PrioritythenRelativeAllocation>
