@@ -69,21 +69,22 @@ namespace Models.PMF.Struct
         
         [Link]
         private IFunction heightModel = null;
-        
-        [Link]
-        private IFunction branchingRate = null;
-        
-        [Link]
-        private IFunction branchMortality = null;
-        
-        [Link]
-        private IFunction stemSenescenceAge = null;
 
+        /// <summary>Branching rate</summary>
+        [Link]
+        public IFunction branchingRate = null;
+
+        /// <summary>Branch mortality</summary>
+        [Link]
+        public IFunction branchMortality = null;
 
         // 2. Private fields
         //-------------------------------------------------------------------------------------------
 
-        private bool Initialised;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Initialised;
 
         // 4. Public Events And Enums
         //-------------------------------------------------------------------------------------------
@@ -108,10 +109,6 @@ namespace Models.PMF.Struct
         /// <summary>Test if Initialisation done</summary>
         public bool LeafAppearanceStarted;
         
-        /// <summary>Total apex number in plant.</summary>
-        [Description("Total apex number in plant")]
-        public double ApexNum { get; set; }
-        
         /// <summary>The Leaf Appearance Data </summary>
         [XmlIgnore]
         public CohortInitParams InitParams { get; set; }
@@ -121,6 +118,12 @@ namespace Models.PMF.Struct
         
         /// <summary>TipToAppear</summary>
         public int TipToAppear { get; set; }
+
+        /// <summary>Did another leaf appear today?</summary>
+        public bool TimeForAnotherLeaf { get; set; }
+
+        /// <summary>Have all leaves appeared?</summary>
+        public bool AllLeavesAppeared { get; set; }
 
         /// <summary>The Leaf Appearance Data </summary>
         [XmlIgnore]
@@ -166,10 +169,6 @@ namespace Models.PMF.Struct
         /// <value>The change in HaunStage each day.</value>
         [XmlIgnore]
         public double DeltaHaunStage { get; set; }
-
-        /// <value>Senscenced by age.</value>
-        [XmlIgnore]
-        public bool SenescenceByAge { get; set; }
 
         /// <value>The delta node number.</value>
         [XmlIgnore]
@@ -236,7 +235,6 @@ namespace Models.PMF.Struct
             ProportionPlantMortality = 0;
             DeltaTipNumber = 0;
             DeltaHaunStage = 0;
-            SenescenceByAge = false;
             Initialised = false;
             CohortsInitialised = false;
             LeafAppearanceStarted = false;
@@ -295,7 +293,7 @@ namespace Models.PMF.Struct
         {
             if (plant.IsGerminated)
             {
-                 DeltaHaunStage = 0;
+                DeltaHaunStage = 0;
                 if (phyllochron.Value() > 0)
                     DeltaHaunStage = ThermalTime.Value() / phyllochron.Value();
                
@@ -317,7 +315,7 @@ namespace Models.PMF.Struct
                     }
 
                     bool AllCohortsInitialised = (leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
-                    bool AllLeavesAppeared = (leaf.AppearedCohortNo == leaf.InitialisedCohortNo);
+                    AllLeavesAppeared = (leaf.AppearedCohortNo == leaf.InitialisedCohortNo);
                     bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1)  == leaf.InitialisedCohortNo);
                     
                     if ((AllCohortsInitialised)&&(LastLeafAppearing))
@@ -345,7 +343,7 @@ namespace Models.PMF.Struct
                     //    FinalLeafDeltaTipNumberonDayOfAppearance = PotLeafTipsAppeared - MainStemFinalNodeNumber.Value;
                     LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
 
-                    bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
+                    TimeForAnotherLeaf = PotLeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1- NextLeafProportion)));
 
                     //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
@@ -372,16 +370,6 @@ namespace Models.PMF.Struct
                             BranchNumber += branchingRate.Value();
                             DoLeafTipAppearance();
                         }
-                        // Apex calculation
-                        ApexNum += branchingRate.Value() * PrimaryBudNo;
-
-                        if (phenology.Stage > 4 & !SenescenceByAge)
-                        {
-                            double senescenceNum = leaf.ApexNumByAge(stemSenescenceAge.Value());
-                            ApexNum -= senescenceNum;
-                            SenescenceByAge = true;
-                            TotalStemPopn -= senescenceNum * plant.Population;
-                        }
                     }
 
                     //Reduce population if there has been plant mortality 
@@ -395,8 +383,7 @@ namespace Models.PMF.Struct
                         double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - plant.Population);
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
-                        // Reduce the apex number by branching mortality
-                        ApexNum -= PropnMortality * (ApexNum - 1);
+
                     }
                 }
             }
@@ -477,7 +464,6 @@ namespace Models.PMF.Struct
                 if (Sow.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 PrimaryBudNo = Sow.BudNumber;
-                ApexNum = PrimaryBudNo;
                 TotalStemPopn = MainStemPopn;
             }
         }

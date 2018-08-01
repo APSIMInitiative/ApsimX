@@ -742,7 +742,7 @@ namespace Models.PMF.Organs
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
             if (CohortPopulation == 0)
-                CohortPopulation = Apex.Appearance(Structure.ApexNum, Plant.Population, Structure.TotalStemPopn);
+                CohortPopulation = Apex.Appearance(Plant.Population, Structure.TotalStemPopn);
 
             MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * leafFraction;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 

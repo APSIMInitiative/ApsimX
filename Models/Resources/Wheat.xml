@@ -1018,7 +1018,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     <Emerged>false</Emerged>
     <CohortToInitialise>0</CohortToInitialise>
     <TipToAppear>0</TipToAppear>
-    <ApexNum>0</ApexNum>
   </Structure>
   <ReproductiveOrgan>
     <Name>Grain</Name>
@@ -1635,8 +1634,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Rank>1</Rank>
       <Area>200</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
-      <ApexGroupSize />
-      <ApexGroupAge />
     </LeafCohort>
     <LeafCohort>
       <Name>InitialLeaves[2]</Name>
@@ -1665,8 +1662,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Rank>2</Rank>
       <Area>0</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
-      <ApexGroupSize />
-      <ApexGroupAge />
     </LeafCohort>
     <ArrayBiomass>
       <Name>CohortArrayLive</Name>
@@ -2427,10 +2422,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-	<ApexStandard>
-      <Name>ApexStandard</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </ApexStandard>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
