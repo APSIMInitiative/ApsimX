@@ -48,10 +48,10 @@ namespace Models.Functions
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (phaseChange.EventStageName == SetEvent)
+            if (phaseChange.StageName == SetEvent)
                 OnSetEvent();
 
-            if (phaseChange.EventStageName == ReSetEvent)
+            if (phaseChange.StageName == ReSetEvent)
                 OnReSetEvent();
         }
 

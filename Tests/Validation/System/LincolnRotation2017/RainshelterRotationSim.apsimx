@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="33">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -12624,7 +12624,7 @@ namespace Models
         [ScopedLinkByName] Plant FodderBeet;
         [ScopedLinkByName] Plant Oats;
         [Link] Clock Clock;
-        [Link] SurfaceOM.SurfaceOrganicMatter mySurfOM;
+        [Link] Surface.SurfaceOrganicMatter mySurfOM;
 
         [Description("FodderBeet planting date: ")]
         public DateTime FodderBeetPlantingDate { get; set; }
@@ -12990,40 +12990,13 @@ namespace Models
           <Name>Surface Organic Matter</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-          <Pools>
-            <Pool>
-              <PoolName>oat_stubble</PoolName>
-              <ResidueType>oats</ResidueType>
-              <Mass>1500</Mass>
-              <CNRatio>20</CNRatio>
-              <CPRatio>NaN</CPRatio>
-              <StandingFraction>0.5</StandingFraction>
-            </Pool>
-          </Pools>
-          <PoolName>oat_stubble</PoolName>
-          <type>oats</type>
-          <mass>1500</mass>
-          <standing_fraction>0.5</standing_fraction>
-          <cpr />
-          <cnr>20</cnr>
-          <CriticalResidueWeight>2000</CriticalResidueWeight>
-          <OptimumDecompTemp>20</OptimumDecompTemp>
-          <MaxCumulativeEOS>20</MaxCumulativeEOS>
-          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-          <TotalLeachRain>25</TotalLeachRain>
-          <MinRainToLeach>10</MinRainToLeach>
-          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-          <DefaultCPRatio>0</DefaultCPRatio>
-          <DefaultStandingFraction>0</DefaultStandingFraction>
-          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          <ResourceName>SurfaceOrganicMatter</ResourceName>
+          <InitialResidueName>oat_stubble</InitialResidueName>
+          <InitialResidueType>oats</InitialResidueType>
+          <InitialResidueMass>1500</InitialResidueMass>
+          <InitialStandingFraction>0.5</InitialStandingFraction>
+          <InitialCPR>0</InitialCPR>
+          <InitialCNR>20</InitialCNR>
         </SurfaceOrganicMatter>
         <Soil>
           <Name>Soil</Name>

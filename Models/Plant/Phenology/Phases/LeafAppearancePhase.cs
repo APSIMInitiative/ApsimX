@@ -5,7 +5,8 @@ using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Struct;
 using System.IO;
-using Models.Interfaces;
+using APSIM.Shared;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Phen
 {
@@ -45,7 +46,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
         
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -59,37 +60,40 @@ namespace Models.PMF.Phen
             {
                 double F = 0;
                 F = (leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
-                if (F < 0) F = 0;
-                if (F > 1) F = 1;
+                F = MathUtilities.Bound(F,0,1);
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
-            set
-            {
-                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
         }
+
 
         //6. Public method
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
+            bool proceedToNextPhase = false;
+            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
+                        
             if (First)
             {
                 LeafNoAtStart = leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion;
-                TargetLeafForCompletion = structure.FinalLeafNumber.Value()  - LeafNoAtStart;
+                TargetLeafForCompletion = structure.FinalLeafNumber.Value() - LeafNoAtStart;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
             if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
-                    return 0.00001;
-                else
-                    return 0;
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.00001; ; //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+                TTForTimeStep *= (1 - propOfDayToUse);
+            }
+
+            TTinPhase += TTForTimeStep;
+
+            return proceedToNextPhase;
         }
                 
         /// <summary>Reset phase</summary>
