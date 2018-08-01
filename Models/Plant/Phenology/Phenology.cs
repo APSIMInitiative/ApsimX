@@ -312,11 +312,11 @@ namespace Models.PMF.Phen
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 AccumulateTT(CurrentPhase.TTForTimeStep);
 
-                if (Stage >= 1 && !Germinated)
-                    Germinated = true;
-
                 while (incrementPhase)
                 {
+                    if (currentPhaseIndex == 0)
+                        Germinated = true;
+
                     if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
                     {
                         plant.SendEmergingEvent();

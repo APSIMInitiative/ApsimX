@@ -54,13 +54,7 @@ namespace Models.PMF.Phen
 
         /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
-        public double FractionComplete
-        {
-            get
-            {
-                return 0.999;
-            }
-        }
+        public double FractionComplete { get { return 0.999; } }
 
         //6. Public methode
         //-----------------------------------------------------------------------------------------------------------------
