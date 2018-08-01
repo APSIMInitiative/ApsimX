@@ -43,6 +43,8 @@ namespace Models.PMF.Struct
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Structure : Model
     {
         /// <summary>Occurs when plant Germinates.</summary>
@@ -78,10 +80,7 @@ namespace Models.PMF.Struct
         #endregion
 
         #region Parameters
-        /// <summary>Gets or sets the primary bud no.</summary>
-        /// <value>The primary bud no.</value>
-        [Description("Number of mainstem units per plant")]
-        [Units("/plant")]
+        /// <summary>Number of mainstem units per plant.</summary>
         [XmlIgnore]
         public double PrimaryBudNo {get; set;}
 
@@ -112,52 +111,41 @@ namespace Models.PMF.Struct
         public IFunction StemSenescenceAge = null;
 
         /// <summary>The Stage that cohorts are initialised on</summary>
-        [Link]
         [Description("The Stage that cohorts are initialised on")]
         public string CohortInitialisationStage { get; set; } = "Germination";
 
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
-        [Link]
         public string LeafInitialisationStage { get; set; } = "Emergence";
         #endregion
 
         #region States
         /// <summary>Test if Initialisation done</summary>
         public bool leavesInitialised;
+        
         /// <summary>Total apex number in plant.</summary>
-        [Description("Total apex number in plant")]
+        [XmlIgnore]
         public double ApexNum { get; set; }
 
         private double _Height;
 
         private bool firstPass;
 
-        /// <summary>Gets or sets the total stem popn.</summary>
-        /// <value>The total stem popn.</value>
+        /// <summary>Number of stems per meter including main and branch stems</summary>
         [XmlIgnore]
-        [Description("Number of stems per meter including main and branch stems")]
-        [Units("/m2")]
         public double TotalStemPopn { get; set; }
 
         //Plant leaf number state variables
-        /// <summary>Gets or sets the main stem node no.</summary>
-        /// <value>The main stem node no.</value>
+        /// <summary>umber of mainstem nodes which have their tips appeared.</summary>
         [XmlIgnore]
-        [Description("Number of mainstem nodes which have their tips appeared")]
         public double PotLeafTipsAppeared { get; set; }
 
-        /// <summary>Gets or sets the main stem node no.</summary>
-        /// <value>The main stem node no.</value>
+        /// <summary>Number of mainstem nodes which have their tips appeared</summary>
         [XmlIgnore]
-        [Description("Number of mainstem nodes which have their tips appeared")]
         public double LeafTipsAppeared { get; set; }
 
-        /// <summary>Gets or sets the plant total node no.</summary>
-        /// <value>The plant total node no.</value>
+        /// <summary>Number of leaves appeared per plant including all main stem and branch leaves</summary>
         [XmlIgnore]
-        [Units("/plant")]
-        [Description("Number of leaves appeared per plant including all main stem and branch leaves")]
         public double PlantTotalNodeNo { get; set; }
 
         //Utility Variables
@@ -224,9 +212,10 @@ namespace Models.PMF.Struct
         #region Outputs
         /// <summary>Gets the main stem popn.</summary>
         /// <value>The main stem popn.</value>
-        [XmlIgnore]
+        
         [Description("Number of mainstems per meter")]
         [Units("/m2")]
+        [XmlIgnore]
         public double MainStemPopn { get { return Plant.Population * PrimaryBudNo; } }
 
         /// <summary>Gets the remaining node no.</summary>

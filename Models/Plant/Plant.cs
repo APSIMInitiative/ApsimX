@@ -254,8 +254,6 @@ namespace Models.PMF
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowPlant2Type> PlantSowing;
-        /// <summary>Occurs when a plant is about to be sown.</summary>
-        public event EventHandler PlantEmerging;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>

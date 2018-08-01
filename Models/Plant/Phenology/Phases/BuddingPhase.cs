@@ -102,9 +102,7 @@ namespace Models.PMF.Phen
                 }
                 TTinPhase = Target;
             }
-
             
-
             if (proceedToNextPhase)
             {
                 double BudNumberBurst = Plant.SowingData.BudNumber * FractionOfBudBurst.Value();
