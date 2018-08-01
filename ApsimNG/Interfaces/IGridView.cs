@@ -31,12 +31,6 @@ namespace UserInterface.Interfaces
         event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
-        /// Invoked when the columns need to be reset to their default colours.
-        /// If this event handler is null, the default colours are assumed to be white.
-        /// </summary>
-        event EventHandler<EventArgs> FormatColumns;
-
-        /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
         System.Data.DataTable DataSource { get; set; }
@@ -56,11 +50,6 @@ namespace UserInterface.Interfaces
         /// </summary>
         bool ReadOnly { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether "property" mode is enabled
-        /// </summary>
-        bool PropertyMode { get; set; }
-        
         /// <summary>
         /// The name of the associated model.
         /// </summary>
@@ -125,9 +114,6 @@ namespace UserInterface.Interfaces
         /// <summary>Lock the left most number of columns.</summary>
         /// <param name="number"></param>
         void LockLeftMostColumns(int number);
-
-        /// <summary>Get screenshot of grid.</summary>
-        Image GetScreenshot();
 
         /// <summary>
         /// Indicates that a row should be treated as a separator line

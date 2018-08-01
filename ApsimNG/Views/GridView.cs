@@ -121,11 +121,6 @@
         private Dictionary<int, ColRenderAttributes> colAttributes = new Dictionary<int, ColRenderAttributes>();
 
         /// <summary>
-        /// Is used as a property editor.
-        /// </summary>
-        private bool isPropertyMode = false;
-
-        /// <summary>
         /// Stores whether our grid is readonly. Internal value.
         /// </summary>
         private bool isReadOnly = false;
@@ -222,12 +217,6 @@
         public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
-        /// Invoked when the columns need to be reset to their default colours.
-        /// If this event handler is null, the default colours are assumed to be white.
-        /// </summary>
-        public event EventHandler<EventArgs> FormatColumns;
-
-        /// <summary>
         /// Gets or sets the treeview object which displays the data.
         /// </summary>
         public Gtk.TreeView Grid { get; set; } = null;
@@ -284,23 +273,6 @@
         /// Gets or sets the numeric grid format e.g. N3
         /// </summary>
         public string NumericFormat { get; set; } = "F2";
-
-        /// <summary>
-        /// Gets or sets a value indicating whether "property" mode is enabled.
-        /// </summary>
-        public bool PropertyMode
-        {
-            get
-            {
-                return isPropertyMode;
-            }
-            set
-            {
-                if (value != isPropertyMode)
-                    PopulateGrid();
-                isPropertyMode = value;
-            }
-        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the grid is read only.
@@ -362,7 +334,6 @@
             {
                 return table;
             }
-
             set
             {
                 table = value;
@@ -737,24 +708,6 @@
                 splitter.Position = 0;
             }
             numberLockedCols = number;
-        }
-
-        /// <summary>
-        /// Get screenshot of grid.
-        /// </summary>
-        /// <returns>A bitmap object.</returns>
-        public System.Drawing.Image GetScreenshot()
-        {
-            // Create a Bitmap and draw the DataGridView on it.
-            int width;
-            int height;
-            Gdk.Window gridWindow = hboxContainer.GdkWindow;  // Should we draw from hbox1 or from gridview?
-            gridWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
         }
 
         /// <summary>
@@ -1432,14 +1385,12 @@
                 colAttributes.Add(i, attrib);
 
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
-                CellRendererText textRender = new Gtk.CellRendererText();
-                CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
+                CellRendererText textRender = new CellRendererText();
+                CellRendererToggle toggleRender = new CellRendererToggle();
                 toggleRender.Visible = false;
                 toggleRender.Toggled += ToggleRenderToggled;
-                toggleRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 0.5f; // Left of center align, as appropriate
                 CellRendererCombo comboRender = new CellRendererDropDown();
                 comboRender.Edited += ComboRenderEdited;
-                comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
                 comboRender.EditingStarted += ComboRenderEditing;
                 CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
@@ -1453,7 +1404,6 @@
                 textRender.EditingStarted += OnCellBeginEdit;
                 textRender.EditingCanceled += TextRenderEditingCanceled;
                 textRender.Edited += OnCellValueChanged;
-                textRender.Xalign = ((i == 0) || ((i == 1) && isPropertyMode)) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
                 TreeViewColumn column = new TreeViewColumn();
                 column.Title = DataSource.Columns[i].Caption;
@@ -1467,10 +1417,6 @@
                 // column.FixedWidth = 100;
                 column.Resizable = true;
                 column.SetCellDataFunc(textRender, OnSetCellData);
-                if (i == 1 && isPropertyMode)
-                    column.Alignment = 0.0f;
-                else
-                    column.Alignment = 0.5f; // For centered alignment of the column header
                 Grid.AppendColumn(column);
 
                 // Gtk Treeview doesn't support "frozen" columns, so we fake it by creating a second, identical, TreeView to display
@@ -1484,7 +1430,7 @@
                 fixedColumn.Visible = false;
                 fixedColView.AppendColumn(fixedColumn);
             }
-
+            /*
             if (!isPropertyMode)
             {
                 // Add an empty column at the end; auto-sizing will give this any "leftover" space
@@ -1492,7 +1438,7 @@
                 Grid.AppendColumn(fillColumn);
                 fillColumn.Sizing = TreeViewColumnSizing.Autosize;
             }
-
+            */
             int numRows = DataSource != null ? DataSource.Rows.Count : 0;
 
             Grid.Model = null;
@@ -1595,8 +1541,10 @@
                 view.Columns[i].Widget = newLabel;
                 newLabel.Wrap = true;
                 newLabel.Justify = Justification.Center;
+                /*
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
                     (newLabel.Parent as Alignment).LeftPadding = 2;
+                */
                 newLabel.UseMarkup = true;
                 newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Grid.Columns[i].Title) + "</b>";
                 if (DataSource.Columns[i].Caption != DataSource.Columns[i].ColumnName)
@@ -2128,7 +2076,7 @@
         }
 
         /// <summary>
-        /// Delete was clicked by the user.
+        /// Delete context menu option was clicked by the user.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="e">The event arguments.</param>

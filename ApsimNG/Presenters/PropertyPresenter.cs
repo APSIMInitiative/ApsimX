@@ -148,7 +148,6 @@ namespace UserInterface.Presenters
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
-            grid.PropertyMode = true;
             FillTable(table);
             FormatGrid();
             if (selectedCell != null)

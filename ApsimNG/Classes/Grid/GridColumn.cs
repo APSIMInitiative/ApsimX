@@ -67,7 +67,7 @@ namespace UserInterface.Classes
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the column is left aligned. If not then right is assumed.
+        /// Gets or sets a value indicating whether the column is left aligned. If not then left is assumed.
         /// </summary>
         public bool LeftAlignment
         {
@@ -77,15 +77,19 @@ namespace UserInterface.Classes
                 if (render != null)
                     return render.Alignment == Pango.Alignment.Left;
                 else
-                    return false;
+                    return true;
             }
 
             set
             {
                 CellRendererText render = this.gridView.Grid.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                float valueAsFloat = value ? 0.5f : 0.95f;
                 if (render != null)
+                {
                     render.Alignment = value ? Pango.Alignment.Left : Pango.Alignment.Right;
-                this.gridView.Grid.Columns[this.ColumnIndex].Alignment = value ? 0.5F : 0.95F;
+                    render.Xalign = valueAsFloat;
+                }
+                this.gridView.Grid.Columns[this.ColumnIndex].Alignment = valueAsFloat;
             }
         }
 
@@ -233,7 +237,6 @@ namespace UserInterface.Classes
                 }
             }
         }
-
 
         /// <summary>
         /// Gets or sets the text of the header
