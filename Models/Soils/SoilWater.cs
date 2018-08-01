@@ -2,7 +2,7 @@
 using Models.Interfaces;
 using Models.PMF;
 using Models.Soils.SoilWaterBackend;
-using Models.SurfaceOM;
+using Models.Surface;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -998,6 +998,30 @@ namespace Models.Soils
         // Tillage
 
         /// <summary>
+        /// 
+        /// </summary>
+        [Serializable]
+        public class TillageTypesList : Model
+        {
+            /// <summary>Gets or sets the type of the tillage.</summary>
+            /// <value>The type of the tillage.</value>
+            public List<TillageType> TillageType { get; set; }
+
+            /// <summary>Gets the tillage data.</summary>
+            /// <param name="Name">The name.</param>
+            /// <returns></returns>
+            public TillageType GetTillageData(string Name)
+            {
+                foreach (TillageType tillageType in TillageType)
+                {
+                    if (tillageType.Name == Name)
+                        return tillageType;
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Tillages the specified default tillage name.
         /// </summary>
         /// <param name="DefaultTillageName">Default name of the tillage.</param>
@@ -1024,7 +1048,7 @@ namespace Models.Soils
             //-->
 
 
-            SurfaceOrganicMatter.TillageTypesList defaultTypes = new SurfaceOrganicMatter.TillageTypesList();
+            TillageTypesList defaultTypes = new TillageTypesList();
 
             TillageType data = defaultTypes.GetTillageData(DefaultTillageName);
 
@@ -1305,7 +1329,7 @@ namespace Models.Soils
         /// <summary>
         /// The surface
         /// </summary>
-        private Surface surface;
+        private Models.Soils.SoilWaterBackend.Surface surface;
 
         //Soil
         /// <summary>
