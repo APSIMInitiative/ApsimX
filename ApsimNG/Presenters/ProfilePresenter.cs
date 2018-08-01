@@ -95,6 +95,11 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.view = view as IProfileView;
+            this.view.ProfileGrid.FormatColumns += (sender, e) =>
+            {
+                FormatGrid((view as IProfileView).ProfileGrid.DataSource);
+            };
+
             this.explorerPresenter = explorerPresenter;
 
             this.view.ShowView(false);
@@ -168,8 +173,6 @@ namespace UserInterface.Presenters
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             
-            this.view.ProfileGrid.ResizeControls();
-            this.view.PropertyGrid.ResizeControls();
             this.view.ShowView(true);
         }
 
@@ -278,7 +281,7 @@ namespace UserInterface.Presenters
                 }
 
                 string format = property.Format;
-                if (format == null)
+                if (format == null || format == string.Empty)
                 {
                     format = "N3";
                 }
@@ -469,10 +472,8 @@ namespace UserInterface.Presenters
                         if (changedValues)
                         {
                             // Store the property change.
-                            Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
-                            property.Name = this.propertiesInGrid[i].Name;
-                            property.Obj = this.propertiesInGrid[i].Object;
-                            property.NewValue = values;
+                            Commands.ChangeProperty.Property property = 
+                                new Commands.ChangeProperty.Property(this.propertiesInGrid[i].Object, this.propertiesInGrid[i].Name, values);
                             properties.Add(property);
                         }
                     }
@@ -588,9 +589,9 @@ namespace UserInterface.Presenters
                 if (property.AllowableUnits.Length > 0)
                 {
                     this.view.ProfileGrid.AddContextSeparator();
-                    foreach (string unit in property.AllowableUnits)
+                    foreach (VariableProperty.NameLabelPair unit in property.AllowableUnits)
                     {
-                        this.view.ProfileGrid.AddContextOption(unit, this.OnUnitClick, unit == property.Units);
+                        this.view.ProfileGrid.AddContextOption(unit.Name, unit.Label, this.OnUnitClick, unit.Name == property.Units);
                     }
                 }
             }
@@ -606,8 +607,8 @@ namespace UserInterface.Presenters
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
             if (sender is Gtk.MenuItem)
             {
-                property.Units = ((sender as Gtk.MenuItem).Child as Gtk.AccelLabel).Text;
-                this.OnModelChanged(this.model);
+                string unitsString = (sender as Gtk.MenuItem).Name;
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));               
             }
         }
     }

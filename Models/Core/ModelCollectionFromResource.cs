@@ -94,12 +94,22 @@ namespace Models.Core
         {
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
-                if (property.CanWrite && 
-                    property.Name != "Name" && 
-                    property.Name != "Children" && 
+                if (property.CanWrite &&
+                    property.Name != "Name" &&
+                    property.Name != "Children" &&
                     property.Name != "IncludeInDocumentation" &&
                     property.Name != "ResourceName")
-                    property.SetValue(this, property.GetValue(from));
+                {
+                    object fromValue = property.GetValue(from);
+                    bool doSetPropertyValue;
+                    if (fromValue is double)
+                        doSetPropertyValue = Convert.ToDouble(fromValue) != 0;
+                    else
+                        doSetPropertyValue = fromValue != null;
+
+                    if (doSetPropertyValue)
+                        property.SetValue(this, fromValue);
+                }
             }
         }
 

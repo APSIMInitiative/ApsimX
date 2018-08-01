@@ -32,15 +32,16 @@ namespace Models
         /// <summary>The elements as XML</summary>
         private string elementsAsXml = null;
         /// <summary>Name of compiled assembly</summary>
+        [NonSerialized]
         private string assemblyName = null;
 
         /// <summary>The _ script</summary>
-        private Model _Script;
+        [NonSerialized] private Model _Script;
         /// <summary>The _elements</summary>
         [NonSerialized] private XmlElement[] _elements;
 
         /// <summary>The compiled code</summary>
-        private string CompiledCode = "";
+        [NonSerialized] private string CompiledCode = "";
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>
@@ -102,6 +103,13 @@ namespace Models
         /// way to store both the caret position and scrolling information.
         /// </summary>
         [XmlIgnore] public System.Drawing.Rectangle Location = new System.Drawing.Rectangle(1, 1, 0, 0);
+
+        /// <summary>
+        /// Stores whether we are currently on the tab displaying the script.
+        /// Meaningful only within the GUI
+        /// </summary>
+        [XmlIgnore] public int ActiveTabIndex = 0;
+
 
         /// <summary>The code for the Manager script</summary>
         [Summary]
@@ -298,7 +306,9 @@ namespace Models
                 if (property != null)
                 {
                     object value;
-                    if (property.PropertyType.Name == "ICrop")
+                    if (element.InnerText.StartsWith(".Simulations."))
+                        value = Apsim.Get(this, element.InnerText);
+                    else if (property.PropertyType == typeof(IPlant))
                         value = Apsim.Find(this, element.InnerText);
                     else
                         value = ReflectionUtilities.StringToObject(property.PropertyType, element.InnerText);
@@ -322,8 +332,8 @@ namespace Models
                     object value = property.GetValue(script, null);
                     if (value == null)
                         value = "";
-                    else if (value is ICrop)
-                        value = (value as IModel).Name;
+                    else if (value is IModel)
+                        value = Apsim.FullPath(value as IModel);
                     XmlUtilities.SetValue(doc.DocumentElement, property.Name, 
                                          ReflectionUtilities.ObjectToString(value));
                 }

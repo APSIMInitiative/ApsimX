@@ -16,6 +16,7 @@ namespace Models.Core.ApsimFile
     using System.Text.RegularExpressions;
     using PMF;
     using System.Data;
+    using Models.Factorial;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -23,12 +24,12 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 27; } }
+        public static int LastestVersion { get { return 34; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Returns true if something was changed.</returns>
-        public static bool ConvertToLatestVersion(string fileName)
+        public static Stream ConvertToLatestVersion(string fileName)
         {
             // Load the file.
             XmlDocument doc = new XmlDocument();
@@ -39,15 +40,13 @@ namespace Models.Core.ApsimFile
 
             if (changed)
             {
-                // Make a backup or original file.
-                string bakFileName = Path.ChangeExtension(fileName, ".bak");
-                if (!File.Exists(bakFileName))
-                    File.Copy(fileName, bakFileName);
-
-                // Save file.
-                doc.Save(fileName);
+                MemoryStream memStream = new MemoryStream();
+                doc.Save(memStream);
+                memStream.Seek(0, SeekOrigin.Begin);
+                return memStream;
             }
-            return changed;
+            else
+                return File.OpenRead(fileName);
         }
 
         /// <summary>Converts XML to the latest version.</summary>
@@ -117,29 +116,29 @@ namespace Models.Core.ApsimFile
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion1(XmlNode node, string fileName)
-    {
-        foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
         {
-            XmlUtilities.Rename(seriesNode, "Title", "Name");
-            XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
-            XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
-            XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
-            XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
-            XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
+            foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
+            {
+                XmlUtilities.Rename(seriesNode, "Title", "Name");
+                XmlUtilities.Move(seriesNode, "X/TableName", seriesNode, "TableName");
+                XmlUtilities.Move(seriesNode, "X/FieldName", seriesNode, "XFieldName");
+                XmlUtilities.Move(seriesNode, "Y/FieldName", seriesNode, "YFieldName");
+                XmlUtilities.Move(seriesNode, "X2/FieldName", seriesNode, "X2FieldName");
+                XmlUtilities.Move(seriesNode, "Y2/FieldName", seriesNode, "Y2FieldName");
 
-            bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
-            if (showRegression)
-                seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
+                bool showRegression = XmlUtilities.Value(seriesNode.ParentNode, "ShowRegressionLine") == "true";
+                if (showRegression)
+                    seriesNode.AppendChild(seriesNode.OwnerDocument.CreateElement("Regression"));
 
-            string seriesType = XmlUtilities.Value(seriesNode, "Type");
-            if (seriesType == "Line")
-                XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
+                string seriesType = XmlUtilities.Value(seriesNode, "Type");
+                if (seriesType == "Line")
+                    XmlUtilities.SetValue(seriesNode, "Type", "Scatter");
 
-            XmlUtilities.DeleteValue(seriesNode, "X");
-            XmlUtilities.DeleteValue(seriesNode, "Y");
+                XmlUtilities.DeleteValue(seriesNode, "X");
+                XmlUtilities.DeleteValue(seriesNode, "Y");
 
+            }
         }
-    }
 
         /// <summary>Upgrades to version 2.</summary>
         /// <remarks>
@@ -743,7 +742,7 @@ namespace Models.Core.ApsimFile
                 }
                 manager.Write(managerNode);
             }
-                
+
         }
 
         /// <summary>
@@ -819,6 +818,304 @@ namespace Models.Core.ApsimFile
                     string pattern = @"\(double\)zone.Get\((?<variable>\"".+\.Leaf\." + variableName + @"\"")\)";
                     ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, replacePattern, null);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 28. Change ICrop to IPlant
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion28(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, " ICrop", " IPlant");
+                ConverterUtilities.SearchReplaceManagerCode(manager, "(ICrop)", "(IPlant)");
+            }
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 29. Change AgPasture to have leaves, stems, stolons included as child model nodes
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion29(XmlNode node, string fileName)
+        {
+            foreach (XmlNode pasture in XmlUtilities.FindAllRecursivelyByType(node, "PastureSpecies"))
+            {
+                XmlNode leaves = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(leaves, "Name", "Leaves");
+                XmlNode genericTissue1 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                XmlNode genericTissue2 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                XmlNode genericTissue3 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                XmlNode genericTissue4 = leaves.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+
+                XmlNode stems = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(stems, "Name", "Stems");
+                genericTissue1 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                genericTissue2 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                genericTissue3 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                genericTissue4 = stems.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+
+                XmlNode stolons = pasture.AppendChild(node.OwnerDocument.CreateElement("PastureAboveGroundOrgan"));
+                XmlUtilities.SetValue(stolons, "Name", "Stolons");
+                genericTissue1 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue1, "Name", "LeafCohort1");
+                genericTissue2 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue2, "Name", "LeafCohort2");
+                genericTissue3 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue3, "Name", "LeafCohort3");
+                genericTissue4 = stolons.AppendChild(node.OwnerDocument.CreateElement("GenericTissue"));
+                XmlUtilities.SetValue(genericTissue4, "Name", "Dead");
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 30. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion30(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                string pattern = @"DisplayType *= *DisplayAttribute\.DisplayTypeEnum\.";
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, pattern, "Type=DisplayType.", null);
+            }
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 31. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion31(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flow", ".SoilWater.Flow", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.flux", ".SoilWater.Flux", null);
+                ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception", null);
+            }
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+            {
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.SetWater_frac\((?<variable>.+)\)", ".SoilWater.SW = ${variable}");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.outflow_lat", ".SoilWater.LateralOutflow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_no3", ".SoilWater.FlowNO3");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow_nh4", ".SoilWater.FlowNH4");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flow", ".SoilWater.Flow");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.flux", ".SoilWater.Flux");
+                ConverterUtilities.SearchReplaceReportCodeUsingRegEx(report, @"\.SoilWater\.residueinterception", ".SoilWater.ResidueInterception");
+            }
+        }
+
+        /// <summary>
+        /// Change the VaryByIndex in series from an integer index to a name of a factor.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion32(XmlNode node, string fileName)
+        {
+            foreach (XmlNode series in XmlUtilities.FindAllRecursivelyByType(node, "series"))
+            {
+                string[] parentTypesToMatch = new string[] { "Simulation", "Zone", "Experiment", "Folder", "Simulations" };
+                XmlNode parent = XmlUtilities.ParentOfType(series, parentTypesToMatch);
+                List<KeyValuePair<string, string>> factorNames;
+                do
+                {
+                    factorNames = GetFactorNames(parent);
+                    parent = parent.ParentNode;
+                }
+                while (factorNames.Count == 0 && parent != null);
+
+                var uniqueFactorNames = CalculateDistinctFactorNames(factorNames);
+                string value = XmlUtilities.Value(series, "FactorIndexToVaryColours");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
+                }
+
+                value = XmlUtilities.Value(series, "FactorIndexToVaryMarkers");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
+                }
+
+                value = XmlUtilities.Value(series, "FactorIndexToVaryLines");
+                if (value != string.Empty)
+                {
+                    int index = Convert.ToInt32(value);
+                    if (index > -1 && index < uniqueFactorNames.Count())
+                        XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
+                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create graph definitions for the specified model
+        /// </summary>
+        /// <param name="node"></param>
+        private static List<KeyValuePair<string, string>> GetFactorNames(XmlNode node)
+        {
+            string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
+            var factors = new List<KeyValuePair<string, string>>();
+            if (node.Name == "Simulation" || Array.IndexOf(zoneTypes, node.Name) != -1)
+                factors.AddRange(BuildListFromSimulation(node));
+            else if (node.Name == "Experiment")
+                factors.AddRange(BuildListFromExperiment(node));
+            else
+            {
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (child.Name == "Simulation" || child.Name == "Experiment" || child.Name == "Folder")
+                        factors.AddRange(GetFactorNames(child));
+                }
+            }
+            return factors;
+        }
+
+
+        /// <summary>
+        /// Build a list of simulation / zone pairs from the specified experiment
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private static List<KeyValuePair<string, string>> BuildListFromExperiment(XmlNode node)
+        {
+            string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
+
+            var factors = new List<KeyValuePair<string, string>>();
+
+            Experiment exp = XmlUtilities.Deserialise(node, typeof(Experiment)) as Experiment;
+            Apsim.ParentAllChildren(exp);
+            if (exp != null)
+            {
+                XmlNode baseSimulation = XmlUtilities.FindByType(node, "Simulation");
+                foreach (XmlNode zone in XmlUtilities.FindAllRecursivelyByTypes(baseSimulation, zoneTypes))
+                {
+                    foreach (List<FactorValue> combination in (exp).AllCombinations())
+                    {
+                        string zoneName = XmlUtilities.Value(zone, "Name");
+                        string simulationName = exp.Name;
+                        factors.Add(new KeyValuePair<string, string>("Simulation", null));
+                        factors.Add(new KeyValuePair<string, string>("Zone", zoneName));
+                        foreach (FactorValue value in combination)
+                        {
+                            simulationName += value.Name;
+                            string factorName = value.Factor.Name;
+                            if (value.Factor.Parent is Factor)
+                            {
+                                factorName = value.Factor.Parent.Name;
+                            }
+                            string factorValue = value.Name.Replace(factorName, "");
+                            factors.Add(new KeyValuePair<string, string>(factorName, factorValue));
+                        }
+                        factors.Add(new KeyValuePair<string, string>("Experiment", exp.Name));
+                    }
+                }
+            }
+            return factors;
+        }
+
+        /// <summary>
+        /// Build a list of simulation / zone pairs from the specified simulation
+        /// </summary>
+        /// <param name="node">This can be either a simulation or a zone</param>
+        /// <returns>A list of simulation / zone pairs</returns>
+        private static List<KeyValuePair<string, string>> BuildListFromSimulation(XmlNode node)
+        {
+            var simulationZonePairs = new List<KeyValuePair<string, string>>();
+            simulationZonePairs.Add(new KeyValuePair<string, string>("Simulation", XmlUtilities.Value(node, "Name")));
+            foreach (XmlNode zone in XmlUtilities.ChildNodes(node, "Zone"))
+                simulationZonePairs.Add(new KeyValuePair<string, string>("Zone", XmlUtilities.Value(zone, "Name")));
+            return simulationZonePairs;
+        }
+
+
+        /// <summary>
+        /// Go through all factors and determine which are distict.
+        /// </summary>
+        /// <param name="factors">A list of simulation zones.</param>
+        private static List<string> CalculateDistinctFactorNames(List<KeyValuePair<string, string>> factors)
+        {
+            var factorNamesToReturn = new List<string>();
+            var factorNames = factors.Select(f => f.Key).Distinct();
+            foreach (var factorName in factorNames)
+            {
+                List<string> factorValues = new List<string>();
+                var matchingFactors = factors.FindAll(f => f.Key == factorName);
+                var matchingFactorValues = matchingFactors.Select(f => f.Value);
+
+                if (matchingFactorValues.Distinct().Count() > 1)
+                {
+                    // All factor values are the same so remove the factor.
+                    factorNamesToReturn.Add(factorName);
+                }
+            }
+            return factorNamesToReturn;
+        }
+
+        /// <summary>
+        /// Change the stores object array in Supplement components to Stores
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion33(XmlNode node, string fileName)
+        {
+            // Find all the Supplement components
+            List<XmlNode> nodeList = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(node, "Supplement"));
+
+            foreach (XmlNode supplementNode in nodeList)
+            {
+                ConverterUtilities.RenameNode(supplementNode, "stores", "Stores");
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 34. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion34(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, @"Models.SurfaceOM", "Models.Surface");
+            }
+            foreach (XmlNode surfaceOrganicMatter in XmlUtilities.FindAllRecursivelyByType(node, "SurfaceOrganicMatter"))
+            {
+                XmlUtilities.DeleteValue(surfaceOrganicMatter, "ResidueTypes");
+                XmlUtilities.SetValue(surfaceOrganicMatter, "ResourceName", "SurfaceOrganicMatter");
+                XmlUtilities.Rename(surfaceOrganicMatter, "PoolName", "InitialResidueName");
+                XmlUtilities.Rename(surfaceOrganicMatter, "type", "InitialResidueType");
+                XmlUtilities.Rename(surfaceOrganicMatter, "mass", "InitialResidueMass");
+                XmlUtilities.Rename(surfaceOrganicMatter, "standing_fraction", "InitialStandingFraction");
+                XmlUtilities.Rename(surfaceOrganicMatter, "cnr", "InitialCNR");
+                XmlUtilities.Rename(surfaceOrganicMatter, "cpr", "InitialCPR");
+                if (XmlUtilities.Value(surfaceOrganicMatter, "InitialCPR") == string.Empty)
+                    XmlUtilities.DeleteValue(surfaceOrganicMatter, "InitialCPR");
             }
         }
     }

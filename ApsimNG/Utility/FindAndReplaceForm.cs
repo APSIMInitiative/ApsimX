@@ -77,8 +77,8 @@ namespace Utility
             args.RetVal = true;
         }
 
-        MonoTextEditor _editor;
-        MonoTextEditor Editor
+        TextEditor _editor;
+        TextEditor Editor
         {
             get { return _editor; }
             set
@@ -107,7 +107,7 @@ namespace Utility
             window1.Title = text;
         }
 
-        public void ShowFor(MonoTextEditor editor, bool replaceMode)
+        public void ShowFor(TextEditor editor, bool replaceMode)
         {
             Editor = editor;
             this.selectionOnly = false;
@@ -136,6 +136,7 @@ namespace Utility
 
             window1.Parent = editor.Toplevel;
             UpdateTitleBar();
+            window1.WindowPosition = WindowPosition.CenterOnParent;
             window1.Show();
             txtLookFor.GrabFocus();
         }

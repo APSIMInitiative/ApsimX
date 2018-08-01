@@ -3,9 +3,12 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+
 namespace UserInterface.Views
 {
+    using System;
     using Gtk;
+    using EventArguments;
 
     interface IReportView
     {
@@ -17,6 +20,11 @@ namespace UserInterface.Views
 
         /// <summary>Provides access to the DataGrid.</summary>
         IDataStoreView DataStoreView { get; }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get; set; }
     }
 
     public class ReportView : ViewBase, IReportView
@@ -71,5 +79,15 @@ namespace UserInterface.Views
 
         /// <summary>Provides access to the DataGrid.</summary>
         public IDataStoreView DataStoreView { get { return dataStoreView1; } }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        public int TabIndex
+        {
+            get { return notebook1.CurrentPage; }
+            set { notebook1.CurrentPage = value; }
+        }
+
     }
 }

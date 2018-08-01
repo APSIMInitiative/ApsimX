@@ -25,7 +25,7 @@ namespace Models.AgPasture
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Sward : Model, ICrop
+    public class Sward : Model
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -1230,8 +1230,8 @@ namespace Models.AgPasture
         /// <summary>Performs the calculations for actual growth.</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/>instance containing the event data</param>
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (swardIsAlive && isSwardControlled)
             {

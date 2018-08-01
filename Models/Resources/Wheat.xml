@@ -50,29 +50,6 @@ FLN = MinLeafNumber + VernalLeaves + PhotoLeaves
 Where MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.]]>
       </MemoText>
     </Memo>
-    <DivideFunction>
-      <Name>MeanTemp</Name>
-      <AddFunction>
-        <Name>TempSum</Name>
-        <VariableReference>
-          <Name>MaxT</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[IWeather].MaxT</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MinT</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[IWeather].MinT</VariableName>
-        </VariableReference>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </AddFunction>
-      <Constant>
-        <Name>Two</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>2</FixedValue>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </DivideFunction>
     <AirTemperatureFunction>
       <Name>ThermalTime</Name>
       <XYPairs>
@@ -600,6 +577,29 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <SetEvent>Maturity</SetEvent>
       <ReSetEvent>never</ReSetEvent>
     </OnEventFunction>
+    <LinearInterpolationFunction>
+      <Name>RewindDueToBiomassRemoved</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <X>
+          <double>0</double>
+          <double>0.1</double>
+          <double>0.4</double>
+          <double>0.5</double>
+          <double>1.0</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>0.08</double>
+          <double>0.4</double>
+          <double>0.5</double>
+          <double>1.0</double>
+        </Y>
+      </XYPairs>
+      <XProperty>[Phenology].FractionBiomassRemoved</XProperty>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </LinearInterpolationFunction>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <DaysAfterSowing>0</DaysAfterSowing>
   </Phenology>
@@ -1795,7 +1795,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Phenology].MeanTemp.Value()</XProperty>
+          <XProperty>[IWeather].MeanT</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NitrogenStressEffect</Name>
@@ -4332,6 +4332,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
         <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
         <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+        <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>        
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>

@@ -31,6 +31,12 @@ namespace UserInterface.Interfaces
         event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
+        /// Invoked when the columns need to be reset to their default colours.
+        /// If this event handler is null, the default colours are assumed to be white.
+        /// </summary>
+        event EventHandler<EventArgs> FormatColumns;
+
+        /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
         System.Data.DataTable DataSource { get; set; }
@@ -100,10 +106,11 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add an option (on context menu) on the series grid.
         /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="itemName">The name of the item</param>
+        /// <param name="menuItemText">The text of the menu item - may include spaces or other "special" characters (if empty, the itemName is used)</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
         /// <param name="active">Indicates whether the option is current selected</param>
-        void AddContextOption(string menuItemText, System.EventHandler onClick, bool active);
+        void AddContextOption(string itemName, string menuItemText, System.EventHandler onClick, bool active);
 
         /// <summary>
         /// Clear all presenter defined context items.
@@ -123,11 +130,6 @@ namespace UserInterface.Interfaces
         bool RowIsEmpty(int rowIndex);
 
         /// <summary>
-        /// Resizes controls on the GridView.
-        /// </summary>
-        void ResizeControls();
-
-        /// <summary>
         /// End the user editing the cell.
         /// </summary>
         void EndEdit();
@@ -138,5 +140,18 @@ namespace UserInterface.Interfaces
 
         /// <summary>Get screenshot of grid.</summary>
         Image GetScreenshot();
+
+        /// <summary>
+        /// Indicates that a row should be treated as a separator line
+        /// </summary>
+        /// <param name="row">the row number</param>
+        /// <param name="isSep">added as a separator if true; removed as a separator if false</param>
+        void SetRowAsSeparator(int row, bool isSep = true);
+
+        /// <summary>
+        /// Inserts text into the current cell at the cursor position.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        void InsertText(string text);
     }
 }

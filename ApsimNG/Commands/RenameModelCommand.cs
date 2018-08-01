@@ -43,14 +43,14 @@ namespace UserInterface.Commands
             // Set the new name.
             this.modelToRename.Name = newName;
             Apsim.EnsureNameIsUnique(this.modelToRename);
-            explorerView.Rename(originalPath, this.modelToRename.Name);
+            explorerView.Tree.Rename(originalPath, this.modelToRename.Name);
         }
 
         /// <summary>Undoes the command.</summary>
         /// <param name="CommandHistory">The command history.</param>
         public void Undo(CommandHistory CommandHistory)
         {
-            explorerView.Rename(Apsim.FullPath(modelToRename), originalName);
+            explorerView.Tree.Rename(Apsim.FullPath(modelToRename), originalName);
             modelToRename.Name = originalName;
         }
     }

@@ -8,19 +8,19 @@ using CMPServices;
 namespace Models.GrazPlan
 {
     /// <summary>
-    /// TParameterDefinition                                                         
+    /// ParameterDefinition                                                         
     /// Class used for the definition of parameter names and types, and for storing  
     /// whether the value(s) of the parameter is defined. A definition may be either 
     /// a single parameter, or it may be an array of parameter definitions. Array    
     /// definitions are indexed by string references                                 
     /// </summary>
     [Serializable]
-    public class TParameterDefinition
+    public class ParameterDefinition
     {
         private string FName;
         private string FNamePart;
         private TTypedValue.TBaseType FType;
-        private TParameterDefinition[] FItems;
+        private ParameterDefinition[] FItems;
         private int FCount;
         private int FParamCount;
         private bool FDefined;
@@ -44,9 +44,9 @@ namespace Models.GrazPlan
         /// <param name="sDefnStrings"></param>
         /// <param name="aType"></param>
         /// <param name="iOffset"></param>
-        public TParameterDefinition(string[] sDefnStrings, TTypedValue.TBaseType aType, int iOffset = 0)
+        public ParameterDefinition(string[] sDefnStrings, TTypedValue.TBaseType aType, int iOffset = 0)
         {
-            FItems = new TParameterDefinition[0];
+            FItems = new ParameterDefinition[0];
             string[] sSubDefnStrings = new string[0];
             string sIndexStr;
             int iPosn;
@@ -79,7 +79,7 @@ namespace Models.GrazPlan
                     {
                         sSubDefnStrings[iOffset + 1] = Convert.ToString(Idx);
                         Array.Resize(ref FItems, FItems.Length + 1);
-                        FItems[FItems.Length - 1] = new TParameterDefinition(sSubDefnStrings, aType, iOffset + 1);
+                        FItems[FItems.Length - 1] = new ParameterDefinition(sSubDefnStrings, aType, iOffset + 1);
                     }
                 }
                 else                                                                       // Single index or semi-colon-separated  }
@@ -99,7 +99,7 @@ namespace Models.GrazPlan
                         }
 
                         Array.Resize(ref FItems, FItems.Length + 1);
-                        FItems[FItems.Length - 1] = new TParameterDefinition(sSubDefnStrings, aType, iOffset + 1);
+                        FItems[FItems.Length - 1] = new ParameterDefinition(sSubDefnStrings, aType, iOffset + 1);
                     }
                 }
             }
@@ -112,12 +112,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Initalises TParameterDefinition from another instance
+        /// Initalises ParameterDefinition from another instance
         /// </summary>
         /// <param name="Source"></param>
-        public TParameterDefinition(TParameterDefinition Source)
+        public ParameterDefinition(ParameterDefinition Source)
         {
-            FItems = new TParameterDefinition[0];
+            FItems = new ParameterDefinition[0];
             int Idx;
 
             FName = Source.sFullName;
@@ -129,7 +129,7 @@ namespace Models.GrazPlan
             {
                 Array.Resize(ref FItems, FCount);
                 for (Idx = 0; Idx <= FCount - 1; Idx++)
-                    FItems[Idx] = new TParameterDefinition(Source.item(Idx));
+                    FItems[Idx] = new ParameterDefinition(Source.item(Idx));
             }
             else
                 FItems = null;
@@ -189,7 +189,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TParameterDefinition item(int Idx)
+        public ParameterDefinition item(int Idx)
         {
             return FItems[Idx];
         }
@@ -205,11 +205,11 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TParameterDefinition getParam(int Idx)
+        public ParameterDefinition getParam(int Idx)
         {
             int iDefn;
             int iOffset;
-            TParameterDefinition result;
+            ParameterDefinition result;
 
             if (bIsScalar() && (Idx == 0))
                 result = this;
@@ -234,11 +234,11 @@ namespace Models.GrazPlan
         /// <param name="sParam"></param>
         /// <param name="iOffset"></param>
         /// <returns></returns>
-        public TParameterDefinition findParam(string[] sParam, int iOffset = 0)
+        public ParameterDefinition FindParam(string[] sParam, int iOffset = 0)
         {
             int Idx;
 
-            TParameterDefinition result;
+            ParameterDefinition result;
             if (sPartName != sParam[iOffset])
                 result = null;
             else if (iOffset == sParam.Length - 1)
@@ -249,7 +249,7 @@ namespace Models.GrazPlan
                 Idx = 0;
                 while ((Idx < iCount) && (result == null))
                 {
-                    result = item(Idx).findParam(sParam, iOffset + 1);
+                    result = item(Idx).FindParam(sParam, iOffset + 1);
                     Idx++;
                 }
             }
@@ -260,18 +260,18 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sParam"></param>
         /// <returns></returns>
-        public bool bParamDefined(string[] sParam)
+        public bool ParamIsDefined(string[] sParam)
         {
-            TParameterDefinition aParam;
+            ParameterDefinition aParam;
 
-            aParam = findParam(sParam, 0);
+            aParam = FindParam(sParam, 0);
             return ((aParam != null) && (aParam.bIsScalar()));
         }
         /// <summary>
         /// Returns true if a value is defined
         /// </summary>
         /// <returns></returns>
-        public bool bValueDefined()
+        public bool ValueIsDefined()
         {
             int Idx;
             bool result;
@@ -282,7 +282,7 @@ namespace Models.GrazPlan
             {
                 result = true;
                 for (Idx = 0; Idx <= iCount - 1; Idx++)
-                    result = (result && item(Idx).bValueDefined());
+                    result = (result && item(Idx).ValueIsDefined());
             }
             return result;
         }
@@ -299,7 +299,7 @@ namespace Models.GrazPlan
         /// Set defined for the source
         /// </summary>
         /// <param name="Source"></param>
-        public void setDefined(TParameterDefinition Source)
+        public void setDefined(ParameterDefinition Source)
         {
             int Idx;
 
@@ -317,7 +317,7 @@ namespace Models.GrazPlan
     /// Encoding translation
     /// </summary>
     [Serializable]
-    public struct TTranslation
+    public struct Translation
     {
         /// <summary>
         /// Language
@@ -334,7 +334,7 @@ namespace Models.GrazPlan
     /// Parameter set class
     /// </summary>
     [Serializable]
-    public class TParameterSet
+    public class ParameterSet
     {
         /// <summary>
         /// Real-single type
@@ -357,11 +357,11 @@ namespace Models.GrazPlan
         private string FName;
         private string FEnglishName;
         private string[] FLocales = new string[0];
-        private TTranslation[] FTranslations = new TTranslation[0];
-        private TParameterSet FParent;
-        private TParameterSet[] FChildren;
+        private Translation[] FTranslations = new Translation[0];
+        private ParameterSet FParent;
+        private ParameterSet[] FChildren;
 
-        private TParameterDefinition[] FDefinitions = new TParameterDefinition[0];
+        private ParameterDefinition[] FDefinitions = new ParameterDefinition[0];
 
         private string FCurrLocale;
         private string FFileSource;
@@ -382,7 +382,7 @@ namespace Models.GrazPlan
         /// <param name="sValue"></param>
         private void setCurrLocale(string sValue)
         {
-            TParameterSet Ancestor;
+            ParameterSet Ancestor;
             int Idx;
 
             Ancestor = this;
@@ -391,8 +391,8 @@ namespace Models.GrazPlan
                 while (Ancestor.Parent != null)
                     Ancestor = Ancestor.Parent;
 
-                for (Idx = 0; Idx <= Ancestor.iNodeCount() - 1; Idx++)
-                    Ancestor.getNode(Idx).FCurrLocale = sValue;
+                for (Idx = 0; Idx <= Ancestor.NodeCount() - 1; Idx++)
+                    Ancestor.GetNode(Idx).FCurrLocale = sValue;
             }
         }
 
@@ -409,7 +409,7 @@ namespace Models.GrazPlan
             Tokenise(sTagDefinition, ref sDefn, "-");
             Kdx = FDefinitions.Length;
             Array.Resize(ref FDefinitions, Kdx + 1);
-            FDefinitions[Kdx] = new TParameterDefinition(sDefn, aType);
+            FDefinitions[Kdx] = new ParameterDefinition(sDefn, aType);
         }
 
         /// <summary>
@@ -450,26 +450,26 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="srcSet"></param>
         /// <param name="Defn"></param>
-        protected void copyDefinition(TParameterSet srcSet, TParameterDefinition Defn)
+        protected void copyDefinition(ParameterSet srcSet, ParameterDefinition Defn)
         {
             int Idx;
 
-            if ((Defn.bIsScalar()) && (srcSet != null) && (srcSet.bIsDefined(Defn.sFullName)))
+            if ((Defn.bIsScalar()) && (srcSet != null) && (srcSet.IsDefined(Defn.sFullName)))
             {
                 switch (Defn.paramType)
                 {
-                    case ptyReal: setParam(Defn.sFullName, srcSet.fParam(Defn.sFullName));
+                    case ptyReal: SetParam(Defn.sFullName, srcSet.fParam(Defn.sFullName));
                         break;
-                    case ptyInt: setParam(Defn.sFullName, srcSet.iParam(Defn.sFullName));
+                    case ptyInt: SetParam(Defn.sFullName, srcSet.iParam(Defn.sFullName));
                         break;
-                    case ptyBool: setParam(Defn.sFullName, srcSet.bParam(Defn.sFullName));
+                    case ptyBool: SetParam(Defn.sFullName, srcSet.bParam(Defn.sFullName));
                         break;
-                    case ptyText: setParam(Defn.sFullName, srcSet.sParam(Defn.sFullName));
+                    case ptyText: SetParam(Defn.sFullName, srcSet.sParam(Defn.sFullName));
                         break;
                 }
             }
             else if (Defn.bIsScalar())
-                setUndefined(Defn.sFullName);
+                SetUndefined(Defn.sFullName);
             else
                 for (Idx = 0; Idx <= Defn.iCount - 1; Idx++)
                     copyDefinition(srcSet, Defn.item(Idx));
@@ -480,7 +480,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="srcSet"></param>
         /// <param name="bCopyData"></param>
-        virtual protected void copyParams(TParameterSet srcSet, bool bCopyData)
+        virtual protected void copyParams(ParameterSet srcSet, bool bCopyData)
         {
             int Kdx;
 
@@ -505,9 +505,9 @@ namespace Models.GrazPlan
 
             if (bCopyData)
             {
-                for (Kdx = 0; Kdx <= (iDefinitionCount() - 1); Kdx++)
+                for (Kdx = 0; Kdx <= (DefinitionCount() - 1); Kdx++)
                 {
-                    copyDefinition(srcSet, getDefinition(Kdx));
+                    copyDefinition(srcSet, GetDefinition(Kdx));
                 }
                 deriveParams();
             }
@@ -517,9 +517,9 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <returns></returns>
-        virtual protected TParameterSet makeChild()
+        virtual protected ParameterSet makeChild()
         {
-            return new TParameterSet(this);
+            return new ParameterSet(this);
         }
         /// <summary>
         /// This is over-ridden in descendant classes and then called within the         
@@ -602,21 +602,21 @@ namespace Models.GrazPlan
         /// <summary>
         /// Constructor for the root set
         /// </summary>
-        public TParameterSet()
+        public ParameterSet()
         {
-            //new TParameterSet(null, null);
+            //new ParameterSet(null, null);
             FParent = null;
         }
         // Constructor for creating a child set
-        /*public TParameterSet(TParameterSet aParent)
+        /*public ParameterSet(ParameterSet aParent)
         {
-            new TParameterSet(aParent, aParent);
+            new ParameterSet(aParent, aParent);
         }*/
         /// <summary>
         /// Copy constructor (with parent)
         /// </summary>
         /// <param name="aParent"></param>
-        public TParameterSet(TParameterSet aParent)
+        public ParameterSet(ParameterSet aParent)
         {
             FParent = aParent;
         }
@@ -626,7 +626,7 @@ namespace Models.GrazPlan
         /// configure the definitions.
         /// </summary>
         /// <param name="srcSet"></param>
-        public void ConstructCopy(TParameterSet srcSet)
+        public void ConstructCopy(ParameterSet srcSet)
         {
             defineEntries();
             copyParams(srcSet, true);
@@ -647,23 +647,23 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <param name="srcSet"></param>
-        public void CopyAll(TParameterSet srcSet)
+        public void CopyAll(ParameterSet srcSet)
         {
             int Idx;
 
             copyParams(srcSet, true);
 
-            while (iChildCount() > srcSet.iChildCount())
+            while (ChildCount() > srcSet.ChildCount())
             {
-                deleteChild(iChildCount() - 1);
+                DeleteChild(ChildCount() - 1);
             }
-            while (iChildCount() < srcSet.iChildCount())
+            while (ChildCount() < srcSet.ChildCount())
             {
-                addChild();
+                AddChild();
             }
-            for (Idx = 0; Idx <= iChildCount() - 1; Idx++)
+            for (Idx = 0; Idx <= ChildCount() - 1; Idx++)
             {
-                getChild(Idx).CopyAll(srcSet.getChild(Idx));
+                GetChild(Idx).CopyAll(srcSet.GetChild(Idx));
             }
         }
         /// <summary>
@@ -735,7 +735,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TTranslation getTranslation(int Idx)
+        public Translation getTranslation(int Idx)
         {
             return FTranslations[Idx];
         }
@@ -778,7 +778,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <param name="sLocale"></param>
-        public void addLocale(string sLocale)
+        public void AddLocale(string sLocale)
         {
             int Idx = FLocales.Length;
             Array.Resize(ref FLocales, Idx + 1);
@@ -788,7 +788,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <returns></returns>
-        public string getLocaleText()
+        public string GetLocaleText()
         {
             string result = "";
             for (int Idx = 0; Idx <= iLocaleCount() - 1; Idx++)
@@ -808,7 +808,7 @@ namespace Models.GrazPlan
         /// TODO: Test this
         /// </summary>
         /// <param name="sText"></param>
-        public void setLocaleText(string sText)
+        public void SetLocaleText(string sText)
         {
             int iPosn;
 
@@ -820,12 +820,12 @@ namespace Models.GrazPlan
                 iPosn = sText.IndexOf(";");
                 if (iPosn < 0)
                 {
-                    addLocale(sText);
+                    AddLocale(sText);
                     sText = String.Empty;
                 }
                 else
                 {
-                    addLocale((sText.Substring(0, iPosn).Trim()));
+                    AddLocale((sText.Substring(0, iPosn).Trim()));
                     sText = sText.Remove(0, iPosn + 1);
                 }
             }
@@ -868,7 +868,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Parent parameter set
         /// </summary>
-        public TParameterSet Parent
+        public ParameterSet Parent
         {
             get { return FParent; }
         }
@@ -876,7 +876,7 @@ namespace Models.GrazPlan
         /// Count of children
         /// </summary>
         /// <returns></returns>
-        public int iChildCount()
+        public int ChildCount()
         {
             if (FChildren != null)
                 return FChildren.Length;
@@ -888,7 +888,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TParameterSet getChild(int Idx)
+        public ParameterSet GetChild(int Idx)
         {
             return FChildren[Idx];
         }
@@ -897,17 +897,17 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sChild"></param>
         /// <returns></returns>
-        public TParameterSet getChild(string sChild)
+        public ParameterSet GetChild(string sChild)
         {
             int Idx;
 
             sChild = sChild.ToLower().Trim();
             Idx = 0;
-            while ((Idx < iChildCount()) && (sChild != getChild(Idx).sName.ToLower()))
+            while ((Idx < ChildCount()) && (sChild != GetChild(Idx).sName.ToLower()))
                 Idx++;
 
-            if (Idx < iChildCount())
-                return getChild(Idx);
+            if (Idx < ChildCount())
+                return GetChild(Idx);
             else
                 return null;
         }
@@ -915,11 +915,11 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <returns></returns>
-        public TParameterSet addChild()
+        public ParameterSet AddChild()
         {
-            TParameterSet result = makeChild();
+            ParameterSet result = makeChild();
             if (FChildren == null)
-                FChildren = new TParameterSet[0];
+                FChildren = new ParameterSet[0];
             Array.Resize(ref FChildren, FChildren.Length + 1);
             FChildren[FChildren.Length - 1] = result;
             return FChildren[FChildren.Length - 1];
@@ -928,11 +928,11 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <param name="Idx"></param>
-        public void deleteChild(int Idx)
+        public void DeleteChild(int Idx)
         {
             int Jdx;
 
-            for (Jdx = Idx + 1; Jdx <= iChildCount() - 1; Jdx++)
+            for (Jdx = Idx + 1; Jdx <= ChildCount() - 1; Jdx++)
             {
                 FChildren[Jdx - 1] = FChildren[Jdx];
             }
@@ -942,7 +942,7 @@ namespace Models.GrazPlan
         /// Returns TRUE i.f.f. this is the root (ultimate parent) node                  
         /// </summary>
         /// <returns></returns>
-        public bool bRootNode()
+        public bool NodeIsRoot()
         {
             return (Parent == null);
         }
@@ -950,7 +950,7 @@ namespace Models.GrazPlan
         /// Returns TRUE i.f.f. this node has no child nodes                             
         /// </summary>
         /// <returns></returns>
-        public bool bLeafNode()
+        public bool NodeIsLeaf()
         {
             return (Parent != null) && ((FChildren == null) || (FChildren.Length == 0));
         }
@@ -958,13 +958,13 @@ namespace Models.GrazPlan
         /// Total number of nodes in the tree of parameter sets, including the current node
         /// </summary>
         /// <returns></returns>
-        public int iNodeCount()
+        public int NodeCount()
         {
             int Idx;
 
             int result = 1;                                                                 // Include Self in the count of nodes    
-            for (Idx = 0; Idx <= iChildCount() - 1; Idx++)
-                result = result + getChild(Idx).iNodeCount();
+            for (Idx = 0; Idx <= ChildCount() - 1; Idx++)
+                result = result + GetChild(Idx).NodeCount();
             return result;
         }
 
@@ -974,10 +974,10 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="iNode"></param>
         /// <returns></returns>
-        public TParameterSet getNode(int iNode)
+        public ParameterSet GetNode(int iNode)
         {
             int iOffset, Idx;
-            TParameterSet result;
+            ParameterSet result;
 
             if (iNode == 0)
                 result = this;
@@ -986,12 +986,12 @@ namespace Models.GrazPlan
                 iOffset = 1;
                 result = null;
                 Idx = 0;
-                while ((Idx < iChildCount()) && (result == null))
+                while ((Idx < ChildCount()) && (result == null))
                 {
-                    result = getChild(Idx).getNode(iNode - iOffset);
+                    result = GetChild(Idx).GetNode(iNode - iOffset);
                     if (result == null)
                     {
-                        iOffset = iOffset + getChild(Idx).iNodeCount();
+                        iOffset = iOffset + GetChild(Idx).NodeCount();
                         Idx++;
                     }
                 }
@@ -1003,21 +1003,21 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sNode"></param>
         /// <returns></returns>
-        public TParameterSet getNode(string sNode)
+        public ParameterSet GetNode(string sNode)
         {
             int Idx;
-            TParameterSet result;
+            ParameterSet result;
 
             sNode = sNode.ToLower().Trim();
             if (sNode == this.sName.ToLower())
                 result = this;
             else
             {
-                result = getChild(sNode);
+                result = GetChild(sNode);
                 Idx = 0;
-                while ((Idx < iChildCount()) && (result == null))
+                while ((Idx < ChildCount()) && (result == null))
                 {
-                    result = getChild(Idx).getNode(sNode);
+                    result = GetChild(Idx).GetNode(sNode);
                     Idx++;
                 }
             }
@@ -1028,15 +1028,15 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="bUseLocale"></param>
         /// <returns></returns>
-        public int iLeafCount(bool bUseLocale = true)
+        public int LeafCount(bool bUseLocale = true)
         {
             int Idx;
 
             int result = 0;
-            if (!bLeafNode())
-                for (Idx = 0; Idx <= iChildCount() - 1; Idx++)
+            if (!NodeIsLeaf())
+                for (Idx = 0; Idx <= ChildCount() - 1; Idx++)
                 {
-                    result = result + getChild(Idx).iLeafCount(bUseLocale);
+                    result = result + GetChild(Idx).LeafCount(bUseLocale);
                 }
             else if (!bUseLocale || bInLocale(sCurrLocale))
                 result = 1;
@@ -1050,20 +1050,20 @@ namespace Models.GrazPlan
         /// <param name="iLeaf"></param>
         /// <param name="bUseLocale"></param>
         /// <returns></returns>
-        public TParameterSet getLeaf(int iLeaf, bool bUseLocale = true)
+        public ParameterSet GetLeaf(int iLeaf, bool bUseLocale = true)
         {
-            TParameterSet Node;
+            ParameterSet Node;
             int Idx, Jdx;
-            TParameterSet result;
+            ParameterSet result;
 
             result = null;
-            int iCount = iNodeCount();
+            int iCount = NodeCount();
             Idx = 0;
             Jdx = 0;
             while ((Idx < iCount) && (result == null))
             {
-                Node = getNode(Idx);
-                if (Node.bLeafNode() && (!bUseLocale || Node.bInLocale(sCurrLocale)))
+                Node = GetNode(Idx);
+                if (Node.NodeIsLeaf() && (!bUseLocale || Node.bInLocale(sCurrLocale)))
                 {
                     if (Jdx == iLeaf)
                         result = Node;
@@ -1079,7 +1079,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <returns></returns>
-        public int iDefinitionCount()
+        public int DefinitionCount()
         {
             if (FDefinitions != null)
                 return FDefinitions.Length;
@@ -1092,7 +1092,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TParameterDefinition getDefinition(int Idx)
+        public ParameterDefinition GetDefinition(int Idx)
         {
             return FDefinitions[Idx];
         }
@@ -1101,9 +1101,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTag"></param>
         /// <returns></returns>
-        public TParameterDefinition getDefinition(string sTag)
+        public ParameterDefinition GetDefinition(string sTag)
         {
-            TParameterDefinition result = null;
+            ParameterDefinition result = null;
             string[] sTagList = new string[0];
             bool bPartName;
 
@@ -1115,7 +1115,7 @@ namespace Models.GrazPlan
                 if (bPartName)
                     sTag = sTag.Remove(sTag.Length - 1, 1);
                 Tokenise(sTag, ref sTagList, "-");
-                result = getDefinition(sTagList);
+                result = GetDefinition(sTagList);
                 if ((result != null) && (bPartName == result.bIsScalar()))
                     result = null;
             }
@@ -1126,17 +1126,17 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTags"></param>
         /// <returns></returns>
-        public TParameterDefinition getDefinition(string[] sTags)
+        public ParameterDefinition GetDefinition(string[] sTags)
         {
             int Idx;
             int defCount;
 
-            TParameterDefinition result = null;
+            ParameterDefinition result = null;
             Idx = 0;
-            defCount = iDefinitionCount();
+            defCount = DefinitionCount();
             while ((Idx < defCount) && (result == null))
             {
-                result = FDefinitions[Idx].findParam(sTags);
+                result = FDefinitions[Idx].FindParam(sTags);
                 Idx++;
             }
 
@@ -1147,15 +1147,15 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <returns></returns>
-        public int iParamCount()
+        public int ParamCount()
         {
             int Idx;
             int defCount;
 
             int result = 0;
-            defCount = iDefinitionCount();
+            defCount = DefinitionCount();
             for (Idx = 0; Idx <= defCount - 1; Idx++)
-                result = result + getDefinition(Idx).iParamCount;
+                result = result + GetDefinition(Idx).iParamCount;
 
             return result;
         }
@@ -1165,19 +1165,19 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
-        public TParameterDefinition getParam(int Idx)
+        public ParameterDefinition getParam(int Idx)
         {
             int iDefn = 0;
             int iOffset = 0;
-            int defCount = iDefinitionCount();
-            while ((iDefn < defCount) && (iOffset + getDefinition(iDefn).iParamCount <= Idx))
+            int defCount = DefinitionCount();
+            while ((iDefn < defCount) && (iOffset + GetDefinition(iDefn).iParamCount <= Idx))
             {
-                iOffset = iOffset + getDefinition(iDefn).iParamCount;
+                iOffset = iOffset + GetDefinition(iDefn).iParamCount;
                 iDefn++;
             }
 
             if (iDefn < defCount)
-                return getDefinition(iDefn).getParam(Idx - iOffset);
+                return GetDefinition(iDefn).getParam(Idx - iOffset);
             else
                 return null;
         }
@@ -1189,14 +1189,14 @@ namespace Models.GrazPlan
         public double fParam(string sTag)
         {
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
             double result = 0;
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !(Definition.bIsScalar()))
                 throw new Exception("Invalid parameter name " + sTag);
-            else if (!Definition.bValueDefined())
+            else if (!Definition.ValueIsDefined())
                 throw new Exception("Parameter value undefined: " + sTag);
             else
                 result = getRealParam(sTagList);
@@ -1213,14 +1213,14 @@ namespace Models.GrazPlan
         {
 
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
             int result = 0;
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !(Definition.bIsScalar()))
                 throw new Exception("Invalid parameter name " + sTag);
-            else if (!(Definition.bValueDefined()))
+            else if (!(Definition.ValueIsDefined()))
                 throw new Exception("Parameter value undefined: " + sTag);
             else
                 result = getIntParam(sTagList);
@@ -1236,14 +1236,14 @@ namespace Models.GrazPlan
         public bool bParam(string sTag)
         {
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
             bool result = false;
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !(Definition.bIsScalar()))
                 throw new Exception("Invalid parameter name " + sTag);
-            else if (!(Definition.bValueDefined()))
+            else if (!(Definition.ValueIsDefined()))
                 throw new Exception("Parameter value undefined: " + sTag);
             else
                 result = getBoolParam(sTagList);
@@ -1259,14 +1259,14 @@ namespace Models.GrazPlan
         public string sParam(string sTag)
         {
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
             string result = "";
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !(Definition.bIsScalar()))
                 throw new Exception("Invalid parameter name " + sTag);
-            else if (!(Definition.bValueDefined()))
+            else if (!(Definition.ValueIsDefined()))
                 throw new Exception("Parameter value undefined: " + sTag);
             else
             {
@@ -1293,13 +1293,13 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTag"></param>
         /// <param name="fValue"></param>
-        public void setParam(string sTag, double fValue)
+        public void SetParam(string sTag, double fValue)
         {
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !(Definition.bIsScalar()))
                 throw new Exception("Invalid parameter name " + sTag);
             else
@@ -1313,13 +1313,13 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTag"></param>
         /// <param name="iValue"></param>
-        public void setParam(string sTag, int iValue)
+        public void SetParam(string sTag, int iValue)
         {
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !(Definition.bIsScalar()))
                 throw new Exception("Invalid parameter name " + sTag);
             else
@@ -1334,13 +1334,13 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTag"></param>
         /// <param name="bValue"></param>
-        public void setParam(string sTag, bool bValue)
+        public void SetParam(string sTag, bool bValue)
         {
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !Definition.bIsScalar())
                 throw new Exception("Invalid parameter name " + sTag);
             else
@@ -1355,15 +1355,15 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTag"></param>
         /// <param name="sValue"></param>
-        public void setParam(string sTag, string sValue)
+        public void SetParam(string sTag, string sValue)
         {
             string[] sTagList = new string[0];
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
             double fValue;
             int iValue;
 
             Tokenise(sTag, ref sTagList, "-");
-            Definition = getDefinition(sTagList);
+            Definition = GetDefinition(sTagList);
             if ((Definition == null) || !Definition.bIsScalar())
                 throw new Exception("Invalid parameter name " + sTag);
             else
@@ -1418,11 +1418,11 @@ namespace Models.GrazPlan
         /// Un-defines a parameter value 
         /// </summary>
         /// <param name="sTag"></param>
-        public void setUndefined(string sTag)
+        public void SetUndefined(string sTag)
         {
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
 
-            Definition = getDefinition(sTag);
+            Definition = GetDefinition(sTag);
             if ((Definition == null) || !(Definition.bIsScalar()))
                 throw new Exception("Invalid parameter name " + sTag);
             else
@@ -1434,27 +1434,27 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTag"></param>
         /// <returns>Returns TRUE i.f.f. the nominated parameter has a defined value</returns>
-        public bool bIsDefined(string sTag)
+        public bool IsDefined(string sTag)
         {
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
 
-            Definition = getDefinition(sTag);
-            return ((Definition != null) && (Definition.bValueDefined()));
+            Definition = GetDefinition(sTag);
+            return ((Definition != null) && (Definition.ValueIsDefined()));
         }
         /// <summary>
         /// Returns TRUE i.f.f. all parameters in the set have defined values
         /// </summary>
         /// <returns></returns>
-        public bool bIsComplete()
+        public bool IsComplete()
         {
             int Idx;
             int defCount;
 
             bool result = true;
-            defCount = iDefinitionCount();
+            defCount = DefinitionCount();
             for (Idx = 0; Idx <= defCount - 1; Idx++)
             {
-                result = (result && getDefinition(Idx).bValueDefined());
+                result = (result && GetDefinition(Idx).ValueIsDefined());
             }
 
             return result;
@@ -1463,11 +1463,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// Convert the name
         /// </summary>
-        public void localiseNames()
+        public void LocaliseNames()
         {
-            TParameterSet Ancestor, child;
+            ParameterSet Ancestor, child;
             int Idx, itrans;
-            TTranslation translation;
+            Translation translation;
 
             Ancestor = this;
             if (Ancestor != null)
@@ -1477,14 +1477,14 @@ namespace Models.GrazPlan
                     Ancestor = Ancestor.Parent;
                 }
 
-                for (Idx = 0; Idx <= Ancestor.iNodeCount() - 1; Idx++)
+                for (Idx = 0; Idx <= Ancestor.NodeCount() - 1; Idx++)
                 {
-                    child = Ancestor.getNode(Idx);
+                    child = Ancestor.GetNode(Idx);
                     child.sName = child.sEnglishName; // Use English name if target language not found
                     for (itrans = 0; itrans <= child.iTranslationCount() - 1; itrans++)
                     {
                         translation = child.getTranslation(itrans);
-                        if (String.Compare(translation.sLang, getUILang(), true) == 0)
+                        if (String.Compare(translation.sLang, GetUILang(), true) == 0)
                             child.sName = translation.sText;
                     }
                 }
@@ -1504,7 +1504,7 @@ namespace Models.GrazPlan
         /// TODO: Test this
         /// </summary>
         /// <returns></returns>
-        public string getUILang()
+        public string GetUILang()
         {
             string result;
 
@@ -1525,7 +1525,7 @@ namespace Models.GrazPlan
         /// Set the IU language
         /// </summary>
         /// <param name="sLang"></param>
-        public void setUILang(string sLang)
+        public void SetUILang(string sLang)
         {
             UILang = sLang;
         }

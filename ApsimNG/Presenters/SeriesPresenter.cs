@@ -155,15 +155,10 @@ namespace UserInterface.Presenters
             if (Enum.TryParse<LineType>(this.seriesView.LineType.SelectedValue, out lineType))
             {
                 this.SetModelProperty("Line", lineType);
-                this.SetModelProperty("FactorIndexToVaryLines", -1);
+                this.SetModelProperty("FactorToVaryLines", null);
             }
             else
-            {
-                List<string> values = new List<string>();
-                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
-                int factorIndex = values.IndexOf(this.seriesView.LineType.SelectedValue);
-                this.SetModelProperty("FactorIndexToVaryLines", factorIndex);
-            }
+                this.SetModelProperty("FactorToVaryLines", this.seriesView.LineType.SelectedValue.Replace("Vary by ", ""));
         }
         
         /// <summary>Series marker type has been changed by the user.</summary>
@@ -175,15 +170,10 @@ namespace UserInterface.Presenters
             if (Enum.TryParse<MarkerType>(this.seriesView.MarkerType.SelectedValue, out markerType))
             {
                 this.SetModelProperty("Marker", markerType);
-                this.SetModelProperty("FactorIndexToVaryMarkers", -1);
+                this.SetModelProperty("FactorToVaryMarkers", null);
             }
             else
-            {
-                List<string> values = new List<string>();
-                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
-                int factorIndex = values.IndexOf(this.seriesView.MarkerType.SelectedValue);
-                this.SetModelProperty("FactorIndexToVaryMarkers", factorIndex);
-            }
+                this.SetModelProperty("FactorToVaryMarkers", this.seriesView.MarkerType.SelectedValue.Replace("Vary by ", ""));
         }
 
         /// <summary>Series line thickness has been changed by the user.</summary>
@@ -219,15 +209,10 @@ namespace UserInterface.Presenters
             if (obj is Color)
             {
                 this.SetModelProperty("Colour", obj);
-                this.SetModelProperty("FactorIndexToVaryColours", -1);
+                this.SetModelProperty("FactorToVaryColours", null);
             }
             else
-            {
-                List<string> colourOptions = new List<string>();
-                colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
-                int factorIndex = colourOptions.IndexOf(obj.ToString());
-                this.SetModelProperty("FactorIndexToVaryColours", factorIndex);
-            }
+                this.SetModelProperty("FactorToVaryColours", obj.ToString().Replace("Vary by ", ""));
         }
 
         /// <summary>X on top has been changed by the user.</summary>
@@ -417,18 +402,13 @@ namespace UserInterface.Presenters
             }
 
             this.seriesView.LineType.Values = values.ToArray();
-            if (series.FactorIndexToVaryLines == -1)
+            if (series.FactorToVaryLines == null)
             {
-                this.seriesView.LineType.SelectedValue = series.Line.ToString();
-            }
-            else if (series.FactorIndexToVaryLines >= series.FactorNamesForVarying.Count)
-            {
-                series.FactorIndexToVaryLines = -1;
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
             }
             else
             {
-                this.seriesView.LineType.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryLines];
+                this.seriesView.LineType.SelectedValue = "Vary by " + series.FactorToVaryLines;
             }
         }
 
@@ -442,18 +422,13 @@ namespace UserInterface.Presenters
             }
 
             this.seriesView.MarkerType.Values = values.ToArray();
-            if (series.FactorIndexToVaryMarkers == -1)
+            if (series.FactorToVaryMarkers == null)
             {
-                this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
-            }
-            else if (series.FactorIndexToVaryMarkers >= series.FactorNamesForVarying.Count)
-            {
-                series.FactorIndexToVaryMarkers = -1;
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
             }
             else
             {
-                this.seriesView.MarkerType.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryMarkers];
+                this.seriesView.MarkerType.SelectedValue = "Vary by " + series.FactorToVaryMarkers;
             }
         }
 
@@ -473,18 +448,13 @@ namespace UserInterface.Presenters
             }
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
-            if (series.FactorIndexToVaryColours == -1)
+            if (series.FactorToVaryColours == null)
             {
-                this.seriesView.Colour.SelectedValue = series.Colour;
-            }
-            else if (series.FactorIndexToVaryColours >= series.FactorNamesForVarying.Count)
-            {
-                series.FactorIndexToVaryColours = -1;
                 this.seriesView.Colour.SelectedValue = series.Colour;
             }
             else
             {
-                this.seriesView.Colour.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryColours];
+                this.seriesView.Colour.SelectedValue = "Vary by " + series.FactorToVaryColours;
             }
         }
 

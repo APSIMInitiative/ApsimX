@@ -187,7 +187,7 @@ namespace UserInterface.Presenters
         public void CopyPathToNode(object sender, EventArgs e)
         {
             string nodePath = explorerPresenter.CurrentNodePath;            
-            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.PMF.Functions.IFunction)
+            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.Functions.IFunction)
             {
                 nodePath += ".Value()";
             }
@@ -304,8 +304,9 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                foreach (IPostSimulationTool tool in Apsim.Children(storage as Model, typeof(IPostSimulationTool)))
-                    tool.Run(storage);
+                foreach (IPostSimulationTool tool in Apsim.FindAll(explorerPresenter.ApsimXFile, typeof(IPostSimulationTool)))
+                    if ((tool as IModel).Enabled)
+                        tool.Run(storage);
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -558,11 +559,23 @@ namespace UserInterface.Presenters
                 foreach (IModel child in Apsim.ChildrenRecursively(model))
                     child.IncludeInDocumentation = model.IncludeInDocumentation;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        [ContextMenu(MenuName = "Show documentation status", IsToggle = true)]
+        public void ShowIncludeInDocumentation(object sender, EventArgs e)
+        {
+            explorerPresenter.ShowIncludeInDocumentation = !explorerPresenter.ShowIncludeInDocumentation;
+        }
+
+        public bool ShowIncludeInDocumentationChecked()
+        {
+            return explorerPresenter != null ? explorerPresenter.ShowIncludeInDocumentation : false;
         }
 
         /// <summary>
@@ -612,6 +625,33 @@ namespace UserInterface.Presenters
             explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.CheckpointsPresenter");
+        }
+
+
+        /// <summary>
+        /// Event handler for 'Enabled' menu item.
+        /// </summary>
+        [ContextMenu(MenuName = "Enabled", IsToggle = true)]
+        public void Enabled(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model != null)
+            {
+                model.Enabled = !model.Enabled;
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.Enabled = model.Enabled;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Enabled' menu item.
+        /// </summary>
+        public bool EnabledChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return model.Enabled;
         }
     }
 }

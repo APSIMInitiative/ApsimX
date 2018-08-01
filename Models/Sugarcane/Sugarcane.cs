@@ -352,7 +352,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class Sugarcane : Model, ICrop, ICanopy, IUptake
+    public class Sugarcane : Model, IPlant, ICanopy, IUptake
     {
 
         #region Canopy interface
@@ -463,7 +463,14 @@ namespace Models
 
         #endregion
 
+        /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        public double Legumosity { get { return 0; } }
 
+        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        public bool IsC4 { get { return true; } }
+
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         //CONSTANTS
 
@@ -12069,7 +12076,7 @@ namespace Models
         /// <param name="soilstate"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)  
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)  
             {
                 throw new NotImplementedException();
             }
@@ -12079,7 +12086,7 @@ namespace Models
         /// <param name="soilstate"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -12089,13 +12096,13 @@ namespace Models
         /// Set the sw uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetSWUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetNUptake(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         { }
 
 
@@ -12484,7 +12491,7 @@ namespace Models
                 //SW DEMAND (Atomospheric Potential)
 
                 //sugar_water_demand(1);
-                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, Soil.SoilWater.Eo);
+                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, (Soil.SoilWater as SoilWater).Eo);
  
 
 
@@ -14597,9 +14604,16 @@ namespace Models
 
         #endregion
 
-
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        /// <param name="fractionRemoved">The fraction of biomass removed</param>
+        public void BiomassRemovalComplete(double fractionRemoved)
+        {
 
         }
+
+    }
 
     
     }

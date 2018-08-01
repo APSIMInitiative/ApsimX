@@ -1,18 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Feedlot</Name>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1999-01-01T00:00:00</StartDate>
       <EndDate>2000-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Dalby.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
@@ -20,6 +23,7 @@
       <Name>Feedlot</Name>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -35,6 +39,7 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>WheatSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.261</double>
               <double>0.248</double>
@@ -63,6 +68,7 @@
               <double>1</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -129,6 +135,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -167,6 +174,7 @@
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -199,17 +207,10 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>40</RootCN>
           <RootWt>1000</RootWt>
           <SoilCN>12</SoilCN>
@@ -264,6 +265,7 @@
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -287,12 +289,14 @@
         </Analysis>
         <InitialWater>
           <Name>InitialWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>InitialN</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -380,6 +384,11 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
@@ -400,8 +409,10 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <Pools>
@@ -435,30 +446,33 @@
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.15</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>10</Area>
       <Slope>0</Slope>
     </Zone>
     <Supplement>
       <Name>Supplement</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <SpoilageTime>0</SpoilageTime>
-      <stores>
+      <Stores>
         <StoreType>
           <IsRoughage>true</IsRoughage>
           <DMContent>0.85</DMContent>
@@ -483,7 +497,7 @@
           <CPConc>0.14</CPConc>
           <ProtDg>0.92</ProtDg>
           <PConc>0.0038</PConc>
-          <SConc>0.0014</SConc>
+          <SConc>0.0014000000000000002</SConc>
           <EEConc>0.02</EEConc>
           <ADIP2CP>0.02</ADIP2CP>
           <AshAlk>0.18</AshAlk>
@@ -491,28 +505,30 @@
           <Name>wheat, crushed</Name>
           <Stored>500000</Stored>
         </StoreType>
-      </stores>
+      </Stores>
       <PaddockList />
     </Supplement>
     <Stock>
       <Name>Stock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <RandSeed>9999</RandSeed>
       <GenoTypes />
       <Sheep />
       <Cattle />
       <PaddockList>
-        <TPaddInit>
-          <forages />
-          <name />
-          <area>1</area>
-          <slope>0</slope>
-        </TPaddInit>
+        <PaddockInit>
+          <Forages />
+          <Name />
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </PaddockInit>
       </PaddockList>
       <EnterpriseList />
       <GrazingPeriods />
     </Stock>
     <Manager>
       <Name>ManageStock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Script />
       <Code><![CDATA[using System;
 using Models.Core;
@@ -522,96 +538,97 @@ using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Calendar;
-		[Link] Stock Animals;
-		[Link] Supplement Feed;
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Calendar;
+        [Link] Stock Animals;
+        [Link] Supplement Feed;
 
-		private double sale_age = 3.0;
-		private int no_to_buy;
-		private int group_count;
-		private int g;
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			// purchase animals annually
-			if (DateUtilities.DatesEqual("01 JAN", Calendar.Today))
-			{
-				g = Animals.NoGroups + 1;
-				no_to_buy = 500 - Animals.NumberAll;
-				
-				TStockBuy purchase = new TStockBuy();
-				purchase.genotype = "small merino";
-				purchase.number = no_to_buy;
-				purchase.sex = "wethers";
-				purchase.age = 12;
-				purchase.weight = 45.0;
-				purchase.usetag = g + 1;
-				
-				Animals.Buy(purchase);
-				Animals.Move(g, "Feedlot");
-			}
+        private double sale_age = 3.0;
+        private int no_to_buy;
+        private int group_count;
+        private int g;
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            // purchase animals annually
+            if (DateUtilities.DatesEqual("01 JAN", Calendar.Today))
+            {
+                g = Animals.NoGroups + 1;
+                no_to_buy = 500 - Animals.NumberAll;
+                
+                StockBuy purchase = new StockBuy();
+                purchase.Genotype = "small merino";
+                purchase.Number = no_to_buy;
+                purchase.Sex = "wethers";
+                purchase.Age = 12;
+                purchase.Weight = 45.0;
+                purchase.UseTag = g + 1;
+                
+                Animals.Buy(purchase);
+                Animals.Move(g, "Feedlot");
+            }
 
-			// Shearing all animals
-			if (DateUtilities.DatesEqual("15 Dec", Calendar.Today))
-			{
-				Animals.Shear(0, "");
-			}
-			
-			// Sell cast for age animals
-			if (DateUtilities.DatesEqual("20 Dec", Calendar.Today))
-			{
-				group_count = Animals.NoGroups;
-				for (g = 1; g <= group_count; g++)
-				{
-					TStockSplit split = new TStockSplit();
-					split.group = g;
-					split.type = "age";
-					split.value = 365 * sale_age;
-					Animals.Split(split);   				// older animals into a new group
-				}
+            // Shearing all animals
+            if (DateUtilities.DatesEqual("15 Dec", Calendar.Today))
+            {
+                Animals.Shear(0, "");
+            }
+            
+            // Sell cast for age animals
+            if (DateUtilities.DatesEqual("20 Dec", Calendar.Today))
+            {
+                group_count = Animals.NoGroups;
+                for (g = 1; g <= group_count; g++)
+                {
+                    StockSplit split = new StockSplit();
+                    split.Group = g;
+                    split.Type = "age";
+                    split.Value = 365 * sale_age;
+                    Animals.Split(split);                   // older animals into a new group
+                }
 
-				for (g = 1; g <= Animals.NoGroups; g++)
-				{
-					if (Animals.Age[g - 1] >= 365 * sale_age)
-						Animals.Sell(g, Animals.Number[g - 1]);
-				}
-			}
-			
-			if (Animals.NumberAll > 0)
-				Feed.Feed("wheat, crushed", 0.5 * Animals.NumberAll, "Feedlot");
-		}
-	}
+                for (g = 1; g <= Animals.NoGroups; g++)
+                {
+                    if (Animals.Age[g - 1] >= 365 * sale_age)
+                        Animals.Sell(g, Animals.Number[g - 1]);
+                }
+            }
+            
+            if (Animals.NumberAll > 0)
+                Feed.Feed("wheat, crushed", 0.5 * Animals.NumberAll, "Feedlot");
+        }
+    }
 }
 ]]></Code>
     </Manager>
     <Report>
       <Name>Report1</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>Stock.Number[1]</string>
-        <string>Stock.NumberAll</string>
-        <string>Stock.Weight[1]</string>
-        <string>Stock.WeightAll</string>
-        <string>Stock.CondScoreAll</string>
-        <string>Stock.CondScore[1]</string>
-        <string>Stock.FleeceWt[1]</string>
-        <string>Stock.FibreDiam[1]</string>
-        <string>Stock.DSEAll</string>
-        <string>Stock.Intake[1].weight</string>
-        <string>Stock.Intake[1].n</string>
-        <string>Stock.Intake[1].p</string>
-        <string>Stock.Intake[1].s</string>
-        <string>Stock.Intake[1].ash_alk</string>
-        <string>Stock.UrineN[1]</string>
-        <string>Stock.Methane[1]</string>
-        <string>Supplement.stores[2].Name</string>
-        <string>Supplement.stores[2].Stored</string>
+        <string>[Stock].Number[1]</string>
+        <string>[Stock].NumberAll</string>
+        <string>[Stock].Weight[1]</string>
+        <string>[Stock].WeightAll</string>
+        <string>[Stock].CondScoreAll</string>
+        <string>[Stock].CondScore[1]</string>
+        <string>[Stock].FleeceWt[1]</string>
+        <string>[Stock].FibreDiam[1]</string>
+        <string>[Stock].DSEAll</string>
+        <string>[Stock].Intake[1].weight</string>
+        <string>[Stock].Intake[1].n</string>
+        <string>[Stock].Intake[1].p</string>
+        <string>[Stock].Intake[1].s</string>
+        <string>[Stock].Intake[1].ash_alk</string>
+        <string>[Stock].UrineN[1]</string>
+        <string>[Stock].Methane[1]</string>
+        <string>[Supplement].stores[2].Name</string>
+        <string>[Supplement].stores[2].Stored</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -621,17 +638,16 @@ namespace Models
       <Name>NumbersAll</Name>
       <Series>
         <Name>Series1</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <ColourArgb>-16777216</ColourArgb>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report1</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Stock.NumberAll</YFieldName>
@@ -640,6 +656,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -658,23 +675,21 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WeightAll</Name>
       <Series>
         <Name>Series1</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <ColourArgb>-16777216</ColourArgb>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report1</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Stock.WeightAll</YFieldName>
@@ -683,6 +698,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -701,23 +717,21 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>CondScoreAll</Name>
       <Series>
         <Name>Series1</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <ColourArgb>-16777216</ColourArgb>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report1</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Stock.CondScoreAll</YFieldName>
@@ -726,6 +740,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -744,23 +759,21 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>FleeceWt1</Name>
       <Series>
         <Name>Weight</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <ColourArgb>-16777216</ColourArgb>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report1</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Stock.FleeceWt1</YFieldName>
@@ -771,17 +784,16 @@ namespace Models
       </Series>
       <Series>
         <Name>Micron</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>Report1</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Stock.FibreDiam1</YFieldName>
@@ -790,6 +802,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -815,15 +828,13 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>296</ExplorerWidth>
 </Simulations>

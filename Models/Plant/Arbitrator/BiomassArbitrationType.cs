@@ -170,7 +170,7 @@ namespace Models.PMF
         /// <summary>Setup all supplies</summary>
         /// <param name="suppliesForEachOrgan">The organs supplies.</param>
         /// <param name="totalOfAllOrgans">The total wt or N for all organs</param>
-        public void SetupSupplies(BiomassSupplyType[] suppliesForEachOrgan, double totalOfAllOrgans)
+        public void GetSupplies(BiomassSupplyType[] suppliesForEachOrgan, double totalOfAllOrgans)
         {
             Clear();
             Start = totalOfAllOrgans;
@@ -186,7 +186,7 @@ namespace Models.PMF
 
         /// <summary>Setup all demands</summary>
         /// <param name="demandsForEachOrgan">The organs demands</param>
-        public void SetupDemands(BiomassPoolType[] demandsForEachOrgan)
+        public void GetDemands(BiomassPoolType[] demandsForEachOrgan)
         {
 
             for (int i = 0; i < demandsForEachOrgan.Length; i++)
@@ -213,7 +213,10 @@ namespace Models.PMF
             SinkLimitation = 0;
             NutrientLimitation = 0;
         }
+
+
         
+
         /// <summary>Clear the arbitration type</summary>
         public void Clear()
         {

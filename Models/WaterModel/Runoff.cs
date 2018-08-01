@@ -9,8 +9,8 @@ namespace Models.WaterModel
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
-    using PMF.Functions;
-    using SurfaceOM;
+    using Functions;
+    using Surface;
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
@@ -22,7 +22,7 @@ namespace Models.WaterModel
     /// When irrigation is applied it can optionally be included in the runoff calculation. This flag (willRunoff) can be set
     /// when applying irrigation.
     /// 
-    /// ![Alt Text](..\\..\\Documentation\\Images\\RunoffRainfallCurves.png)
+    /// ![Alt Text](RunoffRainfallCurves.png)
     /// Figure: Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff). 
     /// Response curves for three runoff curve numbers for rainfall varying between 0 and 100 mm per day.
     /// 
@@ -32,10 +32,10 @@ namespace Models.WaterModel
     /// two extremes for calculation of runoff depending on the daily moisture status of the soil. 
     /// The effect of soil moisture on runoff is confined to the effective hydraulic depth as specified in the 
     /// module's ini file and is calculated to give extra weighting to layers closer to the soil surface.
-    /// ![Alt Text](..\\..\\Documentation\\Images\\RunoffResponseCurve.png)
+    /// ![Alt Text](RunoffResponseCurve.png)
     /// Figure: Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff). 
     ///
-    /// ![Alt Text](..\\..\\Documentation\\Images\\CurveNumberCover.png) 
+    /// ![Alt Text](CurveNumberCover.png) 
     /// Figure: Residue cover effect on runoff curve number where bare soil curve number is 75 and total reduction in 
     /// curve number is 20 at 80% cover. 
     /// 

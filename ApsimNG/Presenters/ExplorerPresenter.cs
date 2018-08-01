@@ -36,17 +36,34 @@ namespace UserInterface.Presenters
         /// <summary>The context menu</summary>
         private ContextMenu contextMenu;
 
+        /// <summary>Show tick on tree nodes where models will be included in auto-doc?</summary>
+        private bool showDocumentationStatus;
+
         /// <summary>Presenter for the component</summary>
         private IPresenter currentRightHandPresenter;
-
-        /// <summary>Using advanced mode</summary>
-        private bool advancedMode = false;
 
         /// <summary>Initializes a new instance of the <see cref="ExplorerPresenter" /> class</summary>
         /// <param name="mainPresenter">The presenter for the main window</param>
         public ExplorerPresenter(MainPresenter mainPresenter)
         {
             this.MainPresenter = mainPresenter;
+        }
+
+        /// <summary>
+        /// Gets or sets whether graphical ticks should be displayed next to nodes that
+        /// are to be included in auto documentation.
+        /// </summary>
+        public bool ShowIncludeInDocumentation
+        {
+            get
+            {
+                return showDocumentationStatus;
+            }
+            set
+            {
+                showDocumentationStatus = value;
+                Refresh();
+            }
         }
 
         /// <summary>Gets or sets the command history for this presenter</summary>
@@ -61,8 +78,8 @@ namespace UserInterface.Presenters
         /// <value>The width of the tree.</value>
         public int TreeWidth
         {
-            get { return this.view.TreeWidth; }
-            set { this.view.TreeWidth = value; }
+            get { return view.Tree.TreeWidth; }
+            set { this.view.Tree.TreeWidth = value; }
         }
 
         /// <summary>Gets the presenter for the main window</summary>
@@ -85,10 +102,19 @@ namespace UserInterface.Presenters
         {
             get
             {
-                return this.view.SelectedNode;
+                return this.view.Tree.SelectedNode;
             }
         }
 
+        private string GetPathToNode(IModel model)
+        {
+            if (model is Simulations)
+            {
+                return model.Name;
+            }
+            return GetPathToNode(model.Parent) + "." + model.Name;
+        }
+        
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>
@@ -104,13 +130,12 @@ namespace UserInterface.Presenters
             this.contextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(contextMenu);
 
-            this.view.ShortcutKeys = new string[] { "F5" };
-            this.view.SelectedNodeChanged += this.OnNodeSelected;
-            this.view.DragStarted += this.OnDragStart;
-            this.view.AllowDrop += this.OnAllowDrop;
-            this.view.Droped += this.OnDrop;
-            this.view.Renamed += this.OnRename;
-
+            this.view.Tree.SelectedNodeChanged += this.OnNodeSelected;
+            this.view.Tree.DragStarted += this.OnDragStart;
+            this.view.Tree.AllowDrop += this.OnAllowDrop;
+            this.view.Tree.Droped += this.OnDrop;
+            this.view.Tree.Renamed += this.OnRename;
+            
             Refresh();
             this.PopulateMainMenu();
         }
@@ -120,18 +145,18 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Refresh()
         {
-            this.view.Refresh(this.GetNodeDescription(this.ApsimXFile));
+            view.Tree.Populate(GetNodeDescription(this.ApsimXFile));
             this.WriteLoadErrors();
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            this.view.SelectedNodeChanged -= this.OnNodeSelected;
-            this.view.DragStarted -= this.OnDragStart;
-            this.view.AllowDrop -= this.OnAllowDrop;
-            this.view.Droped -= this.OnDrop;
-            this.view.Renamed -= this.OnRename;
+            this.view.Tree.SelectedNodeChanged -= this.OnNodeSelected;
+            this.view.Tree.DragStarted -= this.OnDragStart;
+            this.view.Tree.AllowDrop -= this.OnAllowDrop;
+            this.view.Tree.Droped -= this.OnDrop;
+            this.view.Tree.Renamed -= this.OnRename;
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
@@ -143,13 +168,6 @@ namespace UserInterface.Presenters
             this.CommandHistory.Clear();
             this.ApsimXFile.ClearSimulationReferences();
             this.ApsimXFile = null;
-        }
-
-        /// <summary>Toggle advanced mode.</summary>
-        public void ToggleAdvancedMode()
-        {
-            this.advancedMode = !this.advancedMode;
-            this.view.Refresh(this.GetNodeDescription(this.ApsimXFile));
         }
 
         /// <summary>
@@ -172,6 +190,10 @@ namespace UserInterface.Presenters
                     }
                     else
                     {
+                        // Need to hide the right hand panel because some views may not save
+                        // their contents until they get a 'Detach' call.
+                        this.HideRightHandPanel();
+
                         // need to test is ApsimXFile has changed and only prompt when changes have occured.
                         // serialise ApsimXFile to buffer
                         StringWriter o = new StringWriter();
@@ -190,15 +212,12 @@ namespace UserInterface.Presenters
 
                     if (choice == QuestionResponseEnum.Cancel)
                     {   // cancel
+                        this.ShowRightHandPanel();
                         result = false;
                     }
                     else if (choice == QuestionResponseEnum.Yes)
                     {
                         // save
-                        // Need to hide the right hand panel because some views may not have saved
-                        // their contents until they get a 'Detach' call.
-                        this.HideRightHandPanel();
-
                         this.WriteSimulation();
                         result = true;
                     }
@@ -207,6 +226,7 @@ namespace UserInterface.Presenters
             catch (Exception err)
             {
                 MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
+                this.ShowRightHandPanel();
                 result = false;
             }
 
@@ -284,7 +304,7 @@ namespace UserInterface.Presenters
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)
         {
-            this.view.SelectedNode = nodePath;
+            this.view.Tree.SelectedNode = nodePath;
             this.HideRightHandPanel();
             this.ShowRightHandPanel();
         }
@@ -306,9 +326,9 @@ namespace UserInterface.Presenters
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
-            if (this.view.SelectedNode == string.Empty)
+            if (this.view.Tree.SelectedNode == string.Empty)
             {
-                this.view.SelectedNode = Apsim.FullPath(allModels[0]);
+                this.view.Tree.SelectedNode = Apsim.FullPath(allModels[0]);
                 return true;
             }
 
@@ -316,7 +336,7 @@ namespace UserInterface.Presenters
             int index = -1;
             for (int i = 0; i < allModels.Count; i++)
             {
-                if (Apsim.FullPath(allModels[i]) == this.view.SelectedNode)
+                if (Apsim.FullPath(allModels[i]) == this.view.Tree.SelectedNode)
                 {
                     index = i;
                     break;
@@ -335,7 +355,7 @@ namespace UserInterface.Presenters
             }
 
             // Select the next node.
-            this.view.SelectedNode = Apsim.FullPath(allModels[index + 1]);
+            this.view.Tree.SelectedNode = Apsim.FullPath(allModels[index + 1]);
             return true;
         }
 
@@ -373,7 +393,7 @@ namespace UserInterface.Presenters
         /// <summary>Rename the current node.</summary>
         public void Rename()
         {
-            this.view.BeginRenamingCurrentNode();
+            this.view.Tree.BeginRenamingCurrentNode();
         }
 
         /// <summary>
@@ -487,7 +507,7 @@ namespace UserInterface.Presenters
         /// <returns>Clipboard text</returns>
         public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
-            return this.view.GetClipboardText(clipboardName);
+            return ViewBase.GetClipboardText(clipboardName);
         }
 
         /// <summary>
@@ -496,7 +516,7 @@ namespace UserInterface.Presenters
         /// <param name="text">The text to be stored in the clipboard</param>
         public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
-            this.view.SetClipboardText(text, clipboardName);
+            ViewBase.SetClipboardText(text, clipboardName);
         }
 
         /// <summary>
@@ -506,6 +526,9 @@ namespace UserInterface.Presenters
         /// <param name="nodePath">The path to the node</param>
         public void PopulateContextMenu(string nodePath)
         {
+            if (view.Tree.ContextMenu == null)
+                view.Tree.ContextMenu = new MenuView();
+
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
             
             // Get the selected model.
@@ -568,7 +591,7 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.view.PopulateContextMenu(descriptions);
+            view.Tree.ContextMenu.Populate(descriptions);
         }
 
         /// <summary>
@@ -653,9 +676,9 @@ namespace UserInterface.Presenters
         /// <summary>Display a view on the right hand panel in view.</summary>
         public void ShowRightHandPanel()
         {
-            if (this.view.SelectedNode != string.Empty)
+            if (this.view.Tree.SelectedNode != string.Empty)
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode);
+                object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
 
                 if (model != null)
                 {
@@ -667,12 +690,6 @@ namespace UserInterface.Presenters
                     {
                         viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                    }
-
-                    if (this.advancedMode)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.GridView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.PropertyPresenter");
                     }
 
                     if (viewName == null && presenterName == null)
@@ -778,20 +795,17 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.view.PopulateMainToolStrip(descriptions);
-
-            string labelText = "Custom Build";
-            string labelToolTip = null;
-
-            // Get assembly title.
+            // Show version label at right side of toolstrip
+            MenuDescriptionArgs versionItem = new MenuDescriptionArgs();
+            versionItem.Name = "Custom Build";
+            versionItem.RightAligned = true;
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Major > 0)
             {
-                labelText = "Official Build";
-                labelToolTip = "Version: " + version.ToString();
+                versionItem.Name = "Official Build";
+                versionItem.ToolTip = "Version: " + version.ToString();
             }
-
-            this.view.PopulateLabel(labelText, labelToolTip);
+            view.ToolStrip.Populate(descriptions);
         }
 
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
@@ -893,7 +907,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnMoveUp(object sender, EventArgs e)
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode) as Model;
+            Model model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode) as Model;
             
             if (model != null && model.Parent != null)
             {
@@ -910,7 +924,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The args</param>
         private void OnMoveDown(object sender, EventArgs e)
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode) as Model;
+            Model model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode) as Model;
 
             if (model != null && model.Parent != null)
             {
@@ -942,33 +956,21 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="model">The model</param>
         /// <returns>The description</returns>
-        private NodeDescriptionArgs GetNodeDescription(IModel model)
+        private TreeViewNode GetNodeDescription(IModel model)
         {
-            NodeDescriptionArgs description = new NodeDescriptionArgs();
+            TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
 
-            string imageFileName;
-            if (model is ModelCollectionFromResource && (model as ModelCollectionFromResource).ResourceName != null)
-            {
-                imageFileName = (model as ModelCollectionFromResource).ResourceName;
-            }
-            else if (model.GetType().Name == "Plant" || model.GetType().Name == "OldPlant")
-            {
-                imageFileName = model.Name;
-            }
-            else
-            {
-                // Add model name from namespace to the resource image name
-                imageFileName = model.GetType().FullName.Split('.')[1] + "." + model.GetType().Name;
-            }
+            description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
 
-            if (model.GetType().Namespace.Contains("Models.PMF"))
-            {
+            ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
+            if (info == null)
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
+
+            if (typeof(Models.Functions.IFunction).IsAssignableFrom(model.GetType()))
                 description.ToolTip = model.GetType().Name;
-            }
 
-            description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + imageFileName + ".png";
-            description.Children = new List<NodeDescriptionArgs>();
+            description.Children = new List<TreeViewNode>();
             foreach (Model child in model.Children)
             {
                 if (!child.IsHidden)
@@ -976,7 +978,13 @@ namespace UserInterface.Presenters
                     description.Children.Add(this.GetNodeDescription(child));
                 }
             }
-
+            description.Strikethrough = !model.Enabled;
+            description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            /*
+            // Set the colour here
+            System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;
+            description.Colour = colour;
+            */
             return description;
         }
 

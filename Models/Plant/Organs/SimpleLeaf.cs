@@ -1,7 +1,7 @@
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.PMF.Functions;
+using Models.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
@@ -257,6 +257,18 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the metabolic N concentration factor.</summary>
+        public double FNmetabolic
+        {
+            get
+            {
+                double factor = 0.0;
+                if (Live != null)
+                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+                return Math.Min(1.0, factor);
+            }
+        }
+
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
 
@@ -291,9 +303,9 @@ namespace Models.PMF.Organs
         public double WaterAllocation { get; set; }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateDryMatterSupply()
+        public override BiomassSupplyType GetDryMatterSupply()
         {
-            base.CalculateDryMatterSupply();   // get our base GenericOrgan to fill a supply structure first.
+            base.GetDryMatterSupply();   // get our base GenericOrgan to fill a supply structure first.
             DMSupply.Fixation = Photosynthesis.Value();
             return DMSupply;
         }

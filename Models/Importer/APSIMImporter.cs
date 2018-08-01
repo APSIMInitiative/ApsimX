@@ -64,7 +64,7 @@ namespace Importer
                                       "Broccoli","ButterflyPea","Canola","CanolaSWIM","Centro",
                                       "Chickpea","Chickpea2","Chicory","cloverseed","Cotton2",
                                       "Cowpea","EGrandis","EMelliodora","EPopulnea","Fababean",
-                                      "Fieldpea","Fieldpea2","FrenchBean","Grassseed","Heliotrope",
+                                      "Fieldpea","Fieldpea2","Soybean","FrenchBean","Grassseed","Heliotrope",
                                       "Horsegram","Itallianryegrass","Kale","Lablab","Lentil",
                                       "Lettuce","Lolium_rigidum","Lucerne","Lucerne2","LucerneSWIM",
                                       "Lupin","Maize","MaizeZ","Millet","Mucuna","Mungbean","Navybean",
@@ -373,14 +373,14 @@ namespace Importer
                     if (this.soilWaterExists && !this.surfOMExists)
                     {
                         Console.WriteLine("Added SurfaceOM to " + XmlUtilities.FullPathUsingName(newPaddockNode));
-                        Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
+                        Models.Surface.SurfaceOrganicMatter mysom = new Models.Surface.SurfaceOrganicMatter();
 
-                        mysom.PoolName = "wheat_stubble";
-                        mysom.type = "wheat";
-                        mysom.mass = "0";
-                        mysom.cnr = "80";
-                        mysom.cpr = "0";
-                        mysom.standing_fraction = "0.0";
+                        mysom.InitialResidueName = "wheat_stubble";
+                        mysom.InitialResidueType = "wheat";
+                        mysom.InitialResidueMass = 0;
+                        mysom.InitialCNR = 80;
+                        mysom.InitialCPR = 0;
+                        mysom.InitialStandingFraction = 0.0;
 
                         newNode = ImportObject(newPaddockNode, newNode, mysom, "SurfaceOrganicMatter");
                     }
@@ -545,14 +545,16 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportSurfaceOM(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
+            Models.Surface.SurfaceOrganicMatter mysom = new Models.Surface.SurfaceOrganicMatter();
 
-            mysom.PoolName = this.GetInnerText(compNode, "PoolName");
-            mysom.type = this.GetInnerText(compNode, "type");
-            mysom.mass = this.GetInnerText(compNode, "mass");
-            mysom.cnr = this.GetInnerText(compNode, "cnr");
-            mysom.cpr = this.GetInnerText(compNode, "cpr");
-            mysom.standing_fraction = this.GetInnerText(compNode, "standing_fraction");
+            mysom.InitialResidueName = this.GetInnerText(compNode, "PoolName");
+            mysom.InitialResidueType = this.GetInnerText(compNode, "type");
+            mysom.InitialResidueMass = Convert.ToDouble(this.GetInnerText(compNode, "mass"));
+            mysom.InitialCNR = Convert.ToDouble(this.GetInnerText(compNode, "cnr"));
+            string cpr = this.GetInnerText(compNode, "cpr");
+            if (cpr != string.Empty)
+                mysom.InitialCPR = Convert.ToDouble(cpr);
+            mysom.InitialStandingFraction = Convert.ToDouble(this.GetInnerText(compNode, "standing_fraction"));
 
             newNode = ImportObject(destParent, newNode, mysom, XmlUtilities.NameAttr(compNode));
 

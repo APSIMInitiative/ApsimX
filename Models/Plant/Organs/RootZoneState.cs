@@ -1,7 +1,7 @@
 ﻿using Models.Soils;
 using Models.Core;
 using System;
-using Models.PMF.Functions;
+using Models.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -33,8 +33,8 @@ namespace Models.PMF.Organs
         /// <summary>Zone name</summary>
         public string Name = null;
 
-        /// <summary>The uptake</summary>
-        public double[] Uptake { get; set; }
+        /// <summary>The water uptake</summary>
+        public double[] WaterUptake { get; set; }
 
         /// <summary>The delta n h4</summary>
         public double[] DeltaNH4 { get; set; }
@@ -45,6 +45,10 @@ namespace Models.PMF.Organs
         /// <summary>Holds actual DM allocations to use in allocating N to structural and Non-Structural pools</summary>
         [Units("g/2")]
         public double[] DMAllocated { get; set; }
+
+        /// <summary>Holds potential DM allocations to use in allocating N to structural and Non-Structural pools</summary>
+        [Units("g/2")]
+        public double[] PotentialDMAllocated { get; set; }
 
         /// <summary>Demand for structural N, set when Ndemand is called and used again in N allocation</summary>
         [Units("g/2")]
@@ -130,7 +134,7 @@ namespace Models.PMF.Organs
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
-            Uptake = null;
+            WaterUptake = null;
             NitUptake = null;
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
@@ -201,7 +205,7 @@ namespace Models.PMF.Organs
                 if (layer <= Soil.LayerIndexOfDepth(Depth, soil.Thickness))
                     if (LayerLive[layer].Wt > 0)
                     {
-                        RAw[layer] = - Uptake[layer] / LayerLive[layer].Wt
+                        RAw[layer] = - WaterUptake[layer] / LayerLive[layer].Wt
                                    * soil.Thickness[layer]
                                    * Soil.ProportionThroughLayer(layer, Depth, soil.Thickness);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning

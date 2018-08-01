@@ -9,7 +9,7 @@ namespace Models.WaterModel
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
-    using PMF.Functions;
+    using Functions;
     using System;
     using System.Linq;
     using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace Models.WaterModel
     /// Water lost by evaporation is removed from the surface layer of the soil profile thus this layer can dry 
     /// below the wilting point or lower limit (LL) to a specified air-dry water content (air_dry). 
     /// 
-    /// ![Alt Text](..\\..\\Documentation\\Images\\CurveNumberCover.png) 
+    /// ![Alt Text](CurveNumberCover.png) 
     /// Figure: Cumulative Soil Evaporation through time for U = 6 mm and CONA = 3.5.
     ///
     /// For t &lt;=  t<sub>1</sub>

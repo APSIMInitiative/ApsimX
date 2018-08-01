@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
-using Models.PMF.Functions;
+using Models.Functions;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
@@ -32,12 +32,83 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration
+    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IRemovableBiomass
     {
+
+        /// <summary>The surface organic matter model</summary>
+        [Link]
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant Plant = null;
+
+        /// <summary>The summary</summary>
+        [Link]
+        public ISummary Summary = null;
 
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
+
+
+        /// <summary>Growth Respiration</summary>
+        /// [Units("CO_2")]
+        public double GrowthRespiration { get; set; }
+
+
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        [XmlIgnore]
+        public Biomass Allocated { get; set; }
+
+        /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
+        [XmlIgnore]
+        public Biomass Senesced { get; set; }
+
+        /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Detached { get; set; }
+
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public Biomass Removed { get; set; }
+
+        /// <summary>Gets the dm supply photosynthesis.</summary>
+        [Units("g/m^2")]
+        public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
+
+        /// <summary>The dry matter supply</summary>
+        protected BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+
+        /// <summary>The nitrogen supply</summary>
+        protected BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+
+        /// <summary>The dry matter demand</summary>
+        protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
+
+        /// <summary>Structural nitrogen demand</summary>
+        protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
+
+
+        /// <summary>Gets or sets the dm supply.</summary>
+        [XmlIgnore]
+        public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
+        /// <summary>Gets or sets the dm demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
+        /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
+
+        /// <summary>Gets or sets the n supply.</summary>
+        [XmlIgnore]
+        public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        [XmlIgnore]
+        public double NFixationCost { get { return 0; } }
+        /// <summary>Gets or sets the n demand.</summary>
+        [XmlIgnore]
+        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
+
+
         #region Canopy interface
 
         /// <summary>The apex model to use</summary>
@@ -361,7 +432,7 @@ namespace Models.PMF.Organs
         IFunction FRGRFunction = null;
         /// <summary>The thermal time</summary>
         [Link]
-        IFunction ThermalTime = null;
+        public IFunction ThermalTime = null;
         /// <summary>The extinction coeff</summary>
         [Link]
         IFunction ExtinctionCoeff = null;
@@ -437,6 +508,9 @@ namespace Models.PMF.Organs
         //Variables that represent the number of leaf cohorts (integer) in a particular state on an individual main-stem are cohort variables (CohortNo suffix)
         //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
         //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
+        
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [XmlIgnore]
@@ -1009,7 +1083,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// The amount of mass lost to maintenance respiration
         /// </summary>
-        public override double MaintenanceRespiration
+        public double MaintenanceRespiration
         {
             get { return Leaves.Sum(l => l.MaintenanceRespiration); }
         }
@@ -1129,6 +1203,7 @@ namespace Models.PMF.Organs
             TipsAtEmergence = 0;
             Structure.TipToAppear = 0;
             apexGroupAge.Clear();
+            apexGroupSize.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
             nitrogenSupply.Clear();
@@ -1174,12 +1249,20 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
         }
 
+        /// <summary>
+        /// TODO: This method needs documentation
+        /// </summary>
+        /// <param name="NewLeaf"></param>
         private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
+            // update age of cohorts
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
 
-            while (apexGroupSize.Sum() < Structure.ApexNum)
+            // check for increase in apex size, add new group if needed
+            // (ApexNum should be an integer, but need to check in case of flag leaf)
+            double deltaApex = apexGroupSize.Sum() - Structure.ApexNum;
+            if (deltaApex < -1E-12)
             {
                 if (apexGroupSize.Count == 0)
                     apexGroupSize.Add(Structure.ApexNum);
@@ -1188,19 +1271,23 @@ namespace Models.PMF.Organs
                 apexGroupAge.Add(1);
             }
 
-            while (apexGroupSize.Sum() > Structure.ApexNum)
+            // check for reduction in the apex size
+            if ((apexGroupSize.Count > 0) && (deltaApex > 1E-12))
             {
-                double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
-                double remainingRemoveApex = removeApex;
+                double remainingRemoveApex = deltaApex;
                 for (int i = apexGroupSize.Count - 1; i > 0; i--)
                 {
                     double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
                     apexGroupSize[i] -= remove;
                     remainingRemoveApex -= remove;
-                    if (remainingRemoveApex <= 0)
+                    if (remainingRemoveApex <= 0.0)
                         break;
                 }
+
+                if (remainingRemoveApex > 0.0)
+                    throw new Exception("There are not enough apex to remove from plant.");
             }
+
             NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
             NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
@@ -1276,7 +1363,7 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The frations of biomass to remove</param>
-        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
@@ -1285,7 +1372,7 @@ namespace Models.PMF.Organs
                 {
                     double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
-                    writeToSummary = false; // only want it written once.
+                    //writeToSummary = false; // only want it written once.
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
                 }
@@ -1317,7 +1404,7 @@ namespace Models.PMF.Organs
         #region Arbitrator methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateDryMatterSupply()
+        public BiomassSupplyType GetDryMatterSupply()
         {
             // Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)
             double Retranslocation = 0;
@@ -1337,7 +1424,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public override BiomassSupplyType CalculateNitrogenSupply()
+        public BiomassSupplyType GetNitrogenSupply()
         {
             double RetransSupply = 0;
             double ReallocationSupply = 0;
@@ -1353,7 +1440,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public override BiomassPoolType CalculateDryMatterDemand()
+        public BiomassPoolType GetDryMatterDemand()
         {
             double StructuralDemand = 0.0;
             double StorageDemand = 0.0;
@@ -1380,7 +1467,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public override BiomassPoolType CalculateNitrogenDemand()
+        public BiomassPoolType GetNitrogenDemand()
         {
             double StructuralDemand = 0.0;
             double MetabolicDemand = 0.0;
@@ -1398,7 +1485,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
-        public override void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
             //Allocate Potential Structural DM
             if (DMDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
@@ -1463,7 +1550,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
-        public override void SetDryMatterAllocation(BiomassAllocationType value)
+        public void SetDryMatterAllocation(BiomassAllocationType value)
         {
             // get DM lost by respiration (growth respiration)
             // GrowthRespiration with unit CO2 
@@ -1616,7 +1703,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the n allocation.</summary>
-        public override void SetNitrogenAllocation(BiomassAllocationType nitrogen)
+        public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             if (NDemand.Structural == 0 && nitrogen.Structural > 0) //FIXME this needs to be seperated into compoents
                 throw new Exception("Invalid allocation of N");
@@ -1754,8 +1841,30 @@ namespace Models.PMF.Organs
                 throw new Exception(Name + "Some Leaf N was not allocated.");
         }
 
+        /// <summary>Remove maintenance respiration from live component of organs.</summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double totalResLeaf = MaintenanceRespiration;
+
+            foreach (LeafCohort L in Leaves)
+            {
+                double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
+                double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
+                if (resLeafCohort > totalBMLeafCohort)
+                {
+                    throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+                }
+                L.Live.MetabolicWt = L.Live.MetabolicWt - 
+                    (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
+                L.Live.StorageWt = L.Live.StorageWt - 
+                    (resLeafCohort * L.Live.StorageWt / totalBMLeafCohort);
+            }
+        }
+
+
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public override double MinNconc
+        public double MinNconc
         {
             get
             {
@@ -1847,9 +1956,13 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            base.OnSimulationCommencing(sender, e);
+            Allocated = new PMF.Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
+
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
@@ -1882,6 +1995,24 @@ namespace Models.PMF.Organs
         {
             CohortsAtInitialisation = 0;
         }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+         protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+            {
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
+                foreach (LeafCohort leaf in Leaves)
+                    leaf.DoDailyCleanup();
+            }
+        }
+
         #endregion
 
     }

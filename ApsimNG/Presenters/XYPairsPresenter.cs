@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models.Core;
     using Models.Graph;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Views;
 
     /// <summary>
@@ -265,8 +265,6 @@ namespace UserInterface.Presenters
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
-            this.xYPairsView.VariablesGrid.ResizeControls();
-
             // this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
             // this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
             // this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
@@ -369,10 +367,8 @@ namespace UserInterface.Presenters
                     if (changedValues)
                     {
                         // Store the property change.
-                        Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
-                        property.Name = this.propertiesInGrid[i].Name;
-                        property.Obj = this.propertiesInGrid[i].Object;
-                        property.NewValue = values;
+                        Commands.ChangeProperty.Property property =
+                            new Commands.ChangeProperty.Property(this.propertiesInGrid[i].Object, this.propertiesInGrid[i].Name, values);
                         properties.Add(property);
                     }
                 }

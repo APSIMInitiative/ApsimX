@@ -6,24 +6,24 @@ using System.Text;
 using System.Xml;
 using CMPServices;
 
-//Classes for I/O of the generic parameter set class, TParameterSet.           
+//Classes for I/O of the generic parameter set class, ParameterSet.           
 
 namespace Models.GrazPlan
 {
     /// <summary>
     /// Class that wraps the XML param reader
     /// </summary>
-    static public class TGParamFactory
+    static public class GlobalParameterFactory
     {
-        static private TParameterXMLFactory _GParamFactory = null;
+        static private ParameterXMLFactory _GParamFactory = null;
 
         /// <summary>
         /// Returns a ptr to the _GParamFactory. ParamFactory is loaded on demand only.
         /// </summary>
-        static public TParameterXMLFactory ParamXMLFactory()
+        static public ParameterXMLFactory ParamXMLFactory()
         {
             if (_GParamFactory == null)
-                _GParamFactory = new TParameterXMLFactory();
+                _GParamFactory = new ParameterXMLFactory();
             return _GParamFactory;
         }
     }
@@ -50,7 +50,7 @@ namespace Models.GrazPlan
     /// * A blank parameter value (including in a list) denotes "leave at the value  
     /// in the parent parameter set", which may be undefined.                      
     /// </summary>
-    public class TParameterXMLFactory
+    public class ParameterXMLFactory
     {
         /// <summary>
         /// Type real-single
@@ -76,10 +76,10 @@ namespace Models.GrazPlan
         /// <param name="aNode"></param>
         /// <param name="Params"></param>
         /// <param name="bModify"></param>
-        private void readParamNode(TXMLParser Parser, XmlNode aNode, ref TParameterSet Params, bool bModify)
+        private void readParamNode(XMLParser Parser, XmlNode aNode, ref ParameterSet Params, bool bModify)
         {
             XmlNode childNode;
-            TParameterSet newParams;
+            ParameterSet newParams;
             string sTag,
             sValues,
             sChildName,
@@ -90,7 +90,7 @@ namespace Models.GrazPlan
             {
                 Params.sName = Parser.getAttrValue(aNode, "name");                        // Name and version information. The     
                 Params.sEnglishName = Params.sName;
-                if (Params.bRootNode())                                                     //   version is passed to child sets   
+                if (Params.NodeIsRoot())                                                     //   version is passed to child sets   
                     Params.sVersion = Parser.getAttrValue(aNode, "version");               //   during creation                   
 
                 childNode = Parser.firstElementChild(aNode, "translate");                 // See if tbere's a translation of the name matching our current language setting 
@@ -103,11 +103,11 @@ namespace Models.GrazPlan
                 }
 
                 if (!bModify)                                                           // If we are not modifying an existing   
-                    while (Params.iChildCount() > 0)                                           //   parameter set, then clear any old   
-                        Params.deleteChild(Params.iChildCount() - 1);                              //   child parameter sets               
+                    while (Params.ChildCount() > 0)                                           //   parameter set, then clear any old   
+                        Params.DeleteChild(Params.ChildCount() - 1);                              //   child parameter sets               
 
                 sValues = Parser.getAttrValue(aNode, "locales").Trim();                     // Populate the locale list              
-                Params.setLocaleText(sValues);
+                Params.SetLocaleText(sValues);
 
                 childNode = Parser.firstElementChild(aNode, "par");                       // Parse the <par> elements              
                 while (childNode != null)
@@ -123,13 +123,13 @@ namespace Models.GrazPlan
                 while (childNode != null)                                                   //   <set> elements                     
                 {
                     if (!bModify)
-                        newParams = Params.addChild();
+                        newParams = Params.AddChild();
                     else
                     {                                                                      // If we are modifying an existing      
                         sChildName = Parser.getAttrValue(childNode, "name");                  //  parameter set, then locate the child 
-                        newParams = Params.getChild(sChildName);                              //   set that we are about to parse      
+                        newParams = Params.GetChild(sChildName);                              //   set that we are about to parse      
                         if (newParams == null)
-                            newParams = Params.addChild();
+                            newParams = Params.AddChild();
                     }
                     readParamNode(Parser, childNode, ref newParams, bModify);
                     childNode = Parser.nextElementSibling(childNode, "set");
@@ -148,9 +148,9 @@ namespace Models.GrazPlan
         /// <param name="sTag"></param>
         /// <param name="sValues"></param>
         /// <param name="bPropagate"></param>
-        private void readParamValues(ref TParameterSet Params, string sTag, string sValues, bool bPropagate)
+        private void readParamValues(ref ParameterSet Params, string sTag, string sValues, bool bPropagate)
         {
-            TParameterDefinition Definition;
+            ParameterDefinition Definition;
             string sValue;
             int Idx;
 
@@ -158,7 +158,7 @@ namespace Models.GrazPlan
 
             if ((sTag != "") && (sValues != ""))
             {
-                Definition = Params.getDefinition(sTag);
+                Definition = Params.GetDefinition(sTag);
                 if ((Definition == null) || (Definition.iDimension() > 1))
                     throw new Exception("Invalid tag when reading parameters: " + sTag);
 
@@ -185,16 +185,16 @@ namespace Models.GrazPlan
         /// <param name="sTag"></param>
         /// <param name="sValue"></param>
         /// <param name="bPropagate"></param>
-        private void assignParameter(ref TParameterSet Params, string sTag, string sValue, bool bPropagate)
+        private void assignParameter(ref ParameterSet Params, string sTag, string sValue, bool bPropagate)
         {
             int Idx;
 
-            Params.setParam(sTag, sValue);
+            Params.SetParam(sTag, sValue);
             if (bPropagate)
             {
-                for (Idx = 0; Idx <= Params.iChildCount() - 1; Idx++)
+                for (Idx = 0; Idx <= Params.ChildCount() - 1; Idx++)
                 {
-                    TParameterSet child = Params.getChild(Idx);
+                    ParameterSet child = Params.GetChild(Idx);
                     assignParameter(ref child, sTag, sValue, true);
                 }
             }
@@ -230,11 +230,11 @@ namespace Models.GrazPlan
         /// <param name="sText"></param>
         /// <param name="Params"></param>
         /// <param name="bModify"></param>
-        public void readFromXML(string sText, ref TParameterSet Params, bool bModify)
+        public void readFromXML(string sText, ref ParameterSet Params, bool bModify)
         {
-            TXMLParser Parser;
+            XMLParser Parser;
 
-            Parser = new TXMLParser(sText);
+            Parser = new XMLParser(sText);
             readParamNode(Parser, Parser.rootNode(), ref Params, bModify);
         }
 
@@ -244,13 +244,13 @@ namespace Models.GrazPlan
         /// <param name="subSet"></param>
         /// <param name="Definition"></param>
         /// <returns></returns>
-        private bool bDiffers(TParameterSet subSet, TParameterDefinition Definition)
+        private bool bDiffers(ParameterSet subSet, ParameterDefinition Definition)
         {
             bool result;
 
-            if (!Definition.bValueDefined())
+            if (!Definition.ValueIsDefined())
                 result = false;
-            else if ((subSet.Parent == null) || (!subSet.Parent.bIsDefined(Definition.sFullName)))
+            else if ((subSet.Parent == null) || (!subSet.Parent.IsDefined(Definition.sFullName)))
                 result = true;
             else
             {
@@ -271,7 +271,7 @@ namespace Models.GrazPlan
             return result;
         }
 
-        private void writeParameters(TParameterSet subSet, TParameterDefinition Definition, List<string> Strings, int iIndent)
+        private void writeParameters(ParameterSet subSet, ParameterDefinition Definition, List<string> Strings, int iIndent)
         {
             int iDiffCount;
             string sLine;
@@ -324,7 +324,7 @@ namespace Models.GrazPlan
         /// <param name="Strings"></param>
         /// <param name="sElem"></param>
         /// <param name="iIndent"></param>
-        private void writeParamSet(TParameterSet subSet,
+        private void writeParamSet(ParameterSet subSet,
                                    List<string> Strings,
                                    string sElem,
                                    int iIndent)
@@ -332,11 +332,11 @@ namespace Models.GrazPlan
             string sLine;
             int Idx;
 
-            if (!subSet.bRootNode())
+            if (!subSet.NodeIsRoot())
                 Strings.Add("");
 
             sLine = new string(' ', iIndent) + "<" + sElem + " name=\"" + subSet.sEnglishName + "\"";
-            if (subSet.bRootNode())
+            if (subSet.NodeIsRoot())
                 sLine += " version=\"" + subSet.sVersion + "\">";
             else
             {
@@ -360,13 +360,13 @@ namespace Models.GrazPlan
                     Strings.Add(sLine);
                 }
 
-            for (Idx = 0; Idx <= subSet.iDefinitionCount() - 1; Idx++)
-                writeParameters(subSet, subSet.getDefinition(Idx), Strings, iIndent + 2);
-            for (Idx = 0; Idx <= subSet.iChildCount() - 1; Idx++)
-                writeParamSet(subSet.getChild(Idx), Strings, "set", iIndent + 2);
+            for (Idx = 0; Idx <= subSet.DefinitionCount() - 1; Idx++)
+                writeParameters(subSet, subSet.GetDefinition(Idx), Strings, iIndent + 2);
+            for (Idx = 0; Idx <= subSet.ChildCount() - 1; Idx++)
+                writeParamSet(subSet.GetChild(Idx), Strings, "set", iIndent + 2);
 
             sLine = new string(' ', iIndent) + "</" + sElem + ">";
-            if (!subSet.bRootNode() && (subSet.iChildCount() > 0))
+            if (!subSet.NodeIsRoot() && (subSet.ChildCount() > 0))
                 sLine += "<!-- " + subSet.sEnglishName + " -->";
 
             Strings.Add(sLine);
@@ -379,9 +379,10 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sPrmID"></param>
         /// <param name="Params"></param>
-        public void readDefaults(string sPrmID, ref TParameterSet Params)
+        public void readDefaults(string sPrmID, ref ParameterSet Params)
         {
-            readFromResource(sPrmID, ref Params, false); 
+            readFromResource(sPrmID, ref Params, false);
+            Params.sCurrLocale = GrazLocale.sDefaultLocale();
         }
 
         /// <summary>
@@ -390,13 +391,13 @@ namespace Models.GrazPlan
         /// <param name="sResID"></param>
         /// <param name="Params"></param>
         /// <param name="bModify"></param>
-        public void readFromResource(string sResID, ref TParameterSet Params, bool bModify)
+        public void readFromResource(string sResID, ref ParameterSet Params, bool bModify)
         {
             string paramStr = Properties.Resources.ResourceManager.GetString(sResID);
             readFromXML(paramStr, ref Params, bModify);
         }
 
-        private void readFromStream(StreamReader Stream, TParameterSet Params, bool bModify)
+        private void readFromStream(StreamReader Stream, ParameterSet Params, bool bModify)
         {
             string sParamStr;
 
@@ -410,7 +411,7 @@ namespace Models.GrazPlan
         /// <param name="sFileName"></param>
         /// <param name="Params"></param>
         /// <param name="bModify"></param>
-        public void readFromFile(string sFileName, TParameterSet Params, bool bModify)
+        public void readFromFile(string sFileName, ParameterSet Params, bool bModify)
         {
             StreamReader fStream = null;
             try
@@ -430,7 +431,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Params"></param>
         /// <returns></returns>
-        public string sParamXML(TParameterSet Params)
+        public string sParamXML(ParameterSet Params)
         {
             List<string> Strings = new List<string>();
 

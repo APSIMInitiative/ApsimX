@@ -90,13 +90,17 @@
                 if (cloneSimulationBeforeRun)
                 {
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
-                    events = new Events(simulationToRun);
-                    simulationEngine.MakeSubstitutions(simulationToRun);
-                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                    events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
+                    simulationEngine.MakeSubsAndLoad(simulationToRun);
                 }
                 else
                     events = new Events(simulationToRun);
+
+                // Remove disabled models from simulation
+                foreach (IModel model in Apsim.ChildrenRecursively(simulationToRun))
+                {
+                    if (!model.Enabled)
+                        model.Parent.Children.Remove(model as Model);
+                }
 
                 // Get an event and links service
                 if (simulationEngine != null)

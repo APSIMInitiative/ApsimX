@@ -94,7 +94,6 @@ namespace Models.Soils
         /// <summary>Gets or sets the boron.</summary>
         /// <value>The boron.</value>
         [Description("Boron")]
-        [Units("Hot water mg/kg")]
         public double[] Boron { get; set; }
         /// <summary>Gets or sets the boron metadata.</summary>
         /// <value>The boron metadata.</value>
@@ -201,23 +200,17 @@ namespace Models.Soils
         public enum PHUnitsEnum 
         {
             /// <summary>water</summary>
+            [Description("1:5 water")]
             Water,
 
             /// <summary>CaCl2</summary>
+            [Description("CaCl2")]
             CaCl2 
         }
         /// <summary>Gets or sets the ph units.</summary>
         /// <value>The ph units.</value>
         public PHUnitsEnum PHUnits { get; set; }
-        /// <summary>Phes the units to string.</summary>
-        /// <param name="Units">The units.</param>
-        /// <returns></returns>
-        public string PHUnitsToString(PHUnitsEnum Units)
-        {
-            if (Units == PHUnitsEnum.CaCl2)
-                return "CaCl2";
-            return "1:5 water";
-        }
+
         /// <summary>Phes the units set.</summary>
         /// <param name="ToUnits">To units.</param>
         public void PHUnitsSet(PHUnitsEnum ToUnits)
@@ -248,24 +241,17 @@ namespace Models.Soils
         public enum BoronUnitsEnum 
         {
             /// <summary>hot water</summary>
+            [Description("Hot water mg/kg")]
             HotWater,
 
             /// <summary>hot ca CL2</summary>
-            HotCaCl2 
+            [Description("Hot CaCl2")]
+            HotCaCl2
         }
         /// <summary>Gets or sets the boron units.</summary>
         /// <value>The boron units.</value>
         public BoronUnitsEnum BoronUnits { get; set; }
 
-        /// <summary>Borons the units to string.</summary>
-        /// <param name="Units">The units.</param>
-        /// <returns></returns>
-        public string BoronUnitsToString(BoronUnitsEnum Units)
-        {
-            if (Units == BoronUnitsEnum.HotCaCl2)
-                return "Hot CaCl2";
-            return "Hot water mg/kg";
-        }
         /// <summary>Borons the units set.</summary>
         /// <param name="ToUnits">To units.</param>
         public void BoronUnitsSet(BoronUnitsEnum ToUnits)

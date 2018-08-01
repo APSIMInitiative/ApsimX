@@ -1,36 +1,42 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-
+// -----------------------------------------------------------------------
+// <copyright file="graztype.cs" company="CSIRO">
+//      CSIRO Agriculture & Food
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+
     /// <summary>
     /// Container for many GrazPlan constants
     /// </summary>
-    static public class GrazType
+    public static class GrazType
     {
         /// <summary>
-        /// 
+        /// None item
         /// </summary>
         public const int NONE = 0;
+
         /// <summary>
         /// Total item
         /// </summary>
         public const int TOTAL = 0;
+
         /// <summary>
         /// Surface item
         /// </summary>
         public const int SURFACE = 0;
+
         /// <summary>
         /// Represents a large value
         /// </summary>
         public const double VeryLarge = 1.0E6;
+
         /// <summary>
         /// Represents a small value
         /// </summary>
@@ -40,18 +46,26 @@ namespace Models.GrazPlan
         /// Number of digestibility classes
         /// </summary>
         public const int DigClassNo = 6;
+
         /// <summary>
         /// Total number of herbage classes
         /// </summary>
         public const int HerbClassNo = DigClassNo * 2;
+
         /// <summary>
         /// Maximum plant species
         /// </summary>
         public const int MaxPlantSpp = 80;
+
         /// <summary>
-        /// Maximum soil layers
+        /// The ungrazeable amount of green in a paddock
         /// </summary>
-        public const int MaxSoilLayers = 50;
+        public const double Ungrazeable = 40.0;  // g/m^2 
+
+    /// <summary>
+    /// Maximum soil layers
+    /// </summary>
+    public const int MaxSoilLayers = 50;
 #pragma warning disable 1591 //missing xml comment
         public const int stSEEDL = 1; public const int ptLEAF = 1; public const int SOFT = 1; public const int EFFR = 1;
         public const int stESTAB = 2; public const int ptSTEM = 2; public const int HARD = 2; public const int OLDR = 2;
@@ -70,23 +84,25 @@ namespace Models.GrazPlan
         /// <summary>
         /// Organic material elements
         /// </summary>
-        public enum TOMElement { 
+        public enum TOMElement
+        {
             /// <summary>
             /// Carbon
             /// </summary>
-            C, 
+            c,
             /// <summary>
             /// Nitrogen
             /// </summary>
-            N, 
+            n,
             /// <summary>
             /// Phosphorous
             /// </summary>
-            P, 
+            p,
             /// <summary>
             /// Sulphur
             /// </summary>
-            S };
+            s
+        };
         /// <summary>
         /// Plant nutrients
         /// </summary>
@@ -107,15 +123,15 @@ namespace Models.GrazPlan
             /// <summary>
             /// Dry matter in kg/ha
             /// </summary>
-            public double DM;                                         
+            public double DM;
             /// <summary>
             /// Nutrients in kg element/ha
             /// </summary>
-            public double[] Nu = new double[4];                       
+            public double[] Nu = new double[4];
             /// <summary>
             /// Ash alkalinity in mol/ha
             /// </summary>
-            public double AshAlk;                                                      
+            public double AshAlk;
         }
         /// <summary>
         /// Zero the DM pool
@@ -126,7 +142,7 @@ namespace Models.GrazPlan
             int pe;
 
             Pool.DM = 0;
-            for (pe = (int)TOMElement.N; pe <= (int)TOMElement.S; pe++)
+            for (pe = (int)TOMElement.n; pe <= (int)TOMElement.s; pe++)
                 Pool.Nu[pe] = 0;
             Pool.AshAlk = 0;
         }
@@ -136,22 +152,53 @@ namespace Models.GrazPlan
         /// Sheep or Cattle animal type
         /// </summary>
         public enum AnimalType { Sheep, Cattle };
+
         /// <summary>
         /// Age type of the animal
         /// </summary>
-        public enum AgeType { LambCalf, Weaner, Yearling, TwoYrOld, Mature };
+        public enum AgeType
+        {
+            /// <summary>
+            /// Lamb or calf
+            /// </summary>
+            LambCalf,
+
+            /// <summary>
+            /// A weaner
+            /// </summary>
+            Weaner,
+
+            /// <summary>
+            /// A yearling animal
+            /// </summary>
+            Yearling,
+
+            /// <summary>
+            /// A two year old
+            /// </summary>
+            TwoYrOld,
+
+            /// <summary>
+            /// A mature animal
+            /// </summary>
+            Mature
+        };
+
         /// <summary>
         /// Text for the age types
         /// </summary>
         static public string[] AgeText = { "Young", "Weaner", "Yearling", "2-3yo", "Mature" };
+
         /// <summary>
         /// Reproduction type
         /// </summary>
         public enum ReproType { Castrated, Male, Empty, EarlyPreg, LatePreg };
+
         /// <summary>
         /// Lactation type
         /// </summary>
         public enum LactType { Dry, Lactating, Suckling };
+
         /// <summary>
         /// Sheep or cattle text
         /// </summary>
@@ -165,7 +212,7 @@ namespace Models.GrazPlan
         /// One element of the available feed
         /// </summary>
         [Serializable]
-        public struct IntakeRecord                                                  
+        public struct IntakeRecord
         {
             /// <summary>
             /// Biomass
@@ -194,18 +241,18 @@ namespace Models.GrazPlan
             /// <summary>
             /// Average pasture height:default height
             /// </summary>
-            public double HeightRatio;                                          
+            public double HeightRatio;
             /// <summary>
             /// Units are moles/kg DM
             /// </summary>
-            public double AshAlkalinity;                                                        
+            public double AshAlkalinity;
         }
 
         /// <summary>
         /// Grazing inputs
         /// </summary>
         [Serializable]
-        public class TGrazingInputs
+        public class GrazingInputs
         {
             /// <summary>
             /// Available herbage
@@ -214,15 +261,15 @@ namespace Models.GrazPlan
             /// <summary>
             /// Total live + senescing pasture (kg/ha)
             /// </summary>
-            public double TotalGreen;                                                  
+            public double TotalGreen;
             /// <summary>
             /// Total dead pasture + litter (kg/ha)      
             /// </summary>
-            public double TotalDead;                                                
+            public double TotalDead;
             /// <summary>
             /// Proportion of legume
             /// </summary>
-            public double LegumePropn;                     
+            public double LegumePropn;
             /// <summary>
             /// Seeds of various type
             /// </summary>
@@ -238,12 +285,12 @@ namespace Models.GrazPlan
             /// <summary>
             /// "Tropicality" of legumes 0 => temperate; 1 => tropical 
             /// </summary>
-            public double LegumeTrop;                                               
+            public double LegumeTrop;
 
             /// <summary>
-            /// Construct a TGrazingInputs object
+            /// Construct a GrazingInputs object
             /// </summary>
-            public TGrazingInputs()
+            public GrazingInputs()
             {
 
             }
@@ -252,7 +299,7 @@ namespace Models.GrazPlan
             /// Copy the whole object
             /// </summary>
             /// <param name="src"></param>
-            public void CopyFrom(TGrazingInputs src)
+            public void CopyFrom(GrazingInputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 this.TotalGreen = src.TotalGreen;
@@ -268,7 +315,7 @@ namespace Models.GrazPlan
             /// Copy constructor
             /// </summary>
             /// <param name="src"></param>
-            public TGrazingInputs(TGrazingInputs src)
+            public GrazingInputs(GrazingInputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 TotalGreen = src.TotalGreen;
@@ -284,7 +331,7 @@ namespace Models.GrazPlan
         /// Zero the grazing inputs
         /// </summary>
         /// <param name="Inputs"></param>
-        static public void zeroGrazingInputs(ref TGrazingInputs Inputs)
+        static public void zeroGrazingInputs(ref GrazingInputs Inputs)
         {
             Inputs.Herbage = new IntakeRecord[DigClassNo + 1];
             Inputs.TotalGreen = 0;
@@ -301,7 +348,7 @@ namespace Models.GrazPlan
         /// <param name="iPopn"></param>
         /// <param name="partInputs"></param>
         /// <param name="totalInputs"></param>
-        static public void addGrazingInputs(int iPopn, TGrazingInputs partInputs, ref TGrazingInputs totalInputs)
+        static public void addGrazingInputs(int iPopn, GrazingInputs partInputs, ref GrazingInputs totalInputs)
         {
             int iClass;
             // IntakeRecord intakeRec;
@@ -367,16 +414,16 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         [Serializable]
-        public class TPopnHerbageAttr
+        public class PopulationnHerbageAttr
         {
             /// <summary>
             /// kg/ha
             /// </summary>
-            public double fMass_DM;                                                                  
+            public double fMass_DM;
             /// <summary>
             /// kg/kg
             /// </summary>
-            public double fDM_Digestibility;                                                         
+            public double fDM_Digestibility;
             /// <summary>
             /// kg/kg
             /// </summary>
@@ -384,25 +431,25 @@ namespace Models.GrazPlan
             /// <summary>
             /// kg/kg
             /// </summary>
-            public double fNDegradability;                                                           
+            public double fNDegradability;
             /// <summary>
             /// mol/kg
             /// </summary>
-            public double fAshAlkalinity;                                                           
+            public double fAshAlkalinity;
             /// <summary>
             /// kg/m^3
             /// </summary>
-            public double fBulkDensity;                                                             
+            public double fBulkDensity;
             /// <summary>
             /// 0-1, bite-size scale
             /// </summary>
-            public double fGroundAreaFract;                                           
+            public double fGroundAreaFract;
         }
         /// <summary>
         /// 
         /// </summary>
         [Serializable]
-        public class TPopnHerbageData
+        public class PopulationHerbageData
         {
             /// <summary>
             /// Is a legume
@@ -415,11 +462,11 @@ namespace Models.GrazPlan
             /// <summary>
             /// 
             /// </summary>
-            public TPopnHerbageAttr[,] Herbage = new TPopnHerbageAttr[2, HerbClassNo + 1];
+            public PopulationnHerbageAttr[,] Herbage = new PopulationnHerbageAttr[2, HerbClassNo + 1];
             /// <summary>
             /// 
             /// </summary>
-            public TPopnHerbageAttr[] Seeds = new TPopnHerbageAttr[RIPE + 1];
+            public PopulationnHerbageAttr[] Seeds = new PopulationnHerbageAttr[RIPE + 1];
             /// <summary>
             /// 
             /// </summary>
@@ -431,21 +478,21 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         [Serializable]
-        public class TGrazingOutputs // Quantities grazed from a pasture         
+        public class GrazingOutputs // Quantities grazed from a pasture         
         {
             /// <summary>
             /// 
             /// </summary>
-            public double[] Herbage = new double[DigClassNo + 1];   // [1..
+            public double[] Herbage = new double[DigClassNo + 1];   // kg/ha [1..
             /// <summary>
             /// 
             /// </summary>
-            public double[,] Seed = new double[MaxPlantSpp + 1, 3];     // TODO: Fix this [1.., ripe..unripe]
+            public double[,] Seed = new double[MaxPlantSpp + 1, 3]; // kg/ha  TODO: Fix this [1.., ripe..unripe]
 
             /// <summary>
             /// Copy from grazing outputs
             /// </summary>
-            public void CopyFrom(TGrazingOutputs src)
+            public void CopyFrom(GrazingOutputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 Array.Copy(src.Seed, this.Seed, src.Seed.Length);
@@ -461,23 +508,23 @@ namespace Models.GrazPlan
         /// <summary>
         /// Carbon content of dry matter
         /// </summary>
-        public const double DM2Carbon = 0.4;                                         
+        public const double DM2Carbon = 0.4;
         /// <summary>
         /// Conversion from N content to protein     
         /// </summary>
-        public const double N2Protein = 6.25;                           
+        public const double N2Protein = 6.25;
         /// <summary>
         /// Default conversion:  kg/ha -> cm height  
         /// </summary>
-        public const double DM2Height = 0.003;                          
+        public const double DM2Height = 0.003;
         /// <summary>
         /// Herbage bulk density for HR=1 (kg/m^3)   
         /// </summary>
-        public const double REF_HERBAGE_BD = 0.01 / DM2Height;          
+        public const double REF_HERBAGE_BD = 0.01 / DM2Height;
         /// <summary>
         /// Energy content of herbage (MJ/kg DM)     
         /// </summary>
-        public const double HerbageE2DM = 17.0;                         
+        public const double HerbageE2DM = 17.0;
         /// <summary>
         /// 
         /// </summary>
@@ -497,20 +544,21 @@ namespace Models.GrazPlan
         /// <returns></returns>
         static public double fGrazingHeight(double fHeight, double fMaxGH, double fCurvature, double fSlope)
         {
-            double Result;
+            double result;
 
             if (fSlope <= 0.0)                                                    // fSlope=0 => all herbage available        
-                Result = 0.0;
+                result = 0.0;
             else if (fCurvature <= 0.0)                                           // fCurvature=0 => rectangular hyperbola    
-                Result = fMaxGH * fHeight / (fHeight + fMaxGH / fSlope);
+                result = fMaxGH * fHeight / (fHeight + fMaxGH / fSlope);
             else if (fCurvature >= 1.0)                                           // fCurvature=1 => piecewise linear         
-                Result = Math.Min(fSlope * fHeight, fMaxGH);
+                result = Math.Min(fSlope * fHeight, fMaxGH);
             else                                                                      // Otherwise, a non-rectangular hyperbola   
-                Result = (fSlope * fHeight + fMaxGH
+                result = (fSlope * fHeight + fMaxGH
                            - Math.Sqrt(Math.Pow(fSlope * fHeight + fMaxGH, 2) - 4.0 * fCurvature * fMaxGH * fSlope * fHeight))
                           / (2.0 * fCurvature);
-            return Result;
+            return result;
         }
+
         /// <summary>
         /// Get a weighted average
         /// </summary>
@@ -521,28 +569,29 @@ namespace Models.GrazPlan
         /// <returns></returns>
         static public double fWeightAverage(double X1, double Y1, double X2, double Y2)
         {
-            double Result;
+            double result;
             if ((Y1 != 0.0) && (Y2 != 0.0))
-                Result = (X1 * Y1 + X2 * Y2) / (Y1 + Y2);
+                result = (X1 * Y1 + X2 * Y2) / (Y1 + Y2);
             else if (Y1 != 0.0)
-                Result = X1;
+                result = X1;
             else
-                Result = X2;
-            return Result;
+                result = X2;
+            return result;
         }
+
         /// <summary>
         /// Scale the grazing inputs
         /// </summary>
         /// <param name="Inputs"></param>
         /// <param name="fScale"></param>
         /// <returns></returns>
-        static public TGrazingInputs scaleGrazingInputs(TGrazingInputs Inputs, double fScale)
+        static public GrazingInputs scaleGrazingInputs(GrazingInputs Inputs, double fScale)
         {
             int iClass;
             int iSpecies;
             int iRipe;
 
-            TGrazingInputs Result = new TGrazingInputs(Inputs);
+            GrazingInputs Result = new GrazingInputs(Inputs);
 
             if (fScale != 1.0)
             {
@@ -578,7 +627,7 @@ namespace Models.GrazPlan
         {
             DM_Pool Result = new DM_Pool();
             Result.DM = fScale * aPool.DM;
-            for (int Elem = (int)TOMElement.N; Elem <= (int)TOMElement.S; Elem++)
+            for (int Elem = (int)TOMElement.n; Elem <= (int)TOMElement.s; Elem++)
                 Result.Nu[Elem] = fScale * aPool.Nu[Elem];
             Result.AshAlk = fScale * aPool.AshAlk;
             return Result;
@@ -590,9 +639,9 @@ namespace Models.GrazPlan
         /// <param name="TotPool"></param>
         static public void AddDMPool(DM_Pool PartPool, DM_Pool TotPool)
         {
-            int N = (int)GrazType.TOMElement.N;
-            int P = (int)GrazType.TOMElement.P;
-            int S = (int)GrazType.TOMElement.S;
+            int N = (int)GrazType.TOMElement.n;
+            int P = (int)GrazType.TOMElement.p;
+            int S = (int)GrazType.TOMElement.s;
 
             TotPool.DM = TotPool.DM + PartPool.DM;
             TotPool.Nu[N] = TotPool.Nu[N] + PartPool.Nu[N];
@@ -654,7 +703,7 @@ namespace Models.GrazPlan
                 stream.Seek(0, SeekOrigin.Begin);
                 formatter.Binder = new PreMergeToMergedDeserializationBinder();
                 return (T)formatter.Deserialize(stream);
-            } 
+            }
         }
     }
 }

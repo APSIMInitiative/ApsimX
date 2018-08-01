@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
-using Models.PMF.Functions;
-using Models.PMF.Organs;
+using Models.Functions;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.Interfaces;
-using Models.PMF.Interfaces;
 
 namespace Models.PMF.Struct
 {
@@ -91,7 +87,7 @@ namespace Models.PMF.Struct
 
         /// <summary>The thermal time</summary>
         [Link]
-        IFunction ThermalTime = null;
+        public IFunction ThermalTime = null;
         /// <summary>The main stem node appearance rate</summary>
         [Link]
         public IFunction Phyllochron = null;
@@ -107,7 +103,7 @@ namespace Models.PMF.Struct
         [Link]
         [Units("/node")]
         IFunction BranchingRate = null;
-        /// <summary>The branch mortality</summary>
+        /// <summary>The branch mortality (in ratio of total branching)</summary>
         [Link]
         [Units("/d")]
         IFunction BranchMortality = null;
@@ -277,7 +273,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Phenology != null && Phenology.OnDayOf("Emergence"))
+            if (Phenology != null && Phenology.OnStartDayOf("Emergence"))
                      LeafTipsAppeared = 1.0;
         }
 
@@ -358,7 +354,7 @@ namespace Models.PMF.Struct
 
                     //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
                      if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
-                    {
+                     {
                         int i = 1;
                         for (i = 1; i <= LeavesToAppear; i++)
                         {
@@ -367,7 +363,7 @@ namespace Models.PMF.Struct
                             DoLeafTipAppearance();
                         }
                         // Apex calculation
-                        ApexNum += (BranchingRate.Value() - BranchMortality.Value()) * PrimaryBudNo;
+                        ApexNum += BranchingRate.Value() * PrimaryBudNo;
 
                         if (Phenology.Stage > 4 & !SenescenceByAge)
                         {
@@ -389,6 +385,8 @@ namespace Models.PMF.Struct
                         double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
+                        // Reduce the apex number by branching mortality
+                        ApexNum -= PropnMortality * (ApexNum - 1);
                     }
                 }
             }

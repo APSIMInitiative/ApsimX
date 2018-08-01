@@ -45,23 +45,23 @@ namespace UserInterface.Classes
         {
             get
             {
-                if (this.gridView.gridview.Columns[this.ColumnIndex].Sizing == Gtk.TreeViewColumnSizing.Autosize)
+                if (this.gridView.Gridview.Columns[this.ColumnIndex].Sizing == Gtk.TreeViewColumnSizing.Autosize)
                     return -1;
                 else
-                    return this.gridView.gridview.Columns[this.ColumnIndex].Width;
+                    return this.gridView.Gridview.Columns[this.ColumnIndex].Width;
             }
 
             set
             {
                 if (value == -1)
                 {
-                    this.gridView.gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
-                    this.gridView.gridview.Columns[this.ColumnIndex].Resizable = true;
+                    this.gridView.Gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
+                    this.gridView.Gridview.Columns[this.ColumnIndex].Resizable = true;
                 }
                 else
                 {
-                    this.gridView.gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Fixed;
-                    this.gridView.gridview.Columns[this.ColumnIndex].FixedWidth = value;
+                    this.gridView.Gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Fixed;
+                    this.gridView.Gridview.Columns[this.ColumnIndex].FixedWidth = value;
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace UserInterface.Classes
         {
             get
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                CellRendererText render = this.gridView.Gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
                 if (render != null)
                     return render.Alignment == Pango.Alignment.Left;
                 else
@@ -82,10 +82,10 @@ namespace UserInterface.Classes
 
             set
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                CellRendererText render = this.gridView.Gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
                 if (render != null)
                     render.Alignment = value ? Pango.Alignment.Left : Pango.Alignment.Right;
-                this.gridView.gridview.Columns[this.ColumnIndex].Alignment = value ? 0.5F : 0.95F;
+                this.gridView.Gridview.Columns[this.ColumnIndex].Alignment = value ? 0.5F : 0.95F;
             }
         }
 
@@ -96,24 +96,12 @@ namespace UserInterface.Classes
         {
             get
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
-                if (render != null)
-                    return render.Editable == false;
-                else
-                    return true;
+                return this.gridView.ColIsReadonly(this.ColumnIndex);
             }
 
             set
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
-                if (render != null)
-                {
-                    render.Editable = !value;
-                    if (value)
-                        render.Foreground = "darkmagenta";
-                    else
-                        render.Foreground = "black"; // Probably not how this should be done..
-                }
+                this.gridView.SetColAsReadonly(this.ColumnIndex, value);
             }
         }
 
@@ -140,21 +128,13 @@ namespace UserInterface.Classes
         {
             get
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
-                if (render != null)
-                {
-                    Gdk.Color bg = render.BackgroundGdk;
-                    return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
-                }
-                else
-                    return System.Drawing.Color.White;
+                Gdk.Color bg = this.gridView.ColBackgroundColor(this.ColumnIndex);
+                return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
             }
 
             set
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
-                if (render != null)
-                    render.BackgroundGdk = new Gdk.Color(value.R, value.G, value.B);
+                this.gridView.SetColBackgroundColor(this.ColumnIndex, new Gdk.Color(value.R, value.G, value.B));
             }
         }
 
@@ -165,21 +145,13 @@ namespace UserInterface.Classes
         {
             get
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
-                if (render != null)
-                {
-                    Gdk.Color fg = render.ForegroundGdk;
-                    return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
-                }
-                else
-                    return System.Drawing.Color.Black;
+                Gdk.Color bg = this.gridView.ColForegroundColor(this.ColumnIndex);
+                return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
             }
 
             set
             {
-                CellRendererText render = this.gridView.gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
-                if (render != null)
-                    render.ForegroundGdk = new Gdk.Color(value.R, value.G, value.B);
+                this.gridView.SetColForegroundColor(this.ColumnIndex, new Gdk.Color(value.R, value.G, value.B));
             }
         }
 
@@ -270,12 +242,12 @@ namespace UserInterface.Classes
         {
             get
             {
-                return this.gridView.gridview.Columns[this.ColumnIndex].Title;
+                return this.gridView.Gridview.Columns[this.ColumnIndex].Title;
             }
 
             set
             {
-                this.gridView.gridview.Columns[this.ColumnIndex].Title = value;
+                this.gridView.Gridview.Columns[this.ColumnIndex].Title = value;
             }
         }
     }

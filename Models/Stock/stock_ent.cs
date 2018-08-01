@@ -1,3 +1,8 @@
+// -----------------------------------------------------------------------
+// <copyright file="stock_ent.cs" company="CSIRO">
+// CSIRO Agriculture & Food
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.GrazPlan
 {
@@ -10,107 +15,107 @@ namespace Models.GrazPlan
     /// Enterprise type init
     /// </summary>
     [Serializable]
-    public class TAgeInfo
+    public class AgeInfo
     {
         /// <summary>
         /// 
         /// </summary>
-        public string age_descr;
+        public string AgeDescr;
         /// <summary>
         /// 
         /// </summary>
-        public int tag_no;
+        public int TagNumber;
     }
 
     /// <summary>
     /// 
     /// </summary>
     [Serializable]
-    public class TTagFlock
+    public class TagFlock
     {
         /// <summary>
         /// 
         /// </summary>
-        public string mob_descr;
+        public string MobDescr;
         /// <summary>
         /// 
         /// </summary>
-        public bool male;
+        public bool Male;
         /// <summary>
         /// age lamb,weaner, x-n
         /// </summary>
-        public TAgeInfo[] ages;
+        public AgeInfo[] Ages;
     }
 
     /// <summary>
     /// 
     /// </summary>
     [Serializable]
-    public class TReproduction
+    public class Reproduction
     {
         /// <summary>
         /// 
         /// </summary>
-        public string mate_day;
+        public string MateDay;
         /// <summary>
         /// 
         /// </summary>
-        public int mate_age;
+        public int MateAge;
         /// <summary>
         /// 
         /// </summary>
-        public double[] conception;
+        public double[] Conception;
         /// <summary>
         /// 
         /// </summary>
-        public bool castrate;
+        public bool Castrate;
         /// <summary>
         /// 
         /// </summary>
-        public string wean_day;
+        public string WeanDay;
         /// <summary>
         /// 
         /// </summary>
-        public int wean_age;
+        public int WeanAge;
         /// <summary>
         /// 
         /// </summary>
-        public int[] mate_tags;
+        public int[] MateTags;
         /// <summary>
         /// 
         /// </summary>
-        public int joined_tag;
+        public int JoinedTag;
         /// <summary>
         /// 
         /// </summary>
-        public int dry_tag;
+        public int DryTag;
         /// <summary>
         /// 
         /// </summary>
-        public int weanerM_tag;
+        public int WeanerMaleTag;
         /// <summary>
         /// 
         /// </summary>
-        public int weanerF_tag;
+        public int WeanerFemaleTag;
         /// <summary>
         /// 
         /// </summary>
-        public double male_ratio;
+        public double MaleRatio;
         /// <summary>
         /// 
         /// </summary>
-        public double keep_males;
+        public double KeepMales;
         /// <summary>
         /// ausfarm unique
         /// </summary>
-        public string mate_with;
+        public string MateWith;
     }
 
     /// <summary>
     /// The initial state of the Enterprise
     /// </summary>
     [Serializable]
-    public class TEnterpriseInfo
+    public class EnterpriseInfo
     {
 #pragma warning disable 1591 //missing xml comment
         public const int FIXEDPERIOD = 0;
@@ -141,7 +146,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Enterprise type
         /// </summary>
-        public enum TStockEnterprise
+        public enum StockEnterprise
         {
             /// <summary>
             /// Wether
@@ -169,20 +174,20 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="className"></param>
         /// <returns></returns>
-        public TStockEnterprise EntTypeFromName(string className)
+        public StockEnterprise EntTypeFromName(string className)
         {
             if (String.Compare(className, ENT[WETHER], true) == 0)
-                return TStockEnterprise.entWether;
+                return StockEnterprise.entWether;
             else if (String.Compare(className, ENT[EWEWETHER], true) == 0)
-                return TStockEnterprise.entEweWether;
+                return StockEnterprise.entEweWether;
             else if (String.Compare(className, ENT[STEERS_COWS], true) == 0)
-                return TStockEnterprise.entSteer;
+                return StockEnterprise.entSteer;
             else if (String.Compare(className, ENT[BEEF], true) == 0)
-                return TStockEnterprise.entBeefCow;
+                return StockEnterprise.entBeefCow;
             else if (String.Compare(className, ENT[LAMBS], true) == 0)
-                return TStockEnterprise.entLamb;
+                return StockEnterprise.entLamb;
             else
-                return TStockEnterprise.entWether; // Use as the default if no match was found
+                return StockEnterprise.entWether; // Use as the default if no match was found
         }
         /// <summary>
         /// Set the tag of an animal group
@@ -190,15 +195,15 @@ namespace Models.GrazPlan
         /// <param name="mob"></param>
         /// <param name="ageidx"></param>
         /// <param name="value"></param>
-        public void setTag(int mob, int ageidx, int value)
+        public void SetTag(int mob, int ageidx, int value)
         {
             if (mob > tag_flock.Length)
                 Array.Resize(ref tag_flock, mob);
 
-            if (ageidx > tag_flock[mob - 1].ages.Length)
-                Array.Resize(ref tag_flock[mob - 1].ages, ageidx);
+            if (ageidx > tag_flock[mob - 1].Ages.Length)
+                Array.Resize(ref tag_flock[mob - 1].Ages, ageidx);
 
-            tag_flock[mob - 1].ages[ageidx - 1].tag_no = value;
+            tag_flock[mob - 1].Ages[ageidx - 1].TagNumber = value;
         }
 
         /// <summary>
@@ -207,13 +212,13 @@ namespace Models.GrazPlan
         /// <param name="mob">1-n</param>
         /// <param name="ageidx">1-n</param>
         /// <returns></returns>
-        public int getTag(int mob, int ageidx)
+        public int GetTag(int mob, int ageidx)
         {
             int result = 0;
             if (tag_flock.Length >= mob)
             {
-                if (tag_flock[mob - 1].ages.Length >= ageidx)
-                    result = tag_flock[mob - 1].ages[ageidx - 1].tag_no;
+                if (tag_flock[mob - 1].Ages.Length >= ageidx)
+                    result = tag_flock[mob - 1].Ages[ageidx - 1].TagNumber;
             }
             return result;
         }
@@ -231,7 +236,7 @@ namespace Models.GrazPlan
         /// </summary>
         public bool IsCattle
         {
-            get { return ((EntTypeFromName(EntClass) == TStockEnterprise.entSteer) || (EntTypeFromName(EntClass) == TStockEnterprise.entBeefCow)); }
+            get { return ((EntTypeFromName(EntClass) == StockEnterprise.entSteer) || (EntTypeFromName(EntClass) == StockEnterprise.entBeefCow)); }
         }
         /// <summary>
         /// flock/herd genotype
@@ -254,67 +259,67 @@ namespace Models.GrazPlan
         /// <summary>
         /// mob - sex,breeding
         /// </summary>
-        public TTagFlock[] tag_flock;
+        public TagFlock[] tag_flock;
 
         /// <summary>
         /// Mating day
         /// </summary>
         public int MateDay
         {
-            get { return asStdDate(reproduction.mate_day); }
-            set { reproduction.mate_day = setFromStdDate(value); }
+            get { return AsStdDate(reproduction.MateDay); }
+            set { reproduction.MateDay = SetFromStdDate(value); }
         }
         /// <summary>
         /// Mating age in years
         /// </summary>
         public int MateYears
         {
-            get { return reproduction.mate_age; }
-            set { reproduction.mate_age = value; }
+            get { return reproduction.MateAge; }
+            set { reproduction.MateAge = value; }
         }
         /// <summary>
         /// Mate with genotype
         /// </summary>
         public string MateWith
         {
-            get { return reproduction.mate_with; }
-            set { reproduction.mate_with = value; }
+            get { return reproduction.MateWith; }
+            set { reproduction.MateWith = value; }
         }
         /// <summary>
         /// Do castrate
         /// </summary>
         public bool Castrate
         {
-            get { return reproduction.castrate; }
-            set { reproduction.castrate = value; }
+            get { return reproduction.Castrate; }
+            set { reproduction.Castrate = value; }
         }
         /// <summary>
         /// Weaning day
         /// </summary>
         public int WeanDay
         {
-            get { return asStdDate(reproduction.wean_day); }
-            set { reproduction.wean_day = setFromStdDate(value); }
+            get { return AsStdDate(reproduction.WeanDay); }
+            set { reproduction.WeanDay = SetFromStdDate(value); }
         }
         /// <summary>
         /// Count of tags mated
         /// </summary>
         public int MateTagCount
         {
-            get { return reproduction.mate_tags.Length; }
-            set { Array.Resize(ref reproduction.mate_tags, value); }
+            get { return reproduction.MateTags.Length; }
+            set { Array.Resize(ref reproduction.MateTags, value); }
         }
         /// <summary>
         /// Get the mating tag at idx
         /// </summary>
         /// <param name="idx">1-n</param>
         /// <returns></returns>
-        public int getMateTag(int idx)
+        public int GetMateTag(int idx)
         {
             int result = 0;
 
-            if (reproduction.mate_tags.Length >= idx)
-                result = reproduction.mate_tags[idx - 1];
+            if (reproduction.MateTags.Length >= idx)
+                result = reproduction.MateTags[idx - 1];
             return result;
         }
         /// <summary>
@@ -322,42 +327,42 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="idx">1-n</param>
         /// <param name="Value"></param>
-        public void setMateTag(int idx, int Value)
+        public void SetMateTag(int idx, int Value)
         {
-            if (reproduction.mate_tags.Length >= idx)
-                reproduction.mate_tags[idx - 1] = Value;
+            if (reproduction.MateTags.Length >= idx)
+                reproduction.MateTags[idx - 1] = Value;
         }
         /// <summary>
         /// Joined tag
         /// </summary>
         public int JoinedTag
         {
-            get { return reproduction.joined_tag; }
-            set { reproduction.joined_tag = value; }
+            get { return reproduction.JoinedTag; }
+            set { reproduction.JoinedTag = value; }
         }
         /// <summary>
         /// Drying off tag
         /// </summary>
         public int DryTag
         {
-            get { return reproduction.dry_tag; }
-            set { reproduction.dry_tag = value; }
+            get { return reproduction.DryTag; }
+            set { reproduction.DryTag = value; }
         }
         /// <summary>
         /// Weaner female tag
         /// </summary>
         public int WeanerFTag
         {
-            get { return reproduction.weanerF_tag; }
-            set { reproduction.weanerF_tag = value; }
+            get { return reproduction.WeanerFemaleTag; }
+            set { reproduction.WeanerFemaleTag = value; }
         }
         /// <summary>
         /// Weaner male tag
         /// </summary>
         public int WeanerMTag
         {
-            get { return reproduction.weanerM_tag; }
-            set { reproduction.weanerM_tag = value; }
+            get { return reproduction.WeanerMaleTag; }
+            set { reproduction.WeanerMaleTag = value; }
         }
         
         /// <summary>
@@ -369,7 +374,7 @@ namespace Models.GrazPlan
         {
             int mob, agegrp;
             bool found;
-            TTagFlock mobItem;
+            TagFlock mobItem;
 
             found = false;
             mob = 1;
@@ -377,9 +382,9 @@ namespace Models.GrazPlan
             {
                 mobItem = tag_flock[mob - 1];
                 agegrp = 1;
-                while (!found && (agegrp <= mobItem.ages.Length))
+                while (!found && (agegrp <= mobItem.Ages.Length))
                 {
-                    if (mobItem.ages[agegrp - 1].tag_no == tagNo)
+                    if (mobItem.Ages[agegrp - 1].TagNumber == tagNo)
                         found = true;
                     agegrp++;
                 }
@@ -391,20 +396,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
-        public TReproduction reproduction;
+        public Reproduction reproduction;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="strDay"></param>
         /// <returns></returns>
-        protected int asStdDate(string strDay)
+        protected int AsStdDate(string strDay)
         {
-            int doy = 0;
+            int doy = 0;    // doy = decimal stddate
 
-            //convert the day to the day number of the year
-            if (!StdStrng.TokenDate(ref strDay, ref doy))//doy = decimal stddate
+            // convert the day to the day number of the year 
+            if (!StdStrng.TokenDate(ref strDay, ref doy))
+            {
                 doy = 0;
+            }
             return doy;
 
         }
@@ -412,7 +419,7 @@ namespace Models.GrazPlan
         /// Get the string of a std date (integer). The string form is 'dd mmm'
         /// </summary>
         /// <param name="value"></param>
-        protected string setFromStdDate(int value)
+        protected string SetFromStdDate(int value)
         {
             if (value != 0)
                 return StdDate.DateStrFmt(value, "D mmm");
@@ -425,15 +432,15 @@ namespace Models.GrazPlan
     /// 
     /// </summary>
     [Serializable]
-    public class TEnterpriseList
+    public class EnterpriseList
     {
-        private List<TEnterpriseInfo> FEnterpriseList = new List<TEnterpriseInfo>();
+        private List<EnterpriseInfo> FEnterpriseList = new List<EnterpriseInfo>();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="ent"></param>
-        public void Add(TEnterpriseInfo ent)
+        public void Add(EnterpriseInfo ent)
         {
             FEnterpriseList.Add(ent);
         }
@@ -460,7 +467,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sName"></param>
         /// <returns></returns>
-        public TEnterpriseInfo byName(string sName)
+        public EnterpriseInfo byName(string sName)
         {
             int Idx;
 
@@ -475,7 +482,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="iValue">iValue: 0->n</param>
         /// <returns></returns>
-        public TEnterpriseInfo byIndex(int iValue)
+        public EnterpriseInfo byIndex(int iValue)
         {
             return FEnterpriseList[iValue];
         }
@@ -497,20 +504,20 @@ namespace Models.GrazPlan
     /// A period of grazing. Could be flexible or fixed dates
     /// </summary>
     [Serializable]
-    public class TGrazingPeriod
+    public class GrazingPeriod
     {
         /// <summary>
         /// 
         /// </summary>
-        public string start_day;
+        public string StartDay;
         /// <summary>
         /// 
         /// </summary>
-        public string finish_day;
+        public string FinishDay;
         /// <summary>
         /// 
         /// </summary>
-        public string descr;
+        public string Descr;
         /// <summary>
         /// fixed/flexible
         /// </summary>
@@ -518,7 +525,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
-        public int check_every;
+        public int CheckEvery;
         /// <summary>
         /// cover / dm / draft
         /// </summary>
@@ -527,7 +534,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         [Serializable]
-        public class TTagPaddock
+        public class TagPaddock
         {
             /// <summary>
             /// 
@@ -541,13 +548,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// used for flexible
         /// </summary>
-        public TTagPaddock[] tag_list;
+        public TagPaddock[] tag_list;
 
         /// <summary>
         /// 
         /// </summary>
         [Serializable]
-        public class TTagIndex
+        public class TagIndex
         {
             /// <summary>
             /// 
@@ -562,23 +569,23 @@ namespace Models.GrazPlan
         /// <summary>
         /// used for fixed
         /// </summary>
-        public TTagIndex[] paddock_list;   
+        public TagIndex[] paddock_list;   
     }
 
     /// <summary>
     /// List of grazing periods
     /// </summary>
     [Serializable]
-    public class TGrazingList
+    public class GrazingList
     {
-        private List<TGrazingPeriod> FGrazingList = new List<TGrazingPeriod>();
+        private List<GrazingPeriod> grazingList = new List<GrazingPeriod>();
         /// <summary>
         /// Count of periods
         /// </summary>
         /// <returns></returns>
         public int Count()
         {
-            return FGrazingList.Count;
+            return grazingList.Count;
         }
 
         /// <summary>
@@ -587,17 +594,17 @@ namespace Models.GrazPlan
         /// <param name="iValue">0-n</param>
         public void Delete(int iValue)
         {
-            if ((FGrazingList.Count() > iValue) && (iValue >= 0))
-                FGrazingList.RemoveAt(iValue);
+            if ((grazingList.Count() > iValue) && (iValue >= 0))
+                grazingList.RemoveAt(iValue);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="period"></param>
-        public void Add(TGrazingPeriod period)
+        public void Add(GrazingPeriod period)
         {
-            FGrazingList.Add(period);
+            grazingList.Add(period);
         }
 
         /// <summary>
@@ -605,9 +612,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="idx">0-n</param>
         /// <returns></returns>
-        public TGrazingPeriod byIndex(int idx)
+        public GrazingPeriod ByIndex(int idx)
         {
-            return FGrazingList[idx];
+            return grazingList[idx];
         }
 
         /// <summary>
@@ -615,18 +622,18 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <returns></returns>
-        public int getMoveCheck(int periodIdx)
+        public int GetMoveCheck(int periodIdx)
         {
-            return FGrazingList[periodIdx - 1].check_every;
+            return grazingList[periodIdx - 1].CheckEvery;
         }
         /// <summary>
         /// Check for drafting every x days
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <param name="Value"></param>
-        public void setDraftCheck(int periodIdx, int Value)
+        public void SetDraftCheck(int periodIdx, int Value)
         {
-            FGrazingList[periodIdx - 1].check_every = Value;
+            grazingList[periodIdx - 1].CheckEvery = Value;
         }
         /// <summary>
         /// Get the count of paddocks in the tag list
@@ -634,11 +641,11 @@ namespace Models.GrazPlan
         /// <param name="periodIdx">1-n</param>
         /// <param name="idx">1-n</param>
         /// <returns></returns>
-        public int getTagPaddocks(int periodIdx, int idx)
+        public int GetTagPaddocks(int periodIdx, int idx)
         {
             int result = 0;
-            if (FGrazingList[periodIdx - 1].tag_list.Length >= idx)
-                result = FGrazingList[periodIdx - 1].tag_list[idx - 1].paddock.Length;
+            if (grazingList[periodIdx - 1].tag_list.Length >= idx)
+                result = grazingList[periodIdx - 1].tag_list[idx - 1].paddock.Length;
             return result;
         }
         /// <summary>
@@ -647,10 +654,10 @@ namespace Models.GrazPlan
         /// <param name="periodIdx">1-n</param>
         /// <param name="idx">1-n</param>
         /// <param name="Value"></param>
-        public void setTagPaddocks(int periodIdx, int idx, int Value)
+        public void SetTagPaddocks(int periodIdx, int idx, int Value)
         {
-            if (FGrazingList[periodIdx - 1].tag_list.Length >= idx)
-                Array.Resize(ref FGrazingList[periodIdx - 1].tag_list, Value);
+            if (grazingList[periodIdx - 1].tag_list.Length >= idx)
+                Array.Resize(ref grazingList[periodIdx - 1].tag_list, Value);
         }
         /// <summary>
         /// Get the tag item for the grazing period
@@ -658,11 +665,11 @@ namespace Models.GrazPlan
         /// <param name="periodIdx"></param>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public int getTag(int periodIdx, int idx)
+        public int GetTag(int periodIdx, int idx)
         {
             int result = 0;
-            if (FGrazingList[periodIdx - 1].tag_list.Length >= idx)
-                result = FGrazingList[periodIdx - 1].tag_list[idx - 1].tag_no;
+            if (grazingList[periodIdx - 1].tag_list.Length >= idx)
+                result = grazingList[periodIdx - 1].tag_list[idx - 1].tag_no;
             return result;
         }
         /// <summary>
@@ -671,73 +678,73 @@ namespace Models.GrazPlan
         /// <param name="periodIdx"></param>
         /// <param name="idx"></param>
         /// <param name="Value"></param>
-        public void setTag(int periodIdx, int idx, int Value)
+        public void SetTag(int periodIdx, int idx, int Value)
         {
-            if (FGrazingList[periodIdx - 1].tag_list.Length >= idx)
-                FGrazingList[periodIdx - 1].tag_list[idx - 1].tag_no = Value;
+            if (grazingList[periodIdx - 1].tag_list.Length >= idx)
+                grazingList[periodIdx - 1].tag_list[idx - 1].tag_no = Value;
         }
         /// <summary>
         /// Get the count of tag items in the list
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <returns></returns>
-        public int getTagCount(int periodIdx)
+        public int GetTagCount(int periodIdx)
         {
-            return FGrazingList[periodIdx - 1].tag_list.Length;
+            return grazingList[periodIdx - 1].tag_list.Length;
         }
         /// <summary>
         /// Get grazing criteria
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <returns></returns>
-        public string getCriteria(int periodIdx)
+        public string GetCriteria(int periodIdx)
         {
-            return FGrazingList[periodIdx - 1].test;
+            return grazingList[periodIdx - 1].test;
         }
         /// <summary>
         /// Set the grazing criteria
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <param name="Value"></param>
-        public void setCriteria(int periodIdx, int Value)
+        public void SetCriteria(int periodIdx, int Value)
         {
-            FGrazingList[periodIdx - 1].test = Value.ToString();
+            grazingList[periodIdx - 1].test = Value.ToString();
         }
         /// <summary>
         /// Get the finish day
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <returns></returns>
-        public int getFinishDay(int periodIdx)
+        public int GetFinishDay(int periodIdx)
         {
-            return asStdDate(FGrazingList[periodIdx - 1].finish_day);
+            return AsStdDate(grazingList[periodIdx - 1].FinishDay);
         }
         /// <summary>
         /// Set the finish day
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <param name="Value"></param>
-        public void setFinish(int periodIdx, int Value)
+        public void SetFinish(int periodIdx, int Value)
         {
-            FGrazingList[periodIdx - 1].finish_day =setFromStdDate(Value);
+            grazingList[periodIdx - 1].FinishDay =SetFromStdDate(Value);
         }
         /// <summary>
         /// Set the number of paddocks
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <param name="Value"></param>
-        public void setFixedPaddCount(int periodIdx, int Value)
+        public void SetFixedPaddCount(int periodIdx, int Value)
         {
-            Array.Resize(ref FGrazingList[periodIdx - 1].paddock_list,Value);
+            Array.Resize(ref grazingList[periodIdx - 1].paddock_list,Value);
         }
         /// <summary>
         /// Get the number of paddocks
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <returns></returns>
-        public int getFixedPaddCount(int periodIdx)
+        public int GetFixedPaddCount(int periodIdx)
         {
-            return FGrazingList[periodIdx - 1].paddock_list.Length;
+            return grazingList[periodIdx - 1].paddock_list.Length;
         }
         /// <summary>
         /// Get the paddock from the list
@@ -745,11 +752,11 @@ namespace Models.GrazPlan
         /// <param name="periodIdx"></param>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public int getFixedPadd(int periodIdx, int idx)
+        public int GetFixedPadd(int periodIdx, int idx)
         {
             int result = -1;
-            if ((FGrazingList[periodIdx - 1].paddock_list.Length > 0) && (FGrazingList[periodIdx - 1].paddock_list.Length >= idx))
-                result = FGrazingList[periodIdx - 1].paddock_list[idx-1].index;
+            if ((grazingList[periodIdx - 1].paddock_list.Length > 0) && (grazingList[periodIdx - 1].paddock_list.Length >= idx))
+                result = grazingList[periodIdx - 1].paddock_list[idx-1].index;
             return result;
         }
         /// <summary>
@@ -758,10 +765,10 @@ namespace Models.GrazPlan
         /// <param name="periodIdx"></param>
         /// <param name="idx"></param>
         /// <param name="Value"></param>
-        public void setFixedPadd(int periodIdx, int idx, int Value)
+        public void SetFixedPadd(int periodIdx, int idx, int Value)
         {
-            if ((FGrazingList[periodIdx - 1].paddock_list.Length > 0) && (FGrazingList[periodIdx - 1].paddock_list.Length >= idx))
-                FGrazingList[periodIdx - 1].paddock_list[idx - 1].index = Value;
+            if ((grazingList[periodIdx - 1].paddock_list.Length > 0) && (grazingList[periodIdx - 1].paddock_list.Length >= idx))
+                grazingList[periodIdx - 1].paddock_list[idx - 1].index = Value;
         }
 
         /// <summary>
@@ -770,9 +777,9 @@ namespace Models.GrazPlan
         /// <param name="periodIdx"></param>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public int getFixedPaddTagCount(int periodIdx, int idx)
+        public int GetFixedPaddTagCount(int periodIdx, int idx)
         {
-            return FGrazingList[periodIdx - 1].paddock_list[idx-1].tag_no.Length;
+            return grazingList[periodIdx - 1].paddock_list[idx-1].tag_no.Length;
         }
         /// <summary>
         /// Set the count of tags in the paddocks
@@ -780,9 +787,9 @@ namespace Models.GrazPlan
         /// <param name="periodIdx"></param>
         /// <param name="idx"></param>
         /// <param name="Value"></param>
-        public void setFixedPaddTagCount(int periodIdx, int idx, int Value)
+        public void SetFixedPaddTagCount(int periodIdx, int idx, int Value)
         {
-            Array.Resize(ref FGrazingList[periodIdx - 1].paddock_list[idx - 1].tag_no, Value);
+            Array.Resize(ref grazingList[periodIdx - 1].paddock_list[idx - 1].tag_no, Value);
         }
         /// <summary>
         /// Get the tag from paddock
@@ -791,12 +798,12 @@ namespace Models.GrazPlan
         /// <param name="idx"></param>
         /// <param name="tagidx"></param>
         /// <returns></returns>
-        public int getFixedPaddTag(int periodIdx, int idx, int tagidx)
+        public int GetFixedPaddTag(int periodIdx, int idx, int tagidx)
         {
             int result = 0;
-            int len = FGrazingList[periodIdx - 1].paddock_list[idx - 1].tag_no.Length;
+            int len = grazingList[periodIdx - 1].paddock_list[idx - 1].tag_no.Length;
             if ((len > 0) && (len >= tagidx))
-                result = FGrazingList[periodIdx - 1].paddock_list[idx - 1].tag_no[tagidx - 1];
+                result = grazingList[periodIdx - 1].paddock_list[idx - 1].tag_no[tagidx - 1];
             return result;
         }
         /// <summary>
@@ -806,47 +813,47 @@ namespace Models.GrazPlan
         /// <param name="idx"></param>
         /// <param name="tagidx"></param>
         /// <param name="Value"></param>
-        public void setFixedPaddTag(int periodIdx, int idx, int tagidx, int Value)
+        public void SetFixedPaddTag(int periodIdx, int idx, int tagidx, int Value)
         {
-            int len = FGrazingList[periodIdx - 1].paddock_list[idx - 1].tag_no.Length;
+            int len = grazingList[periodIdx - 1].paddock_list[idx - 1].tag_no.Length;
             if ((len > 0) && (len >= tagidx))
-                FGrazingList[periodIdx - 1].paddock_list[idx - 1].tag_no[tagidx - 1] = Value;
+                grazingList[periodIdx - 1].paddock_list[idx - 1].tag_no[tagidx - 1] = Value;
         }
         /// <summary>
         /// Get the grazing period type
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <returns></returns>
-        public string getPeriodType(int periodIdx)
+        public string GetPeriodType(int periodIdx)
         {
-            return FGrazingList[periodIdx - 1].type;
+            return grazingList[periodIdx - 1].type;
         }
         /// <summary>
         /// Set the grazing period type
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <param name="Value"></param>
-        public void setPeriodType(int periodIdx, string Value)
+        public void SetPeriodType(int periodIdx, string Value)
         {
-            FGrazingList[periodIdx - 1].type=Value;
+            grazingList[periodIdx - 1].type=Value;
         }
         /// <summary>
         /// StartDay[1..n]
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <returns></returns>
-        public int getStartDay(int periodIdx)
+        public int GetStartDay(int periodIdx)
         {
-            return asStdDate(FGrazingList[periodIdx - 1].start_day);
+            return AsStdDate(grazingList[periodIdx - 1].StartDay);
         }
         /// <summary>
         /// StartDay[1..n]
         /// </summary>
         /// <param name="periodIdx"></param>
         /// <param name="Value"></param>
-        public void setStart(int periodIdx, int Value)
+        public void SetStart(int periodIdx, int Value)
         {
-            FGrazingList[periodIdx - 1].start_day=setFromStdDate(Value);
+            grazingList[periodIdx - 1].StartDay=SetFromStdDate(Value);
         }
         /// <summary>
         /// 
@@ -855,14 +862,14 @@ namespace Models.GrazPlan
         /// <param name="idx"></param>
         /// <param name="paddIdx"></param>
         /// <returns></returns>
-        public int getPaddock(int periodIdx, int idx, int paddIdx)
+        public int GetPaddock(int periodIdx, int idx, int paddIdx)
         {
             int result = 0;
-            if (FGrazingList[periodIdx - 1].tag_list.Length >= idx)
+            if (grazingList[periodIdx - 1].tag_list.Length >= idx)
             {
-                if (FGrazingList[periodIdx - 1].tag_list[idx-1].paddock.Length >= paddIdx)
+                if (grazingList[periodIdx - 1].tag_list[idx-1].paddock.Length >= paddIdx)
                 {
-                    result = FGrazingList[periodIdx - 1].tag_list[idx - 1].paddock[paddIdx-1];
+                    result = grazingList[periodIdx - 1].tag_list[idx - 1].paddock[paddIdx-1];
                 }
             }
             return result;
@@ -874,13 +881,13 @@ namespace Models.GrazPlan
         /// <param name="idx"></param>
         /// <param name="paddIdx"></param>
         /// <param name="Value"></param>
-        public void setPaddock(int periodIdx, int idx, int paddIdx, int Value)
+        public void SetPaddock(int periodIdx, int idx, int paddIdx, int Value)
         {
-            if (FGrazingList[periodIdx - 1].tag_list.Length >= idx)
+            if (grazingList[periodIdx - 1].tag_list.Length >= idx)
             {
-                if (FGrazingList[periodIdx - 1].tag_list[idx - 1].paddock.Length >= paddIdx)
+                if (grazingList[periodIdx - 1].tag_list[idx - 1].paddock.Length >= paddIdx)
                 {
-                    FGrazingList[periodIdx - 1].tag_list[idx - 1].paddock[paddIdx - 1] = Value;
+                    grazingList[periodIdx - 1].tag_list[idx - 1].paddock[paddIdx - 1] = Value;
                 }
             }
         }
@@ -890,12 +897,12 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="strDay"></param>
         /// <returns></returns>
-        protected int asStdDate(string strDay)
+        protected int AsStdDate(string strDay)
         {
             int doy = 0;
 
-            //convert the day to the day number of the year
-            if (!StdStrng.TokenDate(ref strDay, ref doy))//doy = decimal stddate
+            // convert the day to the day number of the year
+            if (!StdStrng.TokenDate(ref strDay, ref doy)) // doy = decimal stddate
                 doy = 0;
             return doy;
 
@@ -904,12 +911,12 @@ namespace Models.GrazPlan
         /// Get the string of a std date (integer). The string form is 'dd mmm'
         /// </summary>
         /// <param name="value"></param>
-        protected string setFromStdDate(int value)
+        protected string SetFromStdDate(int value)
         {
             if (value != 0)
                 return StdDate.DateStrFmt(value, "D mmm");
             else
-                return String.Empty;
+                return string.Empty;
         }
     }
 }
