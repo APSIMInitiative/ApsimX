@@ -115,12 +115,6 @@ namespace UserInterface.Presenters
             grid.CellsChanged += OnCellValueChanged;
             grid.ButtonClick += OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            if (model != null)
-            {
-                split = this.model.GetType().ToString().Split('.');
-                grid.ModelName = split[split.Length - 1];
-                grid.LoadImage();
-            }
         }
 
         /// <summary>

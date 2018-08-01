@@ -590,26 +590,6 @@
         }
 
         /// <summary>
-        /// Loads an image from a manifest resource.
-        /// </summary>
-        public void LoadImage()
-        {
-            Stream file = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
-            if (file == null)
-                modelImage.Visible = false;
-            else
-            {
-                modelImagePixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.PresenterPictures." + ModelName + ".png");
-
-                // We should do a better job of rescaling the image. Any ideas?
-                double scaleFactor = Math.Min(250.0 / modelImagePixbuf.Height, 250.0 / modelImagePixbuf.Width);
-                modelImage.Pixbuf = modelImagePixbuf.ScaleSimple((int)(modelImagePixbuf.Width * scaleFactor), (int)(modelImagePixbuf.Height * scaleFactor), Gdk.InterpType.Bilinear);
-                modelImage.Visible = true;
-                scrollingWindow.HscrollbarPolicy = PolicyType.Never;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the grid row is empty.
         /// </summary>
         /// <param name="rowIndex">The row index.</param>
