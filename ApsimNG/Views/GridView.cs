@@ -51,16 +51,6 @@
         private HBox hboxContainer = null;
 
         /// <summary>
-        /// Widget used to display the model's image.
-        /// </summary>
-        private Gtk.Image modelImage = null;
-
-        /// <summary>
-        /// Pixbuf of the model's image.
-        /// </summary>
-        private Gdk.Pixbuf modelImagePixbuf;
-
-        /// <summary>
         /// List of grid model names.
         /// </summary>
         private ListStore gridModel = new ListStore(typeof(string));
@@ -167,7 +157,6 @@
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
-            modelImage = (Gtk.Image)builder.GetObject("image1");
             splitter = (HPaned)builder.GetObject("hpaned1");
             _mainWidget = hboxContainer;
             Grid.Model = gridModel;
@@ -176,7 +165,7 @@
             popupMenu.AttachToWidget(Grid, null);
             AddContextActionWithAccel("Copy", OnCopyToClipboard, "Ctrl+C");
             AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
-            AddContextActionWithAccel("Delete", OnDeleteClick, "Delete");
+            AddContextActionWithAccel("Delete", OnDelete, "Delete");
             Grid.ButtonPressEvent += OnButtonDown;
             Grid.Selection.Mode = SelectionMode.None;
             Grid.CursorChanged += OnMoveCursor;
@@ -191,10 +180,23 @@
             fixedColView.EnableSearch = false;
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
-            modelImage.Pixbuf = null;
-            modelImage.Visible = false;
             _mainWidget.Destroyed += MainWidgetDestroyed;
         }
+
+        /// <summary>
+        /// Invoked when the user wants to copy a range of cells to the clipboard.
+        /// </summary>
+        public event EventHandler<GridCellActionArgs> CopyCells;
+
+        /// <summary>
+        /// Invoked when the user wants to paste data into a range of cells.
+        /// </summary>
+        public event EventHandler<GridCellActionArgs> PasteCells;
+
+        /// <summary>
+        /// Invoked when the user wants to delete data from a range of cells.
+        /// </summary>
+        public event EventHandler<GridCellActionArgs> DeleteCells;
 
         /// <summary>
         /// This event is invoked when the values of 1 or more cells have changed.
@@ -890,10 +892,6 @@
             gridModel.Dispose();
             popupMenu.Dispose();
             accel.Dispose();
-            if (modelImagePixbuf != null)
-                modelImagePixbuf.Dispose();
-            if (modelImage != null)
-                modelImage.Dispose();
             if (table != null)
                 table.Dispose();
             _mainWidget.Destroyed -= MainWidgetDestroyed;
@@ -1332,9 +1330,7 @@
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-
-            modelImage.Visible = false;
-
+            
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
@@ -2005,33 +2001,14 @@
             {
                 (editControl as Entry).CopyClipboard();
             }
-            else
+            else if (CopyCells != null)
             {
-                StringBuilder textToCopy = new StringBuilder();
-                if (selectionColMax >= 0 && selectionRowMax >= 0)
-                {
-                    for (int i = FirstSelectedRow(); i <= LastSelectedRow(); i++)
-                    {
-                        for (int j = FirstSelectedColumn(); j <= LastSelectedColumn(); j++)
-                        {
-                            textToCopy.Append(GetCell(j, i).Value.ToString());
-                            if (j != LastSelectedColumn())
-                                textToCopy.Append('\t');
-                        }
-                        textToCopy.AppendLine();
-                    }
-                }
-                else
-                {
-                    // Copy contents of current cell.
-                    IGridCell cell = GetCurrentCell;
-                    if (cell == null)
-                        throw new Exception("Unable to get selected cell for copy.");
-                    textToCopy.Append(GetCurrentCell.Value.ToString());
-                }
-                Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
-                cb.Text = textToCopy.ToString();
+                GridCell firstCell = new GridCell(this, FirstSelectedColumn(), FirstSelectedRow());
+                GridCell lastCell = new GridCell(this, LastSelectedColumn(), LastSelectedRow());
+                CopyCells.Invoke(this, new GridCellActionArgs { StartCell = firstCell, EndCell = lastCell, Grid = this });
             }
+            else
+                ShowError(new Exception("Unable to copy cells - the view is not handled by a grid presenter."));
         }
 
         /// <summary>
@@ -2039,7 +2016,7 @@
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void OnDeleteClick(object sender, EventArgs e)
+        private void OnDelete(object sender, EventArgs e)
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
             if (userEditingCell && editControl != null)
@@ -2047,28 +2024,35 @@
                 (editControl as Entry).DeleteSelection();
                 cellsChanged.Add(popupCell);
             }
+            else if (DeleteCells != null)
+            {
+                GridCell firstCell = new GridCell(this, FirstSelectedColumn(), FirstSelectedRow());
+                GridCell lastCell = new GridCell(this, LastSelectedColumn(), LastSelectedRow());
+                DeleteCells.Invoke(this, new GridCellActionArgs { StartCell = firstCell, EndCell = lastCell, Grid = this });
+            }
             else if (AnyCellIsSelected())
             {
-                for (int row = FirstSelectedRow(); row <= LastSelectedRow(); row++)
-                {
-                    for (int column = FirstSelectedColumn(); column <= LastSelectedColumn(); column++)
-                    {
-                        if (!GetColumn(column).ReadOnly)
-                        {
-                            DataSource.Rows[row][column] = DBNull.Value;
-                            cellsChanged.Add(GetCell(column, row));
-                        }
-                    }
-                }
+                ShowError(new Exception("Unable to delete cells - the view is not handled by a grid presenter."));
             }
+        }
 
-            // If some cells were changed then send out an event.
-            if (cellsChanged.Count > 0 && CellsChanged != null)
-            {
-                fixedColView.QueueDraw();
-                Grid.QueueDraw();
-                CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
-            }
+        /// <summary>
+        /// Refreshes the grid.
+        /// </summary>
+        public void Refresh()
+        {
+            Grid.QueueDraw();
+            fixedColView?.QueueDraw();
+        }
+
+        /// <summary>
+        /// Refreshes the grid and updates the model.
+        /// </summary>
+        /// <param name="args"></param>
+        public void Refresh(GridCellsChangedArgs args)
+        {
+            CellsChanged?.Invoke(this, args);
+            Refresh();
         }
 
         /// <summary>

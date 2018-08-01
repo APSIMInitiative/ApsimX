@@ -31,7 +31,7 @@ namespace UserInterface.Presenters
     /// We don't want properties to be on both the ProfileGrid and the PropertyGrid.
     /// </para>
     /// </summary>
-    public class PropertyPresenter : IPresenter
+    public class PropertyPresenter : GridPresenter
     {
         /// <summary>
         /// Linked storage reader
@@ -40,19 +40,9 @@ namespace UserInterface.Presenters
         private IStorageReader storage = null;
 
         /// <summary>
-        /// The underlying grid control to work with.
-        /// </summary>
-        private IGridView grid;
-
-        /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
         private Model model;
-
-        /// <summary>
-        /// The parent ExplorerPresenter.
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// A list of all properties found in the Model.
@@ -65,28 +55,16 @@ namespace UserInterface.Presenters
         private IntellisensePresenter intellisense;
 
         /// <summary>
-        /// Gets a value indicating whether the grid is empty (i.e. no rows).
-        /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return grid.RowCount == 0;
-            }
-        }
-
-        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model to connect to</param>
         /// <param name="view">The view to connect to</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public new void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            grid = view as IGridView;
+            base.Attach(model, view, explorerPresenter);
             grid.ContextItemsNeeded += GetContextItems;
             this.model = model as Model;
-            this.explorerPresenter = explorerPresenter;
             intellisense = new IntellisensePresenter(grid as ViewBase);
 
             // The grid does not have control-space intellisense (for now).
@@ -98,8 +76,6 @@ namespace UserInterface.Presenters
                 testModel.Test(false, true);
                 grid.ReadOnly = true;
             }
-
-            string[] split;
 
             grid.NumericFormat = "G6"; 
             FindAllProperties(this.model);
@@ -114,18 +90,30 @@ namespace UserInterface.Presenters
 
             grid.CellsChanged += OnCellValueChanged;
             grid.ButtonClick += OnFileBrowseClick;
-            this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the grid is empty (i.e. no rows).
+        /// </summary>
+        public bool IsEmpty
+        {
+            get
+            {
+                return grid.RowCount == 0;
+            }
         }
 
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
-        public void Detach()
+        public new void Detach()
         {
+            base.Detach();
             grid.EndEdit();
             grid.CellsChanged -= OnCellValueChanged;
             grid.ButtonClick -= OnFileBrowseClick;
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
             intellisense.Cleanup();
         }
 
@@ -274,7 +262,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.MainPresenter.ShowError(err);
             }
             
         }
@@ -546,7 +534,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event parameters</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             foreach (IGridCell cell in e.ChangedCells)
             {
@@ -558,11 +546,11 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception ex)
                 {
-                    explorerPresenter.MainPresenter.ShowError(ex);
+                    presenter.MainPresenter.ShowError(ex);
                 }
             }
             
-            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -611,7 +599,7 @@ namespace UserInterface.Presenters
             }
 
             Commands.ChangeProperty cmd = new Commands.ChangeProperty(model, property.Name, value);
-            explorerPresenter.CommandHistory.Add(cmd, true);
+            presenter.CommandHistory.Add(cmd, true);
         }
 
         /// <summary>

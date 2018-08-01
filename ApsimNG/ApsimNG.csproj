@@ -197,6 +197,7 @@
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
+    <Compile Include="EventArguments\GridCopyArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\IntellisenseItemSelectedArgs.cs" />

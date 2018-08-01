@@ -16,6 +16,21 @@ namespace UserInterface.Interfaces
     public interface IGridView
     {
         /// <summary>
+        /// Invoked when the user wants to copy a range of cells to the clipboard.
+        /// </summary>
+        event EventHandler<GridCellActionArgs> CopyCells;
+
+        /// <summary>
+        /// Invoked when the user wants to paste data into a range of cells.
+        /// </summary>
+        event EventHandler<GridCellActionArgs> PasteCells;
+
+        /// <summary>
+        /// Invoked when the user wants to delete data from a range of cells.
+        /// </summary>
+        event EventHandler<GridCellActionArgs> DeleteCells;
+
+        /// <summary>
         /// This event is invoked when the values of 1 or more cells have changed.
         /// </summary>
         event EventHandler<GridCellsChangedArgs> CellsChanged;
@@ -25,9 +40,14 @@ namespace UserInterface.Interfaces
         /// </summary>
         event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
 
-        /// <summary>Occurs when user clicks a button on the cell.</summary>
+        /// <summary>
+        /// Occurs when user clicks a button on the cell.
+        /// </summary>
         event EventHandler<GridCellsChangedArgs> ButtonClick;
 
+        /// <summary>
+        /// Invoked when the user needs context items for the intellisense.
+        /// </summary>
         event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
@@ -117,5 +137,16 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="text">Text to be inserted.</param>
         void InsertText(string text);
+
+        /// <summary>
+        /// Refreshes the grid.
+        /// </summary>
+        void Refresh();
+
+        /// <summary>
+        /// Refreshes the grid and updates the model.
+        /// </summary>
+        /// <param name="args"></param>
+        void Refresh(GridCellsChangedArgs args);
     }
 }

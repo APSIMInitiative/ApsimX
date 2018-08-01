@@ -1,12 +1,11 @@
-//-----------------------------------------------------------------------
-// <copyright file="GridPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using EventArguments;
     using Interfaces;
     using Models.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
     /// <summary>
     /// This presenter displays a table of data, which it gets from the model via
@@ -15,33 +14,28 @@ namespace UserInterface.Presenters
     /// </summary>
     public class GridPresenter : IPresenter
     {
-        /// <summary>The underlying grid control to work with.</summary>
-        private IGridView grid;
+        /// <summary>
+        /// The underlying grid control to work with.</summary>
+        protected IGridView grid;
 
-        /// <summary>The interface we're going to work with</summary>
-        private Models.Interfaces.IModelAsTable tableModel;
-
-        /// <summary>The parent ExplorerPresenter.</summary>
-        private ExplorerPresenter explorerPresenter;
+        /// <summary>
+        /// The parent ExplorerPresenter.
+        /// </summary>
+        protected ExplorerPresenter presenter;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model to connect to</param>
         /// <param name="view">The view to connect to</param>
-        /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        /// <param name="parentPresenter">The parent explorer presenter</param>
+        public void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
-            this.grid = view as IGridView;
-            this.tableModel = model as IModelAsTable;
-            this.explorerPresenter = explorerPresenter;
-
-            // populate the grid
-            this.grid.DataSource = tableModel.GetTable();
-            grid.RowCount = 100;
-            //this.grid.ResizeControls();
-
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            grid = view as IGridView;
+            grid.CopyCells += CopyCells;
+            grid.PasteCells += PasteCells;
+            grid.DeleteCells += DeleteCells;
+            presenter = parentPresenter;
         }
 
         /// <summary>
@@ -49,19 +43,60 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.grid.EndEdit();
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            tableModel.SetTable(grid.DataSource);
+            grid.EndEdit();
+            grid.CopyCells -= CopyCells;
         }
 
         /// <summary>
-        /// The model has changed, update the grid.
+        /// Copies data from a cell or range of cells to the clipboard.
+        /// If the first cell is the same as the last cell, only the data from that cell will be copied.
         /// </summary>
-        /// <param name="changedModel">The model that has changed</param>
-        private void OnModelChanged(object changedModel)
+        private void CopyCells(object sender, GridCellActionArgs args)
         {
-            this.grid.DataSource = tableModel.GetTable();
+            StringBuilder textToCopy = new StringBuilder();
+            for (int row = args.StartCell.RowIndex; row <= args.EndCell.RowIndex; row++)
+            {
+                for (int column = args.StartCell.ColumnIndex; column <= args.EndCell.ColumnIndex; column++)
+                {
+                    textToCopy.Append(grid.GetCell(column, row).Value.ToString());
+                    if (column != args.EndCell.ColumnIndex)
+                        textToCopy.Append('\t');
+                }
+                textToCopy.AppendLine();
+            }
+            presenter.SetClipboardText(textToCopy.ToString(), "CLIPBOARD");
         }
 
+        /// <summary>
+        /// Pastes data from the clipboard into a cell or range of cells.
+        /// If the first cell is the same as the last cell, only the data from that cell will be copied.
+        /// </summary>
+        private void PasteCells(object sender, GridCellActionArgs args)
+        {
+
+        }
+
+        /// <summary>
+        /// Deletes data from a cell or range of cells.
+        /// If the first cell is the same as the last cell, only the data from that cell will be copied.
+        /// </summary>
+        private void DeleteCells(object sender, GridCellActionArgs args)
+        {
+            List<IGridCell> cellsChanged = new List<IGridCell>();
+            for (int row = args.StartCell.RowIndex; row <= args.EndCell.RowIndex; row++)
+            {
+                for (int column = args.StartCell.ColumnIndex; column <= args.EndCell.ColumnIndex; column++)
+                {
+                    if (!args.Grid.GetColumn(column).ReadOnly)
+                    {
+                        args.Grid.DataSource.Rows[row][column] = DBNull.Value;
+                        cellsChanged.Add(grid.GetCell(column, row));
+                    }
+                }
+            }
+            // If some cells were changed then we will need to update the model.
+            if (cellsChanged.Count > 0)
+                args.Grid.Refresh(new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+        }
     }
 }

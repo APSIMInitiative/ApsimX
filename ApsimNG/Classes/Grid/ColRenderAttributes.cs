@@ -1,6 +1,5 @@
 ﻿namespace UserInterface.Classes
 {
-
     /// <summary>
     /// Small data structure to hold information about how a column should be rendered
     /// </summary>

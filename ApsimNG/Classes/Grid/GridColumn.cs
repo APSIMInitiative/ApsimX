@@ -8,7 +8,6 @@ namespace UserInterface.Classes
     using System;
     using System.Drawing;
     using Gtk;
-    /// using System.Windows.Forms;
     using Interfaces;
     using Views;
 
@@ -30,7 +29,7 @@ namespace UserInterface.Classes
         public GridColumn(GridView gridView, int columnIndex)
         {
             this.gridView = gridView;
-            this.ColumnIndex = columnIndex;
+            ColumnIndex = columnIndex;
         }
 
         /// <summary>
