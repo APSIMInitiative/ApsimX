@@ -121,6 +121,9 @@ namespace Models.PMF.Struct
 
         #region States
         /// <summary>Test if Initialisation done</summary>
+        public bool cohorstInitialised;
+
+        /// <summary>Test if Initialisation done</summary>
         public bool leavesInitialised;
         
         /// <summary>Total apex number in plant.</summary>
@@ -199,6 +202,7 @@ namespace Models.PMF.Struct
             DeltaHaunStage = 0;
             SenescenceByAge = false;
             leavesInitialised = false;
+            cohorstInitialised = false;
             firstPass = true;
             _Height = 0;
             LeafTipsAppeared = 0;
@@ -279,95 +283,97 @@ namespace Models.PMF.Struct
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            DeltaHaunStage = 0;
-            if (Phyllochron.Value() > 0)
-                DeltaHaunStage = ThermalTime.Value() / Phyllochron.Value();
-
-            if (leavesInitialised)
+            if (cohorstInitialised)
             {
-                bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
-                bool AllLeavesAppeared = (Leaf.AppearedCohortNo == Leaf.InitialisedCohortNo);
-                bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1) == Leaf.InitialisedCohortNo);
+                DeltaHaunStage = 0;
+                if (Phyllochron.Value() > 0)
+                    DeltaHaunStage = ThermalTime.Value() / Phyllochron.Value();
 
-                if ((AllCohortsInitialised) && (LastLeafAppearing))
+                if (leavesInitialised)
                 {
-                    NextLeafProportion = 1 - (Leaf.InitialisedCohortNo - FinalLeafNumber.Value());
-                }
-                else
-                {
-                    NextLeafProportion = 1.0;
-                }
+                    bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
+                    bool AllLeavesAppeared = (Leaf.AppearedCohortNo == Leaf.InitialisedCohortNo);
+                    bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1) == Leaf.InitialisedCohortNo);
 
-                //Increment MainStemNode Number based on phyllochorn and theremal time
-                if (firstPass == true)
-                {
-                    firstPass = false;
-                    DeltaTipNumber = 0; //Don't increment node number on day of emergence
-                }
-                else
-                {
-                    DeltaTipNumber = DeltaHaunStage; //DeltaTipNumber is only positive after emergence whereas deltaHaunstage is positive from germination
-                }
-
-                PotLeafTipsAppeared += DeltaTipNumber;
-                LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
-
-                bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (Leaf.AppearedCohortNo + 1);
-                int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1 - NextLeafProportion)));
-
-                //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
-                if (TimeForAnotherLeaf && (AllCohortsInitialised == false))
-                {
-                    int i = 1;
-                    for (i = 1; i <= LeavesToAppear; i++)
+                    if ((AllCohortsInitialised) && (LastLeafAppearing))
                     {
-                        CohortToInitialise += 1;
-                        InitParams = new CohortInitParams() { };
-                        InitParams.Rank = CohortToInitialise;
-                        if (AddLeafCohort != null)
-                            AddLeafCohort.Invoke(this, InitParams);
+                        NextLeafProportion = 1 - (Leaf.InitialisedCohortNo - FinalLeafNumber.Value());
                     }
-                }
-
-                //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
-                if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
-                {
-                    int i = 1;
-                    for (i = 1; i <= LeavesToAppear; i++)
+                    else
                     {
-                        TotalStemPopn += BranchingRate.Value() * MainStemPopn;
-                        BranchNumber += BranchingRate.Value();
-                        DoLeafTipAppearance();
+                        NextLeafProportion = 1.0;
                     }
-                    // Apex calculation
-                    ApexNum += BranchingRate.Value() * PrimaryBudNo;
 
-                    if (Phenology.Stage > 4 & !SenescenceByAge)
+                    //Increment MainStemNode Number based on phyllochorn and theremal time
+                    if (firstPass == true)
                     {
-                        double senescenceNum = Leaf.ApexNumByAge(StemSenescenceAge.Value());
-                        ApexNum -= senescenceNum;
-                        SenescenceByAge = true;
-                        TotalStemPopn -= senescenceNum * Plant.Population;
+                        firstPass = false;
+                        DeltaTipNumber = 0; //Don't increment node number on day of emergence
                     }
-                }
+                    else
+                    {
+                        DeltaTipNumber = DeltaHaunStage; //DeltaTipNumber is only positive after emergence whereas deltaHaunstage is positive from germination
+                    }
 
-                //Reduce population if there has been plant mortality 
-                if (DeltaPlantPopulation > 0)
-                    TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
+                    PotLeafTipsAppeared += DeltaTipNumber;
+                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
 
-                //Reduce stem number incase of mortality
-                double PropnMortality = 0;
-                PropnMortality = BranchMortality.Value();
-                {
-                    double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
-                    TotalStemPopn -= DeltaPopn;
-                    ProportionBranchMortality = PropnMortality;
-                    // Reduce the apex number by branching mortality
-                    ApexNum -= PropnMortality * (ApexNum - 1);
+                    bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (Leaf.AppearedCohortNo + 1);
+                    int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1 - NextLeafProportion)));
+
+                    //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
+                    if (TimeForAnotherLeaf && (AllCohortsInitialised == false))
+                    {
+                        int i = 1;
+                        for (i = 1; i <= LeavesToAppear; i++)
+                        {
+                            CohortToInitialise += 1;
+                            InitParams = new CohortInitParams() { };
+                            InitParams.Rank = CohortToInitialise;
+                            if (AddLeafCohort != null)
+                                AddLeafCohort.Invoke(this, InitParams);
+                        }
+                    }
+
+                    //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
+                    if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
+                    {
+                        int i = 1;
+                        for (i = 1; i <= LeavesToAppear; i++)
+                        {
+                            TotalStemPopn += BranchingRate.Value() * MainStemPopn;
+                            BranchNumber += BranchingRate.Value();
+                            DoLeafTipAppearance();
+                        }
+                        // Apex calculation
+                        ApexNum += BranchingRate.Value() * PrimaryBudNo;
+
+                        if (Phenology.Stage > 4 & !SenescenceByAge)
+                        {
+                            double senescenceNum = Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            ApexNum -= senescenceNum;
+                            SenescenceByAge = true;
+                            TotalStemPopn -= senescenceNum * Plant.Population;
+                        }
+                    }
+
+                    //Reduce population if there has been plant mortality 
+                    if (DeltaPlantPopulation > 0)
+                        TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
+
+                    //Reduce stem number incase of mortality
+                    double PropnMortality = 0;
+                    PropnMortality = BranchMortality.Value();
+                    {
+                        double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
+                        TotalStemPopn -= DeltaPopn;
+                        ProportionBranchMortality = PropnMortality;
+                        // Reduce the apex number by branching mortality
+                        ApexNum -= PropnMortality * (ApexNum - 1);
+                    }
                 }
             }
         }
-
         /// <summary>Called when [phase changed].</summary>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
@@ -375,6 +381,7 @@ namespace Models.PMF.Struct
             if (phaseChange.StageName == CohortInitialisationStage)
             {
                 InitialiseLeafCohorts?.Invoke(this, args);
+                cohorstInitialised = true;
             }
 
             if (phaseChange.StageName == LeafInitialisationStage)
