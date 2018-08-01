@@ -5,6 +5,7 @@ using Models.Soils.SoilWaterBackend;
 using Models.Surface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace Models.Soils
@@ -1777,7 +1778,8 @@ namespace Models.Soils
             solutes.Add("Urea",SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("urea"));
             solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NH4"));
             solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NO3"));
-            solutes.Add("Chloride", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("Chloride"));
+            if(solutes.SoluteNames.Contains("Chloride"))
+                solutes.Add("Chloride", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("Chloride"));
         }
 
     }
