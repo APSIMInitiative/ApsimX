@@ -232,11 +232,6 @@
         public Dictionary<Tuple<int, int>, ListStore> ComboLookup { get; set; } = new Dictionary<Tuple<int, int>, ListStore>();
 
         /// <summary>
-        /// Gets or sets the name of the associated model.
-        /// </summary>
-        public string ModelName { get; set; }
-
-        /// <summary>
         /// Gets or sets the number of rows in grid.
         /// </summary>
         public int RowCount

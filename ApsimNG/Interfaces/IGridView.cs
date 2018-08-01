@@ -51,11 +51,6 @@ namespace UserInterface.Interfaces
         bool ReadOnly { get; set; }
 
         /// <summary>
-        /// The name of the associated model.
-        /// </summary>
-        string ModelName { get; set; }
-
-        /// <summary>
         /// Gets or sets the currently selected cell.
         /// </summary>
         IGridCell GetCurrentCell { get; set; }
