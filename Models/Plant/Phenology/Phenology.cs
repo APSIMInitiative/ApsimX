@@ -67,10 +67,6 @@ namespace Models.PMF.Phen
         /// <summary>The emerged</summary>
         [XmlIgnore]
         public bool Emerged { get; set; } = false;
-
-        /// <summary>Germinated test</summary>
-        [XmlIgnore]
-        public bool Germinated { get; set; } = false;
                 
         /// <summary>A one based stage number.</summary>
         [XmlIgnore]
@@ -314,13 +310,9 @@ namespace Models.PMF.Phen
 
                 while (incrementPhase)
                 {
-                    if (currentPhaseIndex == 0)
-                        Germinated = true;
-
                     if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
                     {
-                        plant.SendEmergingEvent();
-                        Emerged = true;
+                         Emerged = true;
                     }
 
                     stagesPassedToday.Add(CurrentPhase.End);
@@ -363,8 +355,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Germinated = false;
-            Emerged = false;            
+             Emerged = false;            
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -410,7 +401,6 @@ namespace Models.PMF.Phen
             AccumulatedTT = 0;
             AccumulatedEmergedTT = 0;
             Emerged = false;
-            Germinated = false;
             stagesPassedToday.Clear();
             currentPhaseIndex = 0;
             foreach (IPhase phase in phases)

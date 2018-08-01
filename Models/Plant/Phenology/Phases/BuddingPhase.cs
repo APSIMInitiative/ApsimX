@@ -110,7 +110,6 @@ namespace Models.PMF.Phen
                 double BudNumberBurst = Plant.SowingData.BudNumber * FractionOfBudBurst.Value();
                 structure.PrimaryBudNo = BudNumberBurst;
                 structure.TotalStemPopn = structure.MainStemPopn;
-                Plant.SendEmergingEvent();
             }
 
             return proceedToNextPhase;

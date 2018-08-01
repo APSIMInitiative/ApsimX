@@ -220,13 +220,7 @@ namespace Models.PMF
         }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
-        public bool IsAlive
-        {
-            get
-            {
-                return Phenology.Germinated;
-            }
-        }
+        public bool IsAlive { get { return SowingData != null; } }
 
         /// <summary>Return true if plant has emerged</summary>
         public bool IsEmerged
@@ -237,14 +231,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Return true if plant has germinated</summary>
-        public bool IsGerminated
-        {
-            get
-            {
-                return Phenology.Germinated;
-            }
-        }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting
         {

@@ -110,20 +110,28 @@ namespace Models.PMF.Struct
         /// <summary>The maximum age of stem senescence</summary>
         [Link]
         public IFunction StemSenescenceAge = null;
+
+        /// <summary>The Stage that cohorts are initialised on</summary>
+        [Link]
+        [Description("The Stage that cohorts are initialised on")]
+        public string CohortInitialisationStage { get; set; } = "Germination";
+
+        /// <summary>The Stage that leaves are initialised on</summary>
+        [Description("The Stage that leaves are initialised on")]
+        [Link]
+        public string LeafInitialisationStage { get; set; } = "Emergence";
         #endregion
 
         #region States
         /// <summary>Test if Initialisation done</summary>
-        public bool Initialised;
-        /// <summary>Test if Initialisation done</summary>
-        public bool Germinated;
-        /// <summary>Test if Initialisation done</summary>
-        public bool Emerged;
+        public bool leavesInitialised;
         /// <summary>Total apex number in plant.</summary>
         [Description("Total apex number in plant")]
         public double ApexNum { get; set; }
 
         private double _Height;
+
+        private bool firstPass;
 
         /// <summary>Gets or sets the total stem popn.</summary>
         /// <value>The total stem popn.</value>
@@ -202,9 +210,8 @@ namespace Models.PMF.Struct
             DeltaTipNumber = 0;
             DeltaHaunStage = 0;
             SenescenceByAge = false;
-            Initialised = false;
-            Germinated = false;
-            Emerged = false;
+            leavesInitialised = false;
+            firstPass = true;
             _Height = 0;
             LeafTipsAppeared = 0;
             BranchNumber = 0;
@@ -287,23 +294,8 @@ namespace Models.PMF.Struct
             if (Phyllochron.Value() > 0)
                 DeltaHaunStage = ThermalTime.Value() / Phyllochron.Value();
 
-            if (Germinated == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
+            if (leavesInitialised)
             {
-                Germinated = true;
-                //On the day of germination set up the first cohorts
-                if (InitialiseLeafCohorts != null)
-                    InitialiseLeafCohorts.Invoke(this, args);
-                Initialised = true;
-            }
-
-            if (Plant.IsEmerged)
-            {
-                if (Emerged == false)
-                {
-                    NextLeafProportion = 1.0;
-                    DoEmergence();
-                }
-
                 bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
                 bool AllLeavesAppeared = (Leaf.AppearedCohortNo == Leaf.InitialisedCohortNo);
                 bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1) == Leaf.InitialisedCohortNo);
@@ -318,9 +310,9 @@ namespace Models.PMF.Struct
                 }
 
                 //Increment MainStemNode Number based on phyllochorn and theremal time
-                if (Emerged == false)
+                if (firstPass == true)
                 {
-                    Emerged = true;
+                    firstPass = false;
                     DeltaTipNumber = 0; //Don't increment node number on day of emergence
                 }
                 else
@@ -329,8 +321,6 @@ namespace Models.PMF.Struct
                 }
 
                 PotLeafTipsAppeared += DeltaTipNumber;
-                //if (PotLeafTipsAppeared > MainStemFinalNodeNumber.Value)
-                //    FinalLeafDeltaTipNumberonDayOfAppearance = PotLeafTipsAppeared - MainStemFinalNodeNumber.Value;
                 LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
 
                 bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (Leaf.AppearedCohortNo + 1);
@@ -388,7 +378,22 @@ namespace Models.PMF.Struct
                 }
             }
         }
-        
+
+        /// <summary>Called when [phase changed].</summary>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.StageName == CohortInitialisationStage)
+            {
+                InitialiseLeafCohorts?.Invoke(this, args);
+            }
+
+            if (phaseChange.StageName == LeafInitialisationStage)
+            {
+                NextLeafProportion = 1.0;
+                DoLeafInitilisation();
+            }
+        }
 
         /// <summary>Does the actual growth.</summary>
         /// <param name="sender">The sender.</param>
@@ -406,7 +411,7 @@ namespace Models.PMF.Struct
         /// <summary>
         /// Called on the day of emergence to get the initials leaf cohorts to appear
         /// </summary>
-        public void DoEmergence()
+        public void DoLeafInitilisation()
         {
             CohortToInitialise = Leaf.CohortsAtInitialisation;
             for (int i = 1; i <= Leaf.TipsAtEmergence; i++)
@@ -415,9 +420,10 @@ namespace Models.PMF.Struct
                 PotLeafTipsAppeared += 1;
                 CohortToInitialise += 1;
                 InitParams.Rank = CohortToInitialise; 
-                if(AddLeafCohort != null)
-                    AddLeafCohort.Invoke(this, InitParams);
-                    DoLeafTipAppearance();
+                AddLeafCohort?.Invoke(this, InitParams);
+                DoLeafTipAppearance();
+                leavesInitialised = true;
+                firstPass = true;
             }
         }
         #region Component Process Functions
@@ -466,9 +472,7 @@ namespace Models.PMF.Struct
         private void OnPlantEnding(object sender, EventArgs e)
         {
             if (sender == Plant)
-                Clear();
-            Germinated = false;
-            Emerged = false;
+            Clear();
             CohortToInitialise = 0;
             TipToAppear = 0;
             PotLeafTipsAppeared = 0;
@@ -538,9 +542,8 @@ namespace Models.PMF.Struct
             {
                  Leaf.Reset();
                  InitialiseLeafCohorts.Invoke(this, args);
-                 Initialised = true;
-                 DoEmergence();
-             }
+                 DoLeafInitilisation();
+            }
         }
         #endregion
 
