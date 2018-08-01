@@ -842,22 +842,6 @@
         }
 
         /// <summary>
-        /// Convert the image to a Gdk pixbuf.
-        /// </summary>
-        /// <param name="image">The image object to convert.</param>
-        /// <returns>A Pixbuf type object.</returns>
-        private Gdk.Pixbuf ImageToPixbuf(System.Drawing.Image image)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                image.Save(stream, ImageFormat.Bmp);
-                stream.Position = 0;
-                Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(stream);
-                return pixbuf;
-            }
-        }
-
-        /// <summary>
         /// Does cleanup when the main widget is destroyed.
         /// </summary>
         /// <param name="sender">The sending object.</param>
