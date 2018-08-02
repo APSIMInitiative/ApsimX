@@ -2270,7 +2270,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>SoilAerationFactor</Name>
@@ -2341,14 +2341,14 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <double>1.5</double>
           </X>
           <Y>
-            <double>0</double>
-            <double>0.9</double>
+            <double>1</double>
+            <double>1</double>
             <double>1</double>
             <double>1</double>
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
@@ -2413,14 +2413,14 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <double>1.5</double>
           </X>
           <Y>
-            <double>0</double>
-            <double>0.9</double>
+            <double>1</double>
+            <double>1</double>
             <double>1</double>
             <double>1</double>
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
@@ -2783,7 +2783,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>SoilAerationFactor</Name>
