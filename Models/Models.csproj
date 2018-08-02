@@ -452,7 +452,6 @@
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\RunoffEventType.cs" />
     <Compile Include="Soils\Analysis.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />
