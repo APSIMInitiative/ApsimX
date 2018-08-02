@@ -23,7 +23,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user wants to paste data into a range of cells.
         /// </summary>
-        event EventHandler<GridCellActionArgs> PasteCells;
+        event EventHandler<GridCellPasteArgs> PasteCells;
 
         /// <summary>
         /// Invoked when the user wants to delete data from a range of cells.
@@ -59,6 +59,11 @@ namespace UserInterface.Interfaces
         /// Gets or sets the number of rows in grid.
         /// </summary>
         int RowCount { get; set; }
+
+        /// <summary>
+        /// Gets the number of columns in the grid.
+        /// </summary>
+        int ColumnCount { get; }
         
         /// <summary>
         /// Gets or sets the numeric grid format e.g. N3

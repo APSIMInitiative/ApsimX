@@ -5,8 +5,9 @@ namespace UserInterface.Presenters
     using Models.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Text;
-
+    
     /// <summary>
     /// This presenter displays a table of data, which it gets from the model via
     /// the interface IModelAsTable, allows user to edit it and returns the data
@@ -69,11 +70,104 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Pastes data from the clipboard into a cell or range of cells.
-        /// If the first cell is the same as the last cell, only the data from that cell will be copied.
+        /// If the first cell is the same as the last cell, data will only be pasted into that cell.
+        /// If the selected number of cells is less than the number of cells the user has copied,
+        /// a dialog will be shown to the user, asking for confirmation before proceeding.
         /// </summary>
-        private void PasteCells(object sender, GridCellActionArgs args)
+        private void PasteCells(object sender, GridCellPasteArgs args)
         {
+            List<IGridCell> cellsChanged = new List<IGridCell>();
+            string[] lines = args.Text.Split(Environment.NewLine.ToCharArray());
+            for (int i = 0; i < lines.Length; i++)
+            {
+                // Add new rows, if necessary.
+                if (args.Grid.RowCount < args.StartCell.RowIndex + i + 1)
+                    args.Grid.RowCount++;
+                string[] words = lines[i].Split('\t');
+                int numReadOnlyColumns = 0;
+                for (int j = 0; j < words.Length; j++)
+                {
+                    IGridColumn column = args.Grid.GetColumn(args.StartCell.ColumnIndex + j + numReadOnlyColumns);
+                    while (column != null && column.ReadOnly)
+                    {
+                        numReadOnlyColumns++;
+                        column = args.Grid.GetColumn(args.StartCell.ColumnIndex + j + numReadOnlyColumns);
+                    }
+                    if (column == null)
+                        throw new Exception("Error pasting into grid - not enough columns.");
+                    /*
+                    if (column <= args.EndCell.ColumnIndex && !args.Grid.GetColumn(column).ReadOnly)
+                    {
+                        string word = words.Length >= column ? words[column] : null;
+                        IGridCell cell = args.Grid.GetCell(column, row);
+                        cell.Value = string.IsNullOrEmpty(words[column]) ? DBNull.Value.ToString() : words[column];
+                        cellsChanged.Add(cell);
+                    }
+                    */
+                }
+            }
+            /*
+            foreach (string line in lines)
+            {
+                if (rowIndex < RowCount && line.Length > 0)
+                {
+                    string[] words = line.Split('\t');
+                    for (int i = 0; i < words.GetLength(0); ++i)
+                    {
+                        if (columnIndex + i < DataSource.Columns.Count)
+                        {
+                            // Make sure there are enough rows in the data source.
+                            while (DataSource.Rows.Count <= rowIndex)
+                            {
+                                DataSource.Rows.Add(DataSource.NewRow());
+                            }
 
+                            IGridCell cell = GetCell(columnIndex + i, rowIndex);
+                            IGridColumn column = GetColumn(columnIndex + i);
+                            if (!column.ReadOnly)
+                            {
+                                try
+                                {
+                                    if (cell.Value == null || AsString(cell.Value) != words[i])
+                                    {
+                                        // We are pasting a new value for this cell. Put the new
+                                        // value into the cell.
+                                        if (words[i] == string.Empty)
+                                        {
+                                            cell.Value = DBNull.Value;
+                                        }
+                                        else
+                                        {
+                                            cell.Value = Convert.ChangeType(words[i], DataSource.Columns[columnIndex + i].DataType);
+                                        }
+
+                                        // Put a cell into the cells changed member.
+                                        cellsChanged.Add(GetCell(columnIndex + i, rowIndex));
+                                    }
+                                }
+                                catch (FormatException)
+                                {
+                                }
+                            }
+                        }
+                        else
+                            break;
+                    }
+                    rowIndex++;
+                }
+                else
+                    break;
+                    */
+            }
+            /*
+            // If some cells were changed then send out an event.
+            if (cellsChanged.Count > 0 && CellsChanged != null)
+            {
+                fixedColView.QueueDraw();
+                Grid.QueueDraw();
+                CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+            }
+            */
         }
 
         /// <summary>

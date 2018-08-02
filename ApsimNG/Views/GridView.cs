@@ -163,8 +163,8 @@
             fixedColView.Model = gridModel;
             fixedColView.Selection.Mode = SelectionMode.None;
             popupMenu.AttachToWidget(Grid, null);
-            AddContextActionWithAccel("Copy", OnCopyToClipboard, "Ctrl+C");
-            AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
+            AddContextActionWithAccel("Copy", OnCopy, "Ctrl+C");
+            AddContextActionWithAccel("Paste", OnPaste, "Ctrl+V");
             AddContextActionWithAccel("Delete", OnDelete, "Delete");
             Grid.ButtonPressEvent += OnButtonDown;
             Grid.Selection.Mode = SelectionMode.None;
@@ -191,7 +191,7 @@
         /// <summary>
         /// Invoked when the user wants to paste data into a range of cells.
         /// </summary>
-        public event EventHandler<GridCellActionArgs> PasteCells;
+        public event EventHandler<GridCellPasteArgs> PasteCells;
 
         /// <summary>
         /// Invoked when the user wants to delete data from a range of cells.
@@ -263,6 +263,17 @@
                 }
 
                 // TBI this.Grid.RowCount = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of columns in the grid.
+        /// </summary>
+        public int ColumnCount
+        {
+            get
+            {
+                return DataSource.Columns.Count;
             }
         }
 
@@ -1885,7 +1896,7 @@
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void OnPasteFromClipboard(object sender, EventArgs e)
+        private void OnPaste(object sender, EventArgs e)
         {
             try
             {
@@ -1895,98 +1906,44 @@
                     (editControl as Entry).PasteClipboard();
                     cellsChanged.Add(popupCell);
                 }
-                else
+                else if (PasteCells != null)
                 {
-                    int rowIndex = FirstSelectedRow();
-                    int columnIndex = FirstSelectedColumn();
                     Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
                     string text = cb.WaitForText();
                     if (text != null)
                     {
                         string[] lines = text.Split('\n');
                         int numCellsToPaste = 0;
-                        lines.ToList().ForEach(line => line.Split('\t').ToList().ForEach(cell => { if (!string.IsNullOrEmpty(cell)) numCellsToPaste += 1; }));
+                        lines.ToList().ForEach(line => line.Split('\t').ToList().ForEach(cell => { if (!string.IsNullOrEmpty(cell)) numCellsToPaste++; }));
+                        int numReadOnlyColumns = 0;
+                        for (int i = FirstSelectedColumn(); i < ColumnCount; i++)
+                            if (GetColumn(i).ReadOnly)
+                                numReadOnlyColumns++;
 
+                        int numColumnsToPaste = lines[0].Split('\t').Count();
+                        int numColumnsAvailable = ColumnCount - FirstSelectedColumn() - numReadOnlyColumns;
+                        if (numColumnsToPaste > numColumnsAvailable)
+                            throw new Exception(string.Format("Unable to paste {0} columns of data into {1} non-readonly columns.", numColumnsToPaste, numColumnsAvailable));
                         int numberSelectedCells = NumSelectedCells();
-                        if (numCellsToPaste > numberSelectedCells && numberSelectedCells > 1)
+                        if (numCellsToPaste > numberSelectedCells && numberSelectedCells > 1 && (ResponseType)MasterView.ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", MessageType.Question, ButtonsType.YesNo) != Gtk.ResponseType.Yes)
                         {
                             // The number of selected cells is less than the number of cells that the user is attempting to paste.
                             // In this scenario, we ask for confirmation before proceeding with the paste operation.
-                            if ((ResponseType)MasterView.ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", MessageType.Question, ButtonsType.YesNo) != Gtk.ResponseType.Yes)
-                                return;
+                            return;
                         }
-                        foreach (string line in lines)
-                        {
-                            if (rowIndex < RowCount && line.Length > 0)
-                            {
-                                string[] words = line.Split('\t');
-                                for (int i = 0; i < words.GetLength(0); ++i)
-                                {
-                                    if (columnIndex + i < DataSource.Columns.Count)
-                                    {
-                                        // Make sure there are enough rows in the data source.
-                                        while (DataSource.Rows.Count <= rowIndex)
-                                        {
-                                            DataSource.Rows.Add(DataSource.NewRow());
-                                        }
-
-                                        IGridCell cell = GetCell(columnIndex + i, rowIndex);
-                                        IGridColumn column = GetColumn(columnIndex + i);
-                                        if (!column.ReadOnly)
-                                        {
-                                            try
-                                            {
-                                                if (cell.Value == null || AsString(cell.Value) != words[i])
-                                                {
-                                                    // We are pasting a new value for this cell. Put the new
-                                                    // value into the cell.
-                                                    if (words[i] == string.Empty)
-                                                    {
-                                                        cell.Value = DBNull.Value;
-                                                    }
-                                                    else
-                                                    {
-                                                        cell.Value = Convert.ChangeType(words[i], DataSource.Columns[columnIndex + i].DataType);
-                                                    }
-
-                                                    // Put a cell into the cells changed member.
-                                                    cellsChanged.Add(GetCell(columnIndex + i, rowIndex));
-                                                }
-                                            }
-                                            catch (FormatException)
-                                            {
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                rowIndex++;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
+                        GridCell firstCell = new GridCell(this, FirstSelectedColumn(), FirstSelectedRow());
+                        GridCell lastCell = new GridCell(this, LastSelectedColumn(), LastSelectedRow());
+                        PasteCells.Invoke(this, new GridCellPasteArgs { StartCell = firstCell, EndCell = lastCell, Grid = this, Text = text });
                     }
                 }
-
-                // If some cells were changed then send out an event.
-                if (cellsChanged.Count > 0 && CellsChanged != null)
+                else
                 {
-                    fixedColView.QueueDraw();
-                    Grid.QueueDraw();
-                    CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+                    throw new Exception("Unable to paste cells - this view is not handled by a grid presenter.");
                 }
             }
             catch (Exception err)
             {
-                MainView mainView = GetMainViewReference(this);
-                if (mainView != null)
-                    mainView.ShowMessage(err.ToString(), Simulation.ErrorLevel.Error);
+                ShowError(err);
             }
         }
 
@@ -1995,20 +1952,30 @@
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void OnCopyToClipboard(object sender, EventArgs e)
+        private void OnCopy(object sender, EventArgs e)
         {
-            if (userEditingCell && editControl != null)
+            try
             {
-                (editControl as Entry).CopyClipboard();
+                if (userEditingCell && editControl != null)
+                {
+                    (editControl as Entry).CopyClipboard();
+                }
+                else if (CopyCells != null)
+                {
+                    GridCell firstCell = new GridCell(this, FirstSelectedColumn(), FirstSelectedRow());
+                    GridCell lastCell = new GridCell(this, LastSelectedColumn(), LastSelectedRow());
+                    CopyCells.Invoke(this, new GridCellActionArgs { StartCell = firstCell, EndCell = lastCell, Grid = this });
+                }
+                else
+                {
+                    throw new Exception("Unable to copy cells - the view is not handled by a grid presenter.");
+                }
             }
-            else if (CopyCells != null)
+            catch (Exception err)
             {
-                GridCell firstCell = new GridCell(this, FirstSelectedColumn(), FirstSelectedRow());
-                GridCell lastCell = new GridCell(this, LastSelectedColumn(), LastSelectedRow());
-                CopyCells.Invoke(this, new GridCellActionArgs { StartCell = firstCell, EndCell = lastCell, Grid = this });
+                ShowError(err);
             }
-            else
-                ShowError(new Exception("Unable to copy cells - the view is not handled by a grid presenter."));
+            
         }
 
         /// <summary>
@@ -2018,21 +1985,26 @@
         /// <param name="e">The event arguments.</param>
         private void OnDelete(object sender, EventArgs e)
         {
-            List<IGridCell> cellsChanged = new List<IGridCell>();
-            if (userEditingCell && editControl != null)
+            try
             {
-                (editControl as Entry).DeleteSelection();
-                cellsChanged.Add(popupCell);
+                List<IGridCell> cellsChanged = new List<IGridCell>();
+                if (userEditingCell && editControl != null)
+                {
+                    (editControl as Entry).DeleteSelection();
+                    cellsChanged.Add(popupCell);
+                }
+                else if (DeleteCells != null)
+                {
+                    GridCell firstCell = new GridCell(this, FirstSelectedColumn(), FirstSelectedRow());
+                    GridCell lastCell = new GridCell(this, LastSelectedColumn(), LastSelectedRow());
+                    DeleteCells.Invoke(this, new GridCellActionArgs { StartCell = firstCell, EndCell = lastCell, Grid = this });
+                }
+                else if (AnyCellIsSelected())
+                    throw new Exception("Unable to delete cells - the view is not handled by a grid presenter.");
             }
-            else if (DeleteCells != null)
+            catch (Exception err)
             {
-                GridCell firstCell = new GridCell(this, FirstSelectedColumn(), FirstSelectedRow());
-                GridCell lastCell = new GridCell(this, LastSelectedColumn(), LastSelectedRow());
-                DeleteCells.Invoke(this, new GridCellActionArgs { StartCell = firstCell, EndCell = lastCell, Grid = this });
-            }
-            else if (AnyCellIsSelected())
-            {
-                ShowError(new Exception("Unable to delete cells - the view is not handled by a grid presenter."));
+                ShowError(err);
             }
         }
 
