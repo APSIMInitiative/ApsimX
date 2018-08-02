@@ -45,7 +45,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>
-        public DirectedGraph DirectedGraph 
+        public DirectedGraph DirectedGraph
         {
             get
             {

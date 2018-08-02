@@ -64,7 +64,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            Type selectedModelType = this.allowableChildFunctions.Find(m => m.Name == this.view.List.SelectedValue);
+            Type selectedModelType = this.allowableChildFunctions.Find(m => m.FullName == this.view.List.SelectedValue);
             if (selectedModelType != null)
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);

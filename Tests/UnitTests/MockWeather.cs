@@ -25,6 +25,8 @@ namespace UnitTests
 
         public double MinT { get; set; }
 
+        public double MeanT { get; set; }
+
         public double Radn { get; set; }
 
         public double Rain { get; set; }

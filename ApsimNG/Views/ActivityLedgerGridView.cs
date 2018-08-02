@@ -52,8 +52,8 @@ namespace UserInterface.Views
         private bool selfCursorMove = false;
 
         private ScrolledWindow scrolledwindow1 = null;
-        public TreeView gridview = null;
-        public TreeView fixedcolview = null;
+        public Gtk.TreeView gridview = null;
+        public Gtk.TreeView fixedcolview = null;
         private HBox hbox1 = null;
         private Gtk.Image image1 = null;
 
@@ -70,8 +70,8 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
-            gridview = (TreeView)builder.GetObject("gridview");
-            fixedcolview = (TreeView)builder.GetObject("fixedcolview");
+            gridview = (Gtk.TreeView)builder.GetObject("gridview");
+            fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
             image1 = (Gtk.Image)builder.GetObject("image1");
             _mainWidget = hbox1;
             gridview.Model = gridmodel;
@@ -392,7 +392,7 @@ namespace UserInterface.Views
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             TreePath path = model.GetPath(iter);
-            TreeView view = col.TreeView as TreeView;
+            Gtk.TreeView view = col.TreeView as Gtk.TreeView;
             int rowNo = path.Indices[0];
             int colNo;
             string text = String.Empty;
@@ -414,7 +414,7 @@ namespace UserInterface.Views
         /// don't seem to work consistently
         /// </summary>
         /// <param name="view">The treeview for which headings are to be modified</param>
-        private void SetColumnHeaders(TreeView view)
+        private void SetColumnHeaders(Gtk.TreeView view)
         {
             int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
             for (int i = 0; i < nCols; i++)

@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models.Core;
     using Models.Graph;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using Views;
 
     /// <summary>
@@ -264,8 +264,6 @@ namespace UserInterface.Presenters
 
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
-
-            this.xYPairsView.VariablesGrid.ResizeControls();
 
             // this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
             // this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;

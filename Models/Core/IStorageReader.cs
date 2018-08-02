@@ -85,5 +85,11 @@ namespace Models.Core
         /// <param name="columnUnits">The column units to add</param>
         void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits);
 
+        /// <summary>
+        /// Get a list of the table columns
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <returns></returns>
+        List<string> GetTableColumns(string tableName);
     }
 }

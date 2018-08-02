@@ -20,6 +20,7 @@ namespace Models.Core
     /// </summary>
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
+    [ValidParent(ParentType = typeof(Morris))]
     [Serializable]
     [ScopedModel]
     public class Simulation : Model, ISimulationGenerator
@@ -150,7 +151,7 @@ namespace Models.Core
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun()
         {
             hasRun = false;
         }
@@ -179,11 +180,8 @@ namespace Models.Core
                 // different. I'm not sure how to fix this yet. A brute force way is to recompile all manager 
                 // scripts after cloning.
                 // https://github.com/APSIMInitiative/ApsimX/issues/2603
-                Events events = new Events(simulationToRun);
-                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
 
-                simulationEngine.MakeSubstitutions(simulationToRun);
+                simulationEngine.MakeSubsAndLoad(simulationToRun);
             }
             return simulationToRun;
         }
@@ -194,6 +192,17 @@ namespace Models.Core
             if (Parent is ISimulationGenerator)
                 return new string[0];
             return new string[] { Name };
+        }
+
+        /// <summary>Gets a list of factors</summary>
+        public List<ISimulationGeneratorFactors> GetFactors()
+        {
+            List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
+            var factor = new SimulationGeneratorFactors("SimulationName", Name, "Simulation", Name);
+            factors.Add(factor);
+            foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+                factor.AddFactor("Zone", zone.Name); 
+            return factors;
         }
 
         /// <summary>

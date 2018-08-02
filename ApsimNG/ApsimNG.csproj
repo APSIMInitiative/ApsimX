@@ -207,6 +207,9 @@
     <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
+    <Compile Include="Interfaces\IMenuView.cs" />
+    <Compile Include="Interfaces\IToolStripView.cs" />
+    <Compile Include="Interfaces\ITreeView.cs" />
     <Compile Include="Interfaces\IExplorerView.cs" />
     <Compile Include="Interfaces\IGraphView.cs" />
     <Compile Include="Interfaces\IGridCell.cs" />
@@ -255,6 +258,7 @@
     <Compile Include="Presenters\NewAzureJobPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
+    <Compile Include="Presenters\GridPresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
     <Compile Include="Presenters\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
@@ -298,6 +302,9 @@
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ErrorView.cs" />
+    <Compile Include="Views\MenuView.cs" />
+    <Compile Include="Views\ToolStripView.cs" />
+    <Compile Include="Views\TreeView.cs" />
     <Compile Include="Views\ExplorerView.cs" />
     <Compile Include="Views\FactorControlView.cs" />
     <Compile Include="Views\FolderView.cs" />
@@ -411,7 +418,10 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Morris.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportPasturePoolDetails.png" />

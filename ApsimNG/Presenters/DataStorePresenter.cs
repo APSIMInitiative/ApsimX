@@ -53,7 +53,6 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.view.Grid.ResizeControls();
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
@@ -83,12 +82,21 @@ namespace UserInterface.Presenters
                         if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
                         {
                             numFrozenColumns = i;
+                            // Make the date column the left-most column
+                            data.Columns[i].SetOrdinal(0);
                             break;
                         }
                     }
 
-                    int simulationId = 0;
+                    int colPos = 1;
+                    // Make "Simulation Name" the second column, if present
+                    if (data.Columns.Contains("SimulationName"))
+                        data.Columns["SimulationName"].SetOrdinal(colPos++);
+                    if (data.Columns.Contains("Zone"))
+                        data.Columns["Zone"].SetOrdinal(colPos++);
 
+                    int simulationId = 0;
+         
                     for (int i = 0; i < data.Columns.Count; i++)
                     {
                         if (data.Columns[i].ColumnName == "SimulationID")
