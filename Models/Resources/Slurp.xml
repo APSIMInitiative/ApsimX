@@ -48,6 +48,26 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
       <Units>days</Units>
     </Constant>
     <GenericPhase>
+      <Name>Initial</Name>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+      </VariableReference>
+      <Constant>
+        <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <FixedValue>0</FixedValue>
+        <Units>d</Units>
+      </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <Start>Initialisation</Start>
+      <End>Sowing</End>
+    </GenericPhase>
+    <GenericPhase>
       <Name>Ongoing</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
@@ -318,6 +338,7 @@ This is important in SLURP as it is set for each species to represent their diff
   </Root>
   <SimpleLeaf>
     <Name>Leaf</Name>
+    <LeafInitialisationStage>Sowing</LeafInitialisationStage>
     <Constant>
       <Name>DetachmentRateFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

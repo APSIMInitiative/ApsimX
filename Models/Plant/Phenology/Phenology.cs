@@ -321,12 +321,9 @@ namespace Models.PMF.Phen
 
                     currentPhaseIndex = currentPhaseIndex + 1;
 
-                    if (PhaseChanged != null)
-                    {
                         PhaseChangedType PhaseChangedData = new PhaseChangedType();
                         PhaseChangedData.StageName = CurrentPhase.Start;
-                        PhaseChanged.Invoke(plant, PhaseChangedData);
-                    }
+                        PhaseChanged?.Invoke(plant, PhaseChangedData);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                     AccumulateTT(CurrentPhase.TTForTimeStep);
