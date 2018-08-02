@@ -13596,6 +13596,7 @@ Soil parameterisation was based on the two description of the soil at the Rainsh
             <string>[Oats].Root.Live.Wt</string>
             <string>[Oats].Ear.Wt</string>
             <string>[Oats].Panicle.Wt  </string>
+            <string>[Oats].Leaf.Dead.Wt</string>
             <string />
             <string>[Oats].AboveGround.N</string>
             <string>[Oats].Leaf.N</string>
