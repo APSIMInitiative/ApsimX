@@ -2628,7 +2628,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -5235,7 +5235,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -7426,7 +7426,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -8512,7 +8512,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -9634,7 +9634,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -10885,7 +10885,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -11671,7 +11671,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -12343,7 +12343,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -13871,7 +13871,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -14618,7 +14618,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -15365,7 +15365,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -16496,7 +16496,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -16640,7 +16640,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -17447,7 +17447,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -18774,7 +18774,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -20255,7 +20255,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -21708,7 +21708,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -23187,7 +23187,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -25841,7 +25841,7 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -28305,7 +28305,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -31520,7 +31520,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -35695,7 +35695,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -40038,7 +40038,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -48312,7 +48312,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -48918,7 +48918,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -49469,7 +49469,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -50405,7 +50405,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -50956,7 +50956,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -51616,7 +51616,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -52167,7 +52167,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -52718,7 +52718,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -53269,7 +53269,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -53820,7 +53820,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -54371,7 +54371,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -54922,7 +54922,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -55473,7 +55473,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -56010,7 +56010,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -57534,7 +57534,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -59310,7 +59310,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -60047,7 +60047,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -61367,7 +61367,7 @@ namespace Models
               <b_interception>0</b_interception>
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.13</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -63504,7 +63504,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -64626,7 +64626,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -65413,7 +65413,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -66200,7 +66200,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -66947,7 +66947,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -67421,7 +67421,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -68574,7 +68574,7 @@ namespace Models
               <b_interception>1</b_interception>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -69728,7 +69728,7 @@ namespace Models
               <b_interception>0</b_interception>
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.13</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -70365,7 +70365,7 @@ namespace Models
               <b_interception>0</b_interception>
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.13</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -71002,7 +71002,7 @@ namespace Models
               <b_interception>0</b_interception>
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.13</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -72825,7 +72825,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -74595,7 +74595,7 @@ namespace Models
                 <b_interception>1</b_interception>
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
+                <soil_albedo>0.23</soil_albedo>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
@@ -75680,7 +75680,7 @@ namespace Models
               <b_interception>0</b_interception>
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.13</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -76361,7 +76361,7 @@ namespace Models
               <b_interception>0</b_interception>
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.13</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -77042,7 +77042,7 @@ namespace Models
               <b_interception>0</b_interception>
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
-              <soil_albedo>0.13</soil_albedo>
+              <soil_albedo>0.23</soil_albedo>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
@@ -78151,7 +78151,7 @@ namespace Models
             <b_interception>0</b_interception>
             <c_interception>0.3</c_interception>
             <d_interception>0</d_interception>
-            <soil_albedo>0.13</soil_albedo>
+            <soil_albedo>0.23</soil_albedo>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
