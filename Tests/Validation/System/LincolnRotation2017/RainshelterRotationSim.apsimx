@@ -432,7 +432,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <ShootRate>4</ShootRate>
           <Start>Germination</Start>
           <End>Emergence</End>
-          <TTForToday>0</TTForToday>
+          <TTForTimeStep>0</TTForTimeStep>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
@@ -9063,7 +9063,7 @@ assumed to be 0°C ([Chakwizira_etal_2016a]).]]></MemoText>
           <ShootRate>12.5</ShootRate>
           <Start>Germination</Start>
           <End>PreEmerge</End>
-          <TTForToday>0</TTForToday>
+          <TTForTimeStep>0</TTForTimeStep>
         </EmergingPhase>
         <GenericPhase>
           <Name>Emerging</Name>
@@ -12624,7 +12624,6 @@ namespace Models
         [ScopedLinkByName] Plant FodderBeet;
         [ScopedLinkByName] Plant Oats;
         [Link] Clock Clock;
-        //[Link] SurfaceOM.SurfaceOrganicMatter mySurfOM;
 
         [Description("FodderBeet planting date: ")]
         public DateTime FodderBeetPlantingDate { get; set; }
@@ -12650,7 +12649,6 @@ namespace Models
         {
             CropSown = "Fallow";
             CropAction = "-";
-            //mySurfOM.ReportAdditions = "yes";
 
             // set removal fractions for FodderBeet(these overrides the default removals in the plant)
             removalFractions = new RemovalFractions();
