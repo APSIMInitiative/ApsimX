@@ -11,7 +11,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EndPhase : Model, IPhase
+    public class EndPhase : Model, IPhase, IPhaseWithTarget
     {
         [Link]
         private Phenology phenology = null;
@@ -33,25 +33,29 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
         [XmlIgnore]
         public double FractionComplete
         {
             get { return 0.0; }
-            set { throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it"); }
         }
+
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get { return 0; } }
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double PropOfDayToUse)
         {
-            TTForToday = phenology.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-            return 0;
+            TTForTimeStep = phenology.thermalTime.Value() * PropOfDayToUse;
+            TTinPhase += TTForTimeStep;
+            
+            return false;
         }
 
         /// <summary>Resets the phase.</summary>
