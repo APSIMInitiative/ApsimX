@@ -11,7 +11,7 @@ namespace Models.GrazPlan
     using Models.Core;
     using Models.PMF.Interfaces;
     using Models.Soils;
-    using Models.SurfaceOM;
+    using Models.Surface;
     using StdUnits;
 
     /// <summary>
@@ -4235,7 +4235,7 @@ namespace Models.GrazPlan
 
                 if (paddInfo.AddFaecesObj != null)
                 {
-                    SurfaceOrganicMatter.AddFaecesType faeces = new SurfaceOrganicMatter.AddFaecesType();
+                    Surface.AddFaecesType faeces = new Surface.AddFaecesType();
                     if (this.PopulateFaeces(paddInfo.iPaddID, faeces))
                     {
                         ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
@@ -4569,7 +4569,7 @@ namespace Models.GrazPlan
         /// <param name="paddID">The paddock ID</param>
         /// <param name="faecesValue">The faeces data</param>
         /// <returns>True if the number of defaecations > 0</returns>
-        private bool PopulateFaeces(int paddID, SurfaceOrganicMatter.AddFaecesType faecesValue)
+        private bool PopulateFaeces(int paddID, Surface.AddFaecesType faecesValue)
         {
             int n = (int)GrazType.TOMElement.n;
             int p = (int)GrazType.TOMElement.p;

@@ -61,7 +61,7 @@ namespace Models.Functions
                 for (int i = 0; i < Stages.Length; i++)
                 {
                     IPhase p = Phenology.PhaseStartingWith(Stages[i]);
-                    StageCodes[i] = Phenology.IndexOfPhase(p.Name) + 1;
+                    StageCodes[i] = Phenology.IndexFromPhaseName(p.Name) + 1;
                 }
             }
 
