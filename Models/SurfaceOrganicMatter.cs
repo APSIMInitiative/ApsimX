@@ -1438,8 +1438,8 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                solutes.AddToDepth(0, "NH4", SoluteManager.SoluteSetterType.Soil, nh4Incorp);
-                solutes.AddToDepth(0, "NO3", SoluteManager.SoluteSetterType.Soil, no3Incorp);
+                solutes.AddToLayer(0, "NH4", SoluteManager.SoluteSetterType.Soil, nh4Incorp);
+                solutes.AddToLayer(0, "NO3", SoluteManager.SoluteSetterType.Soil, no3Incorp);
             }
 
             for (int i = 0; i < numSurfom; i++)
