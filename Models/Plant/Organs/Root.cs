@@ -590,8 +590,8 @@ namespace Models.PMF.Organs
                 double NDeficit = 0.0;
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * minimumNConc.Value() * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, maximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minimumNConc.Value() * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, maximumNConc.Value() * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
                     structuralNDemand += Z.StructuralNDemand[i];
@@ -607,6 +607,7 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
+
             if (PlantZone.WaterUptake == null)
                 throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
 
@@ -629,8 +630,10 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                 {
                     double[] RAw = Z.CalculateRootActivityValues();
+                    Z.PotentialDMAllocated = new double[Z.soil.Thickness.Length];
+
                     for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
-                        Z.LayerLive[layer].PotentialDMAllocation = dryMatter.Structural * RAw[layer] / TotalRAw;
+                        Z.PotentialDMAllocated[layer] = dryMatter.Structural * RAw[layer] / TotalRAw;
                 }
                 needToRecalculateLiveDead = true;
             }

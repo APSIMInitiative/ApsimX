@@ -17,145 +17,97 @@ namespace Models.PMF.Phen
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafDeathPhase : Model, IPhase
     {
-        /// <summary>The leaf</summary>
-        [Link]
-        private Leaf Leaf = null;
+        // 1. Links
+        //----------------------------------------------------------------------------------------------------------------
 
-        /// <summary>The structure</summary>
         [Link]
-        Structure Structure = null;
+        private Leaf leaf = null;
 
-        /// <summary>The dead node no at start</summary>
+        [Link]
+        private Structure structure = null;
+
+        //2. Private and protected fields
+        //-----------------------------------------------------------------------------------------------------------------
         private double DeadNodeNoAtStart = 0;
-        /// <summary>The first</summary>
         private bool First = true;
 
-        /// <summary>Resets the phase.</summary>
-        public void ResetPhase()
-        {
-            _TTForToday = 0;
-            TTinPhase = 0;
-            PropOfDayUnused = 0;
-            DeadNodeNoAtStart = 0;
-            First = true;
-        }
-        /// <summary>Do our timestep development</summary>
-        /// <param name="PropOfDayToUse">The property of day to use.</param>
-        /// <returns></returns>
-        public double DoTimeStep(double PropOfDayToUse)
-        {
-            // Calculate the TT for today and Accumulate.      
-            if (ThermalTime != null)
-            {
-                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
-                if (Stress != null)
-                {
-                    _TTForToday *= Stress.Value();
-                }
-                TTinPhase += _TTForToday;
-            }
 
-            if (First)
-            {
-                DeadNodeNoAtStart = Leaf.DeadCohortNo;
-                First = false;
-            }
-
-            if ((Leaf.DeadCohortNo >= Structure.FinalLeafNumber.Value()) || (Leaf.CohortsInitialised == false))
-                return 0.00001;
-            else
-                return 0;
-        }
-
-        /// <summary>Return a fraction of phase complete.</summary>
-        /// <value>The fraction complete.</value>
-        [XmlIgnore]
-        public double FractionComplete
-        {
-            get
-            {
-                double F = (Leaf.DeadCohortNo - DeadNodeNoAtStart) / (Structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
-                if (F < 0) F = 0;
-                if (F > 1) F = 1;
-                return F;
-            }
-            set
-            {
-                throw new Exception("Not possible to set phenology into "+ this + " phase (at least not at the moment because there is no code to do it");
-            }
-        }
-
+        //5. Public properties
+        //-----------------------------------------------------------------------------------------------------------------
+  
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
 
         /// <summary>The end</summary>
-        [Models.Core.Description("End")]
+        [Description("End")]
         public string End { get; set; }
 
-        /// <summary>The phenology</summary>
-        [Link]
-        protected Phenology Phenology = null;
-
-        /// <summary>The thermal time</summary>
-        [Link(IsOptional = true)]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
-        /// <summary>The stress</summary>
-        [Link(IsOptional = true)]
-        public IFunction Stress = null;
-
-        /// <summary>The property of day unused</summary>
-        protected double PropOfDayUnused = 0;
-        /// <summary>The _ tt for today</summary>
-        protected double _TTForToday = 0;
-
-        /// <summary>Gets the tt for today.</summary>
-        /// <value>The tt for today.</value>
-        public double TTForToday
+        /// <summary>Return a fraction of phase complete.</summary>
+        [XmlIgnore]
+        public double FractionComplete
         {
             get
             {
-                if (ThermalTime == null)
-                    return 0;
-                return ThermalTime.Value();
+                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
+                if (F < 0) F = 0;
+                if (F > 1) F = 1;
+                return F;
             }
         }
+
+        /// <summary>Gets the tt for today.</summary>
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
-        // Return proportion of TT unused
-        /// <summary>Adds the tt.</summary>
-        /// <param name="PropOfDayToUse">The property of day to use.</param>
-        /// <returns></returns>
-        virtual public double AddTT(double PropOfDayToUse)
+
+        //6. Public methods
+        //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Do our timestep development</summary>
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
-            return 0;
+            bool proceedToNextPhase = false;
+            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
+                        
+            if (First)
+            {
+                DeadNodeNoAtStart = leaf.DeadCohortNo;
+                First = false;
+            }
+
+            if ((leaf.DeadCohortNo >= structure.FinalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.00001;
+                TTForTimeStep *= (1 - propOfDayToUse);
+            }
+
+            TTinPhase += TTForTimeStep;
+
+            return proceedToNextPhase;
         }
-        /// <summary>Adds the specified DLT_TT.</summary>
-        /// <param name="dlt_tt">The DLT_TT.</param>
-        virtual public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
-
-
+        /// <summary>Resets the phase.</summary>
+        public void ResetPhase()
+        {
+            TTinPhase = 0;
+            DeadNodeNoAtStart = 0;
+            First = true;
+        }
 
         /// <summary>Writes the summary.</summary>
         /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-        }
-
+        public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }
+              
+        /// <summary>Called when [simulation commencing].</summary>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        { ResetPhase(); }
     }
 }
 

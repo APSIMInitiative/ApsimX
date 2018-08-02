@@ -279,7 +279,7 @@ namespace CMPServices
         /// <summary>
         /// Each typed value uses a parser at creation
         /// </summary>
-        protected TSDMLParser parser;
+        protected SDMLParser parser;
 
         System.Text.ASCIIEncoding ascii;
 
@@ -367,7 +367,7 @@ namespace CMPServices
         /// <param name="sBaseType">Used to set the base type.  See <see cref="sTYPECODES"/></param>
         // N.Herrmann Apr 2002
         //============================================================================
-        public TTypedValue(TSDMLParser parentParser, XmlNode baseNode, String sBaseType)
+        public TTypedValue(SDMLParser parentParser, XmlNode baseNode, String sBaseType)
         {
             ascii = new System.Text.ASCIIEncoding();
 
@@ -1300,7 +1300,7 @@ namespace CMPServices
         //======================================================================
         protected void buildType(String sXML)
         {
-            parser = new TSDMLParser(sXML);    //create a parser, also reads description fields
+            parser = new SDMLParser(sXML);    //create a parser, also reads description fields
             getDescription();                  //set the description fields from the parser
 
             parseType();                       //do the parsing of this type 
@@ -1314,7 +1314,7 @@ namespace CMPServices
         /// <param name="baseNode">DOM Node to use as the root node.</param>
         // N.Herrmann Apr 2002
         //======================================================================
-        protected void buildType(TSDMLParser parentParser, XmlNode baseNode)
+        protected void buildType(SDMLParser parentParser, XmlNode baseNode)
         {
             XmlNode parentsNode;
 

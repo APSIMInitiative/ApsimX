@@ -5,12 +5,12 @@ namespace CMPServices
 {
     ///=========================================================================
     /// <summary>
-    /// The TXMLParser class is a wrapper around a DOM parser. It is used as the
+    /// The XMLParser class is a wrapper around a DOM parser. It is used as the
     /// parent class for other specialised parser types. This class makes it easy to 
     /// access features of the DOM parser.
     /// </summary>
     ///=========================================================================
-    public class TXMLParser
+    public class XMLParser
     {
         private XmlDocument doc;
         /// <summary>
@@ -40,7 +40,7 @@ namespace CMPServices
         /// </summary>
         /// <param name="xml">XML document.</param>
         //======================================================================
-        public TXMLParser(String xml)
+        public XMLParser(String xml)
         {
             doc = new XmlDocument();
             // Don't let the MSXML parser collapse white space
@@ -55,7 +55,7 @@ namespace CMPServices
         /// </summary>
         /// <param name="domNode">The node.</param>
         //======================================================================
-        public TXMLParser(XmlNode domNode)
+        public XMLParser(XmlNode domNode)
         {
             doc = domNode.OwnerDocument;
             topElement = domNode;

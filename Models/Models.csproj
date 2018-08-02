@@ -199,10 +199,13 @@
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
     <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
+    <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
+    <Compile Include="Soils\Nutrient\Chloride.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
@@ -267,7 +270,7 @@
     <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\Phases\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\NodeNumberPhase.cs" />
-    <Compile Include="Plant\Phenology\Responses\QualitativePPEffect.cs" />
+    <Compile Include="Functions\QualitativePPEffect.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
@@ -449,7 +452,6 @@
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\RunoffEventType.cs" />
     <Compile Include="Soils\Analysis.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />
@@ -469,7 +471,12 @@
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />
-    <Compile Include="SurfaceOrganicMatter.cs" />
+    <Compile Include="Surface\AddFaecesType.cs" />
+    <Compile Include="Surface\OMFractionType.cs" />
+    <Compile Include="Surface\SurfaceOrganicMatter.cs" />
+    <Compile Include="Surface\ResidueType.cs" />
+    <Compile Include="Surface\ResidueTypes.cs" />
+    <Compile Include="Surface\SurfOrganicMatterType.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\Model.cs" />
@@ -673,7 +680,7 @@
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />
     <None Include="Resources\Plantain.xml" />
-    <Content Include="Resources\ResidueTypes.xml">
+    <Content Include="Resources\SurfaceOrganicMatter.xml">
       <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\SCRUM.xml" />

@@ -91,7 +91,7 @@ namespace Models.Functions
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (phaseChange.EventStageName == ResetStageName)
+            if (phaseChange.StageName == ResetStageName)
                 AccumulatedValue = 0.0;
         }
 
