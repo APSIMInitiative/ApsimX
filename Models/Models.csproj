@@ -199,6 +199,7 @@
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
     <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
@@ -269,7 +270,7 @@
     <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\Phases\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\NodeNumberPhase.cs" />
-    <Compile Include="Plant\Phenology\Responses\QualitativePPEffect.cs" />
+    <Compile Include="Functions\QualitativePPEffect.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />

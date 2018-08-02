@@ -8,11 +8,7 @@ namespace Models.PMF.Phen
     [Serializable]
     public class PhaseChangedType : EventArgs
     {
-        /// <summary>The old phase name</summary>
-        public String OldPhaseName = "";
-        /// <summary>The new phase name</summary>
-        public String NewPhaseName = "";
         /// <summary>The stage at phase change</summary>
-        public String EventStageName = "";
+        public String StageName = "";
     }
 }

@@ -570,8 +570,6 @@ namespace Models
 		[XmlIgnore] public double AccumRainfall { get; set; }
 		[XmlIgnore] public double SoilWaterDeficit { get; set; }
 		
-		[XmlIgnore] public double AccumTtemerg { get; set; }
-		
 		[XmlIgnore] public double  InitialSoilOMN { get; set; }
 		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
 		[XmlIgnore] public double  InitialMineralN { get; set; }
@@ -639,11 +637,6 @@ namespace Models
 			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
-			
-			//!!!!!! Thermal time calculation !!!!!!
-			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.Stage >= 3)
-				AccumTtemerg += Potato.Phenology.ThermalTime.Value();
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -686,7 +679,6 @@ namespace Models
           <string>[ExtraVariables].Script.AccumPlantN</string>
           <string>[ExtraVariables].Script.AccumRainfall</string>
           <string>[ExtraVariables].Script.AccumRunoff</string>
-          <string>[ExtraVariables].Script.AccumTtemerg</string>
           <string>[ExtraVariables].Script.BiomN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
           <string>[ExtraVariables].Script.DeltaSoilOMN</string>

@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Xml.Serialization;
 using System.IO;
+using Models.Soils;
 using Models.Functions;
 
 
@@ -17,10 +18,10 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        Soils.Soil Soil = null;
+        private Soils.Soil soil = null;
 
         [Link]
-        private Plant Plant = null;
+        private Plant plant = null;
 
         [Link]
         private Phenology phenology = null;
@@ -45,7 +46,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -53,37 +54,26 @@ namespace Models.PMF.Phen
 
         /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
-        public double FractionComplete
-        {
-            get
-            {
-                return 0.999;
-            }
-            set
-            {
-                if (phenology != null)
-                    throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
-        }
+        public double FractionComplete { get { return 0.999; } }
 
         //6. Public methode
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary> Do our timestep development </summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = phenology.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-
-            bool CanGerminate = true;
-            if (Soil != null)
+            bool proceedToNextPhase = false;
+            TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
+            
+            if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
             {
-                CanGerminate = !phenology.OnStartDayOf("Sowing") && Soil.Water[SowLayer] > Soil.LL15mm[SowLayer];
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.999;
+                TTForTimeStep *= (1-propOfDayToUse);
             }
 
-            if (CanGerminate)
-                return 0.999;
-            else
-                return 0;
+            TTinPhase += TTForTimeStep;
+
+            return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
@@ -103,20 +93,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            double SowDepth = 0;
-            double accumDepth = 0;
-            if (Plant != null)
-                SowDepth = Plant.SowingData.Depth;
-            bool layerfound = false;
-            for (int layer = 0; layerfound; layer++)
-            {
-                accumDepth += Soil.Thickness[layer];
-                if (SowDepth <= accumDepth)
-                {
-                    SowLayer = layer;
-                    layerfound = true;
-                }
-            }
+            SowLayer = Soil.LayerIndexOfDepth(plant.SowingData.Depth, soil.Thickness);
         }
 
         /// <summary>Called when [simulation commencing].</summary>
