@@ -188,7 +188,7 @@ namespace Models
         /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
-        private void ShortWaveRadiation(MicroClimateZone MCZone)
+        private void CalculateShortWaveRadiation(MicroClimateZone MCZone)
         {
             // Perform Top-Down Light Balance
             // ==============================
@@ -201,39 +201,38 @@ namespace Models
                     MCZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(MCZone.Canopies[j].Ftot[i] * MCZone.Canopies[j].Ktot, MCZone.layerKtot[i], 0.0);
                 Rin -= Rint;
             }
-            RadIntTotal = 1 - weather.Radn / Rin;
         }
 
         /// <summary>
         /// Calculate the overall system energy terms
         /// </summary>
-        private void EnergyTerms(MicroClimateZone MCZone)
+        private void CalculateEnergyTerms(MicroClimateZone MCZone)
         {
             MCZone.sumRs = 0.0;
-            MCZone._albedo = 0.0;
-            emissivity = 0.0;
+            MCZone.Albedo = 0.0;
+            MCZone.Emissivity = 0.0;
 
             for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                 {
-                    MCZone._albedo += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.Canopies[j].Canopy.Albedo;
-                    emissivity += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * Emissivity;
+                    MCZone.Albedo += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.Canopies[j].Canopy.Albedo;
+                    MCZone.Emissivity += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * CanopyEmissivity;
                     MCZone.sumRs += MCZone.Canopies[j].Rs[i];
                 }
 
-            MCZone._albedo += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * soil_albedo;
-            emissivity += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * soil_emissivity;
+            MCZone.Albedo += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * soil_albedo;
+            MCZone.Emissivity += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * SoilEmissivity;
         }
 
         /// <summary>
         /// Calculate Net Long Wave Radiation Balance
         /// </summary>
-        private void LongWaveRadiation(MicroClimateZone MCZone)
+        private void CalculateLongWaveRadiation(MicroClimateZone MCZone)
         {
             double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.DayOfYear);
             double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
             double averageT = CalcAverageT(weather.MinT, weather.MaxT);
-            MCZone.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, emissivity) * dayLength * hr2s / 1000000.0;             // W to MJ
+            MCZone.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, MCZone.Emissivity) * dayLengthEvap * hr2s / 1000000.0;             // W to MJ
 
             // Long Wave Balance Proportional to Short Wave Balance
             // ====================================================
@@ -261,10 +260,10 @@ namespace Models
         /// <summary>
         /// Calculate Radiation loss to soil heating
         /// </summary>
-        private void SoilHeatRadiation(MicroClimateZone MCZone)
+        private void CalculateSoilHeatRadiation(MicroClimateZone MCZone)
         {
             double radnint = MCZone.sumRs;   // Intercepted SW radiation
-            MCZone.soil_heat = SoilHeatFlux(weather.Radn, radnint, soil_heat_flux_fraction);
+            MCZone.soil_heat = SoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
 
             // SoilHeat balance Proportional to Short Wave Balance
             // ====================================================
