@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-
-namespace Models.Functions
+﻿namespace Models.Functions
 {
+    using Models.Core;
+    using Models.Soils;
+    using System;
+
     /// <summary>
     /// # [Name]
     /// Return soil temperature (oC) from a specified soil profile layer.
@@ -16,11 +15,8 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureDepthFunction : Model, IFunction
     {
-
         /// <summary>The soil</summary>
-        [Link]
-        Soils.Soil Soil = null;
-
+        [Link] private Soil soil = null;
 
         /// <summary>The depth</summary>
         [Units("mm")]
@@ -28,32 +24,10 @@ namespace Models.Functions
         public double Depth { get; set; }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        /// <exception cref="System.Exception">
-        /// </exception>
         public double Value(int arrayIndex = -1)
         {
-            int Layer = LayerIndex(Depth, Soil.Thickness);
-
-            return Soil.Temperature[Layer];
+            int layer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
+            return soil.Temperature[layer];
         }
-        /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>
-        /// <param name="depth">Soil depth (mm)</param>
-        /// <param name="dlayer">Array of soil layer depths in the profile (mm)</param>
-        /// <returns>soil layer index</returns>
-        /// <exception cref="System.Exception"></exception>
-        private int LayerIndex(double depth, double[] dlayer)
-        {
-            double CumDepth = 0.0;
-            for (int i = 0; i < dlayer.Length; i++)
-            {
-                CumDepth = CumDepth + dlayer[i];
-                if (CumDepth >= depth) { return i; }
-            }
-            throw new Exception(Name + ": Specified soil depth of " + Depth.ToString() + " mm is greater than profile depth of " + CumDepth.ToString() + " mm");
-        }
-
-
-
     }
 }

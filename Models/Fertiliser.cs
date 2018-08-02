@@ -1,11 +1,8 @@
-﻿using System;
-using Models.Core;
-using System.Xml;
-using Models.Soils;
-using System.Xml.Serialization;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Models.Interfaces;
+using System.Xml.Serialization;
 
 namespace Models
 {
@@ -39,9 +36,6 @@ namespace Models
         /// <summary>Gets or sets the fraction labile p.</summary>
         /// <value>The fraction labile p.</value>
         public double FractionLabileP{get;set;}
-        /// <summary>Gets or sets the fraction ca.</summary>
-        /// <value>The fraction ca.</value>
-        public double FractionCa { get; set; }
     }
     /// <summary>
     /// The fertiliser model
@@ -50,9 +44,6 @@ namespace Models
     [ValidParent(ParentType = typeof(Zone))]
     public class Fertiliser : Model
     {
-        /// <summary>The soil</summary>
-        [Link] private ISoil Soil = null;
-        
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
 
@@ -69,18 +60,15 @@ namespace Models
         private void AddDefinitions()
         {
             Definitions = new List<FertiliserType>();
-            Definitions.Add(new FertiliserType { Name = "CalciteCA", Description = "Ca as finely ground Agricultural Lime", FractionCa = 1.0 });
-            Definitions.Add(new FertiliserType { Name = "CalciteFine", Description = "finely ground Agricultural Lime", FractionCa = 0.4 });
-            Definitions.Add(new FertiliserType { Name = "Dolomite", Description = "finely ground dolomite", FractionCa = 0.22 });
             Definitions.Add(new FertiliserType { Name = "NO3N", Description = "N as nitrate", FractionNO3 = 1.0 });
             Definitions.Add(new FertiliserType { Name = "NH4N", Description = "N as ammonium", FractionNH4 = 1.0 });
-            Definitions.Add(new FertiliserType { Name = "NH4NO3N", Description = "ammonium nitrate", FractionNH4 = 0.5, FractionNO3 = 0.5 });
-            Definitions.Add(new FertiliserType { Name = "DAP", Description = "di-ammonium phosphate", FractionNH4 = 0.18 });
-            Definitions.Add(new FertiliserType { Name = "MAP", Description = "mono-ammonium phosphate", FractionNH4 = 0.11 });
+            Definitions.Add(new FertiliserType { Name = "NH4NO3N", Description = "Ammonium nitrate", FractionNH4 = 0.5, FractionNO3 = 0.5 });
+            Definitions.Add(new FertiliserType { Name = "DAP", Description = "Di-ammonium phosphate", FractionNH4 = 0.18 });
+            Definitions.Add(new FertiliserType { Name = "MAP", Description = "Mono-ammonium phosphate", FractionNH4 = 0.11 });
             Definitions.Add(new FertiliserType { Name = "UreaN", Description = "N as urea", FractionUrea = 1.0 });
             Definitions.Add(new FertiliserType { Name = "UreaNO3", Description = "N as urea", FractionNO3 = 0.5, FractionUrea = 0.5 });
             Definitions.Add(new FertiliserType { Name = "Urea", Description = "Urea fertiliser", FractionUrea = 0.46 });
-            Definitions.Add(new FertiliserType { Name = "NH4SO4N", Description = "ammonium sulphate", FractionNH4 = 1.0 });
+            Definitions.Add(new FertiliserType { Name = "NH4SO4N", Description = "Ammonium sulphate", FractionNH4 = 1.0 });
             Definitions.Add(new FertiliserType { Name = "RockP", Description = "Rock phosphorus", FractionRockP = 0.8, FractionLabileP = 0.2 });
             Definitions.Add(new FertiliserType { Name = "BandedP", Description = "Banded phosphorus", FractionBandedP = 1.0 });
             Definitions.Add(new FertiliserType { Name = "BroadcastP", Description = "Broadcast phosphorus", FractionLabileP = 1.0 });
@@ -97,12 +85,6 @@ namespace Models
         /// </summary>
         public enum Types 
         {
-            /// <summary>The calcite ca</summary>
-            CalciteCA,
-            /// <summary>The calcite fine</summary>
-            CalciteFine,
-            /// <summary>The dolomite</summary>
-            Dolomite,
             /// <summary>The n o3 n</summary>
             NO3N,
             /// <summary>The n h4 n</summary>
@@ -138,29 +120,26 @@ namespace Models
         {
             if (Amount > 0)
             {
-                // find the layer that the fertilizer is to be added to.
-                int layer = GetLayerDepth(Depth, Soil.Thickness);
-
                 FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == Type.ToString());
                 if (fertiliserType == null)
                     throw new ApsimXException(this, "Cannot find fertiliser type '" + Type + "'");
 
                 if (fertiliserType.FractionNO3 != 0)
                 {
-                    solutes.AddToLayer(layer, "NO3", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNO3);
+                    solutes.AddToDepth(Depth, "NO3", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNO3);
                     NitrogenApplied += Amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
-                    solutes.AddToLayer(layer, "NH4", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNH4);
+                    solutes.AddToDepth(Depth, "NH4", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNH4);
                     NitrogenApplied += Amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
-                    solutes.AddToLayer(layer, "Urea", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionUrea);
+                    solutes.AddToDepth(Depth, "Urea", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionUrea);
                     NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }
-                Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
+                Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} (mm)", Amount, Type, Depth));
             }
         }
 
@@ -181,24 +160,6 @@ namespace Models
         {
             NitrogenApplied = 0;
             AddDefinitions();
-        }
-
-        /// <summary>
-        /// Utility function for determining the layer where 'depth' is located in the 'Thickness' array.
-        /// </summary>
-        /// <param name="depth">The depth.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <returns></returns>
-        private int GetLayerDepth(double depth, double[] thickness)
-        {
-            double cum = 0.0;
-            for (int i = 0; i < thickness.Length; i++)
-            {
-                cum += thickness[i];
-                if (cum >= depth)
-                    return i;
-            }
-            return thickness.Length - 1;
         }
     }
 }

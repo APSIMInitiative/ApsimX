@@ -932,7 +932,7 @@ namespace Models.PMF.OilPalm
         /// <exception cref="System.Exception">Error trying to partition root biomass</exception>
         private void DoRootGrowth(double Allocation)
         {
-            int RootLayer = LayerIndex(RootDepth);
+            int RootLayer = Soil.LayerIndexOfDepth(RootDepth, Soil.Thickness);
             RootDepth = RootDepth + RootFrontVelocity.Value() * soilCrop.XF[RootLayer];
             RootDepth = Math.Min(MaximumRootDepth, RootDepth);
             RootDepth = Math.Min(MathUtilities.Sum(Soil.Thickness), RootDepth);
@@ -945,7 +945,7 @@ namespace Models.PMF.OilPalm
 
             for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
-                if (layer <= LayerIndex(RootDepth))
+                if (layer <= Soil.LayerIndexOfDepth(RootDepth, Soil.Thickness))
                     if (Roots[layer].Mass > 0)
                     {
                         RAw[layer] = SWUptake[layer] / Roots[layer].Mass
@@ -1595,20 +1595,6 @@ namespace Models.PMF.OilPalm
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
             return depth_of_root_in_layer / Soil.Thickness[layer];
-        }
-        /// <summary>Layers the index.</summary>
-        /// <param name="depth">The depth.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Depth deeper than bottom of soil profile</exception>
-        private int LayerIndex(double depth)
-        {
-            double CumDepth = 0;
-            for (int i = 0; i < Soil.Thickness.Length; i++)
-            {
-                CumDepth = CumDepth + Soil.Thickness[i];
-                if (CumDepth >= depth) { return i; }
-            }
-            throw new Exception("Depth deeper than bottom of soil profile");
         }
         /// <summary>Gets the delta t.</summary>
         /// <value>The delta t.</value>

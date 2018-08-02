@@ -11,6 +11,6 @@ namespace Models.Interfaces
     public interface ISoil
     {
         /// <summary>Layer thickess</summary>
-        double[] Thickness { get; }
+        double[] Thickness { get; }        
     }
 }
