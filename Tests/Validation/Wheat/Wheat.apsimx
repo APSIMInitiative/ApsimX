@@ -62479,8 +62479,8 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <a_interception>0</a_interception>
-              <b_interception>0</b_interception>
-              <c_interception>0.3</c_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
               <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
