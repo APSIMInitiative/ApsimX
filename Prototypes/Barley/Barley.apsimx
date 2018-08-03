@@ -1478,404 +1478,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>PotentialBranchingRate</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <Checkpoint>Current</Checkpoint>
-                      <XFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Barley.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                  </Graph>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <X>
                     <double>1</double>
-                    <double>2.99</double>
+                    <double>1.9</double>
+                    <double>2</double>
                     <double>3</double>
                     <double>4</double>
                     <double>5</double>
                     <double>6</double>
                     <double>7</double>
-                    <double>8</double>
                   </X>
                   <Y>
                     <double>0</double>
@@ -5919,7 +5532,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>ExtinctionCoeff</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>0.5</FixedValue>
+          <FixedValue>0.6</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -6345,7 +5958,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>DMRetranslocationFactor</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <FixedValue>0</FixedValue>
+              <FixedValue>0.05</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -6715,8 +6328,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>Omaka</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <Command>[Root].RootFrontVelocity.PotentialRootFrontVelocity.PostEmergence.Value.FixedValue = 30</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Omaka1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Command>[Leaf].ExtinctionCoeff.FixedValue  = 0.5</Command>
-            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000</Command>
+            <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2000</Command>
             <Command>[Root].RootFrontVelocity.PotentialRootFrontVelocity.PostEmergence.Value.FixedValue = 30</Command>
           </Cultivar>
           <Cultivar>
@@ -6767,7 +6386,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
           </Cultivar>
           <Cultivar>
             <Name>Vortex</Name>
@@ -7597,6 +7215,58 @@ namespace Models
           <TableName>HarvestObsPred</TableName>
           <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
           <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Flowering Date1</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorToVaryColours>SD</FactorToVaryColours>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+          <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9286,12 +8956,6 @@ namespace Models
             <Name>LAI</Name>
             <Series>
               <Name>Predicted</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Type>Scatter</Type>
@@ -9574,12 +9238,6 @@ namespace Models
             </Series>
             <Series>
               <Name>Predicted3</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Type>Scatter</Type>
@@ -9604,12 +9262,6 @@ namespace Models
             </Series>
             <Series>
               <Name>Predicted2</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Type>Scatter</Type>
@@ -11940,12 +11592,6 @@ namespace Models
             <Name>LAI</Name>
             <Series>
               <Name>Predicted</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Type>Scatter</Type>
@@ -19984,86 +19630,6 @@ namespace Models
                 <Name>IrrigationEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <Operation>
-                  <Date>1995-10-28</Date>
-                  <Action>[Irrigation].Apply(2);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-11-04</Date>
-                  <Action>[Irrigation].Apply(3.8);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-11-15</Date>
-                  <Action>[Irrigation].Apply(5.2);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-11-28</Date>
-                  <Action>[Irrigation].Apply(49.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-05</Date>
-                  <Action>[Irrigation].Apply(5.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-12</Date>
-                  <Action>[Irrigation].Apply(32);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-18</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-19</Date>
-                  <Action>[Irrigation].Apply(40.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-27</Date>
-                  <Action>[Irrigation].Apply(5.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-03</Date>
-                  <Action>[Irrigation].Apply(80);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-09</Date>
-                  <Action>[Irrigation].Apply(50.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-16</Date>
-                  <Action>[Irrigation].Apply(36);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-23</Date>
-                  <Action>[Irrigation].Apply(24.8);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-30</Date>
-                  <Action>[Irrigation].Apply(21.4);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-02-07</Date>
-                  <Action>[Irrigation].Apply(15.9);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-02-12</Date>
-                  <Action>[Irrigation].Apply(11.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -21547,9 +21113,9 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>3.0081300813008132</double>
-                  <double>1.7479674796747968</double>
-                  <double>0.84905660377358494</double>
+                  <double>7.4</double>
+                  <double>4.3</double>
+                  <double>2.7</double>
                   <double>0.3</double>
                   <double>0.3</double>
                   <double>0.3</double>
@@ -21679,7 +21245,7 @@ namespace Models
                 <Enabled>true</Enabled>
                 <Operation>
                   <Date>1995-10-20</Date>
-                  <Action>[Barley].Sow(population:200, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
+                  <Action>[Barley].Sow(population:280, cultivar:"Triumph", depth:20, rowSpacing:150);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -21687,106 +21253,11 @@ namespace Models
                 <Name>IrrigationEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <Operation>
-                  <Date>1995-10-28</Date>
-                  <Action>[Irrigation].Apply(2);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-11-04</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-11-15</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-11-28</Date>
-                  <Action>[Irrigation].Apply(21.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-05</Date>
-                  <Action>[Irrigation].Apply(5.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-12</Date>
-                  <Action>[Irrigation].Apply(1.5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-18</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-19</Date>
-                  <Action>[Irrigation].Apply(11.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-27</Date>
-                  <Action>[Irrigation].Apply(5.3);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-03</Date>
-                  <Action>[Irrigation].Apply(2.8);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-09</Date>
-                  <Action>[Irrigation].Apply(8.4);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-16</Date>
-                  <Action>[Irrigation].Apply(5.9);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-23</Date>
-                  <Action>[Irrigation].Apply(0.7);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-01-30</Date>
-                  <Action>[Irrigation].Apply(0.7);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-02-07</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1996-02-12</Date>
-                  <Action>[Irrigation].Apply(0); </Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <Operations>
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <Operation>
-                  <Date>1995-10-28</Date>
-                  <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-05</Date>
-                  <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1995-12-18</Date>
-                  <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <Operations>
                 <Name>Harvest</Name>
@@ -22362,6 +21833,12 @@ namespace Models
             <Name>LAI</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Type>Scatter</Type>
@@ -22448,9 +21925,9 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
-            <TableName>ProfileWaterReport</TableName>
+            <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>ProfileWater_0_90</YFieldName>
+            <YFieldName>ProfileWater</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -22570,7 +22047,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>20_30cm</Name>
+            <Name>20_40cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22638,7 +22115,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>30_40cm</Name>
+            <Name>40_60cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22706,7 +22183,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>40_50cm</Name>
+            <Name>60_80cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22774,7 +22251,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>50_60cm</Name>
+            <Name>80_100cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22842,7 +22319,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>60_70cm</Name>
+            <Name>100_120cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22910,7 +22387,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>70_80cm</Name>
+            <Name>120_140cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22978,7 +22455,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>80_90cm</Name>
+            <Name>140_160cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -23068,7 +22545,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Leaf.Fw</YFieldName>
+            <YFieldName>Barley.Leaf.Fn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -23284,11 +22761,6 @@ This is the mineral nitrogen (N) validation trial conducted by the New Zealannd 
                   <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -23309,11 +22781,6 @@ This is the mineral nitrogen (N) validation trial conducted by the New Zealannd 
                 </Operation>
                 <Operation>
                   <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
                   <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -23350,11 +22817,6 @@ This is the mineral nitrogen (N) validation trial conducted by the New Zealannd 
                   <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -23383,11 +22845,6 @@ This is the mineral nitrogen (N) validation trial conducted by the New Zealannd 
                   <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -23408,11 +22865,6 @@ This is the mineral nitrogen (N) validation trial conducted by the New Zealannd 
                 </Operation>
                 <Operation>
                   <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
                   <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -27660,7 +27112,6 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>TOS</FactorToVaryColours>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
@@ -27668,7 +27119,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>HarvestObsPred</TableName>
             <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
-            <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+            <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -27716,8 +27167,8 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>HarvestObsPred</TableName>
-            <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
-            <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+            <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -37734,5 +37185,5 @@ namespace Models
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <Enabled>true</Enabled>
-  <ExplorerWidth>256</ExplorerWidth>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
