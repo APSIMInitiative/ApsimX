@@ -64,6 +64,7 @@ namespace UserInterface.Presenters
         {
             base.Attach(model, view, explorerPresenter);
             grid.ContextItemsNeeded += GetContextItems;
+            grid.CanGrow = false;
             this.model = model as Model;
             intellisense = new IntellisensePresenter(grid as ViewBase);
 
@@ -542,7 +543,8 @@ namespace UserInterface.Presenters
                 {
                     if (e.InvalidValue)
                         throw new Exception("The value you entered was not valid for its datatype.");
-                    SetPropertyValue(properties[cell.RowIndex], cell.Value);
+                    if (cell.RowIndex < properties.Count)
+                        SetPropertyValue(properties[cell.RowIndex], cell.Value);
                 }
                 catch (Exception ex)
                 {

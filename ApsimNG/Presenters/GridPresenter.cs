@@ -7,7 +7,8 @@ namespace UserInterface.Presenters
     using System.Collections.Generic;
     using System.Data;
     using System.Text;
-    
+    using System.Linq;
+
     /// <summary>
     /// This presenter displays a table of data, which it gets from the model via
     /// the interface IModelAsTable, allows user to edit it and returns the data
@@ -30,7 +31,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to connect to</param>
         /// <param name="view">The view to connect to</param>
         /// <param name="parentPresenter">The parent explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter parentPresenter)
+        public virtual void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
             grid = view as IGridView;
             grid.CopyCells += CopyCells;
@@ -75,7 +76,7 @@ namespace UserInterface.Presenters
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
             bool invalid = false;
-            string[] lines = args.Text.Split(Environment.NewLine.ToCharArray());
+            string[] lines = args.Text.Split(Environment.NewLine.ToCharArray()).Where(line => !string.IsNullOrEmpty(line)).ToArray();
             for (int i = 0; i < lines.Length; i++)
             {
                 // Add new rows, if necessary.
