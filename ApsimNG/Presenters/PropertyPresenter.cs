@@ -540,7 +540,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    if (e.invalidValue)
+                    if (e.InvalidValue)
                         throw new Exception("The value you entered was not valid for its datatype.");
                     SetPropertyValue(properties[cell.RowIndex], cell.Value);
                 }

@@ -1870,7 +1870,7 @@
                     GridCellsChangedArgs args = new GridCellsChangedArgs();
                     args.ChangedCells = new List<IGridCell>();
                     args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
-                    args.invalidValue = isInvalid;
+                    args.InvalidValue = isInvalid;
                     CellsChanged(this, args);
                 }
             }
@@ -2041,6 +2041,36 @@
                 cellClicked.ChangedCells = new List<IGridCell>();
                 cellClicked.ChangedCells.Add(cell);
                 ButtonClick(this, cellClicked);
+            }
+        }
+
+        /// <summary>
+        /// Unselects any currently selected cells and selects a new range of cells.
+        /// Passing in a null or empty list of cells will deselect all cells.
+        /// </summary>
+        /// <param name="cells">Cells to be selected.</param>
+        public void SelectCells(List<IGridCell> cells)
+        {
+            try
+            {
+                if (cells == null || !cells.Any())
+                {
+                    selectedCellRowIndex = -1;
+                    selectedCellColumnIndex = -1;
+                    selectionRowMax = -1;
+                    selectionColMax = -1;
+                }
+                else
+                {
+                    selectedCellRowIndex = cells.Min(cell => cell.RowIndex);
+                    selectedCellColumnIndex = cells.Min(cell => cell.ColumnIndex);
+                    selectionRowMax = cells.Max(cell => cell.RowIndex);
+                    selectionColMax = cells.Max(cell => cell.ColumnIndex);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

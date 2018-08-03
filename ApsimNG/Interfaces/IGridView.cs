@@ -8,6 +8,7 @@ namespace UserInterface.Interfaces
     using System;
     using System.Drawing;
     using EventArguments;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The interface to a grid view. Clients of this class should set the data source
@@ -153,5 +154,12 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="args"></param>
         void Refresh(GridCellsChangedArgs args);
+
+        /// <summary>
+        /// Unselects any currently selected cells and selects a new range of cells.
+        /// Passing in a null or empty list of cells will deselect all cells.
+        /// </summary>
+        /// <param name="cells">Cells to be selected.</param>
+        void SelectCells(List<IGridCell> cells);
     }
 }
