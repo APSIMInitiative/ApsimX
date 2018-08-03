@@ -1140,7 +1140,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 					</Y>
 				</XYPairs>
 				<IncludeInDocumentation>false</IncludeInDocumentation>
-				<XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
+				<XProperty>[Potato].Leaf.Fw</XProperty>
 			</LinearInterpolationFunction>
 			<Constant>
 				<Name>CriticalNConc</Name>
@@ -1355,7 +1355,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 					</Y>
 				</XYPairs>
 				<IncludeInDocumentation>false</IncludeInDocumentation>
-				<XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
+				<XProperty>[Potato].Leaf.Fw</XProperty>
 			</LinearInterpolationFunction>
 			<IncludeInDocumentation>false</IncludeInDocumentation>
 		</MultiplyFunction>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="37">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1017,7 +1017,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Wheat].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -2098,7 +2098,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              <XProperty>[Wheat].Leaf.Fw</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NitrogenStressFactor</Name>
@@ -2467,7 +2467,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Wheat].Leaf.Fw</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -2508,7 +2508,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Wheat].Leaf.Fw</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
