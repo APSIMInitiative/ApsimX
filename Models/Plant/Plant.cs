@@ -1,62 +1,21 @@
-// -----------------------------------------------------------------------
-// <copyright file="Plant.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.PMF
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
     using Models.Core;
-    using Models.Interfaces;
     using Models.Functions;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
-    using Models.Soils.Arbitrator;
-    using APSIM.Shared.Utilities;
-    using Struct;
+    using Models.PMF.Struct;
+    using System;
+    using System.Collections.Generic;
     using System.Data;
+    using System.Xml.Serialization;
 
     ///<summary>
     /// # [Name]
     /// The generic plant model
     /// </summary>
-    /// \pre Summary A Summary model has to exist to write summary message.
-    /// \pre Phenology A \ref Models.PMF.Phen.Phenology Phenology model is 
-    /// optional to check whether plant has emerged.
-    /// \pre OrganArbitrator A OrganArbitrator model is optional (not used currently).
-    /// \pre Structure A Structure model is optional (not used currently).
-    /// \pre Leaf A \ref Models.PMF.Organs.Leaf Leaf model is optional 
-    /// to calculate water supply and demand ratio.
-    /// \pre Root A Models.PMF.Organs.Root Root model is optional 
-    /// to calculate water supply and demand ratio.
-    /// \param CropType Used by several organs to determine the type of crop.
-    /// \retval Population Number of plants per square meter. 
-    /// \retval IsAlive Return true if plant is alive and in the ground.
-    /// \retval IsEmerged Return true if plant has emerged.
-    /// 
-    /// On commencing simulation
-    /// ------------------------
-    /// OnSimulationCommencing is called on commencing simulation. Organs contain 
-    /// all children which derive from model IOrgan. The model variables 
-    /// are reset.
-    /// 
-    /// On sowing 
-    /// -------------------------
-    /// Plant is sown by a manager script in a APSIM model. For example,    
-    /// \code
-    /// 2012-10-23 [Maize].Sow(population:11, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);
-    /// \endcode
-    /// 
-    /// Sowing parameters should be specified, i.e. cultivar, population, depth, rowSpacing,
-    /// maxCover (optional), and budNumber (optional).
-    /// 
-    /// Two events "Sowing" and "PlantSowing" are invoked to notify other models 
-    /// to execute sowing events.
-    /// <remarks>
-    /// </remarks>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
@@ -149,10 +108,7 @@ namespace Models.PMF
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
                 foreach (Model model in Apsim.ChildrenRecursively(this, typeof(Cultivar)))
-                {
                     cultivars.Add(model as Cultivar);
-                }
-
                 return cultivars;
             }
         }
@@ -169,23 +125,6 @@ namespace Models.PMF
             IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
             Legumosity = 0;
         }
-
-        /// <summary>Gets the water supply demand ratio.</summary>
-        [Units("0-1")]
-        public double WaterSupplyDemandRatio
-        {
-            get
-            {
-                double F;
-
-                if (Canopy != null && Canopy.PotentialEP > 0)
-                    F = Root.WaterUptake / Canopy.PotentialEP;
-                else
-                    F = 1;
-                return F;
-            }
-        }
-
 
         /// <summary>Holds the number of plants.</summary>
         private double plantPopulation = 0.0;
@@ -298,17 +237,13 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            List<IOrgan> organs = new List<IOrgan>();
-            
+            List<IOrgan> organs = new List<IOrgan>();          
             foreach (IOrgan organ in Apsim.Children(this, typeof(IOrgan)))
-            {
                 organs.Add(organ);
-            }
 
             Organs = organs.ToArray();
 
             Clear();
-
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -339,15 +274,7 @@ namespace Models.PMF
         {
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
-            {
-                double DeltaPopulation = Population * MortalityRate.Value();
-                Population -= DeltaPopulation;
-                if (Structure != null)
-                {
-                    Structure.DeltaPlantPopulation = DeltaPopulation;
-                    Structure.ProportionPlantMortality = MortalityRate.Value();
-                }
-            }
+                Population -= Population * MortalityRate.Value();
         }
 
         /// <summary>Sow the crop with the specified parameters.</summary>
@@ -435,7 +362,7 @@ namespace Models.PMF
 
             // Reset the phenology if SetPhenologyStage specified.
             if (removalData != null && removalData.SetPhenologyStage != 0)
-                Phenology.ReSetToStage(removalData.SetPhenologyStage);
+                Phenology.SetToStage(removalData.SetPhenologyStage);
 
             // Reduce plant and stem population if thinning proportion specified
             if (removalData != null && removalData.SetThinningProportion != 0 && Structure != null)

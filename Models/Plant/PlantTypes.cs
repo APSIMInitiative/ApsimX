@@ -1,22 +1,11 @@
 ﻿namespace Models.PMF
 {
-    using System;
-    using Models.Soils;
-    using Models.Core;
-    using PMF.Interfaces;
-    using System.Collections.Generic;
     using Library;
+    using Models.Core;
+    using Models.Soils;
+    using System;
+    using System.Collections.Generic;
 
-    /// <summary>
-    /// An event arguments class for some events.
-    /// </summary>
-    public class ModelArgs : EventArgs
-    {
-        /// <summary>
-        /// The model
-        /// </summary>
-        public IModel Model;
-    }
     /// <summary>
     /// Data passed to leaf tip appearance occurs.
     /// </summary>
@@ -81,14 +70,6 @@
     /// <summary>
     /// 
     /// </summary>
-    public class PruneType
-    {
-        /// <summary>The bud number</summary>
-        public Double BudNumber;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
     public class KillLeafType
     {
         /// <summary>The kill fraction</summary>
@@ -104,11 +85,6 @@
     /// 
     /// </summary>
     public delegate void NullTypeDelegate();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void NewCropDelegate(NewCropType Data);
     /// <summary>
     /// 
     /// </summary>
@@ -172,33 +148,6 @@
         public Single[] dlt_dm_p;
         /// <summary>The fraction_to_residue</summary>
         public Single[] fraction_to_residue;
-    }
-
-    /// <summary>
-    /// Event arguments when biomass is removed.
-    /// </summary>
-    public class RemovingBiomassArgs : EventArgs
-    {
-        /// <summary>
-        /// Type of biomass removal.
-        /// </summary>
-        public string biomassRemoveType;
-
-        /// <summary>
-        /// Removal fractions for each organ.
-        /// </summary>
-        public Dictionary<string, OrganBiomassRemovalType> removalData = new Dictionary<string, OrganBiomassRemovalType>();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class NewCropType
-    {
-        /// <summary>The sender</summary>
-        public String sender = "";
-        /// <summary>The crop_type</summary>
-        public String crop_type = "";
     }
 
     ///<summary>Data passed to each organ when a biomass remove event occurs.  The proportion of biomass to be removed from each organ is the sum of the FractionToRemove and the FractionToRedidues</summary>

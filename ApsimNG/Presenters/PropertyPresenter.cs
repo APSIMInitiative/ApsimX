@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using Models.Surface;
     using Views;
 
     /// <summary>
@@ -348,7 +349,7 @@ namespace UserInterface.Presenters
                 }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.ResidueName &&
-                         model is Models.SurfaceOM.SurfaceOrganicMatter)
+                         model is SurfaceOrganicMatter)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     string[] fieldNames = GetResidueNames();
@@ -501,6 +502,7 @@ namespace UserInterface.Presenters
 
         private string[] GetResidueNames()
         {
+<<<<<<< HEAD
             if (model is Models.SurfaceOM.SurfaceOrganicMatter)
             {
                 List<Models.SurfaceOM.SurfaceOrganicMatter.ResidueType> types = (model as Models.SurfaceOM.SurfaceOrganicMatter).ResidueTypes.residues;
@@ -510,6 +512,14 @@ namespace UserInterface.Presenters
                 Array.Sort(result, StringComparer.InvariantCultureIgnoreCase);
 
                 return result;
+=======
+            if (this.model is Models.Surface.SurfaceOrganicMatter)
+            {
+                List<string> names = new List<string>();
+                names = (this.model as SurfaceOrganicMatter).ResidueTypeNames();
+                names.Sort();
+                return names.ToArray();
+>>>>>>> cce7c15b87a9a144abc05956c5f10a50067e681e
             }
             return null;
         }

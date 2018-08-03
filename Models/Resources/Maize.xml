@@ -372,7 +372,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </HeightFunction>
@@ -1395,7 +1395,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <MinimumFunction>
         <Name>ExpansionStress</Name>
@@ -1621,7 +1621,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Maize].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
@@ -1893,7 +1893,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
@@ -2067,7 +2067,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <MinimumFunction>
         <Name>ExpansionStress</Name>
@@ -2455,7 +2455,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+      <XProperty>[Maize].Leaf.Fw</XProperty>
     </LinearInterpolationFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>

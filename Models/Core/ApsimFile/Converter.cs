@@ -1,22 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Converter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core.ApsimFile
+﻿namespace Models.Core.ApsimFile
 {
+    using APSIM.Shared.Utilities;
+    using Models.Factorial;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using System.Reflection;
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using PMF;
     using System.Data;
-    using Models.Factorial;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Xml;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -24,7 +16,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 33; } }
+        public static int LastestVersion { get { return 36; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1019,7 +1011,7 @@ namespace Models.Core.ApsimFile
                     {
                         string zoneName = XmlUtilities.Value(zone, "Name");
                         string simulationName = exp.Name;
-                        factors.Add(new KeyValuePair<string, string>("Simulation", simulationName));
+                        factors.Add(new KeyValuePair<string, string>("Simulation", null));
                         factors.Add(new KeyValuePair<string, string>("Zone", zoneName));
                         foreach (FactorValue value in combination)
                         {
@@ -1068,7 +1060,7 @@ namespace Models.Core.ApsimFile
                 var matchingFactors = factors.FindAll(f => f.Key == factorName);
                 var matchingFactorValues = matchingFactors.Select(f => f.Value);
 
-                if (matchingFactorValues.Distinct().Count() > 1 || matchingFactors.Count() != factors.Count())
+                if (matchingFactorValues.Distinct().Count() > 1)
                 {
                     // All factor values are the same so remove the factor.
                     factorNamesToReturn.Add(factorName);
@@ -1092,5 +1084,56 @@ namespace Models.Core.ApsimFile
                 ConverterUtilities.RenameNode(supplementNode, "stores", "Stores");
             }
         }
+
+        /// <summary>
+        /// Upgrades to version 34. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion34(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, @"Models.SurfaceOM", "Models.Surface");
+            }
+            foreach (XmlNode surfaceOrganicMatter in XmlUtilities.FindAllRecursivelyByType(node, "SurfaceOrganicMatter"))
+            {
+                XmlUtilities.DeleteValue(surfaceOrganicMatter, "ResidueTypes");
+                XmlUtilities.SetValue(surfaceOrganicMatter, "ResourceName", "SurfaceOrganicMatter");
+                XmlUtilities.Rename(surfaceOrganicMatter, "PoolName", "InitialResidueName");
+                XmlUtilities.Rename(surfaceOrganicMatter, "type", "InitialResidueType");
+                XmlUtilities.Rename(surfaceOrganicMatter, "mass", "InitialResidueMass");
+                XmlUtilities.Rename(surfaceOrganicMatter, "standing_fraction", "InitialStandingFraction");
+                XmlUtilities.Rename(surfaceOrganicMatter, "cnr", "InitialCNR");
+                XmlUtilities.Rename(surfaceOrganicMatter, "cpr", "InitialCPR");
+                if (XmlUtilities.Value(surfaceOrganicMatter, "InitialCPR") == string.Empty)
+                    XmlUtilities.DeleteValue(surfaceOrganicMatter, "InitialCPR");
+            }
+        }
+        /// <summary>
+        /// Change the stores object array in Supplement components to Stores
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion35(XmlNode node, string fileName)
+        {
+            ConverterUtilities.RenameNode(node, "soil_heat_flux_fraction", "SoilHeatFluxFraction");
+            ConverterUtilities.RenameNode(node, "night_interception_fraction", "NightInterceptionFraction");
+            ConverterUtilities.RenameNode(node, "refheight", "ReferenceHeight");
+        }
+        /// <summary>
+        /// Change the stores object array in Supplement components to Stores
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion36(XmlNode node, string fileName)
+        {
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+                ConverterUtilities.SearchReplaceReportCode(report, ".WaterSupplyDemandRatio", ".Leaf.Fw");
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
+                if (n.InnerText.Contains(".WaterSupplyDemandRatio"))
+                    n.InnerText = n.InnerText.Replace(".WaterSupplyDemandRatio",".Leaf.Fw");
+        }
+
     }
 }

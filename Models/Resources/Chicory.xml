@@ -94,7 +94,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Twilight>-6</Twilight>
       <DayLength>0</DayLength>
     </PhotoperiodFunction>
-    <VernalisationC>
+    <Vernalisation>
       <Name>Vernalisation</Name>
       <Memo>
         <Name>Description</Name>
@@ -155,7 +155,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <StartStage>Emergence</StartStage>
       <EndStage>Bolting</EndStage>
       <ResetStage>Ripening</ResetStage>
-    </VernalisationC>
+    </Vernalisation>
     <GerminatingPhase>
       <Name>Germinating</Name>
       <Memo>
@@ -2270,7 +2270,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>SoilAerationFactor</Name>
@@ -2342,13 +2342,13 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
           </X>
           <Y>
             <double>0</double>
-            <double>0.9</double>
-            <double>1</double>
-            <double>1</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
@@ -2414,13 +2414,13 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
           </X>
           <Y>
             <double>0</double>
-            <double>0.9</double>
-            <double>1</double>
-            <double>1</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
@@ -2783,7 +2783,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Arbitrator].FW</XProperty>
+        <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>SoilAerationFactor</Name>

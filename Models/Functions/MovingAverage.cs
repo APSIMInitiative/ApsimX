@@ -69,7 +69,7 @@ namespace Models.Functions
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             //Put the first data member into the list on the day that moving average is to start being calculated
-            if (phaseChange.EventStageName == StageToStartMovingAverage)
+            if (phaseChange.StageName == StageToStartMovingAverage)
             {
                 AccumulatedValues.Add(ChildFunction.Value());
                 InitialisedToday = true;

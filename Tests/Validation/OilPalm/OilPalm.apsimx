@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <MemoText><![CDATA[# The APSIM Oil Palm Model
  
 _Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_]]></MemoText>
@@ -13,6 +14,7 @@ _Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_]]></MemoText>
     <Input>
       <Name>Input</Name>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <ErrorMessage />
       <FileName>observed.prn</FileName>
     </Input>
@@ -21,6 +23,7 @@ _Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_]]></MemoText>
       <Tests>
         <Name>Tests</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <AcceptedStats>
           <RegrStats>
             <Name>OilPalm.LAI</Name>
@@ -55,6 +58,7 @@ _Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_]]></MemoText>
         <POName>POMonthly</POName>
       </Tests>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <PredictedTableName>MonthlyOutput</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -64,6 +68,7 @@ _Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_]]></MemoText>
       <Tests>
         <Name>Tests</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <AcceptedStats>
           <RegrStats>
             <Name>Calculations.Script.AnnualBunches</Name>
@@ -112,6 +117,7 @@ _Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_]]></MemoText>
         <POName>POAnnual</POName>
       </Tests>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <PredictedTableName>AnnualOutput</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -119,15 +125,18 @@ _Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_]]></MemoText>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <TableName>POAnnual</TableName>
     </TimeSeriesStats>
     <IncludeInDocumentation>false</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </DataStore>
   <Folder>
     <Name>Validation</Name>
     <Memo>
       <Name>Memo</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[
 Data from three sites across PNG with different climate and soils were used for model testing. Soils ranged from sandy clay (volcanic ash) to alluvial clay. Mean annual rainfall ranged from 2400 mm at Sagarai (1990-2008) and Sangara (1986-2009) to 4350 mm at Hargy(1989-2008) with annual rainfall variability larger at Sagarai than the other two sites. Whilst there is only a small difference in temperature across the sites, rainfall patterns do impact on both annual (Hargy 15.9 MJ; Sangara 17.0 MJ; Sagarai 18.1 MJ) and monthly variation in mean daily solar radiation.  
 
@@ -184,6 +193,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (Nitrogen)
 ]]></MemoText>
       </Memo>
@@ -194,20 +204,22 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Regression>
             <Name>Regression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Zone</FactorToVaryColours>
+          <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>POMonthly</TableName>
           <XFieldName>Predicted.OilPalm.LAI</XFieldName>
           <YFieldName>Observed.OilPalm.LAI</YFieldName>
@@ -217,6 +229,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -243,20 +256,22 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Regression>
             <Name>Regression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Zone</FactorToVaryColours>
+          <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>POAnnual</TableName>
           <XFieldName>Predicted.Calculations.Script.AnnualYield</XFieldName>
           <YFieldName>Observed.Calculations.Script.AnnualYield</YFieldName>
@@ -266,6 +281,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Predicted Bunch Production</Title>
@@ -292,20 +308,22 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Regression>
             <Name>Regression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Zone</FactorToVaryColours>
+          <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>POAnnual</TableName>
           <XFieldName>Predicted.Calculations.Script.AnnualBunchSize</XFieldName>
           <YFieldName>Observed.Calculations.Script.AnnualBunchSize</YFieldName>
@@ -315,6 +333,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Predicted Bunch Size</Title>
@@ -341,20 +360,22 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Regression>
             <Name>Regression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Zone</FactorToVaryColours>
+          <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>POAnnual</TableName>
           <XFieldName>Predicted.Calculations.Script.AnnualBunches</XFieldName>
           <YFieldName>Observed.Calculations.Script.AnnualBunches</YFieldName>
@@ -364,6 +385,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Predicted Bunch Production</Title>
@@ -384,6 +406,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Experiment>
@@ -395,361 +418,405 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Operations>
             <Name>0</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(5.7, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(16.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(33.1, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Operations>
             <Name>1</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(5.7, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(16.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(33.1, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2009-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2010-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Operations>
             <Name>2</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(5.7, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(16.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(33.1, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2009-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2010-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Specifications>
             <string>[operations]</string>
           </Specifications>
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Factors>
       <Simulation>
         <Name>Base324</Name>
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FileName>..\..\WeatherFiles\Popondetta.met</FileName>
         </Weather>
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <StartDate>1996-03-01T00:00:00</StartDate>
           <EndDate>2010-09-29T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </Summary>
         <Zone>
           <Name>Field</Name>
           <Fertiliser>
             <Name>Fertiliser</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOM</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>oilpalm</PoolName>
-                <ResidueType>oilpalm</ResidueType>
-                <Mass>24000</Mass>
-                <CNRatio>39</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-              <Pool>
-                <PoolName>oilpalmstem</PoolName>
-                <ResidueType>oilpalmstem</ResidueType>
-                <Mass>63000</Mass>
-                <CNRatio>145</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>oilpalm oilpalmstem</PoolName>
-            <type>oilpalm oilpalmstem</type>
-            <mass>24000 63000</mass>
-            <standing_fraction>0 0</standing_fraction>
-            <cpr />
-            <cnr>39 145</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            <Enabled>true</Enabled>
+            <ResourceName>SurfaceOrganicMatter</ResourceName>
+            <InitialResidueName>oilpalm</InitialResidueName>
+            <InitialResidueType>oilpalm</InitialResidueType>
+            <InitialResidueMass>0</InitialResidueMass>
+            <InitialStandingFraction>0</InitialStandingFraction>
+            <InitialCPR>0</InitialCPR>
+            <InitialCNR>0</InitialCNR>
           </SurfaceOrganicMatter>
           <Soil>
             <Name>Soil</Name>
@@ -758,6 +825,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
               <SoilCropOilPalm>
                 <Name>OilPalmSoil</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
                 <KL>
                   <double>0.06</double>
                   <double>0.04</double>
@@ -788,6 +856,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
                 </XF>
               </SoilCropOilPalm>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -876,6 +945,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             <SoilWater>
               <Name>SoilWater</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -934,11 +1004,12 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
                 <double>0</double>
                 <double>0</double>
               </KLAT>
-              <residueinterception>0</residueinterception>
+              <ResidueInterception>0</ResidueInterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -975,6 +1046,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <RootCN>30</RootCN>
               <RootWt>3000</RootWt>
               <SoilCN>12</SoilCN>
@@ -1055,6 +1127,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             <Analysis>
               <Name>Analysis</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1089,6 +1162,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             <InitialWater>
               <Name>Initial water</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
@@ -1096,6 +1170,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             <Sample>
               <Name>Initial nitrogen</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1147,8 +1222,10 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             <CERESSoilTemperature>
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
             </CERESSoilTemperature>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <RecordNumber>0</RecordNumber>
             <SoilType>Higaturu Series </SoilType>
             <LocalName />
@@ -1162,6 +1239,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Report>
             <Name>AnnualOutput</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -1198,6 +1276,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Report>
             <Name>MonthlyOutput</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -1236,6 +1315,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -1252,6 +1332,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <OilPalm>
             <Name>OilPalm</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ResourceName>OilPalm</ResourceName>
             <interception>0</interception>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
@@ -1266,78 +1347,97 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Operations>
             <Name>operations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(3.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(5.7, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(11.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(16.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(23.6, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(33.1, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(37.8, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42.5, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-07-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-11-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Irrigation>
             <Name>Irrigation</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </Irrigation>
           <Manager>
             <Name>Palm Management</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Script>
               <sowing_date>1996-03-01</sowing_date>
               <population>135</population>
@@ -1349,6 +1449,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -1360,6 +1461,7 @@ namespace Models
         [Link] Clock Clock; 
         [Link] OilPalm oilPalm;
         [Link] Summary Summary;
+        [Link] SurfaceOrganicMatter surface;
         
         [Description("Sowing date")]
         public DateTime sowing_date {get; set;}
@@ -1369,7 +1471,7 @@ namespace Models
 
 
         [Description("Cultivar")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string cultivar {get; set;}
 
         [Description("Sowing depth (mm)")]
@@ -1383,6 +1485,8 @@ namespace Models
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Plant_population = 0;
+            surface.Add(24000, 270.769, 0, "oilpalm", "oilpalm");
+            surface.Add(63000, 191.172, 0, "oilpalmstem", "oilpalmstem");
         }
         
         [EventSubscribe("DoManagement")]
@@ -1408,6 +1512,7 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Script>
               <AnnualRain>0</AnnualRain>
               <Offset>6</Offset>
@@ -1445,7 +1550,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.SurfaceOM;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -1611,6 +1716,7 @@ namespace Models
           <Report>
             <Name>daily</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -1630,29 +1736,32 @@ namespace Models
           <SoluteManager>
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </SoluteManager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.LAI</YFieldName>
@@ -1664,17 +1773,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.LAI</YFieldName>
@@ -1684,6 +1793,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1708,17 +1818,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>MonthlyOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.StemMass</YFieldName>
@@ -1730,17 +1840,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.StemMass</YFieldName>
@@ -1750,6 +1860,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1774,17 +1885,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualFronds</YFieldName>
@@ -1796,17 +1907,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.AnnualFronds</YFieldName>
@@ -1816,6 +1927,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1840,17 +1952,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
@@ -1862,17 +1974,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
@@ -1882,6 +1994,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1906,17 +2019,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualYield</YFieldName>
@@ -1928,17 +2041,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualYield</YFieldName>
@@ -1948,6 +2061,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1972,17 +2086,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
@@ -1994,17 +2108,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
@@ -2014,6 +2128,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -2034,6 +2149,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <DisabledSimNames />
     </Experiment>
     <Experiment>
@@ -2045,393 +2161,445 @@ namespace Models
           <Operations>
             <Name>0</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Operations>
             <Name>1</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2009-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2009-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Operations>
             <Name>2</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2009-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2009-12-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Specifications>
             <string>[operations]</string>
           </Specifications>
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Factors>
       <Simulation>
         <Name>Base212</Name>
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FileName>..\..\WeatherFiles\Hargy.met</FileName>
         </Weather>
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <StartDate>1996-02-01T00:00:00</StartDate>
           <EndDate>2009-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </Summary>
         <Zone>
           <Name>Field</Name>
           <Fertiliser>
             <Name>Fertiliser</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOM</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>oilpalm</PoolName>
-                <ResidueType>oilpalm</ResidueType>
-                <Mass>24000</Mass>
-                <CNRatio>39</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-              <Pool>
-                <PoolName>oilpalmstem</PoolName>
-                <ResidueType>oilpalmstem</ResidueType>
-                <Mass>63000</Mass>
-                <CNRatio>145</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>oilpalm oilpalmstem</PoolName>
-            <type>oilpalm oilpalmstem</type>
-            <mass>24000 63000</mass>
-            <standing_fraction>0 0</standing_fraction>
-            <cpr />
-            <cnr>39 145</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            <Enabled>true</Enabled>
+            <ResourceName>SurfaceOrganicMatter</ResourceName>
+            <InitialResidueName>oilpalm</InitialResidueName>
+            <InitialResidueType>oilpalm</InitialResidueType>
+            <InitialResidueMass>0</InitialResidueMass>
+            <InitialStandingFraction>0</InitialStandingFraction>
+            <InitialCPR>0</InitialCPR>
+            <InitialCNR>0</InitialCNR>
           </SurfaceOrganicMatter>
           <Soil>
             <Name>Soil</Name>
@@ -2440,6 +2608,7 @@ namespace Models
               <SoilCropOilPalm>
                 <Name>OilPalmSoil</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
                 <KL>
                   <double>0.04</double>
                   <double>0.04</double>
@@ -2466,6 +2635,7 @@ namespace Models
                 </XF>
               </SoilCropOilPalm>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -2542,6 +2712,7 @@ namespace Models
             <SoilWater>
               <Name>SoilWater</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -2586,11 +2757,12 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
-              <residueinterception>0</residueinterception>
+              <ResidueInterception>0</ResidueInterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2627,6 +2799,7 @@ namespace Models
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <RootCN>30</RootCN>
               <RootWt>3000</RootWt>
               <SoilCN>10</SoilCN>
@@ -2667,6 +2840,7 @@ namespace Models
             <Analysis>
               <Name>Analysis</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -2689,6 +2863,7 @@ namespace Models
             <InitialWater>
               <Name>Initial water</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
@@ -2696,6 +2871,7 @@ namespace Models
             <Sample>
               <Name>Initial nitrogen</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -2729,8 +2905,10 @@ namespace Models
             <CERESSoilTemperature>
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
             </CERESSoilTemperature>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <RecordNumber>0</RecordNumber>
             <SoilType>Volcanic Ash</SoilType>
             <LocalName />
@@ -2744,6 +2922,7 @@ namespace Models
           <Report>
             <Name>AnnualOutput</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -2780,6 +2959,7 @@ namespace Models
           <Report>
             <Name>MonthlyOutput</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -2818,6 +2998,7 @@ namespace Models
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -2834,62 +3015,77 @@ namespace Models
           <Irrigation>
             <Name>Irrigation</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </Irrigation>
           <Operations>
             <Name>operations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-08-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <OilPalm>
             <Name>OilPalm</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ResourceName>OilPalm</ResourceName>
             <interception>0</interception>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
@@ -2904,6 +3100,7 @@ namespace Models
           <Manager>
             <Name>Palm Management</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Script>
               <sowing_date>1996-03-01</sowing_date>
               <population>135</population>
@@ -2915,6 +3112,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -2923,9 +3121,10 @@ namespace Models
     [System.Xml.Serialization.XmlInclude(typeof(Model))]
     public class Script : Model
     {
-        [Link] Clock Clock;
+        [Link] Clock Clock; 
         [Link] OilPalm oilPalm;
         [Link] Summary Summary;
+        [Link] SurfaceOrganicMatter surface;
         
         [Description("Sowing date")]
         public DateTime sowing_date {get; set;}
@@ -2935,7 +3134,7 @@ namespace Models
 
 
         [Description("Cultivar")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string cultivar {get; set;}
 
         [Description("Sowing depth (mm)")]
@@ -2949,14 +3148,13 @@ namespace Models
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Plant_population = 0;
+            surface.Add(24000, 270.769, 0, "oilpalm", "oilpalm");
+            surface.Add(63000, 191.172, 0, "oilpalmstem", "oilpalmstem");
         }
         
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
-        {
-            // Add Trunk from previous plantation
-            //surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
-            
+        {    
             if (Clock.Today.Date == sowing_date)
             {
                 oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
@@ -2977,6 +3175,7 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Script>
               <AnnualRain>0</AnnualRain>
               <Offset>6</Offset>
@@ -3014,7 +3213,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.SurfaceOM;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -3180,29 +3379,32 @@ namespace Models
           <SoluteManager>
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </SoluteManager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>MonthlyOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.LAI</YFieldName>
@@ -3214,17 +3416,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.LAI</YFieldName>
@@ -3234,6 +3436,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3258,17 +3461,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>MonthlyOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.StemMass</YFieldName>
@@ -3280,17 +3483,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.StemMass</YFieldName>
@@ -3300,6 +3503,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3324,17 +3528,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualFronds</YFieldName>
@@ -3346,17 +3550,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.AnnualFronds</YFieldName>
@@ -3366,6 +3570,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3390,17 +3595,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
@@ -3412,17 +3617,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
@@ -3432,6 +3637,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3456,17 +3662,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualYield</YFieldName>
@@ -3478,17 +3684,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualYield</YFieldName>
@@ -3498,6 +3704,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3522,17 +3729,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
@@ -3544,17 +3751,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
@@ -3564,6 +3771,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3584,7 +3792,11 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <DisabledSimNames />
+      <Enabled>true</Enabled>
+      <DisabledSimNames>
+        <string>HargyN1</string>
+        <string>HargyN2</string>
+      </DisabledSimNames>
     </Experiment>
     <Experiment>
       <Name>Sagarai</Name>
@@ -3595,545 +3807,635 @@ namespace Models
           <Operations>
             <Name>0</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1991-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1991-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Operations>
             <Name>1</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1991-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1991-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1991-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1994-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1994-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1994-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1995-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1995-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1995-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <Operations>
             <Name>2</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1991-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1991-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1991-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1994-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1994-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1994-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1995-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1995-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1995-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1996-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1997-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1998-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1999-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2000-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2001-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2002-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2003-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2004-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2005-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2006-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2007-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-06-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>2008-10-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Specifications>
             <string>[operations]</string>
           </Specifications>
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Factors>
       <Simulation>
         <Name>Base504</Name>
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FileName>..\..\WeatherFiles\Sagarai.met</FileName>
         </Weather>
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <StartDate>1991-03-01T00:00:00</StartDate>
           <EndDate>2008-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </Summary>
         <Zone>
           <Name>Field</Name>
           <Fertiliser>
             <Name>Fertiliser</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOM</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>oilpalm</PoolName>
-                <ResidueType>oilpalm</ResidueType>
-                <Mass>24000</Mass>
-                <CNRatio>39</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-              <Pool>
-                <PoolName>oilpalmstem</PoolName>
-                <ResidueType>oilpalmstem</ResidueType>
-                <Mass>63000</Mass>
-                <CNRatio>145</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>oilpalm oilpalmstem</PoolName>
-            <type>oilpalm oilpalmstem</type>
-            <mass>24000 63000</mass>
-            <standing_fraction>0 0</standing_fraction>
-            <cpr />
-            <cnr>39 145</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            <Enabled>true</Enabled>
+            <ResourceName>SurfaceOrganicMatter</ResourceName>
+            <InitialResidueName>oilpalm</InitialResidueName>
+            <InitialResidueType>oilpalm</InitialResidueType>
+            <InitialResidueMass>0</InitialResidueMass>
+            <InitialStandingFraction>0</InitialStandingFraction>
+            <InitialCPR>0</InitialCPR>
+            <InitialCNR>0</InitialCNR>
           </SurfaceOrganicMatter>
           <Soil>
             <Name>Soil</Name>
@@ -4142,6 +4444,7 @@ namespace Models
               <SoilCropOilPalm>
                 <Name>OilPalmSoil</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
                 <KL>
                   <double>0.03</double>
                   <double>0.02</double>
@@ -4166,6 +4469,7 @@ namespace Models
                 </XF>
               </SoilCropOilPalm>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -4236,6 +4540,7 @@ namespace Models
             <SoilWater>
               <Name>SoilWater</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -4279,11 +4584,12 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
-              <residueinterception>0</residueinterception>
+              <ResidueInterception>0</ResidueInterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4320,6 +4626,7 @@ namespace Models
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <RootCN>30</RootCN>
               <RootWt>3000</RootWt>
               <SoilCN>12</SoilCN>
@@ -4395,6 +4702,7 @@ namespace Models
             <Analysis>
               <Name>Analysis</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4427,6 +4735,7 @@ namespace Models
             <InitialWater>
               <Name>Initial water</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
@@ -4434,6 +4743,7 @@ namespace Models
             <Sample>
               <Name>Initial nitrogen</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -4467,8 +4777,10 @@ namespace Models
             <CERESSoilTemperature>
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
             </CERESSoilTemperature>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <RecordNumber>0</RecordNumber>
             <SoilType>Alluvial Clay</SoilType>
             <LocalName />
@@ -4482,6 +4794,7 @@ namespace Models
           <Report>
             <Name>AnnualOutput</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4518,6 +4831,7 @@ namespace Models
           <Report>
             <Name>MonthlyOutput</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4556,6 +4870,7 @@ namespace Models
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -4572,34 +4887,42 @@ namespace Models
           <Operations>
             <Name>operations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Operation>
               <Date>1991-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1991-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1992-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
             <Operation>
               <Date>1993-09-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
+              <Enabled>true</Enabled>
             </Operation>
           </Operations>
           <OilPalm>
             <Name>OilPalm</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ResourceName>OilPalm</ResourceName>
             <interception>0</interception>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
@@ -4614,10 +4937,12 @@ namespace Models
           <Irrigation>
             <Name>Irrigation</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </Irrigation>
           <Manager>
             <Name>Palm Management</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Script>
               <sowing_date>1991-03-01</sowing_date>
               <population>127</population>
@@ -4629,6 +4954,7 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -4637,9 +4963,10 @@ namespace Models
     [System.Xml.Serialization.XmlInclude(typeof(Model))]
     public class Script : Model
     {
-        [Link] Clock Clock;
+        [Link] Clock Clock; 
         [Link] OilPalm oilPalm;
         [Link] Summary Summary;
+        [Link] SurfaceOrganicMatter surface;
         
         [Description("Sowing date")]
         public DateTime sowing_date {get; set;}
@@ -4649,7 +4976,7 @@ namespace Models
 
 
         [Description("Cultivar")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string cultivar {get; set;}
 
         [Description("Sowing depth (mm)")]
@@ -4663,14 +4990,13 @@ namespace Models
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Plant_population = 0;
+            surface.Add(24000, 270.769, 0, "oilpalm", "oilpalm");
+            surface.Add(63000, 191.172, 0, "oilpalmstem", "oilpalmstem");
         }
         
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
-        {
-            // Add Trunk from previous plantation
-            //surface organic matter' add_surfaceom type=OilPalm, name=trunk, mass=63000, cnr=133, cpr=200
-            
+        {    
             if (Clock.Today.Date == sowing_date)
             {
                 oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
@@ -4691,6 +5017,7 @@ namespace Models
           <Manager>
             <Name>Calculations</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <Script>
               <AnnualRain>0</AnnualRain>
               <Offset>6</Offset>
@@ -4728,7 +5055,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.SurfaceOM;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -4894,29 +5221,32 @@ namespace Models
           <SoluteManager>
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </SoluteManager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>MonthlyOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.LAI</YFieldName>
@@ -4928,17 +5258,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.LAI</YFieldName>
@@ -4948,6 +5278,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -4972,17 +5303,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.StemMass</YFieldName>
@@ -4994,17 +5325,17 @@ namespace Models
         <Series>
           <Name>Series 2</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>MonthlyOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.StemMass</YFieldName>
@@ -5014,6 +5345,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -5038,17 +5370,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualFronds</YFieldName>
@@ -5060,17 +5392,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>OilPalm.AnnualFronds</YFieldName>
@@ -5080,6 +5412,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -5104,17 +5437,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
@@ -5126,17 +5459,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
@@ -5146,6 +5479,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -5170,17 +5504,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualYield</YFieldName>
@@ -5192,17 +5526,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualYield</YFieldName>
@@ -5212,6 +5546,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -5236,17 +5571,17 @@ namespace Models
         <Series>
           <Name>Series 0</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>AnnualOutput</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
@@ -5258,17 +5593,17 @@ namespace Models
         <Series>
           <Name>Series 1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorToVaryColours>Simulation</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
@@ -5278,6 +5613,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -5298,11 +5634,14 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <DisabledSimNames />
     </Experiment>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
   <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
