@@ -1147,6 +1147,25 @@ namespace Models.PMF.Organs
                 }
                 fracSenAge = fracSenAge / Apex.GroupSize.Sum();
             }
+            else
+            {
+                double ttInSenPhase = Math.Max(0.0, Age + tt - LagDuration - GrowthDuration);
+                if (ttInSenPhase > 0)
+                {
+                    double leafDuration = GrowthDuration + LagDuration + SenescenceDuration;
+                    double remainingTt = Math.Max(0, leafDuration - Age);
+
+                    if (remainingTt == 0)
+                        fracSenAge = 1;
+                    else
+                        fracSenAge = Math.Min(1, Math.Min(tt, ttInSenPhase) / remainingTt);
+                    if ((fracSenAge > 1) || (fracSenAge < 0))
+                        throw new Exception("Bad Fraction Senescing");
+                }
+                else
+                    fracSenAge = 0;
+            }
+
             MaxLiveArea = Math.Max(MaxLiveArea, LiveArea);
             MaxCohortPopulation = Math.Max(MaxCohortPopulation, CohortPopulation);
 
