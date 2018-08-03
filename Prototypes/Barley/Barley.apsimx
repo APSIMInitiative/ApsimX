@@ -6594,7 +6594,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorToVaryColours>SD</FactorToVaryColours>
+          <FactorToVaryColours>Experiment</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
@@ -7215,58 +7215,6 @@ namespace Models
           <TableName>HarvestObsPred</TableName>
           <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
           <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter />
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Observed</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Predicted</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Flowering Date1</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorToVaryColours>SD</FactorToVaryColours>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>HarvestObsPred</TableName>
-          <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
-          <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -11800,7 +11748,7 @@ namespace Models
         <Folder>
           <Name>SoilWater</Name>
           <Graph>
-            <Name>0_15cm</Name>
+            <Name>0_20cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11866,7 +11814,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>15_30cm</Name>
+            <Name>20_40cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11932,7 +11880,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>30_60cm</Name>
+            <Name>40_60cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11998,7 +11946,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>60_90cm</Name>
+            <Name>60_80cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -12064,7 +12012,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>90_120cm</Name>
+            <Name>80_100cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -12130,7 +12078,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>120_150cm</Name>
+            <Name>100_120cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -12196,7 +12144,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>150_180cm</Name>
+            <Name>120_140cm</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -12236,6 +12184,72 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Volumetric soil water (mm)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>140_160cm1</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorToVaryLines>Cult</FactorToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorToVaryMarkers>Cult</FactorToVaryMarkers>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <Checkpoint>Current</Checkpoint>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14762,13 +14776,15 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                 </Thickness>
+                <Texture />
+                <MunsellColour />
                 <PH>
                   <double>6.6</double>
-                  <double>6.2</double>
-                  <double>5.7</double>
-                  <double>5.5</double>
-                  <double>5.5</double>
-                  <double>5.5</double>
+                  <double>7</double>
+                  <double>7</double>
+                  <double>7</double>
+                  <double>7</double>
+                  <double>7</double>
                 </PH>
                 <PHUnits>Water</PHUnits>
                 <BoronUnits>HotWater</BoronUnits>
@@ -15141,7 +15157,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>
                   </Cultivar>
                   <SowingDate>2014-10-15</SowingDate>
@@ -15245,15 +15261,6 @@ namespace Models
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            //Soil.SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };
-            //Soil.SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };
-            //Soil.SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };
-            //Soil.SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };
-            //Soil.SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };
-            //Soil.SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };
-            //Soil.SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; 
-            //Soil.SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
-
             Soil.SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };
             Soil.SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };
             Soil.SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };
@@ -15262,8 +15269,6 @@ namespace Models
             Soil.SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };
             Soil.SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };
             Soil.SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };
-            //Soil.SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; 
-            //Soil.SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };
         }
             
     }
@@ -37185,5 +37190,5 @@ namespace Models
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <Enabled>true</Enabled>
-  <ExplorerWidth>282</ExplorerWidth>
+  <ExplorerWidth>257</ExplorerWidth>
 </Simulations>
