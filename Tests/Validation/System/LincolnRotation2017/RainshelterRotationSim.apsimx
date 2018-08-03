@@ -5,22 +5,29 @@
     <Name>Introduction</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
-    <MemoText><![CDATA[# Crop rotation
+    <MemoText><![CDATA[# Simulating crop rotation under controlled  conditions
 
-Edmar I. Teixeira, Hamish Brown, Rob Zyskowski, Edith Khaembah, Rogerio Cichota
+*Rob Zyskowski, Edmar I. Teixeira, Hamish Brown, Edith Khaembah, Rogerio Cichota*  
+*The New Zealand Institute for Plant & Food Research Limited, Private Bag 4704, Christchurch, New Zealand*
 
-The New Zealand Institute for Plant & Food Research Limited, Private Bag 4704, Christchurch, New Zealand
+## Introduction
 
-]]></MemoText>
-  </Memo>
-  <Memo>
-    <Name>FIXME</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Enabled>true</Enabled>
-    <MemoText><![CDATA[Issues to be resulved:
+This is a simulation of a crop rotation consisting of a forage species, fodder beet (*Beta vulgaris* L.), grown over spring/summer and harvested in autumn, followed by a catch crop, oats (*Avena sativa* L.). The actual experiment was divided in two phases and was established at the rain shelter facility of Plant and Food Research, Lincoln, NZ.  The experiment was designed to help develop the models for the respective plants and here they are used to further demonstrate that ApsimX can simulate water and nitrogen cycling in the field and then to examine whether catch crops are a good option for mitigating N leaching from forages.  
 
-(1) Soil temperature does not respond to canopy cover ... data show temperature difference in N and water treatments but simulations are identical. What's impact on N mineralisation? (eit 30 Aug 2017)
- >> One needs to use a ´proper´ soil temperature model for this. The CERES model (used to be within SoilNitrogen) is very basic and probably not capable of the  sensitivity require for this. However the SoilTemperature hasn been ported into ApsimX... (Even in Classic Apsim, tehre was not any people using it - RCichota: There were a few, at Agresearch we did use it regularly)
+ **Phase 1**: Co-limitation of water and nitrogen on fodder beet physiology  
+ - Irrigation: 2 treatments, nil or full irrigation (to match PET)
+ - Nitrogen: 3 treatments, 0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigator  
+  - 25 or 100 kg N/ha applied after emergence  
+  - 25 or 100 kg N/ha applied when canopy nearly reached full cover
+  - 100 kg N/ha applied a month after full cover
+  
+ **Phase 2**: Ability of oats to act as catch-crops for N over winter/spring  
+ - Irrigation: 2 treatments, low (enough to keep plants growing) or full irrigation (to match PET)
+ - Nitrogen: 3 treatments, 80 kg N/ha, 125 kg N/ha & 320 kg N/ha at sowing (residual plus urea applied at sowing)  
+
+ 
+### Acknowledgments  
+This work was a collaborative effort funded by the Sustainable Agro-Ecosystems (SAE) and the Forages for Reduced Nitrogen Leaching (FRNL) programmes.  The experiment was setup and conducted by several people, including Brendon Malcolm, Emmanuel Chakwizira, Shane Maley, Mike George, Steve Dilon and Alexandre Michel, to whom we would like to express our gratitude.
 ]]></MemoText>
   </Memo>
   <Replacements>
@@ -12177,23 +12184,6 @@ Where:
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <MemoText><![CDATA[
-#Experiment description
-
-## Introduction
-This is a simulation of a crop rotation consisting of a forage species, fodder beet, grown over spring/summer and harvested in autumn, followed by a catch crop, oats. The actual experiment was done in two parts in the rain shelter facility of Plant and Food Research, Lincoln, NZ.  The experiments were designed to help develop the model for the respective plants and here they are used to further demonstrate that ApsimX can simulate water and nitrogen cycling in the field and then to examine whether catch crops are a good option for mitigating N leaching from forages.  
-
- Part 1: Co-limitation of water and nitrogen on fodder beet physiology  
- - Irrigation: 2 treatments, nil or full irrigation (to match PET)
- - Nitrogen: 3 treatments, 0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigator  
-  - 25 or 100 kg N/ha applied after emergence  
-  - 25 or 100 kg N/ha applied when canopy nearly reached full cover
-  - 100 kg N/ha applied a month after full cover
-  
- Part 2: Ability of oats to act as catch-crops over winter/spring  
- - Irrigation: 2 treatments, low (enough to keep plants growing) or full irrigation (to match PET)
- - Nitrogen: 3 treatments, 80 kg N/ha, 125 kg N/ha & 320 kg N/ha at sowing (residual plus urea applied at sowing)  
-
-
 ## Management
 Pre-experiment actions:  
   23/08/2016 - Oats harvested  
@@ -12960,7 +12950,7 @@ namespace Models
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
+          <soil_albedo>0.23</soil_albedo>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
@@ -13596,6 +13586,7 @@ Soil parameterisation was based on the two description of the soil at the Rainsh
             <string>[Oats].Root.Live.Wt</string>
             <string>[Oats].Ear.Wt</string>
             <string>[Oats].Panicle.Wt  </string>
+            <string>[Oats].Leaf.Dead.Wt</string>
             <string />
             <string>[Oats].AboveGround.N</string>
             <string>[Oats].Leaf.N</string>

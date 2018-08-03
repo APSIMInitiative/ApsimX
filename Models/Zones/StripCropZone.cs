@@ -8,13 +8,14 @@ using Models.Agroforestry;
 
 namespace Models.Zones
 {
-    /// <summary>A rectangular zone.</summary>
+    /// <summary>A strip crop zone.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(AgroforestrySystem))]
+    [ScopedModel]
     public class StripCropZone : Zone
     {
         /// <summary>Length of the zone.</summary>
@@ -26,19 +27,6 @@ namespace Models.Zones
         /// <value>The width.</value>
         [Description("Width of zone (m)")]
         public double Width { get; set; }
-
-        /// <summary>
-        /// Returns the distance from edge of system
-        /// </summary>
-        public double Distance
-        {
-            get
-            {
-                if (Parent is AgroforestrySystem)
-                    return (Parent as AgroforestrySystem).GetDistanceFromTrees(this);
-                throw new ApsimXException(this, "Not implemented for this system");
-            }
-        }
 
         /// <summary>
         /// Return the area of the zone.
