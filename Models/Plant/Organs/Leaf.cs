@@ -110,11 +110,6 @@ namespace Models.PMF.Organs
 
 
         #region Canopy interface
-
-        /// <summary>The apex model to use</summary>
-        [ChildLink(IsOptional = true)]
-        public IApex apex = null;
-
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
@@ -1100,6 +1095,45 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double ApexNum
+        {
+            get
+            {
+                if (Leaves.Count == 0)
+                    return 0;
+                else
+                    return Leaves.Last().Apex.Number;
+            }
+        }
+
+        /// <summary>Apex group size in plant</summary>
+        [Description("Apex group size in plant")]
+        public double[] ApexGroupSize
+        {
+            get
+            {
+                if (Leaves.Count == 0)
+                    return new double[0];
+                else
+                    return Leaves.Last().Apex.GroupSize;
+            }
+        }
+
+        /// <summary>Apex group age in plant</summary>
+        [Description("Apex group age in plant")]
+        public double[] ApexGroupAge
+        {
+            get
+            {
+                if (Leaves.Count == 0)
+                    return new double[0];
+                else
+                    return Leaves.Last().Apex.GroupAge;
+            }
+        }
+
         #endregion
 
         #region Functions
@@ -1170,8 +1204,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
             Structure.TipToAppear = 0;
-            if (apex != null)
-                apex.Reset();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
             nitrogenSupply.Clear();
@@ -1185,8 +1217,6 @@ namespace Models.PMF.Organs
             foreach (LeafCohort Leaf in InitialLeaves)
             {
                 LeafCohort NewLeaf = Leaf.Clone();
-                if (apex != null)
-                    apex.DoCalculations(NewLeaf);
                 Leaves.Add(NewLeaf);
                 needToRecalculateLiveDead = true;
             }
@@ -1213,8 +1243,6 @@ namespace Models.PMF.Organs
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
-            if (apex != null)
-                apex.DoCalculations(NewLeaf);
             Leaves.Add(NewLeaf);
             needToRecalculateLiveDead = true;
         }
@@ -1229,9 +1257,7 @@ namespace Models.PMF.Organs
                 throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
             int i = CohortParams.CohortToAppear - 1;
 
-            Leaves[i].CohortPopulation = apex.LeafTipAppearance(Plant.Population, CohortParams.TotalStemPopn);
-            Leaves[i].Age = CohortParams.CohortAge;
-            Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
+            Leaves[i].DoAppearance(CohortParams, CohortParameters);
             needToRecalculateLiveDead = true;
             if (NewLeaf != null)
                 NewLeaf.Invoke();

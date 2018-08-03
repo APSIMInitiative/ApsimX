@@ -121,9 +121,6 @@
                 if (remainingRemoveApex > 0.0)
                     throw new Exception("There are not enough apex to remove from plant.");
             }
-
-            NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
-            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
 
         /// <summary>

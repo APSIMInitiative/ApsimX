@@ -405,7 +405,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <ShootRate>1.5</ShootRate>
           <Start>Germination</Start>
           <End>Emergence</End>
-          <TTForToday>0</TTForToday>
+          <TTForTimeStep>0</TTForTimeStep>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
@@ -1957,6 +1957,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Leaf</Name>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <ApexStandard>
+            <Name>Apex</Name>
+            <Constant>
+              <Name>StemSenescenceAge</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </ApexStandard>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <NReallocationFactor>0</NReallocationFactor>
@@ -1983,11 +1994,20 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
+          <ApexStandard>
+            <Name>Apex</Name>
+            <Constant>
+              <Name>StemSenescenceAge</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </ApexStandard>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <NReallocationFactor>0</NReallocationFactor>
@@ -2014,8 +2034,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
@@ -2840,17 +2858,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
         </MultiplyFunction>
-        <ApexStandard>
-          <Name>Apex</Name>
-          <Constant>
-            <Name>StemSenescenceAge</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexStandard>
         <Constant>
           <Name>RemobilisationCost</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7322,40 +7329,13 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>Surface Organic Matter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <ResidueTypes>
-                <Name>ResidueTypes</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <LoadFromResource>ResidueTypes</LoadFromResource>
-              </ResidueTypes>
-              <Pools>
-                <Pool>
-                  <PoolName>wheat_stubble</PoolName>
-                  <ResidueType>wheat</ResidueType>
-                  <Mass>1000</Mass>
-                  <CNRatio>80</CNRatio>
-                  <CPRatio>NaN</CPRatio>
-                  <StandingFraction>0</StandingFraction>
-                </Pool>
-              </Pools>
-              <PoolName>wheat_stubble</PoolName>
-              <type>wheat</type>
-              <mass>1000</mass>
-              <standing_fraction>0</standing_fraction>
-              <cpr />
-              <cnr>80</cnr>
-              <CriticalResidueWeight>2000</CriticalResidueWeight>
-              <OptimumDecompTemp>20</OptimumDecompTemp>
-              <MaxCumulativeEOS>20</MaxCumulativeEOS>
-              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-              <TotalLeachRain>25</TotalLeachRain>
-              <MinRainToLeach>10</MinRainToLeach>
-              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-              <DefaultCPRatio>0</DefaultCPRatio>
-              <DefaultStandingFraction>0</DefaultStandingFraction>
-              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              <ResourceName>SurfaceOrganicMatter</ResourceName>
+              <InitialResidueName>wheat_stubble</InitialResidueName>
+              <InitialResidueType>wheat</InitialResidueType>
+              <InitialResidueMass>1000</InitialResidueMass>
+              <InitialStandingFraction>0</InitialStandingFraction>
+              <InitialCPR>0</InitialCPR>
+              <InitialCNR>80</InitialCNR>
             </SurfaceOrganicMatter>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -7398,7 +7378,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.SurfaceOM;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -7559,7 +7539,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -7581,7 +7561,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
@@ -7627,7 +7607,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -7649,7 +7629,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -7693,7 +7673,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -7715,7 +7695,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -7759,7 +7739,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -7781,7 +7761,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -7825,7 +7805,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -7847,7 +7827,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -7891,7 +7871,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -7913,7 +7893,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -7957,7 +7937,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -7979,7 +7959,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8023,7 +8003,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8045,7 +8025,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8089,7 +8069,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8111,7 +8091,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8159,7 +8139,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -8182,7 +8162,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
@@ -8226,7 +8206,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -8248,7 +8228,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
@@ -8292,7 +8272,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -8315,7 +8295,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
@@ -8359,7 +8339,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8388608</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -8382,7 +8362,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
@@ -8434,7 +8414,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8457,7 +8437,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8501,7 +8481,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8388608</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8524,7 +8504,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8568,7 +8548,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8591,7 +8571,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8635,7 +8615,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8658,7 +8638,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8702,7 +8682,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8725,7 +8705,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8769,7 +8749,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8792,7 +8772,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8836,7 +8816,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8859,7 +8839,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>0</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8909,7 +8889,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8931,7 +8911,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -8975,7 +8955,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -8997,7 +8977,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9041,7 +9021,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -9063,7 +9043,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9107,7 +9087,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -9129,7 +9109,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Irrig</FactorToVaryColours>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -9178,7 +9158,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
@@ -9200,7 +9180,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Simulation</FactorToVaryColours>
+            <FactorToVaryColours>Irrig</FactorToVaryColours>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -9839,40 +9819,13 @@ namespace Models
               <Name>Surface Organic Matter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <ResidueTypes>
-                <Name>ResidueTypes</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <LoadFromResource>ResidueTypes</LoadFromResource>
-              </ResidueTypes>
-              <Pools>
-                <Pool>
-                  <PoolName>wheat_stubble</PoolName>
-                  <ResidueType>wheat</ResidueType>
-                  <Mass>0</Mass>
-                  <CNRatio>80</CNRatio>
-                  <CPRatio>NaN</CPRatio>
-                  <StandingFraction>0</StandingFraction>
-                </Pool>
-              </Pools>
-              <PoolName>wheat_stubble</PoolName>
-              <type>wheat</type>
-              <mass>0</mass>
-              <standing_fraction>0</standing_fraction>
-              <cpr />
-              <cnr>80</cnr>
-              <CriticalResidueWeight>2000</CriticalResidueWeight>
-              <OptimumDecompTemp>20</OptimumDecompTemp>
-              <MaxCumulativeEOS>20</MaxCumulativeEOS>
-              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-              <TotalLeachRain>25</TotalLeachRain>
-              <MinRainToLeach>10</MinRainToLeach>
-              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-              <DefaultCPRatio>0</DefaultCPRatio>
-              <DefaultStandingFraction>0</DefaultStandingFraction>
-              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              <ResourceName>SurfaceOrganicMatter</ResourceName>
+              <InitialResidueName>wheat_stubble</InitialResidueName>
+              <InitialResidueType>wheat</InitialResidueType>
+              <InitialResidueMass>0</InitialResidueMass>
+              <InitialStandingFraction>0</InitialStandingFraction>
+              <InitialCPR>0</InitialCPR>
+              <InitialCNR>80</InitialCNR>
             </SurfaceOrganicMatter>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -10029,8 +9982,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryLines>Simulation</FactorToVaryLines>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryLines>Sow</FactorToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -10053,8 +10006,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -10098,8 +10051,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryLines>Simulation</FactorToVaryLines>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryLines>Sow</FactorToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -10122,8 +10075,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -10167,8 +10120,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryLines>Simulation</FactorToVaryLines>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryLines>Sow</FactorToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -10191,8 +10144,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -10236,8 +10189,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryLines>Simulation</FactorToVaryLines>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryLines>Sow</FactorToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -10260,8 +10213,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Sow</FactorToVaryColours>
-              <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+              <FactorToVaryColours>Nit</FactorToVaryColours>
+              <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -10305,7 +10258,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
+              <FactorToVaryColours>Sow</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -10327,8 +10280,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
-              <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
+              <FactorToVaryColours>Sow</FactorToVaryColours>
+              <FactorToVaryMarkers>Irr</FactorToVaryMarkers>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -10372,8 +10325,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
-              <FactorToVaryLines>Zone</FactorToVaryLines>
+              <FactorToVaryColours>Sow</FactorToVaryColours>
+              <FactorToVaryLines>Irr</FactorToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -10396,8 +10349,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Simulation</FactorToVaryColours>
-              <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
+              <FactorToVaryColours>Sow</FactorToVaryColours>
+              <FactorToVaryMarkers>Irr</FactorToVaryMarkers>
               <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
@@ -10444,8 +10397,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10468,8 +10421,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -10513,8 +10466,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10537,8 +10490,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -10582,8 +10535,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10606,8 +10559,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -10651,8 +10604,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10675,8 +10628,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -10726,8 +10679,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10750,8 +10703,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -10795,8 +10748,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10819,8 +10772,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -10870,8 +10823,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10894,8 +10847,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -10939,8 +10892,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -10963,8 +10916,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11008,8 +10961,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11032,8 +10985,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11077,8 +11030,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11101,8 +11054,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11146,8 +11099,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11170,8 +11123,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11215,8 +11168,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11239,8 +11192,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11290,8 +11243,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11314,8 +11267,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11359,8 +11312,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11383,8 +11336,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11428,8 +11381,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11452,8 +11405,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11497,8 +11450,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11521,8 +11474,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11566,8 +11519,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11590,8 +11543,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11635,8 +11588,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11659,8 +11612,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>0</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11716,8 +11669,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11740,8 +11693,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11791,8 +11744,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11815,8 +11768,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11866,8 +11819,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11890,8 +11843,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -11935,8 +11888,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -11959,8 +11912,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12010,8 +11963,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12034,8 +11987,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12079,8 +12032,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryLines>Simulation</FactorToVaryLines>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryLines>Sow</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12103,8 +12056,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Sow</FactorToVaryColours>
-                <FactorToVaryMarkers>Simulation</FactorToVaryMarkers>
+                <FactorToVaryColours>Nit</FactorToVaryColours>
+                <FactorToVaryMarkers>Sow</FactorToVaryMarkers>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12148,8 +12101,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12171,8 +12124,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryMarkers>Zone</FactorToVaryMarkers>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryMarkers>Irr</FactorToVaryMarkers>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12222,8 +12175,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12245,8 +12198,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12296,8 +12249,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12320,7 +12273,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16776961</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12364,7 +12317,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16776961</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12386,8 +12339,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12432,7 +12385,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16776961</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12454,8 +12407,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12500,7 +12453,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16776961</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12522,8 +12475,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12568,7 +12521,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16776961</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12590,8 +12543,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12636,7 +12589,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16776961</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -12658,8 +12611,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12704,8 +12657,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12750,8 +12703,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12802,8 +12755,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-8388608</ColourArgb>
-                <FactorToVaryColours>Simulation</FactorToVaryColours>
-                <FactorToVaryLines>Zone</FactorToVaryLines>
+                <FactorToVaryColours>Sow</FactorToVaryColours>
+                <FactorToVaryLines>Irr</FactorToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -12866,7 +12819,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorToVaryColours>Irrig</FactorToVaryColours>
+          <FactorToVaryColours>Sow</FactorToVaryColours>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>

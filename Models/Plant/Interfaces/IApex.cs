@@ -8,6 +8,15 @@ namespace Models.PMF.Interfaces
     /// </summary>
     public interface IApex
     {
+        /// <summary>Total apex number in plant.</summary>
+        double Number { get; set; }
+
+        /// <summary>Total apex number in plant.</summary>
+        double[] GroupSize { get; }
+
+        /// <summary>Total apex number in plant.</summary>
+        double[] GroupAge { get; }
+
         /// <summary>
         /// Calculate apex data during leaf tip appearance
         /// </summary>

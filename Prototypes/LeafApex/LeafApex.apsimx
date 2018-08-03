@@ -382,7 +382,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <ShootRate>1.5</ShootRate>
           <Start>Germination</Start>
           <End>Emergence</End>
-          <TTForToday>0</TTForToday>
+          <TTForTimeStep>0</TTForTimeStep>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
@@ -689,6 +689,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Phenology>
       <Structure>
         <Name>Structure</Name>
+        <Constant>
+          <Name>StemSenescenceAge</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <VariableReference>
           <Name>ThermalTime</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1868,19 +1874,19 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Root>
       <Leaf>
         <Name>Leaf</Name>
-        <ApexTiller>
-          <Name>Apex</Name>
-          <Constant>
-            <Name>StemSenescenceAge</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexTiller>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <ApexTiller>
+            <Name>Apex</Name>
+            <Constant>
+              <Name>StemSenescenceAge</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </ApexTiller>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <NReallocationFactor>0</NReallocationFactor>
@@ -1907,11 +1913,20 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
+          <ApexTiller>
+            <Name>Apex</Name>
+            <Constant>
+              <Name>StemSenescenceAge</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </ApexTiller>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <NReallocationFactor>0</NReallocationFactor>
@@ -1938,8 +1953,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
@@ -5595,40 +5608,13 @@ namespace Models
         <Name>SurfaceOrganicMatter</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <Pools>
-          <Pool>
-            <PoolName>wheat_stubble</PoolName>
-            <ResidueType>Wheat</ResidueType>
-            <Mass>0</Mass>
-            <CNRatio>80</CNRatio>
-            <CPRatio>0</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>wheat_stubble</PoolName>
-        <type>Wheat</type>
-        <mass>0</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr>0</cpr>
-        <cnr>80</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        <ResourceName>SurfaceOrganicMatter</ResourceName>
+        <InitialResidueName>wheat_stubble</InitialResidueName>
+        <InitialResidueType>Wheat</InitialResidueType>
+        <InitialResidueMass>0</InitialResidueMass>
+        <InitialStandingFraction>0</InitialStandingFraction>
+        <InitialCPR>0</InitialCPR>
+        <InitialCNR>80</InitialCNR>
       </SurfaceOrganicMatter>
       <Plant>
         <Name>Wheat</Name>
@@ -5762,7 +5748,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.SurfaceOM;
+using Models.Surface;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -5804,7 +5790,7 @@ namespace Models
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
-          <string>[Leaf].Apex.Number</string>
+          <string>[Leaf].ApexNum</string>
         </VariableNames>
         <EventNames>
           <string />
@@ -5831,9 +5817,9 @@ namespace Models
         <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Leaf].Apex.Number</string>
-          <string>[Leaf].Apex.GroupAge</string>
-          <string>[Leaf].Apex.GroupSize</string>
+          <string>[Leaf].ApexNum</string>
+          <string>[Leaf].ApexGroupAge</string>
+          <string>[Leaf].ApexGroupSize</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
