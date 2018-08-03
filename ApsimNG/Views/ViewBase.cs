@@ -27,7 +27,7 @@ namespace UserInterface.Views
         /// <param name="err"></param>
         protected void ShowError(Exception err)
         {
-            MasterView.ShowMessage(err.ToString(), Models.Core.Simulation.ErrorLevel.Error);
+            MasterView.ShowError(err);
         }
 
         /// <summary>

@@ -1931,7 +1931,7 @@
                         int numColumnsToPaste = lines[0].Split('\t').Count();
                         int numColumnsAvailable = ColumnCount - FirstSelectedColumn() - numReadOnlyColumns;
                         if (numColumnsToPaste > numColumnsAvailable)
-                            throw new Exception(string.Format("Unable to paste {0} columns of data into {1} non-readonly columns.", numColumnsToPaste, numColumnsAvailable));
+                            throw new Exception(string.Format("Unable to paste {0} column{1} of data into {2} non-readonly column{3}.", numColumnsToPaste, numColumnsToPaste == 1 ? string.Empty : "s", numColumnsAvailable, numColumnsAvailable == 1 ? string.Empty : "s"));
                         int numberSelectedCells = NumSelectedCells();
                         if (numCellsToPaste > numberSelectedCells && numberSelectedCells > 1 && (ResponseType)MasterView.ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", MessageType.Question, ButtonsType.YesNo) != Gtk.ResponseType.Yes)
                         {
@@ -2106,25 +2106,28 @@
                             selectionColMax = Array.IndexOf(view.Columns, column);
                             selectionRowMax = path.Indices[0];
                             e.RetVal = true;
-                            view.QueueDraw();
+                            Refresh();
                         }
                         else
                         {
-                            selectedCellColumnIndex = Array.IndexOf(view.Columns, column);
-                            selectedCellRowIndex = path.Indices[0];
-                        }
-
-                        if (e.Event.Type == Gdk.EventType.TwoButtonPress)
-                        {
-                            while (GLib.MainContext.Iteration()) ;
-                            view.SetCursor(path, view.Columns[selectedCellColumnIndex], true);
-                            userEditingCell = true;
-                            e.RetVal = true;
+                            int newlySelectedColumnIndex = Array.IndexOf(view.Columns, column);
+                            int newlySelectedRowIndex = path.Indices[0];
+                            // If the user has clicked on a selected cell, or if they have double clicked on any cell, we start editing the cell.
+                            if ( !userEditingCell && ((newlySelectedRowIndex == selectedCellRowIndex && newlySelectedColumnIndex == selectedCellColumnIndex) || e.Event.Type == Gdk.EventType.TwoButtonPress))
+                            {
+                                EditSelectedCell();
+                                e.RetVal = true;
+                            }
+                            else
+                            {
+                                selectedCellColumnIndex = newlySelectedColumnIndex;
+                                selectedCellRowIndex = newlySelectedRowIndex;
+                            }
                         }
                     }
                     catch (Exception err)
                     {
-                        Console.WriteLine(err.ToString());
+                        ShowError(err);
                     }
                 }
             }
@@ -2154,6 +2157,18 @@
                 }
                 popupMenu.Popup();
                 e.RetVal = true;
+            }
+        }
+
+        /// <summary>
+        /// Initiates an edit operation on the selected cell.
+        /// </summary>
+        private void EditSelectedCell()
+        {
+            if (!GetColumn(selectedCellColumnIndex).ReadOnly)
+            {
+                userEditingCell = true;
+                Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);
             }
         }
 

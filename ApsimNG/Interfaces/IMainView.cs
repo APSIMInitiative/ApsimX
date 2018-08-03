@@ -2,6 +2,7 @@
 using Gtk;
 using System;
 using UserInterface.Views;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Interfaces
 {
@@ -120,6 +121,12 @@ namespace UserInterface.Interfaces
         /// </param>
         void ShowMessage(string Message, Models.Core.Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
 
+        /// <summary>
+        /// Displays an error message with a 'more info' button.
+        /// </summary>
+        /// <param name="err">Error for which we want to display information.</param>
+        void ShowError(Exception err);
+
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
@@ -222,5 +229,10 @@ namespace UserInterface.Interfaces
         /// Show a detailed error.
         /// </summary>
         event EventHandler ShowDetailedError;
+
+        /// <summary>
+        /// Invoked when an error has been thrown in a view.
+        /// </summary>
+        event EventHandler<ErrorArgs> OnError;
     }
 }

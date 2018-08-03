@@ -196,6 +196,7 @@
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
+    <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellActionArgs.cs" />

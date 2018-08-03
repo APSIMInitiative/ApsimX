@@ -10,6 +10,7 @@
     using System.Reflection;
     using System.Linq;
     using Interfaces;
+    using EventArguments;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -185,6 +186,11 @@
             if (ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
         }
+
+        /// <summary>
+        /// Invoked when an error has been thrown in a view.
+        /// </summary>
+        public event EventHandler<ErrorArgs> OnError;
 
         /// <summary>
         /// Invoked when application tries to close
@@ -702,6 +708,15 @@
                 stopButton.Visible = false;
             });
             while (GLib.MainContext.Iteration()) ;
+        }
+
+        /// <summary>
+        /// Displays an error message with a 'more info' button.
+        /// </summary>
+        /// <param name="err">Error for which we want to display information.</param>
+        public new void ShowError(Exception err)
+        {
+            OnError?.Invoke(this, new ErrorArgs { Error = err });
         }
 
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
