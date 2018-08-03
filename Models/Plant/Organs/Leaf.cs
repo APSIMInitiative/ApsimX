@@ -50,7 +50,15 @@ namespace Models.PMF.Organs
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
+        
+        [Link]
+        private Checkpoints checkpoints = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Link]
+        public IClock clock = null;
 
         /// <summary>Growth Respiration</summary>
         /// [Units("CO_2")]
@@ -1261,6 +1269,7 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
             if (NewLeaf != null)
                 NewLeaf.Invoke();
+            checkpoints.SaveStateOfObject(clock.Today.ToString(), this);
         }
 
         /// <summary>Does the nutrient allocations.</summary>
