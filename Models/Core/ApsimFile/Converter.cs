@@ -1131,7 +1131,8 @@
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
                 ConverterUtilities.SearchReplaceReportCode(report, ".WaterSupplyDemandRatio", ".Leaf.Fw");
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
-                n.InnerText.Replace(".WaterSupplyDemandRatio",".Leaf.Fw");
+                if (n.InnerText.Contains(".WaterSupplyDemandRatio"))
+                    n.InnerText = n.InnerText.Replace(".WaterSupplyDemandRatio",".Leaf.Fw");
         }
 
     }
