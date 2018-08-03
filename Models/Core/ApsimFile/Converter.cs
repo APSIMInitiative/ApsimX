@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 35; } }
+        public static int LastestVersion { get { return 36; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1120,6 +1120,20 @@
             ConverterUtilities.RenameNode(node, "soil_heat_flux_fraction", "SoilHeatFluxFraction");
             ConverterUtilities.RenameNode(node, "night_interception_fraction", "NightInterceptionFraction");
             ConverterUtilities.RenameNode(node, "refheight", "ReferenceHeight");
-        }    
+        }
+        /// <summary>
+        /// Change the stores object array in Supplement components to Stores
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion36(XmlNode node, string fileName)
+        {
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+                ConverterUtilities.SearchReplaceReportCode(report, ".WaterSupplyDemandRatio", ".Leaf.Fw");
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
+                if (n.InnerText.Contains(".WaterSupplyDemandRatio"))
+                    n.InnerText = n.InnerText.Replace(".WaterSupplyDemandRatio",".Leaf.Fw");
+        }
+
     }
 }
