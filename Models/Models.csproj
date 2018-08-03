@@ -205,6 +205,7 @@
     <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
     <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
+    <Compile Include="Soils\Nutrient\Chloride.cs" />
     <Compile Include="Plant\Structure\ApexBase.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
@@ -452,7 +453,6 @@
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\RunoffEventType.cs" />
     <Compile Include="Soils\Analysis.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />

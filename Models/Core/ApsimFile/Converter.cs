@@ -1,22 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Converter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core.ApsimFile
+﻿namespace Models.Core.ApsimFile
 {
+    using APSIM.Shared.Utilities;
+    using Models.Factorial;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using System.Reflection;
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using PMF;
     using System.Data;
-    using Models.Factorial;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Xml;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -24,7 +16,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 35; } }
+        public static int LastestVersion { get { return 36; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1118,14 +1110,24 @@ namespace Models.Core.ApsimFile
                     XmlUtilities.DeleteValue(surfaceOrganicMatter, "InitialCPR");
             }
         }
-		
-		
         /// <summary>
-        /// Remove apex nodes from leaf objects
+        /// Change the stores object array in Supplement components to Stores
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion35(XmlNode node, string fileName)
+        {
+            ConverterUtilities.RenameNode(node, "soil_heat_flux_fraction", "SoilHeatFluxFraction");
+            ConverterUtilities.RenameNode(node, "night_interception_fraction", "NightInterceptionFraction");
+            ConverterUtilities.RenameNode(node, "refheight", "ReferenceHeight");
+        }
+		
+		        /// <summary>
+        /// Remove apex nodes from leaf objects
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion36(XmlNode node, string fileName)
         {
             // Find all the Supplement components
             List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "ApexStandard");
@@ -1133,5 +1135,7 @@ namespace Models.Core.ApsimFile
             foreach (XmlNode apexNode in nodeList)
                 apexNode.ParentNode.RemoveChild(apexNode);
         }
+		
+		    
     }
 }

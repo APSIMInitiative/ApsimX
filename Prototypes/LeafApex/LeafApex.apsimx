@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="35">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -5727,13 +5727,9 @@ namespace Models
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <refheight>2</refheight>
-        <albedo>0.15</albedo>
-        <emissivity>0.96</emissivity>
-        <RadIntTotal>0</RadIntTotal>
+        <SoilHeatFluxFraction>0</SoilHeatFluxFraction>
+        <NightInterceptionFraction>0</NightInterceptionFraction>
+        <ReferenceHeight>0</ReferenceHeight>
       </MicroClimate>
       <Manager>
         <Name>Calculations</Name>

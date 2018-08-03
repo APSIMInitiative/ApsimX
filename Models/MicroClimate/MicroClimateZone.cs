@@ -19,8 +19,12 @@ namespace Models
             [Link]
             private IWeather weather = null;
 
-            /// <summary>The _albedo</summary>
-            public double _albedo = 0;
+            /// <summary>The Albedo of the combined soil-plant system for this zone</summary>
+            public double Albedo = 0;
+            /// <summary>
+            /// Emissivity of the combined soil-plant system for this zone
+            /// </summary>
+            public double Emissivity = 0;
 
             /// <summary>Net long-wave radiation of the whole system</summary>
             [Description("Net long-wave radiation of the whole system")]
@@ -177,7 +181,7 @@ namespace Models
             {
                 soil_heat = 0.0;
                 dryleaffraction = 0.0;
-                _albedo = 0.0;// albedo;
+                Albedo = 0.0;// albedo;
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
                 numLayers = 0;
@@ -221,7 +225,7 @@ namespace Models
             [Units("MJ/m2/day")]
             public double NetRadiation
             {
-                get { return weather.Radn * (1.0 - _albedo) + NetLongWaveRadiation; }
+                get { return weather.Radn * (1.0 - Albedo) + NetLongWaveRadiation; }
             }
 
             /// <summary>Gets the net_rs.</summary>
@@ -229,7 +233,7 @@ namespace Models
             [Units("MJ/m2/day")]
             public double NetShortWaveRadiation
             {
-                get { return weather.Radn * (1.0 - _albedo); }
+                get { return weather.Radn * (1.0 - Albedo); }
             }
 
             /// <summary>
