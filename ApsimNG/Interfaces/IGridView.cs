@@ -58,6 +58,7 @@ namespace UserInterface.Interfaces
 
         /// <summary>
         /// Gets or sets the number of rows in grid.
+        /// Setting this when <see cref="CanGrow"/> is false will generate an exception.
         /// </summary>
         int RowCount { get; set; }
 
@@ -75,6 +76,11 @@ namespace UserInterface.Interfaces
         /// Gets or sets a value indicating whether the grid is read only
         /// </summary>
         bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// If true, the grid can grow larger.
+        /// </summary>
+        bool CanGrow { get; set; }
 
         /// <summary>
         /// Gets or sets the currently selected cell.

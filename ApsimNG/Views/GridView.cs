@@ -246,6 +246,8 @@
             {
                 // The main use of this will be to allow "empty" rows at the bottom of the grid to allow for
                 // additional data to be entered (primarily soil profile stuff). 
+                if (!CanGrow)
+                    throw new Exception("Unable to modify number of rows in grid - this grid cannot change size.");
                 if (value > RowCount)
                 {
                     // Add new rows
@@ -303,6 +305,12 @@
                 isReadOnly = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the number of rows in grid.
+        /// Setting this when <see cref="CanGrow"/> is false will generate an exception.
+        /// </summary>
+        public bool CanGrow { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the currently selected cell. Null if none selected.
