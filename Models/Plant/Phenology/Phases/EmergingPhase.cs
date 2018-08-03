@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
 using Models.Functions;
@@ -12,25 +11,25 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EmergingPhase : Model, IPhase, ICustomDocumentation
+    public class EmergingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
-        /// <summary>The plant</summary>
-        [Link]
-        Plant Plant = null;
 
+        // 1. Links
+        //----------------------------------------------------------------------------------------------------------------
+       
         [Link]
         Phenology phenology = null;
 
+        //5. Public properties
+        //-----------------------------------------------------------------------------------------------------------------
+
         /// <summary>Gets or sets the shoot lag.</summary>
-        /// <value>The shoot lag.</value>
         [Units("oCd")]
-       // [XmlIgnore]
         [Description("ShootLag")]
         public double ShootLag { get; set; }
+
         /// <summary>Gets or sets the shoot rate.</summary>
-        /// <value>The shoot rate</value>
         [Units("oCd/mm")]
-       // [XmlIgnore]
         [Description("ShootRate")]
         public double ShootRate { get; set; }
 
@@ -42,127 +41,79 @@ namespace Models.PMF.Phen
         [Models.Core.Description("End")]
         public string End { get; set; }
 
-        /// <summary>The thermal time</summary>
-        [Link(IsOptional = true)]
-        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
-
-        /// <summary>
-        /// Return a fraction of phase complete.
-        /// </summary>
+        /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
         public double FractionComplete
         {
             get
             {
-                if (CalcTarget() == 0)
+                if (Target == 0)
                     return 1;
                 else
-                    return TTinPhase / CalcTarget();
-            }
-            set
-            {
-                if (phenology != null)
-                {
-                    TTinPhase = CalcTarget() * value;
-                    phenology.AccumulatedEmergedTT += TTinPhase;
-                    phenology.AccumulatedTT += TTinPhase;
-                }
+                    return TTinPhase / Target;
             }
         }
 
-        /// <summary>Number of days from sowing to end of this phase.</summary>
+        /// <summary>Thermal time target.</summary>
         [XmlIgnore]
-        public int DaysFromSowingToEndPhase { get; set; }
-
-        /// <summary>The property of day unused</summary>
-        protected double PropOfDayUnused = 0;
-        
-        /// <summary>The _ tt for today</summary>
-        protected double _TTForToday = 0;
+        public double Target { get; set; } 
 
         /// <summary>Gets the tt for today.</summary>
-        /// <value>The tt for today.</value>
-        public double TTForToday
-        {
-            get
-            {
-                if (ThermalTime == null)
-                    return 0;
-                return ThermalTime.Value();
-            }
-        }
+        public double TTForTimeStep { get; set; } 
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
-        /// <summary>The stress</summary>
-        [Link(IsOptional = true)]
-        public IFunction Stress = null;
+        //6. Public methods
+        //-----------------------------------------------------------------------------------------------------------------
 
-        /// <summary>Adds the specified DLT_TT.</summary>
-        public void Add(double dlt_tt) { TTinPhase += dlt_tt; }
-
-        /// <summary>
-        /// This function increments thermal time accumulated in each phase 
-        /// and returns a non-zero value if the phase target is met today so
-        /// the phenology class knows to progress to the next phase and how
-        /// much tt to pass it on the first day.
-        /// </summary>
-
-        public double DoTimeStep(double PropOfDayToUse)
+        /// <summary> This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
+        /// the phenology class knows to progress to the next phase and how much tt to pass it on the first day. </summary>
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
+            bool proceedToNextPhase = false;
+            TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
 
-            if (ThermalTime != null)
+            if (TTinPhase > Target)
             {
-                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
-                if (Stress != null)
+                if (TTForTimeStep > 0.0)
                 {
-                    _TTForToday *= Stress.Value();
+                    proceedToNextPhase = true;
+                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
+                    TTForTimeStep *= (1 - propOfDayToUse);
                 }
-                TTinPhase += _TTForToday;
-            }
-            
-            // Get the Target TT
-            double Target = CalcTarget();
-
-            if (DaysFromSowingToEndPhase > 0)
-            {
-                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
-                    PropOfDayUnused = 1.0;
-                else
-                    PropOfDayUnused = 0.0;
-            }
-            else if (TTinPhase > Target)
-            {
-                double LeftOverValue = TTinPhase - Target;
-                if (_TTForToday > 0.0)
-                {
-                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
-                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
-                }
-                else
-                    PropOfDayUnused = 1.0;
                 TTinPhase = Target;
             }
-
-            if (PropOfDayUnused > 0)
-            {
-                Plant.SendEmergingEvent();
-                phenology.Emerged = true;
-            }
-
-            return PropOfDayUnused;
+            
+            return proceedToNextPhase;
         }
 
-        /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
-        private double CalcTarget()
+        /// <summary>Resets the phase.</summary>
+        public virtual void ResetPhase()
         {
-            double retVAl = 0;
-            if (Plant != null)
-                retVAl = ShootLag + Plant.SowingData.Depth * ShootRate;
-            return retVAl;
+            TTinPhase = 0;
+            Target = 0;
+        }
+        
+        /// <summary>Writes the summary.</summary>
+        /// <param name="writer">The writer.</param>
+        public void WriteSummary(TextWriter writer)
+        {
+            writer.WriteLine("      " + Name);
+        }
+
+        
+        //7. Private methode
+        //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Called when crop is ending</summary>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+        Target = ShootLag + data.Depth * ShootRate;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -171,20 +122,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         { ResetPhase(); }
-        /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase()
-        {
-            _TTForToday = 0;
-            TTinPhase = 0;
-            PropOfDayUnused = 0;
-        }
-
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-        }
+       
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

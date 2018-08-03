@@ -355,7 +355,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (Phenology.OnDayOf(RipeStage))
+            if (Phenology.OnStartDayOf(RipeStage))
                 _ReadyForHarvest = true;
 
 

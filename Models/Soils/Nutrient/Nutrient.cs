@@ -4,7 +4,7 @@
     using Models.Core;
     using System;
     using APSIM.Shared.Utilities;
-    using Models.SurfaceOM;
+    using Models.Surface;
     using Models.Soils;
     using System.Collections.Generic;
     using Models.Graph;

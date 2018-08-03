@@ -421,6 +421,18 @@ namespace UserInterface
             }
         }
 
+        /// <summary>Show a message in a dialog box</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="errorLevel">The error level.</param>
+        public static int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType, Window masterWindow)
+        {
+            Gtk.MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
+                msgType, buttonType, message);
+            md.Title = title;
+            int result = md.Run();
+            md.Destroy();
+            return result;
+        }
 
         /// <summary>
         /// Get whatever text is currently on a specific clipboard.

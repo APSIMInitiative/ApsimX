@@ -16479,8 +16479,6 @@ namespace Models
 		[XmlIgnore] public double AccumRainfall { get; set; }
 		[XmlIgnore] public double SoilWaterDeficit { get; set; }
 		
-		[XmlIgnore] public double AccumTtemerg { get; set; }
-		
 		[XmlIgnore] public double  InitialSoilOMN { get; set; }
 		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
 		[XmlIgnore] public double  InitialMineralN { get; set; }
@@ -16549,11 +16547,7 @@ namespace Models
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
-			
-			//!!!!!! Thermal time calculation !!!!!!
-			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (FieldPea.Phenology.Stage >= 3)
-			AccumTtemerg += FieldPea.Phenology.ThermalTime.Value();
+
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
