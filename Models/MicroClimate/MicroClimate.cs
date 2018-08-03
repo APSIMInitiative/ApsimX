@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
 
 namespace Models
 {
@@ -50,14 +51,16 @@ namespace Models
         private const double svp_fract = 0.66;
         /// <summary>The sun set angle (degrees)</summary>
         private const double SunSetAngle = 0.0;
+        /// <summary>The sun angle for net positive radiation (degrees)</summary>
+        private const double SunAngleNetPositiveRadiation = 15;
         /// <summary>Convert hours to seconds</summary>
         private const double hr2s = 60.0 * 60.0;
         /// <summary>von Karman constant</summary>
         private const double vonKarman = 0.41;
         /// <summary>Canopy emissivity</summary>
-        private const double Emissivity = 0.96;
+        private const double CanopyEmissivity = 0.96;
         /// <summary>The soil_emissivity</summary>
-        private const double soil_emissivity = 0.96;
+        private const double SoilEmissivity = 0.96;
 
         #endregion
 
@@ -76,12 +79,11 @@ namespace Models
         /// <summary>Constructor</summary>
         public MicroClimate()
         {
-            Reset();
         }
 
-        /// <summary>The day length</summary>
-        private double dayLength;
-        /// <summary>The day length light</summary>
+        /// <summary>This is the length of time within the day during which evaporation will take place</summary>
+        private double dayLengthEvap;
+        /// <summary>This is the length of time within the day during which the sun is above the horizon</summary>
         private double dayLengthLight;
 
         /// <summary>Gets or sets the a_interception.</summary>
@@ -114,45 +116,23 @@ namespace Models
         [Units("MJ/MJ")]
         public double soil_albedo { get; set; }
 
-        /// <summary>Sun angle at twilight</summary>
-        [Bounds(Lower = -20.0, Upper = 20.0)]
-        [Units("deg")]
-        public double sun_angle { get; set; }
-
         /// <summary>Fraction of solar radiation reaching the soil surface that results in soil heating</summary>
         [Description("Fraction of solar radiation reaching the soil surface that results in soil heating")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("MJ/MJ")]
-        public double soil_heat_flux_fraction { get; set; }
+        public double SoilHeatFluxFraction { get; set; }
 
         /// <summary>The fraction of intercepted rainfall that evaporates at night</summary>
         [Description("The fraction of intercepted rainfall that evaporates at night")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        public double night_interception_fraction { get; set; }
+        public double NightInterceptionFraction { get; set; }
 
         /// <summary>Height of the weather instruments</summary>
         [Description("Height of the weather instruments")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m")]
-        public double refheight { get; set; }
-
-        /// <summary>Albedo of the combined plant-soil system</summary>
-        [Description("Albedo of the combined plant-soil system")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        public double albedo { get; set; }
-
-        /// <summary>Emissivity of the combined plant-soil system</summary>
-        [Description("Emissivity of the combined plant-soil system")]
-        [Bounds(Lower = 0.9, Upper = 1.0)]
-        [Units("0-1")]
-        public double emissivity { get; set; }
-
-        /// <summary>The proportion of radiation that is intercepted by all canopies</summary>
-        [Description("The proportion of radiation that is intercepted by all canopies")]
-        [Units("0-1")]
-        public double RadIntTotal { get; set; }
+        public double ReferenceHeight { get; set; }
 
         /// <summary>Called when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
@@ -160,14 +140,12 @@ namespace Models
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Reset();
-
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
                 CreateMCZone(newZone);
             if (microClimateZones.Count == 0)
                 CreateMCZone(this.Parent as Zone);
-
         }
+
         /// <summary>
         /// Create a new MicroClimateZone for a given simulation zone
         /// </summary>
@@ -188,11 +166,16 @@ namespace Models
         [EventSubscribe("DoEnergyArbitration")]
         private void DoEnergyArbitration(object sender, EventArgs e)
         {
-            MetVariables();
+            dayLengthEvap = MathUtilities.DayLength(Clock.Today.DayOfYear, SunAngleNetPositiveRadiation, weather.Latitude);
+            dayLengthLight = MathUtilities.DayLength(Clock.Today.DayOfYear, SunSetAngle, weather.Latitude);
+
             foreach (MicroClimateZone MCZone in microClimateZones)
             {
                 MCZone.DoCanopyCompartments();
-                BalanceCanopyEnergy(MCZone);
+                CalculateShortWaveRadiation(MCZone);
+                CalculateEnergyTerms(MCZone);
+                CalculateLongWaveRadiation(MCZone);
+                CalculateSoilHeatRadiation(MCZone);
                 CalculateGc(MCZone);
                 CalculateGa(MCZone);
                 CalculateInterception(MCZone);
@@ -202,42 +185,6 @@ namespace Models
             }
         }
 
-        /// <summary>Reset the MicroClimate model back to its original state.</summary>
-        private void Reset()
-        {
-            a_interception = 0.0;
-            b_interception = 1.0;
-            c_interception = 0.0;
-            d_interception = 0.0;
-            soil_albedo = 0.23;
-            sun_angle = 15.0;
-            soil_heat_flux_fraction = 0.4;
-            night_interception_fraction = 0.5;
-            refheight = 2.0;
-            albedo = 0.15;
-            emissivity = 0.96;
-        }
-
-        /// <summary>Mets the variables.</summary>
-        private void MetVariables()
-        {
-            // This is the length of time within the day during which
-            //  Evaporation will take place
-            dayLength = MathUtilities.DayLength(Clock.Today.DayOfYear, sun_angle, weather.Latitude);
-            // This is the length of time within the day during which
-            // the sun is above the horizon
-            dayLengthLight = MathUtilities.DayLength(Clock.Today.DayOfYear, SunSetAngle, weather.Latitude);
-        }
-
-        /// <summary>Perform the overall Canopy Energy Balance</summary>
-        private void BalanceCanopyEnergy(MicroClimateZone MCZone)
-        {
-            ShortWaveRadiation(MCZone);
-            EnergyTerms(MCZone);
-            LongWaveRadiation(MCZone);
-            SoilHeatRadiation(MCZone);
-        }
-
         /// <summary>Calculate the canopy conductance for system compartments</summary>
         private void CalculateGc(MicroClimateZone MCZone)
         {
@@ -245,7 +192,7 @@ namespace Models
 
             for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
             {
-                double Rflux = Rin * 1000000.0 / (dayLength * hr2s) * (1.0 - MCZone._albedo);
+                double Rflux = Rin * 1000000.0 / (dayLengthEvap * hr2s) * (1.0 - MCZone.Albedo);
                 double Rint = 0.0;
 
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
@@ -263,7 +210,7 @@ namespace Models
         {
             double sumDeltaZ = MathUtilities.Sum(MCZone.DeltaZ);
             double sumLAI = MathUtilities.Sum(MCZone.LAItotsum);
-            double totalGa = AerodynamicConductanceFAO(weather.Wind, refheight, sumDeltaZ, sumLAI);
+            double totalGa = AerodynamicConductanceFAO(weather.Wind, ReferenceHeight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= MCZone.numLayers - 1; i++)
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
@@ -307,23 +254,23 @@ namespace Models
                 freeEvapGa += MathUtilities.Sum(MCZone.Canopies[j].Ga);
             }
 
-            double netRadiation = ((1.0 - MCZone._albedo) * MCZone.sumRs + sumRl + sumRsoil) * 1000000.0;   // MJ/J
+            double netRadiation = ((1.0 - MCZone.Albedo) * MCZone.sumRs + sumRl + sumRsoil) * 1000000.0;   // MJ/J
             netRadiation = Math.Max(0.0, netRadiation);
 
             double freeEvapGc = freeEvapGa * 1000000.0; // infinite surface conductance
-            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLength, freeEvapGa, freeEvapGc);
+            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLengthEvap, freeEvapGa, freeEvapGc);
 
-            MCZone.dryleaffraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - night_interception_fraction), freeEvap, 0.0);
+            MCZone.dryleaffraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - NightInterceptionFraction), freeEvap, 0.0);
             MCZone.dryleaffraction = Math.Max(0.0, MCZone.dryleaffraction);
 
             for (int i = 0; i <= MCZone.numLayers - 1; i++)
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                 {
-                    netRadiation = 1000000.0 * ((1.0 - MCZone._albedo) * MCZone.Canopies[j].Rs[i] + MCZone.Canopies[j].Rl[i] + MCZone.Canopies[j].Rsoil[i]);
+                    netRadiation = 1000000.0 * ((1.0 - MCZone.Albedo) * MCZone.Canopies[j].Rs[i] + MCZone.Canopies[j].Rl[i] + MCZone.Canopies[j].Rsoil[i]);
                     netRadiation = Math.Max(0.0, netRadiation);
 
                     MCZone.Canopies[j].PETr[i] = CalcPETr(netRadiation * MCZone.dryleaffraction, weather.MinT, weather.MaxT, weather.AirPressure, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
-                    MCZone.Canopies[j].PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLength * MCZone.dryleaffraction, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
+                    MCZone.Canopies[j].PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLengthEvap * MCZone.dryleaffraction, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
                     MCZone.Canopies[j].PET[i] = MCZone.Canopies[j].PETr[i] + MCZone.Canopies[j].PETa[i];
                 }
         }
