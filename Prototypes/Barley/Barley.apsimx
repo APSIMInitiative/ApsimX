@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -12914,13 +12914,9 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -15924,13 +15920,9 @@ Biomass accumulation, Leaf area index, radiation interception and soil water con
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -17988,13 +17980,9 @@ Biomass accumulation, Leaf appearance, leaf size, radiation interception and soi
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -20192,13 +20180,9 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -23034,13 +23018,9 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -26065,13 +26045,9 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -28159,13 +28135,9 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -29605,13 +29577,9 @@ This was a sowing date by irrigation trial conducted at Lincoln. The following w
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
+              <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+              <NightInterceptionFraction>0.5</NightInterceptionFraction>
+              <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -30861,13 +30829,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.29366217672824863</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <Irrigation>
                 <Name>Irrigation</Name>
@@ -32576,13 +32540,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <Report>
                 <Name>DailyReport</Name>
@@ -33465,13 +33425,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <Report>
                 <Name>DailyReport</Name>
@@ -34656,13 +34612,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <Report>
                 <Name>DailyReport</Name>
@@ -36309,13 +36261,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.23</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -38350,13 +38298,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.23</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -39671,13 +39615,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.23</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -40541,13 +40481,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.23</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <SoluteManager>
                 <Name>SoluteManager</Name>
@@ -41671,13 +41607,9 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.15</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
+                <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+                <NightInterceptionFraction>0.5</NightInterceptionFraction>
+                <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <Report>
                 <Name>DailyReport</Name>
