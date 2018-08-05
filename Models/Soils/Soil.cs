@@ -1391,8 +1391,8 @@ namespace Models.Soils
         internal double[] KLMapped (string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
-                ModifyKLForSubSoilConstraints(SoilCrop);
+            //if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
+            //    ModifyKLForSubSoilConstraints(SoilCrop);
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.KL;
             return Map(SoilCrop.KL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.KL));

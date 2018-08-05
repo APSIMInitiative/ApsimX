@@ -5,6 +5,7 @@ using Models.Soils.SoilWaterBackend;
 using Models.Surface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace Models.Soils
@@ -629,7 +630,7 @@ namespace Models.Soils
             gravity_gradient = 0.00002;
             specific_bd = 2.65;
             hydrol_effective_depth = 450;
-            mobile_solutes = new string[] { "NO3", "urea", "cl", "br", "org_n", "org_c_pool1", "org_c_pool2", "org_c_pool3" };
+            mobile_solutes = new string[] { "NO3", "urea", "Chloride", "br", "org_n", "org_c_pool1", "org_c_pool2", "org_c_pool3" };
             immobile_solutes = new string[] { "NH4" };
             canopy_fact = new double[] { 1, 1, 0, 0 };
             canopy_fact_height = new double[] { 0, 600, 1800, 30000 };
@@ -1777,7 +1778,9 @@ namespace Models.Soils
             solutes.Add("Urea",SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("urea"));
             solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NH4"));
             solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NO3"));
-            }
+            if(solutes.SoluteNames.Contains("Chloride"))
+                solutes.Add("Chloride", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("Chloride"));
+        }
 
     }
 

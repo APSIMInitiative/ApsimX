@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using System.Xml.Serialization;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Models.PMF
 {
@@ -102,11 +102,6 @@ namespace Models.PMF
         [XmlIgnore]
         public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
-        /// <summary>Gets the water supply.</summary>
-        /// <value>The water supply.</value>
-        [XmlIgnore]
-        public double WSupply { get; private set; }
-
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         [XmlIgnore]
@@ -116,11 +111,6 @@ namespace Models.PMF
         /// <value>The water uptake.</value>
         [XmlIgnore]
         public double WAllocated { get; private set; }
-
-        /// <summary>Gets the n supply relative to N demand.</summary>
-        /// <value>The n supply.</value>
-        [XmlIgnore]
-        public double FW { get { return MathUtilities.Divide(WSupply, WDemand, 0); } }
 
         #endregion
 
