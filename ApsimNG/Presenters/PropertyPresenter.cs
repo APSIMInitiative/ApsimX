@@ -502,24 +502,12 @@ namespace UserInterface.Presenters
 
         private string[] GetResidueNames()
         {
-<<<<<<< HEAD
-            if (model is Models.SurfaceOM.SurfaceOrganicMatter)
-            {
-                List<Models.SurfaceOM.SurfaceOrganicMatter.ResidueType> types = (model as Models.SurfaceOM.SurfaceOrganicMatter).ResidueTypes.residues;
-                string[] result = new string[types.Count];
-                for (int i = 0; i < types.Count; i++)
-                    result[i] = types[i].fom_type;
-                Array.Sort(result, StringComparer.InvariantCultureIgnoreCase);
-
-                return result;
-=======
-            if (this.model is Models.Surface.SurfaceOrganicMatter)
+            if (model is SurfaceOrganicMatter)
             {
                 List<string> names = new List<string>();
                 names = (this.model as SurfaceOrganicMatter).ResidueTypeNames();
                 names.Sort();
                 return names.ToArray();
->>>>>>> cce7c15b87a9a144abc05956c5f10a50067e681e
             }
             return null;
         }
