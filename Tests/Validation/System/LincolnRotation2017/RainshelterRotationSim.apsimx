@@ -9267,9 +9267,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
       </Phenology>
       <Structure>
         <Name>Structure</Name>
-        <CohortInitialisationStage>PreEmerge</CohortInitialisationStage>
-		<LeafInitialisationStage>Established</LeafInitialisationStage>
-		<VariableReference>
+        <VariableReference>
           <Name>ThermalTime</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
