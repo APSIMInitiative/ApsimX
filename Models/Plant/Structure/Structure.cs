@@ -51,24 +51,24 @@ namespace Models.PMF.Struct
         //-------------------------------------------------------------------------------------------
         [Link]
         private Plant plant = null;
-        
+
         [Link]
         private ILeaf leaf = null;
-        
+
         [Link]
         private Phenology phenology = null;
 
         /// <summary>The thermal time</summary>
         [Link]
-        public IFunction ThermalTime = null;
-        
+        public IFunction thermalTime = null;
+
         [Link]
         private IFunction phyllochron = null;
 
         /// <summary>The main stem final node number</summary>
         [Link]
-        public IFunction FinalLeafNumber = null;
-        
+        public IFunction finalLeafNumber = null;
+
         [Link]
         private IFunction heightModel = null;
 
@@ -79,7 +79,7 @@ namespace Models.PMF.Struct
         /// <summary>Branch mortality</summary>
         [Link]
         public IFunction branchMortality = null;
-        
+
         /// <summary>The Stage that cohorts are initialised on</summary>
         [Description("The Stage that cohorts are initialised on")]
         public string CohortInitialisationStage { get; set; } = "Germination";
@@ -98,18 +98,19 @@ namespace Models.PMF.Struct
 
         private bool firstPass;
 
+
         // 4. Public Events And Enums
         //-------------------------------------------------------------------------------------------
 
         /// <summary>Occurs when plant Germinates.</summary>
         public event EventHandler InitialiseLeafCohorts;
-        
+
         /// <summary>Occurs when ever an new vegetative leaf cohort is initiated on the stem apex.</summary>
         public event EventHandler<CohortInitParams> AddLeafCohort;
-        
+
         /// <summary>Occurs when ever an new leaf tip appears.</summary>
         public event EventHandler<ApparingLeafParams> LeafTipAppearance;
-        
+
 
         // 5. Public properties
         //-------------------------------------------------------------------------------------------
@@ -192,7 +193,7 @@ namespace Models.PMF.Struct
 
         /// <summary>Number of leaves yet to appear</summary>
         [XmlIgnore]
-        public double RemainingNodeNo { get { return FinalLeafNumber.Value() - LeafTipsAppeared; } }
+        public double RemainingNodeNo { get { return finalLeafNumber.Value() - LeafTipsAppeared; } }
 
         /// <summary>Gets the height.</summary>
         [XmlIgnore]
@@ -204,8 +205,8 @@ namespace Models.PMF.Struct
 
         /// <summary>Relative progress toward final leaf.</summary>
         [XmlIgnore]
-        public double RelativeNodeApperance { get { return LeafTipsAppeared / FinalLeafNumber.Value(); } }
-        
+        public double RelativeNodeApperance { get { return LeafTipsAppeared / finalLeafNumber.Value(); } }
+
 
         // 6. Public methods
         //-------------------------------------------------------------------------------------------
@@ -228,10 +229,10 @@ namespace Models.PMF.Struct
             NextLeafProportion = 0;
             DeltaPlantPopulation = 0;
         }
-        
+
         // 7. Private methods
         //-------------------------------------------------------------------------------------------
-        
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
@@ -245,7 +246,7 @@ namespace Models.PMF.Struct
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (phenology != null && phenology.OnStartDayOf("Emergence"))
-                     LeafTipsAppeared = 1.0;
+                LeafTipsAppeared = 1.0;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -256,16 +257,16 @@ namespace Models.PMF.Struct
             {
                 DeltaHaunStage = 0;
                 if (phyllochron.Value() > 0)
-                    DeltaHaunStage = ThermalTime.Value() / phyllochron.Value();
+                    DeltaHaunStage = thermalTime.Value() / phyllochron.Value();
                 if (leavesInitialised)
                 {
-                    bool AllCohortsInitialised = (leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
+                    bool AllCohortsInitialised = (leaf.InitialisedCohortNo >= finalLeafNumber.Value());
                     AllLeavesAppeared = (leaf.AppearedCohortNo == leaf.InitialisedCohortNo);
                     bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1) == leaf.InitialisedCohortNo);
 
                     if ((AllCohortsInitialised) && (LastLeafAppearing))
                     {
-                        NextLeafProportion = 1 - (leaf.InitialisedCohortNo - FinalLeafNumber.Value());
+                        NextLeafProportion = 1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value());
                     }
                     else
                     {
@@ -284,7 +285,7 @@ namespace Models.PMF.Struct
                     }
 
                     PotLeafTipsAppeared += DeltaTipNumber;
-                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
+                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, finalLeafNumber.Value());
 
                     TimeForAnotherLeaf = PotLeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1 - NextLeafProportion)));
@@ -370,8 +371,8 @@ namespace Models.PMF.Struct
             else
                 CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * phyllochron.Value();
             CohortParams.FinalFraction = NextLeafProportion;
-            if(LeafTipAppearance != null)
-            LeafTipAppearance.Invoke(this, CohortParams);
+            if (LeafTipAppearance != null)
+                LeafTipAppearance.Invoke(this, CohortParams);
         }
 
         /// <summary> Called on the day of emergence to get the initials leaf cohorts to appear </summary>
@@ -401,7 +402,7 @@ namespace Models.PMF.Struct
         {
             TotalStemPopn = MainStemPopn;
         }
-                
+
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -418,7 +419,7 @@ namespace Models.PMF.Struct
             CohortToInitialise = 0;
             TipToAppear = 0;
             PotLeafTipsAppeared = 0;
-            ResetStemPopn(); 
+            ResetStemPopn();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -438,8 +439,8 @@ namespace Models.PMF.Struct
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>
         public void doThin(double ProportionRemoved)
         {
-            plant.Population *= (1-ProportionRemoved);
-            TotalStemPopn *= (1-ProportionRemoved);
+            plant.Population *= (1 - ProportionRemoved);
+            TotalStemPopn *= (1 - ProportionRemoved);
             leaf.DoThin(ProportionRemoved);
         }
 
@@ -451,7 +452,7 @@ namespace Models.PMF.Struct
             PotLeafTipsAppeared = Math.Max(PotLeafTipsAppeared - NodesToRemove, 0);
 
             //Remove corresponding cohorts from leaf
-            int NodesStillToRemove = Math.Min(NodesToRemove + leaf.ApicalCohortNo, leaf.InitialisedCohortNo) ;
+            int NodesStillToRemove = Math.Min(NodesToRemove + leaf.ApicalCohortNo, leaf.InitialisedCohortNo);
             while (NodesStillToRemove > 0)
             {
                 TipToAppear -= 1;
@@ -459,7 +460,7 @@ namespace Models.PMF.Struct
                 leaf.RemoveHighestLeaf();
                 NodesStillToRemove -= 1;
             }
-            TipToAppear = Math.Max(TipToAppear+leaf.CohortsAtInitialisation, 1);
+            TipToAppear = Math.Max(TipToAppear + leaf.CohortsAtInitialisation, 1);
             CohortToInitialise = Math.Max(CohortToInitialise, 1);
             //Reinitiate apical cohorts ready for regrowth
             if (leaf.InitialisedCohortNo > 0) //Sone cohorts remain after defoliation
@@ -475,13 +476,13 @@ namespace Models.PMF.Struct
             }
             else   //If all nodes have been removed initalise again
             {
-                 leaf.Reset();
-                 InitialiseLeafCohorts.Invoke(this, new EventArgs());
-                 DoLeafInitilisation();
-             }
+                leaf.Reset();
+                InitialiseLeafCohorts.Invoke(this, new EventArgs());
+                DoLeafInitilisation();
+            }
         }
-       
-
     }
+}   
 
-}
+    
+

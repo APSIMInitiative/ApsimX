@@ -586,7 +586,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.FinalLeafNumber.Value()); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.finalLeafNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
