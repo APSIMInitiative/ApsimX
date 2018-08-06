@@ -1,38 +1,36 @@
-﻿using System;
-using Models.PMF.Interfaces;
-using Models.Core;
-
-namespace Models.PMF.Struct
+﻿namespace Models.PMF.Struct
 {
+    using System;
+    using Models.Core;
+    using Models.PMF.Interfaces;
+
     /// <summary>
     /// # [Name]
     /// Calculate cohort populations using apex number
     /// </summary>
     [Serializable]
-    public class ApexTiller : Model, IApex
+    public class ApexTiller : ApexBase, IApex
     {
         /// <summary>
         /// Calculate cohort population at leaf appearance.
         /// </summary>
-        /// <param name="apexNumber"></param>
         /// <param name="population"></param>
         /// <param name="totalStemPopn"></param>
         /// <returns></returns>
-        public double Appearance(double apexNumber, double population, double totalStemPopn)
+        public override double Appearance(double population, double totalStemPopn)
         {
-            return apexNumber * population;
+            return Number * population;
         }
 
         /// <summary>
         /// Calculate cohort population at leaf tip appearance.
         /// </summary>
-        /// <param name="apexNumber"></param>
         /// <param name="population"></param>
         /// <param name="totalStemPopn"></param>
         /// <returns></returns>
-        public double LeafTipAppearance(double apexNumber, double population, double totalStemPopn)
+        public override double LeafTipAppearance(double population, double totalStemPopn)
         {
-            return apexNumber * population;
+            return Number * population;
         }
     }
 }

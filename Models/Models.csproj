@@ -139,6 +139,7 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
     <Compile Include="CLEM\FileSQLiteGRASP.cs" />
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
     <Compile Include="Soils\Nutrient\Chloride.cs" />
+    <Compile Include="Plant\Structure\ApexBase.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
