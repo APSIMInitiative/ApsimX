@@ -40,47 +40,10 @@ pipeline {
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true
+				archiveArtifacts artifacts: 'ApsimX\\issuenumber.txt', onlyIfSuccessful: true
 			}
 		}
-		stage('Deploy') {
-			parallel {
-				stage('CreateInstallers') {
-					agent {
-						label "windows && docker"
-					}
-					steps {
-						bat '''
-							@echo off
-							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
-							if not exist ApsimX (
-								git config --system core.longpaths true
-								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
-							)
-							cd ApsimX
-							git checkout master
-							rem Don't cleanup nuget packages for now....this will be a problem in the long run!!
-							git clean -fxdq -e packages
-							git pull origin master
-							if %errorlevel% neq 0 (
-								exit 1
-							)
-							cd ..
-						'''
-						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
-						copyArtifacts filter: 'ApsimX\\datetimestamp.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
-						bat '''
-							@echo off
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
-							set /P DATETIMESTAMP=<ApsimX\\datetimestamp.txt
-							docker build -m 16g -t createinstallation ApsimX\\Docker\\CreateInstallation
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "ghprbPullId=%ghprbPullId%" -e "ghprbActualCommitAuthor=%ghprbActualCommitAuthor%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared createinstallation
-						'''
-					}
-				}
-				stage('Validation') {
+		stage('Validation') {
 					agent {
 						label "windows && docker"
 					}
@@ -125,7 +88,108 @@ pipeline {
 							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "ghprbPullId=%ghprbPullId%" -e "ghprbActualCommitAuthor=%ghprbActualCommitAuthor%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
 						'''
 					}
+		}
+		stage('CreateInstallations') {
+			parallel {
+				stage('Documentation') {
+					agent {
+						label "windows"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							call ApsimX\\Docker\\cleanup.bat
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							@echo off
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							call ApsimX\\Documentation\\GenerateDocumentation.bat
+						'''
+					}
 				}
+				stage('Windows') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							call ApsimX\\Docker\\cleanup.bat
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\issuenumber.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							call ApsimX\\Docker\\CreateInstallations.bat windows
+							move ApsimX\\Setup\\Output\\APSIMSetup.exe .\\APSIMSetup
+						'''
+					}
+				}
+				stage('MacOS') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							call ApsimX\\Docker\\cleanup.bat
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\issuenumber.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							call ApsimX\\Docker\\CreateInstallations.bat macos
+						'''
+					}
+				}
+				stage('Linux') {
+					agent {
+						label "windows && docker"
+					}
+					steps {
+						bat '''
+							@echo off
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							call ApsimX\\Docker\\cleanup.bat
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\issuenumber.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							call ApsimX\\Docker\\CreateInstallations.bat linux
+						'''
+					}
+				}
+			}
+		}
+		stage('Deploy') {
+			agent {
+				label "windows"
+			}
+			steps {
+				bat '''
+					rem TBI
+				'''
 			}
 		}
 	}

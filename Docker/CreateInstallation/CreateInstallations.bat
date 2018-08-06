@@ -1,5 +1,18 @@
 @echo off
 
+if "%1"=="docs" (
+
+)
+if "%1"=="windows" (
+	goto :windows
+)
+if "%1"=="macos" (
+	goto :macos
+)
+if "%1"=="linux" (
+	goto :linux
+)
+
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
 	echo Error: C:\ApsimX does not exist.
@@ -70,14 +83,3 @@ echo.
 echo.
 cd "%setup%\OS X"
 call BuildMacDist.bat
-
-
-
-rem echo ########### Uploading installations
-rem cd "C:\Jenkins\workspace\1. GitHub pull request\ApsimX\Setup"
-rem call C:\Jenkins\ftpcommand.bat %Issue_Number%
-rem echo.
-rem 
-rem echo ########### Add a green build to DB
-rem set /p PASSWORD=<C:\Jenkins\ChangeDBPassword.txt
-rem curl -k https://www.apsim.info/APSIM.Builds.Service/Builds.svc/AddGreenBuild?pullRequestNumber=%ghprbPullId%^&buildTimeStamp=%DATETIMESTAMP%^&changeDBPassword=%PASSWORD%

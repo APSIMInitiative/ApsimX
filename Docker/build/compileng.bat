@@ -21,7 +21,7 @@ echo APSIM_VERSION=%APSIM_VERSION%
 echo ISSUE_NUMBER=%ISSUE_NUMBER%
 echo DATETIMESTAMP=%DATETIMESTAMP%
 echo %DATETIMESTAMP% > ApsimX\datetimestamp.txt
-
+echo %ISSUE_NUMBER% > ApsimX\issuenumber.txt
 echo ########### Insert the version number into AssemblyVersion.cs
 echo using System.Reflection; > ApsimX\Models\Properties\AssemblyVersion.cs
 echo [assembly: AssemblyTitle("APSIM %APSIM_VERSION%")] >> ApsimX\Models\Properties\AssemblyVersion.cs
