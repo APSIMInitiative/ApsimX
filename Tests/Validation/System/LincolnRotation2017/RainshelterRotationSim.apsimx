@@ -2473,15 +2473,8 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <leavesInitialised>false</leavesInitialised>
-        <cohortsInitialised>false</cohortsInitialised>
-        <firstPass>false</firstPass>
         <CohortInitialisationStage>Germination</CohortInitialisationStage>
         <LeafInitialisationStage>Emergence</LeafInitialisationStage>
-        <CohortToInitialise>0</CohortToInitialise>
-        <TipToAppear>0</TipToAppear>
-        <TimeForAnotherLeaf>false</TimeForAnotherLeaf>
-        <AllLeavesAppeared>false</AllLeavesAppeared>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -9389,15 +9382,8 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <leavesInitialised>false</leavesInitialised>
-        <cohortsInitialised>false</cohortsInitialised>
-        <firstPass>false</firstPass>
-        <CohortInitialisationStage>PreEmerge</CohortInitialisationStage>
-        <LeafInitialisationStage>Established</LeafInitialisationStage>
-        <CohortToInitialise>0</CohortToInitialise>
-        <TipToAppear>0</TipToAppear>
-        <TimeForAnotherLeaf>false</TimeForAnotherLeaf>
-        <AllLeavesAppeared>false</AllLeavesAppeared>
+        <CohortInitialisationStage>Germination</CohortInitialisationStage>
+        <LeafInitialisationStage>PreEmerge</LeafInitialisationStage>
       </Structure>
       <GenericOrgan>
         <Name>StorageRoot</Name>
@@ -13531,6 +13517,8 @@ Soil parameterisation was based on the two description of the soil at the Rainsh
             <string>[CropOperations].Script.CropAction</string>
             <string>[ClimateControl].Script.RainshelterCover</string>
             <string>[FodderBeet].Phenology.Stage </string>
+            <string>[FodderBeet].Phenology.CurrentPhaseName</string>
+            <string>[FodderBeet].Phenology.CurrentStageName</string>
             <string>[Oats].Phenology.Stage </string>
             <string />
             <string>[FodderBeet].Structure.MainStemPopn</string>
