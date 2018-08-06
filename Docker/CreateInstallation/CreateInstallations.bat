@@ -1,18 +1,5 @@
 @echo off
 
-if "%1"=="docs" (
-
-)
-if "%1"=="windows" (
-	goto :windows
-)
-if "%1"=="macos" (
-	goto :macos
-)
-if "%1"=="linux" (
-	goto :linux
-)
-
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
 	echo Error: C:\ApsimX does not exist.
@@ -35,10 +22,36 @@ if not exist %bin% (
 )
 
 set setup=%apsimx%\Setup
-echo ########### Creating documentation
-cd %apsimx%\Documentation
-call GenerateDocumentation.bat
 
+if "%1"=="docs" (
+	goto :docs
+) else (
+	if exist %apsimx%\issuenumber.txt (
+		set /p issuenumber=<%apsimx%\issuenumber.txt
+	)
+	else (
+		echo Create %1 installation: No issue number file provided.
+		exit 1
+	)
+)
+if "%1"=="windows" (
+	goto :windows
+)
+if "%1"=="macos" (
+	goto :macos
+)
+if "%1"=="linux" (
+	goto :linux
+)
+
+rem User has not provided a valid first argument.
+echo Usage: %0 (windows | macos | linux | docs)
+
+:docs
+call %apsimx%\Documentation\GenerateDocumentation.bat
+exit %errorlevel%
+
+:windows
 echo.
 echo.
 echo   _____                _   _              __          ___           _                     _____           _        _ _       _   _             
@@ -53,6 +66,10 @@ echo.
 echo.
 cd %setup%
 ISCC.exe apsimx.iss
+if not errorlevel 0 (
+	exit %errorlevel%
+)
+rename %setup%\Output\APSIMSetup.exe APSIMSetup%issuenumber%.exe
 
 echo.
 echo.
@@ -66,8 +83,8 @@ echo                                     __/ ^|                                 
 echo                                    ^|___/                                                               ^|___/      
 echo.
 echo.
-cd %setup%\Linux
-call BuildDeb.bat
+call %setup%\Linux\BuildDeb.bat
+exit %errorlevel%
 
 echo.
 echo.
@@ -83,3 +100,4 @@ echo.
 echo.
 cd "%setup%\OS X"
 call BuildMacDist.bat
+exit %errorlevel%
