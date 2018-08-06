@@ -1888,7 +1888,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
             Structure.TipToAppear =  0;
             Structure.Clear();
