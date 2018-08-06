@@ -1891,18 +1891,14 @@ namespace Models.PMF.Organs
             Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
             Structure.TipToAppear =  0;
-            Structure.LeafAppearanceStarted = false;
             Structure.Clear();
             Structure.ResetStemPopn();
-            Structure.LeafTipsAppeared = 0;
             Structure.NextLeafProportion = 1.0;
 
             Leaves.Clear();
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.CohortsInitialised = false;            
-
         }
 
         /// <summary>Called when [simulation commencing].</summary>

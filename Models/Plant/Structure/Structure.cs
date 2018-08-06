@@ -43,6 +43,8 @@ namespace Models.PMF.Struct
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Structure : Model
     {
         // 1. Links
@@ -77,6 +79,14 @@ namespace Models.PMF.Struct
         /// <summary>Branch mortality</summary>
         [Link]
         public IFunction branchMortality = null;
+        /// <summary>The Stage that cohorts are initialised on</summary>
+        [Description("The Stage that cohorts are initialised on")]
+        public string CohortInitialisationStage { get; set; } = "Germination";
+
+        /// <summary>The Stage that leaves are initialised on</summary>
+        [Description("The Stage that leaves are initialised on")]
+        public string LeafInitialisationStage { get; set; } = "Emergence";
+
 
         // 2. Private fields
         //-------------------------------------------------------------------------------------------
@@ -84,7 +94,7 @@ namespace Models.PMF.Struct
         /// <summary>
         /// 
         /// </summary>
-        public bool Initialised;
+        public bool leavesInitialised;
 
         // 4. Public Events And Enums
         //-------------------------------------------------------------------------------------------
@@ -104,10 +114,10 @@ namespace Models.PMF.Struct
         //-------------------------------------------------------------------------------------------
 
         /// <summary>Test if Initialisation done</summary>
-        public bool CohortsInitialised;
+        public bool cohortsInitialised;
         
         /// <summary>Test if Initialisation done</summary>
-        public bool LeafAppearanceStarted;
+        public bool firstPass;
         
         /// <summary>The Leaf Appearance Data </summary>
         [XmlIgnore]
@@ -130,8 +140,6 @@ namespace Models.PMF.Struct
         public ApparingLeafParams CohortParams { get; set; }
 
         /// <summary>Gets or sets the primary bud no.</summary>
-        [Description("Number of mainstem units per plant")]
-        [Units("/plant")]
         [XmlIgnore]
         public double PrimaryBudNo { get; set; }
 
@@ -235,9 +243,9 @@ namespace Models.PMF.Struct
             ProportionPlantMortality = 0;
             DeltaTipNumber = 0;
             DeltaHaunStage = 0;
-            Initialised = false;
-            CohortsInitialised = false;
-            LeafAppearanceStarted = false;
+            leavesInitialised = false;
+            cohortsInitialised = false;
+            firstPass = false;
             height = 0;
             LeafTipsAppeared = 0;
             BranchNumber = 0;
@@ -247,7 +255,7 @@ namespace Models.PMF.Struct
         /// <summary>
         /// Called on the day of emergence to get the initials leaf cohorts to appear
         /// </summary>
-        public void DoEmergence()
+        public void DoLeafInitilisation()
         {
             CohortToInitialise = leaf.CohortsAtInitialisation;
             for (int i = 1; i <= leaf.TipsAtEmergence; i++)
@@ -256,9 +264,10 @@ namespace Models.PMF.Struct
                 PotLeafTipsAppeared += 1;
                 CohortToInitialise += 1;
                 InitParams.Rank = CohortToInitialise;
-                if (AddLeafCohort != null)
-                    AddLeafCohort.Invoke(this, InitParams);
+                AddLeafCohort?.Invoke(this, InitParams);
                 DoLeafTipAppearance();
+                leavesInitialised = true;
+                firstPass = true;
             }
         }
 
@@ -291,36 +300,20 @@ namespace Models.PMF.Struct
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (plant.IsGerminated)
+            if (cohortsInitialised)
             {
                 DeltaHaunStage = 0;
                 if (phyllochron.Value() > 0)
                     DeltaHaunStage = ThermalTime.Value() / phyllochron.Value();
-               
-                if (CohortsInitialised==false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
+                if (leavesInitialised)
                 {
-                    CohortsInitialised = true;
-                    //On the day of germination set up the first cohorts
-                    if(InitialiseLeafCohorts !=null)
-                        InitialiseLeafCohorts.Invoke(this, new EventArgs());
-                        Initialised = true;
-                }
-
-                if (plant.IsEmerged)
-                {
-                    if(LeafAppearanceStarted==false)
-                    {
-                        NextLeafProportion = 1.0;
-                        DoEmergence();
-                    }
-
                     bool AllCohortsInitialised = (leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
                     AllLeavesAppeared = (leaf.AppearedCohortNo == leaf.InitialisedCohortNo);
-                    bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1)  == leaf.InitialisedCohortNo);
-                    
-                    if ((AllCohortsInitialised)&&(LastLeafAppearing))
+                    bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1) == leaf.InitialisedCohortNo);
+
+                    if ((AllCohortsInitialised) && (LastLeafAppearing))
                     {
-                        NextLeafProportion = 1-(leaf.InitialisedCohortNo - FinalLeafNumber.Value());
+                        NextLeafProportion = 1 - (leaf.InitialisedCohortNo - FinalLeafNumber.Value());
                     }
                     else
                     {
@@ -328,9 +321,9 @@ namespace Models.PMF.Struct
                     }
 
                     //Increment MainStemNode Number based on phyllochorn and theremal time
-                    if (LeafAppearanceStarted == false)
+                    if (firstPass == true)
                     {
-                        LeafAppearanceStarted = true;
+                        firstPass = false;
                         DeltaTipNumber = 0; //Don't increment node number on day of emergence
                     }
                     else
@@ -339,12 +332,10 @@ namespace Models.PMF.Struct
                     }
 
                     PotLeafTipsAppeared += DeltaTipNumber;
-                    //if (PotLeafTipsAppeared > MainStemFinalNodeNumber.Value)
-                    //    FinalLeafDeltaTipNumberonDayOfAppearance = PotLeafTipsAppeared - MainStemFinalNodeNumber.Value;
                     LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
 
                     TimeForAnotherLeaf = PotLeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
-                    int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1- NextLeafProportion)));
+                    int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1 - NextLeafProportion)));
 
                     //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
                     if (TimeForAnotherLeaf && (AllCohortsInitialised == false))
@@ -361,8 +352,8 @@ namespace Models.PMF.Struct
                     }
 
                     //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
-                     if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
-                     {
+                    if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
+                    {
                         int i = 1;
                         for (i = 1; i <= LeavesToAppear; i++)
                         {
@@ -373,9 +364,9 @@ namespace Models.PMF.Struct
                     }
 
                     //Reduce population if there has been plant mortality 
-                    if (DeltaPlantPopulation>0)
-                    TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / plant.Population;
-                    
+                    if (DeltaPlantPopulation > 0)
+                        TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / plant.Population;
+
                     //Reduce stem number incase of mortality
                     double PropnMortality = 0;
                     PropnMortality = branchMortality.Value();
@@ -386,6 +377,23 @@ namespace Models.PMF.Struct
 
                     }
                 }
+            }
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.StageName == CohortInitialisationStage)
+            {
+                InitialiseLeafCohorts?.Invoke(this, new EventArgs());
+                cohortsInitialised = true;
+            }
+
+            if (phaseChange.StageName == LeafInitialisationStage)
+            {
+                NextLeafProportion = 1.0;
+                DoLeafInitilisation();
             }
         }
 
@@ -444,8 +452,6 @@ namespace Models.PMF.Struct
         {
             if (sender == plant)
                 Clear();
-            CohortsInitialised = false;
-            LeafAppearanceStarted = false;
             CohortToInitialise = 0;
             TipToAppear = 0;
             PotLeafTipsAppeared = 0;
@@ -514,8 +520,7 @@ namespace Models.PMF.Struct
             {
                  leaf.Reset();
                  InitialiseLeafCohorts.Invoke(this, new EventArgs());
-                 Initialised = true;
-                 DoEmergence();
+                 DoLeafInitilisation();
              }
         }
        
