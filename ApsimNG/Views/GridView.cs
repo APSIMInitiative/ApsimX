@@ -165,6 +165,7 @@
             popupMenu.AttachToWidget(Grid, null);
             AddContextActionWithAccel("Copy", OnCopy, "Ctrl+C");
             AddContextActionWithAccel("Paste", OnPaste, "Ctrl+V");
+            AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
             AddContextActionWithAccel("Delete", OnDelete, "Delete");
             Grid.ButtonPressEvent += OnButtonDown;
             Grid.Selection.Mode = SelectionMode.None;
@@ -1992,6 +1993,19 @@
             Grid.Show();
         }
 
+        private void OnCut(object sender, EventArgs e)
+        {
+            try
+            {
+                OnCopy(this, new EventArgs());
+                OnDelete(this, new EventArgs());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// <summary>
         /// Paste from clipboard into grid.
         /// </summary>
@@ -2257,7 +2271,8 @@
                         args.RightClick = true;
                         ColumnHeaderClicked.Invoke(this, args);
                     }
-                    popupMenu.Popup();
+                    if (AnyCellIsSelected())
+                        popupMenu.Popup();
                     e.RetVal = true;
                 }
             }

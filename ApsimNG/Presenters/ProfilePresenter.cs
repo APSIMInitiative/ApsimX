@@ -545,12 +545,7 @@
                     }
                     catch (Exception e)
                     {
-                        if (e is System.Reflection.TargetInvocationException)
-                        {
-                            e = (e as System.Reflection.TargetInvocationException).InnerException;
-                        }
-
-                        this.explorerPresenter.MainPresenter.ShowError(e);
+                        explorerPresenter.MainPresenter.ShowError(e);
                     }
                 }
             }
