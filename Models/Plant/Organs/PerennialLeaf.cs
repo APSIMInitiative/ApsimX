@@ -749,11 +749,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
                 MicroClimatePresent = false;
                 Clear();
-            }
         }
 
         /// <summary>Kill a fraction of the green leaf</summary>

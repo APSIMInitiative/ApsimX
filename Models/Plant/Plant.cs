@@ -252,7 +252,7 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Phenology != null && Canopy != null && AboveGround != null)
+            if (Canopy != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
                 if (Canopy != null)

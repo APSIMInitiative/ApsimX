@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="37">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -2114,11 +2114,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Initialised>false</Initialised>
-        <Germinated>false</Germinated>
-        <Emerged>false</Emerged>
+        <CohortsInitialised>false</CohortsInitialised>
+        <LeafAppearanceStarted>false</LeafAppearanceStarted>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
-        <ApexNum>0</ApexNum>
+        <TimeForAnotherLeaf>false</TimeForAnotherLeaf>
+        <AllLeavesAppeared>false</AllLeavesAppeared>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -2965,8 +2966,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -2996,8 +2995,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
@@ -5546,11 +5543,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Enabled>true</Enabled>
           <FixedValue>1</FixedValue>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexStandard>
         <Constant>
           <Name>RemobilisationCost</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7667,11 +7659,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Initialised>false</Initialised>
-        <Germinated>false</Germinated>
-        <Emerged>false</Emerged>
+        <CohortsInitialised>false</CohortsInitialised>
+        <LeafAppearanceStarted>false</LeafAppearanceStarted>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
-        <ApexNum>0</ApexNum>
+        <TimeForAnotherLeaf>false</TimeForAnotherLeaf>
+        <AllLeavesAppeared>false</AllLeavesAppeared>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -8391,8 +8384,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -8422,8 +8413,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
@@ -9298,11 +9287,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Enabled>true</Enabled>
           <FixedValue>0.4</FixedValue>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexStandard>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Leaves />
