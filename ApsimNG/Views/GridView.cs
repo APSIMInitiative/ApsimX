@@ -375,6 +375,10 @@
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 cell.CellBackgroundGdk = CellIsSelected(rowNo, colNo) ? Grid.Style.Base(StateType.Selected) : Grid.Style.Base(StateType.Normal);
+                if (cell is CellRendererText)
+                {
+                    (cell as CellRendererText).ForegroundGdk = CellIsSelected(rowNo, colNo) ? Grid.Style.Foreground(StateType.Selected) : Grid.Style.Foreground(StateType.Normal);
+                }
                 if (view == Grid)
                 {
                     col.CellRenderers[1].Visible = false;
