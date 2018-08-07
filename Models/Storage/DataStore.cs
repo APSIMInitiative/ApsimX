@@ -987,20 +987,24 @@
         private void ExecuteInsertQuery(string tableName, string columnName, IEnumerable<string> simulationNames)
         {
             StringBuilder sql = new StringBuilder();
-            for (int i = 0; i < simulationNames.Count(); i++)
+
+            if (useFirebird)
             {
-                if (useFirebird)
+                sql.Append("set term ^ ;\n");
+                sql.Append("EXECUTE BLOCK AS BEGIN\n");
+                for (int i = 0; i < simulationNames.Count(); i++)
                 {
-                    sql.Append("set term ^ ;\n");
-                    sql.Append("EXECUTE BLOCK AS BEGIN\n");
                     if (!simulationIDs.ContainsKey(simulationNames.ElementAt(i)))
                     {
                         sql.AppendFormat("INSERT INTO \"{0}\"(\"{1}\") VALUES('{2}');\n", tableName, columnName, simulationNames.ElementAt(i));
                     }
-                    sql.Append("END ^");
-                    connection.ExecuteNonQuery(sql.ToString());
                 }
-                else
+                sql.Append("END ^");
+                connection.ExecuteNonQuery(sql.ToString());
+            }
+            else
+            {
+                for (int i = 0; i < simulationNames.Count(); i++)
                 {
                     if (!simulationIDs.ContainsKey(simulationNames.ElementAt(i)))
                     {
@@ -1031,18 +1035,33 @@
         private void ExecuteDeleteQuery(string sqlPrefix, IEnumerable<string> simulationNames, string sqlSuffix)
         {
             StringBuilder sql = new StringBuilder();
-            for (int i = 0; i < simulationNames.Count(); i++)
+
+            if (useFirebird)
             {
-                if (sql.Length > 0)
-                    sql.Append(',');
-                sql.AppendFormat("'{0}'", simulationNames.ElementAt(i));
-                // TODO: generalise this
-                // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
-                // so we will run the query on batches of ~100 values at a time.
-                if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
+                for (int i = 0; i < simulationNames.Count(); i++)
                 {
+                    if (sql.Length > 0)
+                        sql.Append(',');
+                    sql.AppendFormat("'{0}'", simulationNames.ElementAt(i));
+                }
+                if (sql.Length > 0)
                     connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
-                    sql.Clear();
+            }
+            else
+            {
+                for (int i = 0; i < simulationNames.Count(); i++)
+                {
+                    if (sql.Length > 0)
+                        sql.Append(',');
+                    sql.AppendFormat("'{0}'", simulationNames.ElementAt(i));
+
+                    // It appears that SQLite can't handle lots of values in SQL INSERT INTO statements
+                    // so we will run the query on batches of ~100 values at a time.
+                    if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
+                    {
+                        connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
+                        sql.Clear();
+                    }
                 }
             }
         }
@@ -1057,22 +1076,41 @@
         private void ExecuteDeleteQueryUsingIDs(string sqlPrefix, IEnumerable<string> simulationNames, string sqlSuffix)
         {
             StringBuilder sql = new StringBuilder();
-            for (int i = 0; i < simulationNames.Count(); i++)
+
+            if (useFirebird)
             {
-                string simulationName = simulationNames.ElementAt(i);
-                if (simulationIDs.ContainsKey(simulationName))
+                for (int i = 0; i < simulationNames.Count(); i++)
                 {
-                    if (sql.Length > 0)
-                        sql.Append(',');
-                    sql.Append(simulationIDs[simulationName]);
+                    string simulationName = simulationNames.ElementAt(i);
+                    if (simulationIDs.ContainsKey(simulationName))
+                    {
+                        if (sql.Length > 0)
+                            sql.Append(',');
+                        sql.Append(simulationIDs[simulationName]);
+                    }
                 }
-                // TODO: generalise this
-                // It appears that SQLite can't handle lots of values in SQL DELETE statements
-                // so we will run the query on batches of ~100 values at a time.
-                if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
-                {
+                if (sql.Length > 0)
                     connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
-                    sql.Clear();
+            }
+            else
+            {
+                for (int i = 0; i < simulationNames.Count(); i++)
+                {
+                    string simulationName = simulationNames.ElementAt(i);
+                    if (simulationIDs.ContainsKey(simulationName))
+                    {
+                        if (sql.Length > 0)
+                            sql.Append(',');
+                        sql.Append(simulationIDs[simulationName]);
+                    }
+                    
+                    // It appears that SQLite can't handle lots of values in SQL DELETE statements
+                    // so we will run the query on batches of ~100 values at a time.
+                    if (sql.Length > 0 && ((i + 1) % 100 == 0 || i == simulationNames.Count() - 1))
+                    {
+                        connection.ExecuteNonQuery(sqlPrefix + sql + sqlSuffix);
+                        sql.Clear();
+                    }
                 }
             }
         }

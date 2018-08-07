@@ -29,6 +29,8 @@ namespace Models.Core
 
         private Links links;
 
+        private Checkpoints checkpoints = new Checkpoints();
+
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
@@ -307,6 +309,7 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
+            checkpoints.Write(Path.ChangeExtension(FileName, ".checkpoints"));
         }
 
         /// <summary>Write the specified simulation set to the specified 'stream'</summary>
@@ -391,6 +394,7 @@ namespace Models.Core
             if (storage != null)
                 services.Add(storage);
             services.Add(this);
+            services.Add(checkpoints);
             links = new Links(services);
         }
 

@@ -171,15 +171,11 @@ namespace UserInterface.Presenters
             properties.Clear();
             if (this.model != null)
             {
-                var members = from member in model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public)
-                                 where Attribute.IsDefined(member, typeof(DescriptionAttribute)) &&
-                                       (member is PropertyInfo || member is FieldInfo)
-                                 orderby ((DescriptionAttribute)member
-                                           .GetCustomAttributes(typeof(DescriptionAttribute), false)
-                                           .Single()).LineNumber
-                                 select member;
+                var members = model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
+                members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
+                var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber);
 
-                foreach (MemberInfo member in members)
+                foreach (MemberInfo member in orderedMembers)
                 {
                     IVariable property = null;
                     if (member is PropertyInfo)

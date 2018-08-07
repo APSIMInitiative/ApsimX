@@ -197,6 +197,8 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 	</OrganArbitrator>
 	<Structure>
 		<Name>Structure</Name>
+    <CohortInitialisationStage>Peeping</CohortInitialisationStage>
+    <LeafInitialisationStage>Emergence</LeafInitialisationStage>
 		<VariableReference>
 			<Name>ThermalTime</Name>
 			<IncludeInDocumentation>false</IncludeInDocumentation>
@@ -339,7 +341,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 		<Emerged>false</Emerged>
 		<CohortToInitialise>0</CohortToInitialise>
 		<TipToAppear>0</TipToAppear>
-		<ApexNum>0</ApexNum>
 	</Structure>
 	<GenericOrgan>
 		<Name>Tuber</Name>
@@ -871,10 +872,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 	</Root>
 	<Leaf>
 		<Name>Leaf</Name>
-		<ApexStandard>
-			<Name>ApexStandard</Name>
-			<IncludeInDocumentation>false</IncludeInDocumentation>
-		</ApexStandard>
 		<VariableReference>
 			<Name>ThermalTime</Name>
 			<IncludeInDocumentation>false</IncludeInDocumentation>
@@ -907,8 +904,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<Rank>1</Rank>
 			<Area>900</Area>
 			<MaintenanceRespiration>0</MaintenanceRespiration>
-			<ApexGroupSize />
-			<ApexGroupAge />
 		</LeafCohort>
 		<LeafCohort>
 			<Name>InitialLeaf2</Name>
@@ -937,8 +932,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<Rank>2</Rank>
 			<Area>600</Area>
 			<MaintenanceRespiration>0</MaintenanceRespiration>
-			<ApexGroupSize />
-			<ApexGroupAge />
 		</LeafCohort>
 		<LeafCohort>
 			<Name>InitialLeaf3</Name>
@@ -967,8 +960,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<Rank>3</Rank>
 			<Area>300</Area>
 			<MaintenanceRespiration>0</MaintenanceRespiration>
-			<ApexGroupSize />
-			<ApexGroupAge />
 		</LeafCohort>
 		<LeafCohortParameters>
 			<Name>CohortParameters</Name>

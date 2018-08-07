@@ -1818,6 +1818,7 @@
             try
             {
                 UpdateCellText(GetCurrentCell, e.NewText);
+                userEditingCell = false;
             }
             catch (Exception err)
             {
@@ -1826,7 +1827,7 @@
         }
 
         /// <summary>
-        /// Update the text in the cell.
+        /// Update the text in the cell
         /// </summary>
         /// <param name="where">The cell.</param>
         /// <param name="newText">The new text.</param>

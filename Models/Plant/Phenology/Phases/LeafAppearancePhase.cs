@@ -14,6 +14,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class LeafAppearancePhase : Model, IPhase, ICustomDocumentation
     {
         // 1. Links
@@ -73,12 +74,12 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
+            TTForTimeStep = structure.thermalTime.Value() * propOfDayToUse;
                         
             if (First)
             {
                 LeafNoAtStart = leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion;
-                TargetLeafForCompletion = structure.FinalLeafNumber.Value() - LeafNoAtStart;
+                TargetLeafForCompletion = structure.finalLeafNumber.Value() - LeafNoAtStart;
                 First = false;
             }
 

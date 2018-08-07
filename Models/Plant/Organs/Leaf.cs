@@ -110,11 +110,6 @@ namespace Models.PMF.Organs
 
 
         #region Canopy interface
-
-        /// <summary>The apex model to use</summary>
-        [Link]
-        public IApex Apex = null;
-
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
@@ -467,20 +462,6 @@ namespace Models.PMF.Organs
         [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
-
-        /// <summary>Total apex number in plant.</summary>
-        [Description("Total apex number in plant")]
-        public double[] ApexGroupSize { get { return apexGroupSize.ToArray(); } }
-
-        /// <summary>Total apex number in plant.</summary>
-        [Description("Total apex number in plant")]
-        public double[] ApexGroupAge { get { return apexGroupAge.ToArray(); } }
-
-        /// <summary>The number of apex in each age group.</summary>
-        private List<double> apexGroupSize = new List<double>();
-        /// <summary>The age of apex in age group.</summary>
-        private List<double> apexGroupAge = new List<double>();
-
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
         private bool needToRecalculateLiveDead = true;
         private Biomass liveBiomass = new Biomass();
@@ -605,7 +586,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.FinalLeafNumber.Value()); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.finalLeafNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
@@ -1114,23 +1095,44 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Apex number by age</summary>
-        /// <param name="age">Threshold age</param>
-        public double ApexNumByAge(double age)
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double ApexNum
         {
-            double num = 0;
-            for (int i = 0; i < apexGroupAge.Count; i++)
+            get
             {
-                if (apexGroupAge[i] <= age)
-                {
-                    num += apexGroupSize[i++];
-                }
+                if (Leaves.Count == 0)
+                    return 0;
+                else
+                    return Leaves.Last().Apex.Number;
             }
-
-            return num;
-
         }
 
+        /// <summary>Apex group size in plant</summary>
+        [Description("Apex group size in plant")]
+        public double[] ApexGroupSize
+        {
+            get
+            {
+                if (Leaves.Count == 0)
+                    return new double[0];
+                else
+                    return Leaves.Last().Apex.GroupSize;
+            }
+        }
+
+        /// <summary>Apex group age in plant</summary>
+        [Description("Apex group age in plant")]
+        public double[] ApexGroupAge
+        {
+            get
+            {
+                if (Leaves.Count == 0)
+                    return new double[0];
+                else
+                    return Leaves.Last().Apex.GroupAge;
+            }
+        }
 
         #endregion
 
@@ -1202,8 +1204,6 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
             Structure.TipToAppear = 0;
-            apexGroupAge.Clear();
-            apexGroupSize.Clear();
             dryMatterSupply.Clear();
             dryMatterDemand.Clear();
             nitrogenSupply.Clear();
@@ -1217,7 +1217,6 @@ namespace Models.PMF.Organs
             foreach (LeafCohort Leaf in InitialLeaves)
             {
                 LeafCohort NewLeaf = Leaf.Clone();
-                DoApexCalculations(ref NewLeaf);
                 Leaves.Add(NewLeaf);
                 needToRecalculateLiveDead = true;
             }
@@ -1244,52 +1243,8 @@ namespace Models.PMF.Organs
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
-            DoApexCalculations(ref NewLeaf);
             Leaves.Add(NewLeaf);
             needToRecalculateLiveDead = true;
-        }
-
-        /// <summary>
-        /// TODO: This method needs documentation
-        /// </summary>
-        /// <param name="NewLeaf"></param>
-        private void DoApexCalculations(ref LeafCohort NewLeaf)
-        {
-            // update age of cohorts
-            for (int i = 0; i < apexGroupAge.Count; i++)
-                apexGroupAge[i]++;
-
-            // check for increase in apex size, add new group if needed
-            // (ApexNum should be an integer, but need to check in case of flag leaf)
-            double deltaApex = apexGroupSize.Sum() - Structure.ApexNum;
-            if (deltaApex < -1E-12)
-            {
-                if (apexGroupSize.Count == 0)
-                    apexGroupSize.Add(Structure.ApexNum);
-                else
-                    apexGroupSize.Add(Structure.ApexNum - apexGroupSize[apexGroupSize.Count - 1]);
-                apexGroupAge.Add(1);
-            }
-
-            // check for reduction in the apex size
-            if ((apexGroupSize.Count > 0) && (deltaApex > 1E-12))
-            {
-                double remainingRemoveApex = deltaApex;
-                for (int i = apexGroupSize.Count - 1; i > 0; i--)
-                {
-                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
-                    apexGroupSize[i] -= remove;
-                    remainingRemoveApex -= remove;
-                    if (remainingRemoveApex <= 0.0)
-                        break;
-                }
-
-                if (remainingRemoveApex > 0.0)
-                    throw new Exception("There are not enough apex to remove from plant.");
-            }
-
-            NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
-            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
 
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
@@ -1302,9 +1257,7 @@ namespace Models.PMF.Organs
                 throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
             int i = CohortParams.CohortToAppear - 1;
 
-            Leaves[i].CohortPopulation = Apex.LeafTipAppearance(Structure.ApexNum, Plant.Population, CohortParams.TotalStemPopn);
-            Leaves[i].Age = CohortParams.CohortAge;
-            Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
+            Leaves[i].DoAppearance(CohortParams, CohortParameters);
             needToRecalculateLiveDead = true;
             if (NewLeaf != null)
                 NewLeaf.Invoke();
@@ -1905,14 +1858,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
                 MicroClimatePresent = false;
                 Reset();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
-            }
         }
 
         /// <summary>Called when [kill leaf].</summary>
@@ -1935,21 +1885,16 @@ namespace Models.PMF.Organs
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
             Structure.TipToAppear =  0;
-            Structure.Emerged = false;
             Structure.Clear();
             Structure.ResetStemPopn();
-            Structure.LeafTipsAppeared = 0;
             Structure.NextLeafProportion = 1.0;
 
             Leaves.Clear();
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.Germinated = false;            
-
         }
 
         /// <summary>Called when [simulation commencing].</summary>

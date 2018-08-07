@@ -87,7 +87,7 @@ namespace Models.PMF.Phen
                 {
                    BBCH_stage = Math.Min(19.0,10.0f + Math.Max(0,leaf.AppearedCohortNo -1));
                 }
-                else if (Phenology.InPhase("LeafAppearance") && (leaf.AppearedCohortNo <= structure.FinalLeafNumber.Value()))
+                else if (Phenology.InPhase("LeafAppearance") && (leaf.AppearedCohortNo <= structure.finalLeafNumber.Value()))
                 {
                     if (StemExtensionInitialised == false)
                     {
@@ -96,7 +96,7 @@ namespace Models.PMF.Phen
                     }
                     BBCH_stage = 30.0f + Math.Min(9,leaf.ExpandedCohortNo - ligulesAtStartStemExtension);
                 }
-                else if (Phenology.InPhase("LeafAppearance") && (leaf.AppearedCohortNo >= structure.FinalLeafNumber.Value()))
+                else if (Phenology.InPhase("LeafAppearance") && (leaf.AppearedCohortNo >= structure.finalLeafNumber.Value()))
                 {
                     if (TasselVisiable == false)
                     {

@@ -31,7 +31,7 @@ namespace Models.PMF
         public Zone Zone = null;
 
         /// <summary>The phenology</summary>
-        [Link(IsOptional = true)]
+        [Link]
         public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
@@ -166,37 +166,16 @@ namespace Models.PMF
         {
             get
             {
-                if (Phenology != null)
-                    return Phenology.Emerged;
-                    //If the crop model has phenology and the crop is emerged return true
-                else
-                    return IsAlive;
-                    //Else if the crop is in the grown returen true
+                return Phenology.Emerged;
             }
         }
 
-        /// <summary>Return true if plant has germinated</summary>
-        public bool IsGerminated
-        {
-            get
-            {
-                if (Phenology != null)
-                    return Phenology.Germinated;
-                //If the crop model has phenology and the crop is emerged return true
-                else
-                    return IsAlive;
-                //Else if the crop is in the grown returen true
-            }
-        }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting
         {
             get
             {
-                if (Phenology != null)
-                    return Phenology.CurrentPhaseName == "ReadyForHarvesting";
-                else
-                    return false;
+                return Phenology.CurrentPhaseName == "ReadyForHarvesting";
             }
         }
 
@@ -214,8 +193,6 @@ namespace Models.PMF
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowPlant2Type> PlantSowing;
-        /// <summary>Occurs when a plant is about to be sown.</summary>
-        public event EventHandler PlantEmerging;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
@@ -252,7 +229,7 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Phenology != null && Canopy != null && AboveGround != null)
+            if (Canopy != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
                 if (Canopy != null)
@@ -311,19 +288,7 @@ namespace Models.PMF
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            if (Phenology == null)
-                SendEmergingEvent();
-
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
-        }
-
-        /// <summary>
-        /// Send out an emerging event
-        /// </summary>
-        public void SendEmergingEvent()
-        {
-            if (PlantEmerging != null)
-                PlantEmerging.Invoke(this, null);
         }
 
         /// <summary>Harvest the crop.</summary>
