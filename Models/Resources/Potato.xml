@@ -197,6 +197,8 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 	</OrganArbitrator>
 	<Structure>
 		<Name>Structure</Name>
+    <CohortInitialisationStage>Peeping</CohortInitialisationStage>
+    <LeafInitialisationStage>Emergence</LeafInitialisationStage>
 		<VariableReference>
 			<Name>ThermalTime</Name>
 			<IncludeInDocumentation>false</IncludeInDocumentation>

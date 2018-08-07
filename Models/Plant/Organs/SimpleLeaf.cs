@@ -216,12 +216,15 @@ namespace Models.PMF.Organs
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
-        /// <summary>The phenology</summary>
-        [Link(IsOptional = true)]
-        public Phenology Phenology = null;
+        
         /// <summary>Water Demand Function</summary>
         [Link(IsOptional = true)]
         IFunction WaterDemandFunction = null;
+
+        /// <summary>The Stage that leaves are initialised on</summary>
+        [Description("The Stage that leaves are initialised on")]
+        public string LeafInitialisationStage { get; set; } = "Emergence";
+        
 
 
         #endregion
@@ -295,6 +298,7 @@ namespace Models.PMF.Organs
             }
         }
 
+        private bool LeafInitialised = false;
         #endregion
 
         #region Arbitrator Methods
@@ -323,6 +327,16 @@ namespace Models.PMF.Organs
             Clear();
         }
 
+        /// <summary>Called when [phase changed].</summary>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.StageName == LeafInitialisationStage)
+            {
+                LeafInitialised = true;
+            }
+        }
+
         #endregion
 
         #region Component Process Functions
@@ -333,6 +347,7 @@ namespace Models.PMF.Organs
             base.Clear();
             Height = 0;
             LAI = 0;
+            LeafInitialised = false;
         }
         #endregion
 
@@ -344,7 +359,7 @@ namespace Models.PMF.Organs
         private new void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             base.OnDoPotentialPlantGrowth(sender, e);
-            if (Plant.IsEmerged)
+            if (LeafInitialised)
             {
                 if (MicroClimatePresent == false)
                     throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
