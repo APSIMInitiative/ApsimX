@@ -1,37 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="30">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </DataStore>
   <Simulation>
     <Name>PlantainGrazing</Name>
     <Clock>
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <StartDate>2010-09-01T00:00:00</StartDate>
       <EndDate>2012-08-31T00:00:00</EndDate>
     </Clock>
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
     <Summary>
       <Name>Summary</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </Summary>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </SoilArbitrator>
     <Supplement>
       <Name>Supplement</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <SpoilageTime>0</SpoilageTime>
-      <stores>
+      <Stores>
         <StoreType>
           <IsRoughage>true</IsRoughage>
           <DMContent>0.85</DMContent>
@@ -64,12 +70,13 @@
           <Name>silage</Name>
           <Stored>2000</Stored>
         </StoreType>
-      </stores>
+      </Stores>
       <PaddockList />
     </Supplement>
     <Stock>
       <Name>Stock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <RandSeed>9999</RandSeed>
       <GenoTypes />
       <Sheep />
@@ -88,6 +95,7 @@
     <Manager>
       <Name>GrazeForageCrop</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Script>
         <genotypeInput>Angus</genotypeInput>
         <sexInput>Steers</sexInput>
@@ -104,17 +112,17 @@
         <DoNoGrazingWindow>True</DoNoGrazingWindow>
         <noGrazeStart>01-apr</noGrazeStart>
         <noGrazeEnd>15-aug</noGrazeEnd>
-        <NumStock>0</NumStock>
-        <FarmArea>0</FarmArea>
-        <harvestableBiomass>0</harvestableBiomass>
-        <CurrentLocationNum>0</CurrentLocationNum>
-        <listOfPaddockInfo>
-        </listOfPaddockInfo>
-        <grazingSeasonIsOpen>False</grazingSeasonIsOpen>
-        <TriggerPastureMass>2100</TriggerPastureMass>
         <SupplementName>silage</SupplementName>
         <SupplementEveryDay>0</SupplementEveryDay>
         <SupplementOnPastureMass>2</SupplementOnPastureMass>
+        <TriggerPastureMass>2100</TriggerPastureMass>
+        <NumStock>0</NumStock>
+        <FarmArea>0</FarmArea>
+        <harvestableBiomass>0</harvestableBiomass>
+        <grazingSeasonIsOpen>False</grazingSeasonIsOpen>
+        <CurrentLocationNum>0</CurrentLocationNum>
+        <listOfPaddockInfo>
+        </listOfPaddockInfo>
       </Script>
       <Code><![CDATA[using System;
 using Models;
@@ -389,6 +397,7 @@ namespace Models
     <Report>
       <Name>ReportTop</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
@@ -414,13 +423,11 @@ namespace Models
         <Series>
           <Name>Harvestable</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -437,13 +444,11 @@ namespace Models
         <Series>
           <Name>StockNum</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Dash</Line>
@@ -458,6 +463,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -489,13 +495,11 @@ namespace Models
         <Series>
           <Name>Harvestable</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -510,6 +514,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -530,6 +535,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Zone>
@@ -539,6 +545,7 @@ namespace Models
         <Manager>
           <Name>SowingRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Script>
             <StartDate>1-oct</StartDate>
             <EndDate>30-oct</EndDate>
@@ -633,6 +640,7 @@ namespace Models
         <Operations>
           <Name>FertiliserSchedule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Operation>
             <Date>2011-01-05</Date>
             <Action>[Fertiliser].Apply(Amount: 20.0, Type: Fertiliser.Types.UreaN, Depth: 30)</Action>
@@ -682,6 +690,7 @@ namespace Models
         <Manager>
           <Name>AutomaticIrrigation</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Script>
             <allowIrrigation>yes</allowIrrigation>
             <seasonStart>15-Sep</seasonStart>
@@ -864,11 +873,13 @@ namespace Models
 ]]></Code>
         </Manager>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <ShowPageOfGraphs>false</ShowPageOfGraphs>
       </Folder>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -885,65 +896,36 @@ namespace Models
       <Irrigation>
         <Name>Irrigation</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Fertiliser>
       <SoluteManager>
         <Name>SoluteManager</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </SoluteManager>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <PondActive>no</PondActive>
-        <ReportAdditions>no</ReportAdditions>
-        <ReportRemovals>no</ReportRemovals>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <TillageTypes>
-          <Name>TillageTypesList</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <TillageType />
-        </TillageTypes>
-        <Pools>
-          <Pool>
-            <PoolName>grass</PoolName>
-            <ResidueType>grass</ResidueType>
-            <Mass>500</Mass>
-            <CNRatio>40</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>grass</PoolName>
-        <type>grass</type>
-        <mass>500</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr />
-        <cnr>40</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        <Enabled>true</Enabled>
+        <ResourceName>SurfaceOrganicMatter</ResourceName>
+        <InitialResidueName>grass</InitialResidueName>
+        <InitialResidueType>grass</InitialResidueType>
+        <InitialResidueMass>500</InitialResidueMass>
+        <InitialStandingFraction>0</InitialStandingFraction>
+        <InitialCPR>0</InitialCPR>
+        <InitialCNR>40</InitialCNR>
       </SurfaceOrganicMatter>
       <Soil>
         <Name>Soil</Name>
         <Analysis>
           <Name>Analysis</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1010,6 +992,7 @@ namespace Models
           <SoilCrop>
             <Name>PlantainSoil</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <LL>
               <double>0.15</double>
               <double>0.17</double>
@@ -1036,6 +1019,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1096,6 +1080,7 @@ namespace Models
         <SoilWater>
           <Name>SoilWater</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <SummerDate>21-Sep</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -1128,11 +1113,12 @@ namespace Models
             <double>0.3</double>
             <double>0.2</double>
           </SWCON>
-          <residueinterception>0</residueinterception>
+          <ResidueInterception>0</ResidueInterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -1169,6 +1155,7 @@ namespace Models
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <RootCN>40</RootCN>
           <RootWt>1000</RootWt>
           <SoilCN>12</SoilCN>
@@ -1219,6 +1206,7 @@ namespace Models
         <InitialWater>
           <Name>Initial water</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>0.9</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
@@ -1226,6 +1214,7 @@ namespace Models
         <Sample>
           <Name>Initial nitrogen</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>200</double>
             <double>200</double>
@@ -1253,8 +1242,10 @@ namespace Models
         <CERESSoilTemperature>
           <Name>CERESSoilTemperature</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </CERESSoilTemperature>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <RecordNumber>0</RecordNumber>
         <SoilType>Generic medium texture</SoilType>
         <Region>Canterbury</Region>
@@ -1266,12 +1257,14 @@ namespace Models
       <Plant>
         <Name>Plantain</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <ResourceName>Plantain</ResourceName>
         <CropType>Plantain</CropType>
       </Plant>
       <Report>
         <Name>Report</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -1313,6 +1306,7 @@ namespace Models
         </EventNames>
       </Report>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -1321,13 +1315,11 @@ namespace Models
       <Series>
         <Name>Total</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Dash</Line>
@@ -1344,13 +1336,11 @@ namespace Models
       <Series>
         <Name>AboveGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1367,13 +1357,11 @@ namespace Models
       <Series>
         <Name>BelowGround</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1388,6 +1376,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -1412,13 +1401,11 @@ namespace Models
       <Series>
         <Name>Leaf</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1435,13 +1422,11 @@ namespace Models
       <Series>
         <Name>Stem</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Dot</Line>
@@ -1458,13 +1443,11 @@ namespace Models
       <Series>
         <Name>Inflorescence</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-11094807</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1481,13 +1464,11 @@ namespace Models
       <Series>
         <Name>Taproot</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-990142</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1504,13 +1485,11 @@ namespace Models
       <Series>
         <Name>Root</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1525,6 +1504,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -1549,13 +1529,11 @@ namespace Models
       <Series>
         <Name>WaterContent</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16747854</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1572,13 +1550,11 @@ namespace Models
       <Series>
         <Name>DUL</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1595,13 +1571,11 @@ namespace Models
       <Series>
         <Name>LL15</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-2793984</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
@@ -1616,6 +1590,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -1636,7 +1611,9 @@ namespace Models
       <DisabledSeries />
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
   <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
