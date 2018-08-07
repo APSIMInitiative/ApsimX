@@ -221,6 +221,10 @@ namespace Models.GrazPlan
         [Link]
         private Simulation sim = null;
 
+        /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
+        [Link]
+        private ISummary OutputSummary = null;
+
         #endregion
 
         /// <summary>
@@ -4265,6 +4269,7 @@ namespace Models.GrazPlan
         public void Add(StockAdd animals)
         {
             this.GetTimeAndWeather();
+            OutputSummary.WriteMessage(this, "Adding " + animals.Number.ToString() + ", " + animals.Genotype + " " + animals.Sex);
             this.stockModel.DoStockManagement(this.stockModel, animals, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4274,6 +4279,7 @@ namespace Models.GrazPlan
         /// <param name="stock">The stock data</param>
         public void Buy(StockBuy stock)
         {
+            OutputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex + " ");
             this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4295,6 +4301,7 @@ namespace Models.GrazPlan
             stock.Age = age;
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
+            OutputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex + " ");
             this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4310,7 +4317,7 @@ namespace Models.GrazPlan
         public void Draft(StockDraft closedZones)
         {
             this.RequestAvailableToAnimal();
-
+            OutputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed)); 
             this.stockModel.DoStockManagement(this.stockModel, closedZones, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4325,6 +4332,7 @@ namespace Models.GrazPlan
             StockSell selling = new StockSell();
             selling.Group = group;
             selling.Number = Convert.ToInt32(number);
+            OutputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals");
             this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4339,6 +4347,7 @@ namespace Models.GrazPlan
             StockSellTag selling = new StockSellTag();
             selling.Tag = tag;
             selling.Number = number;
+            OutputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals from tag group " + tag.ToString());
             this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4354,6 +4363,7 @@ namespace Models.GrazPlan
             StockShear shearing = new StockShear();
             shearing.Group = group;
             shearing.SubGroup = subGroup;
+            OutputSummary.WriteMessage(this, "Shearing animals");
             this.stockModel.DoStockManagement(this.stockModel, shearing, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4367,6 +4377,7 @@ namespace Models.GrazPlan
             StockMove move = new StockMove();
             move.Group = group;
             move.Paddock = paddock;
+            OutputSummary.WriteMessage(this, "Moving animal group " + group.ToString() + " to " + paddock);
             this.stockModel.DoStockManagement(this.stockModel, move, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4384,6 +4395,7 @@ namespace Models.GrazPlan
             join.Group = group;
             join.MateTo = mateTo;
             join.MateDays = mateDays;
+            OutputSummary.WriteMessage(this, "Joining animal group " + group.ToString() + " to " + mateTo);
             this.stockModel.DoStockManagement(this.stockModel, join, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4401,6 +4413,7 @@ namespace Models.GrazPlan
             StockCastrate castrate = new StockCastrate();
             castrate.Group = group;
             castrate.Number = number;
+            OutputSummary.WriteMessage(this, "Castrate " + number.ToString() + " animals in group " + group.ToString());
             this.stockModel.DoStockManagement(this.stockModel, castrate, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4411,6 +4424,7 @@ namespace Models.GrazPlan
         /// <param name="wean">The weaning data</param>
         public void Wean(StockWean wean)
         {
+            OutputSummary.WriteMessage(this, "Weaning " + wean.Number.ToString() + " " + wean.Sex);
             this.stockModel.DoStockManagement(this.stockModel, wean, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4427,6 +4441,7 @@ namespace Models.GrazPlan
             StockDryoff dryoff = new StockDryoff();
             dryoff.Group = group;
             dryoff.Number = number;
+            OutputSummary.WriteMessage(this, "Drying off " + number.ToString() + " animals in group " + group.ToString());
             this.stockModel.DoStockManagement(this.stockModel, dryoff, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4437,6 +4452,7 @@ namespace Models.GrazPlan
         /// <param name="splitall">The split data</param>
         public void SplitAll(StockSplitAll splitall)
         {
+            OutputSummary.WriteMessage(this, "Split all animals by " + splitall.Type + " at " + splitall.Value);
             this.stockModel.DoStockManagement(this.stockModel, splitall, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4450,6 +4466,7 @@ namespace Models.GrazPlan
         /// <param name="split">The split data</param>
         public void Split(StockSplit split)
         {
+            OutputSummary.WriteMessage(this, "Split animals by " + split.Type + " at " + split.Value);
             this.stockModel.DoStockManagement(this.stockModel, split, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4466,6 +4483,7 @@ namespace Models.GrazPlan
             StockTag tag = new StockTag();
             tag.Group = group;
             tag.Value = value;
+            OutputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString()); 
             this.stockModel.DoStockManagement(this.stockModel, tag, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4479,6 +4497,7 @@ namespace Models.GrazPlan
             StockPrioritise prioritise = new StockPrioritise();
             prioritise.Group = group;
             prioritise.Value = value;
+            OutputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString()); 
             this.stockModel.DoStockManagement(this.stockModel, prioritise, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4488,6 +4507,7 @@ namespace Models.GrazPlan
         public void Sort()
         {
             StockSort sortEvent = new StockSort();
+            OutputSummary.WriteMessage(this, "Sort animals");
             this.stockModel.DoStockManagement(this.stockModel, sortEvent, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
