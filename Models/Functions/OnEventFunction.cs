@@ -49,22 +49,10 @@ namespace Models.Functions
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             if (phaseChange.StageName == SetEvent)
-                OnSetEvent();
+                _Value = PostEventValue.Value();
 
             if (phaseChange.StageName == ReSetEvent)
-                OnReSetEvent();
-        }
-
-        /// <summary>Called when [re set event].</summary>
-        public void OnReSetEvent()
-        {
-            _Value = PreEventValue.Value();
-        }
-
-        /// <summary>Called when [set event].</summary>
-        public void OnSetEvent()
-        {
-            _Value = PostEventValue.Value();
+                _Value = PreEventValue.Value();
         }
 
         /// <summary>Gets the value.</summary>
