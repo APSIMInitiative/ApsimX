@@ -372,7 +372,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </HeightFunction>
@@ -502,7 +502,6 @@ Though tillering is common in some maize varieties under certain agronomic condi
     <Emerged>false</Emerged>
     <CohortToInitialise>0</CohortToInitialise>
     <TipToAppear>0</TipToAppear>
-    <ApexNum>0</ApexNum>
   </Structure>
   <ReproductiveOrgan>
     <Name>Grain</Name>
@@ -1175,10 +1174,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
   </Root>
   <Leaf>
     <Name>Leaf</Name>
-    <ApexStandard>
-      <Name>ApexStandard</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </ApexStandard>
     <LeafCohort>
       <Name>InitialLeaves[1]</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1206,8 +1201,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Rank>1</Rank>
       <Area>380</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
-      <ApexGroupSize />
-      <ApexGroupAge />
     </LeafCohort>
     <LeafCohort>
       <Name>InitialLeaves[2]</Name>
@@ -1236,8 +1229,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Rank>2</Rank>
       <Area>0</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
-      <ApexGroupSize />
-      <ApexGroupAge />
     </LeafCohort>
     <ArrayBiomass>
       <Name>CohortArrayLive</Name>
@@ -1395,7 +1386,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <MinimumFunction>
         <Name>ExpansionStress</Name>
@@ -1621,7 +1612,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Maize].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
@@ -1893,7 +1884,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
@@ -2067,7 +2058,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
       </LinearInterpolationFunction>
       <MinimumFunction>
         <Name>ExpansionStress</Name>
@@ -2455,7 +2446,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+      <XProperty>[Maize].Leaf.Fw</XProperty>
     </LinearInterpolationFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>

@@ -12,7 +12,8 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class BuddingPhase : Model, IPhase, ICustomDocumentation
+    [ValidParent(ParentType = typeof(Phenology))]
+    public class BuddingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -21,20 +22,21 @@ namespace Models.PMF.Phen
         Plant Plant = null;
 
         [Link]
-        Phenology phenology = null;
-
-        [Link]
         Structure structure = null;
 
         [Link]
         private IFunction FractionOfBudBurst = null;
 
         [Link]
-        private IFunction Target = null;
+        private IFunction target = null;
 
         [Link]
         private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
+        //2. private fields
+        //-----------------------------------------------------------------------------------------------------------------
+
+        private bool firstStep = true;
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -53,79 +55,78 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Target.Value() == 0)
+                if (target.Value() == 0)
                     return 1;
                 else
-                    return TTinPhase / Target.Value();
-            }
-            set
-            {
-                if (phenology != null)
-                {
-                    TTinPhase = Target.Value() * value;
-                    phenology.AccumulatedEmergedTT += TTinPhase;
-                    phenology.AccumulatedTT += TTinPhase;
-                }
+                    return TTinPhase / target.Value();
             }
         }
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get { return ThermalTime.Value(); } }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get { return target.Value(); } }
+
+
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary> This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
         /// the phenology class knows to progress to the next phase and howmuch tt to pass it on the first day.</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            double tTForToday = ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += tTForToday;
+            bool proceedToNextPhase = false;
+            TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
 
-            // Get the Target TT
-            structure.PrimaryBudNo = Plant.SowingData.BudNumber;
-
-            double PropOfDayUnused = 0;
-            if (TTinPhase > Target.Value())
+            if (firstStep)
             {
-                if (tTForToday > 0.0)
-                {
-                    double PropOfValueUnused = (TTinPhase - Target.Value()) / ThermalTime.Value();
-                    PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
-                }
-                else
-                    PropOfDayUnused = 1.0;
-                TTinPhase = Target.Value();
+                structure.PrimaryBudNo = Plant.SowingData.BudNumber;
+                firstStep = false;
             }
 
-            if (PropOfDayUnused > 0.0)
+            double Target = target.Value();
+            if (TTinPhase > Target)
+            {
+                if (TTForTimeStep > 0.0)
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
+                    TTForTimeStep *= (1 - propOfDayToUse);
+                }
+                TTinPhase = Target;
+            }
+            
+            if (proceedToNextPhase)
             {
                 double BudNumberBurst = Plant.SowingData.BudNumber * FractionOfBudBurst.Value();
-
                 structure.PrimaryBudNo = BudNumberBurst;
                 structure.TotalStemPopn = structure.MainStemPopn;
-                Plant.SendEmergingEvent();
-                phenology.Emerged = true;
             }
 
-            return PropOfDayUnused;
+            return proceedToNextPhase;
         }
         
         /// <summary> Write Summary  /// </summary>
         public void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("      " + Name);
-            if (Target != null)
-                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
+            if (target != null)
+                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", target.Value()));
         }
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
-        { TTinPhase = 0; }
+        {
+            TTinPhase = 0;
+            firstStep = true;
+        }
 
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------

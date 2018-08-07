@@ -15,6 +15,7 @@ namespace Models.PMF.Phen
     [Description("This phase extends from the end of the previous phase until the Completion Leaf Number is achieved.  The duration of this phase is determined by leaf appearance rate and the completion leaf number target.")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class NodeNumberPhase : Model, IPhase
     {
         // 1. Links
@@ -59,15 +60,11 @@ namespace Models.PMF.Phen
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
-            set
-            {
-                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
         }
 
         /// <summary>Gets the tt for today.</summary>
         [XmlIgnore]
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         [XmlIgnore]
@@ -77,11 +74,11 @@ namespace Models.PMF.Phen
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>Do our timestep development</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-
+            bool proceedToNextPhase = false;
+            TTForTimeStep = structure.thermalTime.Value() * propOfDayToUse;
+            
             if (First)
             {
                 NodeNoAtStart = structure.LeafTipsAppeared;
@@ -91,9 +88,15 @@ namespace Models.PMF.Phen
             FractionCompleteYesterday = FractionComplete;
 
             if (structure.LeafTipsAppeared >= CompletionNodeNumber.Value())
-                return 0.00001;
-            else
-                return 0;
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.00001; //assumes we use most of the Tt today to get to specified node number.  Should be calculated as a function of the phyllochron
+                TTForTimeStep *= (1 - propOfDayToUse);
+            }
+
+            TTinPhase += TTForTimeStep;
+
+            return proceedToNextPhase;
         }
 
         /// <summary>Reset phase</summary>

@@ -2198,6 +2198,7 @@
         private void ComboRender_Edited(object sender, EditedArgs e)
         {
             UpdateCellText(GetCurrentCell, e.NewText);
+            userEditingCell = false;
         }
 
         /// <summary>

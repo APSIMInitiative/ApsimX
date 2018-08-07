@@ -15,6 +15,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class LeafDeathPhase : Model, IPhase
     {
         // 1. Links
@@ -49,19 +50,15 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
+                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.finalLeafNumber.Value() - DeadNodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return F;
             }
-            set
-            {
-                throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
-            }
         }
 
         /// <summary>Gets the tt for today.</summary>
-        public double TTForToday { get; set; }
+        public double TTForTimeStep { get; set; }
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
@@ -73,21 +70,27 @@ namespace Models.PMF.Phen
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Do our timestep development</summary>
-        public double DoTimeStep(double PropOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = structure.ThermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForToday;
-
+            bool proceedToNextPhase = false;
+            TTForTimeStep = structure.thermalTime.Value() * propOfDayToUse;
+                        
             if (First)
             {
                 DeadNodeNoAtStart = leaf.DeadCohortNo;
                 First = false;
             }
 
-            if ((leaf.DeadCohortNo >= structure.FinalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
-                return 0.00001;
-            else
-                return 0;
+            if ((leaf.DeadCohortNo >= structure.finalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.00001;
+                TTForTimeStep *= (1 - propOfDayToUse);
+            }
+
+            TTinPhase += TTForTimeStep;
+
+            return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>

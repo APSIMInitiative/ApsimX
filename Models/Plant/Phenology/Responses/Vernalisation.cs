@@ -123,10 +123,10 @@ namespace Models.PMF.Phen
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (phaseChange.EventStageName == EndStage)
+            if (phaseChange.StageName == EndStage)
                 TodaysVernalisation = 0.0;
 
-            if (phaseChange.EventStageName == ResetStage)
+            if (phaseChange.StageName == ResetStage)
             {
                 DaysVernalised = 0.0;
                 DaysVernalising = 0.0;

@@ -943,9 +943,10 @@ namespace Models.GrazPlan
         /// <param name="posIdx">Position in stock list</param>
         /// <param name="startTime">Start time</param>
         /// <param name="deltaTime">Time adjustment</param>
-        private void ComputeGrazing(int posIdx, double startTime, double deltaTime)
+        /// <param name="feedSuppFirst"></param>
+        private void ComputeGrazing(int posIdx, double startTime, double deltaTime, bool feedSuppFirst)
         {
-            this.At(posIdx).Grazing(deltaTime, (startTime == 0.0), false, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
+            this.At(posIdx).Grazing(deltaTime, (startTime == 0.0), feedSuppFirst, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
             if (this.At(posIdx).Young != null)
                 this.At(posIdx).Young.Grazing(deltaTime, (startTime == 0.0), false, ref this.stock[posIdx].PastIntakeRate[1], ref this.stock[posIdx].SuppIntakeRate[1]);
         }
@@ -1702,7 +1703,8 @@ namespace Models.GrazPlan
         /// <param name="paddName">Paddock name</param>
         /// <param name="suppKG">The amount of supplement</param>
         /// <param name="supplement">The supplement to use</param>
-        public void PlaceSuppInPadd(string paddName, double suppKG, FoodSupplement supplement)
+        /// <param name="feedSuppFirst"></param>
+        public void PlaceSuppInPadd(string paddName, double suppKG, FoodSupplement supplement, bool feedSuppFirst)
         {
             PaddockInfo thePadd;
 
@@ -1710,7 +1712,7 @@ namespace Models.GrazPlan
             if (thePadd == null)
                 throw new Exception("Stock: attempt to feed supplement into non-existent paddock");
             else
-                thePadd.FeedSupplement(suppKG, supplement);
+                thePadd.FeedSupplement(suppKG, supplement, feedSuppFirst);
         }
 
         // Model execution routines ................................................
@@ -1812,7 +1814,7 @@ namespace Models.GrazPlan
                         // Compute rate of grazing for this substep                             
                         for (idx = 1; idx <= this.Count(); idx++)                           
                             if (this.GetPaddInfo(idx) == thePaddock)                             
-                                this.ComputeGrazing(idx, timeValue, delta);
+                                this.ComputeGrazing(idx, timeValue, delta, thePaddock.FeedSuppFirst);
 
                         this.ComputeRemoval(thePaddock, delta);
 

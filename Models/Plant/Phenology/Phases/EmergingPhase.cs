@@ -11,25 +11,15 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EmergingPhase : Model, IPhase, ICustomDocumentation
+    [ValidParent(ParentType = typeof(Phenology))]
+    public class EmergingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
 
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
        
         [Link]
-        Plant Plant = null;
-
-        [Link]
         Phenology phenology = null;
-
-        //3. Public properties
-        //-----------------------------------------------------------------------------------------------------------------
-
-
-        //4. Public events
-        //-----------------------------------------------------------------------------------------------------------------
-
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -58,67 +48,56 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (CalcTarget() == 0)
+                if (Target == 0)
                     return 1;
                 else
-                    return TTinPhase / CalcTarget();
-            }
-            set
-            {
-                if (phenology != null)
-                {
-                    TTinPhase = CalcTarget() * value;
-                    phenology.AccumulatedEmergedTT += TTinPhase;
-                    phenology.AccumulatedTT += TTinPhase;
-                }
+                    return TTinPhase / Target;
             }
         }
 
+        /// <summary>Thermal time target.</summary>
+        [XmlIgnore]
+        public double Target { get; set; } 
+
         /// <summary>Gets the tt for today.</summary>
-        public double TTForToday { get; set; } 
+        public double TTForTimeStep { get; set; } 
 
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         [XmlIgnore]
         public double TTinPhase { get; set; }
 
-        //6. Public methode
+        //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary> This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
         /// the phenology class knows to progress to the next phase and how much tt to pass it on the first day. </summary>
-        public double DoTimeStep(double propOfDayToUse)
+        public bool DoTimeStep(ref double propOfDayToUse)
         {
-            TTForToday = phenology.ThermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForToday;
+            bool proceedToNextPhase = false;
+            TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
+            TTinPhase += TTForTimeStep;
 
-            // Get the Target TT
-            double Target = CalcTarget();
-
-            double PropOfDayUnused = 0;
             if (TTinPhase > Target)
             {
-                if (TTForToday > 0.0)
+                if (TTForTimeStep > 0.0)
                 {
-                    double PropOfValueUnused = (TTinPhase - Target) / TTForToday;
-                    PropOfDayUnused = PropOfValueUnused * propOfDayToUse;
+                    proceedToNextPhase = true;
+                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
+                    TTForTimeStep *= (1 - propOfDayToUse);
                 }
-                else
-                    PropOfDayUnused = 1.0;
                 TTinPhase = Target;
             }
-
-            if (PropOfDayUnused > 0)
-            {
-                Plant.SendEmergingEvent();
-                phenology.Emerged = true;
-            }
-
-            return PropOfDayUnused;
+            
+            return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { TTinPhase = 0; }
+        public virtual void ResetPhase()
+        {
+            TTinPhase = 0;
+            Target = 0;
+        }
         
         /// <summary>Writes the summary.</summary>
         /// <param name="writer">The writer.</param>
@@ -127,15 +106,15 @@ namespace Models.PMF.Phen
             writer.WriteLine("      " + Name);
         }
 
+        
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
-        /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
-        private double CalcTarget()
+
+        /// <summary>Called when crop is ending</summary>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            double retVAl = 0;
-            if (Plant != null)
-                retVAl = ShootLag + Plant.SowingData.Depth * ShootRate;
-            return retVAl;
+        Target = ShootLag + data.Depth * ShootRate;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
