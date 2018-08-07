@@ -136,9 +136,7 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
                 // Describe the start and end stages
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
-
-                tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + " and simulates time to emergence as a function of sowing depth."
                     + " The <i>ThermalTime Target</i> from Sowing to Emergence is given by:<br>"
                     + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
                     + "Where:<br>"

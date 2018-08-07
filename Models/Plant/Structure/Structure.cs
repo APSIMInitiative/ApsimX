@@ -10,7 +10,7 @@ namespace Models.PMF.Struct
     /// <summary>
     /// # Structure
     /// The structure model simulates morphological development of the plant to inform the Leaf class when 
-    ///   and how many leaves appear and to provides a hight estimate for use in calculating potential transpiration.
+    ///   and how many leaves appear and to provide a hight estimate for use in calculating potential transpiration.
     /// ## Plant and Main-Stem Population
     /// The *Plant.Population* is set at sowing with information sent from a manager script in the Sow method.    
     ///   The *PrimaryBudNumber* is also sent with the Sow method and the main-stem population (*MainStemPopn*) for the crop is calculated as:  

@@ -381,7 +381,7 @@ namespace Models.PMF
 
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 {
-                    if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder))
+                    if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
                     {
                         DataRow row = tableData.NewRow();
                         row[0] = child.Name;
