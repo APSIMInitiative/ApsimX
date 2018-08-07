@@ -415,8 +415,6 @@ namespace Models.PMF.Struct
         private void OnPlantEnding(object sender, EventArgs e)
         {
             Clear();
-            CohortsInitialised = false;
-            LeafAppearanceStarted = false;
             CohortToInitialise = 0;
             TipToAppear = 0;
             PotLeafTipsAppeared = 0;
