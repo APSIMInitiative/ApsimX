@@ -290,6 +290,7 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             Clear();
+            stagesPassedToday.Add(phases[0].Start);
         }
 
         /// <summary>Called by sequencer to perform phenology.</summary>
