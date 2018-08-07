@@ -5,7 +5,7 @@
 FROM microsoft/windowsservercore:10.0.14393.206
 SHELL ["powershell", "-Command"]
 
-ADD https://sourceforge.net/projects/dos2unix/files/latest/download /dos2unix.zip
+ADD https://sourceforge.net/projects/dos2unix/files/dos2unix/7.4.0/dos2unix-7.4.0-win64.zip/download /dos2unix.zip
 
 ADD https://download.sysinternals.com/files/Sigcheck.zip /sigcheck.zip
 
@@ -29,4 +29,4 @@ RUN Install-PackageProvider -Name Chocolatey -Force -RequiredVersion 2.8.5.130;	
 # run.bat is the script which will be run inside the container.
 COPY CreateInstallations.bat CreateInstallations.bat
 
-ENTRYPOINT ["CreateInstallations.bat"]
+#ENTRYPOINT ["CreateInstallations.bat"]
