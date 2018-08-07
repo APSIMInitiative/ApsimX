@@ -4200,7 +4200,7 @@ namespace Models.GrazPlan
                 {
                     // each paddock
                     this.suppFed.SetSuppAttrs(availSupp[idx]);
-                    this.stockModel.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed);
+                    this.stockModel.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed, availSupp[idx].FeedSuppFirst);
                 }
             }
 

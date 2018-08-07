@@ -1376,7 +1376,8 @@ namespace Models.GrazPlan
         /// CAREFUL - FForages does not own its members
         /// </summary>
         private ForageList FForages;                                       
-        private SupplementRation FSuppInPadd;                                                  
+        private SupplementRation FSuppInPadd;
+        private bool feedSupplementFirst = false;                                                
         private bool FUseHerbageAmt;
 
         private void SetSlope(double fValue)
@@ -1431,6 +1432,15 @@ namespace Models.GrazPlan
         {
             get { return FForages; }
         }
+
+        /// <summary>
+        /// Feed the supplement first. Bail feeding.
+        /// </summary>
+        public bool FeedSuppFirst
+        {
+            get { return feedSupplementFirst; }
+        }
+
         /// <summary>
         /// Create the PaddockInfo
         /// </summary>
@@ -1495,14 +1505,17 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="fNewAmount"></param>
         /// <param name="NewSupp"></param>
-        public void FeedSupplement(double fNewAmount, FoodSupplement NewSupp)
+        /// <param name="feedSuppFirst">Bail feeding</param>
+        public void FeedSupplement(double fNewAmount, FoodSupplement NewSupp, bool feedSuppFirst)
         {
             FoodSupplement aSupp;
             bool bFound;
             int Idx;
 
+            this.feedSupplementFirst = false;
             if (fNewAmount > 0.0)
             {
+                this.feedSupplementFirst = feedSuppFirst;
                 Idx = 0;
                 bFound = false;
                 while (!bFound && (Idx < SuppInPadd.Count))
