@@ -307,7 +307,7 @@ namespace UserInterface.Commands
 
                           "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
                           "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
-                          "are to be made publicly available. For more information visit <a href=\"https://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
+                          "are to be made publicly available. For more information visit <a href=\"https://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site.</a>";
 
             tags.Add(new AutoDocumentation.Heading("APSIM Description", 1));
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
@@ -690,9 +690,22 @@ namespace UserInterface.Commands
                             popupWin.ShowAll();
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
-
                             string PNGFileName = (presenter as IExportable).ExportToPNG(workingDirectory);
                             section.AddImage(PNGFileName);
+
+                            DirectedGraphPresenter graph = presenter as DirectedGraphPresenter;
+                            if (graph != null && !string.IsNullOrEmpty(graph.Caption))
+                            {
+                                string text = graph.Caption;
+                                if (text.Contains("[FigureNumber"))
+                                {
+                                    text = text.Replace("[FigureNumber]", figureNumber.ToString());
+                                    figureNumber++;
+                                }
+                                section.AddParagraph(text);
+                            }
+                                
+
                             presenter.Detach();
                             view.MainWidget.Destroy();
                             popupWin.Destroy();
@@ -930,6 +943,11 @@ namespace UserInterface.Commands
         {
             DirectedGraphInfo = graph;
         }
+
+        /// <summary>
+        /// Caption for the graph.
+        /// </summary>
+        public string Caption { get; set; }
     }
 }
 

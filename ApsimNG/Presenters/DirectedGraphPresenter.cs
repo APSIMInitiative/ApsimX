@@ -5,10 +5,13 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using Commands;
     using Models.Interfaces;
     using System.Drawing;
     using System.IO;
     using Views;
+    using System;
+
 
     /// <summary>
     /// This presenter connects an instance of a Model with a 
@@ -39,12 +42,30 @@ namespace UserInterface.Presenters
 
             // Tell the view to populate the axis.
             this.PopulateView();
+            this.view.OnCaptionChanged += CaptionChanged;
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
             model.DirectedGraphInfo = view.DirectedGraph;
+            view.OnCaptionChanged -= CaptionChanged;
+        }
+
+        /// <summary>
+        /// Caption for the directed graph.
+        /// </summary>
+        public string Caption
+        {
+            get
+            {
+                return model.Caption;
+            }
+            set
+            {
+                ChangeProperty propertyChangedCommand = new ChangeProperty(model, "Caption", value);
+                propertyChangedCommand.Do(explorerPresenter.CommandHistory);
+            }
         }
 
         /// <summary>Export the view object to a file and return the file name</summary>
@@ -65,5 +86,15 @@ namespace UserInterface.Presenters
             view.DirectedGraph = model.DirectedGraphInfo;
         }
 
+        /// <summary>
+        /// Triggered whenever the user modifies the caption. 
+        /// Updates the model's caption.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void CaptionChanged(object sender, EventArgs args)
+        {
+            Caption = view.Caption;
+        }
     }
 }

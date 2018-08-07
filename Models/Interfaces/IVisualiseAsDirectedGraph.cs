@@ -15,5 +15,10 @@ namespace Models.Interfaces
     {
         /// <summary>Get directed graph from model</summary>
         DirectedGraph DirectedGraphInfo { get; set; }
+
+        /// <summary>
+        /// Caption for the graph.
+        /// </summary>
+        string Caption { get; set; }
     }
 }

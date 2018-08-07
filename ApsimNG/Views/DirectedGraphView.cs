@@ -47,6 +47,16 @@ namespace UserInterface.Views
         private List<DGNode> nodes = new List<DGNode>();
 
         /// <summary>
+        /// Entry widget used to input a caption.
+        /// </summary>
+        private Entry caption = new Entry();
+
+        /// <summary>
+        /// Scrolling window which allows the user to make use of more than one screen's worth of space.
+        /// </summary>
+        private ScrolledWindow scroller;
+
+        /// <summary>
         /// List of arcs which connect the nodes.
         /// </summary>
         private List<DGArc> arcs = new List<DGArc>();
@@ -65,18 +75,51 @@ namespace UserInterface.Views
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
-
-            ScrolledWindow scroller = new ScrolledWindow(new Adjustment(0, 0, 100, 1, 1, 1), new Adjustment(0, 0, 100, 1, 1, 1))
+            scroller = new ScrolledWindow(new Adjustment(0, 0, 100, 1, 1, 1), new Adjustment(0, 0, 100, 1, 1, 1))
             {
                 HscrollbarPolicy = PolicyType.Always,
                 VscrollbarPolicy = PolicyType.Always
             };
             
             scroller.AddWithViewport(drawable);
+            HBox captionContainer = new HBox();
 
-            _mainWidget = scroller;
+            // A caption for the caption.
+            Label captionCaption = new Label("Enter a caption: ");
+            captionContainer.Add(captionCaption);
+            captionContainer.Add(caption);
+
+            VBox container = new VBox();
+            container.Add(scroller);
+            container.PackEnd(captionContainer, false, true, 0);
+
             drawable.ModifyBg(StateType.Normal, new Gdk.Color(255, 255, 255));
             drawable.Realized += OnRealized;
+            _mainWidget = container;
+        }
+
+        public event EventHandler OnCaptionChanged
+        {
+            add
+            {
+                caption.Changed += value;
+            }
+            remove
+            {
+                caption.Changed -= value;
+            }
+        }
+
+        public string Caption
+        {
+            get
+            {
+                return caption.Text;
+            }
+            set
+            {
+                caption.Text = value;
+            }
         }
 
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>
@@ -101,7 +144,7 @@ namespace UserInterface.Views
         {
             int width;
             int height;
-            MainWidget.GdkWindow.GetSize(out width, out height);
+            scroller.GdkWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
             byte[] buffer = screenshot.SaveToBuffer("png");
             MemoryStream stream = new MemoryStream(buffer);
