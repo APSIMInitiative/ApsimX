@@ -323,11 +323,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
-                MicroClimatePresent = false;
-                Clear();
-            }
+            MicroClimatePresent = false;
+            Clear();
         }
 
         /// <summary>Called when [phase changed].</summary>
