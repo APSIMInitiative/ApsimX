@@ -289,8 +289,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == plant)
-                Clear();
+            Clear();
             stagesPassedToday.Add(phases[0].Start);
         }
 
@@ -341,11 +340,8 @@ namespace Models.PMF.Phen
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-            if (sender == plant)
-            {
                 //Jump phenology to the end
                 SetToStage((double)(phases.Count));
-            }
         }
 
         /// <summary>Called when crop is being prunned.</summary>
@@ -359,8 +355,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (sender == plant)
-                Clear();
+            Clear();
         }
   
         /// <summary>Called at the start of each day</summary>

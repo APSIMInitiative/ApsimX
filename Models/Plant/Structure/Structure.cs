@@ -414,8 +414,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (sender == plant)
-                Clear();
+            Clear();
             CohortToInitialise = 0;
             TipToAppear = 0;
             PotLeafTipsAppeared = 0;

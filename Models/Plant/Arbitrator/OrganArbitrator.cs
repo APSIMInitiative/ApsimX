@@ -297,20 +297,17 @@ namespace Models.PMF
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
-                List<IArbitration> organsToArbitrate = new List<IArbitration>();
-                foreach (IOrgan organ in Plant.Organs)
-                    if (organ is IArbitration)
-                        organsToArbitrate.Add(organ as IArbitration);
+            List<IArbitration> organsToArbitrate = new List<IArbitration>();
+            foreach (IOrgan organ in Plant.Organs)
+                if (organ is IArbitration)
+                    organsToArbitrate.Add(organ as IArbitration);
 
-                Organs = organsToArbitrate;
+            Organs = organsToArbitrate;
 
-                DM = new BiomassArbitrationType("DM", Organs);
-                N = new BiomassArbitrationType("N", Organs);
-            }
-
-        }
+            DM = new BiomassArbitrationType("DM", Organs);
+            N = new BiomassArbitrationType("N", Organs);
+        }   
+        
 
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
@@ -404,8 +401,7 @@ namespace Models.PMF
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (sender == Plant)
-                Clear();
+            Clear();
         }
 
         /// <summary>Clears this instance.</summary>
