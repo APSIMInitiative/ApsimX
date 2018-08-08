@@ -373,14 +373,24 @@
             int rowNo = path.Indices[0];
             int colNo = -1;
             string text = string.Empty;
+            CellRendererText textRenderer = cell as CellRendererText;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
-                cell.CellBackgroundGdk = Grid.Style.Base(cellState);
-                if (cell is CellRendererText)
+                if (categoryRows.Contains(rowNo))
                 {
-                    (cell as CellRendererText).ForegroundGdk = Grid.Style.Foreground(cellState);
+                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                    Color separatorColour = Color.LightSteelBlue;
+                    cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
+                    textRenderer.Editable = false;
                 }
+                else
+                {
+                    cell.CellBackgroundGdk = Grid.Style.Base(cellState);
+                    textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
+                    textRenderer.Editable = true;
+                }
+
                 if (view == Grid)
                 {
                     col.CellRenderers[1].Visible = false;
@@ -452,16 +462,7 @@
 
             // We have a "text" cell. Set the text, and other properties for the cell
             cell.Visible = true;
-            CellRendererText textRenderer = cell as CellRendererText;
             textRenderer.Text = text;
-
-            if (categoryRows.Contains(rowNo) && !CellIsSelected(rowNo, colNo))
-            {
-                textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                Color separatorColour = Color.LightSteelBlue;
-                cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
-                textRenderer.Editable = false;
-            }
         }
 
         /// <summary>
