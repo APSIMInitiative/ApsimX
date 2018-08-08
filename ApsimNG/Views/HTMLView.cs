@@ -444,7 +444,7 @@ namespace UserInterface.Views
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.HTMLView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.HTMLView.glade");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             frame1 = (Frame)builder.GetObject("frame1");
@@ -517,8 +517,8 @@ namespace UserInterface.Views
 
         private void MainWindow_SetFocus(object o, SetFocusArgs args)
         {
-            if (mainWindow != null)
-                mainWindow.Focus(0);
+            if (MasterView.MainWindow != null)
+                MasterView.MainWindow.Focus(0);
         }
 
         /// <summary>
