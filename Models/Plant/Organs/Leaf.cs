@@ -586,7 +586,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.FinalLeafNumber.Value()); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.finalLeafNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
@@ -1858,14 +1858,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
                 MicroClimatePresent = false;
                 Reset();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
-            }
         }
 
         /// <summary>Called when [kill leaf].</summary>
@@ -1888,21 +1885,16 @@ namespace Models.PMF.Organs
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Structure.PotLeafTipsAppeared = 0;
             Structure.CohortToInitialise = 0;
             Structure.TipToAppear =  0;
-            Structure.LeafAppearanceStarted = false;
             Structure.Clear();
             Structure.ResetStemPopn();
-            Structure.LeafTipsAppeared = 0;
             Structure.NextLeafProportion = 1.0;
 
             Leaves.Clear();
             needToRecalculateLiveDead = true;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.CohortsInitialised = false;            
-
         }
 
         /// <summary>Called when [simulation commencing].</summary>

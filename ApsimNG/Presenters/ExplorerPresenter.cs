@@ -507,7 +507,7 @@ namespace UserInterface.Presenters
         /// <returns>Clipboard text</returns>
         public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
-            return ViewBase.GetClipboardText(clipboardName);
+            return ViewBase.MasterView.GetClipboardText(clipboardName);
         }
 
         /// <summary>
@@ -516,7 +516,7 @@ namespace UserInterface.Presenters
         /// <param name="text">The text to be stored in the clipboard</param>
         public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
-            ViewBase.SetClipboardText(text, clipboardName);
+            ViewBase.MasterView.SetClipboardText(text, clipboardName);
         }
 
         /// <summary>
@@ -560,6 +560,7 @@ namespace UserInterface.Presenters
                         desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
                         desc.ShortcutKey = contextMenuAttr.ShortcutKey;
                         desc.ShowCheckbox = contextMenuAttr.IsToggle;
+                        desc.FollowsSeparator = contextMenuAttr.FollowsSeparator;
 
                         // Check for an enable method
                         MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");
@@ -617,7 +618,7 @@ namespace UserInterface.Presenters
 
             if (string.IsNullOrEmpty(path))
             {
-                path = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
+                path = ViewBase.MasterView.AskUserForDirectory("Select a directory to save model files to.");
                 if (path == null)
                     return false;
             }

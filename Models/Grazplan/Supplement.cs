@@ -163,6 +163,22 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Returns the flag to feed supplement first that would
+        /// have been entered when calling a feed() event.
+        /// </summary>
+        /// <param name="paddIdx">Paddock index</param>
+        /// <returns></returns>
+        public bool FeedSuppFirst(int paddIdx)
+        {
+            bool result = false;
+            if (paddIdx >= 0 && paddIdx < Paddocks.Length)
+            {
+                result = Paddocks[paddIdx].FeedSuppFirst;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Index of the paddock by name
         /// </summary>
         /// <param name="name">The name of a paddock</param>
@@ -292,12 +308,13 @@ namespace Models.GrazPlan
         /// <param name="suppName">Name of the supp.</param>
         /// <param name="fedKg">The fed kg.</param>
         /// <param name="paddName">Name of the padd.</param>
+        /// <param name="feedSuppFirst">Feed the supplement before pasture consumption. Bail feeding.</param>
         /// <exception cref="System.Exception">
         /// Supplement \ + suppName + \ not recognised
         /// or
         /// </exception>
         /// Paddock \ + paddName + \ not recognised
-        public void FeedOut(string suppName, double fedKg, string paddName)
+        public void FeedOut(string suppName, double fedKg, string paddName, bool feedSuppFirst)
         {
             int suppIdx = IndexOf(suppName);
             int paddIdx = PaddockIndexOf(paddName);
@@ -306,6 +323,7 @@ namespace Models.GrazPlan
             else if (paddIdx < 0)
                 throw new Exception("Paddock \"" + paddName + "\" not recognised");
 
+            Paddocks[paddIdx].FeedSuppFirst = feedSuppFirst;
             Transfer(this, suppIdx, Paddocks[paddIdx].SupptFed, 0, fedKg);
         }
 
@@ -448,7 +466,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="src">The source.</param>
         /// <param name="srcIdx">Index of the source.</param>
-        /// <param name="dest">The dest.</param>
+        /// <param name="dest">The dest ration in a paddock.</param>
         /// <param name="destIdx">Index of the dest.</param>
         /// <param name="amount">The amount.</param>
         /// <exception cref="System.Exception">Invalid transfer of feed</exception>
@@ -495,6 +513,11 @@ namespace Models.GrazPlan
             /// The suppt fed
             /// </summary>
             public SupplementRation SupptFed;   // Entry N is the supplement fed out N days ago
+
+            /// <summary>
+            /// For bail feeding
+            /// </summary>
+            public bool FeedSuppFirst = false;
         }
     }
 
@@ -542,6 +565,11 @@ namespace Models.GrazPlan
         /// The amount of ration (kg).
         /// </value>
         public double Amount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag to feed supplement before pasture. Bail feeding.
+        /// </summary>
+        public bool FeedSuppFirst { get; set; }
     }
 
     /// <summary>
@@ -955,6 +983,7 @@ namespace Models.GrazPlan
                     result[i].ADIP2CP = supp.ADIP2CP;
                     result[i].AshAlk = supp.AshAlkalinity;
                     result[i].MaxPassage = supp.MaxPassage;
+                    result[i].FeedSuppFirst = theModel.FeedSuppFirst(i);
                 }
                 return result;
             }
@@ -1131,9 +1160,10 @@ namespace Models.GrazPlan
         /// <param name="supplement">The supplement.</param>
         /// <param name="amount">The amount.</param>
         /// <param name="paddock">The paddock.</param>
-        public void Feed(string supplement, double amount, string paddock)
+        /// <param name="feedSuppFirst">Feed supplement before pasture. Bail feeding.</param>
+        public void Feed(string supplement, double amount, string paddock, bool feedSuppFirst = false)
         {
-            theModel.FeedOut(supplement, amount, paddock);
+            theModel.FeedOut(supplement, amount, paddock, feedSuppFirst);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class BuddingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
     {
         // 1. Links
@@ -102,15 +103,12 @@ namespace Models.PMF.Phen
                 }
                 TTinPhase = Target;
             }
-
             
-
             if (proceedToNextPhase)
             {
                 double BudNumberBurst = Plant.SowingData.BudNumber * FractionOfBudBurst.Value();
                 structure.PrimaryBudNo = BudNumberBurst;
                 structure.TotalStemPopn = structure.MainStemPopn;
-                Plant.SendEmergingEvent();
             }
 
             return proceedToNextPhase;

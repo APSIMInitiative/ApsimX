@@ -663,20 +663,14 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            Clear();
-        }
-
-        /// <summary>Called when crop is emerging</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">Event data</param>
-        [EventSubscribe("PlantEmerging")]
-        protected void OnPlantEmerging(object sender, EventArgs e)
-        {
-            //Initialise biomass and nitrogen
-            Live.StructuralWt = initialWtFunction.Value();
-            Live.StorageWt = 0.0;
-            Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-            Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+            if (data.Plant == parentPlant)
+            {
+                Clear();
+                Live.StructuralWt = initialWtFunction.Value();
+                Live.StorageWt = 0.0;
+                Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
+                Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+            }
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

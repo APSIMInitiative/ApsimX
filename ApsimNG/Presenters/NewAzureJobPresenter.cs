@@ -53,11 +53,6 @@ namespace UserInterface.Presenters
         private BatchCredentials batchAuth;
 
         /// <summary>
-        /// The pool settings for the Azure VM pool.
-        /// </summary>
-        private PoolSettings poolOptions;
-
-        /// <summary>
         /// The worker which will submit the job.
         /// </summary>
         private BackgroundWorker submissionWorker;
@@ -705,7 +700,6 @@ namespace UserInterface.Presenters
                 // store credentials
                 storageAuth = StorageCredentials.FromConfiguration();
                 batchAuth = BatchCredentials.FromConfiguration();
-                poolOptions = PoolSettings.FromConfiguration();
 
                 storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
                 uploader = new FileUploader(storageAccount);

@@ -15,6 +15,7 @@ namespace Models.PMF.Phen
     [Description("This phase extends from the end of the previous phase until the Completion Leaf Number is achieved.  The duration of this phase is determined by leaf appearance rate and the completion leaf number target.")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class NodeNumberPhase : Model, IPhase
     {
         // 1. Links
@@ -76,7 +77,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
+            TTForTimeStep = structure.thermalTime.Value() * propOfDayToUse;
             
             if (First)
             {

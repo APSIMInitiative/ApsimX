@@ -171,12 +171,12 @@ namespace UserInterface.Views
             disableButtonContainer.PackStart(btnDisable, true, true, 0);
 
             btnExportCsv = new Button("Generate CSV");
-            btnExportCsv.Clicked += (sender, e) => { Presenter.GenerateCsv(AskUserForFileName("Export to CSV", "CSV file | .csv", Gtk.FileChooserAction.Save, (string)ApsimNG.Cloud.AzureSettings.Default["OutputDir"])); };
+            btnExportCsv.Clicked += (sender, e) => { Presenter.GenerateCsv(MasterView.AskUserForFileName("Export to CSV", "CSV file | .csv", Gtk.FileChooserAction.Save, (string)ApsimNG.Cloud.AzureSettings.Default["OutputDir"])); };
             HBox csvExportButtonContainer = new HBox();
             csvExportButtonContainer.PackStart(btnExportCsv, true, true, 0);
 
             btnImportCsv = new Button("Import factor information from CSV file");
-            btnImportCsv.Clicked += (sender, e) => { Presenter.ImportCsv(AskUserForFileName("Choose a .csv file", "CSV file | *.csv")); };
+            btnImportCsv.Clicked += (sender, e) => { Presenter.ImportCsv(MasterView.AskUserForFileName("Choose a .csv file", "CSV file | *.csv")); };
             HBox csvImportButtonCOntainer = new HBox();
             csvImportButtonCOntainer.PackStart(btnImportCsv, true, true, 0);
 

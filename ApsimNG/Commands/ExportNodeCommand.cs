@@ -250,13 +250,7 @@ namespace UserInterface.Commands
                             AutoDocumentation.DocumentModel(model, tags, 1, 0);
                         else
                         {
-                            System.Drawing.Image image = null;
-
-                            if (model is Manager)
-                                image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
-                            else
-                                image = examplePresenter.GetScreenhotOfRightHandPanel();
-
+                            Image image = examplePresenter.GetScreenhotOfRightHandPanel();
                             if (image != null)
                             {
                                 string name = "Example" + instruction;
