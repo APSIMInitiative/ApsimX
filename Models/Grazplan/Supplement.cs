@@ -742,6 +742,27 @@ namespace Models.GrazPlan
     /// Stock component may be assigned. Feed which has been placed in a paddock is accessible to grazing stock 
     /// in that paddock. If more than one supplement is placed into a paddock, the animals access a mixture.
     /// 
+    /// **Mangement Operations in Supplement**
+    /// 
+    ///**1. Buy**
+    ///
+    /// * Increases the amount of supplement in a store.
+    /// 
+    ///**2. Feed**
+    ///
+    /// * Transfers an amount of supplement from store to one of the paddocks, where it will be accessible to grazing stock.
+    /// It is possible to feed supplement before grazing.
+    /// 
+    ///**3. Mix**
+    ///
+    /// * Transfers an amount of supplement from one store into another. The transferred supplement is mixed
+    /// with any supplement already in the destination store. 
+    /// 
+    ///**4. Conserve**
+    ///
+    /// * Notifies the component that an amount of forage has been conserved. This forage is added to the first item in the stores array.
+    /// 
+    /// ---
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.SupplementView")]
