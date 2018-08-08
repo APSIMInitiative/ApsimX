@@ -192,10 +192,8 @@ namespace Models.Graph
         /// Go through all simulation zone objects and remove factors that don't vary between objects.
         /// </summary>
         /// <param name="factors">A list of factors.</param>
-        /// <returns>A new list of factors</returns>
         private void RemoveFactorsThatDontVary(List<ISimulationGeneratorFactors> factors)
         {
-            List<ISimulationGeneratorFactors> newFactors = new List<ISimulationGeneratorFactors>();
             foreach (string factorName in GetFactorList(factors))
             {
                 List<string> factorValues = new List<string>();
@@ -310,80 +308,6 @@ namespace Models.Graph
             }
             return simulationZonePairs;
         }
-
-        ///// <summary>
-        ///// Build a list of simulation / zone pairs from the specified simulation
-        ///// </summary>
-        ///// <param name="model">This can be either a simulation or a zone</param>
-        ///// <returns>A list of simulation / zone pairs</returns>
-        ////private List<SimulationZone> BuildListFromSimulation(IModel model)
-        //{
-        //    IModel simulation = Apsim.Parent(model, typeof(Simulation));
-        //    List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
-        //    foreach (Zone zone in Apsim.ChildrenRecursively(model, typeof(Zone)))
-        //        simulationZonePairs.Add(new SimulationZone(simulation.Name, zone.Name));
-
-        //    if (typeof(Zone).IsAssignableFrom(model.GetType()))
-        //        simulationZonePairs.Add(new SimulationZone(simulation.Name, model.Name));
-        //    return simulationZonePairs;
-        //}
-
-        ///// <summary>
-        ///// Build a list of simulation / zone pairs from the specified experiment
-        ///// </summary>
-        ///// <param name="model"></param>
-        ///// <returns></returns>
-        //private List<SimulationZone> BuildListFromExperiment(IModel model)
-        //{
-        //    List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
-        //    foreach (SimulationZone simulationZonePair in BuildListFromSimulation((model as Experiment).BaseSimulation))
-        //    {
-        //        foreach (List<FactorValue> combination in (model as Experiment).AllCombinations())
-        //        {
-        //            string zoneName = simulationZonePair.factorNameValues.Find(factorValue => factorValue.Key == "Zone").Value;
-        //            SimulationZone simulationZone = new SimulationZone(null, zoneName);
-        //            string simulationName = model.Name;
-        //            foreach (FactorValue value in combination)
-        //            {
-        //                simulationName += value.Name;
-        //                string factorName = value.Factor.Name;
-        //                if (value.Factor.Parent is Factor)
-        //                {
-        //                    factorName = value.Factor.Parent.Name;
-        //                }
-        //                string factorValue = value.Name.Replace(factorName, "");
-        //                simulationZone.factorNameValues.Add(new KeyValuePair<string, string>(factorName, factorValue));
-        //            }
-        //            simulationZone.factorNameValues.Add(new KeyValuePair<string, string>("Experiment", (model as Experiment).Name));
-        //            simulationZone.simulationNames.Add(simulationName);
-        //            simulationZonePairs.Add(simulationZone);
-        //        }
-        //    }
-        //    return simulationZonePairs;
-        //}
-
-        ///// <summary>
-        ///// Build a list of simulation / zone pairs from the specified experiment
-        ///// </summary>
-        ///// <param name="simGenerator">Simulation generator</param>
-        ///// <returns></returns>
-        //private List<SimulationZone> BuildListFromSimulationGenerator(ISimulationGenerator simGenerator)
-        //{
-        //    List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
-
-        //    // Get a list of simulation names from generator.
-        //    IEnumerable simulationNames = simGenerator.GetSimulationNames();
-
-        //    // Get a list of factor names from generator.
-        //    List<SimulationGeneratorFactor> factors = simGenerator.GetFactors();
-
-        //    //foreach (string simulationName in simulationNames)
-        //        simulationZonePairs.Add(new SimulationZone(null, factors));
-
-        //    return simulationZonePairs;
-        //}
-
-
 
         /// <summary>
         /// Paint the visual elements (colour, line and marker) of all simulation / zone pairs.
@@ -500,7 +424,8 @@ namespace Models.Graph
                 DataView data = new DataView(baseData);
                 try
                 {
-                    data.RowFilter = CreateRowFilter(new ISimulationGeneratorFactors[] { factor });
+                    data.RowFilter = CreateRowFilter(storage, new ISimulationGeneratorFactors[] { factor },
+                                                     DataTableUtilities.GetColumnNames(baseData));
                 }
                 catch
                 {
@@ -662,9 +587,14 @@ namespace Models.Graph
         /// <param name="storage">Storage service</param>
         private DataTable GetBaseData(IStorageReader storage, List<ISimulationGeneratorFactors> factors)
         {
+            var columnsInTable = storage.ColumnNames(TableName).ToList();
+            columnsInTable.Add("SimulationName");
             List<string> fieldNames = new List<string>();
             foreach (ISimulationGeneratorFactors factor in factors)
-                fieldNames.Add(factor.ColumnName);
+                foreach (var column in factor.Columns)
+                    if (!fieldNames.Contains(column.Key) && columnsInTable.Contains(column.Key))
+                        fieldNames.Add(column.Key);
+
             if (XFieldName != null)
                 fieldNames.Add(XFieldName);
             if (YFieldName != null)
@@ -685,9 +615,9 @@ namespace Models.Graph
 
             string filterToUse;
             if (Filter == null || Filter == string.Empty)
-                filterToUse = CreateRowFilter(factors);
+                filterToUse = CreateRowFilter(storage, factors, columnsInTable);
             else
-                filterToUse = Filter + " AND (" + CreateRowFilter(factors) + ")";
+                filterToUse = Filter + " AND (" + CreateRowFilter(storage, factors, columnsInTable) + ")";
 
             return storage.GetData(tableName: TableName, checkpointName: Checkpoint, fieldNames: fieldNames.Distinct(), filter: filterToUse);
         }
@@ -698,36 +628,44 @@ namespace Models.Graph
             public string ColumnName { get; set; }
             public List<string> ColumnValues { get; set; }
 
-            public ColumnNameValues(string name, List<string> values)
+            public ColumnNameValues(string name, string value)
             {
                 ColumnName = name;
                 ColumnValues = new List<string>();
-                ColumnValues.AddRange(values);
+                ColumnValues.Add(value);
             }
         }
 
         /// <summary>
         /// Create a row filter for the specified factors.
         /// </summary>
-        /// <param name="factors">A list of factors to build a filter for</param>
-        private string CreateRowFilter(IEnumerable<ISimulationGeneratorFactors> factors)
+        /// <param name="storage">Storage service</param>
+        /// <param name="factors">A list of factors to build a filter for.</param>
+        /// <param name="columnsInTable">Columns in table</param>
+        private string CreateRowFilter(IStorageReader storage, IEnumerable<ISimulationGeneratorFactors> factors, IEnumerable<string> columnsInTable)
         {
             string factorFilters = null;
 
             List<ColumnNameValues> columns = new List<ColumnNameValues>();
             foreach (var factor in factors)
             {
-                ColumnNameValues column = columns.Find(col => col.ColumnName == factor.ColumnName);
-                if (column == null)
-                    columns.Add(new ColumnNameValues(factor.ColumnName, factor.ColumnValues));
-                else
-                    column.ColumnValues.AddRange(factor.ColumnValues);
+                foreach (var factorColumn in factor.Columns)
+                {
+                    if (columnsInTable.Contains(factorColumn.Key))
+                    {
+                        ColumnNameValues column = columns.Find(col => col.ColumnName == factorColumn.Key);
+                        if (column == null)
+                            columns.Add(new ColumnNameValues(factorColumn.Key, factorColumn.Value));
+                        else if (!column.ColumnValues.Contains(factorColumn.Value))
+                            column.ColumnValues.Add(factorColumn.Value);
+                    }
+                }
             }
 
             foreach (var column in columns)
             {
                 if (factorFilters != null)
-                    factorFilters += " OR ";
+                    factorFilters += " AND ";
                 if (column.ColumnValues.Count == 1)
                     foreach (var value in column.ColumnValues)
                         factorFilters += column.ColumnName + " = '" + value + "'";
