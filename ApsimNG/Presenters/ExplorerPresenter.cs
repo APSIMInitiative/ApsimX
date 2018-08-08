@@ -727,9 +727,9 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                if (err is System.Reflection.TargetInvocationException)
+                if (err is TargetInvocationException)
                 {
-                    err = (err as System.Reflection.TargetInvocationException).InnerException;
+                    err = (err as TargetInvocationException).InnerException;
                 }
 
                 string message = err.Message;

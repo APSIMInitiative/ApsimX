@@ -43,10 +43,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
-        public void Detach()
+        public virtual void Detach()
         {
             grid.EndEdit();
             grid.CopyCells -= CopyCells;
+            grid.PasteCells -= PasteCells;
+            grid.DeleteCells -= DeleteCells;
         }
 
         /// <summary>
