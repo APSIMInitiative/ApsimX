@@ -1199,6 +1199,8 @@ namespace Models.GrazPlan
         /// <param name="feedSuppFirst">Feed supplement before pasture. Bail feeding.</param>
         public void Feed(string supplement, double amount, string paddock, bool feedSuppFirst = false)
         {
+            string firstly = feedSuppFirst ? " (Feeding supplement before pasture)" : string.Empty;
+            OutputSummary.WriteMessage(this, "Feeding " + amount.ToString() + "kg of " + supplement + " into " + paddock + firstly);
             theModel.FeedOut(supplement, amount, paddock, feedSuppFirst);
         }
 
