@@ -375,10 +375,11 @@
             string text = string.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
-                cell.CellBackgroundGdk = CellIsSelected(rowNo, colNo) ? Grid.Style.Base(StateType.Selected) : Grid.Style.Base(StateType.Normal);
+                StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
+                cell.CellBackgroundGdk = Grid.Style.Base(cellState);
                 if (cell is CellRendererText)
                 {
-                    (cell as CellRendererText).ForegroundGdk = CellIsSelected(rowNo, colNo) ? Grid.Style.Foreground(StateType.Selected) : Grid.Style.Foreground(StateType.Normal);
+                    (cell as CellRendererText).ForegroundGdk = Grid.Style.Foreground(cellState);
                 }
                 if (view == Grid)
                 {
@@ -403,6 +404,7 @@
                         CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
                         if (toggleRend != null)
                         {
+                            toggleRend.CellBackgroundGdk = Grid.Style.Base(cellState);
                             toggleRend.Active = (bool)dataVal;
                             toggleRend.Activatable = true;
                             cell.Visible = false;
@@ -1383,6 +1385,11 @@
                 CellRendererToggle toggleRender = new CellRendererToggle();
                 toggleRender.Visible = false;
                 toggleRender.Toggled += ToggleRenderToggled;
+                toggleRender.Xalign = 0f;
+                toggleRender.EditingCanceled += (sender, e) =>
+                {
+                    userEditingCell = false;
+                };
                 CellRendererCombo comboRender = new CellRendererDropDown();
                 comboRender.Edited += ComboRenderEdited;
                 comboRender.Visible = false;
@@ -1784,6 +1791,7 @@
             {
                 ShowError(err);
             }
+            userEditingCell = false;
         }
 
         /// <summary>
