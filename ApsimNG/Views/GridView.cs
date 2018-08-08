@@ -1900,104 +1900,100 @@
             try
             {
                 if (userEditingCell)
-                {
-                    IGridCell where = GetCurrentCell;
-                    if (where == null)
-                        return;
-
-                    object oldValue = valueBeforeEdit;
-
                     userEditingCell = false;
+                IGridCell where = GetCurrentCell;
+                if (where == null)
+                    return;
+                object oldValue = valueBeforeEdit;
 
-                    // Make sure our table has enough rows.
-                    string newtext = e.NewText;
-                    object newValue = oldValue;
-                    bool isInvalid = false;
-                    if (newtext == null)
-                    {
-                        newValue = DBNull.Value;
-                    }
+                // Make sure our table has enough rows.
+                string newtext = e.NewText;
+                object newValue = oldValue;
+                bool isInvalid = false;
+                if (newtext == null)
+                {
+                    newValue = DBNull.Value;
+                }
 
-                    Type dataType = oldValue.GetType();
-                    if (oldValue == DBNull.Value)
+                Type dataType = oldValue.GetType();
+                if (oldValue == DBNull.Value)
+                {
+                    if (string.IsNullOrEmpty(newtext))
+                        return; // If the old value was null, and we've nothing meaningfull to add, pack up and go home
+                    dataType = DataSource.Columns[where.ColumnIndex].DataType;
+                }
+                if (dataType == typeof(string))
+                    newValue = newtext;
+                else if (dataType == typeof(double))
+                {
+                    double numval;
+                    if (double.TryParse(newtext, out numval))
+                        newValue = numval;
+                    else
                     {
-                        if (string.IsNullOrEmpty(newtext))
-                            return; // If the old value was null, and we've nothing meaningfull to add, pack up and go home
-                        dataType = DataSource.Columns[where.ColumnIndex].DataType;
+                        newValue = double.NaN;
+                        isInvalid = true;
                     }
-                    if (dataType == typeof(string))
-                        newValue = newtext;
-                    else if (dataType == typeof(double))
+                }
+                else if (dataType == typeof(float))
+                {
+                    float numval;
+                    if (float.TryParse(newtext, out numval))
+                        newValue = numval;
+                    else
                     {
-                        double numval;
-                        if (double.TryParse(newtext, out numval))
-                            newValue = numval;
-                        else
-                        {
-                            newValue = double.NaN;
-                            isInvalid = true;
-                        }
+                        newValue = float.NaN;
+                        isInvalid = true;
                     }
-                    else if (dataType == typeof(float))
+                }
+                else if (dataType == typeof(int))
+                {
+                    int numval;
+                    if (int.TryParse(newtext, out numval))
+                        newValue = numval;
+                    else
                     {
-                        float numval;
-                        if (float.TryParse(newtext, out numval))
-                            newValue = numval;
-                        else
-                        {
-                            newValue = float.NaN;
-                            isInvalid = true;
-                        }
+                        newValue = 0;
+                        isInvalid = true;
                     }
-                    else if (dataType == typeof(int))
-                    {
-                        int numval;
-                        if (int.TryParse(newtext, out numval))
-                            newValue = numval;
-                        else
-                        {
-                            newValue = 0;
-                            isInvalid = true;
-                        }
-                    }
-                    else if (dataType == typeof(DateTime))
-                    {
-                        DateTime dateval;
-                        if (!DateTime.TryParse(newtext, out dateval))
-                            isInvalid = true;
-                        newValue = dateval;
-                    }
+                }
+                else if (dataType == typeof(DateTime))
+                {
+                    DateTime dateval;
+                    if (!DateTime.TryParse(newtext, out dateval))
+                        isInvalid = true;
+                    newValue = dateval;
+                }
 
-                    while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
-                    {
-                        DataSource.Rows.Add(DataSource.NewRow());
-                    }
+                while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
+                {
+                    DataSource.Rows.Add(DataSource.NewRow());
+                }
 
-                    // Put the new value into the table on the correct row.
-                    if (DataSource != null)
+                // Put the new value into the table on the correct row.
+                if (DataSource != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
                     }
+                    catch (Exception)
+                    {
+                    }
+                }
 
-                    if (valueBeforeEdit != null && valueBeforeEdit.GetType() == typeof(string) && newValue == null)
-                    {
-                        newValue = string.Empty;
-                    }
+                if (valueBeforeEdit != null && valueBeforeEdit.GetType() == typeof(string) && newValue == null)
+                {
+                    newValue = string.Empty;
+                }
 
-                    if (CellsChanged != null && valueBeforeEdit.ToString() != newValue.ToString())
-                    {
-                        GridCellsChangedArgs args = new GridCellsChangedArgs();
-                        args.ChangedCells = new List<IGridCell>();
-                        args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
-                        args.InvalidValue = isInvalid;
-                        CellsChanged(this, args);
-                    }
+                if (CellsChanged != null && valueBeforeEdit.ToString() != newValue.ToString())
+                {
+                    GridCellsChangedArgs args = new GridCellsChangedArgs();
+                    args.ChangedCells = new List<IGridCell>();
+                    args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                    args.InvalidValue = isInvalid;
+                    CellsChanged(this, args);
                 }
             }
             catch (Exception err)
