@@ -1,10 +1,18 @@
 @echo off
-set PATH=C:\Jenkins\Utilities;%PATH%
+set "PATH=%PATH%;C:\Utilities"
 if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
 if Exist Version.tmp Del Version.tmp
 set APSIMX_BUILD_DIR="..\.."
 if not exist %APSIMX_BUILD_DIR%\Bin\Models.exe exit /B 1
+
+rem Microsoft, in their infinite wisdom, decided that it would be a good idea for
+rem sysinternals such as sigcheck to spawn a popup window the first time you run them,
+rem which asks you to agree to their eula. To get around this, we just need to set a few
+rem registry entries...
+reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
+reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
+
 sigcheck64 -n -nobanner %APSIMX_BUILD_DIR%\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 for /F "tokens=1,2 delims=." %%a in ("%APSIM_VERSION%") do (set SHORT_VERSION=%%a.%%b)
@@ -84,11 +92,13 @@ for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/Examples/
 )
 
 rem Create the tarballs and ar them together
-tar --mode=755 -z -c -f ..\data.tar.gz .
+tar --mode=755 -cf ..\data.tar .
+gzip ..\data.tar
 cd ..\DEBIAN
-tar zcf ..\control.tar.gz .
+tar -cf ..\control.tar .
+gzip ..\control.tar
 cd ..
 ar r ..\Apsim.deb debian-binary control.tar.gz data.tar.gz
 cd ..
-rmdir /S /Q .\DebPackage
+rem rmdir /S /Q .\DebPackage
 exit /B 0
