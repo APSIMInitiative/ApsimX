@@ -702,7 +702,7 @@ namespace UserInterface.Commands
                                     text = text.Replace("[FigureNumber]", figureNumber.ToString());
                                     figureNumber++;
                                 }
-                                section.AddParagraph(text);
+                                AddFormattedParagraphToSection(section, new AutoDocumentation.Paragraph(text, 0));
                             }
                                 
 

@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
             this.view = view as DirectedGraphView;
             this.explorerPresenter = explorerPresenter;
             this.model = model as IVisualiseAsDirectedGraph;
-
+            this.view.Caption = Caption;
             // Tell the view to populate the axis.
             this.PopulateView();
             this.view.OnCaptionChanged += CaptionChanged;
