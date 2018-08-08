@@ -194,13 +194,13 @@ namespace UserInterface.Presenters
                 switch (tagEnum)
                 {
                     case FoodSupplement.SuppAttribute.spaDMP:
-                        propName = "DM_Propn";
+                        propName = "DMPropn";
                         break;
                     case FoodSupplement.SuppAttribute.spaDMD:
-                        propName = "DM_Digestibility";
+                        propName = "DMDigestibility";
                         break;
                     case FoodSupplement.SuppAttribute.spaMEDM:
-                        propName = "ME_2_DM";
+                        propName = "ME2DM";
                         break;
                     case FoodSupplement.SuppAttribute.spaEE:
                         propName = "EtherExtract";
@@ -209,10 +209,10 @@ namespace UserInterface.Presenters
                         propName = "CrudeProt";
                         break;
                     case FoodSupplement.SuppAttribute.spaDG:
-                        propName = "DgProt";
+                        propName = "DegProt";
                         break;
                     case FoodSupplement.SuppAttribute.spaADIP:
-                        propName = "ADIP_2_CP";
+                        propName = "ADIP2CP";
                         break;
                     case FoodSupplement.SuppAttribute.spaPH:
                         propName = "Phosphorus";
