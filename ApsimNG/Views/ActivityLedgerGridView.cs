@@ -67,7 +67,7 @@ namespace UserInterface.Views
         /// </summary>
         public ActivityLedgerGridView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             gridview = (Gtk.TreeView)builder.GetObject("gridview");
@@ -232,8 +232,8 @@ namespace UserInterface.Views
             // of events associated with the grid data, and it's best to let them be handled in the 
             // main message loop. 
 
-            if (mainWindow != null)
-                mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+            if (MasterView.MainWindow != null)
+                MasterView.MainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             ClearGridColumns();
             fixedcolview.Visible = false;
             colLookup.Clear();
@@ -342,8 +342,8 @@ namespace UserInterface.Views
 
             gridview.Show();
 
-            if (mainWindow != null)
-                mainWindow.Cursor = null;
+            if (MasterView.MainWindow != null)
+                MasterView.MainWindow.Cursor = null;
         }
 
         /// <summary>

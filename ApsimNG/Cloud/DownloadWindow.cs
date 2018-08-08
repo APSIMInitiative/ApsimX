@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UserInterface.Views;
 using Gtk;
 
 namespace ApsimNG.Cloud
@@ -208,7 +209,7 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void ChangeOutputDir(object sender, EventArgs e)
         {
-            string dir = UserInterface.ViewBase.AskUserForDirectory("Choose a download folder");
+            string dir = ViewBase.MasterView.AskUserForDirectory("Choose a download folder");
             if (dir != "")
             {
                 entryOutputDir.Text = dir;

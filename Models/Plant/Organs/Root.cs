@@ -1050,13 +1050,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
-                PlantZone.Initialise(Plant.SowingData.Depth, initialDM.Value(), Plant.Population, maximumNConc.Value());
-                InitialiseZones();
-                needToRecalculateLiveDead = true;
-            }
+            PlantZone.Initialise(Plant.SowingData.Depth, initialDM.Value(), Plant.Population, maximumNConc.Value());
+            InitialiseZones();
+            needToRecalculateLiveDead = true;
         }
+        
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
