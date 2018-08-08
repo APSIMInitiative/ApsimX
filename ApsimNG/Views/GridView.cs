@@ -454,6 +454,14 @@
             cell.Visible = true;
             CellRendererText textRenderer = cell as CellRendererText;
             textRenderer.Text = text;
+
+            if (categoryRows.Contains(rowNo) && !CellIsSelected(rowNo, colNo))
+            {
+                textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                Color separatorColour = Color.LightSteelBlue;
+                cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
+                textRenderer.Editable = false;
+            }
         }
 
         /// <summary>
@@ -2296,7 +2304,7 @@
         /// </summary>
         private void EditSelectedCell()
         {
-            if (!GetColumn(selectedCellColumnIndex).ReadOnly)
+            if ( !(GetColumn(selectedCellColumnIndex).ReadOnly || categoryRows.Contains(selectedCellRowIndex)) )
             {
                 userEditingCell = true;
                 Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);
