@@ -650,6 +650,7 @@
         {
             if (userEditingCell)
             {
+                userEditingCell = false;
                 // NB - this assumes that the editing control is a Gtk.Entry control
                 // This may change in future versions of Gtk
                 if (editControl is Entry)
@@ -1781,25 +1782,34 @@
         {
             try
             {
-                IGridCell where = GetCurrentCell;
+                int colNo = Grid.Columns.ToList().IndexOf(Grid.Columns.FirstOrDefault(c => c.Cells.Contains(sender as CellRenderer)));
+                int rowNo = Int32.Parse(r.Path);
+                IGridCell where = colNo >= 0 && rowNo >= 0 ? new GridCell(this, colNo, rowNo) : GetCurrentCell;
                 while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
                 {
                     DataSource.Rows.Add(DataSource.NewRow());
                 }
-                DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)DataSource.Rows[where.RowIndex][where.ColumnIndex];
-                if (CellsChanged != null)
+                object value = DataSource.Rows[where.RowIndex][where.ColumnIndex];
+                if (value != null && value != DBNull.Value)
                 {
-                    GridCellsChangedArgs args = new GridCellsChangedArgs();
-                    args.ChangedCells = new List<IGridCell>();
-                    args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
-                    CellsChanged(this, args);
+                    DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)DataSource.Rows[where.RowIndex][where.ColumnIndex];
+                    if (CellsChanged != null)
+                    {
+                        GridCellsChangedArgs args = new GridCellsChangedArgs();
+                        args.ChangedCells = new List<IGridCell>();
+                        args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                        CellsChanged(this, args);
+                    }
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
-            userEditingCell = false;
+            finally
+            {
+                userEditingCell = false;
+            }
         }
 
         /// <summary>
