@@ -731,7 +731,17 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// The supplement component
+    /// #GrazPlan Supplement
+    /// This component represents one or more stores of supplementary feed. 
+    /// 
+    /// A component instance represents the stores and paddock-available amounts of several supplements. 
+    /// Each supplement type is distinguished by a name and is represented by the amount in store together 
+    /// with a number of attributes relating to its quality as a diet for animals.
+    /// 
+    /// Feed may be bought and then (logically) placed in one of the "paddocks" to which animals in the 
+    /// Stock component may be assigned. Feed which has been placed in a paddock is accessible to grazing stock 
+    /// in that paddock. If more than one supplement is placed into a paddock, the animals access a mixture.
+    /// 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.SupplementView")]
@@ -751,6 +761,10 @@ namespace Models.GrazPlan
         /// </summary>
         [Link(IsOptional = true)]
         private Stock animals = null;
+
+        /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
+        [Link]
+        private ISummary OutputSummary = null;
 
         /// <summary>
         /// Used to keep track of the selected SupplementItem in the user interface
@@ -1137,10 +1151,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// Buys the specified amount.
         /// </summary>
-        /// <param name="amount">The amount.</param>
+        /// <param name="amount">Amount (kg fresh weight) of the supplement to be included in the store</param>
         /// <param name="supplement">The supplement.</param>
         public void Buy(double amount, string supplement)
         {
+            OutputSummary.WriteMessage(this, "Purchase " + amount.ToString() + "kg of " + supplement);
             theModel.AddToStore(amount, supplement);
         }
 
