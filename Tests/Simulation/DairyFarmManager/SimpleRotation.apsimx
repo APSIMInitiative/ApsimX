@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="37">
   <Name>Simulations</Name>
   <Simulation>
     <Name>SimpleRotation</Name>
@@ -7,14 +7,16 @@
       <Name>Memo</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <MemoText><![CDATA[Look at ReportTop and see what the output looks like after the cows are weaned]]></MemoText>
+      <MemoText><![CDATA[(next script add more complexity to animal trading)
+
+]]></MemoText>
     </Memo>
     <Clock>
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <StartDate>2001-10-01T00:00:00</StartDate>
-      <EndDate>2001-10-31T00:00:00</EndDate>
+      <EndDate>2003-09-30T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
@@ -52,26 +54,62 @@
       <EnterpriseList />
       <GrazingPeriods />
     </Stock>
+    <Supplement>
+      <Name>Supplement</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <SpoilageTime>0</SpoilageTime>
+      <Stores>
+        <StoreType>
+          <IsRoughage>true</IsRoughage>
+          <DMContent>0.85</DMContent>
+          <DMD>0</DMD>
+          <MEContent>0</MEContent>
+          <CPConc>0</CPConc>
+          <ProtDg>0</ProtDg>
+          <PConc>0</PConc>
+          <SConc>0</SConc>
+          <EEConc>0</EEConc>
+          <ADIP2CP>0</ADIP2CP>
+          <AshAlk>0</AshAlk>
+          <MaxPassage>0</MaxPassage>
+          <Name>fodder</Name>
+          <Stored>0</Stored>
+        </StoreType>
+        <StoreType>
+          <IsRoughage>true</IsRoughage>
+          <DMContent>1</DMContent>
+          <DMD>0.85</DMD>
+          <MEContent>12</MEContent>
+          <CPConc>0.16</CPConc>
+          <ProtDg>0.70000000000000007</ProtDg>
+          <PConc>0.0032</PConc>
+          <SConc>0.0024</SConc>
+          <EEConc>0.02</EEConc>
+          <ADIP2CP>0.06</ADIP2CP>
+          <AshAlk>0.6</AshAlk>
+          <MaxPassage>0</MaxPassage>
+          <Name>silage_highquality</Name>
+          <Stored>0</Stored>
+        </StoreType>
+      </Stores>
+      <PaddockList />
+    </Supplement>
     <Manager>
-      <Name>Ex_TargetRotationLength</Name>
+      <Name>TargetRotationLength</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <Script>
         <DoVerbose>False</DoVerbose>
-        <StockingRate>3</StockingRate>
-        <CurrentLocationName>Paddock01</CurrentLocationName>
-        <Seperator1>
-        </Seperator1>
-        <TargetRotationLength>4</TargetRotationLength>
-        <PostGrazingResidual>1500</PostGrazingResidual>
-        <HarvestExcessHerbage>False</HarvestExcessHerbage>
-        <Seperator2>
-        </Seperator2>
+        <StockingRate>10</StockingRate>
+        <CurrentLocationName>Paddock00</CurrentLocationName>
+        <TargetRotationLength>10</TargetRotationLength>
+        <PostGrazingResidual>2800</PostGrazingResidual>
+        <PostCuttingResidual>1800</PostCuttingResidual>
+        <HarvestExcessHerbage>True</HarvestExcessHerbage>
         <SilageEveryDay>0.25</SilageEveryDay>
-        <SilageOnPastureMass>5</SilageOnPastureMass>
-        <TriggerPastureMass>1500</TriggerPastureMass>
-        <Seperator3>
-        </Seperator3>
+        <SilageOnPastureMass>15</SilageOnPastureMass>
+        <TriggerPastureMass>2000</TriggerPastureMass>
         <NumCows>3</NumCows>
         <pastLocationName>
         </pastLocationName>
@@ -103,7 +141,7 @@ namespace Models
     {
         [Link] Clock Clock;
         [Link] Stock Cows;
-        [Link] Supplement Feed;
+        [Link] Supplement Supplement;
         [Link] Zone[] Paddocks;
         [Link] ISummary summary = null;
         [Link] Simulation Farm;
@@ -120,30 +158,41 @@ namespace Models
             public double paddockArea;
         }
 
-        [Description("Do verbose reporting from this script (tick for yes): ")] public bool DoVerbose { get; set; }
-        [Separator("some text")]         //[Description("===============================")] public string Seperator0 { get; set; }
+        [Description("Do verbose reporting from this script (tick for yes): ")] 
+        public bool DoVerbose { get; set; }
 
-        [Description("Whole-farm stocking rate (head/ha): ")]
-        public double StockingRate { get; set; }
-        [Description("Initial location of the cows (paddock name): ")] public string CurrentLocationName { get; set; }
-        [Description("===============================")] public string Seperator1 { get; set; }
+        [Separator("Whole farm and initial location")]
 
-        [Description("Target rotation length (days/paddock): ")] public int TargetRotationLength { get; set; }
-        [Description("Post grazing residual (kgDM/ha): ")] public double PostGrazingResidual { get; set; }
-        [Description("Harvest excess herbage above residual when cows leave the paddock?: ")] public bool HarvestExcessHerbage { get; set; }
-        [Description("===============================")] public string Seperator2 { get; set; }
+        [Description("Whole-farm stocking rate (head/ha): ")] 
+        public double StockingRate { get; set; } 
 
-        [Description("Baseline feeding of silage (kgDM/head/day): ")] public double SilageEveryDay { get; set; }
-        [Description("Low pasture mass feeding of silage (kgDM/head/day): ")] public double SilageOnPastureMass { get; set; }
-        [Description("Trigger pasture mass for above rule (kgDM/ha): ")] public double TriggerPastureMass { get; set; }
+        [Description("Initial location of the cows (paddock name): ")] 
+        public string CurrentLocationName { get; set; }
 
+        [Separator("Settings for the rotation")]
 
+        [Description("Target rotation length (days/paddock): ")] 
+        public int TargetRotationLength { get; set; }
 
+        [Description("Post-grazing residual to trigger pasture conservation (kgDM/ha): ")] 
+        public double PostGrazingResidual { get; set; }
 
+        [Description("Post-cutting residual (kgDM/ha): ")] 
+        public double PostCuttingResidual { get; set; }
 
+        [Description("Harvest excess herbage above residual when cows leave the paddock?: ")] 
+        public bool HarvestExcessHerbage { get; set; }
 
-        [Description("===============================")] public string Seperator3 { get; set; }
+        [Separator("Settings for supplementary feeding")]
 
+        [Description("Baseline (i.e. every day) feeding of silage (kgDM/head/day): ")] 
+        public double SilageEveryDay { get; set; }
+
+        [Description("Low pre-grazing pasture mass feeding (additional to baseline) of silage (kgDM/head/day): ")] 
+        public double SilageOnPastureMass { get; set; }
+
+        [Description("Trigger pre-grazing pasture mass for the rule above (kgDM/ha): ")] 
+        public double TriggerPastureMass { get; set; }
 
         public int NumCows { get; set; } // number of cows on the whole farm
         public string pastLocationName { get; set; }  // name of the paddock that the cows are currently in
@@ -227,10 +276,10 @@ namespace Models
                             double pastPaddockBiomass = 0.0;
                             foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
                                 pastPaddockBiomass += plant.AboveGroundWt;
-                            if (pastPaddockBiomass > (PostGrazingResidual + 250.0))  //why the 250?
+                            if (pastPaddockBiomass > PostGrazingResidual)  //why the 250? Because don't harvest very small amounts ...
                             {
                                 foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))
-                                    plant.Graze(amount: (plant.AboveGroundWt / pastPaddockBiomass * PostGrazingResidual), type: "SetResidueAmount");
+                                    plant.Graze(amount: (plant.AboveGroundWt / pastPaddockBiomass * PostCuttingResidual), type: "SetResidueAmount");  
 
                             }
                         }
@@ -248,12 +297,26 @@ namespace Models
 
             if (SilageEveryDay > 0)
             {
-                Feed.Feed("silage_highquality", SilageEveryDay * Cows.NumberAll, CurrentLocationName);
+            // see how much supplement there is - buy more if needed
+            // Stores 1 is from a pasture component so bought supplements start at 2
+            	double silageOnHand = Supplement.Stores[2 - 1].Stored;
+            	if (silageOnHand < SilageEveryDay * Cows.NumberAll)
+            	{
+            		Supplement.Buy(SilageEveryDay * 180 * Cows.NumberAll, "silage_highquality");  // i.e. 6 months worth
+            		summary.WriteMessage(this, "SilageEveryDay: Buying silage_highquality of total amount : " + (SilageEveryDay * 180 * Cows.NumberAll) + " kg DM");
+            	}
+                Supplement.Feed("silage_highquality", SilageEveryDay * Cows.NumberAll, CurrentLocationName, true);
             }
 
             if ((SilageOnPastureMass > 0) && (listOfPaddockInfo[CurrentLocationNum].harvestableBiomass < TriggerPastureMass))
             {
-                Feed.Feed("silage_highquality", SilageOnPastureMass * Cows.NumberAll, CurrentLocationName);
+            	double silageOnHand = Supplement.Stores[2 - 1].Stored;
+            	if (silageOnHand < SilageOnPastureMass * Cows.NumberAll)
+            	{
+            		Supplement.Buy(SilageOnPastureMass * 180 * Cows.NumberAll, "silage_highquality");
+            		summary.WriteMessage(this, "SilageOnPastureMass: Buying silage_highquality of total amount : " + (SilageOnPastureMass * 180 * Cows.NumberAll) + " kg DM");
+            	}
+                Supplement.Feed("silage_highquality", SilageOnPastureMass * Cows.NumberAll, CurrentLocationName, true);
             }
 
 
@@ -265,6 +328,7 @@ namespace Models
             //this is after Stock have eaten
             UpdatePaddockInfo();
 
+
         }
 
         public void SetInitialCowStuff()
@@ -274,17 +338,17 @@ namespace Models
                 g = Cows.NoGroups + 1;
 
                 StockBuy purchase = new StockBuy();
-                purchase.Genotype = "Friesian";
+                purchase.Genotype = "Angus";
                 purchase.Number = NumCows;
-                purchase.Sex = "heifers";
+                purchase.Sex = "steers";
                 purchase.Age = 36;       // age in months
                 purchase.Weight = 600.0;  // live weight in kg
                 purchase.UseTag = g + 1;
-                purchase.MatedTo = "Friesian";
-                purchase.Pregnant = 280;  // days pregnant, 0 = non pregnant, 1 = pregnant
+                purchase.MatedTo = "Angus";
+                purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant
                 purchase.Lactating = 0;  // 0 for dry, 1 for lactating
-                purchase.NumYoung = 1;
-                purchase.YoungWt = 45;
+                purchase.NumYoung = 0;
+                purchase.YoungWt = 0;
 
                 Cows.Buy(purchase);
             }
@@ -382,70 +446,28 @@ namespace Models
 }
 ]]></Code>
     </Manager>
-    <Supplement>
-      <Name>Supplement</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <SpoilageTime>0</SpoilageTime>
-      <Stores>
-        <StoreType>
-          <IsRoughage>true</IsRoughage>
-          <DMContent>0.85</DMContent>
-          <DMD>0</DMD>
-          <MEContent>0</MEContent>
-          <CPConc>0</CPConc>
-          <ProtDg>0</ProtDg>
-          <PConc>0</PConc>
-          <SConc>0</SConc>
-          <EEConc>0</EEConc>
-          <ADIP2CP>0</ADIP2CP>
-          <AshAlk>0</AshAlk>
-          <MaxPassage>0</MaxPassage>
-          <Name>fodder</Name>
-          <Stored>0</Stored>
-        </StoreType>
-        <StoreType>
-          <IsRoughage>true</IsRoughage>
-          <DMContent>1</DMContent>
-          <DMD>0.85</DMD>
-          <MEContent>12</MEContent>
-          <CPConc>0.16</CPConc>
-          <ProtDg>0.70000000000000007</ProtDg>
-          <PConc>0.0032</PConc>
-          <SConc>0.0024</SConc>
-          <EEConc>0.02</EEConc>
-          <ADIP2CP>0.06</ADIP2CP>
-          <AshAlk>0.6</AshAlk>
-          <MaxPassage>0</MaxPassage>
-          <Name>silage_highquality</Name>
-          <Stored>2000</Stored>
-        </StoreType>
-      </Stores>
-      <PaddockList />
-    </Supplement>
     <Report>
-      <Name>ReportTop</Name>
+      <Name>ReportFarm</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[Ex_TargetRotationLength].Script.listOfPaddockInfo[1].harvestableBiomass as PaddockInfo</string>
-        <string>[Ex_TargetRotationLength].Script.CurrentLocation as CurrentLoc</string>
-        <string>[Ex_TargetRotationLength].Script.CurrentLocationNum as CurrentLocNum</string>
+        <string>[TargetRotationLength].Script.listOfPaddockInfo[1].harvestableBiomass as PaddockInfo</string>
+        <string>[TargetRotationLength].Script.CurrentLocation as CurrentLoc</string>
+        <string>[TargetRotationLength].Script.CurrentLocationNum as CurrentLocNum</string>
         <string>[Stock].PastIntakeAll.Weight as IntakePast</string>
         <string>[Stock].SuppIntakeAll.Weight as IntakeSupp</string>
         <string>[Stock].IntakeAll.Weight as IntakePastSupp</string>
         <string>[Stock].Paddock as StockInPaddockName</string>
-        <string>[Ex_TargetRotationLength].Script.CurrentLocationNum as StockInPaddockNum</string>
+        <string>[TargetRotationLength].Script.CurrentLocationNum as StockInPaddockNum</string>
         <string>[Stock].NumberAll</string>
-        <string>[Stock].MilkWtAll * 0.1 as MilkSolids</string>
         <string>[Stock].BaseWtAll</string>
         <string>[Stock].CondScoreAll</string>
         <string>[Stock].IntakeAll.Weight * [Stock].NumberAll as TotalIntake</string>
         <string>([Paddock00].Ryegrass.HerbageGrowthWt + [Paddock00].WhiteClover.HerbageGrowthWt) * [Paddock00].Area + ([Paddock01].Ryegrass.HerbageGrowthWt + [Paddock01].WhiteClover.HerbageGrowthWt) * [Paddock01].Area + ([Paddock02].Ryegrass.HerbageGrowthWt + [Paddock02].WhiteClover.HerbageGrowthWt) * [Paddock02].Area as TotalGrowth</string>
-        <string>[Supplement].stores[2].Stored</string>
+        <string>[Supplement].Stores[2].Stored</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -463,16 +485,16 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <Marker>FilledDiamond</Marker>
+          <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
+          <TableName>ReportFarm</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Stock.NumberAll</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -484,12 +506,12 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-1663232</ColourArgb>
-          <Marker>FilledDiamond</Marker>
+          <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
+          <TableName>ReportFarm</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>StockInPaddockNum</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -526,7 +548,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>BodyWt and Milk Production</Name>
+        <Name>BodyWt and Condition Score</Name>
         <Series>
           <Name>BodyWeight</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -540,7 +562,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
+          <TableName>ReportFarm</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Stock.BaseWtAll</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -549,70 +571,19 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>MilkProduction</Name>
+          <Name>ConditionScore</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
+          <ColourArgb>-2793984</ColourArgb>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MilkSolids</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Condition Score</Name>
-        <Series>
-          <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
+          <TableName>ReportFarm</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Stock.CondScoreAll</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -631,8 +602,14 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
           <Type>Left</Type>
-          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -641,10 +618,16 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
+    <Folder>
+      <Name>Biomass and Intake</Name>
       <Graph>
-        <Name>BodyWt and Milk Production1</Name>
+        <Name>BiomassPlot</Name>
         <Series>
-          <Name>MilkProduction</Name>
+          <Name>Pasture</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Type>Scatter</Type>
@@ -656,15 +639,233 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
+          <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>MilkSolids</YFieldName>
+          <YFieldName>PaddockBiomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Intake</Name>
+        <Series>
+          <Name>Pasture</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportFarm</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>IntakePast</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>PastureAndSilage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportFarm</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>IntakePastSupp</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Total Intake and Growth</Name>
+        <Series>
+          <Name>TotIntake</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportFarm</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalIntake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>TotGrowth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportFarm</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalGrowth</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>PGR</Name>
+        <Series>
+          <Name>Series1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>PGR</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>SupplementStore</Name>
+        <Series>
+          <Name>Series1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>ReportFarm</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Supplement.Stores2.Stored</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
@@ -987,13 +1188,9 @@ namespace Models
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <refheight>2</refheight>
-        <albedo>0.29366217672824863</albedo>
-        <emissivity>0.96</emissivity>
-        <RadIntTotal>0</RadIntTotal>
+        <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+        <NightInterceptionFraction>0.5</NightInterceptionFraction>
+        <ReferenceHeight>2</ReferenceHeight>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -1903,9 +2100,72 @@ namespace Models
           <string>[Clock].EndOfDay</string>
         </EventNames>
       </Report>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>PaddockBiomass</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>WhiteClover.AboveGroundWt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <Area>1</Area>
+      <Area>10</Area>
       <Slope>0</Slope>
     </Zone>
     <Zone>
@@ -2206,13 +2466,9 @@ namespace Models
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <refheight>2</refheight>
-        <albedo>0.29366217672824863</albedo>
-        <emissivity>0.96</emissivity>
-        <RadIntTotal>0</RadIntTotal>
+        <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+        <NightInterceptionFraction>0.5</NightInterceptionFraction>
+        <ReferenceHeight>2</ReferenceHeight>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -3122,9 +3378,72 @@ namespace Models
           <string>[Clock].EndOfDay</string>
         </EventNames>
       </Report>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>PaddockBiomass</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Series1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>WhiteClover.AboveGroundWt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <Area>1</Area>
+      <Area>10</Area>
       <Slope>0</Slope>
     </Zone>
     <Zone>
@@ -3425,13 +3744,9 @@ namespace Models
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <refheight>2</refheight>
-        <albedo>0.29366217672824863</albedo>
-        <emissivity>0.96</emissivity>
-        <RadIntTotal>0</RadIntTotal>
+        <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+        <NightInterceptionFraction>0.5</NightInterceptionFraction>
+        <ReferenceHeight>2</ReferenceHeight>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -4341,25 +4656,17 @@ namespace Models
           <string>[Clock].EndOfDay</string>
         </EventNames>
       </Report>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Folder>
-      <Name>Biomass and Intake</Name>
       <Graph>
-        <Name>Biomass</Name>
+        <Name>Graph</Name>
         <Series>
-          <Name>Series1</Name>
+          <Name>Series</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorToVaryColours>Zone</FactorToVaryColours>
-          <Marker>FilledCircle</Marker>
+          <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
@@ -4367,192 +4674,11 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>PaddockBiomass</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Intake</Name>
-        <Series>
-          <Name>Pasture</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>IntakePast</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>PastureAndSilage</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>IntakePastSupp</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Silage</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-11094807</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>IntakeSupp</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Total Intake and Growth</Name>
-        <Series>
-          <Name>TotIntake</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>TotalIntake</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>TotGrowth</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>TotalGrowth</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>PGR</Name>
         <Series>
           <Name>Series1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4560,17 +4686,16 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorToVaryColours>Zone</FactorToVaryColours>
-          <Marker>FilledCircle</Marker>
+          <ColourArgb>-11094807</ColourArgb>
+          <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>PGR</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <YFieldName>WhiteClover.AboveGroundWt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4579,7 +4704,6 @@ namespace Models
         <Enabled>true</Enabled>
         <Axis>
           <Type>Bottom</Type>
-          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -4587,51 +4711,6 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>SupplementStore</Name>
-        <Series>
-          <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-11094807</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <Checkpoint>Current</Checkpoint>
-          <TableName>ReportTop</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Supplement.stores2.Stored</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -4642,8 +4721,9 @@ namespace Models
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
-    </Folder>
+      <Area>10</Area>
+      <Slope>0</Slope>
+    </Zone>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
   </Simulation>
