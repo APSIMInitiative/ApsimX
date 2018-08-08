@@ -136,7 +136,32 @@ namespace Models.GrazPlan
     ///**2. Buy**
     /// 
     /// * Buys animals (i.e. they enter the simulation). The purchased animals will form a new animal group that is placed at the end of the list of animal groups
+    ///
+    /// ***Method details:***
     /// 
+    ///      public void Buy(StockBuy stock)
+    ///    
+    ///      public void Buy(string genotype, double number, string sex, double age, double weight, double fleeceWeight)
+    ///
+    /// _StockBuy_ type:
+    /// 
+    ///|Field       .|Type  .|Units  .|Description                   .| 
+    ///|---           |---     |---    |:--- |
+    ///|Genotype      |string  |       |Genotype of the animals to be bought. Must match the name field of a member of the genotypes property       |
+    ///|Number        |int     |       |Number of animals to be bought       |
+    ///|Sex           |string  |       |Sex of the animals. Feasible values are as for sheep: ram, crypto, wether, ewe or cattle: bull, steer, heifer, cow as appropriate       |
+    ///|Age           |int     |Months |Average age of the animals       |
+    ///|Weight        |double  |kg     |Average unfasted live weight of the animals. If a value of zero is given, a default value will be calculated, making use of the cond_score parameter if it is non-zero. |
+    ///|FleeceWt      |double  |kg     |Average greasy fleece weight of the animals. Only meaningful in sheep. |
+    ///|CondScore     |double  |       |Average condition score of the animals. If a value of zero is given, the default condition score for the weight and age will be used |
+    ///|MatedTo       |string  |       |Genotype of the rams or bulls with which the animals were mated prior to entry. Only meaningful if pregnant or lactating is non-zero. Must match the name field of a member of the genotypes property|
+    ///|Pregnant      |int     |days   |Zero denotes not pregnant; 1 or more denotes the time since conception. Only meaningful for females|
+    ///|Lactating     |int     |days   |Zero denotes not lactating; 1 or more denotes the time since parturition in lactating animals. Only meaningful for females|
+    ///|NumYoung      |int     |       |Number of foetuses and/or suckling offspring|
+    ///|YoungWt       |double  |kg     |Average unfasted live weight of any suckling lambs or calves.|
+    ///|YoungFleeceWt |double  |kg     |Average greasy fleece weight of any suckling lambs.|
+    ///|UseTag        |int     |       |Tag the new animals with this tag number|
+    ///
     ///**3. Castrate**
     ///
     /// * Converts ram lambs to wether lambs, or bull calves to steers.  
