@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to connect to</param>
         /// <param name="view">The view to connect to</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public new void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public override void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             base.Attach(model, view, explorerPresenter);
             grid.ContextItemsNeeded += GetContextItems;
@@ -109,7 +109,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
-        public new void Detach()
+        public override void Detach()
         {
             base.Detach();
             grid.EndEdit();
