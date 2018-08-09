@@ -150,9 +150,6 @@ namespace Models.PMF.Phen
 
             currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage)) - 1;
 
-            if (!(phases[currentPhaseIndex] is IPhaseWithTarget))
-               { throw new Exception("Can not set phenology to phase of type " + phases[currentPhaseIndex].GetType()); }
-
             if (currentPhaseIndex <= oldPhaseIndex)
             {
                 //Make a list of phases to rewind
@@ -165,8 +162,11 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    AccumulatedTT -= phase.TTinPhase;
-                    AccumulatedEmergedTT -= phase.TTinPhase;
+                    if(!(phase is IPhaseWithTarget))
+                        { throw new Exception("Can not rewind over phase of type " + phases[currentPhaseIndex].GetType()); }
+                    IPhaseWithTarget rewindingPhase = phase as IPhaseWithTarget;
+                    AccumulatedTT -= rewindingPhase.ProgressThroughPhase;
+                    AccumulatedEmergedTT -= rewindingPhase.ProgressThroughPhase;
                     phase.ResetPhase();
                 }
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
@@ -193,9 +193,9 @@ namespace Models.PMF.Phen
             }
             
             IPhaseWithTarget currentPhase = (phases[currentPhaseIndex] as IPhaseWithTarget);
-            currentPhase.TTinPhase = currentPhase.Target * (newStage - currentPhaseIndex - 1);
+            currentPhase.ProgressThroughPhase = currentPhase.Target * (newStage - currentPhaseIndex - 1);
 
-            if (currentPhase.TTinPhase == 0)
+            if (currentPhase.ProgressThroughPhase == 0)
                 stagesPassedToday.Add(currentPhase.Start);
 
             if (StageWasReset != null)
@@ -305,7 +305,9 @@ namespace Models.PMF.Phen
                 // Calculate progression through current phase
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
-                AccumulateTT(CurrentPhase.TTForTimeStep);
+                AccumulatedTT += thermalTime.Value();
+                if (Emerged)
+                    AccumulatedEmergedTT += thermalTime.Value();
 
                 while (incrementPhase)
                 {
@@ -325,7 +327,6 @@ namespace Models.PMF.Phen
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
-                    AccumulateTT(CurrentPhase.TTForTimeStep);
                 }
                 
                Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
@@ -379,13 +380,6 @@ namespace Models.PMF.Phen
             }
         }
         
-        private void AccumulateTT(double TTinTimeStep)
-        {
-            AccumulatedTT += TTinTimeStep;
-            if (Emerged)
-                AccumulatedEmergedTT += TTinTimeStep;
-        }
-                
          private void Clear()
         {
             DaysAfterSowing = 0;

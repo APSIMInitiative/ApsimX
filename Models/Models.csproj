@@ -407,7 +407,6 @@
     <Compile Include="Functions\Exponential.cs" />
     <Compile Include="Functions\ExpressionFunction.cs" />
     <Compile Include="Functions\ExternalVariable.cs" />
-    <Compile Include="Functions\InPhaseTtFunction.cs" />
     <Compile Include="Functions\LessThanFunction.cs" />
     <Compile Include="Functions\LinearInterpolationFunction.cs" />
     <Compile Include="Functions\MaximumFunction.cs" />

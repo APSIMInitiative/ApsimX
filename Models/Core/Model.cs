@@ -177,7 +177,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.Functions.ExpressionFunction))]
         [XmlElement(typeof(Models.Functions.ExternalVariable))]
         [XmlElement(typeof(Models.Functions.HoldFunction))]
-        [XmlElement(typeof(Models.Functions.InPhaseTtFunction))]
         [XmlElement(typeof(Models.Functions.LessThanFunction))]
         [XmlElement(typeof(Models.Functions.LinearInterpolationFunction))]
         [XmlElement(typeof(Models.Functions.BoundFunction))]

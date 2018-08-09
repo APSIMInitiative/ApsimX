@@ -31,7 +31,7 @@ namespace Models.PMF.Phen
         private IFunction target = null;
 
         [Link]
-        private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        private IFunction progression = null;  
 
         //2. private fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -58,19 +58,19 @@ namespace Models.PMF.Phen
                 if (target.Value() == 0)
                     return 1;
                 else
-                    return TTinPhase / target.Value();
+                    return ProgressThroughPhase / target.Value();
             }
         }
 
-        /// <summary>Gets the tt for today.</summary>
+        /// <summary>Units of progress through phase on this time step.</summary>
         [XmlIgnore]
-        public double TTForTimeStep { get; set; }
+        public double ProgressionForTimeStep { get; set; }
 
-        /// <summary>Gets the t tin phase.</summary>
+        /// <summary>Accumulated units of pregress through phase.</summary>
         [XmlIgnore]
-        public double TTinPhase { get; set; }
+        public double ProgressThroughPhase { get; set; }
 
-        /// <summary>Thermal time target.</summary>
+        /// <summary>Target that accumulated progression must meet to proceed to the next phase</summary>
         [XmlIgnore]
         public double Target { get { return target.Value(); } }
 
@@ -83,8 +83,8 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = ThermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForTimeStep;
+            ProgressionForTimeStep = progression.Value() * propOfDayToUse;
+            ProgressThroughPhase += ProgressionForTimeStep;
 
             if (firstStep)
             {
@@ -93,15 +93,15 @@ namespace Models.PMF.Phen
             }
 
             double Target = target.Value();
-            if (TTinPhase > Target)
+            if (ProgressThroughPhase > Target)
             {
-                if (TTForTimeStep > 0.0)
+                if (ProgressionForTimeStep > 0.0)
                 {
                     proceedToNextPhase = true;
-                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
-                    TTForTimeStep *= (1 - propOfDayToUse);
+                    propOfDayToUse = (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                    ProgressionForTimeStep *= (1 - propOfDayToUse);
                 }
-                TTinPhase = Target;
+                ProgressThroughPhase = Target;
             }
             
             if (proceedToNextPhase)
@@ -124,7 +124,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
         {
-            TTinPhase = 0;
+            ProgressThroughPhase = 0;
             firstStep = true;
         }
 
