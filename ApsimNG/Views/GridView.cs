@@ -719,6 +719,7 @@
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
                 fixedColView.Visible = false;
                 splitter.Position = 0;
+                splitter.Child1.HideAll();
             }
             numberLockedCols = number;
         }
