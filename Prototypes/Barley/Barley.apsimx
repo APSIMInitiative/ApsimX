@@ -161,7 +161,7 @@ _Brown, H.E., Huth, N.I., Khaembah E.N., Zyskowski, R., and Holzworth, D.P._
           <MemoText><![CDATA[Barley exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.
 Temperature effects development increasing development rates and decreasing phase durations as temperatures increase.  Theset affects are captured by thermal time, .  However, Barley also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  
 
-We draw on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress toward this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    
+We draw on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress toward this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage ([Jamieson_LeafAppearance_1995]).    
 
 Final Leaf Number (FLN) is modeled as the sum of three numbers:
 
@@ -943,7 +943,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Rational</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <MemoText><![CDATA[This is the thermal time between the emergence of leaf tips.  The model used here is based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
+            <MemoText><![CDATA[This is the thermal time between the emergence of leaf tips where leaf appearace is described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7 ([Jamieson_SIRIUS_1998]).]]></MemoText>
           </Memo>
           <LinearInterpolationFunction>
             <Name>LeafStageFactor</Name>
@@ -1612,7 +1612,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>Memo</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <MemoText><![CDATA[Tillering is said to cease once a threshold fraction of incoming radiation has been achieved.  This captures shading effects on tillering described by [evers2006cessation].]]></MemoText>
+                <MemoText><![CDATA[Tillering is said to cease once a threshold fraction of incoming radiation has been achieved to captures shading effects on tillering ([evers2006cessation]).]]></MemoText>
               </Memo>
               <XYPairs>
                 <Name>XYPairs</Name>
@@ -26099,17 +26099,6 @@ namespace Models
     </Folder>
     <Folder>
       <Name>Australia</Name>
-      <Memo>
-        <Name>Trial details</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <MemoText><![CDATA[•	These simulations are inherited from barley validation (Path = Apsim\Tests\Validation\Barley) & modified for ApsimX.
-•	HRS = Hermitage Research Station (28" l8/S, 152"06/E, altitude 480 m), near Warwick, Queensland) - see Goyne et al. (1996).
-•	This reference indicates plant population of 90/m2 and row spacing of 0.5 m (adopted here as a place holder).
-•	Roma Research Station (R?) – see Table 1 in Goyne et al. (1996).
-•	Kingsthorpe (Kthpe?) – see Table 1 in Goyne et al. (1996).
-]]></MemoText>
-      </Memo>
       <Graph>
         <Name>Harvest Biomass</Name>
         <Series>
@@ -26345,7 +26334,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>HarvestObsPred</TableName>
             <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
-            <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
+            <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -26393,8 +26382,8 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>HarvestObsPred</TableName>
-            <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
-            <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
+            <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -26991,6 +26980,74 @@ namespace Models
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
               </Plant>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Barley].Phenology.CurrentPhaseName</string>
+                  <string>[Barley].Phenology.CurrentStageName</string>
+                  <string>[Barley].Phenology.FlagLeafDAS.Value()</string>
+                  <string>[Barley].Phenology.FloweringDAS.Value()</string>
+                  <string>[Barley].Phenology.MaturityDAS.Value()</string>
+                  <string>[Barley].Grain.Wt</string>
+                  <string>[Barley].Grain.N</string>
+                  <string>[Barley].Grain.Number</string>
+                  <string>[Barley].Grain.Nconc</string>
+                  <string>[Barley].AboveGround.Wt</string>
+                  <string>[Barley].AboveGround.N</string>
+                  <string>[Barley].Grain.Protein</string>
+                  <string>[Barley].Grain.Size</string>
+                  <string>[Barley].Structure.HaunStage.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.MainStemPopn</string>
+                  <string>[Barley].SowingData.Cultivar</string>
+                  <string>[Barley].SowingDate.DayOfYear</string>
+                  <string>[Barley].Leaf.CohortMaxSize</string>
+                  <string>[Clock].StartDate</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Barley].Harvesting</string>
+                </EventNames>
+              </Report>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Plant Barley;
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Barley.Phenology.CurrentPhaseName == "Ripening")
+            {
+                Barley.Harvest();
+                Barley.EndCrop();
+            }
+        }
+    }
+}
+       
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Area>1</Area>
@@ -28178,6 +28235,74 @@ namespace Models
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
               </Plant>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Barley].Phenology.CurrentPhaseName</string>
+                  <string>[Barley].Phenology.CurrentStageName</string>
+                  <string>[Barley].Phenology.FlagLeafDAS.Value()</string>
+                  <string>[Barley].Phenology.FloweringDAS.Value()</string>
+                  <string>[Barley].Phenology.MaturityDAS.Value()</string>
+                  <string>[Barley].Grain.Wt</string>
+                  <string>[Barley].Grain.N</string>
+                  <string>[Barley].Grain.Number</string>
+                  <string>[Barley].Grain.Nconc</string>
+                  <string>[Barley].AboveGround.Wt</string>
+                  <string>[Barley].AboveGround.N</string>
+                  <string>[Barley].Grain.Protein</string>
+                  <string>[Barley].Grain.Size</string>
+                  <string>[Barley].Structure.HaunStage.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.MainStemPopn</string>
+                  <string>[Barley].SowingData.Cultivar</string>
+                  <string>[Barley].SowingDate.DayOfYear</string>
+                  <string>[Barley].Leaf.CohortMaxSize</string>
+                  <string>[Clock].StartDate</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Barley].Harvesting</string>
+                </EventNames>
+              </Report>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Plant Barley;
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Barley.Phenology.CurrentPhaseName == "Ripening")
+            {
+                Barley.Harvest();
+                Barley.EndCrop();
+            }
+        }
+    }
+}
+       
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Area>1</Area>
@@ -29329,6 +29454,74 @@ namespace Models
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
               </Plant>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Barley].Phenology.CurrentPhaseName</string>
+                  <string>[Barley].Phenology.CurrentStageName</string>
+                  <string>[Barley].Phenology.FlagLeafDAS.Value()</string>
+                  <string>[Barley].Phenology.FloweringDAS.Value()</string>
+                  <string>[Barley].Phenology.MaturityDAS.Value()</string>
+                  <string>[Barley].Grain.Wt</string>
+                  <string>[Barley].Grain.N</string>
+                  <string>[Barley].Grain.Number</string>
+                  <string>[Barley].Grain.Nconc</string>
+                  <string>[Barley].AboveGround.Wt</string>
+                  <string>[Barley].AboveGround.N</string>
+                  <string>[Barley].Grain.Protein</string>
+                  <string>[Barley].Grain.Size</string>
+                  <string>[Barley].Structure.HaunStage.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.MainStemPopn</string>
+                  <string>[Barley].SowingData.Cultivar</string>
+                  <string>[Barley].SowingDate.DayOfYear</string>
+                  <string>[Barley].Leaf.CohortMaxSize</string>
+                  <string>[Clock].StartDate</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Barley].Harvesting</string>
+                </EventNames>
+              </Report>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable] 
+    public class Script : Model
+    {
+        [Link] Plant Barley;
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Barley.Phenology.CurrentPhaseName == "Ripening")
+            {
+                Barley.Harvest();
+                Barley.EndCrop();
+            }
+        }
+    }
+}
+       
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <Area>1</Area>
