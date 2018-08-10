@@ -25,15 +25,8 @@ set setup=%apsimx%\Setup
 
 if "%1"=="docs" (
 	goto :docs
-) else (
-	if exist %apsimx%\issuenumber.txt (
-		set /p issuenumber=<%apsimx%\issuenumber.txt
-	)
-	else (
-		echo Create %1 installation: No issue number file provided.
-		exit 1
-	)
 )
+
 if "%1"=="windows" (
 	goto :windows
 )
@@ -45,7 +38,7 @@ if "%1"=="linux" (
 )
 
 rem User has not provided a valid first argument.
-echo Usage: %0 (windows | macos | linux | docs)
+echo Usage: %0 (windows ^| macos ^| linux ^| docs)
 
 :docs
 call %apsimx%\Documentation\GenerateDocumentation.bat
@@ -69,8 +62,22 @@ ISCC.exe apsimx.iss
 if not errorlevel 0 (
 	exit %errorlevel%
 )
-rename %setup%\Output\APSIMSetup.exe APSIMSetup%issuenumber%.exe
 
+rem Microsoft, in their infinite wisdom, decided that it would be a good idea for
+rem sysinternals such as sigcheck to spawn a popup window the first time you run them,
+rem which asks you to agree to their eula. To get around this, we just need to set a few
+rem registry entries...
+reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
+reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
+
+sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
+set /p APSIM_VERSION=<Version.tmp
+set issuenumber=%APSIM_VERSION:~-4,4%
+
+rename %setup%\Output\APSIMSetup.exe APSIMSetup%issuenumber%.exe
+exit %errorlevel%
+
+:linux
 echo.
 echo.
 echo   _____                _   _               _____       _     _               _____           _                    
@@ -83,9 +90,13 @@ echo                                     __/ ^|                                 
 echo                                    ^|___/                                                               ^|___/      
 echo.
 echo.
-call %setup%\Linux\BuildDeb.bat
+%setup%\Linux\builddeb.bat
+if not errorlevel 0 (
+	exit %errorlevel%
+)
 exit %errorlevel%
 
+:macos
 echo.
 echo.
 echo   _____                _   _               __  __             ____   _____   _____           _        _ _       _   _             
@@ -100,4 +111,4 @@ echo.
 echo.
 cd "%setup%\OS X"
 call BuildMacDist.bat
-exit %errorlevel%
+exit /b %errorlevel%

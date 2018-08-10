@@ -3,8 +3,7 @@ set "PATH=%PATH%;C:\Utilities"
 if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
 if Exist Version.tmp Del Version.tmp
-set APSIMX_BUILD_DIR="..\.."
-if not exist %APSIMX_BUILD_DIR%\Bin\Models.exe exit /B 1
+if not exist %apsimx%\Bin\Models.exe exit /B 1
 
 rem Microsoft, in their infinite wisdom, decided that it would be a good idea for
 rem sysinternals such as sigcheck to spawn a popup window the first time you run them,
@@ -13,7 +12,7 @@ rem registry entries...
 reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 
-sigcheck64 -n -nobanner %APSIMX_BUILD_DIR%\Bin\Models.exe > Version.tmp
+sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 for /F "tokens=1,2 delims=." %%a in ("%APSIM_VERSION%") do (set SHORT_VERSION=%%a.%%b)
 del Version.tmp
@@ -42,15 +41,15 @@ echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/Models.exe "$@"
 dos2unix -q .\DebPackage\data\usr\local\bin\Models
 
 rem Copy the binaries and examples to their destinations
-xcopy /S /I /Y /Q %APSIMX_BUILD_DIR%\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\Models.xml .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\APSIM.bib .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%
+xcopy /S /I /Y /Q %apsimx%\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
+xcopy /I /Y /Q %apsimx%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\Bin\Models.xml .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\APSIM.bib .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%
 
 rem Determine the approximate size of the package
 du.exe -k -s DebPackage > size.temp
@@ -98,7 +97,10 @@ cd ..\DEBIAN
 tar -cf ..\control.tar .
 gzip ..\control.tar
 cd ..
-ar r ..\Apsim.deb debian-binary control.tar.gz data.tar.gz
+if not exist %setup%\Output (
+	mkdir %setup%\Output
+)
+ar r %setup%\Output\APSIMSetup%APSIM_VERSION:~-4,4%.deb debian-binary control.tar.gz data.tar.gz
 cd ..
-rem rmdir /S /Q .\DebPackage
-exit /B 0
+rmdir /S /Q .\DebPackage
+exit /B %errorlevel%
