@@ -70,3 +70,4 @@ echo "</plist>" >> $PLIST_FILE
 
 genisoimage -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup.dmg MacBundle
 popd > /dev/null
+echo Done.
