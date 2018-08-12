@@ -1,11 +1,6 @@
-#########################################################################################################################
-# Docker image to create ApsimX installations. 																			#
-# 											   																			#
-# cyg-get is used to install specific cygwin packages. We need use it to install genisoimage							#
-# 											   																			#
-# 											   																			#
-# 											   																			#
-#########################################################################################################################
+################################################
+# Docker image to create ApsimX installations. #
+################################################
 
 FROM microsoft/windowsservercore:10.0.14393.206
 SHELL ["powershell", "-Command"]
@@ -19,7 +14,7 @@ ADD https://download.sysinternals.com/files/Sigcheck.zip /sigcheck.zip
 # ar, the archive manager
 ADD http://bob.apsim.info/files/ar.exe /ar.exe
 
-#coreutils
+# coreutils. This contains the md5sum utility.
 ADD https://nchc.dl.sourceforge.net/project/gnuwin32/coreutils/5.3.0/coreutils-5.3.0-bin.zip /coreutils_bin.zip
 
 # coreutils dependencies
@@ -43,6 +38,7 @@ RUN Install-PackageProvider -Name Chocolatey -Force -RequiredVersion 2.8.5.130;	
 	choco install innosetup;																							\
 	choco install fciv;																									\
 	choco install cygwin;																								\
+	# cyg-get is used to install specific cygwin packages. We need use it to install genisoimage						\
 	choco install cyg-get;																								\
 	choco install 7zip;																									\
 	mkdir C:\Utilities;																									\
@@ -72,7 +68,7 @@ RUN Expand-Archive -Path C:\bzip2.zip -DestinationPath C:\bzip2 -Force;									
 	C:\Utilities\bunzip2 C:\genisoimage.tar.bz2;																		\
 	C:\Utilities\tar -xf C:\genisoimage.tar usr/bin/* -C genisoimage;													\
 	cp C:\genisoimage\usr\bin\* C:\Utilities\;
-	
+
 
 # run.bat is the script which will be run inside the container.
 COPY CreateInstallations.bat CreateInstallations.bat
