@@ -283,12 +283,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
-    <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
-    <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
-    <Compile Include="Utility\DateTimeCellType.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
@@ -649,7 +645,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SummaryFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Summary.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Summariser.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Sugarcane.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SubtractFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Structure.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StageBasedInterpolation.png" />
