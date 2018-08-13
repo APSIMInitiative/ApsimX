@@ -7,6 +7,7 @@ pipeline {
 			}
 			steps {
 				bat '''
+					set
 					@echo off
 					echo.
 					echo.
