@@ -36,8 +36,16 @@ pipeline {
 					)
 					git -C APSIM.Shared pull origin master
 					
+					if "%ISSUE_NUMBER%"=="" (
+						if "%ghprbPullId%"=="" (
+							echo Error: No issue number provided.
+							exit 1
+						)
+						set ISSUE_NUMBER=%ghprbPullId%
+					)
+					
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
-					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "ghprbPullId=%ghprbPullId%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "ISSUE_NUMBER=%ISSUE_NUMBER%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true
