@@ -46465,12 +46465,12 @@ namespace Models
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <Operation>
-                  <Date>2015-02-04</Date>
+                  <Date>2014-02-04</Date>
                   <Action>[Wheat].Harvest();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2015-02-04</Date>
+                  <Date>2014-02-04</Date>
                   <Action>[Wheat].EndCrop();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -49102,12 +49102,12 @@ namespace Models
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <Operation>
-                  <Date>2014-02-04</Date>
+                  <Date>2015-02-04</Date>
                   <Action>[Wheat].Harvest();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2014-02-04</Date>
+                  <Date>2015-02-04</Date>
                   <Action>[Wheat].EndCrop();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -51371,7 +51371,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorToVaryColours>Sow</FactorToVaryColours>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -54233,15 +54233,15 @@ Considerable canopy decay was observed during the winter for the early sown trea
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Specifications>
-              <string>[Sowing].Script.SowDate = 20-Feb,10-Mar,26-Mar,23-Apr</string>
+              <string>[Sowing].Script.SowDate = 24-Feb,08-Mar,29-Mar,14-Apr</string>
             </Specifications>
           </Factor>
           <Factor>
-            <Name>Popn</Name>
+            <Name>Cm</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Specifications>
-              <string>[Sowing].Script.Population = 50,200</string>
+              <string>[Defoliation].Script.Defoliated = Normal,Defoliation</string>
             </Specifications>
           </Factor>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -54372,16 +54372,87 @@ namespace Models
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <Operation>
-                  <Date>2015-02-04</Date>
+                  <Date>2017-02-04</Date>
                   <Action>[Wheat].Harvest();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>2015-02-04</Date>
+                  <Date>2017-02-04</Date>
                   <Action>[Wheat].EndCrop();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
+              <Manager>
+                <Name>Defoliation</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Script>
+                  <NibblingDate>2002-10-31</NibblingDate>
+                  <ProportionNibbled>0.5</ProportionNibbled>
+                  <Defoliated>False</Defoliated>
+                </Script>
+                <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+        [Link] Clock Clock;
+
+        [Description("Date that mouse damage event occurs")]
+        public DateTime NibblingDate { get; set; }
+        [Description("Proportion of the crop removed by mice")]
+        public double ProportionNibbled { get; set; }
+        [Description("Switch if crop is defoliated")]
+        public string Defoliated {get; set;}
+        
+        [XmlIgnore] private RemovalFractions Remove { get; set; }
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Remove = new RemovalFractions();
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
+
+            if (Clock.Today.Date == NibblingDate)
+            {
+                //Harvest with manager specified removal fractions
+                Remove.SetFractionToRemove("Grain", 0);
+                Remove.SetFractionToRemove("Leaf", 0, "live");
+                Remove.SetFractionToRemove("Leaf", 0, "dead");
+                Remove.SetFractionToRemove("Stem", 0);
+                Remove.SetFractionToRemove("Spike", 0);
+                Remove.SetFractionToRemove("Root", 0);
+                Remove.SetFractionToResidue("Grain", ProportionNibbled);
+                Remove.SetFractionToResidue("Leaf", ProportionNibbled, "live");
+                Remove.SetFractionToResidue("Leaf", ProportionNibbled, "dead");
+                Remove.SetFractionToResidue("Stem", ProportionNibbled);
+                Remove.SetFractionToResidue("Spike", ProportionNibbled);
+                Remove.SetFractionToResidue("Root", 0);
+                Remove.SetThinningProportion = ProportionNibbled;
+                Wheat.RemoveBiomass("Thin", Remove);
+            }
+        }
+    }
+}
+
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -56868,15 +56939,15 @@ Considerable canopy decay was observed during the winter for the early sown trea
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Specifications>
-              <string>[Sowing].Script.SowDate = 20-Feb,10-Mar,26-Mar,23-Apr</string>
+              <string>[Sowing].Script.SowDate = 09-Mar,30-Mar,19-Apr</string>
             </Specifications>
           </Factor>
           <Factor>
-            <Name>Popn</Name>
+            <Name>Cm</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Specifications>
-              <string>[Sowing].Script.Population = 50,200</string>
+              <string>[Defoliation].Script.Defoliated = Normal,Defoliation</string>
             </Specifications>
           </Factor>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -57017,6 +57088,77 @@ namespace Models
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
+              <Manager>
+                <Name>Defoliation</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <Script>
+                  <NibblingDate>2002-10-31</NibblingDate>
+                  <ProportionNibbled>0.5</ProportionNibbled>
+                  <Defoliated>False</Defoliated>
+                </Script>
+                <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+        [Link] Clock Clock;
+
+        [Description("Date that mouse damage event occurs")]
+        public DateTime NibblingDate { get; set; }
+        [Description("Proportion of the crop removed by mice")]
+        public double ProportionNibbled { get; set; }
+        [Description("Switch if crop is defoliated")]
+        public string Defoliated {get; set;}
+        
+        [XmlIgnore] private RemovalFractions Remove { get; set; }
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Remove = new RemovalFractions();
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
+
+            if (Clock.Today.Date == NibblingDate)
+            {
+                //Harvest with manager specified removal fractions
+                Remove.SetFractionToRemove("Grain", 0);
+                Remove.SetFractionToRemove("Leaf", 0, "live");
+                Remove.SetFractionToRemove("Leaf", 0, "dead");
+                Remove.SetFractionToRemove("Stem", 0);
+                Remove.SetFractionToRemove("Spike", 0);
+                Remove.SetFractionToRemove("Root", 0);
+                Remove.SetFractionToResidue("Grain", ProportionNibbled);
+                Remove.SetFractionToResidue("Leaf", ProportionNibbled, "live");
+                Remove.SetFractionToResidue("Leaf", ProportionNibbled, "dead");
+                Remove.SetFractionToResidue("Stem", ProportionNibbled);
+                Remove.SetFractionToResidue("Spike", ProportionNibbled);
+                Remove.SetFractionToResidue("Root", 0);
+                Remove.SetThinningProportion = ProportionNibbled;
+                Wheat.RemoveBiomass("Thin", Remove);
+            }
+        }
+    }
+}
+
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
