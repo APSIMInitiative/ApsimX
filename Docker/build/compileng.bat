@@ -1,5 +1,5 @@
-@echo off
-
+rem @echo off
+set
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
 	echo C:\ApsimX does not exist. This directory must be mounted via the docker run -v switch.
