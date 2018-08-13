@@ -134,13 +134,13 @@ pipeline {
 						copyArtifacts filter: 'ApsimX\\issuenumber.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							call ApsimX\\Docker\\CreateInstallations.bat windows
-							move ApsimX\\Setup\\Output\\APSIMSetup.exe .\\APSIMSetup
+							rem move ApsimX\\Setup\\Output\\APSIMSetup.exe .\\APSIMSetup
 						'''
 					}
 				}
 				stage('MacOS') {
 					agent {
-						label "windows && docker"
+						label "linux && docker"
 					}
 					steps {
 						bat '''
@@ -188,7 +188,7 @@ pipeline {
 			}
 			steps {
 				bat '''
-					rem TBI
+					echo TBI
 				'''
 			}
 		}
