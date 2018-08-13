@@ -15,6 +15,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class LeafDeathPhase : Model, IPhase
     {
         // 1. Links
@@ -49,7 +50,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
+                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.finalLeafNumber.Value() - DeadNodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return F;
@@ -72,7 +73,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
+            TTForTimeStep = structure.thermalTime.Value() * propOfDayToUse;
                         
             if (First)
             {
@@ -80,7 +81,7 @@ namespace Models.PMF.Phen
                 First = false;
             }
 
-            if ((leaf.DeadCohortNo >= structure.FinalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
+            if ((leaf.DeadCohortNo >= structure.finalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;

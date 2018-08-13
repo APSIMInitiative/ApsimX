@@ -8,7 +8,6 @@ namespace UserInterface.Classes
     using System;
     using System.Drawing;
     using Gtk;
-    /// using System.Windows.Forms;
     using Interfaces;
     using Views;
 
@@ -30,7 +29,7 @@ namespace UserInterface.Classes
         public GridColumn(GridView gridView, int columnIndex)
         {
             this.gridView = gridView;
-            this.ColumnIndex = columnIndex;
+            ColumnIndex = columnIndex;
         }
 
         /// <summary>
@@ -45,47 +44,51 @@ namespace UserInterface.Classes
         {
             get
             {
-                if (this.gridView.Gridview.Columns[this.ColumnIndex].Sizing == Gtk.TreeViewColumnSizing.Autosize)
+                if (this.gridView.Grid.Columns[this.ColumnIndex].Sizing == Gtk.TreeViewColumnSizing.Autosize)
                     return -1;
                 else
-                    return this.gridView.Gridview.Columns[this.ColumnIndex].Width;
+                    return this.gridView.Grid.Columns[this.ColumnIndex].Width;
             }
 
             set
             {
                 if (value == -1)
                 {
-                    this.gridView.Gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
-                    this.gridView.Gridview.Columns[this.ColumnIndex].Resizable = true;
+                    this.gridView.Grid.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
+                    this.gridView.Grid.Columns[this.ColumnIndex].Resizable = true;
                 }
                 else
                 {
-                    this.gridView.Gridview.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Fixed;
-                    this.gridView.Gridview.Columns[this.ColumnIndex].FixedWidth = value;
+                    this.gridView.Grid.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Fixed;
+                    this.gridView.Grid.Columns[this.ColumnIndex].FixedWidth = value;
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the column is left aligned. If not then right is assumed.
+        /// Gets or sets a value indicating whether the column is left aligned. If not then left is assumed.
         /// </summary>
         public bool LeftAlignment
         {
             get
             {
-                CellRendererText render = this.gridView.Gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                CellRendererText render = this.gridView.Grid.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
                 if (render != null)
                     return render.Alignment == Pango.Alignment.Left;
                 else
-                    return false;
+                    return true;
             }
 
             set
             {
-                CellRendererText render = this.gridView.Gridview.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                CellRendererText render = this.gridView.Grid.Columns[this.ColumnIndex].Cells[0] as CellRendererText;
+                float valueAsFloat = value ? 0.5f : 0.95f;
                 if (render != null)
+                {
                     render.Alignment = value ? Pango.Alignment.Left : Pango.Alignment.Right;
-                this.gridView.Gridview.Columns[this.ColumnIndex].Alignment = value ? 0.5F : 0.95F;
+                    render.Xalign = valueAsFloat;
+                }
+                this.gridView.Grid.Columns[this.ColumnIndex].Alignment = valueAsFloat;
             }
         }
 
@@ -124,7 +127,7 @@ namespace UserInterface.Classes
         /// <summary>
         /// Gets or sets the background color
         /// </summary>
-        public System.Drawing.Color BackgroundColour
+        public Color BackgroundColour
         {
             get
             {
@@ -141,7 +144,7 @@ namespace UserInterface.Classes
         /// <summary>
         /// Gets or sets the foreground color
         /// </summary>
-        public System.Drawing.Color ForegroundColour
+        public Color ForegroundColour
         {
             get
             {
@@ -234,7 +237,6 @@ namespace UserInterface.Classes
             }
         }
 
-
         /// <summary>
         /// Gets or sets the text of the header
         /// </summary>
@@ -242,12 +244,12 @@ namespace UserInterface.Classes
         {
             get
             {
-                return this.gridView.Gridview.Columns[this.ColumnIndex].Title;
+                return this.gridView.Grid.Columns[this.ColumnIndex].Title;
             }
 
             set
             {
-                this.gridView.Gridview.Columns[this.ColumnIndex].Title = value;
+                this.gridView.Grid.Columns[this.ColumnIndex].Title = value;
             }
         }
     }

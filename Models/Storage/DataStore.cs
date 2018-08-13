@@ -447,6 +447,7 @@
         /// <param name="tableName">The table name</param>
         public IEnumerable<string> ColumnNames(string tableName)
         {
+            Open(readOnly: true);
             Table table = tables.Find(t => t.Name == tableName);
             if (table != null)
                 return table.Columns.Select(c => c.Name);

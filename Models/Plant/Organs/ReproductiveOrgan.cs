@@ -259,8 +259,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-                Clear();
+            Clear();
         }
 
         #endregion
@@ -289,15 +288,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-            if (sender == Plant)
-            {
                 Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
                 Live.Clear();
                 Dead.Clear();
                 Number = 0;
                 _ReadyForHarvest = false;
-            }
         }
 
         /// <summary>Called when crop is ending</summary>

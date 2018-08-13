@@ -13,6 +13,7 @@ namespace UserInterface.Forms
     using APSIM.Shared.Utilities;
     using Gtk;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// An upgrade form.
@@ -74,7 +75,7 @@ namespace UserInterface.Forms
         /// </summary>
         public UpgradeForm(IMainView explorerPresenter)
         {
-            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeForm.glade");
+            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeForm.glade");
             window1 = (Window)builder.GetObject("window1");
             button1 = (Button)builder.GetObject("button1");
             button2 = (Button)builder.GetObject("button2");
@@ -167,7 +168,7 @@ namespace UserInterface.Forms
                 }
                 catch (Exception)
                 {
-                    ViewBase.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                    ViewBase.MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
                     loadFailure = true;
                     return;
                 }
@@ -205,7 +206,7 @@ namespace UserInterface.Forms
             }
             catch (Exception)
             {
-                ViewBase.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
                 loadFailure = true;
             }
 
@@ -274,7 +275,7 @@ namespace UserInterface.Forms
                     Upgrade upgrade = upgrades[selIndex];
                     versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
-                    if ((Gtk.ResponseType)ViewBase.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
+                    if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
                     {
                         window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
@@ -312,7 +313,7 @@ namespace UserInterface.Forms
                         }
                         catch (Exception err)
                         {
-                            ViewBase.ShowMsgDialog("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
+                            ViewBase.MasterView.ShowMsgDialog("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
                         }
                         finally
                         {
@@ -330,7 +331,7 @@ namespace UserInterface.Forms
                 catch (Exception err)
                 {
                     window1.GdkWindow.Cursor = null;
-                    ViewBase.ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
+                    ViewBase.MasterView.ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
                 }
             }
         }
@@ -396,7 +397,7 @@ namespace UserInterface.Forms
                 catch (Exception err)
                 {
                     window1.GdkWindow.Cursor = null;
-                    ViewBase.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
+                    ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                 }
             }
         }

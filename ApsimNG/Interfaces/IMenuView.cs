@@ -47,5 +47,8 @@ namespace UserInterface.Interfaces
 
         /// <summary>For toolstrips, is this menu item aligned to right side of bar?</summary>
         public bool RightAligned;
+
+        /// <summary> Has a separator preceding it. </summary>
+        public bool FollowsSeparator;
     }
 }

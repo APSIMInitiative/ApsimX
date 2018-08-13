@@ -152,8 +152,7 @@
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
         {
-            if (sender == plant)
-                Reset();
+            Reset();
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

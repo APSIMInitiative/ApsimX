@@ -163,6 +163,22 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Returns the flag to feed supplement first that would
+        /// have been entered when calling a feed() event.
+        /// </summary>
+        /// <param name="paddIdx">Paddock index</param>
+        /// <returns></returns>
+        public bool FeedSuppFirst(int paddIdx)
+        {
+            bool result = false;
+            if (paddIdx >= 0 && paddIdx < Paddocks.Length)
+            {
+                result = Paddocks[paddIdx].FeedSuppFirst;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Index of the paddock by name
         /// </summary>
         /// <param name="name">The name of a paddock</param>
@@ -292,12 +308,13 @@ namespace Models.GrazPlan
         /// <param name="suppName">Name of the supp.</param>
         /// <param name="fedKg">The fed kg.</param>
         /// <param name="paddName">Name of the padd.</param>
+        /// <param name="feedSuppFirst">Feed the supplement before pasture consumption. Bail feeding.</param>
         /// <exception cref="System.Exception">
         /// Supplement \ + suppName + \ not recognised
         /// or
         /// </exception>
         /// Paddock \ + paddName + \ not recognised
-        public void FeedOut(string suppName, double fedKg, string paddName)
+        public void FeedOut(string suppName, double fedKg, string paddName, bool feedSuppFirst)
         {
             int suppIdx = IndexOf(suppName);
             int paddIdx = PaddockIndexOf(paddName);
@@ -306,6 +323,7 @@ namespace Models.GrazPlan
             else if (paddIdx < 0)
                 throw new Exception("Paddock \"" + paddName + "\" not recognised");
 
+            Paddocks[paddIdx].FeedSuppFirst = feedSuppFirst;
             Transfer(this, suppIdx, Paddocks[paddIdx].SupptFed, 0, fedKg);
         }
 
@@ -448,7 +466,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="src">The source.</param>
         /// <param name="srcIdx">Index of the source.</param>
-        /// <param name="dest">The dest.</param>
+        /// <param name="dest">The dest ration in a paddock.</param>
         /// <param name="destIdx">Index of the dest.</param>
         /// <param name="amount">The amount.</param>
         /// <exception cref="System.Exception">Invalid transfer of feed</exception>
@@ -495,6 +513,11 @@ namespace Models.GrazPlan
             /// The suppt fed
             /// </summary>
             public SupplementRation SupptFed;   // Entry N is the supplement fed out N days ago
+
+            /// <summary>
+            /// For bail feeding
+            /// </summary>
+            public bool FeedSuppFirst = false;
         }
     }
 
@@ -542,6 +565,11 @@ namespace Models.GrazPlan
         /// The amount of ration (kg).
         /// </value>
         public double Amount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag to feed supplement before pasture. Bail feeding.
+        /// </summary>
+        public bool FeedSuppFirst { get; set; }
     }
 
     /// <summary>
@@ -703,7 +731,38 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// The supplement component
+    /// #GrazPlan Supplement
+    /// This component represents one or more stores of supplementary feed. 
+    /// 
+    /// A component instance represents the stores and paddock-available amounts of several supplements. 
+    /// Each supplement type is distinguished by a name and is represented by the amount in store together 
+    /// with a number of attributes relating to its quality as a diet for animals.
+    /// 
+    /// Feed may be bought and then (logically) placed in one of the "paddocks" to which animals in the 
+    /// Stock component may be assigned. Feed which has been placed in a paddock is accessible to grazing stock 
+    /// in that paddock. If more than one supplement is placed into a paddock, the animals access a mixture.
+    /// 
+    /// **Mangement Operations in Supplement**
+    /// 
+    ///**1. Buy**
+    ///
+    /// * Increases the amount of supplement in a store.
+    /// 
+    ///**2. Feed**
+    ///
+    /// * Transfers an amount of supplement from store to one of the paddocks, where it will be accessible to grazing stock.
+    /// It is possible to feed supplement before grazing.
+    /// 
+    ///**3. Mix**
+    ///
+    /// * Transfers an amount of supplement from one store into another. The transferred supplement is mixed
+    /// with any supplement already in the destination store. 
+    /// 
+    ///**4. Conserve**
+    ///
+    /// * Notifies the component that an amount of forage has been conserved. This forage is added to the first item in the stores array.
+    /// 
+    /// ---
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.SupplementView")]
@@ -723,6 +782,10 @@ namespace Models.GrazPlan
         /// </summary>
         [Link(IsOptional = true)]
         private Stock animals = null;
+
+        /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
+        [Link]
+        private ISummary OutputSummary = null;
 
         /// <summary>
         /// Used to keep track of the selected SupplementItem in the user interface
@@ -955,6 +1018,7 @@ namespace Models.GrazPlan
                     result[i].ADIP2CP = supp.ADIP2CP;
                     result[i].AshAlk = supp.AshAlkalinity;
                     result[i].MaxPassage = supp.MaxPassage;
+                    result[i].FeedSuppFirst = theModel.FeedSuppFirst(i);
                 }
                 return result;
             }
@@ -1108,10 +1172,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// Buys the specified amount.
         /// </summary>
-        /// <param name="amount">The amount.</param>
+        /// <param name="amount">Amount (kg fresh weight) of the supplement to be included in the store</param>
         /// <param name="supplement">The supplement.</param>
         public void Buy(double amount, string supplement)
         {
+            OutputSummary.WriteMessage(this, "Purchase " + amount.ToString() + "kg of " + supplement);
             theModel.AddToStore(amount, supplement);
         }
 
@@ -1131,9 +1196,12 @@ namespace Models.GrazPlan
         /// <param name="supplement">The supplement.</param>
         /// <param name="amount">The amount.</param>
         /// <param name="paddock">The paddock.</param>
-        public void Feed(string supplement, double amount, string paddock)
+        /// <param name="feedSuppFirst">Feed supplement before pasture. Bail feeding.</param>
+        public void Feed(string supplement, double amount, string paddock, bool feedSuppFirst = false)
         {
-            theModel.FeedOut(supplement, amount, paddock);
+            string firstly = feedSuppFirst ? " (Feeding supplement before pasture)" : string.Empty;
+            OutputSummary.WriteMessage(this, "Feeding " + amount.ToString() + "kg of " + supplement + " into " + paddock + firstly);
+            theModel.FeedOut(supplement, amount, paddock, feedSuppFirst);
         }
 
         /// <summary>

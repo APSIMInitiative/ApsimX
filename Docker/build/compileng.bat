@@ -36,7 +36,7 @@ call "C:\BuildTools\Common7\Tools\VsDevCmd.bat"
 rem Download nuget packages
 echo Downloading NuGet packages.
 cd %apsimx%
-nuget restore
+nuget restore -verbosity quiet
 
 rem Copy files from deployment support
 echo Copying DeploymentSupport files.

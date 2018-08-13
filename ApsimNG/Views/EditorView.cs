@@ -505,7 +505,7 @@ namespace UserInterface.Views
             p.Y += (int)textEditor.LineHeight;
             // Need to convert to screen coordinates....
             int x, y, frameX, frameY;
-            mainWindow.GetOrigin(out frameX, out frameY);
+            MasterView.MainWindow.GetOrigin(out frameX, out frameY);
             textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
             return new Tuple<int, int>(x + frameX, y + frameY);
