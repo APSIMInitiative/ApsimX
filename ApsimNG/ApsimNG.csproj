@@ -645,7 +645,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SummaryFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Summary.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Summariser.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Sugarcane.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SubtractFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Structure.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StageBasedInterpolation.png" />
