@@ -1,61 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="37">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Sugarcane</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>Ingham.met</FileName>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FileName>WeatherFiles\Ingham.met</FileName>
     </Weather>
     <Clock>
       <Name>clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <StartDate>1990-01-01T00:00:00</StartDate>
       <EndDate>2000-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </Summary>
     <Zone>
       <Name>Field</Name>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <ResidueTypes>
-          <Name>ResidueTypesList</Name>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <Pools>
-          <Pool>
-            <PoolName>wheat_stubble</PoolName>
-            <ResidueType>wheat</ResidueType>
-            <Mass>0</Mass>
-            <CNRatio>80</CNRatio>
-            <CPRatio>0</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>wheat_stubble</PoolName>
-        <type>wheat</type>
-        <mass>0</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr>0</cpr>
-        <cnr>80</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ResourceName>SurfaceOrganicMatter</ResourceName>
+        <InitialResidueName>wheat_stubble</InitialResidueName>
+        <InitialResidueType>wheat</InitialResidueType>
+        <InitialResidueMass>0</InitialResidueMass>
+        <InitialStandingFraction>0</InitialStandingFraction>
+        <InitialCPR>0</InitialCPR>
+        <InitialCNR>80</InitialCNR>
       </SurfaceOrganicMatter>
       <Soil>
         <Name>Soil</Name>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>0</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
@@ -64,6 +49,8 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>SugarcaneSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -104,6 +91,8 @@
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -185,6 +174,8 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -227,10 +218,12 @@
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
-          <residueinterception>0</residueinterception>
+          <ResidueInterception>0</ResidueInterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -263,17 +256,11 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <RootCN>40</RootCN>
           <RootWt>200</RootWt>
           <SoilCN>12.5</SoilCN>
@@ -348,6 +335,8 @@
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -379,6 +368,8 @@
         </Analysis>
         <Sample>
           <Name>Initial nitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -502,6 +493,13 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <RecordNumber>0</RecordNumber>
         <SoilType>Black Vertosol</SoilType>
         <Site>Jimbour</Site>
@@ -513,9 +511,13 @@
       </Soil>
       <Fertiliser>
         <Name>fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Fertiliser>
       <Sugarcane>
         <Name>Sugarcane</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <maxt_lb>0</maxt_lb>
         <crop_type>Sugarcane</crop_type>
         <tt_emerg_to_begcane_ub>2000</tt_emerg_to_begcane_ub>
@@ -2835,6 +2837,8 @@
         <Name>Manager folder</Name>
         <Manager>
           <Name>SUGAR management</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Script>
             <planting_day>1-apr</planting_day>
             <plantlen>450</plantlen>
@@ -2848,111 +2852,113 @@
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Sugarcane Sugarcane;
-		
-		[Description("Enter planting date (dd-mmm)")]
-		public string planting_day { get; set; }
-		[Description("Duration of a plant crop (days) (30days/mth x 15mths)")]
-		public int    plantlen { get; set; }
-		[Description("Stalk density of plant crop (/m2)")]
-		public double plant_stalks { get; set; }
-		[Description("Planting variety")]
-		public string variety { get; set; }
-		[Description("Planting depth (mm)")]
-		public double sowing_depth { get; set; }
-		[Description("Number of ratoons before EndCrop")]  
-		public int    NoRatoons { get; set; }
-		[Description("Duration of a ratoon crop (days) (30days/mth x 13mths)")]
-		public int    ratoonlen { get; set; }
-		[Description("Stalk density of ratoon crop (/m2)")]
-		public double ratoon_stalks { get; set; }
-		
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Sugarcane Sugarcane;
+        
+        [Description("Enter planting date (dd-mmm)")]
+        public string planting_day { get; set; }
+        [Description("Duration of a plant crop (days) (30days/mth x 15mths)")]
+        public int    plantlen { get; set; }
+        [Description("Stalk density of plant crop (/m2)")]
+        public double plant_stalks { get; set; }
+        [Description("Planting variety")]
+        public string variety { get; set; }
+        [Description("Planting depth (mm)")]
+        public double sowing_depth { get; set; }
+        [Description("Number of ratoons before EndCrop")]  
+        public int    NoRatoons { get; set; }
+        [Description("Duration of a ratoon crop (days) (30days/mth x 13mths)")]
+        public int    ratoonlen { get; set; }
+        [Description("Stalk density of ratoon crop (/m2)")]
+        public double ratoon_stalks { get; set; }
+        
 
-		private int dah;
-		//Remove this later, I don't think they use it. Days After Harvest.
-		
-		//two below are used for rotations. Remove this. I don't think ApsimX does rotations like this.
-		private int nextcrop;
-		private int fallowin;
+        private int dah;
+        //Remove this later, I don't think they use it. Days After Harvest.
+        
+        //two below are used for rotations. Remove this. I don't think ApsimX does rotations like this.
+        private int nextcrop;
+        private int fallowin;
 
-		
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			//Rotation variables. Not sure if these are still needed in ApsimX rotations
-			nextcrop = 0;
-			fallowin = 0;
-		}
-
-
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-			//! Initialise and set a time counter for entire run
-			dah = 0;
+        
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            //Rotation variables. Not sure if these are still needed in ApsimX rotations
+            nextcrop = 0;
+            fallowin = 0;
+        }
 
 
-			if (Sugarcane.crop_status == "alive")
-			{
-				dah = 0;
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
 
-				//! Set harvest dates for each crop phase
-				if (((Sugarcane.DaysAfterSowing == plantlen) && (Sugarcane.ratoon_no == 0))
-				    || ((Sugarcane.DaysAfterSowing == ratoonlen) && (Sugarcane.ratoon_no > 0)))
-				{
-					
-					Sugarcane.HarvestCrop();
-					if (Sugarcane.ratoon_no == NoRatoons + 1)
-					{
-						//! plough the crop out
-						Sugarcane.KillCrop();
-						Sugarcane.EndCrop();
-					}
-					else
-					{
-						//! Set stalk density
-						Sugarcane.plants = ratoon_stalks;
-					}
-				}
-				else
-				{
-					//! We have not reached the harvest date for this ratoon.
-				}
-			}
-			else if (Sugarcane.crop_status == "dead")
-			{
-				Sugarcane.HarvestCrop();
-				Sugarcane.EndCrop();
-			}
-			else if ((Sugarcane.crop_status == "out") && (DateUtilities.DatesEqual(planting_day, Clock.Today)))
-			{
-				Sugarcane.SowNewPlant(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
-				Sugarcane.plants = plant_stalks;
-				dah = 0;
-			}
-			else
-			{
-				dah = dah + 1;
-			}
+            //! Initialise and set a time counter for entire run
+            dah = 0;
+
+
+            if (Sugarcane.crop_status == "alive")
+            {
+                dah = 0;
+
+                //! Set harvest dates for each crop phase
+                if (((Sugarcane.DaysAfterSowing == plantlen) && (Sugarcane.ratoon_no == 0))
+                    || ((Sugarcane.DaysAfterSowing == ratoonlen) && (Sugarcane.ratoon_no > 0)))
+                {
+                    
+                    Sugarcane.HarvestCrop();
+                    if (Sugarcane.ratoon_no == NoRatoons + 1)
+                    {
+                        //! plough the crop out
+                        Sugarcane.KillCrop();
+                        Sugarcane.EndCrop();
+                    }
+                    else
+                    {
+                        //! Set stalk density
+                        Sugarcane.plants = ratoon_stalks;
+                    }
+                }
+                else
+                {
+                    //! We have not reached the harvest date for this ratoon.
+                }
+            }
+            else if (Sugarcane.crop_status == "dead")
+            {
+                Sugarcane.HarvestCrop();
+                Sugarcane.EndCrop();
+            }
+            else if ((Sugarcane.crop_status == "out") && (DateUtilities.DatesEqual(planting_day, Clock.Today)))
+            {
+                Sugarcane.SowNewPlant(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
+                Sugarcane.plants = plant_stalks;
+                dah = 0;
+            }
+            else
+            {
+                dah = dah + 1;
+            }
      
-		}
-	}
+        }
+    }
 }
 ]]></Code>
         </Manager>
         <Manager>
           <Name>Fertilise on fixed date</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Script>
             <fert_date>1-Sep</fert_date>
             <fert_criteria>1000</fert_criteria>
@@ -2962,38 +2968,38 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
+    [Serializable]
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
 
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		
-		[Description("Fertilise on this date (dd-mmm)")]
-		public string fert_date { get; set; }
-		
-		[Description("Don't add fertiliser if N in top 2 layers exceeds (kg/ha)")]
-		public double fert_criteria { get; set; }
-		
-		[Description("Amount to apply (kg/ha)")]
-		public double fert_amount { get; set; }
-		
-		[Description("Type of fertilser to apply")]
-		public string fert_type { get; set; }
-	
-		private double N_topsoil;
+        [Link] Clock Clock;
+        [Link] Soil Soil;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        
+        [Description("Fertilise on this date (dd-mmm)")]
+        public string fert_date { get; set; }
+        
+        [Description("Don't add fertiliser if N in top 2 layers exceeds (kg/ha)")]
+        public double fert_criteria { get; set; }
+        
+        [Description("Amount to apply (kg/ha)")]
+        public double fert_amount { get; set; }
+        
+        [Description("Type of fertilser to apply")]
+        public string fert_type { get; set; }
+    
+        private double N_topsoil;
 
 
-		/*
+        /*
          if (today = date('[fert_date]') then
             N_topsoil = no3(1) + nh4(1) + no3(2) + nh4(2)
             if (N_topsoil < [fert_criteria]) then
@@ -3003,28 +3009,33 @@ namespace Models
         */
         
         
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
 
-			if (DateUtilities.DatesEqual(fert_date, Clock.Today))
-			{
-				N_topsoil = Soil.SoilNitrogen.NO3[1] + Soil.SoilNitrogen.NH4[1] + Soil.SoilNitrogen.NO3[2] + Soil.SoilNitrogen.NH4[2];					
-				if (N_topsoil < fert_criteria)
-				{
-					Fertiliser.Apply(Amount: fert_amount, Depth: 50, Type: Fertiliser.Types.UreaN);
-				}
-			}
+            if (DateUtilities.DatesEqual(fert_date, Clock.Today))
+            {
+                N_topsoil = Soil.SoilNitrogen.NO3[1] + Soil.SoilNitrogen.NH4[1] + Soil.SoilNitrogen.NO3[2] + Soil.SoilNitrogen.NH4[2];                    
+                if (N_topsoil < fert_criteria)
+                {
+                    Fertiliser.Apply(Amount: fert_amount, Depth: 50, Type: Fertiliser.Types.UreaN);
+                }
+            }
 
-		}
+        }
       
-	}
+    }
 }
 ]]></Code>
         </Manager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -3055,14 +3066,67 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+      </SoluteManager>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>cane_wt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </DataStore>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
