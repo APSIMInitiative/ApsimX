@@ -19,6 +19,7 @@ pipeline {
 					echo	^|____/ \\__,_^|_^|_^|\\__,_^|
 					echo.
 					echo.
+					set
 					if not exist ApsimX (
 						git config --system core.longpaths true
 						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -43,7 +44,7 @@ pipeline {
 						)
 						set ISSUE_NUMBER=%ghprbPullId%
 					)
-					
+					set
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
 					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "ISSUE_NUMBER=%ISSUE_NUMBER%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
