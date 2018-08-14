@@ -9,10 +9,10 @@ find $setup -name "*.dmg" -exec rm "{}" \;
 
 export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d\.){3}\d')
 export short_version=$(echo $version | cut -d'.' -f 1,2)
-export issue_number=$(echo $version | cut -d'.' -f 4)
+export issue_id=$(echo $version | cut -d'.' -f 4)
 echo Apsim version: $version
 echo Short version: $short_version
-echo Issue number: 	$issue_number
+echo Issue number: 	$issue_id
 
 if [ -d ./MacBundle ]; then
 	rm -rf ./MacBundle

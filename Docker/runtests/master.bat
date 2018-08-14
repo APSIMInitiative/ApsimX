@@ -96,11 +96,11 @@ echo errorlevel: "%errorlevel%"
 set err=0
 if not errorlevel 1 (
 	if "%1"=="%validationsyntax%" (
-		echo Pull request ID: 	"%ghprbPullId%"
+		echo Pull request ID: 	"%PULL_ID%"
 		echo DateTime stamp: 	"%DATETIMESTAMP%"
-		echo Commit author:		"%ghprbActualCommitAuthor%"
+		echo Commit author:		"%COMMIT_AUTHOR%"
 		echo Running performance tests collector...
-		C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %ghprbPullId% %DATETIMESTAMP% %ghprbActualCommitAuthor%
+		C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 		set err=%errorlevel%
 		if %err% neq 0 (
 			echo APSIM.PerformanceTests.Collector did not run succecssfully!
