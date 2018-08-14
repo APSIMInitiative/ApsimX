@@ -7,6 +7,7 @@ pipeline {
 			}
 			steps {
 				bat '''
+					set
 					@echo off
 					echo.
 					echo.
@@ -18,6 +19,7 @@ pipeline {
 					echo	^|____/ \\__,_^|_^|_^|\\__,_^|
 					echo.
 					echo.
+					set
 					if not exist ApsimX (
 						git config --system core.longpaths true
 						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -35,12 +37,15 @@ pipeline {
 					)
 					git -C APSIM.Shared pull origin master
 					
+					if "%PULL_ID%"=="" (
+						echo Error: No issue number provided.
+						exit 1
+					)
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
-					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "ghprbPullId=%ghprbPullId%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "PULL_ID=%PULL_ID%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true
-				archiveArtifacts artifacts: 'ApsimX\\issuenumber.txt', onlyIfSuccessful: true
 			}
 		}
 		stage('Validation') {
@@ -85,7 +90,7 @@ pipeline {
 							git -C APSIM.Shared pull origin master
 							set /P DATETIMESTAMP=<ApsimX\\datetimestamp.txt
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "ghprbPullId=%ghprbPullId%" -e "ghprbActualCommitAuthor=%ghprbActualCommitAuthor%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%PULL_ID%" -e "COMMIT_AUTHOR=%COMMIT_AUTHOR%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
 						'''
 					}
 		}
@@ -131,7 +136,6 @@ pipeline {
 							call ApsimX\\Docker\\cleanup.bat
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
-						copyArtifacts filter: 'ApsimX\\issuenumber.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							call ApsimX\\Docker\\CreateInstallations.bat windows
 							rem move ApsimX\\Setup\\Output\\APSIMSetup.exe .\\APSIMSetup
@@ -153,7 +157,6 @@ pipeline {
 							call ApsimX\\Docker\\cleanup.bat
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
-						copyArtifacts filter: 'ApsimX\\issuenumber.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							call ApsimX\\Docker\\CreateInstallations.bat macos
 						'''
@@ -174,7 +177,6 @@ pipeline {
 							call ApsimX\\Docker\\cleanup.bat
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
-						copyArtifacts filter: 'ApsimX\\issuenumber.txt', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							call ApsimX\\Docker\\CreateInstallations.bat linux
 						'''
