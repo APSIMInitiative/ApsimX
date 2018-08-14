@@ -196,11 +196,23 @@ pipeline {
 		}
 		stage('Deploy') {
 			agent {
-				label "windows"
+				label "windows && docker"
 			}
 			steps {
+				environment {
+					CHANGE_DB_CREDS = credentials('change-db-creds')
+				}
 				bat '''
-					echo TBI
+					@echo off
+					rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+					if not exist ApsimX (
+						git config --system core.longpaths true
+						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+					)
+					call ApsimX\\Docker\\cleanup.bat
+					docker build -m 16g -t deploy ApsimX\\Docker\\Deploy
+					docker run -m 16g -e "PASSWORD=%CHANGE_DB_CREDS_PWD%" -e NUMBER_OF_PROCESSORS -e ISSUE_NUMBER -e PULL_ID -e ISSUE_TITLE -e RELEASED deploy
+
 				'''
 			}
 		}

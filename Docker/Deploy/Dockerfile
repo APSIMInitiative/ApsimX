@@ -7,7 +7,6 @@ RUN Install-PackageProvider -Name Chocolatey            -Force -RequiredVersion 
 RUN Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex; 	\
     choco feature disable –name showDownloadProgress;                                        							\
 	choco feature enable -n allowGlobalConfirmation;                                         							\
-    choco install git;                                                                                                  \
 	choco install curl;
 
 # run.bat is the script which will be run inside the container.
