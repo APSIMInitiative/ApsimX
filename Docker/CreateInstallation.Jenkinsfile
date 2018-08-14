@@ -7,7 +7,6 @@ pipeline {
 			}
 			steps {
 				bat '''
-					set
 					@echo off
 					echo.
 					echo.
@@ -19,7 +18,6 @@ pipeline {
 					echo	^|____/ \\__,_^|_^|_^|\\__,_^|
 					echo.
 					echo.
-					set
 					if not exist ApsimX (
 						git config --system core.longpaths true
 						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
