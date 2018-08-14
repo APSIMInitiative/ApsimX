@@ -64,7 +64,7 @@ namespace Models.Graph
                     {
                         for (int i = 0; i < names.Length; i++)
                         {
-                            if (names[i] != "?")
+                            if (names[i] != "?" && !string.IsNullOrEmpty(names[i]))
                             {
                                 // Add a line annotation.
                                 LineAnnotation line = new LineAnnotation();
@@ -77,11 +77,16 @@ namespace Models.Graph
                                 annotations.Add(line);
 
                                 // Add a text annotation.
+
                                 TextAnnotation text = new TextAnnotation();
                                 text.text = names[i];
                                 text.colour = Color.Black;
                                 text.leftAlign = true;
+                                int minDateSeparation = 2;
                                 text.x = dates[i];
+                                while (annotations.Count > 1 && (((DateTime)text.x) - ((DateTime)((annotations.OfType<TextAnnotation>().Last()).x))).Days < minDateSeparation)
+                                    text.x = dates[i].AddDays(minDateSeparation);
+
                                 text.y = double.MinValue;
                                 text.textRotation = 270;
                                 annotations.Add(text);
