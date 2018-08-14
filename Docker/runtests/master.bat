@@ -99,7 +99,7 @@ if errorlevel 1 (
 	exit %errorlevel%
 )
 if "%1"=="%validationsyntax%" (
-	if %RUN_PERFORMANCE_TESTS%==TRUE
+	if "%RUN_PERFORMANCE_TESTS%"=="TRUE" (
 		echo Pull request ID: 	"%PULL_ID%"
 		echo DateTime stamp: 	"%DATETIMESTAMP%"
 		echo Commit author:		"%COMMIT_AUTHOR%"
