@@ -1,5 +1,5 @@
-@echo off
-
+rem @echo off
+set
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
 	echo C:\ApsimX does not exist. This directory must be mounted via the docker run -v switch.
@@ -7,7 +7,7 @@ if not exist %apsimx% (
 )
 
 echo ########### Create an APSIM_VERSION (yyyy.mm.dd.###) environment variable.
-curl -k https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%ghprbPullId% > temp.txt
+curl -k https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
 FOR /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
 FOR /F "tokens=1-6 delims=-" %%I IN ("%FULLRESPONSE%") DO SET BUILD_TIMESTAMP=%%I
 FOR /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
