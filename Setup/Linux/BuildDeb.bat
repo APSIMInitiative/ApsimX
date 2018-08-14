@@ -100,7 +100,12 @@ cd ..
 if not exist %setup%\Output (
 	mkdir %setup%\Output
 )
-ar r %setup%\Output\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
+ar r %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb debian-binary control.tar.gz data.tar.gz
+if errorlevel 1 (
+	echo Errors encountered!
+	exit %errorlevel%
+)
+@curl -u %APSIM_SITE_CREDS% -T Setup\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
 cd ..
 rmdir /S /Q .\DebPackage
 exit /B %errorlevel%

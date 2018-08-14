@@ -124,6 +124,9 @@ pipeline {
 					agent {
 						label "windows && docker"
 					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
 					steps {
 						bat '''
 							@echo off
@@ -139,12 +142,14 @@ pipeline {
 							call ApsimX\\Docker\\CreateInstallations.bat windows
 							rem move ApsimX\\Setup\\Output\\APSIMSetup.exe .\\APSIMSetup
 						'''
-						archiveArtifacts artifacts: 'ApsimX\\Setup\\Output\\APSIMSetup.exe', onlyIfSuccessful: true
 					}
 				}
 				stage('MacOS') {
 					agent {
 						label "linux && docker"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
 					}
 					steps {
 						bat '''
@@ -166,6 +171,9 @@ pipeline {
 				stage('Linux') {
 					agent {
 						label "windows && docker"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
 					}
 					steps {
 						bat '''

@@ -59,9 +59,12 @@ echo.
 echo.
 cd %setup%
 ISCC.exe apsimx.iss
-if not errorlevel 0 (
+if errorlevel 1 (
+	echo Errors encountered!
 	exit %errorlevel%
 )
+rename Output\APSIMSetup.exe APSIMSetup%ISSUE_NUMBER%.exe
+@curl -u APSIM_SITE_CREDS -T Output\APSIMSetup%ISSUE_NUMBER%.exe ftp://www.apsim.info/APSIM/ApsimXFiles/
 exit %errorlevel%
 
 :linux
@@ -78,9 +81,6 @@ echo                                    ^|___/                                  
 echo.
 echo.
 %setup%\Linux\builddeb.bat
-if not errorlevel 0 (
-	exit %errorlevel%
-)
 exit %errorlevel%
 
 :macos
@@ -96,6 +96,5 @@ echo                                     __/ ^|
 echo                                    ^|___/                                                                                          
 echo.
 echo.
-cd "%setup%\OS X"
-call BuildMacDist.bat
-exit /b %errorlevel%
+%setup%\osx\BuildMacDist.bat
+exit %errorlevel%

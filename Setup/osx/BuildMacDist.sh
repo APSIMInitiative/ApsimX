@@ -68,6 +68,16 @@ echo "<string>"$SHORT_VERSION"</string>" >> $PLIST_FILE
 echo "</dict>" >> $PLIST_FILE
 echo "</plist>" >> $PLIST_FILE
 
-genisoimage -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup.dmg MacBundle
+genisoimage -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup$version.dmg MacBundle
+if [ $? -ne 0 ]; then
+	echo Errors encountered!
+	exit $?
+fi
+
+# Never echo this command, even if someone has used set -x above.
+{ curl -u $APSIM_SITE_CREDS -T ApsimSetup$version.dmg ftp://www.apsim.info/APSIM/ApsimXFiles; } 2> /dev/null
+
+export err_code=$?
 popd > /dev/null
 echo Done.
+exit $err_code
