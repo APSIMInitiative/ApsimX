@@ -62,8 +62,6 @@ ISCC.exe apsimx.iss
 if not errorlevel 0 (
 	exit %errorlevel%
 )
-
-rename %setup%\Output\APSIMSetup.exe APSIMSetup%ISSUE_NUMBER%.exe
 exit %errorlevel%
 
 :linux

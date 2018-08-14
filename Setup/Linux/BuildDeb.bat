@@ -100,7 +100,7 @@ cd ..
 if not exist %setup%\Output (
 	mkdir %setup%\Output
 )
-ar r %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb debian-binary control.tar.gz data.tar.gz
+ar r %setup%\Output\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
 cd ..
 rmdir /S /Q .\DebPackage
 exit /B %errorlevel%
