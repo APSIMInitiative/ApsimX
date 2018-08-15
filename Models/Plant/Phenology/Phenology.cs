@@ -150,7 +150,7 @@ namespace Models.PMF.Phen
 
             currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage)) - 1;
 
-            if (currentPhaseIndex <= oldPhaseIndex)
+            if (currentPhaseIndex <= oldPhaseIndex && currentPhaseIndex < phases.Count)
             {
                 //Make a list of phases to rewind
                 List<IPhase> phasesToRewind = new List<IPhase>();
