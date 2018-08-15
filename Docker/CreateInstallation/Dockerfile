@@ -39,6 +39,7 @@ RUN Install-PackageProvider -Name Chocolatey -Force -RequiredVersion 2.8.5.130;	
 	choco install fciv;																									\
 	choco install cygwin;																								\
 	choco install 7zip;																									\
+	choco install curl;																									\
 	mkdir C:\Utilities;																									\
 	Expand-Archive -Path C:\coreutils.zip -DestinationPath C:\coreutils -Force;											\
 	cp C:\coreutils\bin\* C:\Utilities\;																				\
