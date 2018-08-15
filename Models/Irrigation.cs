@@ -52,8 +52,9 @@
         /// <param name="willRunoff">Whether irrigation can run off (<c>true</c>/<c>false</c>).</param>
         /// <param name="no3">Amount of NO3 in irrigation water</param>
         /// <param name="nh4">Amount of NH4 in irrigation water</param>
+        /// <param name="doOutput">If true, output will be written to the summary.</param>
         public void Apply(double amount, double depth = 0.0, double duration = 1440.0, double efficiency = 1.0, bool willRunoff = false,
-                          double no3 = 0.0, double nh4 = 0.0)
+                          double no3 = 0.0, double nh4 = 0.0, bool doOutput = true)
         {
             if (Irrigated != null && amount > 0.0)
             {
@@ -87,9 +88,10 @@
 
                 // Raise event and write log
                 Irrigated.Invoke(this, irrigData);
-                summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", IrrigationApplied, Depth));
+                if (doOutput)
+                    summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", IrrigationApplied, Depth));
             }
-            else
+            else if (doOutput)
                 summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative");
         }
 

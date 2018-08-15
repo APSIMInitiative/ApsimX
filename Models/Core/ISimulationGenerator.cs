@@ -26,14 +26,8 @@
         /// <summary>Name of factor</summary>
         List<KeyValuePair<string, string>> Factors { get; }
 
-        /// <summary>The name of the column that our filter is based on e.g. 'SimulationName'</summary>
-        string ColumnName { get; }
-
-        /// <summary>
-        /// Column values so that a DataView filter can be constructed for this factor
-        /// e.g. 'Gatton87', 'Gatton88'
-        /// </summary>
-        List<string> ColumnValues { get; }
+        /// <summary>The column name/value pairs that our filter is based on.</summary>
+        List<KeyValuePair<string, string>> Columns { get; }
 
         /// <summary>Returns true if this object is equal to rhs</summary>
         bool Equals(ISimulationGeneratorFactors rhs);
@@ -63,6 +57,18 @@
         /// </summary>
         /// <param name="name">The name of factor to remove</param>
         void RemoveFactor(string name);
+
+        /// <summary>
+        /// Get the value of a factor
+        /// </summary>
+        /// <param name="name">The name of the factor</param>
+        string GetColumnValue(string name);
+
+        /// <summary>
+        /// Remove the specified column
+        /// </summary>
+        /// <param name="name">The name of column to remove</param>
+        void RemoveColumn(string name);
 
         /// <summary>
         /// Merge the specified object into this object

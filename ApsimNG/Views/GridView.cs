@@ -373,13 +373,24 @@
             int rowNo = path.Indices[0];
             int colNo = -1;
             string text = string.Empty;
+            CellRendererText textRenderer = cell as CellRendererText;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
-                cell.CellBackgroundGdk = CellIsSelected(rowNo, colNo) ? Grid.Style.Base(StateType.Selected) : Grid.Style.Base(StateType.Normal);
-                if (cell is CellRendererText)
+                StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
+                if (categoryRows.Contains(rowNo))
                 {
-                    (cell as CellRendererText).ForegroundGdk = CellIsSelected(rowNo, colNo) ? Grid.Style.Foreground(StateType.Selected) : Grid.Style.Foreground(StateType.Normal);
+                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                    Color separatorColour = Color.LightSteelBlue;
+                    cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
+                    textRenderer.Editable = false;
                 }
+                else
+                {
+                    cell.CellBackgroundGdk = Grid.Style.Base(cellState);
+                    textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
+                    textRenderer.Editable = true;
+                }
+
                 if (view == Grid)
                 {
                     col.CellRenderers[1].Visible = false;
@@ -403,6 +414,7 @@
                         CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
                         if (toggleRend != null)
                         {
+                            toggleRend.CellBackgroundGdk = Grid.Style.Base(cellState);
                             toggleRend.Active = (bool)dataVal;
                             toggleRend.Activatable = true;
                             cell.Visible = false;
@@ -450,7 +462,6 @@
 
             // We have a "text" cell. Set the text, and other properties for the cell
             cell.Visible = true;
-            CellRendererText textRenderer = cell as CellRendererText;
             textRenderer.Text = text;
         }
 
@@ -640,6 +651,7 @@
         {
             if (userEditingCell)
             {
+                userEditingCell = false;
                 // NB - this assumes that the editing control is a Gtk.Entry control
                 // This may change in future versions of Gtk
                 if (editControl is Entry)
@@ -707,6 +719,7 @@
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
                 fixedColView.Visible = false;
                 splitter.Position = 0;
+                splitter.Child1.HideAll();
             }
             numberLockedCols = number;
         }
@@ -1383,6 +1396,11 @@
                 CellRendererToggle toggleRender = new CellRendererToggle();
                 toggleRender.Visible = false;
                 toggleRender.Toggled += ToggleRenderToggled;
+                toggleRender.Xalign = 0f;
+                toggleRender.EditingCanceled += (sender, e) =>
+                {
+                    userEditingCell = false;
+                };
                 CellRendererCombo comboRender = new CellRendererDropDown();
                 comboRender.Edited += ComboRenderEdited;
                 comboRender.Visible = false;
@@ -1766,23 +1784,33 @@
         {
             try
             {
-                IGridCell where = GetCurrentCell;
+                int colNo = Grid.Columns.ToList().IndexOf(Grid.Columns.FirstOrDefault(c => c.Cells.Contains(sender as CellRenderer)));
+                int rowNo = Int32.Parse(r.Path);
+                IGridCell where = colNo >= 0 && rowNo >= 0 ? new GridCell(this, colNo, rowNo) : GetCurrentCell;
                 while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
                 {
                     DataSource.Rows.Add(DataSource.NewRow());
                 }
-                DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)DataSource.Rows[where.RowIndex][where.ColumnIndex];
-                if (CellsChanged != null)
+                object value = DataSource.Rows[where.RowIndex][where.ColumnIndex];
+                if (value != null && value != DBNull.Value)
                 {
-                    GridCellsChangedArgs args = new GridCellsChangedArgs();
-                    args.ChangedCells = new List<IGridCell>();
-                    args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
-                    CellsChanged(this, args);
+                    DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)DataSource.Rows[where.RowIndex][where.ColumnIndex];
+                    if (CellsChanged != null)
+                    {
+                        GridCellsChangedArgs args = new GridCellsChangedArgs();
+                        args.ChangedCells = new List<IGridCell>();
+                        args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                        CellsChanged(this, args);
+                    }
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
+            }
+            finally
+            {
+                userEditingCell = false;
             }
         }
 
@@ -1873,104 +1901,100 @@
             try
             {
                 if (userEditingCell)
-                {
-                    IGridCell where = GetCurrentCell;
-                    if (where == null)
-                        return;
-
-                    object oldValue = valueBeforeEdit;
-
                     userEditingCell = false;
+                IGridCell where = GetCurrentCell;
+                if (where == null)
+                    return;
+                object oldValue = valueBeforeEdit;
 
-                    // Make sure our table has enough rows.
-                    string newtext = e.NewText;
-                    object newValue = oldValue;
-                    bool isInvalid = false;
-                    if (newtext == null)
-                    {
-                        newValue = DBNull.Value;
-                    }
+                // Make sure our table has enough rows.
+                string newtext = e.NewText;
+                object newValue = oldValue;
+                bool isInvalid = false;
+                if (newtext == null)
+                {
+                    newValue = DBNull.Value;
+                }
 
-                    Type dataType = oldValue.GetType();
-                    if (oldValue == DBNull.Value)
+                Type dataType = oldValue.GetType();
+                if (oldValue == DBNull.Value)
+                {
+                    if (string.IsNullOrEmpty(newtext))
+                        return; // If the old value was null, and we've nothing meaningfull to add, pack up and go home
+                    dataType = DataSource.Columns[where.ColumnIndex].DataType;
+                }
+                if (dataType == typeof(string))
+                    newValue = newtext;
+                else if (dataType == typeof(double))
+                {
+                    double numval;
+                    if (double.TryParse(newtext, out numval))
+                        newValue = numval;
+                    else
                     {
-                        if (string.IsNullOrEmpty(newtext))
-                            return; // If the old value was null, and we've nothing meaningfull to add, pack up and go home
-                        dataType = DataSource.Columns[where.ColumnIndex].DataType;
+                        newValue = double.NaN;
+                        isInvalid = true;
                     }
-                    if (dataType == typeof(string))
-                        newValue = newtext;
-                    else if (dataType == typeof(double))
+                }
+                else if (dataType == typeof(float))
+                {
+                    float numval;
+                    if (float.TryParse(newtext, out numval))
+                        newValue = numval;
+                    else
                     {
-                        double numval;
-                        if (double.TryParse(newtext, out numval))
-                            newValue = numval;
-                        else
-                        {
-                            newValue = double.NaN;
-                            isInvalid = true;
-                        }
+                        newValue = float.NaN;
+                        isInvalid = true;
                     }
-                    else if (dataType == typeof(float))
+                }
+                else if (dataType == typeof(int))
+                {
+                    int numval;
+                    if (int.TryParse(newtext, out numval))
+                        newValue = numval;
+                    else
                     {
-                        float numval;
-                        if (float.TryParse(newtext, out numval))
-                            newValue = numval;
-                        else
-                        {
-                            newValue = float.NaN;
-                            isInvalid = true;
-                        }
+                        newValue = 0;
+                        isInvalid = true;
                     }
-                    else if (dataType == typeof(int))
-                    {
-                        int numval;
-                        if (int.TryParse(newtext, out numval))
-                            newValue = numval;
-                        else
-                        {
-                            newValue = 0;
-                            isInvalid = true;
-                        }
-                    }
-                    else if (dataType == typeof(DateTime))
-                    {
-                        DateTime dateval;
-                        if (!DateTime.TryParse(newtext, out dateval))
-                            isInvalid = true;
-                        newValue = dateval;
-                    }
+                }
+                else if (dataType == typeof(DateTime))
+                {
+                    DateTime dateval;
+                    if (!DateTime.TryParse(newtext, out dateval))
+                        isInvalid = true;
+                    newValue = dateval;
+                }
 
-                    while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
-                    {
-                        DataSource.Rows.Add(DataSource.NewRow());
-                    }
+                while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
+                {
+                    DataSource.Rows.Add(DataSource.NewRow());
+                }
 
-                    // Put the new value into the table on the correct row.
-                    if (DataSource != null)
+                // Put the new value into the table on the correct row.
+                if (DataSource != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
                     }
+                    catch (Exception)
+                    {
+                    }
+                }
 
-                    if (valueBeforeEdit != null && valueBeforeEdit.GetType() == typeof(string) && newValue == null)
-                    {
-                        newValue = string.Empty;
-                    }
+                if (valueBeforeEdit != null && valueBeforeEdit.GetType() == typeof(string) && newValue == null)
+                {
+                    newValue = string.Empty;
+                }
 
-                    if (CellsChanged != null && valueBeforeEdit.ToString() != newValue.ToString())
-                    {
-                        GridCellsChangedArgs args = new GridCellsChangedArgs();
-                        args.ChangedCells = new List<IGridCell>();
-                        args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
-                        args.InvalidValue = isInvalid;
-                        CellsChanged(this, args);
-                    }
+                if (CellsChanged != null && valueBeforeEdit.ToString() != newValue.ToString())
+                {
+                    GridCellsChangedArgs args = new GridCellsChangedArgs();
+                    args.ChangedCells = new List<IGridCell>();
+                    args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                    args.InvalidValue = isInvalid;
+                    CellsChanged(this, args);
                 }
             }
             catch (Exception err)
@@ -2288,7 +2312,7 @@
         /// </summary>
         private void EditSelectedCell()
         {
-            if (!GetColumn(selectedCellColumnIndex).ReadOnly)
+            if ( !(GetColumn(selectedCellColumnIndex).ReadOnly || categoryRows.Contains(selectedCellRowIndex)) )
             {
                 userEditingCell = true;
                 Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);
