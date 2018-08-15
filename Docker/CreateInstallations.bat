@@ -1,6 +1,6 @@
 @echo off
 if "%1"=="macos" (
-	docker build -t createosxinstallation ApsimX\Docker\osx\CreateInstallation
+	docker build -t createosxinstallation ApsimX\Docker\osx
 	docker run -e APSIM_SITE_CREDS -e ISSUE_NUMBER -v %cd%\ApsimX:/ApsimX -v createosxinstallation
 ) else (
 	docker build -m 16g -t createinstallation ApsimX\Docker\CreateInstallation
