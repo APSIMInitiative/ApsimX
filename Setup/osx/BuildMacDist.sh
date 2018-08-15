@@ -13,6 +13,10 @@ export issue_id=$(echo $version | cut -d'.' -f 4)
 echo Apsim version: $version
 echo Short version: $short_version
 echo Issue number: 	$issue_id
+if [ -f $apsimx/bin.zip ]; then
+	unzip bin.zip -d $apsimx/bin
+	rm -f bin.zip
+fi
 
 if [ -d ./MacBundle ]; then
 	rm -rf ./MacBundle
