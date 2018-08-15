@@ -965,13 +965,8 @@
         /// <summary> Rename ThermalTime functions on phases to Progression </summary>
         private static void UpgradeToVersion38(XmlNode node, string fileName)
         {
-            // Find all the phase nodex
-            List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "GenericPhase");
-            nodeList.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "BuddingPhase"));
-
-            foreach (XmlNode phaseNode in nodeList)
-                ConverterUtilities.RenameNode(phaseNode, "ThermalTime", "Progression");
-
+            ConverterUtilities.RenamePMFFunction(node, "GenericPhase", "ThermalTime", "Progression");
+            ConverterUtilities.RenamePMFFunction(node, "BuddingPhase", "ThermalTime", "Progression");
         }
     }
 }
