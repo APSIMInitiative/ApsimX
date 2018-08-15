@@ -150,7 +150,7 @@ namespace Models.PMF.Phen
 
             currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage)) - 1;
 
-            if (currentPhaseIndex <= oldPhaseIndex && currentPhaseIndex < phases.Count)
+            if (currentPhaseIndex <= oldPhaseIndex && oldPhaseIndex != phases.Count()-1)
             {
                 //Make a list of phases to rewind
                 List<IPhase> phasesToRewind = new List<IPhase>();
@@ -173,7 +173,7 @@ namespace Models.PMF.Phen
             }
             else
             {
-                //Make a list of phases fast forward
+                //Make a list of phases to fast forward
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
@@ -191,15 +191,18 @@ namespace Models.PMF.Phen
                     }
                 }
             }
-            
-            IPhaseWithTarget currentPhase = (phases[currentPhaseIndex] as IPhaseWithTarget);
-            currentPhase.ProgressThroughPhase = currentPhase.Target * (newStage - currentPhaseIndex - 1);
 
-            if (currentPhase.ProgressThroughPhase == 0)
-                stagesPassedToday.Add(currentPhase.Start);
+            if (phases[currentPhaseIndex] is IPhaseWithTarget)
+            {
+                IPhaseWithTarget currentPhase = (phases[currentPhaseIndex] as IPhaseWithTarget);
+                currentPhase.ProgressThroughPhase = currentPhase.Target * (newStage - currentPhaseIndex - 1);
 
-            if (StageWasReset != null)
-                StageWasReset.Invoke(this, new EventArgs());
+
+                if (currentPhase.ProgressThroughPhase == 0)
+                    stagesPassedToday.Add(currentPhase.Start);
+            }
+
+           StageWasReset?.Invoke(this, new EventArgs());
         }
 
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>
