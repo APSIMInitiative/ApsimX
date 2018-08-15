@@ -198,10 +198,10 @@ pipeline {
 			agent {
 				label "windows && docker"
 			}
+			environment {
+				CHANGE_DB_CREDS = credentials('change-db-creds')
+			}
 			steps {
-				environment {
-					CHANGE_DB_CREDS = credentials('change-db-creds')
-				}
 				bat '''
 					@echo off
 					rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
