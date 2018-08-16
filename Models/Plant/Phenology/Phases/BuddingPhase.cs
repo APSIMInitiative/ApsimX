@@ -4,7 +4,6 @@ using Models.Core;
 using Models.Functions;
 using System.IO;
 using System.Xml.Serialization;
-using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
@@ -22,7 +21,7 @@ namespace Models.PMF.Phen
         private IFunction target = null;
 
         [Link]
-        private IFunction progression = null;  
+        private IFunction progression = null;
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -34,7 +33,7 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Description("End")]
         public string End { get; set; }
-        
+
         /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
         public double FractionComplete
@@ -60,7 +59,6 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double Target { get { return target.Value(); } }
 
-
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -85,19 +83,18 @@ namespace Models.PMF.Phen
             
             return proceedToNextPhase;
         }
-        
+
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase()  { ProgressThroughPhase = 0; }
+        public void ResetPhase() { ProgressThroughPhase = 0; }
         
-        /// <summary> Write Summary  /// </summary>
+        /// <summary>Writes the summary.</summary>
         public void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("      " + Name);
-            if (target != null)
-                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", target.Value()));
+            writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target));
         }
 
-        //7. Private methode
+        //7. Private method
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -129,6 +126,7 @@ namespace Models.PMF.Phen
             }
         }
     }
+
 }
-
-
+      
+      

@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Data;
 using System.Linq;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
@@ -26,6 +27,9 @@ namespace Models.PMF.Phen
         /// <summary>The thermal time</summary>
         [Link]
         public IFunction thermalTime = null;
+
+        [Link(IsOptional = true)]
+        private Structure structure = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -314,7 +318,7 @@ namespace Models.PMF.Phen
 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
+                    if ((CurrentPhase is EmergingPhase) | (CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
                          Emerged = true;
                     }
