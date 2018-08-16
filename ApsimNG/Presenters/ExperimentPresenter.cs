@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using Commands;
     using EventArguments;
     using Interfaces;
     using Models.Core;
@@ -13,6 +14,17 @@
 
     public class ExperimentPresenter : IPresenter
     {
+        /// <summary>
+        /// The storage writer.
+        /// </summary>
+        [Link]
+        private IStorageWriter storage = null;
+
+        /// <summary>
+        /// Command to handle the running of simulations from this view.
+        /// </summary>
+        private RunCommand runner;
+
         /// <summary>
         /// The Experiment node that was clicked on.
         /// </summary>
@@ -41,12 +53,12 @@
         /// <summary>
         /// The explorer presenter controlling the tab's contents.
         /// </summary>
-        public ExplorerPresenter Presenter { get; set; }
+        private ExplorerPresenter presenter;
 
         /// <summary>
         /// By default, only display this many simulations are displayed (for performance reasons).
         /// </summary>
-        public static int DefaultMaxSims = 50;
+        public const int DefaultMaxSims = 50;
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -56,7 +68,11 @@
         {
             model = modelObject as Experiment;
             view = viewObject as ExperimentView;
-            Presenter = parentPresenter;
+            presenter = parentPresenter;
+
+            runner = new RunCommand(model, presenter, false, storage);
+            // Once the simulation is finished, we will need to reset the disabled simulation names.
+            runner.Finished += OnSimulationsCompleted;
 
             view.EnableSims += OnEnable;
             view.DisableSims += OnDisable;
@@ -88,6 +104,7 @@
             view.ExportCsv -= OnExportCsv;
             view.ImportCsv -= OnImportCsv;
             view.RunSims -= OnRunSims;
+            runner.Finished -= OnSimulationsCompleted;
         }
 
         /// <summary>
@@ -127,7 +144,8 @@
                 }
             }
             UpdateView();
-            model.DisabledSimNames = GetDisabledSimNames();
+            ChangeProperty changeDisabledSims = new ChangeProperty(model, "DisabledSimNames", GetDisabledSimNames());
+            changeDisabledSims.Do(presenter.CommandHistory);
         }
 
         /// <summary>
@@ -148,7 +166,7 @@
                 }
                 else if (Int32.TryParse(newMaxSims, out n))
                 {
-                    if (n > 1000 && Presenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)
+                    if (n > 1000 && presenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)
                         return;
                     else if (n < 0)
                         throw new Exception("Unable to display a negative number of simulations.");
@@ -161,7 +179,7 @@
             }
             catch (Exception err)
             {
-                Presenter.MainPresenter.ShowError(err);
+                presenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -184,21 +202,33 @@
         {
             try
             {
-                Simulation sim = null;
-                List<Model> simulationList = new List<Model>();
-                foreach (string simName in view.SelectedItems)
-                {
-                    sim = model.CreateSpecificSimulation(simName);
-                    simulationList.Add(sim);
-                }
-                Simulations simulationsToRun = Simulations.Create(simulationList);
-
-                Commands.RunCommand command = new Commands.RunCommand(simulationsToRun, Presenter, false, null);
-                command.Do(null);
+                // Before running the simulations, disable all simulations except for those which are selected.
+                model.DisabledSimNames = model.GetSimulationNames().Where(s => !view.SelectedItems.Contains(s)).ToList();
+                runner.Do(presenter.CommandHistory);
             }
             catch (Exception e)
             {
-                Presenter.MainPresenter.ShowError(e);
+                presenter.MainPresenter.ShowError(e);
+            }
+        }
+
+        /// <summary>
+        /// Runs when the simulations have finished. Resets the experiment's disabled simulations to 
+        /// their state before the simulations were run.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnSimulationsCompleted(object sender, EventArgs args)
+        {
+            try
+            {
+                // We don't use a ChangeProperty command here, because this action was not initiated by the user,
+                // and should not be undo-able.
+                model.DisabledSimNames = simulations.Where(s => !s.Item3).Select(s => s.Item1).ToList();
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -263,7 +293,7 @@
             }
             catch (Exception e)
             {
-                Presenter.MainPresenter.ShowError(e);
+                presenter.MainPresenter.ShowError(e);
                 return new List<Tuple<string, List<string>, bool>>();
             }
         }
@@ -335,11 +365,11 @@
                 }
 
                 File.WriteAllText(args.Path, data.ToString());
-                Presenter.MainPresenter.ShowMessage(string.Format("Successfully generated {0}.", args.Path), Simulation.MessageType.Information);
+                presenter.MainPresenter.ShowMessage(string.Format("Successfully generated {0}.", args.Path), Simulation.MessageType.Information);
             }
             catch (Exception e)
             {
-                Presenter.MainPresenter.ShowError(e);
+                presenter.MainPresenter.ShowError(e);
             }
         }
 
@@ -386,22 +416,22 @@
                 }
                 UpdateView();
                 model.DisabledSimNames = GetDisabledSimNames();
-                Presenter.MainPresenter.ShowMessage("Successfully imported data from " + args.Path, Simulation.MessageType.Information);
+                presenter.MainPresenter.ShowMessage("Successfully imported data from " + args.Path, Simulation.MessageType.Information);
             }
             catch (Exception e)
             {
-                Presenter.MainPresenter.ShowError(e);
+                presenter.MainPresenter.ShowError(e);
             }
         }
 
         private void Sobol()
         {
-            Presenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
+            presenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
         }
 
         private void Morris()
         {
-            Presenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
+            presenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
         }
     }
 }
