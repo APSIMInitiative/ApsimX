@@ -34,12 +34,12 @@ RUN Install-PackageProvider -Name Chocolatey -Force -RequiredVersion 2.8.5.130;	
 	Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex; 	\
     choco feature disable –name showDownloadProgress;                                        							\
 	choco feature enable -n allowGlobalConfirmation;                                         							\
-    choco install git;                                                                                                  \
-	choco install innosetup;																							\
-	choco install fciv;																									\
-	choco install cygwin;																								\
-	choco install 7zip;																									\
-	choco install curl;																									\
+    choco install --limit-output git																					\
+	choco install --limit-output innosetup;																				\
+	choco install --limit-output fciv;																					\
+	choco install --limit-output cygwin;																				\
+	choco install --limit-output 7zip;																					\
+	choco install --limit-output curl;																					\
 	mkdir C:\Utilities;																									\
 	Expand-Archive -Path C:\coreutils.zip -DestinationPath C:\coreutils -Force;											\
 	cp C:\coreutils\bin\* C:\Utilities\;																				\
