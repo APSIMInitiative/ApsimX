@@ -19,24 +19,10 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        Plant Plant = null;
-
-        [Link]
-        Structure structure = null;
-
-        [Link]
-        private IFunction FractionOfBudBurst = null;
-
-        [Link]
         private IFunction target = null;
 
         [Link]
         private IFunction progression = null;  
-
-        //2. private fields
-        //-----------------------------------------------------------------------------------------------------------------
-
-        private bool firstStep = true;
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -55,10 +41,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (target.Value() == 0)
+                if (Target == 0)
                     return 1;
                 else
-                    return ProgressThroughPhase / target.Value();
+                    return ProgressThroughPhase / Target;
             }
         }
 
@@ -86,13 +72,6 @@ namespace Models.PMF.Phen
             ProgressionForTimeStep = progression.Value() * propOfDayToUse;
             ProgressThroughPhase += ProgressionForTimeStep;
 
-            if (firstStep)
-            {
-                structure.PrimaryBudNo = Plant.SowingData.BudNumber;
-                firstStep = false;
-            }
-
-            double Target = target.Value();
             if (ProgressThroughPhase > Target)
             {
                 if (ProgressionForTimeStep > 0.0)
@@ -104,15 +83,11 @@ namespace Models.PMF.Phen
                 ProgressThroughPhase = Target;
             }
             
-            if (proceedToNextPhase)
-            {
-                double BudNumberBurst = Plant.SowingData.BudNumber * FractionOfBudBurst.Value();
-                structure.PrimaryBudNo = BudNumberBurst;
-                structure.TotalStemPopn = structure.MainStemPopn;
-            }
-
             return proceedToNextPhase;
         }
+        
+        /// <summary>Resets the phase.</summary>
+        public virtual void ResetPhase()  { ProgressThroughPhase = 0; }
         
         /// <summary> Write Summary  /// </summary>
         public void WriteSummary(TextWriter writer)
@@ -120,12 +95,6 @@ namespace Models.PMF.Phen
             writer.WriteLine("      " + Name);
             if (target != null)
                 writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", target.Value()));
-        }
-        /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase()
-        {
-            ProgressThroughPhase = 0;
-            firstStep = true;
         }
 
         //7. Private methode

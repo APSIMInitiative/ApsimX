@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="38">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -88,7 +88,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Enabled>true</Enabled>
           </SubtractFunction>
           <AirTemperatureFunction>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <Graph>
@@ -160,7 +160,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
         <BuddingPhase>
           <Name>Budding</Name>
           <WangEngelTempFunction>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <MinTemp>0</MinTemp>
@@ -482,7 +482,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <FixedValue>29</FixedValue>
           </Constant>
           <VariableReference>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -502,7 +502,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Units>d</Units>
           </Constant>
           <VariableReference>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -553,7 +553,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Enabled>true</Enabled>
           </MultiplyFunction>
           <VariableReference>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -575,7 +575,6 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
           <Enabled>true</Enabled>
           <Start>Veraison</Start>
           <End>LeafFall</End>
-          <TTForTimeStep>0</TTForTimeStep>
         </LeafDeathPhase>
         <GotoPhase>
           <Name>GotoPhase</Name>
@@ -1008,14 +1007,71 @@ A function is used to capture the year of the current season as in the south hem
           <Enabled>true</Enabled>
           <WhenToHold>FruitSet</WhenToHold>
         </HoldFunction>
+        <BudNumberFunction>
+          <Name>BudNumber</Name>
+          <MultiplyFunction>
+            <Name>FractionOfBudBurst</Name>
+            <SigmoidFunction>
+              <Name>BudNumberEffect</Name>
+              <VariableReference>
+                <Name>XValue</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[Structure].PrimaryBudNo</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>Ymax</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>1.4</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Xo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>100</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>b</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>-54.8977</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </SigmoidFunction>
+            <LinearInterpolationFunction>
+              <Name>CordonDiameterEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <X>
+                  <double>0</double>
+                  <double>12</double>
+                  <double>15</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <XProperty>[Grapevine].Cordon.CordonDiameter.Value()</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <SetStage>BudBurst</SetStage>
+        </BudNumberFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <leavesInitialised>false</leavesInitialised>
-        <CohortToInitialise>0</CohortToInitialise>
-        <TipToAppear>0</TipToAppear>
         <CohortInitialisationStage>Ecodormancy</CohortInitialisationStage>
         <LeafInitialisationStage>BudBurst</LeafInitialisationStage>
-        <ApexNum>0</ApexNum>
       </Structure>
       <Leaf>
         <Name>Leaf</Name>
@@ -1053,8 +1109,6 @@ A function is used to capture the year of the current season as in the south hem
           <Rank>1</Rank>
           <Area>1000</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
@@ -1084,8 +1138,6 @@ A function is used to capture the year of the current season as in the south hem
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
@@ -1115,8 +1167,6 @@ A function is used to capture the year of the current season as in the south hem
           <Rank>3</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
@@ -1440,7 +1490,7 @@ A function is used to capture the year of the current season as in the south hem
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <XProperty>[Grapevine].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Grapevine].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -1857,11 +1907,6 @@ A function is used to capture the year of the current season as in the south hem
           <Enabled>true</Enabled>
           <FixedValue>1</FixedValue>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexStandard>
         <Constant>
           <Name>RemobilisationCost</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5043,13 +5088,9 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <sun_angle>15</sun_angle>
-          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-          <night_interception_fraction>0.5</night_interception_fraction>
-          <refheight>2</refheight>
-          <albedo>0.15</albedo>
-          <emissivity>0.96</emissivity>
-          <RadIntTotal>0</RadIntTotal>
+          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+          <NightInterceptionFraction>0.5</NightInterceptionFraction>
+          <ReferenceHeight>2</ReferenceHeight>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6949,13 +6990,9 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
+            <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+            <NightInterceptionFraction>0.5</NightInterceptionFraction>
+            <ReferenceHeight>2</ReferenceHeight>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -7649,13 +7686,9 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
+            <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+            <NightInterceptionFraction>0.5</NightInterceptionFraction>
+            <ReferenceHeight>2</ReferenceHeight>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>

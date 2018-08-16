@@ -38,10 +38,6 @@ namespace Models.PMF.Phen
         [Description("End")]
         public string End { get; set; }
 
-        /// <summary>Accumulated units of pregress through phase.</summary>
-        [XmlIgnore]
-        public double ProgressThroughPhase { get; set; }
-
         /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
         public double FractionComplete
@@ -55,14 +51,17 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Target that accumulated progression must meet to proceed to the next phase</summary>
-        [XmlIgnore]
-        public double Target { get { return target.Value(); } }
-
         /// <summary>Units of progress through phase on this time step.</summary>
         [XmlIgnore]
         public double ProgressionForTimeStep { get; set; }
 
+        /// <summary>Accumulated units of pregress through phase.</summary>
+        [XmlIgnore]
+        public double ProgressThroughPhase { get; set; }
+
+        /// <summary>Target that accumulated progression must meet to proceed to the next phase</summary>
+        [XmlIgnore]
+        public double Target { get { return target.Value(); } }
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -87,11 +86,6 @@ namespace Models.PMF.Phen
             return proceedToNextPhase;
         }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
-
         /// <summary>Resets the phase.</summary>
         public void ResetPhase() { ProgressThroughPhase = 0; }
         
@@ -104,6 +98,11 @@ namespace Models.PMF.Phen
 
         //7. Private method
         //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Called when [simulation commencing].</summary>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        { ResetPhase(); }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)

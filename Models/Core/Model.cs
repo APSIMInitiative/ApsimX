@@ -223,6 +223,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OrganBiomassRemovalType))]
         [XmlElement(typeof(Models.PMF.Library.BiomassRemoval))]
         [XmlElement(typeof(Models.PMF.Struct.Structure))]
+        [XmlElement(typeof(Models.PMF.Struct.BudNumberFunction))]
         [XmlElement(typeof(Models.PMF.Struct.HeightFunction))]
         [XmlElement(typeof(Models.PMF.Struct.ApexStandard))]
         [XmlElement(typeof(Models.PMF.Struct.ApexTiller))]
