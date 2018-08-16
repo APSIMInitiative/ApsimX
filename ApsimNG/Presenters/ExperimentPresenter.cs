@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UserInterface.Views;
-using Models.Core;
-using Models.Factorial;
-using System.IO;
-using UserInterface.EventArguments;
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using EventArguments;
+    using Interfaces;
+    using Models.Core;
+    using Models.Factorial;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using Views;
+
     public class ExperimentPresenter : IPresenter
     {
         /// <summary>
@@ -21,7 +21,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view responsible for displaying the factor information in a table.
         /// </summary>
-        private ExperimentView view;
+        private IExperimentView view;
 
         /// <summary>
         /// List of the view's column headers. The first one is 'Simulation Name', then the rest are the factor names. The final header is 'Enabled'.

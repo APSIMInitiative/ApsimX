@@ -4,10 +4,11 @@ using System.Linq;
 using UserInterface.EventArguments;
 using Gtk;
 using Pango;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    public class ExperimentView : ViewBase
+    public class ExperimentView : ViewBase, IExperimentView
     {
         /// <summary>
         /// Primary container holding the TreeView and controls vbox.
