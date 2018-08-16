@@ -197,6 +197,7 @@
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
+    <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellActionArgs.cs" />
@@ -241,9 +242,8 @@
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
-    <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
-    <Compile Include="Presenters\FactorControlPresenter.cs" />
+    <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\GenericPresenter.cs" />
@@ -308,7 +308,7 @@
     <Compile Include="Views\ToolStripView.cs" />
     <Compile Include="Views\TreeView.cs" />
     <Compile Include="Views\ExplorerView.cs" />
-    <Compile Include="Views\FactorControlView.cs" />
+    <Compile Include="Views\ExperimentView.cs" />
     <Compile Include="Views\FolderView.cs" />
     <Compile Include="Views\GeneralView.cs" />
     <Compile Include="Views\DirectedGraphView.cs" />
