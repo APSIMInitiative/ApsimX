@@ -105,7 +105,7 @@ if errorlevel 1 (
 	echo Errors encountered!
 	exit %errorlevel%
 )
-@curl -u %APSIM_SITE_CREDS% -T Setup\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
+@curl -u %APSIM_SITE_CREDS% -T C:\ApsimX\Setup\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
 cd ..
 rmdir /S /Q .\DebPackage
 exit /B %errorlevel%
