@@ -1,31 +1,37 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="utf-8"?>
 <OilPalm>
   <Name>OilPalm</Name>
   <Memo>
     <Name>Memo</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <MemoText><![CDATA[The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.]]></MemoText>
   </Memo>
-  <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
-  <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-  <InterceptionFraction>0</InterceptionFraction>
-  <MaximumRootDepth>5000</MaximumRootDepth>
   <Cultivar>
     <Name>Dami</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </Cultivar>
   <Cultivar>
     <Name>SuperFamily</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
     <Command>[FrondMaxArea].XYPairs.Y = 0.1,0.9,0.63,10.8,12.6</Command>
   </Cultivar>
   <Cultivar>
     <Name>Nigeria_IRHO</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,11,15</Command>
     <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,11600,12750</Command>
     <Command>[FrondAppearanceRate].XYPairs.X =     0,    2,     5,   10,   15</Command>
-    <Command>[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11</Command>    
+    <Command>[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11</Command>
   </Cultivar>
   <Cultivar>
     <Name>Nigeria_SOCFINDO</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,11,15</Command>
     <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,11600,12750</Command>
     <Command>[FrondAppearanceRate].XYPairs.X =     0,    2,     5,    8,   15</Command>
@@ -33,40 +39,58 @@
   </Cultivar>
   <Constant>
     <Name>KNO3</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.02</FixedValue>
   </Constant>
   <Constant>
     <Name>RootFraction</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[The proportion of plant growth  partitioned to roots has been set to 10% as this value lies between estimates used by Henson and Dolmat (2003) and van Kraalingen et al. (1989). ]]></MemoText>
-    </Memo>    
+    </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.1</FixedValue>
   </Constant>
   <Constant>
     <Name>RootNConcentration</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[Root nitrogen concentration is set at 0.39% (Goh, 2005)]]></MemoText>
-    </Memo>    
+    </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.39</FixedValue>
   </Constant>
   <Constant>
     <Name>RootSenescenceRate</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[A constant root turnover rate of 0.001 d-1 is used for all soil layers.  This value is larger than the value of 0.00065 which can be calculated from the root turnover functions given by Henson and Dolmat (2003), reflecting the slightly higher fraction of growth partitioned to roots in this model.]]></MemoText>
-    </Memo>    
+    </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.001</FixedValue>
   </Constant>
   <Constant>
     <Name>InitialFrondNumber</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>5</FixedValue>
   </Constant>
   <AirTemperatureFunction>
     <Name>RelativeDevelopmentalRate</Name>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>13</double>
         <double>32</double>
@@ -80,16 +104,21 @@
         <double>0</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </AirTemperatureFunction>
   <LinearInterpolationFunction>
     <Name>FrondAppearanceRate</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[This value has been fitted to frond appearance data from Papua New Guinea (see model validation documentation)]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>2</double>
@@ -105,32 +134,46 @@
         <double>10.1</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </LinearInterpolationFunction>
   <Constant>
     <Name>ExpandingFronds</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>5</FixedValue>
   </Constant>
   <Constant>
     <Name>FrondMaximumNConcentration</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>1.15</FixedValue>
   </Constant>
   <Constant>
     <Name>FrondCriticalNConcentration</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>1.1</FixedValue>
   </Constant>
   <Constant>
     <Name>FrondMinimumNConcentration</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.5</FixedValue>
   </Constant>
   <SplineInterpolationFunction>
     <Name>FrondMaxArea</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[This value has been fitted to frond area data from Papua New Guinea (see model validation documentation)]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>2</double>
@@ -146,16 +189,22 @@
         <double>14</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </SplineInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>BunchSizeMax</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[This value has been fitted to bunch size data from Papua New Guinea (see model validation documentation)]]></MemoText>
-    </Memo>    
-    <XProperty>[OilPalm].Age</XProperty>
+    </Memo>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>2</double>
@@ -171,16 +220,22 @@
         <double>12750</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>HarvestFrondNumber</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[This function frond number data from Papua New Guinea (see model validation documentation)]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>6</double>
@@ -192,24 +247,34 @@
         <double>34</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </LinearInterpolationFunction>
-    <Constant>
+  <Constant>
     <Name>FemaleFlowerFraction</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. A constant value is assumed for Female Flower Fraction at the beginning of this phase.  This represents the fraction of female flowers in the absence of any further stress effect.]]></MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.8</FixedValue>
   </Constant>
   <LinearInterpolationFunction>
     <Name>FFFStressImpact</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. Combres et al. (2013) showed that variation in the proportion of female inflorescences could be modelled in response to the ratio of assimilate supply to demand (RSD) within the whole plant. We use a similar approach here in which the female inflorescence fraction (FIF) for each cohort within the sex determination phase is decreased each day at a rate of 0.06 x (1 – RSD).]]></MemoText>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <MemoText><![CDATA[Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. Combres et al. (2013) showed that variation in the proportion of female inflorescences could be modelled in response to the ratio of assimilate supply to demand (RSD) within the whole plant. We use a similar approach here in which the female inflorescence fraction (FIF) for each cohort within the sex determination phase is decreased each day at a rate of 0.06 x (1 â€“ RSD).]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].CarbonStress</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>1</double>
@@ -219,16 +284,22 @@
         <double>0</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].CarbonStress</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>StemToFrondFraction</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[The proportion of daily assimilation partitioned to stem is calculated from daily frond growth using a ratio of stem to frond dry mass, calculated from data used in this study, which increases from 0 at planting to 0.25 by seven years of age.]]></MemoText>
-    </Memo>     
-    <XProperty>[OilPalm].Age</XProperty>
+    </Memo>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>4</double>
@@ -242,16 +313,22 @@
         <double>0.25</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>StemNConcentration</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[Average whole stem N concentration decreases with plant age.  We use the equation of Goh (2005) which specifies that stem N concentration decreases from 1.37% to 0.35% by the age of 8.5 years and then remains constant.]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>8.5</double>
@@ -261,36 +338,52 @@
         <double>0.351</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </LinearInterpolationFunction>
   <Constant>
     <Name>BunchOilConversionFactor</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>1.55</FixedValue>
   </Constant>
   <Constant>
     <Name>RipeBunchWaterContent</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[]]></MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.47</FixedValue>
   </Constant>
   <Constant>
     <Name>BunchNConcentration</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[]]></MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>0.603</FixedValue>
   </Constant>
   <LinearInterpolationFunction>
     <Name>SpecificLeafArea</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[ A value of 0.003 m2 g-1 was calculated by combining the allometric equations for frond mass and area (Corley et al., 1971)]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>1</double>
         <double>5</double>
@@ -302,16 +395,22 @@
         <double>0.003</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>SpecificLeafAreaMax</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Age</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>1</double>
         <double>5</double>
@@ -323,16 +422,22 @@
         <double>0.0035</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Age</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>FlowerAbortionFraction</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[Inflorescence abortion is calculated during a phase 10 to 12 fronds after the spear leaf stage.   Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 – RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ]]></MemoText>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <MemoText><![CDATA[Inflorescence abortion is calculated during a phase 10 to 12 fronds after the spear leaf stage.   Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 â€“ RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].CarbonStress</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>1</double>
@@ -342,16 +447,22 @@
         <double>0</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].CarbonStress</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>BunchFailureFraction</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[Bunch failure is determined 21 fronds after spear leaf over the course of a single frond.  Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 – RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ]]></MemoText>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <MemoText><![CDATA[Bunch failure is determined 21 fronds after spear leaf over the course of a single frond.  Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 â€“ RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].CarbonStress</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0</double>
         <double>1</double>
@@ -361,16 +472,22 @@
         <double>0</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].CarbonStress</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>DirectExtinctionCoeff</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[Light interception is calculated using the Beer-Lambert law with extinction coefficients derived from data from a nearby site in West New Britain, PNG (Breure, 1988a) and other modelling (van Kraalingen et al., 1989)]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Population</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0.0056</double>
         <double>0.0186</double>
@@ -380,16 +497,22 @@
         <double>0.35</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Population</XProperty>
   </LinearInterpolationFunction>
   <LinearInterpolationFunction>
     <Name>DiffuseExtinctionCoeff</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[Light interception is calculated using the Beer-Lambert law with extinction coefficients derived from data from a nearby site in West New Britain, PNG (Breure, 1988a) and other modelling (van Kraalingen et al., 1989)]]></MemoText>
     </Memo>
-    <XProperty>[OilPalm].Population</XProperty>
     <XYPairs>
       <Name>XYPairs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <X>
         <double>0.0056</double>
         <double>0.0186</double>
@@ -399,34 +522,40 @@
         <double>0.45</double>
       </Y>
     </XYPairs>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <XProperty>[OilPalm].Population</XProperty>
   </LinearInterpolationFunction>
   <Constant>
     <Name>RUE</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[Photosynthesis is calculated using a radiation use efficiency (RUE) of 1.22 g MJ-1 of intercepted direct beam total short wave radiation.  RUE for diffuse light increases from this direct beam value by up to 33%, in proportion to the fraction of daily intercepted radiation, corresponding with the observed impact of diffuse light penetration on forest growth (Alton et al., 2007).  Daily average RUE is calculated as the average of the direct and diffuse beam RUE values, weighted toward the diffuse light RUE using the square of the daily diffuse light fraction (van Kraalingen et al., 1989).  This approach yields a value of 1.35 for a clear day with approximately 30% diffuse light which matches estimates provided by Henson and Dolmat (2003) assuming a density of 140 palms ha-1.]]></MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>1.22</FixedValue>
   </Constant>
   <Constant>
     <Name>RootFrontVelocity</Name>
     <Memo>
       <Name>Memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[Fixed root front velocity taken from Carr(2011).]]></MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <FixedValue>30</FixedValue>
   </Constant>
-  <plant_status>out</plant_status>
-  <kl />
-  <ll />
-  <xf />
-  
-  <DefoliationFraction>0</DefoliationFraction>
-  
-    <Memo>
-      <Name>Reference List</Name>
-      <MemoText>
-  <![CDATA[
+  <Memo>
+    <Name>Reference List</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <MemoText>
+      <![CDATA[
 
 **References**
 
@@ -486,8 +615,19 @@ van Kraalingen, D.W.G., Breure, C.J., Spitters, C.J.T., 1989. Simulation of oil 
 
 Van Noordwijk, M., Lusiana, B., Khasanah, N., Mulia, R., 2011. WaNuLCAS version 4.0: Background on a model of water, nutrient and light capture in agroforestry systems. World Agroforestry Centre (ICRAF): Bogor, Indonesia, p. 224.
 
-von Uexküll, H., Henson, I.E., Fairhurst, T., 2003. Canopy management to optimize yield, In: Fairhurst, T., Härdter, R. (Eds.), The Oil Palm – Management for Large and Sustainable Yields. Potash and Phosphate Institute of Canada, Potash and Phosphate Institute, International Potash Institute: Singapore, pp. 163-180.
-           ]]></MemoText>
-    </Memo>  
-  
+von UexkÃ¼ll, H., Henson, I.E., Fairhurst, T., 2003. Canopy management to optimize yield, In: Fairhurst, T., HÃ¤rdter, R. (Eds.), The Oil Palm â€“ Management for Large and Sustainable Yields. Potash and Phosphate Institute of Canada, Potash and Phosphate Institute, International Potash Institute: Singapore, pp. 163-180.
+           ]]>
+    </MemoText>
+  </Memo>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
+  <interception>0</interception>
+  <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+  <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
+  <InterceptionFraction>0</InterceptionFraction>
+  <MaximumRootDepth>5000</MaximumRootDepth>
+  <RootDepth>0</RootDepth>
+  <DltDM>0</DltDM>
+  <ReproductiveGrowthFraction>0</ReproductiveGrowthFraction>
+  <UnderstoryCoverGreen>0</UnderstoryCoverGreen>
 </OilPalm>
