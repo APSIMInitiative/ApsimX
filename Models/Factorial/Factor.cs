@@ -146,6 +146,11 @@ namespace Models.Factorial
                         factorName += pathValue.value.ToString();
                 }
             }
+            else if (!factorValues.Any() && fixedValues.Count == 1)
+            {
+                // When the factor has only a single level, we need to remember to set factorName correctly.
+                factorName += fixedValues.First().value;
+            }
 
             if (pathsForFactor.Count > 0)
                 factorValues.Add(new FactorValue(this, factorName, pathsForFactor, valuesForFactor));
