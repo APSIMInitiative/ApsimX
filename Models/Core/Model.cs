@@ -159,7 +159,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.NodeNumberPhase))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
-        [XmlElement(typeof(Models.PMF.Phen.BuddingPhase))]
         [XmlElement(typeof(Models.Functions.ArrayFunction))]
         [XmlElement(typeof(Models.Functions.AccumulateFunction))]
         [XmlElement(typeof(Models.Functions.AccumulateByDate))]

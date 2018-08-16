@@ -206,7 +206,7 @@
     <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
     <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
-    <Compile Include="Plant\Structure\BudNumberFuncticon.cs" />
+    <Compile Include="Plant\Structure\BudNumberFunction.cs" />
     <Compile Include="Soils\Nutrient\Chloride.cs" />
     <Compile Include="Plant\Structure\ApexBase.cs" />
     <Compile Include="Storage\DataStore.cs" />
@@ -271,7 +271,6 @@
     <Compile Include="Plant\Structure\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
-    <Compile Include="Plant\Phenology\Phases\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\NodeNumberPhase.cs" />
     <Compile Include="Functions\QualitativePPEffect.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMF.cs" />
