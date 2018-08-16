@@ -7,16 +7,18 @@ pushd $osx > /dev/null
 # Delete any .dmg files leftover from previous builds.
 find $setup -name "*.dmg" -exec rm "{}" \;
 
+if [ -f $apsimx/bin.zip ]; then
+	unzip $apsimx/bin.zip -d $apsimx/bin
+	rm -f $apsimx/bin.zip
+fi
+
 export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d\.){3}\d')
 export short_version=$(echo $version | cut -d'.' -f 1,2)
 export issue_id=$(echo $version | cut -d'.' -f 4)
 echo Apsim version: $version
 echo Short version: $short_version
 echo Issue number: 	$issue_id
-if [ -f $apsimx/bin.zip ]; then
-	unzip bin.zip -d $apsimx/bin
-	rm -f bin.zip
-fi
+
 
 if [ -d ./MacBundle ]; then
 	rm -rf ./MacBundle
