@@ -165,7 +165,6 @@ pipeline {
 						bat '''
 							call ApsimX\\Docker\\CreateInstallations.bat macos
 						'''
-						archiveArtifacts artifacts: 'ApsimX\\Setup\\osx\\ApsimSetup.dmg', onlyIfSuccessful: true
 					}
 				}
 				stage('Linux') {
@@ -189,7 +188,6 @@ pipeline {
 						bat '''
 							call ApsimX\\Docker\\CreateInstallations.bat linux
 						'''
-						archiveArtifacts artifacts: 'ApsimX\\Setup\\Linux\\APSIMSetup.deb', onlyIfSuccessful: true
 					}
 				}
 			}
