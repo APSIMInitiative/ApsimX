@@ -7,15 +7,14 @@
     class FileConverterView : ViewBase, IFileConverterView
     {
         /// <summary>
-        /// Label which goes next to the checkbutton.
-        /// Clicking on this label toggles the checkbutton.
+        /// Radio button which sets the version number to the latest version.
         /// </summary>
-        private Label autoVersionLabel;
+        private RadioButton latestVersion;
 
         /// <summary>
-        /// Check box which sets the version number to the latest version.
+        /// Radio button which allows the user to upgrade to a specific version.
         /// </summary>
-        private CheckButton latestVersion;
+        private RadioButton specificVersion;
 
         /// <summary>
         /// Text box into which the user types the desired file version.
@@ -58,22 +57,18 @@
             pathContainer.PackStart(pathInput, false, true, 0);
             pathContainer.PackEnd(chooseFileButton, false, false, 0);
 
-            latestVersion = new CheckButton();
-            latestVersion.Toggled += OnAutoVersionToggle;
-            autoVersionLabel = new Label("Upgrade to latest version: ");
-            autoVersionLabel.Events = Gdk.EventMask.ButtonPressMask;
-            autoVersionLabel.ButtonPressEvent += OnAutoVersionLabelClick;
-            HBox autoVersionContainer = new HBox();
-            autoVersionContainer.PackStart(autoVersionLabel, false, true, 0);
-            autoVersionContainer.PackEnd(latestVersion, false, true, 0);
-            
+            latestVersion = new RadioButton("Latest version");
+            latestVersion.Toggled += OnUseLatestVersion;
+
+            specificVersion = new RadioButton(latestVersion, "Specific version: ");
+            specificVersion.Toggled += OnUseLatestVersion;
             versionInput = new Entry();
-            Label versionLabel = new Label("Upgrade to version: ");
             HBox versionContainer = new HBox();
-            versionContainer.PackStart(versionLabel, false, true, 0);
+            versionContainer.PackStart(specificVersion, false, true, 0);
             versionContainer.PackEnd(versionInput, false, true, 0);
 
             // This will grey out the version input text box.
+            specificVersion.Active = true;
             latestVersion.Active = true;
 
             convertButton = new Button("Go");
@@ -81,7 +76,7 @@
 
             VBox controlsContainer = new VBox();
             controlsContainer.PackStart(pathContainer, false, true, 5);
-            controlsContainer.PackStart(autoVersionContainer, false, true, 5);
+            controlsContainer.PackStart(latestVersion, false, true, 5);
             controlsContainer.PackStart(versionContainer, false, true, 5);
             controlsContainer.PackEnd(convertButton, false, false, 5);
 
@@ -123,7 +118,14 @@
         {
             get
             {
-                return int.Parse(versionInput.Text);
+                try
+                {
+                    return int.Parse(versionInput.Text);
+                }
+                catch (FormatException)
+                {
+                    throw new FormatException("Version number was not in the correct format. This should be an integer.");
+                }
             }
             set
             {
@@ -174,26 +176,18 @@
         }
 
         /// <summary>
-        /// Invoked when the user clicks on the auto version label.
-        /// Toggles the auto version checkbox.
+        /// Invoked when the 'latest version' checkbox is toggled.
+        /// When this occurs, we need to toggle the 'sensitive'
+        /// property of the version input textbox to grey it out
+        /// if it's not going to be used.
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
         [GLib.ConnectBefore]
-        private void OnAutoVersionLabelClick(object sender, EventArgs args)
+        private void OnUseLatestVersion(object sender, EventArgs args)
         {
-            LatestVersion = !LatestVersion;
-        }
-
-        [GLib.ConnectBefore]
-        private void OnAutoVersionToggle(object sender, EventArgs args)
-        {
-            // We will need to access the active property of latestVersion.
-            // In order to get an accurate value, we first need to let the
-            // Gtk event loop do its thing.
-            while (GLib.MainContext.Iteration()) ;
-
-            versionInput.Sensitive = !LatestVersion;
+            versionInput.Sensitive = specificVersion.Active;
+            versionInput.IsEditable = specificVersion.Active;
         }
 
         /// <summary>
@@ -250,8 +244,8 @@
             mainWindow.Destroyed -= OnClose;
             chooseFileButton.Clicked -= OnChooseFile;
             convertButton.Clicked -= OnConvert;
-            latestVersion.Toggled -= OnAutoVersionToggle;
-            autoVersionLabel.ButtonPressEvent -= OnAutoVersionLabelClick;
+            latestVersion.Toggled -= OnUseLatestVersion;
+            specificVersion.Toggled -= OnUseLatestVersion;
             mainWindow.Dispose();
         }
 
