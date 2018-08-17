@@ -19,6 +19,11 @@
         string FilePath { get; }
 
         /// <summary>
+        /// If true, we automatically upgrade to the latest version.
+        /// </summary>
+        bool LatestVersion { get; }
+
+        /// <summary>
         /// Controls the visibility of the view.
         /// Settings this to true displays the view.
         /// </summary>

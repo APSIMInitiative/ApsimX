@@ -7,6 +7,17 @@
     class FileConverterView : ViewBase, IFileConverterView
     {
         /// <summary>
+        /// Label which goes next to the checkbutton.
+        /// Clicking on this label toggles the checkbutton.
+        /// </summary>
+        private Label autoVersionLabel;
+
+        /// <summary>
+        /// Check box which sets the version number to the latest version.
+        /// </summary>
+        private CheckButton latestVersion;
+
+        /// <summary>
         /// Text box into which the user types the desired file version.
         /// </summary>
         private Entry versionInput;
@@ -47,17 +58,30 @@
             pathContainer.PackStart(pathInput, false, true, 0);
             pathContainer.PackEnd(chooseFileButton, false, false, 0);
 
+            latestVersion = new CheckButton();
+            latestVersion.Toggled += OnAutoVersionToggle;
+            autoVersionLabel = new Label("Upgrade to latest version: ");
+            autoVersionLabel.Events = Gdk.EventMask.ButtonPressMask;
+            autoVersionLabel.ButtonPressEvent += OnAutoVersionLabelClick;
+            HBox autoVersionContainer = new HBox();
+            autoVersionContainer.PackStart(autoVersionLabel, false, true, 0);
+            autoVersionContainer.PackEnd(latestVersion, false, true, 0);
+            
             versionInput = new Entry();
             Label versionLabel = new Label("Upgrade to version: ");
             HBox versionContainer = new HBox();
             versionContainer.PackStart(versionLabel, false, true, 0);
             versionContainer.PackEnd(versionInput, false, true, 0);
 
+            // This will grey out the version input text box.
+            latestVersion.Active = true;
+
             convertButton = new Button("Go");
             convertButton.Clicked += OnConvert;
 
             VBox controlsContainer = new VBox();
             controlsContainer.PackStart(pathContainer, false, true, 5);
+            controlsContainer.PackStart(autoVersionContainer, false, true, 5);
             controlsContainer.PackStart(versionContainer, false, true, 5);
             controlsContainer.PackEnd(convertButton, false, false, 5);
 
@@ -75,6 +99,22 @@
         /// Invoked when the user hits clicks convert button.
         /// </summary>
         public event EventHandler Convert;
+
+        /// <summary>
+        /// If true, we automatically upgrade to the latest version.
+        /// </summary>
+        public bool LatestVersion
+        {
+            get
+            {
+                return latestVersion.Active;
+            }
+            set
+            {
+                latestVersion.Active = value;
+                latestVersion.Sensitive = !value;
+            }
+        }
 
         /// <summary>
         /// Version to which the user wants to upgrade the file.
@@ -134,6 +174,29 @@
         }
 
         /// <summary>
+        /// Invoked when the user clicks on the auto version label.
+        /// Toggles the auto version checkbox.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
+        private void OnAutoVersionLabelClick(object sender, EventArgs args)
+        {
+            LatestVersion = !LatestVersion;
+        }
+
+        [GLib.ConnectBefore]
+        private void OnAutoVersionToggle(object sender, EventArgs args)
+        {
+            // We will need to access the active property of latestVersion.
+            // In order to get an accurate value, we first need to let the
+            // Gtk event loop do its thing.
+            while (GLib.MainContext.Iteration()) ;
+
+            versionInput.Sensitive = !LatestVersion;
+        }
+
+        /// <summary>
         /// Invoked when the user presses the file chooser button.
         /// Opens a file chooser dialog and sets the contents of 
         /// the file path textbox to the chosen file.
@@ -187,6 +250,8 @@
             mainWindow.Destroyed -= OnClose;
             chooseFileButton.Clicked -= OnChooseFile;
             convertButton.Clicked -= OnConvert;
+            latestVersion.Toggled -= OnAutoVersionToggle;
+            autoVersionLabel.ButtonPressEvent -= OnAutoVersionLabelClick;
             mainWindow.Dispose();
         }
 

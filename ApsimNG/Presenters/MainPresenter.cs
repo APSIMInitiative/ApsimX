@@ -1046,8 +1046,13 @@
         {
             try
             {
+                // The file converter view has an option to automatically select the latest version.
+                // If the user has enabled this option, we will upgrade the file to the latest version. 
+                // Otherwise, we will upgrade to the version they have specified.
+                int version = fileConverter.LatestVersion ? Models.Core.ApsimFile.Converter.LatestVersion : fileConverter.ToVersion;
+
                 // Run the converter.
-                using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(fileConverter.FilePath, fileConverter.ToVersion))
+                using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(fileConverter.FilePath, version))
                 {
                     File.WriteAllText(fileConverter.FilePath, inStream.ToString());
                 }
@@ -1089,7 +1094,7 @@
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
-                fileConverter.Destroy();
+                fileConverter?.Destroy();
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
