@@ -90,7 +90,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = ApsimFile.Converter.LastestVersion;
+            Version = ApsimFile.Converter.LatestVersion;
             LoadErrors = new List<Exception>();
         }
 

@@ -15,20 +15,40 @@
     /// </summary>
     public class Converter
     {
-        /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 37; } }
+        /// <summary>Gets the latest .apsimx file format version.</summary>
+        public static int LatestVersion { get { return 37; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Returns true if something was changed.</returns>
         public static Stream ConvertToLatestVersion(string fileName)
         {
+            return ConvertToVersion(fileName, LatestVersion);
+        }
+
+        /// <summary>Converts XML to the latest version.</summary>
+        /// <param name="rootNode">The root node.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        /// <returns>Returns true if something was changed.</returns>
+        public static bool ConvertToLatestVersion(XmlNode rootNode, string fileName)
+        {
+            return ConvertToVersion(rootNode, fileName, LatestVersion);
+        }
+
+        /// <summary>
+        /// Converts XML to a given version.
+        /// </summary>
+        /// <param name="fileName">Filename (including path) of the file to be converted.</param>
+        /// <param name="version">Version to which the file will be converted.</param>
+        /// <returns></returns>
+        public static Stream ConvertToVersion(string fileName, int version)
+        {
             // Load the file.
             XmlDocument doc = new XmlDocument();
             doc.Load(fileName);
 
             // Apply converter.
-            bool changed = ConvertToLatestVersion(doc.DocumentElement, fileName);
+            bool changed = ConvertToVersion(doc.DocumentElement, fileName, version);
 
             if (changed)
             {
@@ -39,15 +59,6 @@
             }
             else
                 return File.OpenRead(fileName);
-        }
-
-        /// <summary>Converts XML to the latest version.</summary>
-        /// <param name="rootNode">The root node.</param>
-        /// <param name="fileName">The name of the .apsimx file</param>
-        /// <returns>Returns true if something was changed.</returns>
-        public static bool ConvertToLatestVersion(XmlNode rootNode, string fileName)
-        {
-            return ConvertToVersion(rootNode, fileName, LastestVersion);
         }
 
         /// <summary>Converts XML to the latest version.</summary>

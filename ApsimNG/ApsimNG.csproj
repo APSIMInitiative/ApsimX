@@ -212,6 +212,7 @@
     <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
+    <Compile Include="Interfaces\IFileConverterView.cs" />
     <Compile Include="Interfaces\IMainView.cs" />
     <Compile Include="Interfaces\IMenuView.cs" />
     <Compile Include="Interfaces\IToolStripView.cs" />
@@ -304,6 +305,7 @@
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ErrorView.cs" />
+    <Compile Include="Views\FileConverterView.cs" />
     <Compile Include="Views\MenuView.cs" />
     <Compile Include="Views\ToolStripView.cs" />
     <Compile Include="Views\TreeView.cs" />

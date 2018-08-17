@@ -37,6 +37,11 @@
         private List<IPresenter> presenters2 = new List<IPresenter>();
 
         /// <summary>
+        /// View used to convert xml files to a newer version.
+        /// </summary>
+        private IFileConverterView fileConverter = null;
+
+        /// <summary>
         /// The most recent exception that has been thrown.
         /// </summary>
         public List<string> LastError { get; private set; }
@@ -98,6 +103,8 @@
             this.view.TabClosing -= this.OnTabClosing;
             this.view.OnError -= OnError;
             this.view.ShowDetailedError -= ShowDetailedErrorMessage;
+            if (fileConverter != null)
+                fileConverter.Convert -= OnConvert;
         }
 
         /// <summary>
@@ -510,7 +517,13 @@
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
-            
+#if DEBUG
+            startPage.AddButton(
+                                "Convert XML File",
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                this.OnShowConverter);
+#endif
+
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
 
@@ -999,6 +1012,49 @@
                 string label = Path.GetFileNameWithoutExtension(fileName) + " (example)";
                 this.OpenApsimXFromMemoryInTab(label, reader.ReadToEnd(), onLeftTabControl);
                 reader.Close();
+            }
+        }
+
+        /// <summary>
+        /// Shows the file converter view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnShowConverter(object sender, EventArgs args)
+        {
+            try
+            {
+                if (fileConverter == null)
+                {
+                    fileConverter = new FileConverterView(view as ViewBase);
+                    fileConverter.Convert += OnConvert;
+                }
+                fileConverter.Visible = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Opens a dialog which allows the user to upgrade an XML file from and to a version of their choice.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnConvert(object sender, EventArgs args)
+        {
+            try
+            {
+                // Run the converter.
+                using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(fileConverter.FilePath, fileConverter.ToVersion))
+                {
+                    File.WriteAllText(fileConverter.FilePath, inStream.ToString());
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
