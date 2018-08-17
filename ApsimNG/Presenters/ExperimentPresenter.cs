@@ -99,6 +99,7 @@
         public void Detach()
         {
             view.Detach();
+            view.SetMaxSims -= OnSetMaxNumSims;
             view.EnableSims -= OnEnable;
             view.DisableSims -= OnDisable;
             view.ExportCsv -= OnExportCsv;
@@ -407,11 +408,14 @@
                         if (data.Count == headers.Count)
                         {
                             bool enabled;
-                            if (!bool.TryParse(data[data.Count - 1], out enabled)) throw new Exception("Unable to parse " + data[data.Count - 1] + " to bool on line " + i + ".");
+                            if (!bool.TryParse(data[data.Count - 1], out enabled))
+                                throw new Exception("Unable to parse " + data[data.Count - 1] + " to bool on line " + i + ".");
                             simulations.Add(new Tuple<string, List<string>, bool>(data[0], data.Skip(1).Take(data.Count - 2).ToList(), enabled));
                         }
-                        else if (data.Count > headers.Count) throw new Exception("Too many elements in row " + i + ".");
-                        else throw new Exception("Too few elements in row " + i + ".");
+                        else if (data.Count > headers.Count)
+                            throw new Exception("Too many elements in row " + i + ".");
+                        else
+                            throw new Exception("Too few elements in row " + i + ".");
                     }
                 }
                 UpdateView();
