@@ -28,5 +28,10 @@
         /// Invoked when the user hits clicks convert button.
         /// </summary>
         event EventHandler Convert;
+
+        /// <summary>
+        /// Does some cleanup when the object is no longer needed.
+        /// </summary>
+        void Destroy();
     }
 }

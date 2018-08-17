@@ -38,13 +38,10 @@
         /// <param name="owner">Owner view.</param>
         public FileConverterView(ViewBase owner) : base(owner)
         {
-            mainWindow = new Window("File Converter");
-            mainWindow.TransientFor = owner.MainWidget.Toplevel as Window;
-
             pathInput = new Entry();
-            Label pathLabel = new Label("File to conver: ");
+            Label pathLabel = new Label("File to convert: ");
             chooseFileButton = new Button("...");
-            chooseFileButton.ButtonPressEvent += OnChooseFile;
+            chooseFileButton.Clicked += OnChooseFile;
             HBox pathContainer = new HBox();
             pathContainer.PackStart(pathLabel, false, true, 0);
             pathContainer.PackStart(pathInput, false, true, 0);
@@ -57,13 +54,19 @@
             versionContainer.PackEnd(versionInput, false, true, 0);
 
             convertButton = new Button("Go");
-            convertButton.ButtonPressEvent += OnConvert;
+            convertButton.Clicked += OnConvert;
 
             VBox controlsContainer = new VBox();
             controlsContainer.PackStart(pathContainer, false, true, 5);
             controlsContainer.PackStart(versionContainer, false, true, 5);
             controlsContainer.PackEnd(convertButton, false, false, 5);
+
+            mainWindow = new Window("File Converter");
+            mainWindow.TransientFor = owner.MainWidget.Toplevel as Window;
             mainWindow.Add(controlsContainer);
+            mainWindow.DeleteEvent += OnDelete;
+            mainWindow.Destroyed += OnClose;
+            mainWindow.KeyPressEvent += OnKeyPress;
 
             _mainWidget = mainWindow;
         }
@@ -121,6 +124,15 @@
                     mainWindow.HideAll();
             }
         }
+
+        /// <summary>
+        /// Does some cleanup when the object is no longer needed.
+        /// </summary>
+        public void Destroy()
+        {
+            mainWindow.Destroy();
+        }
+
         /// <summary>
         /// Invoked when the user presses the file chooser button.
         /// Opens a file chooser dialog and sets the contents of 
@@ -128,6 +140,7 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
         private void OnChooseFile(object sender, EventArgs args)
         {
             string fileName = MasterView.AskUserForOpenFileName("*.xml|*.xml", Utility.Configuration.Settings.PreviousFolder);
@@ -141,9 +154,53 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        private void OnConvert(object sender, ButtonPressEventArgs args)
+        [GLib.ConnectBefore]
+        private void OnConvert(object sender, EventArgs args)
         {
             Convert?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Invoked when the user closes the window.
+        /// This prevents the window from closing, but still hides
+        /// the window. This means we don't have to re-initialise
+        /// the window each time the user opens it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        [GLib.ConnectBefore]
+        private void OnDelete(object sender, DeleteEventArgs args)
+        {
+            Visible = false;
+            args.RetVal = true;
+        }
+
+        /// <summary>
+        /// Invoked when the window is closed for good, when Apsim closes.
+        /// </summary>
+        /// <param name="sender">Event arguments.</param>
+        /// <param name="args">Sender object.</param>
+        [GLib.ConnectBefore]
+        private void OnClose(object sender, EventArgs args)
+        {
+            mainWindow.DeleteEvent -= OnDelete;
+            mainWindow.Destroyed -= OnClose;
+            chooseFileButton.Clicked -= OnChooseFile;
+            convertButton.Clicked -= OnConvert;
+            mainWindow.Dispose();
+        }
+
+        /// <summary>
+        /// Invoked when a keyboard key is pressed.
+        /// Closes the window if the pressed key was escape.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
+        private void OnKeyPress(object sender, KeyPressEventArgs args)
+        {
+            if (args.Event.Key == Gdk.Key.Escape)
+                Visible = false;
         }
     }
 }

@@ -1089,6 +1089,7 @@
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
+                fileConverter.Destroy();
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
