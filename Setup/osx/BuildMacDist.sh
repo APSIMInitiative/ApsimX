@@ -11,8 +11,7 @@ if [ -f $apsimx/bin.zip ]; then
 	unzip $apsimx/bin.zip -d $apsimx/bin
 	rm -f $apsimx/bin.zip
 fi
-
-export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d\.){3}\d')
+export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d+\.){3}\d+')
 export short_version=$(echo $version | cut -d'.' -f 1,2)
 export issue_id=$(echo $version | cut -d'.' -f 4)
 echo Apsim version: $version
