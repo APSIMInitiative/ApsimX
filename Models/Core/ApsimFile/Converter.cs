@@ -967,6 +967,10 @@
         {
             ConverterUtilities.RenamePMFFunction(node, "GenericPhase", "ThermalTime", "Progression");
             ConverterUtilities.RenamePMFFunction(node, "BuddingPhase", "ThermalTime", "Progression");
+
+            List<XmlNode> CultivarList = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"));
+            foreach (XmlNode cult in CultivarList)
+                ConverterUtilities.SearchReplaceCultivarOverrides(cult, ".Vegetative.ThermalTime", ".Vegetative.Progression");
         }
     }
 }
