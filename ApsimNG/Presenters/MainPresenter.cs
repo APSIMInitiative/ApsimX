@@ -170,6 +170,14 @@
         }
 
         /// <summary>
+        /// Clears the status panel.
+        /// </summary>
+        public void ClearStatusPanel()
+        {
+            view.ShowMessage(string.Empty, Simulation.ErrorLevel.Information);
+        }
+
+        /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// For error messages, use <see cref="ShowError(Exception)"/>.
         /// </summary>
