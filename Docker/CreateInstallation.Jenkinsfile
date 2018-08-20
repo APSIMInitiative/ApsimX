@@ -88,8 +88,10 @@ pipeline {
 					git -C APSIM.Shared pull origin master
 					set /P DATETIMESTAMP=<ApsimX\\datetimestamp.txt
 					docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%PULL_ID%" -e "COMMIT_AUTHOR=%COMMIT_AUTHOR%" -e "RUN_PERFORMANCE_TESTS=no_thanks" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%PULL_ID%" -e "COMMIT_AUTHOR=%COMMIT_AUTHOR%" -e "RUN_PERFORMANCE_TESTS=no_thanks" -e "ARCHIVE_RESULTS=TRUE" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+					cd ApsimX
 				'''
+				archiveArtifacts artifacts: 'ApsimX\\results.7z', onlyIfSuccessful: true
 			}
 		}
 		stage('CreateInstallations') {
@@ -112,13 +114,16 @@ pipeline {
 							call ApsimX\\Docker\\cleanup.bat
 						'''
 						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						copyArtifacts filter: 'ApsimX\\results.7z', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
 						bat '''
 							@echo off
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							cd ApsimX\\Documentation
+							cd ApsimX
+							7z x -y results.7z
+							cd Documentation
 							call GenerateDocumentation.bat
 							cd ..
 							for /r Tests\\Validation %%D in (*.pdf) do ( 
