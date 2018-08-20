@@ -310,10 +310,7 @@ namespace Models.PMF.Phen
                 // Calculate progression through current phase
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
-                AccumulatedTT += thermalTime.Value();
-                if (Emerged)
-                    AccumulatedEmergedTT += thermalTime.Value();
-
+                
                 while (incrementPhase)
                 {
                     if ((CurrentPhase is EmergingPhase) | (CurrentPhase.End == structure?.LeafInitialisationStage))
@@ -333,8 +330,12 @@ namespace Models.PMF.Phen
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
-                
-               Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+
+                AccumulatedTT += thermalTime.Value();
+                if (Emerged)
+                    AccumulatedEmergedTT += thermalTime.Value();
+
+                Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
 
                if (plant != null)
                     if (plant.IsAlive && PostPhenology != null)
