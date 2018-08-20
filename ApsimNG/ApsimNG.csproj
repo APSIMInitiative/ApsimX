@@ -213,6 +213,7 @@
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
     <Compile Include="Interfaces\IFileConverterView.cs" />
+    <Compile Include="Interfaces\IFileDialog.cs" />
     <Compile Include="Interfaces\IMainView.cs" />
     <Compile Include="Interfaces\IMenuView.cs" />
     <Compile Include="Interfaces\IToolStripView.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\Excel.cs" />
+    <Compile Include="Utility\FileDialog.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
