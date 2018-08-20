@@ -143,8 +143,7 @@ namespace Models.PMF.Phen
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
-            string stageOnEvent = CurrentPhase.End;
-            double oldPhaseIndex = IndexFromPhaseName(CurrentPhase.Name);
+            int oldPhaseIndex = IndexFromPhaseName(CurrentPhase.Name);
             stagesPassedToday.Clear();
 
             if (newStage <= 0)
@@ -154,7 +153,7 @@ namespace Models.PMF.Phen
 
             currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage)) - 1;
 
-            if (currentPhaseIndex <= oldPhaseIndex && oldPhaseIndex != phases.Count()-1)
+            if (newStage < Stage) 
             {
                 //Make a list of phases to rewind
                 List<IPhase> phasesToRewind = new List<IPhase>();
@@ -166,12 +165,15 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget))
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase))
                         { throw new Exception("Can not rewind over phase of type " + phases[currentPhaseIndex].GetType()); }
-                    IPhaseWithTarget rewindingPhase = phase as IPhaseWithTarget;
-                    AccumulatedTT -= rewindingPhase.ProgressThroughPhase;
-                    AccumulatedEmergedTT -= rewindingPhase.ProgressThroughPhase;
-                    phase.ResetPhase();
+                    if (phase is IPhaseWithTarget)
+                    {
+                        IPhaseWithTarget rewindingPhase = phase as IPhaseWithTarget;
+                        AccumulatedTT -= rewindingPhase.ProgressThroughPhase;
+                        AccumulatedEmergedTT -= rewindingPhase.ProgressThroughPhase;
+                        phase.ResetPhase();
+                    }
                 }
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
             }
@@ -187,12 +189,9 @@ namespace Models.PMF.Phen
                 foreach (IPhase phase in phasesToFastForward)
                 {
                     stagesPassedToday.Add(phase.End);
-                    if (PhaseChanged != null)
-                    {
-                        PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                        PhaseChangedData.StageName = phase.End;
-                        PhaseChanged.Invoke(plant, PhaseChangedData);
-                    }
+                    PhaseChangedType PhaseChangedData = new PhaseChangedType();
+                    PhaseChangedData.StageName = phase.End;
+                    PhaseChanged?.Invoke(plant, PhaseChangedData);
                 }
             }
 
@@ -200,7 +199,6 @@ namespace Models.PMF.Phen
             {
                 IPhaseWithTarget currentPhase = (phases[currentPhaseIndex] as IPhaseWithTarget);
                 currentPhase.ProgressThroughPhase = currentPhase.Target * (newStage - currentPhaseIndex - 1);
-
 
                 if (currentPhase.ProgressThroughPhase == 0)
                     stagesPassedToday.Add(currentPhase.Start);
