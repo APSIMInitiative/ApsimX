@@ -12,6 +12,7 @@
     using Models.Core;
     using Views;
     using System.Linq;
+    using System.Diagnostics;
     using System.Text;
     using System.Text.RegularExpressions;
     using EventArguments;
@@ -518,6 +519,10 @@
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
+            startPage.AddButton(
+                                "Help",
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
+                                        this.OnHelp);
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -971,6 +976,18 @@
                 ShowError("Microsoft Azure functionality is currently only available under Windows.");
             }
             
+        }
+
+        /// <summary>
+        /// Opens the ApsimX online documentation.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnHelp(object sender, EventArgs args)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
+            process.Start();
         }
 
         /// <summary>
