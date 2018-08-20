@@ -98,6 +98,9 @@ pipeline {
 					agent {
 						label "windows"
 					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
 					steps {
 						bat '''
 							@echo off
@@ -116,6 +119,10 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							call ApsimX\\Documentation\\GenerateDocumentation.bat
+							for /r ApsimX\\Tests\\Validation %%D in (*.pdf) do ( 
+								echo Uploading %%D
+								@curl -u %APSIM_SITE_CREDS% -T %%D ftp://www.apsim.info/APSIM/ApsimXFiles/
+							)
 						'''
 						
 					}
