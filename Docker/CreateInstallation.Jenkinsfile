@@ -118,10 +118,13 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							call ApsimX\\Documentation\\GenerateDocumentation.bat
-							for /r ApsimX\\Tests\\Validation %%D in (*.pdf) do ( 
-								echo Uploading %%D
-								@curl -u %APSIM_SITE_CREDS% -T %%D ftp://www.apsim.info/APSIM/ApsimXFiles/
+							cd ApsimX\\Documentation
+							call GenerateDocumentation.bat
+							cd ..
+							for /r Tests\\Validation %%D in (*.pdf) do ( 
+								rename %%D %%~nD%ISSUE_NUMBER%%%~xD
+								echo Uploading %%~nD%ISSUE_NUMBER%%%~xD
+								@curl -u %APSIM_SITE_CREDS% -T %%~nD%ISSUE_NUMBER%%%~xD ftp://www.apsim.info/APSIM/ApsimXFiles/
 							)
 						'''
 						
