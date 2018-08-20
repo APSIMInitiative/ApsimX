@@ -1046,22 +1046,22 @@
         {
             try
             {
-                if (!File.Exists(fileConverter.FilePath))
-                    throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", fileConverter.FilePath));
+                if (!File.Exists(fileConverter.Files))
+                    throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", fileConverter.Files));
                 // The file converter view has an option to automatically select the latest version.
                 // If the user has enabled this option, we will upgrade the file to the latest version. 
                 // Otherwise, we will upgrade to the version they have specified.
                 int version = fileConverter.LatestVersion ? Models.Core.ApsimFile.Converter.LatestVersion : fileConverter.ToVersion;
 
                 // Run the converter.
-                using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(fileConverter.FilePath, version))
+                using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(fileConverter.Files, version))
                 {
-                    using (FileStream fileWriter = File.Open(fileConverter.FilePath, FileMode.Create))
+                    using (FileStream fileWriter = File.Open(fileConverter.Files, FileMode.Create))
                     {
                         inStream.CopyTo(fileWriter);
                     }
                 }
-                ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", fileConverter.FilePath, version), Simulation.MessageType.Information);
+                ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", fileConverter.Files, version), Simulation.MessageType.Information);
             }
             catch (Exception err)
             {

@@ -3,6 +3,7 @@
     using System;
     using Gtk;
     using Interfaces;
+    using Utility;
 
     class FileConverterView : ViewBase, IFileConverterView
     {
@@ -136,7 +137,7 @@
         /// <summary>
         /// Path to the file.
         /// </summary>
-        public string FilePath
+        public string Files
         {
             get
             {
@@ -200,9 +201,21 @@
         [GLib.ConnectBefore]
         private void OnChooseFile(object sender, EventArgs args)
         {
-            string fileName = MasterView.AskUserForOpenFileName("*.xml|*.xml", Utility.Configuration.Settings.PreviousFolder);
-            if (!string.IsNullOrEmpty(fileName))
-                FilePath = fileName;
+            try
+            {
+                //string fileName = MasterView.AskUserForOpenFileName("*.xml|*.xml", Utility.Configuration.Settings.PreviousFolder, false);
+                IFileDialog dialog = new FileDialog();
+                dialog.Action = FileDialog.FileActionType.Open;
+                dialog.FileType = "*.xml";
+                dialog.Prompt = "Choose XML files.";
+                string[] files = dialog.GetFiles();
+                if (!string.IsNullOrEmpty(fileName))
+                    Files = fileName;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

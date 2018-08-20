@@ -91,7 +91,8 @@ namespace UserInterface.Interfaces
         /// <summary>Ask user for a filename to open.</summary>
         /// <param name="fileSpec">The file specification to use to filter the files.</param>
         /// <param name="initialDirectory">Optional Initial starting directory</param>
-        string AskUserForOpenFileName(string fileSpec, string initialDirectory = "");
+        /// <param name="selectMultiple">Whether or not the user is allowed to select multiple files.</param>
+        string AskUserForOpenFileName(string fileSpec, string initialDirectory = "", bool selectMultiple = false);
 
         /// <summary>
         /// A helper function that asks user for a SaveAs name and returns their new choice.
@@ -207,8 +208,9 @@ namespace UserInterface.Interfaces
         /// <param name="prompt">String to use as dialog heading</param>
         /// <param name="fileSpec">The file specification used to filter the files.</param>
         /// <param name="action">Action to perform (currently either "Open" or "Save")</param>
-        /// <param name="initialPath">Optional Initial starting filename or directory</param>      
-        string AskUserForFileName(string prompt, string fileSpec, FileChooserAction action = FileChooserAction.Open, string initialPath = "");
+        /// <param name="initialPath">Optional Initial starting filename or directory</param>
+        /// <param name="selectMultiple">Whether or not the user is allowed to select multiple files.</param>
+        string AskUserForFileName(string prompt, string fileSpec, FileChooserAction action = FileChooserAction.Open, string initialPath = "", bool selectMultiple = false);
 
         /// <summary>
         /// Invoked when application tries to close
