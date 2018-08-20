@@ -8,7 +8,7 @@ using Models.Functions;
 
 namespace Models.PMF.Phen
 {
-    /// <summary> This model assumes that germination will be completed on any day after sowing if the extractable soil water is greater than zero. /// </summary>
+    /// <summary> This model assumes that germination will be completed on any day after sowing if the extractable soil water is greater than zero.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
