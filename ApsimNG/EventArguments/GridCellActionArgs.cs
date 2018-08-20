@@ -1,10 +1,11 @@
-﻿using UserInterface.Interfaces;
+﻿using System;
+using UserInterface.Interfaces;
 namespace UserInterface.EventArguments
 {
     /// <summary>
     /// Event arguments used to perform an action on a range of grid cells.
     /// </summary>
-    public class GridCellActionArgs
+    public class GridCellActionArgs : EventArgs
     {
         /// <summary>
         /// First (top-left) cell in the range of cells to be copied.

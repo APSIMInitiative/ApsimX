@@ -1,32 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UserInterface.EventArguments;
 using Gtk;
 using Pango;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    public class FactorControlView : ViewBase
+    public class ExperimentView : ViewBase, IExperimentView
     {
-        public Presenters.FactorControlPresenter Presenter { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value displayed in the number of simulations label.
-        /// </summary>
-        public string NumSims
-        {
-            get
-            {
-                return lblNumSims.Text;
-            }
-            set
-            {
-                lblNumSims.Text = value + " simulations total.";
-            }
-        }
-
         /// <summary>
         /// Primary container holding the TreeView and controls vbox.
         /// </summary>
@@ -55,47 +38,47 @@ namespace UserInterface.Views
         /// <summary>
         /// Button to enable the selected simulations.
         /// </summary>
-        private Button btnEnable;
+        private Button enableButton;
 
         /// <summary>
         /// Button to disable the selected simulations.
         /// </summary>
-        private Button btnDisable;
+        private Button disableButton;
 
         /// <summary>
         /// Button to export factor data to a csv file.
         /// </summary>
-        private Button btnExportCsv;
+        private Button exportButton;
 
         /// <summary>
         /// Button to import factor data from a csv file.
         /// </summary>
-        private Button btnImportCsv;
+        private Button importButton;
 
         /// <summary>
         /// Button to start a Sobol analysis.
         /// </summary>
-        private Button btnSobol;
+        private Button sobolButton;
         
         /// <summary>
         /// Button to start a Morris method analysis.
         /// </summary>
-        private Button btnMorris;
-
-        /// <summary>
-        /// Label to display the total number of simulations
-        /// </summary>
-        private Label lblNumSims;
-
-        /// <summary>
-        /// Textbox to allow the user to input a maximum number of simulations to display.
-        /// </summary>
-        private Entry entryMaxSims;
+        private Button morrisButton;
 
         /// <summary>
         /// Button to allow the user to select a maximum number of simulations to display.
         /// </summary>
-        private Button btnMaxSims;
+        private Button changeMaxSimsButton;
+
+        /// <summary>
+        /// Label to display the total number of simulations
+        /// </summary>
+        private Label numSimsLabel;
+
+        /// <summary>
+        /// Textbox to allow the user to input a maximum number of simulations to display.
+        /// </summary>
+        private Entry maxSimsInput;
 
         /// <summary>
         /// Context menu that appears after the user right clicks on a simulation.
@@ -111,15 +94,90 @@ namespace UserInterface.Views
         /// Constructor
         /// </summary>
         /// <param name="owner"></param>
-        public FactorControlView(ViewBase owner) : base(owner)
+        public ExperimentView(ViewBase owner) : base(owner)
         {
-            primaryContainer = new HBox();
-            //Application.Invoke(delegate
-            //{                        
-                _mainWidget = primaryContainer;
-                primaryContainer.ShowAll();
-            
-            //});
+            primaryContainer = new HBox();          
+            _mainWidget = primaryContainer;
+            primaryContainer.ShowAll();
+        }
+
+        /// <summary>
+        /// Invoked when the user wishes to export the current factor information to a .csv file.
+        /// </summary>
+        public event EventHandler<FileActionArgs> ExportCsv;
+
+        /// <summary>
+        /// Invoked when the user wishes to export the current factor information to a .csv file.
+        /// </summary>
+        public event EventHandler<FileActionArgs> ImportCsv;
+
+        /// <summary>
+        /// Invoked when the user wishes to run simulations.
+        /// </summary>
+        public event EventHandler RunSims;
+
+        /// <summary>
+        /// Invoked when the user wishes to enable the selected simulations.
+        /// </summary>
+        public event EventHandler EnableSims;
+
+        /// <summary>
+        /// Invoked when the user wishes to disable the selected simulations.
+        /// </summary>
+        public event EventHandler DisableSims;
+
+        /// <summary>
+        /// Invoked when the user changes the maximum number of simulations to display at once.
+        /// </summary>
+        public event EventHandler SetMaxSims;
+
+        /// <summary>
+        /// Gets the names of the selected simulations.
+        /// </summary>
+        public List<string> SelectedItems
+        {
+            get
+            {
+                TreePath[] selectedRows = tree.Selection.GetSelectedRows();
+                List<string> simNames = new List<string>();
+                TreeIter iter;
+                foreach (TreePath row in selectedRows)
+                {
+                    tree.Model.GetIter(out iter, row);
+                    simNames.Add((string)tree.Model.GetValue(iter, 0));
+                }
+                return simNames;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the max number of sims to display.
+        /// </summary>
+        public string MaxSimsToDisplay
+        {
+            get
+            {
+                return maxSimsInput.Text;
+            }
+            set
+            {
+                maxSimsInput.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value displayed in the number of simulations label.
+        /// </summary>
+        public string NumSims
+        {
+            get
+            {
+                return numSimsLabel.Text;
+            }
+            set
+            {
+                numSimsLabel.Text = value + " simulations total.";
+            }
         }
 
         /// <summary>
@@ -129,9 +187,6 @@ namespace UserInterface.Views
         /// <param name="simulations">List of simulations. Each simulation is a tuple comprised of the simulation name, the list of factor levels, and an enabled/disabled flag.</param>
         public void Initialise(List<string> columnNames)
         {
-            //primaryContainer = new HBox();
-            //_mainWidget = primaryContainer;
-
             Type[] types = new Type[columnNames.Count];
             tree = new Gtk.TreeView();
             tree.ButtonPressEvent += TreeClicked;
@@ -160,50 +215,50 @@ namespace UserInterface.Views
             tree.Name = "custom_treeview";
             Rc.ParseString(style);
 
-            btnEnable = new Button("Enable");
-            btnEnable.Clicked += (sender, e) => { BtnToggle(true); };
+            enableButton = new Button("Enable");
+            enableButton.Clicked += EnableSims;
             HBox enableButtonContainer = new HBox();
-            enableButtonContainer.PackStart(btnEnable, true, true, 0);
+            enableButtonContainer.PackStart(enableButton, true, true, 0);
 
-            btnDisable = new Button("Disable");
-            btnDisable.Clicked += (sender, e) => { BtnToggle(false); };
+            disableButton = new Button("Disable");
+            disableButton.Clicked += DisableSims;
             HBox disableButtonContainer = new HBox();
-            disableButtonContainer.PackStart(btnDisable, true, true, 0);
+            disableButtonContainer.PackStart(disableButton, true, true, 0);
 
-            btnExportCsv = new Button("Generate CSV");
-            btnExportCsv.Clicked += (sender, e) => { Presenter.GenerateCsv(MasterView.AskUserForFileName("Export to CSV", "CSV file | .csv", Gtk.FileChooserAction.Save, (string)ApsimNG.Cloud.AzureSettings.Default["OutputDir"])); };
+            exportButton = new Button("Generate CSV");
+            exportButton.Clicked += OnExportToCsv;
             HBox csvExportButtonContainer = new HBox();
-            csvExportButtonContainer.PackStart(btnExportCsv, true, true, 0);
+            csvExportButtonContainer.PackStart(exportButton, true, true, 0);
 
-            btnImportCsv = new Button("Import factor information from CSV file");
-            btnImportCsv.Clicked += (sender, e) => { Presenter.ImportCsv(MasterView.AskUserForFileName("Choose a .csv file", "CSV file | *.csv")); };
+            importButton = new Button("Import factor information from CSV file");
+            importButton.Clicked += OnImportCsv;
             HBox csvImportButtonCOntainer = new HBox();
-            csvImportButtonCOntainer.PackStart(btnImportCsv, true, true, 0);
+            csvImportButtonCOntainer.PackStart(importButton, true, true, 0);
 
-            btnSobol = new Button("Sobol Analysis");
-            btnSobol.Clicked += (sender, e) => { Presenter.Sobol(); };
-            btnSobol.Sensitive = false;
+            sobolButton = new Button("Sobol Analysis");
+            //btnSobol.Clicked += (sender, e) => { Presenter.Sobol(); };
+            sobolButton.Sensitive = false;
 
-            btnMorris = new Button("Morris method analysis");
-            btnMorris.Clicked += (sender, e) => { Presenter.Morris(); };
-            btnMorris.Sensitive = false;
+            morrisButton = new Button("Morris method analysis");
+            //btnMorris.Clicked += (sender, e) => { Presenter.Morris(); };
+            morrisButton.Sensitive = false;
 
             VBox sensitivityContainer = new VBox();
-            sensitivityContainer.PackStart(btnSobol, false, false, 0);
-            sensitivityContainer.PackStart(btnMorris, false, false, 0);
+            sensitivityContainer.PackStart(sobolButton, false, false, 0);
+            sensitivityContainer.PackStart(morrisButton, false, false, 0);
 
             Frame analysis = new Frame("Sensitivity Analysis");
             analysis.Add(sensitivityContainer);
             
-            entryMaxSims = new Entry(Presenters.FactorControlPresenter.DEFAULT_MAX_SIMS.ToString());
-            btnMaxSims = new Button("Apply");
-            btnMaxSims.Clicked += BtnMaxSims_Click;
+            maxSimsInput = new Entry(Presenters.ExperimentPresenter.DefaultMaxSims.ToString());
+            changeMaxSimsButton = new Button("Apply");
+            changeMaxSimsButton.Clicked += BtnMaxSims_Click;
             
             HBox maxSimsContainer = new HBox();
-            maxSimsContainer.PackStart(entryMaxSims, true, true, 0);
-            maxSimsContainer.PackStart(btnMaxSims, false, false, 0);
+            maxSimsContainer.PackStart(maxSimsInput, true, true, 0);
+            maxSimsContainer.PackStart(changeMaxSimsButton, false, false, 0);
             
-            lblNumSims = new Label { Xalign = 0f };
+            numSimsLabel = new Label { Xalign = 0f };
 
             VBox controlsContainer = new VBox();
             controlsContainer.PackStart(new Label("Max number of simulations to display:"), false, false, 0);
@@ -215,19 +270,16 @@ namespace UserInterface.Views
             controlsContainer.PackStart(csvImportButtonCOntainer, false, false, 0);
             controlsContainer.PackStart(new Label(""), false, false, 0);
             controlsContainer.PackStart(analysis, false, false, 0);
-            controlsContainer.PackEnd(lblNumSims, false, false, 0);
+            controlsContainer.PackEnd(numSimsLabel, false, false, 0);
 
-            //(((Presenter.explorerPresenter.GetView().MainWidget as VBox).Children[1] as HPaned).Child2 as ScrolledWindow).HscrollbarPolicy = PolicyType.Always;            
             ScrolledWindow sw = new ScrolledWindow();
             sw.Add(tree);
             sw.HscrollbarPolicy = PolicyType.Automatic;
             sw.VscrollbarPolicy = PolicyType.Automatic;
-            //Frame test = new Frame("Factor Control");
-            //test.Add(sw);
 
             AccelGroup agr = new AccelGroup();
-            entryMaxSims.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.Return, Gdk.ModifierType.ControlMask, AccelFlags.Visible));
-            entryMaxSims.Activated += BtnMaxSims_Click;
+            maxSimsInput.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.Return, Gdk.ModifierType.ControlMask, AccelFlags.Visible));
+            maxSimsInput.Activated += BtnMaxSims_Click;
             Application.Invoke(delegate
             {                
                 primaryContainer.PackStart(sw, true, true, 0);
@@ -237,8 +289,8 @@ namespace UserInterface.Views
             });
 
             contextMenu = new Menu();
-            run = new MenuItem("Run this simulation");
-            run.ButtonPressEvent += RunSim;
+            run = new MenuItem("Run");
+            run.ButtonPressEvent += OnRunSim;
             contextMenu.Add(run);
         }
 
@@ -265,47 +317,22 @@ namespace UserInterface.Views
             });            
         }
 
+        /// <summary>
+        /// Do cleanup work.
+        /// </summary>
         public void Detach()
         {
+            exportButton.Clicked -= OnExportToCsv;
+            importButton.Clicked -= OnImportCsv;
+            disableButton.Clicked -= DisableSims;
+            enableButton.Clicked -= EnableSims;
+            changeMaxSimsButton.Clicked -= SetMaxSims;
+            run.ButtonPressEvent -= OnRunSim;
+
+            store.Dispose();
+            contextMenu.Dispose();
             MainWidget.Destroy();
-            // TODO : change button event handlers to not be anonymous so they may be detached?
-        }
-
-        /// <summary>
-        /// Gets a list of names of all currently selected simulations (rows) in the TreeView.
-        /// </summary>
-        /// <returns></returns>
-        private List<string> GetSelectedSimNames()
-        {
-            List<string> sims = new List<string>();
-            TreeIter iter;
-            foreach(TreePath path in tree.Selection.GetSelectedRows())
-            {
-                tree.Model.GetIter(out iter, path);
-                sims.Add((string)tree.Model.GetValue(iter, 0));
-            }
-            return sims;
-        }
-
-        /// <summary>
-        /// Event handler for Enable button's click event. 
-        /// Passes the names of the currently selected rows to the presenter, and asks it to change their status to enabled.
-        /// </summary>
-        /// <param name="flag">If true, the selected items will be enabled. If false they will be disabled.</param>
-        private void BtnToggle(bool flag)
-        {
-            Application.Invoke(delegate
-            {
-                TreePath[] selectedRows = tree.Selection.GetSelectedRows();
-                List<string> simNames = new List<string>();
-                TreeIter iter;
-                foreach (TreePath row in selectedRows)
-                {
-                    tree.Model.GetIter(out iter, row);
-                    simNames.Add((string)tree.Model.GetValue(iter, 0));
-                }
-                Presenter.ToggleSims(simNames, flag);
-            });
+            _owner = null;
         }
 
         /// <summary>
@@ -332,7 +359,7 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void BtnMaxSims_Click(object sender, EventArgs e)
         {
-            Presenter.SetMaxNumSims(entryMaxSims.Text);
+            SetMaxSims?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -346,9 +373,6 @@ namespace UserInterface.Views
         {
             if (e.Event.Button == 3) // right click
             {
-                contextMenu.Remove(run);
-                string txt = "";
-
                 TreePath path;
                 tree.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path);
 
@@ -356,23 +380,8 @@ namespace UserInterface.Views
                 // Setting e.Retval to true will stop the default Gtk ButtonPress event handler from being called after 
                 // we return from this handler, which in turn means that the rows will not be deselected.
                 e.RetVal = tree.Selection.GetSelectedRows().Contains(path);
-                    
-                // Get the grammar right
-                if (tree.Selection.CountSelectedRows() == 1 || !(bool)e.RetVal)
-                {
-                    txt = "Run this simulation";
-                }
-                else
-                {
-                    txt = "Run these simulations";
-                }
-
-                run = new MenuItem(txt);
-                run.ButtonPressEvent += RunSim;
-                contextMenu.Add(run);
                 contextMenu.ShowAll();
                 contextMenu.Popup();
-                
             }
         }
 
@@ -383,13 +392,38 @@ namespace UserInterface.Views
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [GLib.ConnectBefore]
-        private void RunSim(object sender, ButtonPressEventArgs e)
+        private void OnRunSim(object sender, ButtonPressEventArgs e)
         {
             contextMenu.HideAll();
             // process everything in the Gtk event queue so the context menu disappears immediately.
             while (GLib.MainContext.Iteration()) ;
-            List<string> names = GetSelectedSimNames();
-            Presenter.RunSims(names);
+            RunSims?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks the 'Export to CSV' button.
+        /// Asks the user for a filename and generates a .csv file from the factor information.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
+        private void OnExportToCsv(object sender, EventArgs args)
+        {
+            string fileName = MasterView.AskUserForFileName("Export to CSV", "CSV file | .csv", FileChooserAction.Save, Utility.Configuration.Settings.PreviousFolder);
+            ExportCsv?.Invoke(this, new FileActionArgs { Path = fileName });
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks the 'Import CSV' button.
+        /// Asks the user for a filename and generates a .csv file from the factor information.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
+        private void OnImportCsv(object sender, EventArgs args)
+        {
+            string fileName = MasterView.AskUserForFileName("Choose a .csv file", "CSV file | *.csv", initialPath: Utility.Configuration.Settings.PreviousFolder);
+            ImportCsv?.Invoke(this, new FileActionArgs { Path = fileName });
         }
     }
 }

@@ -5,7 +5,7 @@ namespace UserInterface.EventArguments
     /// <summary>
     /// Lightweight event args used to pass data when an error is thrown in a view.
     /// </summary>
-    public class ErrorArgs
+    public class ErrorArgs : EventArgs
     {
         /// <summary>
         /// Exception which has been thrown.
