@@ -165,7 +165,7 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase))
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase))
                         { throw new Exception("Can not rewind over phase of type " + phases[currentPhaseIndex].GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
