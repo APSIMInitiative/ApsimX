@@ -40,6 +40,7 @@
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
 
+        public event EventHandler Finished;
 
         /// <summary>Constructor</summary>
         /// <param name="model">The model the user has selected to run</param>
@@ -117,6 +118,8 @@
             else
                 player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
             player.Play();
+
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

@@ -11,8 +11,7 @@ if [ -f $apsimx/bin.zip ]; then
 	unzip $apsimx/bin.zip -d $apsimx/bin
 	rm -f $apsimx/bin.zip
 fi
-
-export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d\.){3}\d')
+export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d+\.){3}\d+')
 export short_version=$(echo $version | cut -d'.' -f 1,2)
 export issue_id=$(echo $version | cut -d'.' -f 4)
 echo Apsim version: $version
@@ -74,14 +73,14 @@ echo "<string>"$SHORT_VERSION"</string>" >> $PLIST_FILE
 echo "</dict>" >> $PLIST_FILE
 echo "</plist>" >> $PLIST_FILE
 
-genisoimage -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup$version.dmg MacBundle
+genisoimage -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup.dmg MacBundle
 if [ $? -ne 0 ]; then
 	echo Errors encountered!
 	exit $?
 fi
-
-# Never echo this command, even if someone has used set -x above.
-{ curl -u $APSIM_SITE_CREDS -T ApsimSetup$version.dmg ftp://www.apsim.info/APSIM/ApsimXFiles; } 2> /dev/null
+mv $osx/ApsimSetup.dmg $osx/ApsimSetup$version.dmg
+ls $osx
+curl -u $APSIM_SITE_CREDS -T $osx/ApsimSetup$version.dmg ftp://www.apsim.info/APSIM/ApsimXFiles/
 
 export err_code=$?
 popd > /dev/null

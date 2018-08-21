@@ -64,7 +64,7 @@ if errorlevel 1 (
 	exit %errorlevel%
 )
 rename Output\APSIMSetup.exe APSIMSetup%ISSUE_NUMBER%.exe
-@curl -u APSIM_SITE_CREDS -T Output\APSIMSetup%ISSUE_NUMBER%.exe ftp://www.apsim.info/APSIM/ApsimXFiles/
+@curl -u %APSIM_SITE_CREDS% -T Output\APSIMSetup%ISSUE_NUMBER%.exe ftp://www.apsim.info/APSIM/ApsimXFiles/
 exit %errorlevel%
 
 :linux
@@ -81,6 +81,12 @@ echo                                    ^|___/                                  
 echo.
 echo.
 %setup%\Linux\builddeb.bat
+if errorlevel 1 (
+	exit %errorlevel%
+)
+rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUENUMBER%.deb
+dir %setup%\Output
+@curl -u %APSIM_SITE_CREDS% -T %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
 exit %errorlevel%
 
 :macos
