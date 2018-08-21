@@ -21,10 +21,10 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link]
+        [ChildLinkByName]
         private IFunction target = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction thermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         //5. Public properties

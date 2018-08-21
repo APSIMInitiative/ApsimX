@@ -24,13 +24,13 @@ namespace Models.PMF.Phen
         [Link]
         Structure structure = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction FractionOfBudBurst = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction target = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         //2. private fields
