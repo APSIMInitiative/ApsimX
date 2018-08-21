@@ -188,6 +188,10 @@ namespace Models.PMF.Phen
                 }
                 foreach (IPhase phase in phasesToFastForward)
                 {
+                    if (phase is EndPhase)
+                    {
+                        stagesPassedToday.Add(phase.Start); //Fixme.  This is a pretty ordinary bit of programming to get around the fact we use a phenological stage to match observed values. We should change this so plant has a harvest tag to match on.
+                    }
                     stagesPassedToday.Add(phase.End);
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
