@@ -92,7 +92,10 @@
         /// <returns>Array of chosen files.</returns>
         public string[] GetFiles()
         {
-            return GetFiles(true);
+            string[] files = GetFiles(true);
+            if (files != null && files.Any(f => File.Exists(f)))
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(files.First(f => File.Exists(f)));
+            return files;
         }
 
         /// <summary>

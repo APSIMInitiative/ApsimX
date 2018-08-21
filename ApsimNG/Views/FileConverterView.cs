@@ -56,7 +56,7 @@
             chooseFileButton.Clicked += OnChooseFile;
             HBox pathContainer = new HBox();
             pathContainer.PackStart(pathLabel, false, true, 0);
-            pathContainer.PackStart(pathInput, false, true, 0);
+            pathContainer.PackStart(pathInput, true, true, 0);
             pathContainer.PackEnd(chooseFileButton, false, false, 0);
 
             latestVersion = new RadioButton("Latest version");
@@ -67,7 +67,7 @@
             versionInput = new Entry();
             HBox versionContainer = new HBox();
             versionContainer.PackStart(specificVersion, false, true, 0);
-            versionContainer.PackEnd(versionInput, false, true, 0);
+            versionContainer.PackEnd(versionInput, true, true, 0);
 
             // This will grey out the version input text box.
             specificVersion.Active = true;
@@ -207,10 +207,10 @@
                 //string fileName = MasterView.AskUserForOpenFileName("*.xml|*.xml", Utility.Configuration.Settings.PreviousFolder, false);
                 IFileDialog dialog = new FileDialog();
                 dialog.Action = FileDialog.FileActionType.Open;
-                dialog.FileType = "*.xml";
+                dialog.FileType = "XML Files (*.xml) | *.xml";
                 dialog.Prompt = "Choose XML files.";
                 string[] files = dialog.GetFiles();
-                if (files.Any(f => !string.IsNullOrEmpty(f)))
+                if (files != null && files.Any(f => !string.IsNullOrEmpty(f)))
                     Files = files.Where(f => !string.IsNullOrEmpty(f)).Aggregate((a, b) => a + "; " + b);
             }
             catch (Exception err)
