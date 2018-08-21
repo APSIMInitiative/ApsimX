@@ -45,6 +45,11 @@
         private Window mainWindow;
 
         /// <summary>
+        /// List of files to be converted.
+        /// </summary>
+        private string[] fileList;
+
+        /// <summary>
         /// Constructor. Initialises the components of the view, but does not show anything onscreen.
         /// </summary>
         /// <param name="owner">Owner view.</param>
@@ -138,15 +143,16 @@
         /// <summary>
         /// Path to the file.
         /// </summary>
-        public string Files
+        public string[] Files
         {
             get
             {
-                return pathInput.Text;
+                return fileList;
             }
             set
             {
-                pathInput.Text = value;
+                fileList = value;
+                pathInput.Text = value.Aggregate((a, b) => string.Format("\"{0}\" \"{1}\"", a, b));
             }
         }
 
@@ -211,7 +217,7 @@
                 dialog.Prompt = "Choose XML files.";
                 string[] files = dialog.GetFiles();
                 if (files != null && files.Any(f => !string.IsNullOrEmpty(f)))
-                    Files = files.Where(f => !string.IsNullOrEmpty(f)).Aggregate((a, b) => a + "; " + b);
+                    Files = files;
             }
             catch (Exception err)
             {
