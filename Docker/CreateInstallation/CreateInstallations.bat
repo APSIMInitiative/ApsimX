@@ -59,22 +59,12 @@ echo.
 echo.
 cd %setup%
 ISCC.exe apsimx.iss
-if not errorlevel 0 (
+if errorlevel 1 (
+	echo Errors encountered!
 	exit %errorlevel%
 )
-
-rem Microsoft, in their infinite wisdom, decided that it would be a good idea for
-rem sysinternals such as sigcheck to spawn a popup window the first time you run them,
-rem which asks you to agree to their eula. To get around this, we just need to set a few
-rem registry entries...
-reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
-reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
-
-sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
-set /p APSIM_VERSION=<Version.tmp
-set issuenumber=%APSIM_VERSION:~-4,4%
-
-rename %setup%\Output\APSIMSetup.exe APSIMSetup%issuenumber%.exe
+rename Output\APSIMSetup.exe APSIMSetup%ISSUE_NUMBER%.exe
+@curl -u %APSIM_SITE_CREDS% -T Output\APSIMSetup%ISSUE_NUMBER%.exe ftp://www.apsim.info/APSIM/ApsimXFiles/
 exit %errorlevel%
 
 :linux
@@ -91,24 +81,14 @@ echo                                    ^|___/                                  
 echo.
 echo.
 %setup%\Linux\builddeb.bat
-if not errorlevel 0 (
+if errorlevel 1 (
 	exit %errorlevel%
 )
+rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUENUMBER%.deb
+dir %setup%\Output
+@curl -u %APSIM_SITE_CREDS% -T %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
 exit %errorlevel%
 
 :macos
-echo.
-echo.
-echo   _____                _   _               __  __             ____   _____   _____           _        _ _       _   _             
-echo  / ____^|              ^| ^| ^(_^)             ^|  \/  ^|           / __ \ / ____^| ^|_   _^|         ^| ^|      ^| ^| ^|     ^| ^| ^(_^)            
-echo ^| ^|     _ __ ___  __ _^| ^|_ _ _ __   __ _  ^| \  / ^| __ _  ___^| ^|  ^| ^| ^(___     ^| ^|  _ __  ___^| ^|_ __ _^| ^| ^| __ _^| ^|_ _  ___  _ __  
-echo ^| ^|    ^| '__/ _ \/ _` ^| __^| ^| '_ \ / _` ^| ^| ^|\/^| ^|/ _` ^|/ __^| ^|  ^| ^|\___ \    ^| ^| ^| '_ \/ __^| __/ _` ^| ^| ^|/ _` ^| __^| ^|/ _ \^| '_ \ 
-echo ^| ^|____^| ^| ^|  __/ ^(_^| ^| ^|_^| ^| ^| ^| ^| ^(_^| ^| ^| ^|  ^| ^| ^(_^| ^| ^(__^| ^|__^| ^|____^) ^|  _^| ^|_^| ^| ^| \__ \ ^|^| ^(_^| ^| ^| ^| ^(_^| ^| ^|_^| ^| ^(_^) ^| ^| ^| ^|
-echo  \_____^|_^|  \___^|\__,_^|\__^|_^|_^| ^|_^|\__, ^| ^|_^|  ^|_^|\__,_^|\___^|\____/^|_____/  ^|_____^|_^| ^|_^|___/\__\__,_^|_^|_^|\__,_^|\__^|_^|\___/^|_^| ^|_^|
-echo                                     __/ ^|                                                                                         
-echo                                    ^|___/                                                                                          
-echo.
-echo.
-cd "%setup%\OS X"
-call BuildMacDist.bat
-exit /b %errorlevel%
+%setup%\osx\BuildMacDist.bat
+exit %errorlevel%

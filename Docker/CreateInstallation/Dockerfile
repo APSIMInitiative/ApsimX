@@ -34,13 +34,12 @@ RUN Install-PackageProvider -Name Chocolatey -Force -RequiredVersion 2.8.5.130;	
 	Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex; 	\
     choco feature disable –name showDownloadProgress;                                        							\
 	choco feature enable -n allowGlobalConfirmation;                                         							\
-    choco install git;                                                                                                  \
-	choco install innosetup;																							\
-	choco install fciv;																									\
-	choco install cygwin;																								\
-	# cyg-get is used to install specific cygwin packages. We need use it to install genisoimage						\
-	choco install cyg-get;																								\
-	choco install 7zip;																									\
+    choco install --limit-output git																					\
+	choco install --limit-output innosetup;																				\
+	choco install --limit-output fciv;																					\
+	choco install --limit-output cygwin;																				\
+	choco install --limit-output 7zip;																					\
+	choco install --limit-output curl;																					\
 	mkdir C:\Utilities;																									\
 	Expand-Archive -Path C:\coreutils.zip -DestinationPath C:\coreutils -Force;											\
 	cp C:\coreutils\bin\* C:\Utilities\;																				\
@@ -56,21 +55,9 @@ RUN Install-PackageProvider -Name Chocolatey -Force -RequiredVersion 2.8.5.130;	
 	cp C:\tar_dependencies\bin\* C:\Utilities\;																			\
 	Expand-Archive -Path C:\gzip.zip -DestinationPath C:\gzip -Force;													\
 	cp C:\gzip\bin\* C:\Utilities\;																						\
-	cyg-get genisoimage;																								\
 	cp C:\ar.exe C:\Utilities\ar.exe;
-
-ADD http://ring.u-toyama.ac.jp/archives/pc/gnu-win32/x86/release/cdrkit/genisoimage/genisoimage-1.1.11-1.tar.bz2 /genisoimage.tar.bz2
-
-ADD https://nchc.dl.sourceforge.net/project/gnuwin32/bzip2/1.0.5/bzip2-1.0.5-bin.zip /bzip2.zip
-
-RUN Expand-Archive -Path C:\bzip2.zip -DestinationPath C:\bzip2 -Force;													\
-	cp C:\bzip2\bin\* C:\Utilities\;																					\
-	C:\Utilities\bunzip2 C:\genisoimage.tar.bz2;																		\
-	C:\Utilities\tar -xf C:\genisoimage.tar usr/bin/* -C genisoimage;													\
-	cp C:\genisoimage\usr\bin\* C:\Utilities\;
-
 
 # run.bat is the script which will be run inside the container.
 COPY CreateInstallations.bat CreateInstallations.bat
 
-#ENTRYPOINT ["CreateInstallations.bat"]
+ENTRYPOINT ["CreateInstallations.bat"]

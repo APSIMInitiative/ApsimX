@@ -87,6 +87,17 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// User has clicked on clear status panel.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [MainMenu(MenuName = "Clear Status")]
+        public void ClearStatusPanel(object sender, EventArgs args)
+        {
+            explorerPresenter.MainPresenter.ClearStatusPanel();
+        }
+
+        /// <summary>
         /// User has clicked on Help
         /// </summary>
         /// <param name="sender">Sender of the event</param>
