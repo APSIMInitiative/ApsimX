@@ -1,3 +1,4 @@
+@echo off
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
 	echo %apsimx% does not exist. Aborting...
@@ -20,9 +21,9 @@ if exist %apsimx%\results.7z (
 	)
 )
 
-cd Documentation
+cd %apsimx%\Documentation
 call GenerateDocumentation.bat
-cd ..
+cd %apsimx%
 for /r Tests\Validation %%D in (*.pdf) do ( 
 	rename %%D %%~nD%ISSUE_NUMBER%%%~xD
 	echo Uploading %%~nD%ISSUE_NUMBER%%%~xD

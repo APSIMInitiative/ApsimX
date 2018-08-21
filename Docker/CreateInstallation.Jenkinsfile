@@ -98,7 +98,7 @@ pipeline {
 			parallel {
 				stage('Documentation') {
 					agent {
-						label "windows"
+						label "windows && docker"
 					}
 					environment {
 						APSIM_SITE_CREDS = credentials('apsim-site-creds')
@@ -122,7 +122,7 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							docker build -t documentation ApsimX\\Docker\\Documentation
-							docker run -m 12g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e ISSUE_NUMBER -e APSIM_SITE_CREDS -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared documentation
+							docker run -m 12g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e NUMBER_OF_PROCESSORS -e ISSUE_NUMBER -e APSIM_SITE_CREDS -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared documentation
 						'''
 						
 					}
