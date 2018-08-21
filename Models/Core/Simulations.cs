@@ -27,9 +27,10 @@ namespace Models.Core
         /// <summary>The _ file name</summary>
         private string _FileName;
 
+        [NonSerialized]
         private Links links;
 
-        private Checkpoints checkpoints = new Checkpoints();
+        private Checkpoints checkpoints;
 
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
@@ -92,6 +93,7 @@ namespace Models.Core
         {
             Version = ApsimFile.Converter.LastestVersion;
             LoadErrors = new List<Exception>();
+            checkpoints = new Checkpoints(this);
         }
 
         /// <summary>
@@ -309,7 +311,6 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
-            checkpoints.Write(Path.ChangeExtension(FileName, ".checkpoints"));
         }
 
         /// <summary>Write the specified simulation set to the specified 'stream'</summary>
@@ -477,7 +478,7 @@ namespace Models.Core
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
-                    Links.Unresolve(clonedSimulation);
+                    Links.Unresolve(clonedSimulation, allLinks: true);
                 }
             }
         }

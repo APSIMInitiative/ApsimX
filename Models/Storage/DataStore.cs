@@ -33,21 +33,26 @@
         private bool useFirebird;
 
         /// <summary>A List of tables that needs writing.</summary>
+        [NonSerialized]
         private List<Table> tables = new List<Table>();
 
         /// <summary>Data that needs writing</summary>
+        [NonSerialized]
         private List<Table> dataToWrite = new List<Table>();
 
         /// <summary>The IDS for all simulations</summary>
+        [NonSerialized]
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
+        [NonSerialized]
         private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>Are we stopping writing to the DB?</summary>
         private bool stoppingWriteToDB;
 
         /// <summary>A task, run asynchronously, that writes to the .db</summary>
+        [NonSerialized]
         private Task writeTask;
 
         /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>

@@ -233,14 +233,13 @@ namespace Models.Properties {
         ///&lt;SurfaceOrganicMatter&gt;
         ///  &lt;ResidueTypes&gt;
         ///    &lt;Name&gt;ResidueTypes&lt;/Name&gt;
-        ///    &lt;IsHidden&gt;true&lt;/IsHidden&gt;
         ///    &lt;ResidueType&gt;
         ///      &lt;fom_type&gt;base_type&lt;/fom_type&gt;
         ///      &lt;fraction_C description=&quot;fraction of Carbon in FOM (0-1)&quot;&gt;0.4&lt;/fraction_C&gt;
         ///      &lt;po4ppm description=&quot;labile P concentration(ppm)&quot;&gt;0.0&lt;/po4ppm&gt;
         ///      &lt;nh4ppm description=&quot;ammonium N concentration (ppm)&quot;&gt;0.0&lt;/nh4ppm&gt;
         ///      &lt;no3ppm description=&quot;nitrate N concentration (ppm)&quot;&gt;0.0&lt;/no3ppm&gt;
-        ///      &lt;specif [rest of string was truncated]&quot;;.
+        ///      &lt;specific_area description=&quot;specific a [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SurfaceOrganicMatter {
             get {

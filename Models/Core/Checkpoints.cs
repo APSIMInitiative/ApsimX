@@ -5,6 +5,7 @@ namespace Models.Core
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Newtonsoft.Json;
 
     /// <summary>B
     /// Saves state of objects and has options to write to a file.
@@ -12,7 +13,16 @@ namespace Models.Core
     [Serializable]
     public class Checkpoints
     {
-        List<Tuple<string, string>> store = new List<Tuple<string, string>>();
+        private Simulations simulations = null;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="sims"></param>
+        public Checkpoints(Simulations sims)
+        {
+            simulations = sims;
+        }
 
         /// <summary>
         /// Save the state of an object under the specified name.
@@ -21,24 +31,33 @@ namespace Models.Core
         /// <param name="o"></param>
         public void SaveStateOfObject(string name, object o)
         {
-            store.Add(new Tuple<string, string>(name, XmlUtilities.Serialise(o, false)));
+            if (o is IModel)
+            {
+                simulations.Links.Unresolve(o as IModel, allLinks: false);
+                simulations.GetEventService(o as IModel).DisconnectEvents();
+                IModel savedParent = (o as IModel).Parent;
+                (o as IModel).Parent = null;
+                Apsim.UnparentAllChildren(o as IModel);
+
+                WriteToFile(name, o);
+
+                (o as IModel).Parent = savedParent;
+                Apsim.ParentAllChildren(o as IModel);
+                simulations.Links.Resolve(o as IModel, allLinks: false);
+                simulations.GetEventService(o as IModel).ConnectEvents();
+            }
+            else
+                WriteToFile(name, o);
         }
 
-        /// <summary>
-        /// Write the store to a file.
-        /// </summary>
-        /// <param name="fileName">Name of file to write to</param>
-        public void Write(string fileName)
+        private void WriteToFile(string name, object o)
         {
+            string fileName = Path.Combine(Path.GetDirectoryName(simulations.FileName), name);
+            fileName = Path.ChangeExtension(fileName, ".checkpoint.json");
             using (StreamWriter writer = new StreamWriter(fileName))
             {
-                foreach (Tuple<string, string> item in store)
-                {
-                    writer.WriteLine(item.Item1);
-                    writer.WriteLine(item.Item2);
-                }
+                writer.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented));
             }
-            store.Clear();
         }
     }
 }
