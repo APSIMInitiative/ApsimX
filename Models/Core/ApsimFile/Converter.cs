@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 37; } }
+        public static int LastestVersion { get { return 38; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1147,6 +1147,20 @@
 
             foreach (XmlNode apexNode in nodeList)
                 apexNode.ParentNode.RemoveChild(apexNode);
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 34. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion38(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, @"SurfaceOrganicMatter.AddFaecesType", "AddFaecesType");
+            }
         }
     }
 }
