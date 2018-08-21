@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="38">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1010,12 +1010,8 @@ A function is used to capture the year of the current season as in the south hem
         </HoldFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <leavesInitialised>false</leavesInitialised>
-        <CohortToInitialise>0</CohortToInitialise>
-        <TipToAppear>0</TipToAppear>
         <CohortInitialisationStage>Ecodormancy</CohortInitialisationStage>
         <LeafInitialisationStage>BudBurst</LeafInitialisationStage>
-        <ApexNum>0</ApexNum>
       </Structure>
       <Leaf>
         <Name>Leaf</Name>
@@ -1053,8 +1049,6 @@ A function is used to capture the year of the current season as in the south hem
           <Rank>1</Rank>
           <Area>1000</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
@@ -1084,8 +1078,6 @@ A function is used to capture the year of the current season as in the south hem
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
@@ -1115,8 +1107,6 @@ A function is used to capture the year of the current season as in the south hem
           <Rank>3</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
@@ -1440,7 +1430,7 @@ A function is used to capture the year of the current season as in the south hem
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <XProperty>[Grapevine].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Grapevine].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -1857,11 +1847,6 @@ A function is used to capture the year of the current season as in the south hem
           <Enabled>true</Enabled>
           <FixedValue>1</FixedValue>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexStandard>
         <Constant>
           <Name>RemobilisationCost</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1984,9 +1969,9 @@ A function is used to capture the year of the current season as in the south hem
             <Name>Prune</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>1</FractionLiveToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -2169,10 +2154,10 @@ A function is used to capture the year of the current season as in the south hem
             <Name>Prune</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
@@ -2190,7 +2175,7 @@ A function is used to capture the year of the current season as in the south hem
           <Name>InitialWtFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>200</FixedValue>
+          <FixedValue>130</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
@@ -4478,9 +4463,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <Name>ExtraVariables</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Script>
-          <CordonDiameter>10</CordonDiameter>
-        </Script>
+        <Script />
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
@@ -4497,16 +4480,8 @@ namespace Models
         [Link] Plant Grapevine;
         [Link] Zone zone;
 
-        [Description("CordonDiameter_mm")]         
-        public double CordonDiameter { get; set; }  //mm
-        
-
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, EventArgs e)
-        {
-        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);      
-        }
-
+   
+   
      }
 }
 ]]></Code>
@@ -4527,6 +4502,7 @@ namespace Models
         <Enabled>true</Enabled>
         <Script>
           <PruneDateString>1-May</PruneDateString>
+          <CordonDiameter>10</CordonDiameter>
         </Script>
         <Code><![CDATA[
 using System;
@@ -4544,9 +4520,13 @@ namespace Models
     {
         [Link] Plant Grapevine;
         [Link] Clock Clock;
+        [Link] Zone zone;
 
         [Description("Prune Date")]
         public string PruneDateString { get; set; }
+        [Description("CordonDiameter_mm")]         
+        public double CordonDiameter { get; set; }  //mm
+
         [XmlIgnore] private DateTime PruneDate { get; set; }
         [XmlIgnore] private RemovalFractions Remove { get; set; }
         
@@ -4567,6 +4547,15 @@ namespace Models
                 Remove.SetPhenologyStage = 1;
                 Grapevine.RemoveBiomass("Prune", Remove);
             }
+
+            {
+        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);   
+        	//calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)
+        	zone.Set("[Grapevine].Cordon.Live.StructuralWt", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); 
+
+       	 	}
+
+
         }
     }
 }
@@ -4613,6 +4602,7 @@ namespace Models
         <string>[Grapevine].Leaf.Live.Wt</string>
         <string>[Grapevine].Shoot.Live.Wt</string>
         <string>[Grapevine].Cordon.Live.Wt</string>
+        <string>[Grapevine].Cordon.Live.StructuralWt</string>
         <string>[Grapevine].Trunk.Live.Wt</string>
         <string>[Grapevine].Root.Live.Wt</string>
         <string />
@@ -5033,6 +5023,7 @@ namespace Models
           <InitialStandingFraction>0</InitialStandingFraction>
           <InitialCPR>0</InitialCPR>
           <InitialCNR>80</InitialCNR>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -5043,13 +5034,9 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <sun_angle>15</sun_angle>
-          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-          <night_interception_fraction>0.5</night_interception_fraction>
-          <refheight>2</refheight>
-          <albedo>0.15</albedo>
-          <emissivity>0.96</emissivity>
-          <RadIntTotal>0</RadIntTotal>
+          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+          <NightInterceptionFraction>0.5</NightInterceptionFraction>
+          <ReferenceHeight>2</ReferenceHeight>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6187,7 +6174,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Grapevine.Cordon.Live.Wt</YFieldName>
+        <YFieldName>Grapevine.Cordon.Live.StructuralWt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6939,6 +6926,7 @@ namespace Models
             <InitialStandingFraction>0</InitialStandingFraction>
             <InitialCPR>0</InitialCPR>
             <InitialCNR>80</InitialCNR>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -6949,13 +6937,9 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
+            <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+            <NightInterceptionFraction>0.5</NightInterceptionFraction>
+            <ReferenceHeight>2</ReferenceHeight>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -7639,6 +7623,7 @@ namespace Models
             <InitialStandingFraction>0</InitialStandingFraction>
             <InitialCPR>0</InitialCPR>
             <InitialCNR>80</InitialCNR>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -7649,13 +7634,9 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
+            <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+            <NightInterceptionFraction>0.5</NightInterceptionFraction>
+            <ReferenceHeight>2</ReferenceHeight>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
