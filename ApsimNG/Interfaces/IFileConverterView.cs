@@ -16,7 +16,7 @@
         /// <summary>
         /// Path to the file.
         /// </summary>
-        string Files { get; }
+        string[] Files { get; }
 
         /// <summary>
         /// If true, we automatically upgrade to the latest version.

@@ -5,6 +5,8 @@
     using Interfaces;
     using Utility;
     using System.Linq;
+    using APSIM.Shared.Utilities;
+    using System.Collections.Specialized;
 
     class FileConverterView : ViewBase, IFileConverterView
     {
@@ -56,6 +58,8 @@
         public FileConverterView(ViewBase owner) : base(owner)
         {
             pathInput = new Entry();
+            // pathInput.Changed += OnFilesChanged;
+            pathInput.KeyPressEvent += OnFilesChanged;
             Label pathLabel = new Label("File to convert: ");
             chooseFileButton = new Button("...");
             chooseFileButton.Clicked += OnChooseFile;
@@ -152,7 +156,7 @@
             set
             {
                 fileList = value;
-                pathInput.Text = value.Aggregate((a, b) => string.Format("\"{0}\" \"{1}\"", a, b));
+                pathInput.Text = value.Select(v => "\"" + v + "\"").Aggregate((a, b) => string.Format("{0} {1}", a, b));
             }
         }
 
@@ -262,10 +266,12 @@
         {
             mainWindow.DeleteEvent -= OnDelete;
             mainWindow.Destroyed -= OnClose;
+            mainWindow.KeyPressEvent -= OnKeyPress;
             chooseFileButton.Clicked -= OnChooseFile;
             convertButton.Clicked -= OnConvert;
             latestVersion.Toggled -= OnUseLatestVersion;
             specificVersion.Toggled -= OnUseLatestVersion;
+            pathInput.Changed -= OnFilesChanged;
             mainWindow.Dispose();
         }
 
@@ -280,6 +286,27 @@
         {
             if (args.Event.Key == Gdk.Key.Escape)
                 Visible = false;
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the contents of the file paths textbox.
+        /// Updates the array of files.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnFilesChanged(object sender, EventArgs args)
+        {
+            try
+            {
+                StringCollection paths = StringUtilities.SplitStringHonouringQuotes(pathInput.Text, " ");
+                Files = new string[paths.Count];
+                for (int i = 0; i < paths.Count; i++)
+                    Files[i] = paths[i];   
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }
