@@ -605,39 +605,6 @@
             return null;
         }
 
-        /// <summary>Ask user for a filename to open.</summary>
-        /// <param name="fileSpec">The file specification to use to filter the files.</param>
-        /// <param name="initialDirectory">Optional Initial starting directory</param>
-        public string AskUserForOpenFileName(string fileSpec, string initialDirectory = "", bool selectMultiple = false)
-        {
-            string fileName = AskUserForFileName("Choose a file to open", fileSpec, FileChooserAction.Open, initialDirectory, selectMultiple);
-            if (!String.IsNullOrEmpty(fileName))
-            { 
-                string dir = Path.GetDirectoryName(fileName);
-                if (!dir.Contains(@"ApsimX\Examples"))
-                    Utility.Configuration.Settings.PreviousFolder = dir;
-            }
-            return fileName;
-        }
-
-        /// <summary>
-        /// A helper function that asks user for a SaveAs name and returns their new choice.
-        /// </summary>
-        /// <param name="fileSpec">The file specification to filter the files.</param>
-        /// <param name="OldFilename">The current file name.</param>
-        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
-        public string AskUserForSaveFileName(string fileSpec, string OldFilename)
-        {
-            string result = AskUserForFileName("Choose a file name for saving", fileSpec, FileChooserAction.Save, OldFilename);
-            if (!String.IsNullOrEmpty(result))
-            {
-                string dir = Path.GetDirectoryName(result);
-                if (!dir.Contains(@"ApsimX\Examples"))
-                    Utility.Configuration.Settings.PreviousFolder = dir;
-            }
-            return result;
-        }
-
         /// <summary>Ask the user a question</summary>
         /// <param name="message">The message to show the user.</param>
         public QuestionResponseEnum AskQuestion(string message)
@@ -915,86 +882,6 @@
             return result;
         }
 
-        /// <summary>Ask user for a directory on OSX.</summary>
-        /// <param name="prompt">String to use as dialog heading.</param>
-        /// <param name="initialPath">Optional initial starting filename or directory.</param>
-        /// <returns>string containing the path to the chosen directory.</returns>
-        private string OsxDirectoryDialog(string prompt, string initialPath = "")
-        {
-            NSOpenPanel panel = new NSOpenPanel
-            {
-                Title = prompt,
-                CanChooseDirectories = true,
-                CanChooseFiles = false
-            };
-
-            if (File.Exists(initialPath))
-            {
-                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Path.GetDirectoryName(initialPath));
-                panel.NameFieldStringValue = Path.GetFileName(initialPath);
-            }
-            else if (Directory.Exists(initialPath))
-                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(initialPath);
-            else
-                panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(Utility.Configuration.Settings.PreviousFolder);
-
-            string dir = "";
-            if (panel.RunModal() == 1 /*NSFileHandlingPanelOKButton*/)
-            {
-                dir = panel.Url.Path;
-            }
-            return dir;
-        }
-
-        /// <summary>
-        /// Ask the user for a directory. Returns the path to that directory, or null if they did not choose a directory.
-        /// </summary>
-        /// <param name="prompt">String to use as dialog heading.</param>
-        /// <param name="initialPath">Optional initial starting filename or directory.</param>
-        /// <returns>string containing the path to the chosen directory.</returns>
-        public string AskUserForDirectory(string prompt, string initialPath = "")
-        {
-            if (ProcessUtilities.CurrentOS.IsWindows)
-                return WindowsDirectoryDialog(prompt, initialPath);
-            else if (ProcessUtilities.CurrentOS.IsMac)
-                return OsxDirectoryDialog(prompt, initialPath);
-            else
-            {
-                string path = null;
-                FileChooserDialog fc = new FileChooserDialog(
-                    prompt,
-                    null,
-                    FileChooserAction.SelectFolder,
-                    "Cancel", ResponseType.Cancel,
-                    "Select Folder", ResponseType.Accept);
-                try
-                {
-                    int response = (int)ResponseType.Cancel;
-                    Application.Invoke(delegate
-                    {
-                        response = fc.Run();
-                    });
-                    // The issue here is that if this method is called from the main UI thread, the 
-                    // Application.Invoke delegate will not be called until the main thread is idle.
-                    while (GLib.MainContext.Iteration()) ;
-                    if (response == (int)ResponseType.Accept)
-                    {
-                        path = fc.Filename;
-                    }
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    fc.Destroy();
-                }
-
-                return path;
-            }
-        }
-        
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>

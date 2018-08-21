@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using Utility;
     using Views;
 
     /// <summary>
@@ -618,8 +619,13 @@ namespace UserInterface.Presenters
 
             if (string.IsNullOrEmpty(path))
             {
-                path = ViewBase.MasterView.AskUserForDirectory("Select a directory to save model files to.");
-                if (path == null)
+                IFileDialog fileChooser = new FileDialog()
+                {
+                    Prompt = "Select a directory to save model files to.",
+                    Action = FileDialog.FileActionType.SelectFolder
+                };
+                path = fileChooser.GetFile();
+                if (string.IsNullOrEmpty(path))
                     return false;
             }
             
@@ -627,7 +633,7 @@ namespace UserInterface.Presenters
                 Directory.CreateDirectory(path);
             List<Exception> errors = new List<Exception>();
             int i = 0;
-            children.ForEach(sim =>
+            foreach (IModel sim in children)
             {
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
                 MainPresenter.ShowProgress(100 * i / children.Count, false);
@@ -642,7 +648,7 @@ namespace UserInterface.Presenters
                 }
 
                 i++;
-            });
+            }
             if (errors.Count < 1)
             {
                 MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);

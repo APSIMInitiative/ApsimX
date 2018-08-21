@@ -15,6 +15,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using EventArguments;
+    using Utility;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -368,7 +369,13 @@
         /// <returns>A filename.</returns>
         public string AskUserForOpenFileName(string fileSpec, string initialDirectory = "")
         {
-            return this.view.AskUserForOpenFileName(fileSpec, initialDirectory);
+            IFileDialog fileChooser = new FileDialog()
+            {
+                Action = FileDialog.FileActionType.Open,
+                FileType = fileSpec,
+                InitialDirectory = initialDirectory,
+            };
+            return fileChooser.GetFile();
         }
 
         /// <summary>
@@ -379,7 +386,12 @@
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
         public string AskUserForSaveFileName(string fileSpec, string oldFilename)
         {
-            return this.view.AskUserForSaveFileName(fileSpec, oldFilename);
+            IFileDialog fileChooser = new FileDialog()
+            {
+                Action = FileDialog.FileActionType.Save,
+                FileType = fileSpec,
+            };
+            return fileChooser.GetFile();
         }
 
         /// <summary>Open an .apsimx file into the current tab.</summary>
@@ -827,12 +839,12 @@
         /// <param name="e">Event parameters.</param>
         private void OnOpenApsimXFile(object sender, EventArgs e)
         {
-            string fileName = this.view.AskUserForOpenFileName("*.apsimx|*.apsimx");
+            string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
             if (fileName != null)
             {
                 bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                this.OpenApsimXFileInTab(fileName, onLeftTabControl);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                OpenApsimXFileInTab(fileName, onLeftTabControl);
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }
 
@@ -847,8 +859,8 @@
             string fileName = onLeftTabControl ? this.view.StartPage1.List.SelectedValue : this.view.StartPage2.List.SelectedValue;
             if (fileName != null)
             {
-                this.OpenApsimXFileInTab(fileName, onLeftTabControl);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                OpenApsimXFileInTab(fileName, onLeftTabControl);
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }
 
@@ -933,7 +945,7 @@
         /// <param name="e">Event arguments.</param>
         private void OnImport(object sender, EventArgs e)
         {
-            string fileName = this.view.AskUserForOpenFileName("*.apsim|*.apsim");
+            string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
 
             APSIMImporter importer = new APSIMImporter();
             try
@@ -1000,7 +1012,7 @@
                 initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
             }
 
-            string fileName = this.view.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+            string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
 
             if (fileName != null)
             {

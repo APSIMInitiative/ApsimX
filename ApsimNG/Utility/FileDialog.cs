@@ -61,7 +61,7 @@
         {
             get
             {
-                return Directory.Exists(initialDirectory) ? initialDirectory : Configuration.Settings.PreviousFolder;
+                return Directory.Exists(initialDirectory) ? initialDirectory : File.Exists(initialDirectory) ? Path.GetDirectoryName(initialDirectory) : Configuration.Settings.PreviousFolder;
             }
             set
             {

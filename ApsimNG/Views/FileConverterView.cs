@@ -4,6 +4,7 @@
     using Gtk;
     using Interfaces;
     using Utility;
+    using System.Linq;
 
     class FileConverterView : ViewBase, IFileConverterView
     {
@@ -209,8 +210,8 @@
                 dialog.FileType = "*.xml";
                 dialog.Prompt = "Choose XML files.";
                 string[] files = dialog.GetFiles();
-                if (!string.IsNullOrEmpty(fileName))
-                    Files = fileName;
+                if (files.Any(f => !string.IsNullOrEmpty(f)))
+                    Files = files.Where(f => !string.IsNullOrEmpty(f)).Aggregate((a, b) => a + "; " + b);
             }
             catch (Exception err)
             {
