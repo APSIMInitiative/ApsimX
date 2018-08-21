@@ -121,16 +121,8 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							cd ApsimX
-							7z x -y results.7z
-							cd Documentation
-							call GenerateDocumentation.bat
-							cd ..
-							for /r Tests\\Validation %%D in (*.pdf) do ( 
-								rename %%D %%~nD%ISSUE_NUMBER%%%~xD
-								echo Uploading %%~nD%ISSUE_NUMBER%%%~xD
-								@curl -u %APSIM_SITE_CREDS% -T %%~nD%ISSUE_NUMBER%%%~xD ftp://www.apsim.info/APSIM/ApsimXFiles/
-							)
+							docker build -t documentation ApsimX\\Docker\\Documentation
+							docker run -m 12g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e ISSUE_NUMBER -e APSIM_SITE_CREDS -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared documentation
 						'''
 						
 					}
