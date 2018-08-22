@@ -580,6 +580,18 @@ namespace Models.PMF.Organs
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
         public int GreenCohortNo { get { return CohortCounter("IsGreen"); } }
 
+        /// <summary>Gets the green cohort no.</summary>
+        [Description("Number of leaf cohorts that are have expanded but 50% fully senesced")]
+        public int GreenCohortNo2 { get {
+                int count = 0;
+                foreach (LeafCohort l in Leaves)
+                {
+                    if (l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2)
+                        count++;
+                }
+                return count;
+            } }
+
         /// <summary>Gets the senescing cohort no.</summary>
         [Description("Number of leaf cohorts that are Senescing")]
         public int SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
