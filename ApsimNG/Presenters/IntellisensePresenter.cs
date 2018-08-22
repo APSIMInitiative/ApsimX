@@ -245,16 +245,13 @@
 
         public bool GenerateSeriesCompletions(string text, int offset, string tableName, IStorageReader storage)
         {
-            string textSoFar = text?.Substring(0, offset);
-
-            if (textSoFar.LastOrDefault() == '[')
-                textSoFar = string.Empty;
-
+            triggerWord = text?.Substring(0, offset).Split(' ').Last().Replace("[", "").Replace("]", "");
+            
             List<string> columnNames = storage.ColumnNames(tableName).ToList();
             List<NeedContextItemsArgs.ContextItem> intellisenseOptions = new List<NeedContextItemsArgs.ContextItem>();
             foreach (string columnName in columnNames)
             {
-                if (string.IsNullOrEmpty(textSoFar) || string.IsNullOrEmpty(textSoFar.Replace("[", "").Replace("]", "")) || columnName.StartsWith(textSoFar.Substring(0, offset)))
+                if (string.IsNullOrEmpty(triggerWord) || string.IsNullOrEmpty(triggerWord.Replace("[", "").Replace("]", "")) || columnName.StartsWith(triggerWord.Replace("[", "").Replace("]", "")))
                 intellisenseOptions.Add(new NeedContextItemsArgs.ContextItem()
                 {
                     Name = columnName,

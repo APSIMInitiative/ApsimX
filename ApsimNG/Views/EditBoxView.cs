@@ -32,6 +32,14 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="text"></param>
         void InsertAtCursor(string text);
+
+        /// <summary>
+        /// Inserts a completion option, replacing the half-typed trigger word
+        /// for which we have generated completion options.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        /// <param name="triggerWord">Incomplete word to be replaced.</param>
+        void InsertCompletionOption(string text, string triggerWord);
     }
 
     /// <summary>A drop down view.</summary>
@@ -152,6 +160,43 @@ namespace UserInterface.Views
             else if ((args.Event.Key & Gdk.Key.Return) == Gdk.Key.Return)
             {
                 OnSelectionChanged(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a completion option, replacing the half-typed trigger word
+        /// for which we have generated completion options.
+        /// </summary>
+        /// <param name="text">Text to be inserted.</param>
+        /// <param name="triggerWord">Incomplete word to be replaced.</param>
+        public void InsertCompletionOption(string text, string triggerWord)
+        {
+            if (string.IsNullOrEmpty(text))
+                return;
+            if (string.IsNullOrEmpty(triggerWord))
+            {
+                textentry1.Text = text;
+                textentry1.Position = text.Length;
+            }
+            else if (!textentry1.Text.Contains(triggerWord))
+                textentry1.Text += text;
+            else
+            {
+                string textBeforeCursor = textentry1.Text.Substring(0, Offset);
+                string textAfterCursor = textentry1.Text.Substring(Offset);
+                int index = textBeforeCursor.LastIndexOf(triggerWord);
+                if (index >= 0)
+                {
+                    string textBeforeWord = textBeforeCursor.Substring(0, index);
+                    string textAfterWord = textBeforeCursor.Substring(index + triggerWord.Length);
+                    textentry1.Text = textBeforeWord + text + textAfterWord + textAfterCursor;
+                    textentry1.Position = textBeforeWord.Length + text.Length;
+                }
+                else
+                {
+                    // I can't imagine how this could ever happen, but it doesn't hurt to be prepared.
+                    textentry1.Text = textBeforeCursor + text + textAfterCursor;
+                }
             }
         }
 

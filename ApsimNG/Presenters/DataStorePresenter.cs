@@ -237,9 +237,15 @@ namespace UserInterface.Presenters
 
         private void OnInsertIntellisenseItem(object sender, IntellisenseItemSelectedArgs args)
         {
-            // (sender, e) => managerView.Editor.InsertCompletionOption(e.ItemSelected, e.TriggerWord)
-            this.view.ColumnFilter.InsertAtCursor(args.ItemSelected);
-            PopulateGrid();
+            try
+            {
+                view.ColumnFilter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                PopulateGrid();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>The maximum number of records has changed.</summary>
