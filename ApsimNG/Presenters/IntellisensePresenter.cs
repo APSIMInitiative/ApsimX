@@ -243,6 +243,32 @@
             return completionList.Any();
         }
 
+        public bool GenerateSeriesCompletions(string text, int offset, string tableName, IStorageReader storage)
+        {
+            string textSoFar = text?.Substring(0, offset);
+
+            if (textSoFar.LastOrDefault() == '[')
+                textSoFar = string.Empty;
+
+            List<string> columnNames = storage.ColumnNames(tableName).ToList();
+            List<NeedContextItemsArgs.ContextItem> intellisenseOptions = new List<NeedContextItemsArgs.ContextItem>();
+            foreach (string columnName in columnNames)
+            {
+                if (string.IsNullOrEmpty(textSoFar) || string.IsNullOrEmpty(textSoFar.Replace("[", "").Replace("]", "")) || columnName.StartsWith(textSoFar.Substring(0, offset)))
+                intellisenseOptions.Add(new NeedContextItemsArgs.ContextItem()
+                {
+                    Name = columnName,
+                    Units = string.Empty,
+                    TypeName = string.Empty,
+                    Descr = string.Empty,
+                    ParamString = string.Empty
+                });
+            }
+            if (intellisenseOptions.Any())
+                view.Populate(intellisenseOptions);
+            return intellisenseOptions.Any();
+        }
+
         /// <summary>
         /// Generates the intellisense options.
         /// After calling this, call <see cref="Show(int, int, int)"/> to show the intellisense popup.
