@@ -24,7 +24,7 @@ namespace Models.PMF.Phen
         [Link]
         Structure structure = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction CompletionNodeNumber = null;
 
         //2. Private and protected fields

@@ -41,7 +41,7 @@ echo Copying DeploymentSupport files.
 copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin\ >nul
 
 echo Building ApsimX.
-msbuild /m /v:m %apsimx%\ApsimX.sln
+msbuild /m /v:m /p:Configuration=Release %apsimx%\ApsimX.sln
 
 set error=%errorlevel%
 

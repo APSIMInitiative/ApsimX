@@ -1802,9 +1802,9 @@ A function is used to capture the year of the current season as in the south hem
             <Name>Prune</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>1</FractionLiveToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -1987,10 +1987,10 @@ A function is used to capture the year of the current season as in the south hem
             <Name>Prune</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
@@ -2008,7 +2008,7 @@ A function is used to capture the year of the current season as in the south hem
           <Name>InitialWtFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-          <FixedValue>200</FixedValue>
+          <FixedValue>130</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
@@ -4296,9 +4296,7 @@ Pollination alone results in the development of small, hard green berries (live 
         <Name>ExtraVariables</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Script>
-          <CordonDiameter>10</CordonDiameter>
-        </Script>
+        <Script />
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
@@ -4315,16 +4313,8 @@ namespace Models
         [Link] Plant Grapevine;
         [Link] Zone zone;
 
-        [Description("CordonDiameter_mm")]         
-        public double CordonDiameter { get; set; }  //mm
-        
-
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, EventArgs e)
-        {
-        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);      
-        }
-
+   
+   
      }
 }
 ]]></Code>
@@ -4345,6 +4335,7 @@ namespace Models
         <Enabled>true</Enabled>
         <Script>
           <PruneDateString>1-May</PruneDateString>
+          <CordonDiameter>10</CordonDiameter>
         </Script>
         <Code><![CDATA[
 using System;
@@ -4362,9 +4353,13 @@ namespace Models
     {
         [Link] Plant Grapevine;
         [Link] Clock Clock;
+        [Link] Zone zone;
 
         [Description("Prune Date")]
         public string PruneDateString { get; set; }
+        [Description("CordonDiameter_mm")]         
+        public double CordonDiameter { get; set; }  //mm
+
         [XmlIgnore] private DateTime PruneDate { get; set; }
         [XmlIgnore] private RemovalFractions Remove { get; set; }
         
@@ -4385,6 +4380,15 @@ namespace Models
                 Remove.SetPhenologyStage = 1;
                 Grapevine.RemoveBiomass("Prune", Remove);
             }
+
+            {
+        	zone.Set("Grapevine.Cordon.CordonDiameter.FixedValue", CordonDiameter);   
+        	//calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)
+        	zone.Set("[Grapevine].Cordon.Live.StructuralWt", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); 
+
+       	 	}
+
+
         }
     }
 }
@@ -4431,6 +4435,7 @@ namespace Models
         <string>[Grapevine].Leaf.Live.Wt</string>
         <string>[Grapevine].Shoot.Live.Wt</string>
         <string>[Grapevine].Cordon.Live.Wt</string>
+        <string>[Grapevine].Cordon.Live.StructuralWt</string>
         <string>[Grapevine].Trunk.Live.Wt</string>
         <string>[Grapevine].Root.Live.Wt</string>
         <string />
@@ -4851,6 +4856,7 @@ namespace Models
           <InitialStandingFraction>0</InitialStandingFraction>
           <InitialCPR>0</InitialCPR>
           <InitialCNR>80</InitialCNR>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -6001,7 +6007,7 @@ namespace Models
         <Checkpoint>Current</Checkpoint>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Grapevine.Cordon.Live.Wt</YFieldName>
+        <YFieldName>Grapevine.Cordon.Live.StructuralWt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6753,6 +6759,7 @@ namespace Models
             <InitialStandingFraction>0</InitialStandingFraction>
             <InitialCPR>0</InitialCPR>
             <InitialCNR>80</InitialCNR>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -7449,6 +7456,7 @@ namespace Models
             <InitialStandingFraction>0</InitialStandingFraction>
             <InitialCPR>0</InitialCPR>
             <InitialCNR>80</InitialCNR>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>

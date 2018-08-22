@@ -223,6 +223,23 @@
         [Units("0-1")]
         public double wf { get { return MoistureFactor(); } }
 
+        /// <summary>
+        /// Fraction of incoming faeces to add.
+        /// </summary>
+        [Bounds(Lower = 0.0, Upper = 0.0)]
+        [Units("0-1")]
+        public double FractionFaecesAdded
+        {
+            get
+            {
+                return fractionFaecesAdded;
+            }
+            set
+            {
+                fractionFaecesAdded = value;
+            }
+        }
+
         /// <summary>Called when [reset].</summary>
         public void Reset()
         {

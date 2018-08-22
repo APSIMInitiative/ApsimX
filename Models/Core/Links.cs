@@ -35,11 +35,13 @@ namespace Models.Core
         /// </summary>
         /// <param name="rootNode"></param>
         /// <param name="recurse">Recurse through all child models?</param>
-        public void Resolve(IModel rootNode, bool recurse = true)
+        /// <param name="allLinks">Unresolve all links or just the non child links?</param>
+        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true)
         {
             if (recurse)
             {
-                List<IModel> allModels = Apsim.ChildrenRecursively(rootNode);
+                List<IModel> allModels = new List<IModel>() { rootNode };
+                allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
                 foreach (IModel modelNode in allModels)
                     ResolveInternal(modelNode, null);
             }
@@ -66,7 +68,8 @@ namespace Models.Core
         {
             // Go looking for [Link]s
             foreach (IVariable field in GetAllDeclarations(obj, GetModel(obj).GetType(),
-                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+                                                           BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                           allLinks:true))
             {
                 LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
 
@@ -86,14 +89,18 @@ namespace Models.Core
         /// Set to null all link fields in the specified model.
         /// </summary>
         /// <param name="model">The model to look through for links</param>
-        public void Unresolve(IModel model)
+        /// <param name="allLinks">Unresolve all links or just the non child links?</param>
+        public void Unresolve(IModel model, bool allLinks)
         {
-            foreach (IModel modelNode in Apsim.ChildrenRecursively(model))
+            List<IModel> allModels = new List<IModel>() { model };
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            foreach (IModel modelNode in allModels)
             {
                 // Go looking for private [Link]s
-                foreach (IVariable declaration in GetAllDeclarations(model, 
-                                                                     model.GetType(),
-                                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+                foreach (IVariable declaration in GetAllDeclarations(modelNode,
+                                                                     modelNode.GetType(),
+                                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                                     allLinks))
                 {
                     LinkAttribute link = declaration.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
                     if (link != null)
@@ -112,7 +119,8 @@ namespace Models.Core
             // Go looking for [Link]s
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
-                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                     allLinks: true))
             {
                 LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
 
@@ -287,25 +295,31 @@ namespace Models.Core
         /// Return all fields. The normal .NET reflection doesn't return private fields in base classes.
         /// This function does.
         /// </summary>
-        public static List<IVariable> GetAllDeclarations(object obj, Type type, BindingFlags flags)
+        public static List<IVariable> GetAllDeclarations(object obj, Type type, BindingFlags flags, bool allLinks)
         {
             if (type == typeof(Object) || type == typeof(Model)) return new List<IVariable>();
 
-            var list = GetAllDeclarations(obj, type.BaseType, flags);
+            var list = GetAllDeclarations(obj, type.BaseType, flags, allLinks);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
             foreach (FieldInfo field in type.GetFields(flags | BindingFlags.DeclaredOnly))
                 foreach (Attribute a in field.GetCustomAttributes())
                 {
                     LinkAttribute link = a as LinkAttribute;
-                    if (a != null)
-                        list.Add(new VariableField(obj, field));
+                    if (link != null)
+                    {
+                        if (allLinks || !link.GetType().Name.StartsWith("Child"))
+                            list.Add(new VariableField(obj, field));
+                    }
                 }
             foreach (PropertyInfo property in type.GetProperties(flags | BindingFlags.DeclaredOnly))
                 foreach (Attribute a in property.GetCustomAttributes())
                 {
                     LinkAttribute link = a as LinkAttribute;
-                    if (a != null)
-                        list.Add(new VariableProperty(obj, property));
+                    if (link != null)
+                    {
+                        if (allLinks || !link.GetType().Name.StartsWith("Child"))
+                            list.Add(new VariableProperty(obj, property));
+                    }
                 }
 
             return list;

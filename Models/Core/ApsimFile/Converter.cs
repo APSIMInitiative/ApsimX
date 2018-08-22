@@ -962,6 +962,18 @@
                 apexNode.ParentNode.RemoveChild(apexNode);
         }
 
+
+        /// <summary>
+        /// Upgrades to version 34. Change DisplayAttribute
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion38(XmlNode node, string fileName)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, @"SurfaceOrganicMatter.AddFaecesType", "AddFaecesType");
+            }
         /// <summary> Rename ThermalTime functions on phases to Progression </summary>
         private static void UpgradeToVersion38(XmlNode node, string fileName)
         {

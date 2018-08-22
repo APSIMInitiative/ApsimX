@@ -21,11 +21,12 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link]
+        [ChildLinkByName]
         private IFunction target = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction progression = null;
+
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------

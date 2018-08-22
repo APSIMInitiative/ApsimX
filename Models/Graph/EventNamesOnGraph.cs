@@ -26,13 +26,6 @@ namespace Models.Graph
         [NonSerialized]
         private DataTable data;
 
-        /// <summary>
-        /// The minimum number of days (on the x-axis) that should exist between two event names.
-        /// This helps prevent event names from overlapping.
-        /// </summary>
-        [NonSerialized]
-        private const int minDateSeparation = 2;
-
         /// <summary>The x variable name</summary>
         private string xFieldName;
 
@@ -90,8 +83,6 @@ namespace Models.Graph
                                 text.colour = Color.Black;
                                 text.leftAlign = true;
                                 text.x = dates[i];
-                                while (annotations.Count > 1 && (((DateTime)text.x) - ((DateTime)((annotations.OfType<TextAnnotation>().Last()).x))).Days < minDateSeparation)
-                                    text.x = dates[i].AddDays(minDateSeparation);
 
                                 text.y = double.MinValue;
                                 text.textRotation = 270;
