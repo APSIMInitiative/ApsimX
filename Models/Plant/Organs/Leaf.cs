@@ -599,6 +599,17 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the plant appeared green leaf no. (matching with observation)</summary>
+        [Units("/plant")]
+        [Description("Number of appeared leaves per plant that have appeared but 50% senesced on each plant")]
+        public double PlantAppearedGreenLeafNo2
+        {
+            get
+            {
+                return Leaves.Where(l => l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / Plant.Population;
+            }
+        }
+
         /// <summary>Gets the plant appeared leaf no.</summary>
         [Units("/plant")]
         [Description("Number of leaves per plant that have appeared")]
