@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 38; } }
+        public static int LastestVersion { get { return 39; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -974,8 +974,10 @@
             {
                 ConverterUtilities.SearchReplaceManagerCode(manager, @"SurfaceOrganicMatter.AddFaecesType", "AddFaecesType");
             }
+        }
+
         /// <summary> Rename ThermalTime functions on phases to Progression </summary>
-        private static void UpgradeToVersion38(XmlNode node, string fileName)
+        private static void UpgradeToVersion39(XmlNode node, string fileName)
         {
             ConverterUtilities.RenamePMFFunction(node, "GenericPhase", "ThermalTime", "Progression");
             ConverterUtilities.RenamePMFFunction(node, "BuddingPhase", "ThermalTime", "Progression");
