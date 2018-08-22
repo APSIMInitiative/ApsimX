@@ -677,33 +677,40 @@ namespace UserInterface.Presenters
         /// <summary>Display a view on the right hand panel in view.</summary>
         public void ShowRightHandPanel()
         {
-            if (this.view.Tree.SelectedNode != string.Empty)
+            try
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
-
-                if (model != null)
+                if (this.view.Tree.SelectedNode != string.Empty)
                 {
-                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                    object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
 
-                    if (descriptionName != null)
+                    if (model != null)
                     {
-                        viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                    }
+                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                        PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                        DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-                    if (viewName == null && presenterName == null)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
-                    }
+                        if (descriptionName != null)
+                        {
+                            viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                        }
 
-                    if (viewName != null && presenterName != null)
-                    {
-                        this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                        if (viewName == null && presenterName == null)
+                        {
+                            viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
+                        }
+
+                        if (viewName != null && presenterName != null)
+                        {
+                            this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                        }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 
