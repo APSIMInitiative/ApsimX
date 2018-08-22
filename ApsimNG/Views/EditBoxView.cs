@@ -154,6 +154,7 @@ namespace UserInterface.Views
                         Code = textentry1.Text,
                         Offset = Offset
                     };
+                    lastText = textentry1.Text;
                     IntellisenseItemsNeeded.Invoke(this, e);
                 }
             }
