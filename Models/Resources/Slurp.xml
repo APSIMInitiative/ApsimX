@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
   <Name>Slurp</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -382,49 +382,6 @@ This is important in SLURP as it is set for each species to represent their diff
       <Name>FRGRFunction</Name>
       <XYPairs>
         <Name>XYPairs</Name>
-        <Graph>
-          <Name>Graph</Name>
-          <Series>
-            <Name>Series</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <XFieldName>[XYPairs].X</XFieldName>
-            <YFieldName>[XYPairs].Y</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>0</double>

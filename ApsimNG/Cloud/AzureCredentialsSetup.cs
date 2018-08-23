@@ -1,6 +1,9 @@
 ﻿using System;
 using UserInterface.Views;
+using System.Linq;
 using Gtk;
+using Utility;
+using UserInterface.Interfaces;
 
 namespace ApsimNG.Cloud
 {
@@ -137,10 +140,15 @@ namespace ApsimNG.Cloud
             string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey", "EmailSender", "EmailPW" };
             // not very scalable, I know. the better solution would be to split the properties into 2 files: credentials, and misc settings. then just iterate over the following:
             //List<string> properties = AzureSettings.Default.Properties.Cast<System.Configuration.SettingsProperty>().Select(p => p.Name).ToList();
+
+            // Could turn this method into a two-liner (including the above line initialising credentials):
+            // return credentials.All(c => !string.IsNullOrEmpty((string)AzureSettings.Default[c]));
+            // But I don't have the means to test this right now - DH 8/18.
             foreach (string key in credentials)
             {
                 string value = (string)AzureSettings.Default[key];
-                if (value == null || value == "") return false;
+                if (string.IsNullOrEmpty(value))
+                    return false;
             }
             return true;
         }
@@ -153,13 +161,20 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void LoadCredentialsFromFile(object sender, EventArgs e)
         {
-            string path = ViewBase.MasterView.AskUserForFileName("Select a licence file", "Azure Licence file (*.lic) | *.lic", FileChooserAction.Open, (string)AzureSettings.Default["AzureLicenceFilePath"]);
-            if (path != "" && path != null)
+            IFileDialog fileChooser = new FileDialog()
             {
-                AzureSettings.Default["AzureLicenceFilePath"] = path;
+                Prompt = "Select a licence file",
+                FileType = "Azure Licence file (*.lic) | *.lic",
+                Action = FileDialog.FileActionType.Open,
+                InitialDirectory = (string)AzureSettings.Default["AzureLicenceFilePath"]
+            };
+            string credentialsFile = fileChooser.GetFile();
+            if (!string.IsNullOrEmpty(credentialsFile))
+            {
+                AzureSettings.Default["AzureLicenceFilePath"] = credentialsFile;
                 AzureSettings.Default.Save();
                 string line = "";
-                System.IO.StreamReader file = new System.IO.StreamReader(path);
+                System.IO.StreamReader file = new System.IO.StreamReader(credentialsFile);
                 while ((line= file.ReadLine()) != null)
                 {
                     if (line.IndexOf('=') > -1)

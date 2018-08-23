@@ -351,7 +351,7 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            string fileName = MasterView.AskUserForFileName("Choose a weather file to open", "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", FileChooserAction.Open, labelFileName.Text);
+            string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", labelFileName.Text);
             if (!String.IsNullOrEmpty(fileName))
             {
                 Filename = fileName;
