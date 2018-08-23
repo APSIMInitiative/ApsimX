@@ -527,6 +527,34 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Event handler for 'Show Model Structure' menu item.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        [ContextMenu(MenuName = "Show Model Structure",
+                     IsToggle = true,
+                     AppliesTo = new Type[] { typeof(ModelCollectionFromResource) })]
+        public void ShowModelStructure(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model != null)
+            {
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.IsHidden = !child.IsHidden;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
+            }
+        }
+
+        public bool ShowModelStructureChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model.Children.Count < 1)
+                return true;
+            return !model.Children[0].IsHidden;
+        }
+
+        /// <summary>
         /// Event handler for 'Enabled' menu item.
         /// </summary>
         [ContextMenu(MenuName = "Enabled", IsToggle = true)]
