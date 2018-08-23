@@ -652,19 +652,31 @@
             if (userEditingCell)
             {
                 userEditingCell = false;
-                // NB - this assumes that the editing control is a Gtk.Entry control
-                // This may change in future versions of Gtk
+                string text = string.Empty;
+                string path = string.Empty;
                 if (editControl is Entry)
                 {
-                    string text = (editControl as Entry).Text;
-                    EditedArgs args = new EditedArgs();
-                    args.Args = new object[2];
-                    args.Args[0] = editPath; // Path
-                    args.Args[1] = text;     // NewText
-                    OnCellValueChanged(editSender, args);
+                    text = (editControl as Entry).Text;
+                    path = editPath;
+                }
+                else if (editControl is ComboBox)
+                {
+                    text = (editControl as ComboBox).ActiveText;
+                    path = editPath;
+                }
+                else if (GetCurrentCell != null)
+                {
+                    text = GetCurrentCell.Value.ToString();
+                    path = GetCurrentCell.RowIndex.ToString();
                 }
                 else
-                    ShowError(new Exception("Unable to finish editing cell."));
+                    throw new Exception("Unable to finish editing cell.");
+
+                EditedArgs args = new EditedArgs();
+                args.Args = new object[2];
+                args.Args[0] = path; // Path
+                args.Args[1] = text;     // NewText
+                OnCellValueChanged(editSender, args);
             }
         }
 
@@ -961,6 +973,7 @@
                     else if (render is CellRendererToggle)
                     {
                         (render as CellRendererToggle).Toggled -= ToggleRenderToggled;
+                        (render as CellRendererToggle).EditingStarted -= OnCellBeginEdit;
                     }
                     else if (render is CellRendererCombo)
                     {
@@ -1402,6 +1415,7 @@
                     userEditingCell = false;
                 };
                 CellRendererCombo comboRender = new CellRendererDropDown();
+                comboRender.EditingStarted += OnCellBeginEdit;
                 comboRender.Edited += ComboRenderEdited;
                 comboRender.Visible = false;
                 comboRender.EditingStarted += ComboRenderEditing;
