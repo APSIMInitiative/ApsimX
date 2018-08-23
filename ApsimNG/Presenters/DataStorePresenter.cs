@@ -12,6 +12,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Models.Factorial;
     using Views;
+    using EventArguments;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -21,6 +22,11 @@ namespace UserInterface.Presenters
 
         /// <summary>The data store view to work with.</summary>
         private IDataStoreView view;
+
+        /// <summary>
+        /// The intellisense.
+        /// </summary>
+        private IntellisensePresenter intellisense;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -40,6 +46,8 @@ namespace UserInterface.Presenters
             dataStore = model as IStorageReader;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
+            this.intellisense = new IntellisensePresenter(this.view as ViewBase);
+            intellisense.ItemSelected += OnInsertIntellisenseItem;
 
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
@@ -55,6 +63,7 @@ namespace UserInterface.Presenters
 
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
+            this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
             PopulateGrid();
         }
@@ -206,6 +215,37 @@ namespace UserInterface.Presenters
         private void OnColumnFilterChanged(object sender, EventArgs e)
         {
             PopulateGrid();
+        }
+
+        /// <summary>
+        /// The view is asking for items for the intellisense.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseNeeded(object sender, NeedContextItemsArgs args)
+        {
+            try
+            {
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore))
+                    intellisense.Show(args.Coordinates.Item1, args.Coordinates.Item2);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        private void OnInsertIntellisenseItem(object sender, IntellisenseItemSelectedArgs args)
+        {
+            try
+            {
+                view.ColumnFilter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                PopulateGrid();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>The maximum number of records has changed.</summary>
