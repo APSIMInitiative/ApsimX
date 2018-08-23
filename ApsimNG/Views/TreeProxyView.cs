@@ -15,6 +15,7 @@ namespace UserInterface.Views
     using OxyPlot;
     using OxyPlot.Axes;
     using OxyPlot.GtkSharp;
+    using Interfaces;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -68,11 +69,31 @@ namespace UserInterface.Views
         VPaned vpaned1 = null;
         Alignment alignment1 = null;
         HBox hbox1 = null;
-        Gtk.TreeView treeview1 = null;
-        Gtk.TreeView treeview2 = null;
 
-        private ListStore heightModel = new ListStore(typeof(string));
-        private ListStore gridModel = new ListStore(typeof(string));
+        /// <summary>
+        /// Grid control for the Temporal Data tab.
+        /// </summary>
+        Gtk.TreeView temporalDataTree = null;
+
+        /// <summary>
+        /// Grid control for the Spatial Data tab.
+        /// </summary>
+        Gtk.TreeView spatialDataGrid = null;
+
+        /// <summary>
+        /// Data model for temporal data.
+        /// </summary>
+        private ListStore temporalData = new ListStore(typeof(string));
+
+        /// <summary>
+        /// Data model for spatial data.
+        /// </summary>
+        private ListStore spatialData = new ListStore(typeof(string));
+
+        /// <summary>
+        /// Scrolled window which houses the temporal data.
+        /// </summary>
+        private ScrolledWindow temporalDataTab = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeProxyView" /> class.
@@ -80,14 +101,17 @@ namespace UserInterface.Views
         public TreeProxyView(ViewBase owner) : base(owner)
         {
             Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
+            temporalDataTab = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             alignment1 = (Alignment)builder.GetObject("alignment1");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
-            treeview2 = (Gtk.TreeView)builder.GetObject("treeview2");
+            temporalDataTree = (Gtk.TreeView)builder.GetObject("treeview1");
+            spatialDataGrid = (Gtk.TreeView)builder.GetObject("treeview2");
             _mainWidget = vpaned1;
-            this.pBelowGround = new OxyPlot.GtkSharp.PlotView();
-            this.pAboveGround = new OxyPlot.GtkSharp.PlotView();
+            TemporalDataGridView = new GridView(this as ViewBase);
+            temporalDataTab.Add((TemporalDataGridView as GridView).Grid);
+            this.pBelowGround = new PlotView();
+            this.pAboveGround = new PlotView();
             this.pAboveGround.Model = new PlotModel();
             this.pBelowGround.Model = new PlotModel();
             plots.Add(pAboveGround);
@@ -96,7 +120,7 @@ namespace UserInterface.Views
             hbox1.PackStart(pAboveGround, true, true, 0);
             pBelowGround.SetSizeRequest(-1, 100);
             hbox1.PackStart(pBelowGround, true, true, 0);
-
+            
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
             this.LeftRightPadding = 40;
@@ -104,15 +128,20 @@ namespace UserInterface.Views
             alignment1.Add(this.gridView1.MainWidget);
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
-            treeview2.CursorChanged += GridCursorChanged;
+            //spatialDataGrid.CursorChanged += GridCursorChanged;
             MainWidget.ShowAll();
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// Grid which displays the temporal data.
+        /// </summary>
+        public IGridView TemporalDataGridView { get; }
+
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            heightModel.Dispose();
-            gridModel.Dispose();
+            temporalData.Dispose();
+            spatialData.Dispose();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }
@@ -151,17 +180,17 @@ namespace UserInterface.Views
         /// <param name="showInLegend">Show in legend?</param>
         /// <param name="showOnLegend"></param>
         public void DrawLineAndMarkers(
-     string title,
-     IEnumerable x,
-     IEnumerable y,
-     Models.Graph.Axis.AxisType xAxisType,
-     Models.Graph.Axis.AxisType yAxisType,
-     Color colour,
-     Models.Graph.LineType lineType,
-     Models.Graph.MarkerType markerType,
-     Models.Graph.LineThicknessType lineThickness,
-     Models.Graph.MarkerSizeType markerSize,
-     bool showOnLegend)
+             string title,
+             IEnumerable x,
+             IEnumerable y,
+             Models.Graph.Axis.AxisType xAxisType,
+             Models.Graph.Axis.AxisType yAxisType,
+             Color colour,
+             Models.Graph.LineType lineType,
+             Models.Graph.MarkerType markerType,
+             Models.Graph.LineThicknessType lineThickness,
+             Models.Graph.MarkerSizeType markerSize,
+             bool showOnLegend)
         {
         }
 
@@ -630,9 +659,9 @@ namespace UserInterface.Views
 
         public void SetupGrid(List<List<string>> data)
         {
-            while (treeview2.Columns.Length > 0)
+            while (spatialDataGrid.Columns.Length > 0)
             {
-                TreeViewColumn col = treeview2.GetColumn(0);
+                TreeViewColumn col = spatialDataGrid.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
                     if (render is CellRendererText)
                     {
@@ -640,7 +669,7 @@ namespace UserInterface.Views
                         textRender.Edited -= GridCellEdited;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
-                treeview2.RemoveColumn(treeview2.GetColumn(0));
+                spatialDataGrid.RemoveColumn(spatialDataGrid.GetColumn(0));
             }
 
             int nCols = data[0].Count;
@@ -660,23 +689,23 @@ namespace UserInterface.Views
                 column.Resizable = true;
                 column.Alignment = 0.5f; // For centered alignment of the column header
                 column.SetCellDataFunc(textRender, OnSetGridData);
-                treeview2.AppendColumn(column);
+                spatialDataGrid.AppendColumn(column);
             }
 
             // Add an empty column at the end; auto-sizing will give this any "leftover" space
             TreeViewColumn fillColumn = new TreeViewColumn();
             fillColumn.Sizing = TreeViewColumnSizing.Autosize;
-            treeview2.AppendColumn(fillColumn);
+            spatialDataGrid.AppendColumn(fillColumn);
 
             // Now let's add some padding to the column headers, to avoid having very narrow columns
             for (int i = 0; i < nCols; i++)
             {
-                Label label = GetColumnHeaderLabel(i, treeview2);
+                Label label = GetColumnHeaderLabel(i, spatialDataGrid);
                 label.Justify = Justification.Center;
                 label.SetPadding(10, 0);
             }
 
-            gridModel = new ListStore(colTypes);
+            spatialData = new ListStore(colTypes);
 
             for (int i = 0; i < data[1].Count; i++)
             {
@@ -684,9 +713,9 @@ namespace UserInterface.Views
                 for (int j = 1; j <= nCols; j++)
                     row[j - 1] = data[j][i];
 
-                gridModel.AppendValues(row);
+                spatialData.AppendValues(row);
             }
-            treeview2.Model = gridModel;
+            spatialDataGrid.Model = spatialData;
 
             table = new DataTable();
 
@@ -710,17 +739,17 @@ namespace UserInterface.Views
 
         private void GridCursorChanged(object sender, EventArgs e)
         {
-            TreeSelection selection = treeview2.Selection;
+            TreeSelection selection = spatialDataGrid.Selection;
             TreeModel model;
             TreeIter iter;
             // The iter will point to the selected row
             if (selection.GetSelected(out model, out iter))
             {
-                Gtk.TreePath path = gridModel.GetPath(iter);
+                Gtk.TreePath path = spatialData.GetPath(iter);
                 int row = path.Indices[0];
                 bool editable = row < 1 || row > 2;
-                for (int i = 1; i < treeview2.Columns.Count() - 1; i++)
-                    (treeview2.Columns[i].CellRenderers[0] as CellRendererText).Editable = editable;
+                for (int i = 1; i < spatialDataGrid.Columns.Count() - 1; i++)
+                    (spatialDataGrid.Columns[i].CellRenderers[0] as CellRendererText).Editable = editable;
             }
         }
 
@@ -728,16 +757,16 @@ namespace UserInterface.Views
         {
             Gtk.TreeIter iter;
             Gtk.TreePath path = new Gtk.TreePath(args.Path);
-            gridModel.GetIter(out iter, path);
+            spatialData.GetIter(out iter, path);
             int row = path.Indices[0];
             int col;
-            for (col = 0; col < treeview2.Columns.Count(); col++)
-                if (treeview2.Columns[col].CellRenderers[0] == o)
+            for (col = 0; col < spatialDataGrid.Columns.Count(); col++)
+                if (spatialDataGrid.Columns[col].CellRenderers[0] == o)
                     break;
-            if (col == treeview2.Columns.Count())
+            if (col == spatialDataGrid.Columns.Count())
                 return;  // Could not locate the column!
             string value = args.NewText.Trim();
-            if (value == gridModel.GetValue(iter, col) as string)
+            if (value == spatialData.GetValue(iter, col) as string)
                 return;
             double numval;
             if (Double.TryParse(args.NewText, out numval))
@@ -746,7 +775,7 @@ namespace UserInterface.Views
                 // a Gtk.ListStore and a System.Data.Table. However, we want a
                 // ListStore for the GUI, and don't want the Presenter to 
                 // have to know about Gtk.
-                    gridModel.SetValue(iter, col, value);
+                    spatialData.SetValue(iter, col, value);
                 table.Rows[row][col] = value;
                 if (OnCellEndEdit != null)
                     OnCellEndEdit.Invoke(this, new EventArgs());
@@ -772,21 +801,22 @@ namespace UserInterface.Views
 
         public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands, double[] CanopyWidths, double[] TreeLeafAreas)
         {
-            while (treeview1.Columns.Length > 0)
+            while (temporalDataTree.Columns.Length > 0)
             {
-                TreeViewColumn col = treeview1.GetColumn(0);
+                TreeViewColumn col = temporalDataTree.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
                     if (render is CellRendererText)
                     {
                         CellRendererText textRender = render as CellRendererText;
                         textRender.Edited -= HeightCellEdited;
                     }
-                treeview1.RemoveColumn(treeview1.GetColumn(0));
+                temporalDataTree.RemoveColumn(temporalDataTree.GetColumn(0));
             }
             string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Canopy Width (m)", "Tree Leaf Area (m2)" };
             // Begin by creating a new ListStore with the appropriate number of
             // columns. Use the string column type for everything.
             Type[] colTypes = new Type[5];
+            DataTable table = new DataTable("Height Data");
             for (int i = 0; i < 5; i++)
             {
                 colTypes[i] = typeof(string);
@@ -800,55 +830,63 @@ namespace UserInterface.Views
                 column.Sizing = TreeViewColumnSizing.Autosize;
                 column.Resizable = true;
                 column.Alignment = 0.5f; // For centered alignment of the column header
-                treeview1.AppendColumn(column);
+                temporalDataTree.AppendColumn(column);
+
+                table.Columns.Add(colLabels[i], colTypes[i]);
             }
             // Add an empty column at the end; auto-sizing will give this any "leftover" space
             TreeViewColumn fillColumn = new TreeViewColumn();
             fillColumn.Sizing = TreeViewColumnSizing.Autosize;
-            treeview1.AppendColumn(fillColumn);
+            temporalDataTree.AppendColumn(fillColumn);
 
-            heightModel = new ListStore(colTypes);
+            temporalData = new ListStore(colTypes);
+            
 
             for (int i = 0; i < dates.Count(); i++)
             {
-                heightModel.AppendValues(dates[i].ToShortDateString(), (heights[i] / 1000).ToString(), NDemands[i].ToString(), CanopyWidths[i].ToString(), TreeLeafAreas[i].ToString());
+                //temporalData.AppendValues(dates[i].ToShortDateString(), (heights[i] / 1000).ToString(), NDemands[i].ToString(), CanopyWidths[i].ToString(), TreeLeafAreas[i].ToString());
+                table.Rows.Add(dates[i].ToShortDateString(), (heights[i] / 1000).ToString(), NDemands[i].ToString(), CanopyWidths[i].ToString(), TreeLeafAreas[i].ToString());
             }
             // Add an empty row to allow for adding new values
-            heightModel.Append();
-            treeview1.Model = heightModel;
+            //temporalData.Append();
+            //temporalDataGrid.Model = temporalData;
+            var test = new GridView(this as ViewBase);
+            test.DataSource = table;
+            temporalDataTree = test.Grid;
+            temporalDataTab.Add(temporalDataTree);
         }
 
         private void HeightCellEdited(object o, EditedArgs args)
         {
             Gtk.TreeIter iter;
             Gtk.TreePath path = new Gtk.TreePath(args.Path);
-            heightModel.GetIter(out iter, path);
+            temporalData.GetIter(out iter, path);
             int row = path.Indices[0];
             int col;
-            for (col = 0; col < treeview1.Columns.Count(); col++)
-                if (treeview1.Columns[col].CellRenderers[0] == o)
+            for (col = 0; col < temporalDataTree.Columns.Count(); col++)
+                if (temporalDataTree.Columns[col].CellRenderers[0] == o)
                     break;
-            if (col == treeview1.Columns.Count())
+            if (col == temporalDataTree.Columns.Count())
                 return;  // Could not locate the column!
             string value = args.NewText.Trim();
-            if (value == (string)heightModel.GetValue(iter, col))
+            if (value == (string)temporalData.GetValue(iter, col))
                 return;
             if (value == String.Empty)
-                heightModel.SetValue(iter, col, value);
+                temporalData.SetValue(iter, col, value);
             else if (col == 0)
             {
                 DateTime dateval;
                 if (DateTime.TryParse(args.NewText, out dateval))
-                    heightModel.SetValue(iter, col, value);
+                    temporalData.SetValue(iter, col, value);
             }
             else
             {
                 double numval;
                 if (Double.TryParse(args.NewText, out numval))
-                    heightModel.SetValue(iter, col, value);
+                    temporalData.SetValue(iter, col, value);
             }
-            if (!String.IsNullOrEmpty(value) && row == heightModel.IterNChildren() - 1)  // Entry on the last row? Add a new blank one
-                heightModel.Append();
+            if (!String.IsNullOrEmpty(value) && row == temporalData.IterNChildren() - 1)  // Entry on the last row? Add a new blank one
+                temporalData.Append();
         }
 
         private void SetupGraphs()
@@ -972,7 +1010,7 @@ namespace UserInterface.Views
         public DateTime[] SaveDates()
         {
             List<DateTime> dates = new List<DateTime>();
-            foreach (object[] row in heightModel)
+            foreach (object[] row in temporalData)
             {
                 if (!String.IsNullOrEmpty((string)row[0]))
                    dates.Add(DateTime.Parse((string)row[0]));
@@ -983,7 +1021,7 @@ namespace UserInterface.Views
         public double[] SaveHeights()
         {
             List<double> heights = new List<double>();
-            foreach (object[] row in heightModel)
+            foreach (object[] row in temporalData)
             {
                 if (!String.IsNullOrEmpty((string)row[1]))
                     heights.Add(Convert.ToDouble((string)row[1], System.Globalization.CultureInfo.InvariantCulture) * 1000.0);
@@ -994,7 +1032,7 @@ namespace UserInterface.Views
         public double[] SaveNDemands()
         {
             List<double> NDemands = new List<double>();
-            foreach (object[] row in heightModel)
+            foreach (object[] row in temporalData)
             {
                 if (!String.IsNullOrEmpty((string)row[2]))
                     NDemands.Add(Convert.ToDouble((string)row[2], 
@@ -1006,7 +1044,7 @@ namespace UserInterface.Views
         public double[] SaveCanopyWidths()
         {
             List<double> CanopyWidths = new List<double>();
-            foreach (object[] row in heightModel)
+            foreach (object[] row in temporalData)
             {
                 if (!String.IsNullOrEmpty((string)row[3]))
                     CanopyWidths.Add(Convert.ToDouble((string)row[3], 
@@ -1018,7 +1056,7 @@ namespace UserInterface.Views
         public double[] SaveTreeLeafAreas()
         {
             List<double> TreeLeafAreas = new List<double>();
-            foreach (object[] row in heightModel)
+            foreach (object[] row in temporalData)
             {
                 if (!String.IsNullOrEmpty((string)row[4]))
                     TreeLeafAreas.Add(Convert.ToDouble((string)row[4], 

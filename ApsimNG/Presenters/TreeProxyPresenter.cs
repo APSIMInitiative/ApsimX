@@ -36,6 +36,16 @@ namespace UserInterface.Presenters
         private PropertyPresenter propertyPresenter;
 
         /// <summary>
+        /// Presenter for the view's spatial data grid.
+        /// </summary>
+        private GridPresenter spatialGridPresenter = new GridPresenter();
+
+        /// <summary>
+        /// Presenter for the view's temporal data grid.
+        /// </summary>
+        private GridPresenter temporalGridPresenter = new GridPresenter();
+
+        /// <summary>
         /// Attach the presenter
         /// </summary>
         /// <param name="model">The model object</param>
@@ -45,6 +55,8 @@ namespace UserInterface.Presenters
         {
             forestryModel = model as TreeProxy;
             forestryViewer = view as TreeProxyView;
+
+            temporalGridPresenter.Attach(model, forestryViewer.TemporalDataGridView, explorerPresenter);
 
             AttachData();
             forestryViewer.OnCellEndEdit += OnCellEndEdit;
@@ -58,6 +70,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            temporalGridPresenter.Detach();
             propertyPresenter.Detach();
             SaveTable();
             forestryModel.dates = forestryViewer.SaveDates();
