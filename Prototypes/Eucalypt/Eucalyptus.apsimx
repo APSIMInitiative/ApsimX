@@ -381,7 +381,7 @@ This document elsewhere provides a more detailed description of the model, descr
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <MemoText><![CDATA[Structural carbon fraction is set at 0.99 for all plant components except fine roots, for which this component is not specified. Values measured range from about 5 to 50% for eucalyptus leaves (Quetin et al 20015), which also covers the range of 1-20% for other species and plant parts (Hoch et al 2003).
+            <MemoText><![CDATA[Structural carbon fraction is set at 0.99 for all plant components except fine roots, for which this component is not specified. Values measured range from about 5 to 50% for eucalyptus leaves ([quentin2015non]), which also covers the range of 1-20% for other species and plant parts ([hoch2003non]).
 
 This value may become an important focus if one attempts to use the model for coppicing, as is already the case in several other APSIM models, e.g. lucerne and gliricidia.  
 
@@ -1411,12 +1411,6 @@ Data for SLA (m^2/g)came from [borges2009parametrizaccao] and [almeida2003compar
           <Enabled>true</Enabled>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
-        <ExpressionFunction>
-          <Name>HeightFunctionRafael</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <Expression>(0.19204*(0.99999^[Eucalyptus].AboveGround.Wt)*([Eucalyptus].AboveGround.Wt^0.51589)</Expression>
-        </ExpressionFunction>
         <Constant>
           <Name>CarbonConcentration</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2174,20 +2168,18 @@ MAI, which is based on stem volume, depends entirely on the allometric equation 
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
-    <Memo>
-      <Name>Genotype note</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <MemoText><![CDATA[This genotype specification was used to specifiy partitioning to roots and shoots for the C15 clone used by the Aracruz company (now Fibria), in order to approximate the root:shoot ratios reported in [almeida]. 
-
-    
-]]></MemoText>
-    </Memo>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
+    <Input>
+      <Name>Input</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>EucalyptusValidationData.txt</FileName>
+    </Input>
     <ExcelInput>
       <Name>Observed</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2221,8 +2213,8 @@ MAI, which is based on stem volume, depends entirely on the allometric equation 
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
     <Center>
-      <Latitude>-16.6361918783977</Latitude>
-      <Longitude>67.32421875</Longitude>
+      <Latitude>-16.63619187839765</Latitude>
+      <Longitude>67.324218750000014</Longitude>
     </Center>
     <Zoom>2</Zoom>
   </Map>
@@ -2260,8 +2252,8 @@ All observed data that we tabulated are shown compared to predictions.
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <Center>
-        <Latitude>-27.0591257843741</Latitude>
-        <Longitude>26.982421875</Longitude>
+        <Latitude>-27.059125784374054</Latitude>
+        <Longitude>26.982421875000004</Longitude>
       </Center>
       <Zoom>3</Zoom>
     </Map>
@@ -34557,7 +34549,13 @@ namespace Models
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <MemoText><![CDATA[Representative growth rates for Eucalyptus grandis have been published for south-eastern Australia (Victoria and South Australia) by [Wong2000].  Some of the sites within this publication had previously been used for improved pasture and had minimual fertility constraints.  Simulations for 4 sites have been presented here to capture a range of environmental conditions.  Stocking rates used at each site match those obtained at each site within the published study.  MAI at age 10 years should be approximately 10 cubic metres per annum for Mount Worth and Stockdale and approximately 20 cubic metres per annum for Tostaree and Mount Lofty.  Climate data has been taken from nearby towns and common soil properties have been used for all sites, with soil properties reflecting a relatively high state of fertility.
+        <MemoText><![CDATA[Eucalyptus responses to rate of fertiliser is often asymptotic, the plateau of which is determined by other limiting factors ([rubilar2018advances]). In the sensibility tests presented here, soil from Wodonga, Australia, was used as the basis for the simulations, except soil organic C and C:N were set to represent site 1 in Columbia in [albaugh2015response] and [rubilar2018advances]. Two climates are used in these simualtions ('WodongaIoClimateWodonga' and 'WodongaIoClimateCoffs'. Management was set similar to site 1 in Rubilar et al (2018), i.e. E grandis was fertilised at 2 years of age and the 3-year stem volume response assessed at 5 years of age. For a highly responsive site in Columbia, a plateau in grwoth response occurred at about 800 kg N/ha, when it was speculated that other factors became limiting. 
+
+In 'WodongaIoClimateWodonga', a low rainfall site (739 mm/year average longterm), the response to N was simulated to plateau at a rate also of about 800 kg N/ha. The N rate inflexion point here is similar to that in [rubilar2018advances], but the limiting factor above this N rate in this simulation was mainly water, whereas in [albaugh2015response] we can specualte that it was base cation deficiency.
+
+In 'WodongaIoClimateCoffs', a high rainfall site (1635 mm/year average longterm), the water limitation was removed and the response to N has not plateaued even at a rate of 3000 kg N/ha.
+
+Values of MAI and other outputs are in the range of expectation.
 
 ]]></MemoText>
       </Memo>
