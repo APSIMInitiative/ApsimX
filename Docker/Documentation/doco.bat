@@ -27,5 +27,5 @@ cd %apsimx%
 for /r Tests\Validation %%D in (*.pdf) do ( 
 	rename %%D %%~nD%ISSUE_NUMBER%%%~xD
 	echo Uploading %%~nD%ISSUE_NUMBER%%%~xD
-	@curl -u %APSIM_SITE_CREDS% -T %%~nD%ISSUE_NUMBER%%%~xD ftp://www.apsim.info/APSIM/ApsimXFiles/
+	@curl -u %APSIM_SITE_CREDS% -T "%%~dpnD%ISSUE_NUMBER%%%~xD" ftp://www.apsim.info/APSIM/ApsimXFiles/
 )
