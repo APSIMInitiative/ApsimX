@@ -16,6 +16,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using EventArguments;
+    using Utility;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -36,6 +37,11 @@
 
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<IPresenter> presenters2 = new List<IPresenter>();
+
+        /// <summary>
+        /// View used to convert xml files to a newer version.
+        /// </summary>
+        private IFileConverterView fileConverter = null;
 
         /// <summary>
         /// The most recent exception that has been thrown.
@@ -99,6 +105,8 @@
             this.view.TabClosing -= this.OnTabClosing;
             this.view.OnError -= OnError;
             this.view.ShowDetailedError -= ShowDetailedErrorMessage;
+            if (fileConverter != null)
+                fileConverter.Convert -= OnConvert;
         }
 
         /// <summary>
@@ -370,7 +378,13 @@
         /// <returns>A filename.</returns>
         public string AskUserForOpenFileName(string fileSpec, string initialDirectory = "")
         {
-            return this.view.AskUserForOpenFileName(fileSpec, initialDirectory);
+            IFileDialog fileChooser = new FileDialog()
+            {
+                Action = FileDialog.FileActionType.Open,
+                FileType = fileSpec,
+                InitialDirectory = initialDirectory,
+            };
+            return fileChooser.GetFile();
         }
 
         /// <summary>
@@ -381,7 +395,12 @@
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
         public string AskUserForSaveFileName(string fileSpec, string oldFilename)
         {
-            return this.view.AskUserForSaveFileName(fileSpec, oldFilename);
+            IFileDialog fileChooser = new FileDialog()
+            {
+                Action = FileDialog.FileActionType.Save,
+                FileType = fileSpec,
+            };
+            return fileChooser.GetFile();
         }
 
         /// <summary>Open an .apsimx file into the current tab.</summary>
@@ -515,14 +534,22 @@
                                 "Upgrade",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                         this.OnUpgrade);
+
             startPage.AddButton(
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
+
             startPage.AddButton(
                                 "Help",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
                                         this.OnHelp);
+#if DEBUG
+            startPage.AddButton(
+                                "Convert XML File",
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                this.OnShowConverter);
+#endif
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -827,12 +854,12 @@
         /// <param name="e">Event parameters.</param>
         private void OnOpenApsimXFile(object sender, EventArgs e)
         {
-            string fileName = this.view.AskUserForOpenFileName("*.apsimx|*.apsimx");
+            string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
             if (fileName != null)
             {
                 bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                this.OpenApsimXFileInTab(fileName, onLeftTabControl);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                OpenApsimXFileInTab(fileName, onLeftTabControl);
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }
 
@@ -847,8 +874,8 @@
             string fileName = onLeftTabControl ? this.view.StartPage1.List.SelectedValue : this.view.StartPage2.List.SelectedValue;
             if (fileName != null)
             {
-                this.OpenApsimXFileInTab(fileName, onLeftTabControl);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                OpenApsimXFileInTab(fileName, onLeftTabControl);
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }
 
@@ -933,7 +960,7 @@
         /// <param name="e">Event arguments.</param>
         private void OnImport(object sender, EventArgs e)
         {
-            string fileName = this.view.AskUserForOpenFileName("*.apsim|*.apsim");
+            string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
 
             APSIMImporter importer = new APSIMImporter();
             try
@@ -1012,7 +1039,7 @@
                 initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
             }
 
-            string fileName = this.view.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+            string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
 
             if (fileName != null)
             {
@@ -1024,6 +1051,65 @@
                 string label = Path.GetFileNameWithoutExtension(fileName) + " (example)";
                 this.OpenApsimXFromMemoryInTab(label, reader.ReadToEnd(), onLeftTabControl);
                 reader.Close();
+            }
+        }
+
+        /// <summary>
+        /// Shows the file converter view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnShowConverter(object sender, EventArgs args)
+        {
+            try
+            {
+                if (fileConverter == null)
+                {
+                    fileConverter = new FileConverterView(view as ViewBase);
+                    fileConverter.Convert += OnConvert;
+                }
+                fileConverter.Visible = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Opens a dialog which allows the user to upgrade an XML file from and to a version of their choice.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnConvert(object sender, EventArgs args)
+        {
+            try
+            {
+                // The file converter view has an option to automatically select the latest version.
+                // If the user has enabled this option, we will upgrade the file to the latest version. 
+                // Otherwise, we will upgrade to the version they have specified.
+                int version = fileConverter.LatestVersion ? Models.Core.ApsimFile.Converter.LatestVersion : fileConverter.ToVersion;
+                ClearStatusPanel();
+                foreach (string file in fileConverter.Files)
+                {
+                    if (!File.Exists(file))
+                        throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
+
+                    // Run the converter.
+                    using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(file, version))
+                    {
+                        using (FileStream fileWriter = File.Open(file, FileMode.Create))
+                        {
+                            inStream.CopyTo(fileWriter);
+                        }
+                    }
+                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), Simulation.ErrorLevel.Information, false);
+                }
+                view.ShowMessage("Successfully upgraded all files.", Simulation.ErrorLevel.Information);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -1058,6 +1144,7 @@
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
+                fileConverter?.Destroy();
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;

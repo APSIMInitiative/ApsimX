@@ -115,7 +115,7 @@ if "%1"=="%validationsyntax%" (
 		type C:\ApsimX\Docker\runtests\APSIM.PerformanceTests.Collector\PerformanceCollector.txt
 		exit %err%
 	)
-	if "%ARCHIVE_RESULTS"=="TRUE" (
+	if "%ARCHIVE_RESULTS%"=="TRUE" (
 		cd %apsimx%
 		7z a results.7z -r Tests\Validation\*.db
 	)
