@@ -1108,6 +1108,8 @@
                         selectionRowMax = -1;
                         selectionColMax = -1;
                     }
+                    else
+                        Grid.SetCursor(new TreePath(new int[1] { nextRow }), Grid.GetColumn(nextCol), false);
 
                     while (GLib.MainContext.Iteration()) ;
                     args.RetVal = true;
