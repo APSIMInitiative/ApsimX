@@ -203,6 +203,8 @@
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "CircularZone"))
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
+            foreach (XmlNode constantNode in XmlUtilities.FindAllRecursivelyByType(node, "Constant"))
+                XmlUtilities.Rename(constantNode, "Value", "FixedValue");
         }
 
         /// <summary>Upgrades to version 5. Make sure all zones have a CERESSoilTemperature model.</summary>
