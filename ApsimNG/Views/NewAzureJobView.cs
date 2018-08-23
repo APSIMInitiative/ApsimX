@@ -447,17 +447,17 @@ namespace UserInterface.Views
 
         private void BtnApsimDir_Click(object sender, EventArgs e)
         {
-            entryApsimDir.Text = ViewBase.MasterView.AskUserForDirectory("Select the ApsimX folder");
+            entryApsimDir.Text = AskUserForFileName("Select the ApsimX folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
         }
 
         private void BtnApsimZip_Click(object sender, EventArgs e)
         {
-            entryApsimZip.Text = ViewBase.MasterView.AskUserForFileName("Please select a zipped file", "Zip file (*.zip) | *.zip");
+            entryApsimZip.Text = AskUserForFileName("Please select a zipped file", Utility.FileDialog.FileActionType.Open, "Zip file (*.zip) | *.zip");
         }
 
         private void BtnOutputDir_Click(object sender, EventArgs e)
         {
-            entryOutputDir.Text = ViewBase.MasterView.AskUserForDirectory("Select an output folder");
+            entryOutputDir.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
         }        
 
         private void ChkSaveModels_Toggled(object sender, EventArgs e)
@@ -469,7 +469,7 @@ namespace UserInterface.Views
 
         private void BtnModelPath_Click(object sender, EventArgs e)
         {
-            entryModelPath.Text = ViewBase.MasterView.AskUserForDirectory("Select an output folder");
+            entryModelPath.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using Utility;
     using Views;
 
     /// <summary>
@@ -618,8 +619,13 @@ namespace UserInterface.Presenters
 
             if (string.IsNullOrEmpty(path))
             {
-                path = ViewBase.MasterView.AskUserForDirectory("Select a directory to save model files to.");
-                if (path == null)
+                IFileDialog fileChooser = new FileDialog()
+                {
+                    Prompt = "Select a directory to save model files to.",
+                    Action = FileDialog.FileActionType.SelectFolder
+                };
+                path = fileChooser.GetFile();
+                if (string.IsNullOrEmpty(path))
                     return false;
             }
             
@@ -627,7 +633,7 @@ namespace UserInterface.Presenters
                 Directory.CreateDirectory(path);
             List<Exception> errors = new List<Exception>();
             int i = 0;
-            children.ForEach(sim =>
+            foreach (IModel sim in children)
             {
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
                 MainPresenter.ShowProgress(100 * i / children.Count, false);
@@ -642,7 +648,7 @@ namespace UserInterface.Presenters
                 }
 
                 i++;
-            });
+            }
             if (errors.Count < 1)
             {
                 MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
@@ -677,33 +683,40 @@ namespace UserInterface.Presenters
         /// <summary>Display a view on the right hand panel in view.</summary>
         public void ShowRightHandPanel()
         {
-            if (this.view.Tree.SelectedNode != string.Empty)
+            try
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
-
-                if (model != null)
+                if (this.view.Tree.SelectedNode != string.Empty)
                 {
-                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                    object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
 
-                    if (descriptionName != null)
+                    if (model != null)
                     {
-                        viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                    }
+                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                        PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                        DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-                    if (viewName == null && presenterName == null)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
-                    }
+                        if (descriptionName != null)
+                        {
+                            viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                        }
 
-                    if (viewName != null && presenterName != null)
-                    {
-                        this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                        if (viewName == null && presenterName == null)
+                        {
+                            viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
+                        }
+
+                        if (viewName != null && presenterName != null)
+                        {
+                            this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                        }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 

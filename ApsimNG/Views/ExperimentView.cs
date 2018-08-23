@@ -409,7 +409,7 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnExportToCsv(object sender, EventArgs args)
         {
-            string fileName = MasterView.AskUserForFileName("Export to CSV", "CSV file | .csv", FileChooserAction.Save, Utility.Configuration.Settings.PreviousFolder);
+            string fileName = AskUserForFileName("Export to CSV", Utility.FileDialog.FileActionType.Save, "CSV file (*.csv) | *.csv");
             ExportCsv?.Invoke(this, new FileActionArgs { Path = fileName });
         }
 
@@ -422,7 +422,7 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnImportCsv(object sender, EventArgs args)
         {
-            string fileName = MasterView.AskUserForFileName("Choose a .csv file", "CSV file | *.csv", initialPath: Utility.Configuration.Settings.PreviousFolder);
+            string fileName = AskUserForFileName("Choose a .csv file", Utility.FileDialog.FileActionType.Open, "CSV File (*.csv) | *.csv");
             ImportCsv?.Invoke(this, new FileActionArgs { Path = fileName });
         }
     }

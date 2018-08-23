@@ -213,6 +213,8 @@
     <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
+    <Compile Include="Interfaces\IFileConverterView.cs" />
+    <Compile Include="Interfaces\IFileDialog.cs" />
     <Compile Include="Interfaces\IExperimentView.cs" />
     <Compile Include="Interfaces\IMainView.cs" />
     <Compile Include="Interfaces\IMenuView.cs" />
@@ -287,6 +289,7 @@
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\Excel.cs" />
+    <Compile Include="Utility\FileDialog.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
@@ -305,6 +308,7 @@
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ErrorView.cs" />
+    <Compile Include="Views\FileConverterView.cs" />
     <Compile Include="Views\MenuView.cs" />
     <Compile Include="Views\ToolStripView.cs" />
     <Compile Include="Views\TreeView.cs" />
