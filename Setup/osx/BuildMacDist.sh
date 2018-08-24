@@ -78,9 +78,9 @@ if [ $? -ne 0 ]; then
 	echo Errors encountered!
 	exit $?
 fi
-mv $osx/ApsimSetup.dmg $osx/ApsimSetup$version.dmg
-ls $osx
-curl -u $APSIM_SITE_CREDS -T $osx/ApsimSetup$version.dmg ftp://www.apsim.info/APSIM/ApsimXFiles/
+mv $osx/ApsimSetup.dmg $osx/ApsimSetup$issue_id.dmg
+echo Uploading $osx/ApsimSetup$issue_id.dmg
+curl -u $APSIM_SITE_CREDS -T $osx/ApsimSetup$issue_id.dmg ftp://www.apsim.info/APSIM/ApsimXFiles/
 
 export err_code=$?
 popd > /dev/null

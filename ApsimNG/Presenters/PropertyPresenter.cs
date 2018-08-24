@@ -16,6 +16,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Models.Surface;
+    using Utility;
     using Views;
 
     /// <summary>
@@ -612,13 +613,21 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Called when user clicks on a file name.
-        /// Does creation of the dialog belong here, or in the view?
         /// </summary>
+        /// <remarks>
+        /// Does creation of the dialog belong here, or in the view?
+        /// </remarks>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = ViewBase.MasterView.AskUserForFileName("Select file path", string.Empty, Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
+            IFileDialog fileChooser = new FileDialog()
+            {
+                Action = FileDialog.FileActionType.Open,
+                Prompt = "Select file path",
+                InitialDirectory = e.ChangedCells[0].Value.ToString()
+            };
+            string fileName = fileChooser.GetFile();
             if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
             {
                 e.ChangedCells[0].Value = fileName;

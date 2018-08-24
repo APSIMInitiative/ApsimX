@@ -427,15 +427,5 @@
                 presenter.MainPresenter.ShowError(e);
             }
         }
-
-        private void Sobol()
-        {
-            presenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
-        }
-
-        private void Morris()
-        {
-            presenter.MainPresenter.ShowMessage("This feature is currently under development.", Simulation.MessageType.Information);
-        }
     }
 }

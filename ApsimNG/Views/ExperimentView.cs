@@ -56,16 +56,6 @@ namespace UserInterface.Views
         private Button importButton;
 
         /// <summary>
-        /// Button to start a Sobol analysis.
-        /// </summary>
-        private Button sobolButton;
-        
-        /// <summary>
-        /// Button to start a Morris method analysis.
-        /// </summary>
-        private Button morrisButton;
-
-        /// <summary>
         /// Button to allow the user to select a maximum number of simulations to display.
         /// </summary>
         private Button changeMaxSimsButton;
@@ -234,21 +224,6 @@ namespace UserInterface.Views
             importButton.Clicked += OnImportCsv;
             HBox csvImportButtonCOntainer = new HBox();
             csvImportButtonCOntainer.PackStart(importButton, true, true, 0);
-
-            sobolButton = new Button("Sobol Analysis");
-            //btnSobol.Clicked += (sender, e) => { Presenter.Sobol(); };
-            sobolButton.Sensitive = false;
-
-            morrisButton = new Button("Morris method analysis");
-            //btnMorris.Clicked += (sender, e) => { Presenter.Morris(); };
-            morrisButton.Sensitive = false;
-
-            VBox sensitivityContainer = new VBox();
-            sensitivityContainer.PackStart(sobolButton, false, false, 0);
-            sensitivityContainer.PackStart(morrisButton, false, false, 0);
-
-            Frame analysis = new Frame("Sensitivity Analysis");
-            analysis.Add(sensitivityContainer);
             
             maxSimsInput = new Entry(Presenters.ExperimentPresenter.DefaultMaxSims.ToString());
             changeMaxSimsButton = new Button("Apply");
@@ -268,8 +243,6 @@ namespace UserInterface.Views
             controlsContainer.PackStart(disableButtonContainer, false, false, 0);
             controlsContainer.PackStart(csvExportButtonContainer, false, false, 0);
             controlsContainer.PackStart(csvImportButtonCOntainer, false, false, 0);
-            controlsContainer.PackStart(new Label(""), false, false, 0);
-            controlsContainer.PackStart(analysis, false, false, 0);
             controlsContainer.PackEnd(numSimsLabel, false, false, 0);
 
             ScrolledWindow sw = new ScrolledWindow();
@@ -409,7 +382,7 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnExportToCsv(object sender, EventArgs args)
         {
-            string fileName = MasterView.AskUserForFileName("Export to CSV", "CSV file | .csv", FileChooserAction.Save, Utility.Configuration.Settings.PreviousFolder);
+            string fileName = AskUserForFileName("Export to CSV", Utility.FileDialog.FileActionType.Save, "CSV file (*.csv) | *.csv");
             ExportCsv?.Invoke(this, new FileActionArgs { Path = fileName });
         }
 
@@ -422,7 +395,7 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnImportCsv(object sender, EventArgs args)
         {
-            string fileName = MasterView.AskUserForFileName("Choose a .csv file", "CSV file | *.csv", initialPath: Utility.Configuration.Settings.PreviousFolder);
+            string fileName = AskUserForFileName("Choose a .csv file", Utility.FileDialog.FileActionType.Open, "CSV File (*.csv) | *.csv");
             ImportCsv?.Invoke(this, new FileActionArgs { Path = fileName });
         }
     }
