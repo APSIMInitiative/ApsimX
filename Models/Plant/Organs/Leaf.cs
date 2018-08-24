@@ -582,7 +582,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the green cohort no.</summary>
         [Description("Number of leaf cohorts that are have expanded but 50% fully senesced")]
-        public int GreenCohortNo2 { get {
+        public int GreenCohortNoHalfSenescence { get {
                 int count = 0;
                 foreach (LeafCohort l in Leaves)
                 {
@@ -614,7 +614,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the plant appeared green leaf no. (matching with observation)</summary>
         [Units("/plant")]
         [Description("Number of appeared leaves per plant that have appeared but 50% senesced on each plant")]
-        public double PlantAppearedGreenLeafNo2
+        public double PlantAppearedGreenLeafNoHalfSenescence
         {
             get
             {
