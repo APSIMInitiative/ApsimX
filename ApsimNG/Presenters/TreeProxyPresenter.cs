@@ -52,11 +52,11 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
 
         /// <summary>
-        /// Attach the presenter
+        /// Attach the presenter to the model and view.
         /// </summary>
-        /// <param name="model">The model object</param>
-        /// <param name="view">The view object</param>
-        /// <param name="explorerPresenter">The explorer presenter</param>
+        /// <param name="model">The model object.</param>
+        /// <param name="view">The view object.</param>
+        /// <param name="explorerPresenter">The explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             forestryModel = model as TreeProxy;
