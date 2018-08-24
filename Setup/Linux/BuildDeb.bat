@@ -101,10 +101,4 @@ if not exist %setup%\Output (
 	mkdir %setup%\Output
 )
 ar r %setup%\Output\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
-if errorlevel 1 (
-	echo Errors encountered!
-	exit %errorlevel%
-)
-cd ..
-rmdir /S /Q .\DebPackage
-exit /B %errorlevel%
+exit %errorlevel%
