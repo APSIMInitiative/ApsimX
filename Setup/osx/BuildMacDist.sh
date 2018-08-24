@@ -11,6 +11,14 @@ if [ -f $apsimx/bin.zip ]; then
 	unzip $apsimx/bin.zip -d $apsimx/bin
 	rm -f $apsimx/bin.zip
 fi
+
+# Delete all files from DeploymentSupport/Windows which may exist in Bin directory.
+for f in $(find $apsimx/DeploymentSupport/Windows -name '*'); 
+do 
+	echo Deleting $apsimx/Bin/$(basename -- $f);
+	rm -rf $apsimx/Bin/$(basename -- $f)
+done
+
 export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d+\.){3}\d+')
 export short_version=$(echo $version | cut -d'.' -f 1,2)
 export issue_id=$(echo $version | cut -d'.' -f 4)
