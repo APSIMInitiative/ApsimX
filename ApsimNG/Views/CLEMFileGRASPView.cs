@@ -113,12 +113,12 @@ namespace UserInterface.Views
         {
             if (BrowseButtonClicked != null)
             {
-                string fileName = MasterView.AskUserForFileName("Select a file to open", "", FileChooserAction.Open, FileName);
-                if (!String.IsNullOrEmpty(fileName))
+                string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "*.*");
+                if (!string.IsNullOrEmpty(fileName))
                 {
                     OpenDialogArgs args = new OpenDialogArgs();
                     args.FileName = fileName;
-                    BrowseButtonClicked.Invoke(this, args);
+                    BrowseButtonClicked?.Invoke(this, args);
                 }
             }
         }

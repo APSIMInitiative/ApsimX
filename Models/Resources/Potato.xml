@@ -1,4 +1,4 @@
-<Plant>
+<Plant Version="36">
 	<Name>Potato</Name>
 	<Memo>
 		<Name>TitlePage</Name>
@@ -395,49 +395,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 							<Name>ThermalTime</Name>
 							<XYPairs>
 								<Name>XYPairs</Name>
-								<Graph>
-									<Name>Graph</Name>
-									<Series>
-										<Name>Series</Name>
-										<IncludeInDocumentation>false</IncludeInDocumentation>
-										<Type>Scatter</Type>
-										<XAxis>Bottom</XAxis>
-										<YAxis>Left</YAxis>
-										<ColourArgb>-65536</ColourArgb>
-										<FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-										<FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-										<FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-										<Marker>None</Marker>
-										<MarkerSize>Normal</MarkerSize>
-										<Line>Solid</Line>
-										<LineThickness>Normal</LineThickness>
-										<XFieldName>.Simulations.Replacements.Potato.Tuber.DMDemandFunction.ThermalTime.XYPairs.X</XFieldName>
-										<YFieldName>.Simulations.Replacements.Potato.Tuber.DMDemandFunction.ThermalTime.XYPairs.Y</YFieldName>
-										<ShowInLegend>false</ShowInLegend>
-										<IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-										<Cumulative>false</Cumulative>
-										<CumulativeX>false</CumulativeX>
-									</Series>
-									<IncludeInDocumentation>false</IncludeInDocumentation>
-									<Axis>
-										<Type>Left</Type>
-										<Title>Y</Title>
-										<Inverted>false</Inverted>
-										<Minimum>NaN</Minimum>
-										<Maximum>NaN</Maximum>
-										<Interval>NaN</Interval>
-									</Axis>
-									<Axis>
-										<Type>Bottom</Type>
-										<Title>X</Title>
-										<Inverted>false</Inverted>
-										<Minimum>NaN</Minimum>
-										<Maximum>NaN</Maximum>
-										<Interval>NaN</Interval>
-									</Axis>
-									<LegendPosition>BottomRight</LegendPosition>
-									<DisabledSeries />
-								</Graph>
 								<IncludeInDocumentation>false</IncludeInDocumentation>
 								<X>
 									<double>2</double>

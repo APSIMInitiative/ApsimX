@@ -88,19 +88,6 @@ namespace UserInterface.Interfaces
         /// <returns></returns>
         string GetMenuItemFileName(object obj);
 
-        /// <summary>Ask user for a filename to open.</summary>
-        /// <param name="fileSpec">The file specification to use to filter the files.</param>
-        /// <param name="initialDirectory">Optional Initial starting directory</param>
-        string AskUserForOpenFileName(string fileSpec, string initialDirectory = "");
-
-        /// <summary>
-        /// A helper function that asks user for a SaveAs name and returns their new choice.
-        /// </summary>
-        /// <param name="fileSpec">The file specification to filter the files.</param>
-        /// <param name="OldFilename">The current file name.</param>
-        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
-        string AskUserForSaveFileName(string fileSpec, string OldFilename);
-
         /// <summary>Ask the user a question</summary>
         /// <param name="message">The message to show the user.</param>
         QuestionResponseEnum AskQuestion(string message);
@@ -194,21 +181,6 @@ namespace UserInterface.Interfaces
         /// <param name="text">Text to be copied.</param>
         /// <param name="clipboardName">Name of the clipboard.</param>
         void SetClipboardText(string text, string clipboardName);
-
-        /// <summary>
-        /// Ask the user for a directory. Returns the path to that directory, or null if they did not choose a directory.
-        /// </summary>
-        /// <param name="prompt">String to use as dialog heading.</param>
-        /// <param name="initialPath">Optional initial starting filename or directory.</param>
-        /// <returns>string containing the path to the chosen directory.</returns>
-        string AskUserForDirectory(string prompt, string initialPath = "");
-
-        /// <summary>Ask user for a filename to open.</summary>
-        /// <param name="prompt">String to use as dialog heading</param>
-        /// <param name="fileSpec">The file specification used to filter the files.</param>
-        /// <param name="action">Action to perform (currently either "Open" or "Save")</param>
-        /// <param name="initialPath">Optional Initial starting filename or directory</param>      
-        string AskUserForFileName(string prompt, string fileSpec, FileChooserAction action = FileChooserAction.Open, string initialPath = "");
 
         /// <summary>
         /// Invoked when application tries to close
