@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 38; } }
+        public static int LastestVersion { get { return 39; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1151,7 +1151,7 @@
 
 
         /// <summary>
-        /// Upgrades to version 34. Change DisplayAttribute
+        /// Upgrades to version 38. Change SurfaceOrganicMatter.AddFaecesType to AddFaecesType.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
@@ -1160,6 +1160,21 @@
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
                 ConverterUtilities.SearchReplaceManagerCode(manager, @"SurfaceOrganicMatter.AddFaecesType", "AddFaecesType");
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 39. Replaces TreeProxy.dates and TreeProxy.heights
+        /// with TreeProxy.Dates and TreeProxy.Heights.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion39(XmlNode node, string fileName)
+        {
+            foreach (XmlNode tree in XmlUtilities.FindAllRecursivelyByType(node, "TreeProxy"))
+            {
+                tree.ChildNodes.Cast<XmlNode>().Where(n => n.Name == "dates").ToList().ForEach(n => ConverterUtilities.RenameNode(n, "dates", "Dates"));
+                tree.ChildNodes.Cast<XmlNode>().Where(n => n.Name == "heights").ToList().ForEach(n => ConverterUtilities.RenameNode(n, "heights", "Heights"));
             }
         }
     }

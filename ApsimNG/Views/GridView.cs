@@ -803,6 +803,59 @@
         }
 
         /// <summary>
+        /// Does some cleanup work on the Grid.
+        /// </summary>
+        public void Dispose()
+        {
+            if (splitter.Child1.Visible)
+            {
+                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
+                Grid.Selection.Changed -= GridviewCursorChanged;
+                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
+                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
+            }
+            Grid.ButtonPressEvent -= OnButtonDown;
+            fixedColView.ButtonPressEvent -= OnButtonDown;
+            Grid.FocusInEvent -= FocusInEvent;
+            Grid.FocusOutEvent -= FocusOutEvent;
+            Grid.KeyPressEvent -= GridviewKeyPressEvent;
+            fixedColView.FocusInEvent -= FocusInEvent;
+            fixedColView.FocusOutEvent -= FocusOutEvent;
+            Grid.ExposeEvent -= GridviewExposed;
+
+            // It's good practice to disconnect the event handlers, as it makes memory leaks
+            // less likely. However, we may not "own" the event handlers, so how do we 
+            // know what to disconnect?
+            // We can do this via reflection. Here's how it currently can be done in Gtk#.
+            // Windows.Forms would do it differently.
+            // This may break if Gtk# changes the way they implement event handlers.
+            foreach (Widget w in popupMenu)
+            {
+                if (w is MenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as MenuItem).Activated -= handler;
+                        }
+                    }
+                }
+            }
+            ClearGridColumns();
+            gridModel.Dispose();
+            popupMenu.Dispose();
+            accel.Dispose();
+            if (table != null)
+                table.Dispose();
+            _mainWidget.Destroyed -= MainWidgetDestroyed;
+            _owner = null;
+        }
+
+        /// <summary>
         /// Column index of the left-most selected cell.
         /// </summary>
         private int FirstSelectedColumn()
@@ -899,52 +952,7 @@
         /// <param name="e">The event arguments.</param>
         private void MainWidgetDestroyed(object sender, EventArgs e)
         {
-            if (splitter.Child1.Visible)
-            {
-                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
-                Grid.Selection.Changed -= GridviewCursorChanged;
-                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
-                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
-            }
-            Grid.ButtonPressEvent -= OnButtonDown;
-            fixedColView.ButtonPressEvent -= OnButtonDown;
-            Grid.FocusInEvent -= FocusInEvent;
-            Grid.FocusOutEvent -= FocusOutEvent;
-            Grid.KeyPressEvent -= GridviewKeyPressEvent;
-            fixedColView.FocusInEvent -= FocusInEvent;
-            fixedColView.FocusOutEvent -= FocusOutEvent;
-            Grid.ExposeEvent -= GridviewExposed;
-
-            // It's good practice to disconnect the event handlers, as it makes memory leaks
-            // less likely. However, we may not "own" the event handlers, so how do we 
-            // know what to disconnect?
-            // We can do this via reflection. Here's how it currently can be done in Gtk#.
-            // Windows.Forms would do it differently.
-            // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in popupMenu)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
-                    }
-                }
-            }
-            ClearGridColumns();
-            gridModel.Dispose();
-            popupMenu.Dispose();
-            accel.Dispose();
-            if (table != null)
-                table.Dispose();
-            _mainWidget.Destroyed -= MainWidgetDestroyed;
-            _owner = null;
+            Dispose();
         }
 
         /// <summary>
