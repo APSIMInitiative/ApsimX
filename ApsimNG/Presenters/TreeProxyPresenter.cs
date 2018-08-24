@@ -80,11 +80,11 @@ namespace UserInterface.Presenters
             temporalGridPresenter.Detach();
             propertyPresenter.Detach();
             SaveTable();
-            forestryModel.Dates = forestryViewer.SaveDates();
-            forestryModel.Heights = forestryViewer.SaveHeights();
-            forestryModel.NDemands = forestryViewer.SaveNDemands();
-            forestryModel.CanopyWidths = forestryViewer.SaveCanopyWidths();
-            forestryModel.TreeLeafAreas = forestryViewer.SaveTreeLeafAreas();
+            forestryModel.Dates = forestryViewer.Dates;
+            forestryModel.Heights = forestryViewer.Heights;
+            forestryModel.NDemands = forestryViewer.NDemands;
+            forestryModel.CanopyWidths = forestryViewer.CanopyWidths;
+            forestryModel.TreeLeafAreas = forestryViewer.TreeLeafAreas;
             forestryViewer.OnCellEndEdit -= OnCellEndEdit;
         }
 
@@ -94,40 +94,22 @@ namespace UserInterface.Presenters
         public void AttachData()
         {
             if (!(forestryModel.Parent is AgroforestrySystem))
-            {
                 throw new ApsimXException(forestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
-            }
 
             Soil soil;
             List<IModel> zones = Apsim.ChildrenRecursively(forestryModel.Parent, typeof(Zone));
             if (zones.Count == 0)
-            {
                 return;
-            }
 
-            // setup tree heights
+            // Setup tree heights.
             forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
 
-            /*      //get the distance of each Zone from Tree.
-                  double zoneWidth = 0;
-                  double[] ZoneWidths = new double[Zones.Count];
-
-                  for (int i = 1; i < Zones.Count; i++) //skip first Zone with tree
-                  {
-                      if (Zones[i] is RectangularZone)
-                          zoneWidth = (Zones[i] as RectangularZone).Width;
-                      else if (Zones[i] is CircularZone)
-                          zoneWidth = (Zones[i] as CircularZone).Width;
-
-                          ZoneWidths[i] = ZoneWidths[i - 1] + zoneWidth;
-                  }*/
-
-            // get the first soil. For now we're assuming all soils have the same structure.
+            // Get the first soil. For now we're assuming all soils have the same structure.
             soil = Apsim.Find(zones[0], typeof(Soil)) as Soil;
 
             forestryViewer.SoilMidpoints = soil.DepthMidPoints;
             
-            // setup columns
+            // Setup columns.
             List<string> colNames = new List<string>();
 
             colNames.Add("Parameter");
@@ -147,7 +129,7 @@ namespace UserInterface.Presenters
                 forestryModel.Table = new List<List<string>>();
                 forestryModel.Table.Add(colNames);
 
-                // setup rows
+                // Setup rows.
                 List<string> rowNames = new List<string>();
 
                 rowNames.Add("Shade (%)");
@@ -167,7 +149,7 @@ namespace UserInterface.Presenters
 
                 for (int i = 2; i < forestryModel.Table.Count; i++)
                 {
-                    // set Depth and RLD rows to empty strings
+                    // Set Depth and RLD rows to empty strings.
                     forestryModel.Table[i][1] = string.Empty;
                     forestryModel.Table[i][2] = string.Empty;
                 }
@@ -177,26 +159,20 @@ namespace UserInterface.Presenters
                 // add Zones not in the table
                 IEnumerable<string> except = colNames.Except(forestryModel.Table[0]);
                 foreach (string s in except)
-                {
                     forestryModel.Table.Add(Enumerable.Range(1, forestryModel.Table[1].Count).Select(x => "0").ToList());
-                }
 
                 forestryModel.Table[0].AddRange(except);
                 for (int i = 2; i < forestryModel.Table.Count; i++) 
                 {
-                    // set Depth and RLD rows to empty strings
+                    // Set Depth and RLD rows to empty strings.
                     forestryModel.Table[i][2] = string.Empty;
-
-                    // ForestryModel.Table[i][3] = string.Empty;
                 }
 
-                // remove Zones from table that don't exist in simulation
+                // Remove Zones from table that don't exist in simulation.
                 except = forestryModel.Table[0].Except(colNames);
                 List<int> indexes = new List<int>();
                 foreach (string s in except.ToArray())
-                {
                     indexes.Add(forestryModel.Table[0].FindIndex(x => s == x));
-                }
 
                 indexes.Sort();
                 indexes.Reverse();
@@ -207,8 +183,7 @@ namespace UserInterface.Presenters
                     forestryModel.Table.RemoveAt(i + 1);
                 }
             }
-
-            forestryViewer.SetupGrid(forestryModel.Table);
+            forestryViewer.SpatialData = forestryModel.Table;
         }
 
         /// <summary>
@@ -216,57 +191,17 @@ namespace UserInterface.Presenters
         /// </summary>
         private void SaveTable()
         {
-            DataTable spatialData = forestryViewer.SpatialDataGrid.DataSource;
-            if (spatialData == null)
-                throw new Exception(string.Format("Unable to save changes to spatial data of {0}.", forestryModel.Name));
-
-            List<List<string>> newTable = new List<List<string>>();
-            newTable.Add(spatialData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
-
-            // i is the column index.
-            for (int col = 0; col < spatialData.Columns.Count; col++)
-            {
-                // The first list in the forestry model's table holds the column headers.
-                // We don't want to modify these.
-                // The second list in the forestry model's table holds the first column,
-                // which holds the row names. We don't want to modify this either.
-                List<string> column = new List<string>();
-                for (int row = 0; row < spatialData.Rows.Count; row++)
-                    column.Add(spatialData.Rows[row][col].ToString());
-                newTable.Add(column);
-            }
-            ChangeProperty command = new ChangeProperty(forestryModel, "Table", newTable);
-            command.Do(presenter.CommandHistory);
-
-            DataTable temporalData = forestryViewer.TemporalDataGrid.DataSource;
-            if (temporalData == null)
-                throw new Exception(string.Format("Unable to save changes to temporal data of {0}.", forestryModel.Name));
-
-            // forestryViewer.SetupHeights(forestryModel.dates, forestryModel.heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
-            List<DateTime> dates = new List<DateTime>();
-            List<double> heights = new List<double>();
-            List<double> nDemands = new List<double>();
-            List<double> canopyWidths = new List<double>();
-            List<double> leafAreas = new List<double>();
-            
-            for (int i = 0; i < temporalData.Rows.Count; i++)
-            {
-                // The data is displayed in the following order:
-                // Date, height, N Demands, Canopy Width, Tree Leaf Area
-                dates.Add(DateTime.Parse(temporalData.Rows[i].ItemArray[0].ToString()));
-                heights.Add(double.Parse(temporalData.Rows[i].ItemArray[1].ToString()));
-                nDemands.Add(double.Parse(temporalData.Rows[i].ItemArray[2].ToString()));
-                canopyWidths.Add(double.Parse(temporalData.Rows[i].ItemArray[3].ToString()));
-                leafAreas.Add(double.Parse(temporalData.Rows[i].ItemArray[4].ToString()));
-            }
-
+            // It would be better to check what precisely has been changed, but for now,
+            // just load all of the UI components into one big ChangeProperty command, and
+            // execute the command.
             ChangeProperty changeTemporalData = new ChangeProperty(new List<ChangeProperty.Property>()
             {
-                new ChangeProperty.Property(forestryModel, "Dates", dates.ToArray()),
-                new ChangeProperty.Property(forestryModel, "Heights", heights.ToArray()),
-                new ChangeProperty.Property(forestryModel, "NDemands", nDemands.ToArray()),
-                new ChangeProperty.Property(forestryModel, "CanopyWidths", canopyWidths.ToArray()),
-                new ChangeProperty.Property(forestryModel, "TreeLeafAreas", leafAreas.ToArray())
+                new ChangeProperty.Property(forestryModel, "Table", forestryViewer.SpatialData),
+                new ChangeProperty.Property(forestryModel, "Dates", forestryViewer.Dates.ToArray()),
+                new ChangeProperty.Property(forestryModel, "Heights", forestryViewer.Heights.ToArray()),
+                new ChangeProperty.Property(forestryModel, "NDemands", forestryViewer.NDemands.ToArray()),
+                new ChangeProperty.Property(forestryModel, "CanopyWidths", forestryViewer.CanopyWidths.ToArray()),
+                new ChangeProperty.Property(forestryModel, "TreeLeafAreas", forestryViewer.TreeLeafAreas.ToArray())
             });
             changeTemporalData.Do(presenter.CommandHistory);
         }

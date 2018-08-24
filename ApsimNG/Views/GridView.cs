@@ -913,7 +913,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnMoveCursor(object sender, EventArgs args)
         {
-            UpdateSelectedCell();
+            try
+            {
+                UpdateSelectedCell();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
