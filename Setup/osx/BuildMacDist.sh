@@ -8,7 +8,7 @@ pushd $osx > /dev/null
 find $setup -name "*.dmg" -exec rm "{}" \;
 
 if [ -f $apsimx/bin.zip ]; then
-	unzip $apsimx/bin.zip -d $apsimx/bin
+	unzip -o $apsimx/bin.zip -d $apsimx/bin
 	rm -f $apsimx/bin.zip
 fi
 
