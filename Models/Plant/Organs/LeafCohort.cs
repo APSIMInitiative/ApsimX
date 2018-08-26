@@ -1033,8 +1033,14 @@ namespace Models.PMF.Organs
         /// <returns>(mm2 leaf/cohort position/m2 soil/day)</returns>
         public double PotentialAreaGrowthFunction(double tt)
         {
-            double leafSizeDelta = SizeFunction(Age + tt) - SizeFunction(Age);
-                //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
+            if (Age > GrowthDuration)
+            {
+                return 0;
+            }
+            double ageToday = Math.Min(Age + tt, GrowthDuration);
+
+            double leafSizeDelta = SizeFunction(ageToday) - SizeFunction(Age);
+            //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
             double growth = CohortPopulation*leafSizeDelta;
                 // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
             if (growth < 0)
