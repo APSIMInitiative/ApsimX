@@ -123,14 +123,14 @@
         private string[] WindowsFileDialog(bool selectMultiple)
         {
             System.Windows.Forms.FileDialog dialog = null;
-            if ((Action & FileActionType.Open) == FileActionType.Open)
+            if (Action == FileActionType.Open)
             {
                 dialog = new System.Windows.Forms.OpenFileDialog();
                 (dialog as System.Windows.Forms.OpenFileDialog).Multiselect = selectMultiple;
             }
-            else if ((Action & FileActionType.Save) == FileActionType.Save)
+            else if (Action == FileActionType.Save)
                 dialog = new System.Windows.Forms.SaveFileDialog();
-            else if ((Action & FileActionType.SelectFolder) == FileActionType.SelectFolder)
+            else if (Action == FileActionType.SelectFolder)
                 return WindowsDirectoryDialog(selectMultiple);
 
             dialog.Title = Prompt;
@@ -160,16 +160,16 @@
         {
             int result = 0;
             NSSavePanel panel = null;
-            if ((Action & FileActionType.Open) == FileActionType.Open)
+            if (Action  == FileActionType.Open)
             {
                 panel = new NSOpenPanel();
                 (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
                 (panel as NSOpenPanel).CanChooseDirectories = false;
                 (panel as NSOpenPanel).CanChooseFiles = true;
             }
-            else if ((Action & FileActionType.Save) == FileActionType.Save)
+            else if (Action == FileActionType.Save)
                 panel = new NSSavePanel();
-            else if ((Action & FileActionType.SelectFolder) == FileActionType.SelectFolder)
+            else if (Action == FileActionType.SelectFolder)
             {
                 panel = new NSOpenPanel();
                 (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
@@ -222,17 +222,17 @@
         {
             string buttonText = string.Empty;
             FileChooserAction gtkActionType;
-            if ((Action & FileActionType.Open) == FileActionType.Open)
+            if (Action == FileActionType.Open)
             {
                 buttonText = "Open";
                 gtkActionType = FileChooserAction.Open;
             }
-            else if ((Action & FileActionType.Save) == FileActionType.Save)
+            else if (Action == FileActionType.Save)
             {
                 buttonText = "Save";
                 gtkActionType = FileChooserAction.Save;
             }
-            else if ((Action & FileActionType.SelectFolder) == FileActionType.SelectFolder)
+            else if (Action == FileActionType.SelectFolder)
             {
                 buttonText = "Select Folder";
                 gtkActionType = FileChooserAction.SelectFolder;
