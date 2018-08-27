@@ -33,18 +33,8 @@ namespace Models.Core
         {
             if (o is IModel)
             {
-                simulations.Links.Unresolve(o as IModel, allLinks: false);
-                simulations.GetEventService(o as IModel).DisconnectEvents();
-                IModel savedParent = (o as IModel).Parent;
-                (o as IModel).Parent = null;
-                Apsim.UnparentAllChildren(o as IModel);
-
-                WriteToFile(name, o);
-
-                (o as IModel).Parent = savedParent;
-                Apsim.ParentAllChildren(o as IModel);
-                simulations.Links.Resolve(o as IModel, allLinks: false);
-                simulations.GetEventService(o as IModel).ConnectEvents();
+                var simulation = Apsim.Parent(o as IModel, typeof(Simulation));
+                WriteToFile(name, simulation);
             }
             else
                 WriteToFile(name, o);
@@ -56,7 +46,11 @@ namespace Models.Core
             fileName = Path.ChangeExtension(fileName, ".checkpoint.json");
             using (StreamWriter writer = new StreamWriter(fileName))
             {
-                writer.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented));
+                writer.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented,
+                    new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    }));
             }
         }
     }
