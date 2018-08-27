@@ -147,6 +147,7 @@ namespace Models.Graph
 
                 // Get a list of factors that the presenter uses to show the user.
                 FactorNamesForVarying = GetFactorList(factors);
+                FactorNamesForVarying.Add("Graph series");
 
                 // If a factor isn't being used to vary a colour/marker/line, then remove the factor. i.e. we
                 // don't care about it.
@@ -398,7 +399,7 @@ namespace Models.Graph
                 visualElement.LineThickness = LineThickness;
                 visualElement.Marker = Marker;
                 visualElement.MarkerSize = MarkerSize;
-                painter.PaintSimulationZone(factor, visualElement);
+                painter.PaintSimulationZone(factor, visualElement, this);
 
                 SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
                 seriesDefinition.type = Type;
@@ -736,7 +737,7 @@ namespace Models.Graph
             /// <summary>A painter interface for setting visual elements of a simulation/zone pair</summary>
             public interface IPainter
             {
-                void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement);
+                void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series);
             }
 
             /// <summary>A default painter for setting a simulation / zone pair to default values.</summary>
@@ -745,7 +746,7 @@ namespace Models.Graph
                 public Color Colour { get; set; }
                 public LineType LineType { get; set; }
                 public MarkerType MarkerType { get; set; }
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     visualElement.colour = Colour;
                     visualElement.Line = LineType;
@@ -761,15 +762,25 @@ namespace Models.Graph
                 public int MaximumIndex { get; set; }
                 public SetFunction Setter { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
-                    string factorValue = factor.GetFactorValue(FactorName);
-                    int index = values.IndexOf(factorValue);
-                    if (index == -1)
+                    int index;
+                    if (FactorName == "Graph series")
                     {
-                        values.Add(factorValue);
-                        index = values.Count - 1;
+                        index = (series.Parent as Graph).Series.IndexOf(series);
                     }
+                    else
+                    {
+                        string factorValue = factor.GetFactorValue(FactorName);
+
+                        index = values.IndexOf(factorValue);
+                        if (index == -1)
+                        {
+                            values.Add(factorValue);
+                            index = values.Count - 1;
+                        }
+                    }
+
                     index = index % MaximumIndex;
                     Setter(visualElement, index);
                 }
@@ -786,7 +797,7 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     string factorValue = factor.GetFactorValue(FactorName);
 
@@ -817,7 +828,7 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     string factorValue1 = factor.GetFactorValue(FactorName1);
                     string factorValue2 = factor.GetFactorValue(FactorName2);
