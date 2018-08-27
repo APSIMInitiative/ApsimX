@@ -93,8 +93,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
-        public void Detach()
+        public override void Detach()
         {
+            base.Detach();
             this.presenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.DisconnectViewEvents();
             this.xYPairs.Children.Remove(this.graph);
