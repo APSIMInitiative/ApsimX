@@ -174,7 +174,7 @@ namespace Models.PMF.Organs
         [Units("/m^2")]
         public double MaximumSize { get; set; }
 
-        /// <summary>Gets the live f wt.</summary>
+        /// <summary>Gets the live fresh weight (with moisture content, i.e. machine harvest).</summary>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -200,7 +200,17 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the size of the f.</summary>
+        /// <summary>Gets the thousand kernel weight.</summary>
+        [Units("g")]
+        public double ThousandKernelWeight
+        {
+            get
+            {
+                return Size * 1000;
+            }
+        }
+
+        /// <summary>Gets the size of the fresh weight with moisture content (i.e. machine harvest).</summary>
         [Units("g")]
         private double FSize
         {
