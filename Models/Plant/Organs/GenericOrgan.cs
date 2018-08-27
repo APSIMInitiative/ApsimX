@@ -259,36 +259,7 @@ namespace Models.PMF.Organs
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
-
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        public double DemandedDMStructural()
-        {
-            if (dmConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = dmDemands.Structural.Value() / dmConversionEfficiency.Value();
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        public double DemandedDMStorage()
-        {
-            // Assumes that StructuralFraction is always greater than zero
-            if (dmConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = Math.Max(0,dmDemands.Storage.Value()/dmConversionEfficiency.Value());
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
-
+               
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
@@ -338,9 +309,18 @@ namespace Models.PMF.Organs
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public virtual BiomassPoolType GetDryMatterDemand()
         {
-            dryMatterDemand.Structural = DemandedDMStructural() + remobilisationCost.Value();
-            dryMatterDemand.Storage = DemandedDMStorage();
-            dryMatterDemand.Metabolic = 0;
+            if (dmConversionEfficiency.Value() > 0.0)
+            {
+                dryMatterDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                dryMatterDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
+                dryMatterDemand.Metabolic = 0;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                dryMatterDemand.Structural = 0;
+                dryMatterDemand.Storage = 0;
+                dryMatterDemand.Metabolic = 0;
+            }
             return dryMatterDemand;
         }
 
