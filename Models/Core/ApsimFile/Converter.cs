@@ -15,8 +15,8 @@
     /// </summary>
     public class Converter
     {
-        /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 39; } }
+        /// <summary>Gets the latest .apsimx file format version.</summary>
+        public static int LatestVersion { get { return 40; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -977,7 +977,7 @@
 
 
         /// <summary>
-        /// Upgrades to version 34. Change DisplayAttribute
+        /// Upgrades to version 38. Change SurfaceOrganicMatter.AddFaecesType to AddFaecesType.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
         /// <param name="fileName">The name of the .apsimx file</param>
@@ -989,8 +989,21 @@
             }
         }
 
-        /// <summary> Rename ThermalTime functions on phases to Progression </summary>
+        /// <summary>
+        /// Upgrades to version 39. Replaces TreeProxy.dates and TreeProxy.heights
+        /// with TreeProxy.Dates and TreeProxy.Heights.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion39(XmlNode node, string fileName)
+        {
+            foreach (XmlNode tree in XmlUtilities.FindAllRecursivelyByType(node, "TreeProxy"))
+            {
+                tree.ChildNodes.Cast<XmlNode>().Where(n => n.Name == "dates").ToList().ForEach(n => ConverterUtilities.RenameNode(n, "dates", "Dates"));
+                tree.ChildNodes.Cast<XmlNode>().Where(n => n.Name == "heights").ToList().ForEach(n => ConverterUtilities.RenameNode(n, "heights", "Heights"));
+            }
+        /// <summary> Rename ThermalTime functions on phases to Progression </summary>
+        private static void UpgradeToVersion40(XmlNode node, string fileName)
         {
             ConverterUtilities.RenamePMFFunction(node, "GenericPhase", "ThermalTime", "Progression");
             ConverterUtilities.RenamePMFFunction(node, "BuddingPhase", "ThermalTime", "Progression");
