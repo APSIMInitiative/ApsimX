@@ -65,6 +65,8 @@ namespace UserInterface.Presenters
 
             AttachData();
             forestryViewer.OnCellEndEdit += OnCellEndEdit;
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
+
             propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(forestryModel, forestryViewer.ConstantsGrid, explorerPresenter);
             spatialGridPresenter.Attach(forestryModel, forestryViewer.SpatialDataGrid, explorerPresenter);
@@ -86,6 +88,7 @@ namespace UserInterface.Presenters
             forestryModel.CanopyWidths = forestryViewer.CanopyWidths;
             forestryModel.TreeLeafAreas = forestryViewer.TreeLeafAreas;
             forestryViewer.OnCellEndEdit -= OnCellEndEdit;
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -203,7 +206,20 @@ namespace UserInterface.Presenters
                 new ChangeProperty.Property(forestryModel, "CanopyWidths", forestryViewer.CanopyWidths.ToArray()),
                 new ChangeProperty.Property(forestryModel, "TreeLeafAreas", forestryViewer.TreeLeafAreas.ToArray())
             });
-            changeTemporalData.Do(presenter.CommandHistory);
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            presenter.CommandHistory.Add(changeTemporalData);
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// Invoked when the model has been changed via the undo command.
+        /// </summary>
+        /// <param name="changedModel">The model which has changed.</param>
+        private void OnModelChanged(object changedModel)
+        {
+            propertyPresenter.UpdateModel(forestryModel);
+            forestryViewer.SpatialData = forestryModel.Table;
+            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
         }
 
         /// <summary>
