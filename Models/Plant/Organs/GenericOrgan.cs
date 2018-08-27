@@ -1,14 +1,15 @@
 namespace Models.PMF.Organs
 {
     using APSIM.Shared.Utilities;
-    using Models.Core;
+    using Core;
     using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Library;
+    using Functions;
+    using Interfaces;
+    using Library;
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using PMF;
 
     /// <summary>
     /// This organ is simulated using a generic organ type.
@@ -74,7 +75,12 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]
-        private IFunction dmDemandFunction = null;
+        private BiomassDemand dmDemands = null;
+
+        // <summary>The N demand function</summary>
+        //[ChildLinkByName]
+        //[Units("g/m2/d")]
+        //private BiomassDemand nDemandFunctions = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
         [ChildLinkByName]
@@ -259,7 +265,7 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                double demandedDM = dmDemandFunction.Value() * structuralFraction.Value() / dmConversionEfficiency.Value();
+                double demandedDM = dmDemands.Structural.Value() / dmConversionEfficiency.Value();
                 return demandedDM;
             }
             else
@@ -274,9 +280,7 @@ namespace Models.PMF.Organs
             // Assumes that StructuralFraction is always greater than zero
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                double theoreticalMaximumDM = MathUtilities.Divide(startLive.StructuralWt + dryMatterDemand.Structural, structuralFraction.Value(), 0);
-                double baseAllocated = startLive.StructuralWt + startLive.StorageWt + dryMatterDemand.Structural;
-                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), dmConversionEfficiency.Value(), 0);
+                double demandedDM = Math.Max(0,dmDemands.Storage.Value()/dmConversionEfficiency.Value());
                 return demandedDM;
             }
             else
