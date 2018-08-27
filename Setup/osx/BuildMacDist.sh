@@ -8,9 +8,18 @@ pushd $osx > /dev/null
 find $setup -name "*.dmg" -exec rm "{}" \;
 
 if [ -f $apsimx/bin.zip ]; then
-	unzip $apsimx/bin.zip -d $apsimx/bin
+	unzip -o $apsimx/bin.zip -d $apsimx/bin
 	rm -f $apsimx/bin.zip
 fi
+
+# Delete all files from DeploymentSupport/Windows which may exist in Bin directory.
+for f in $(find $apsimx/DeploymentSupport/Windows -name '*'); 
+do 
+	echo Deleting $apsimx/Bin/$(basename -- $f);
+	rm -rf $apsimx/Bin/$(basename -- $f)
+done
+
+cp $apsimx/ApsimNG/Assemblies/MonoMac.dll $apsimx/Bin/
 export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d+\.){3}\d+')
 export short_version=$(echo $version | cut -d'.' -f 1,2)
 export issue_id=$(echo $version | cut -d'.' -f 4)
@@ -78,9 +87,9 @@ if [ $? -ne 0 ]; then
 	echo Errors encountered!
 	exit $?
 fi
-mv $osx/ApsimSetup.dmg $osx/ApsimSetup$version.dmg
-ls $osx
-curl -u $APSIM_SITE_CREDS -T $osx/ApsimSetup$version.dmg ftp://www.apsim.info/APSIM/ApsimXFiles/
+mv $osx/ApsimSetup.dmg $osx/ApsimSetup$issue_id.dmg
+echo Uploading $osx/ApsimSetup$issue_id.dmg
+curl -u $APSIM_SITE_CREDS -T $osx/ApsimSetup$issue_id.dmg ftp://www.apsim.info/APSIM/ApsimXFiles/
 
 export err_code=$?
 popd > /dev/null

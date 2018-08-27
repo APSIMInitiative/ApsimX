@@ -120,7 +120,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private void DeleteCells(object sender, GridCellActionArgs args)
         {
+            if (args.Grid.ReadOnly)
+                throw new Exception("Unable to delete cells - grid is read-only.");
             List<IGridCell> cellsChanged = new List<IGridCell>();
+
             for (int row = args.StartCell.RowIndex; row <= args.EndCell.RowIndex; row++)
             {
                 for (int column = args.StartCell.ColumnIndex; column <= args.EndCell.ColumnIndex; column++)
@@ -130,6 +133,12 @@ namespace UserInterface.Presenters
                         args.Grid.DataSource.Rows[row][column] = DBNull.Value;
                         cellsChanged.Add(grid.GetCell(column, row));
                     }
+                }
+                if (args.Grid.CanGrow && args.StartCell.ColumnIndex == 0 && args.EndCell.ColumnIndex == args.Grid.DataSource.Columns.Count - 1)
+                {
+                    // User has selected the entire row. In this case, we delete the entire row,
+                    // but only if the grid can change size.
+                    args.Grid.DataSource.Rows.Remove(args.Grid.DataSource.Rows[row]);
                 }
             }
             // If some cells were changed then we will need to update the model.

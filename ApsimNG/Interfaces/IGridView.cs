@@ -167,5 +167,10 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="cells">Cells to be selected.</param>
         void SelectCells(List<IGridCell> cells);
+
+        /// <summary>
+        /// Does some cleanup work on the Grid.
+        /// </summary>
+        void Dispose();
     }
 }

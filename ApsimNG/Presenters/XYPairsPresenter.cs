@@ -20,7 +20,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
     /// </summary>
-    public class XYPairsPresenter : IPresenter
+    public class XYPairsPresenter : GridPresenter, IPresenter
     {
         /// <summary>
         /// The XYPairs model.
@@ -31,11 +31,6 @@ namespace UserInterface.Presenters
         /// The initial XYPairs view;
         /// </summary>
         private XYPairsView xYPairsView;
-
-        /// <summary>
-        /// The parent explorer presenter.
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// A reference to the 'graphPresenter' responsible for our graph.
@@ -58,19 +53,19 @@ namespace UserInterface.Presenters
         /// <param name="model">The initial water model</param>
         /// <param name="view">The initial water view</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public override void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.xYPairs = model as XYPairs;
             this.xYPairsView = view as XYPairsView;
-            this.explorerPresenter = explorerPresenter as ExplorerPresenter;
-
+            this.presenter = explorerPresenter as ExplorerPresenter;
+            base.Attach(model, xYPairsView.VariablesGrid, explorerPresenter);
             // Create a list of profile (array) properties. PpoulateView wil create a table from them and 
             // hand the table to the variables grid.
             this.FindAllProperties(this.xYPairs);
 
             this.PopulateView();
 
-            this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
@@ -79,7 +74,7 @@ namespace UserInterface.Presenters
             (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
             (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
             this.graphPresenter = new GraphPresenter();
-            this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.explorerPresenter);
+            this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.presenter);
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
             {
@@ -98,9 +93,10 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
-        public void Detach()
+        public override void Detach()
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            base.Detach();
+            this.presenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.DisconnectViewEvents();
             this.xYPairs.Children.Remove(this.graph);
         }
@@ -263,7 +259,7 @@ namespace UserInterface.Presenters
             this.xYPairsView.VariablesGrid.CellsChanged += this.OnVariablesGridCellValueChanged;
 
             // Trap the model changed event so that we can handle undo.
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
             // this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
             // this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
@@ -278,7 +274,7 @@ namespace UserInterface.Presenters
         private void DisconnectViewEvents()
         {
             this.xYPairsView.VariablesGrid.CellsChanged -= this.OnVariablesGridCellValueChanged;
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
         /// <summary>
@@ -305,7 +301,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void SaveGrid()
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             // Get the data source of the profile grid.
             DataTable data = this.xYPairsView.VariablesGrid.DataSource;
@@ -378,10 +374,10 @@ namespace UserInterface.Presenters
             if (properties.Count > 0)
             {
                 Commands.ChangeProperty command = new Commands.ChangeProperty(properties);
-                this.explorerPresenter.CommandHistory.Add(command);
+                this.presenter.CommandHistory.Add(command);
             }
 
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
