@@ -135,6 +135,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.PrioritythenRelativeAllocation))]
         [XmlElement(typeof(Models.PMF.PriorityAllocation))]
         [XmlElement(typeof(Models.PMF.Biomass))]
+        [XmlElement(typeof(Models.PMF.BiomassDemand))]
         [XmlElement(typeof(Models.PMF.CompositeBiomass))]
         [XmlElement(typeof(Models.PMF.ArrayBiomass))]
         [XmlElement(typeof(Models.PMF.Organs.GenericOrgan))]
