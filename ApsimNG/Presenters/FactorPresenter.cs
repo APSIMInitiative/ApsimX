@@ -83,23 +83,6 @@ namespace UserInterface.Presenters
 
             try
             {
-                /*
-                Experiment experiment = this.factor.Parent.Parent as Experiment;
-                if (experiment != null && experiment.BaseSimulation != null)
-                {
-                    object o = experiment.BaseSimulation.Get(e.ObjectName);
-
-                    if (o != null)
-                    {
-                        foreach (IVariable property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            e.Items.Add(property.Name);
-                        }
-
-                        e.Items.Sort();
-                    }
-                }
-                */
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
