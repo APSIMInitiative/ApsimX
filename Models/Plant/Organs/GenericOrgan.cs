@@ -75,7 +75,7 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
+        private BiomassDemand dmDemand = null;
 
         // <summary>The N demand function</summary>
         //[ChildLinkByName]
@@ -311,8 +311,8 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                dryMatterDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
-                dryMatterDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
+                dryMatterDemand.Structural = dmDemand.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                dryMatterDemand.Storage = Math.Max(0, dmDemand.Storage.Value() / dmConversionEfficiency.Value());
                 dryMatterDemand.Metabolic = 0;
             }
             else
