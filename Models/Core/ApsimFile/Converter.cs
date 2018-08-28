@@ -1207,6 +1207,8 @@
             XmlNode structuralFraction = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
             XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
             ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
+            storageFraction.AppendChild(structuralFraction);
+            Storage.AppendChild(storageFraction);
             DMDemands.AppendChild(Storage);
         }
         /// <summary>
