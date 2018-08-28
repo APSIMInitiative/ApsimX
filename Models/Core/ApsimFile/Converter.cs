@@ -1145,10 +1145,10 @@
                 ConverterUtilities.SearchReplaceReportCode(report, ".WaterSupplyDemandRatio", ".Leaf.Fw");
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
                 if (n.InnerText.Contains(".WaterSupplyDemandRatio"))
-                    n.InnerText = n.InnerText.Replace(".WaterSupplyDemandRatio",".Leaf.Fw");
+                    n.InnerText = n.InnerText.Replace(".WaterSupplyDemandRatio", ".Leaf.Fw");
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Remove apex nodes from leaf objects
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
@@ -1191,27 +1191,42 @@
             }
         }
 
+        private static void MakeDMDemandsNode(XmlNode node,XmlNode organNode)
+        {   //Make DMDemand node
+            XmlNode DMDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "DMDemand");
+            organNode.AppendChild(DMDemands);
+            
+            //Add Structural demand function
+            XmlNode structural = ConverterUtilities.FindModelNode(organNode, "DMDemandFunction");
+            XmlUtilities.SetValue(structural, "Name", "Structural");
+            DMDemands.AppendChild(structural);
+            //Add Metabolic Demand function
+            ConverterUtilities.AddConstantFuntionIfNotExists(DMDemands, "Metabolic", "0.0");
+            //Add Storage Demand function
+            XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageDemandFunction", "Storage");
+            XmlNode structuralFraction = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
+            XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
+            ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
+            DMDemands.AppendChild(Storage);
+        }
         /// <summary>
-        /// Upgrades to version 39. Replaces TreeProxy.dates and TreeProxy.heights
-        /// with TreeProxy.Dates and TreeProxy.Heights.
+        /// Upgrades to version 40. Replaces Refactorying parameterisation of DM demands.
         /// </summary>
-        /// <param name="node">The node to upgrade.</param>
-        /// <param name="fileName">The name of the .apsimx file</param>
         private static void UpgradeToVersion40(XmlNode node, string fileName)
         {
+           
             foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
             {
-                XmlNode DMDemands = organNode.AppendChild(organNode.OwnerDocument.CreateElement("DMDemands"));
-                XmlNode structural = XmlUtilities.Find(organNode, "DMDemandFunction");
-                XmlNode structuralFraction = XmlUtilities.Find(organNode, "StructuralFraction");
-                XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
-                ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
-                storageFraction.AppendChild(structuralFraction);
-                DMDemands.AppendChild(structural);
-                ConverterUtilities.AddConstantFuntionIfNotExists(DMDemands, "Metabolic", "0.0");
-                XmlNode Storage = DMDemands.AppendChild(DMDemands.OwnerDocument.CreateElement("StorageDemandFunction"));
-                Storage.AppendChild(storageFraction);
-            }  
+                MakeDMDemandsNode(node, organNode);
+            }
+            foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
+            {
+                MakeDMDemandsNode(node, organNode);
+            }
+            foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "Nodule"))
+            {
+                MakeDMDemandsNode(node, organNode);
+            }
         }
 
     }
