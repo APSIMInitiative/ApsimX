@@ -538,7 +538,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void SetDryMatterDemand(object sender, EventArgs e)
         {
-            if (Plant.SowingData.Depth < PlantZone.Depth)
+            if (Plant.SowingData?.Depth < PlantZone.Depth)
             {
                 structuralDMDemand = DemandedDMStructural();
                 storageDMDemand = DemandedDMStorage();

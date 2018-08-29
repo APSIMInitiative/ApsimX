@@ -324,7 +324,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        private void SetNitrogenDemand(object sender, EventArgs e)
+        protected virtual void SetNitrogenDemand(object sender, EventArgs e)
         {
             double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocating) - Live.N);
             NDeficit *= nitrogenDemandSwitch.Value();
