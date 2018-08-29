@@ -31,11 +31,11 @@ namespace Models.Functions.DemandFunctions
             IModel ParentClass = this.Parent;
             while (!ParentOrganIdentified)
             {
-                if (ParentClass.GetType() == typeof(IArbitration))
+                if (ParentClass is IArbitration)
                 {
                     parentOrgan = ParentClass as IArbitration;
                     ParentOrganIdentified = true;
-                    if (ParentClass.GetType() == typeof(IPlant))
+                    if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and storage DM status");
                 }
                 ParentClass = ParentClass.Parent;

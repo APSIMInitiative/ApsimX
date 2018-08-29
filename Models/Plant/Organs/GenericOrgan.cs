@@ -67,11 +67,6 @@ namespace Models.PMF.Organs
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
-        /// <summary>The DM structural fraction</summary>
-        [ChildLinkByName]
-        [Units("g/g")]
-        private IFunction structuralFraction = null;
-
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]
@@ -437,7 +432,7 @@ namespace Models.PMF.Organs
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation && structuralFraction != null)
+            if (IncludeInDocumentation)
             {
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
@@ -445,32 +440,7 @@ namespace Models.PMF.Organs
                 // write description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // Documment DM demands.
-                tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction.", indent));
-                IModel DMDemand = Apsim.Child(this, "DMDemandFunction");
-                AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel+1, indent);
-                IModel StrucFrac = Apsim.Child(this, "StructuralFraction");
-                if (StrucFrac.GetType() == typeof(Constant))
-                {
-                    if (structuralFraction.Value() == 1.0)
-                    {
-                        tags.Add(new AutoDocumentation.Paragraph("All demand is structural and this organ has no Non-structural demand.", indent));
-                    }
-                    else
-                    {
-                        double StrucPercent = structuralFraction.Value() * 100;
-                        tags.Add(new AutoDocumentation.Paragraph("Of total biomass, " + StrucPercent + "% of this is structural and the remainder is non-structural demand", indent));
-                        tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
-                    }
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of total biomass that is partitioned to structural is determined by the StructuralFraction", indent));
-                    AutoDocumentation.DocumentModel(StrucFrac, tags, headingLevel + 1, indent);
-                    tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
-                }
-
+                
                 // Document Nitrogen Demand
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand is the product of Total DM demand and a Minimum N concentration", indent));
