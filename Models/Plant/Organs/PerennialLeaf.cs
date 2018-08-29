@@ -396,7 +396,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        public void BiomassPoolType SetNitrogenDemand()
+        public void SetNitrogenDemand()
         {
             double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
             double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
