@@ -75,6 +75,9 @@ namespace Models.PMF
         [XmlIgnore]
         public BiomassArbitrationType N { get; private set; }
 
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler SetNDemand;
+
         #endregion
 
         #region Main outputs
@@ -320,7 +323,7 @@ namespace Models.PMF
             {
                 DM.Clear();
                 // Setup DM supplies from each organ
-                BiomassSupplyType[] supplies = Organs.Select(organ => organ.GetDryMatterSupply()).ToArray();
+                BiomassSupplyType[] supplies = Organs.Select(organ => organ.DMSupply).ToArray();
 
                 double totalWt = Organs.Sum(o => o.Total.Wt);
                 DM.GetSupplies(supplies, totalWt);
@@ -330,7 +333,7 @@ namespace Models.PMF
                 {
                     SubtractMaintenanceRespiration(maintenanceRespiration);
                 }
-                BiomassPoolType[] demands = Organs.Select(organ => organ.GetDryMatterDemand()).ToArray();
+                BiomassPoolType[] demands = Organs.Select(organ => organ.DMDemand).ToArray();
                 DM.GetDemands(demands);
 
                 Reallocation(Organs.ToArray(), DM, DMArbitrator);         // Allocate supply of reallocated DM to organs
@@ -338,15 +341,17 @@ namespace Models.PMF
                 Retranslocation(Organs.ToArray(), DM, DMArbitrator);      // Allocate supply of retranslocated DM to organs
                 SendPotentialDMAllocations(Organs.ToArray());               // Tell each organ what their potential growth is so organs can calculate their N demands
 
+                SetNDemand?.Invoke(this, new EventArgs());
+
                 N.Clear();
 
                 // Setup N supplies from each organ
-                supplies = Organs.Select(organ => organ.GetNitrogenSupply()).ToArray();
+                supplies = Organs.Select(organ => organ.NSupply).ToArray();
                 double totalN = Organs.Sum(o => o.Total.N);
                 N.GetSupplies(supplies, totalN);
 
                 // Setup N demands
-                demands = Organs.Select(organ => organ.GetNitrogenDemand()).ToArray();
+                demands = Organs.Select(organ => organ.NDemand).ToArray();
                 N.GetDemands(demands);
 
                 Reallocation(Organs.ToArray(), N, NArbitrator);           // Allocate N available from reallocation to each organ
