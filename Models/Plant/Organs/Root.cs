@@ -517,7 +517,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public void SetDryMatterSupply()
+        private void SetDryMatterSupply(object sender, EventArgs e)
         {
             DMSupply.Fixation = 0.0;
             DMSupply.Retranslocation = dmRetranslocationSupply;
@@ -526,7 +526,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public void SetNitrogenSupply()
+        private void SetNitrogenSupply(object sender, EventArgs e)
         {
             NSupply.Fixation = 0.0;
             NSupply.Uptake = 0.0;
@@ -536,7 +536,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public void SetDryMatterDemand()
+        private void SetDryMatterDemand(object sender, EventArgs e)
         {
             if (Plant.SowingData.Depth < PlantZone.Depth)
             {
@@ -550,7 +550,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        public void SetNitrogenDemand()
+        private void SetNitrogenDemand(object sender, EventArgs e)
         {
             // This is basically the old/original function with added metabolicN.
             // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.

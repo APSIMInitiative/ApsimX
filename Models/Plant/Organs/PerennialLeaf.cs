@@ -363,7 +363,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public void SetDryMatterSupply()
+        private void SetDryMatterSupply(object sender, EventArgs e)
         {
             DMSupply.Fixation = Photosynthesis.Value();
             DMSupply.Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
@@ -372,7 +372,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public void SetNitrogenSupply()
+        private void SetNitrogenSupply(object sender, EventArgs e)
         {
             double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
             Biomass Senescing = new Biomass();
@@ -386,7 +386,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public void SetDryMatterDemand()
+        private void SetDryMatterDemand(object sender, EventArgs e)
         {
             StructuralDMDemand = DMDemandFunction.Value();
             StorageDMDemand = 0;
@@ -396,7 +396,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        public void SetNitrogenDemand()
+        private void SetNitrogenDemand(object sender, EventArgs e)
         {
             double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
             double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);

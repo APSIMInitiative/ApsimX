@@ -302,14 +302,14 @@ namespace Models.PMF.Organs
         #region Arbitrator methods
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public void SetDryMatterDemand()
+        private void SetDryMatterDemand(object sender, EventArgs e)
         {
             DMDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        public void SetNitrogenDemand()
+        private void SetNitrogenDemand(object sender, EventArgs e)
         {
             double demand = NFillingRate.Value();
             demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);

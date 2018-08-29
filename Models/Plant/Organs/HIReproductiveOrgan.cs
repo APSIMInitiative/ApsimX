@@ -222,19 +222,18 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        public BiomassPoolType SetDryMatterDemand()
+        private void SetDryMatterDemand(object sender, EventArgs e)
         {
             double currentWt = (Live.Wt + Dead.Wt);
             double newHI = HI + HIIncrement.Value();
             double newWt = newHI * AboveGroundWt.Value();
             double demand = Math.Max(0.0, newWt - currentWt);
             DMDemand.Structural = demand;
-            return DMDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        public void SetNitrogenDemand()
+        private void SetNitrogenDemand(object sender, EventArgs e)
         {
             double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
             NDemand.Structural = demand;
