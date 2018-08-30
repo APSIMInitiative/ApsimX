@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using UserInterface.Views;
+using UserInterface.Interfaces;
+using Utility;
 using Gtk;
 
 namespace ApsimNG.Cloud
@@ -209,11 +210,16 @@ namespace ApsimNG.Cloud
         /// <param name="e"></param>
         private void ChangeOutputDir(object sender, EventArgs e)
         {
-            string dir = ViewBase.MasterView.AskUserForDirectory("Choose a download folder");
-            if (dir != "")
+            IFileDialog fileChooser = new FileDialog()
             {
-                entryOutputDir.Text = dir;
-                AzureSettings.Default["OutputDir"] = dir;                
+                Action = FileDialog.FileActionType.SelectFolder,
+                Prompt = "Choose a download folder"
+            };
+            string downloadDirectory = fileChooser.GetFile();
+            if (!string.IsNullOrEmpty(downloadDirectory))
+            {
+                entryOutputDir.Text = downloadDirectory;
+                AzureSettings.Default["OutputDir"] = downloadDirectory;                
                 AzureSettings.Default.Save();                
             }
         }

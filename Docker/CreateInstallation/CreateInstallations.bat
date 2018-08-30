@@ -64,6 +64,7 @@ if errorlevel 1 (
 	exit %errorlevel%
 )
 rename Output\APSIMSetup.exe APSIMSetup%ISSUE_NUMBER%.exe
+echo Uploading APSIMSetup%ISSUE_NUMBER%.exe
 @curl -u %APSIM_SITE_CREDS% -T Output\APSIMSetup%ISSUE_NUMBER%.exe ftp://www.apsim.info/APSIM/ApsimXFiles/
 exit %errorlevel%
 
@@ -82,11 +83,14 @@ echo.
 echo.
 %setup%\Linux\builddeb.bat
 if errorlevel 1 (
+	echo Errors encountered!
 	exit %errorlevel%
 )
-rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUENUMBER%.deb
-dir %setup%\Output
-@curl -u %APSIM_SITE_CREDS% -T %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
+if exist %setup%\Output\APSIMSetup.deb (
+	rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUENUMBER%.deb
+	echo Uploading APSIMSetup%ISSUENUMBER%.deb
+	@curl -u %APSIM_SITE_CREDS% -T %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
+)
 exit %errorlevel%
 
 :macos

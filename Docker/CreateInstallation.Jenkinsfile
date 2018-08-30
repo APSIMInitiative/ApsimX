@@ -217,7 +217,6 @@ pipeline {
 					call ApsimX\\Docker\\cleanup.bat
 					docker build -m 16g -t deploy ApsimX\\Docker\\Deploy
 					docker run -m 16g -e "PASSWORD=%CHANGE_DB_CREDS_PWD%" -e NUMBER_OF_PROCESSORS -e ISSUE_NUMBER -e PULL_ID -e ISSUE_TITLE -e RELEASED deploy
-
 				'''
 			}
 		}

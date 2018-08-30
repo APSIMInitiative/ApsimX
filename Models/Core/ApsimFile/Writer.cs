@@ -14,7 +14,7 @@ namespace Models.Core.ApsimFile
         public Writer(TextWriter w) 
             : base(w)
         {
-            version = Converter.LastestVersion;
+            version = Converter.LatestVersion;
         }
        
 

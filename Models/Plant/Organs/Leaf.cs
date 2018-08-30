@@ -580,6 +580,18 @@ namespace Models.PMF.Organs
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
         public int GreenCohortNo { get { return CohortCounter("IsGreen"); } }
 
+        /// <summary>Gets the green cohort no.</summary>
+        [Description("Number of leaf cohorts that are have expanded but 50% fully senesced")]
+        public int GreenCohortNoHalfSenescence { get {
+                int count = 0;
+                foreach (LeafCohort l in Leaves)
+                {
+                    if (l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2)
+                        count++;
+                }
+                return count;
+            } }
+
         /// <summary>Gets the senescing cohort no.</summary>
         [Description("Number of leaf cohorts that are Senescing")]
         public int SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
@@ -596,6 +608,17 @@ namespace Models.PMF.Organs
             get
             {
                 return Leaves.Where(l => l.IsAppeared && !l.Finished).Sum(l => l.CohortPopulation) / Plant.Population;
+            }
+        }
+
+        /// <summary>Gets the plant appeared green leaf no. (matching with observation)</summary>
+        [Units("/plant")]
+        [Description("Number of appeared leaves per plant that have appeared but 50% senesced on each plant")]
+        public double PlantAppearedGreenLeafNoHalfSenescence
+        {
+            get
+            {
+                return Leaves.Where(l => l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / Plant.Population;
             }
         }
 
