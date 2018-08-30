@@ -17,8 +17,8 @@ namespace Models.PMF.Organs
     [ValidParent(ParentType = typeof(Plant))]
     public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
     {
-         /// <summary>Tolerance for biomass comparisons</summary>
-         private double BiomassToleranceValue = 0.0000000001; 
+        /// <summary>Tolerance for biomass comparisons</summary>
+        protected double BiomassToleranceValue = 0.0000000001; 
 
         /// <summary>The parent plant</summary>
         [Link]
@@ -35,7 +35,7 @@ namespace Models.PMF.Organs
         /// <summary>The senescence rate function</summary>
         [ChildLinkByName]
         [Units("/d")]
-        private IFunction senescenceRate = null;
+        protected IFunction senescenceRate = null;
 
         /// <summary>The detachment rate function</summary>
         [ChildLinkByName]
@@ -45,12 +45,12 @@ namespace Models.PMF.Organs
         /// <summary>The N retranslocation factor</summary>
         [ChildLinkByName]
         [Units("/d")]
-        private IFunction nRetranslocationFactor = null;
+        protected IFunction nRetranslocationFactor = null;
 
         /// <summary>The N reallocation factor</summary>
         [ChildLinkByName]
         [Units("/d")]
-        private IFunction nReallocationFactor = null;
+        protected IFunction nReallocationFactor = null;
 
         /// <summary>The nitrogen demand switch</summary>
         [ChildLinkByName]
@@ -118,7 +118,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>The live biomass state at start of the computation round</summary>
-        private Biomass startLive = null;
+        protected Biomass startLive = null;
 
         /// <summary>The dry matter supply</summary>
         public BiomassSupplyType DMSupply { get; set; }
@@ -291,7 +291,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public virtual void SetDryMatterSupply()
+        [EventSubscribe("SetDMSupply")]
+        public virtual void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.Reallocation = AvailableDMReallocation();
             DMSupply.Retranslocation = AvailableDMRetranslocation();         
@@ -300,7 +301,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public virtual void SetNitrogenSupply()
+        [EventSubscribe("SetNSupply")]
+        public virtual void SetNSupply(object sender, EventArgs e)
         {
             NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
             if (NSupply.Reallocation < -BiomassToleranceValue)
@@ -315,7 +317,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public void SetDryMatterDemand()
+        [EventSubscribe("SetDMDemand")]
+        public void SetDMDemand(object sender, EventArgs e)
         {
             DMDemand.Structural = DemandedDMStructural() + remobilisationCost.Value();
             DMDemand.Storage = DemandedDMStorage();
@@ -324,7 +327,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        protected virtual void SetNitrogenDemand(object sender, EventArgs e)
+        protected virtual void SetNDemand(object sender, EventArgs e)
         {
             double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocating) - Live.N);
             NDeficit *= nitrogenDemandSwitch.Value();
@@ -668,10 +671,6 @@ namespace Models.PMF.Organs
             // save current state
             if (parentPlant.IsEmerged)
                 startLive = Live;
-            SetDryMatterSupply();
-            SetNitrogenSupply();
-            SetDryMatterDemand();
-
         }
 
         /// <summary>Does the nutrient allocations.</summary>

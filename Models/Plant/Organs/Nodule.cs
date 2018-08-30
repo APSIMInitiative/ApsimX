@@ -51,9 +51,17 @@ namespace Models.PMF.Organs
         public double RespiredWtFixation { get { return RespiredWt; } }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public override void SetNitrogenSupply()
+        public override void SetNSupply(object sender, EventArgs e)
         {
-            base.SetNitrogenSupply();   // get our base GenericOrgan to fill a supply structure first.
+            NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
+            if (NSupply.Reallocation < -BiomassToleranceValue)
+                throw new Exception("Negative N reallocation value computed for " + Name);
+
+            NSupply.Retranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            if (NSupply.Retranslocation < -BiomassToleranceValue)
+                throw new Exception("Negative N retranslocation value computed for " + Name);
+
+            NSupply.Uptake = 0;
             NSupply.Fixation = FixationRate.Value();
         }
 

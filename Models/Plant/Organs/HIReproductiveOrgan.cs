@@ -221,8 +221,8 @@ namespace Models.PMF.Organs
         public double N { get { return Total.N; } }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void SetDryMatterDemand(object sender, EventArgs e)
+        [EventSubscribe("SetDMDemand")]
+        private void SetDMDemand(object sender, EventArgs e)
         {
             double currentWt = (Live.Wt + Dead.Wt);
             double newHI = HI + HIIncrement.Value();
@@ -233,7 +233,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        private void SetNitrogenDemand(object sender, EventArgs e)
+        private void SetNDemand(object sender, EventArgs e)
         {
             double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
             NDemand.Structural = demand;

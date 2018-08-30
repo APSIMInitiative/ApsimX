@@ -1199,9 +1199,6 @@ namespace Models.PMF.Organs
                 }
             }
             FRGR = FRGRFunction.Value();
-            SetDryMatterDemand();
-            SetDryMatterSupply();
-            SetNitrogenSupply();
         }
 
         /// <summary>Clears this instance.</summary>
@@ -1366,7 +1363,8 @@ namespace Models.PMF.Organs
         #region Arbitrator methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        private void SetDryMatterSupply()
+        [EventSubscribe("SetDMSupply")]
+        private void SetDMSupply()
         {
             // Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)
             double Retranslocation = 0;
@@ -1384,7 +1382,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        private void SetNitrogenSupply()
+        [EventSubscribe("SetNSupply")]
+        private void SetNSupply()
         {
             double RetransSupply = 0;
             double ReallocationSupply = 0;
@@ -1398,7 +1397,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        private void SetDryMatterDemand()
+        [EventSubscribe("SetDMDemand")]
+        private void SetDMDemand()
         {
             double StructuralDemand = 0.0;
             double StorageDemand = 0.0;
@@ -1425,7 +1425,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        private void SetNitrogenDemand(object sender, EventArgs e)
+        private void SetNDemand(object sender, EventArgs e)
         {
             double StructuralDemand = 0.0;
             double MetabolicDemand = 0.0;

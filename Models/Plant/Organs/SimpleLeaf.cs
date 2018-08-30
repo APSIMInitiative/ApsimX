@@ -307,9 +307,12 @@ namespace Models.PMF.Organs
         public double WaterAllocation { get; set; }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public override void SetDryMatterSupply()
+        [EventSubscribe("SetDMSupply")]
+        public override void SetDMSupply(object sender, EventArgs e)
         {
-            base.SetDryMatterSupply();   // get our base GenericOrgan to fill a supply structure first.
+            DMSupply.Reallocation = AvailableDMReallocation();
+            DMSupply.Retranslocation = AvailableDMRetranslocation();
+            DMSupply.Uptake = 0;
             DMSupply.Fixation = Photosynthesis.Value();
         }
 
@@ -374,10 +377,6 @@ namespace Models.PMF.Organs
                 Height = HeightFunction.Value();
 
                 LAIDead = LaiDeadFunction.Value();
-
-                SetDryMatterDemand();
-                SetDryMatterSupply();
-                SetNitrogenSupply();
             }
         }
 
