@@ -20,8 +20,9 @@ if exist %apsimx%\results.7z (
 		echo Error unzipping %apsimx%\results.7z
 	)
 )
-
+dir %apsimx%\Bin
 cd %apsimx%\Documentation
+set FC_DEBUG=8191
 call GenerateDocumentation.bat
 cd %apsimx%
 for /r Documentation\PDF %%D in (*.pdf) do (
