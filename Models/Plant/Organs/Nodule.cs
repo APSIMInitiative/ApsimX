@@ -51,7 +51,8 @@ namespace Models.PMF.Organs
         public double RespiredWtFixation { get { return RespiredWt; } }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public override void SetNSupply(object sender, EventArgs e)
+        [EventSubscribe("SetNSupply")]
+        private new void SetNSupply(object sender, EventArgs e)
         {
             NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
             if (NSupply.Reallocation < -BiomassToleranceValue)
@@ -85,4 +86,6 @@ namespace Models.PMF.Organs
             RespiredWt = 0;
         }
     }
+
+
 }

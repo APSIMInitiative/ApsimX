@@ -292,7 +292,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("SetDMSupply")]
-        public virtual void SetDMSupply(object sender, EventArgs e)
+        protected virtual void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.Reallocation = AvailableDMReallocation();
             DMSupply.Retranslocation = AvailableDMRetranslocation();         
@@ -302,7 +302,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         [EventSubscribe("SetNSupply")]
-        public virtual void SetNSupply(object sender, EventArgs e)
+        protected virtual void SetNSupply(object sender, EventArgs e)
         {
             NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
             if (NSupply.Reallocation < -BiomassToleranceValue)
@@ -318,7 +318,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("SetDMDemand")]
-        public void SetDMDemand(object sender, EventArgs e)
+        protected virtual void SetDMDemand(object sender, EventArgs e)
         {
             DMDemand.Structural = DemandedDMStructural() + remobilisationCost.Value();
             DMDemand.Storage = DemandedDMStorage();
