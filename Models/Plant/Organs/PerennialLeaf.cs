@@ -80,16 +80,16 @@ namespace Models.PMF.Organs
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter supply</summary>
-        protected BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+        public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The nitrogen supply</summary>
-        protected BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+        public BiomassSupplyType NSupply { get;  set; }
 
         /// <summary>The dry matter demand</summary>
-        protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
+        public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
-        protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
+        public BiomassPoolType NDemand { get;  set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         public double MaintenanceRespiration { get; set; }
@@ -362,72 +362,53 @@ namespace Models.PMF.Organs
         #region Arbitrator Methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public virtual BiomassSupplyType GetDryMatterSupply()
+        [EventSubscribe("SetDMSupply")]
+        private void SetDMSupply(object sender, EventArgs e)
         {
-            dryMatterSupply.Fixation = Photosynthesis.Value();
-            dryMatterSupply.Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
-            dryMatterSupply.Reallocation = 0.0;
-            return dryMatterSupply;
+            DMSupply.Fixation = Photosynthesis.Value();
+            DMSupply.Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
+            DMSupply.Reallocation = 0.0;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public virtual BiomassSupplyType GetNitrogenSupply()
+        [EventSubscribe("SetNSupply")]
+        private void SetNSupply(object sender, EventArgs e)
         {
             double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
             Biomass Senescing = new Biomass();
             GetSenescingLeafBiomass(out Senescing);
 
-            nitrogenSupply.Reallocation = Senescing.StorageN * NReallocationFactor.Value();
-            nitrogenSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
-            nitrogenSupply.Uptake = 0.0;
-
-            return nitrogenSupply;
+            NSupply.Reallocation = Senescing.StorageN * NReallocationFactor.Value();
+            NSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
+            NSupply.Uptake = 0.0;        
         }
+        
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public virtual BiomassPoolType GetDryMatterDemand()
+        [EventSubscribe("SetDMDemand")]
+        private void SetDMDemand(object sender, EventArgs e)
         {
             StructuralDMDemand = DMDemandFunction.Value();
             StorageDMDemand = 0;
-            dryMatterDemand.Structural = StructuralDMDemand;
-            dryMatterDemand.Storage = StorageDMDemand;
-
-            return dryMatterDemand;
+            DMDemand.Structural = StructuralDMDemand;
+            DMDemand.Storage = StorageDMDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public virtual BiomassPoolType GetNitrogenDemand()
+        [EventSubscribe("SetNDemand")]
+        private void SetNDemand(object sender, EventArgs e)
         {
             double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
             double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
 
-            nitrogenDemand.Structural = StructuralDemand;
-            nitrogenDemand.Storage = NDeficit;
-
-            return nitrogenDemand;
+            NDemand.Structural = StructuralDemand;
+            NDemand.Storage = NDeficit;
         }
 
 
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
         public double WaterAllocation { get; set; }
-
-        /// <summary>Gets or sets the dm demand.</summary>
-        [XmlIgnore]
-        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
-
-        /// <summary>Gets or sets the dm supply.</summary>
-        [XmlIgnore]
-        public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
-
-        /// <summary>Gets or sets the n demand.</summary>
-        [XmlIgnore]
-        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
-
-        /// <summary>Gets the nitrogen supply.</summary>
-        [XmlIgnore]
-        public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
-
         #endregion
 
         #region Events
@@ -460,10 +441,10 @@ namespace Models.PMF.Organs
             StructuralDMDemand = 0;
             StorageDMDemand = 0;
             LiveFWt = 0;
-            dryMatterDemand.Clear();
-            dryMatterSupply.Clear();
-            nitrogenDemand.Clear();
-            nitrogenSupply.Clear();
+            DMDemand.Clear();
+            DMSupply.Clear();
+            NDemand.Clear();
+            NSupply.Clear();
             Detached.Clear();
 
         }
@@ -740,6 +721,10 @@ namespace Models.PMF.Organs
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             Detached = new Biomass();
+            NDemand = new BiomassPoolType();
+            DMDemand = new BiomassPoolType();
+            NSupply = new BiomassSupplyType();
+            DMSupply = new BiomassSupplyType();
             Clear();
         }
 
