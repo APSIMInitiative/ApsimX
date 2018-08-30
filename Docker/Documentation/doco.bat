@@ -20,12 +20,14 @@ if exist %apsimx%\results.7z (
 		echo Error unzipping %apsimx%\results.7z
 	)
 )
-
+dir %apsimx%\Bin
 cd %apsimx%\Documentation
+set FC_DEBUG=8191
 call GenerateDocumentation.bat
 cd %apsimx%
-for /r Tests\Validation %%D in (*.pdf) do ( 
-	rename %%D %%~nD%ISSUE_NUMBER%%%~xD
-	echo Uploading %%~nD%ISSUE_NUMBER%%%~xD
-	@curl -u %APSIM_SITE_CREDS% -T "%%~dpnD%ISSUE_NUMBER%%%~xD" ftp://www.apsim.info/APSIM/ApsimXFiles/
+for /r Documentation\PDF %%D in (*.pdf) do (
+	set "NEW_NAME=%%~nD%ISSUE_NUMBER%%%~xD"
+	rename "%%D" "%NEW_NAME%"
+	echo Uploading %NEW_NAME%
+	@curl -u %APSIM_SITE_CREDS% -T "%NEW_NAME%" ftp://www.apsim.info/APSIM/ApsimXFiles/
 )
