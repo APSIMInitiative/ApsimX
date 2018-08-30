@@ -347,6 +347,9 @@ namespace UserInterface.Forms
             {
                 try
                 {
+                    if (e.Error != null) // On Linux, we get to this point even when errors have occurred
+                        throw e.Error;
+
                     // Write to the registration database.
                     WriteUpgradeRegistration(versionNumber);
 
@@ -397,7 +400,10 @@ namespace UserInterface.Forms
                 catch (Exception err)
                 {
                     window1.GdkWindow.Cursor = null;
-                    ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
+                    Application.Invoke(delegate
+                    {
+                        ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
+                    });
                 }
             }
         }
