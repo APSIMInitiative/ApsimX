@@ -1364,7 +1364,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("SetDMSupply")]
-        private void SetDMSupply()
+        private void SetDMSupply(object sender, EventArgs e)
         {
             // Daily photosynthetic "net" supply of dry matter for the whole plant (g DM/m2/day)
             double Retranslocation = 0;
@@ -1383,7 +1383,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         [EventSubscribe("SetNSupply")]
-        private void SetNSupply()
+        private void SetNSupply(object sender, EventArgs e)
         {
             double RetransSupply = 0;
             double ReallocationSupply = 0;
@@ -1398,7 +1398,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("SetDMDemand")]
-        private void SetDMDemand()
+        private void SetDMDemand(object sender, EventArgs e)
         {
             double StructuralDemand = 0.0;
             double StorageDemand = 0.0;
