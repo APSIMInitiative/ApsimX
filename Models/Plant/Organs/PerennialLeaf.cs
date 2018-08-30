@@ -721,11 +721,11 @@ namespace Models.PMF.Organs
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             Detached = new Biomass();
-            Clear();
-             NDemand = new BiomassPoolType();
+            NDemand = new BiomassPoolType();
             DMDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
+            Clear();
         }
 
         /// <summary>Called when crop is sown</summary>
