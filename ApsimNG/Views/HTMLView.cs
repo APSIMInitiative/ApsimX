@@ -149,7 +149,6 @@ namespace UserInterface.Views
                 wb.Document.Body.InnerHtml = html;
             else
                 wb.DocumentText = html;
-
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
@@ -158,6 +157,32 @@ namespace UserInterface.Views
             while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
+            wb.Document.BackColor = System.Drawing.Color.FromArgb(34, 34, 34);
+            wb.Document.ForeColor = System.Drawing.Color.FromArgb(255, 255, 255);
+        }
+
+        public System.Drawing.Color BackgroundColour
+        {
+            get
+            {
+                return wb.Document.BackColor;
+            }
+            set
+            {
+                wb.Document.BackColor = value;
+            }
+        }
+
+        public System.Drawing.Color ForegroundColour
+        {
+            get
+            {
+                return wb.Document.ForeColor;
+            }
+            set
+            {
+                wb.Document.ForeColor = value;
+            }
         }
 
         public TWWebBrowserIE(Gtk.Box w)
@@ -576,7 +601,13 @@ namespace UserInterface.Views
                 browser.Navigate(contents);
             else
                browser.LoadHTML(contents);
-            //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
+            if (browser is TWWebBrowserIE)
+            {
+                Gdk.Color colour = MainWidget.Style.Base(StateType.Normal);
+                (browser as TWWebBrowserIE).BackgroundColour = System.Drawing.Color.FromArgb(colour.Red * 255 / 65535, colour.Green * 255 / 65535, colour.Blue * 255 / 65535);
+                colour = MainWidget.Style.Foreground(StateType.Normal);
+                (browser as TWWebBrowserIE).ForegroundColour = System.Drawing.Color.FromArgb(colour.Red * 255 / 65535, colour.Green * 255 / 65535, colour.Blue * 255 / 65535);
+            }
         }
 
         private IBrowserWidget CreateIEBrowser(Gtk.Box box)
