@@ -38,7 +38,7 @@ GtkCheckButton::indicator-spacing = 4
 
 	GtkMenuItem::arrow-scaling= 0.5
 
-	GtkPaned::handle-size = 1
+	GtkPaned::handle-size = 5
 
 	GtkProgressBar::min-horizontal-bar-height = 12
 	GtkProgressBar::min-vertical-bar-width = 12
