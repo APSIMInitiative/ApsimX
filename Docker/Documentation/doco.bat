@@ -1,4 +1,5 @@
 @echo off
+regedit /S C:\ie.reg
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
 	echo %apsimx% does not exist. Aborting...

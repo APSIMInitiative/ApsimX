@@ -15,4 +15,6 @@ RUN Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org
 
 COPY doco.bat doco.bat
 
+COPY ie.reg ie.reg
+
 ENTRYPOINT ["doco.bat"]
