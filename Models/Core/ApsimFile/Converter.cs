@@ -1193,7 +1193,7 @@
 
         private static void MakeDMDemandsNode(XmlNode node,XmlNode organNode)
         {   //Make DMDemand node
-            XmlNode DMDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "DMDemand");
+            XmlNode DMDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "DMDemands");
             organNode.AppendChild(DMDemands);
             
             //Add Structural demand function
@@ -1221,14 +1221,14 @@
             {
                 MakeDMDemandsNode(node, organNode);
             }
-            foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
+         /*   foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
             {
                 MakeDMDemandsNode(node, organNode);
             }
             foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "Nodule"))
             {
                 MakeDMDemandsNode(node, organNode);
-            }
+            } */
         }
 
     }

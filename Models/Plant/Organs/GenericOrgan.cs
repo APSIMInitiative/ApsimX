@@ -70,7 +70,7 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemand = null;
+        private BiomassDemand dmDemands = null;
 
         // <summary>The N demand function</summary>
         //[ChildLinkByName]
@@ -240,37 +240,6 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
 
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        public double DemandedDMStructural()
-        {
-            if (dmConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = dmDemandFunction.Value() * structuralFraction.Value() / dmConversionEfficiency.Value();
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        public double DemandedDMStorage()
-        {
-            // Assumes that StructuralFraction is always greater than zero
-            if (dmConversionEfficiency.Value() > 0.0)
-            {
-                double theoreticalMaximumDM = MathUtilities.Divide(startLive.StructuralWt + DMDemand.Structural, structuralFraction.Value(), 0);
-                double baseAllocated = startLive.StructuralWt + startLive.StorageWt + DMDemand.Structural;
-                double demandedDM = MathUtilities.Divide(Math.Max(0.0, theoreticalMaximumDM - baseAllocated), dmConversionEfficiency.Value(), 0);
-                return demandedDM;
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                return 0.0;
-            }
-        }
-
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
@@ -323,8 +292,8 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                DMDemand.Structural = dmDemand.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
-                DMDemand.Storage = Math.Max(0, dmDemand.Storage.Value() / dmConversionEfficiency.Value());
+                DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = 0;
             }
             else

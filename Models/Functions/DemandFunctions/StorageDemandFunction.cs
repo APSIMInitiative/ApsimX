@@ -17,6 +17,7 @@ namespace Models.Functions.DemandFunctions
     {
         /// <summary>The Storage Fraction</summary>
         [Description("StorageFraction")]
+        [Link]
         private IFunction storageFraction = null;
 
         private IArbitration parentOrgan = null;
@@ -45,7 +46,7 @@ namespace Models.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            double structuralWt = parentOrgan.Live.StructuralWt + parentOrgan.GetDryMatterDemand().Structural;
+            double structuralWt = parentOrgan.Live.StructuralWt + parentOrgan.DMDemand.Structural;
             double storageMaximum = MathUtilities.Divide(structuralWt,storageFraction.Value() - 1, 0);
             return storageMaximum - parentOrgan.Live.StorageWt;
          }
