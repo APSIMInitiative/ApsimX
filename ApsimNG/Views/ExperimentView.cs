@@ -201,9 +201,7 @@ namespace UserInterface.Views
             tree.RubberBanding = true;
             tree.CanFocus = true;
             tree.RulesHint = true;
-            string style = "style \"custom-treestyle\"{ GtkTreeView::odd-row-color = \"#ECF2FD\" GtkTreeView::even-row-color = \"#FFFFFF\" GtkTreeView::allow-rules = 1 } widget \"*custom_treeview*\" style \"custom-treestyle\"";
-            tree.Name = "custom_treeview";
-            Rc.ParseString(style);
+            tree.Name = "experiment_grid";
 
             enableButton = new Button("Enable");
             enableButton.Clicked += EnableSims;
