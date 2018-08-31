@@ -177,12 +177,6 @@ namespace UserInterface.Views
                     StyleSeparator.Visible = true;
                     StyleMenu.Visible = true;
                 }
-                else
-                {
-                    textEditor.Options.ColorScheme = "Default";
-                    StyleSeparator.Visible = false;
-                    StyleMenu.Visible = false;
-                }
             }
         }
 
