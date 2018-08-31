@@ -40,6 +40,7 @@
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
 
+        public event EventHandler Finished;
 
         /// <summary>Constructor</summary>
         /// <param name="model">The model the user has selected to run</param>
@@ -117,6 +118,8 @@
             else
                 player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
             player.Play();
+
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -161,7 +164,22 @@
             int numSimulations = 0;
             if (jobManager.SimulationNamesBeingRun != null)
                 numSimulations = jobManager.SimulationNamesBeingRun.Count;
-            double percentComplete = (numSimulationsRun * 1.0 / numSimulations) * 100.0;
+
+            double numberComplete = 0.0;
+            if (jobManager.SimClocks != null)
+            {
+                foreach(Models.IClock clock in jobManager.SimClocks)
+                {
+                    if (clock != null)
+                        numberComplete += clock.FractionComplete;
+                }
+            }
+            else
+            {
+                numberComplete = numSimulationsRun;
+            }
+
+            double percentComplete = (numberComplete / numSimulations) * 100.0;
 
             if (numSimulations > 0)
             {

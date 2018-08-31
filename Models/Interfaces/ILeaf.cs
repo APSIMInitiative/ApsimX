@@ -42,19 +42,15 @@ namespace Models.Interfaces
         /// <param name="ProportionRemoved"></param>
         void DoThin(double ProportionRemoved);
 
-        /// <summary>Apex number by age</summary>
-        /// <param name="age">Threshold age</param>
-        double ApexNumByAge(double age);
-
         /// <summary>
         /// Method to remove 
         /// </summary>
-       void RemoveHighestLeaf();
+        void RemoveHighestLeaf();
         
         /// <summary>
         /// Method to zero leaf numbembers
         /// </summary>
-       void Reset();
+        void Reset();
 
         /// <summary>
         /// Then number of cohorts on the apex that are yet to expand

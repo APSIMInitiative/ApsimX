@@ -69,10 +69,10 @@ namespace UserInterface.Presenters
             PopulateSupplementNames();
             if (supplement.NoStores > 1)
             {
-                if (supplement.curIndex == 0)
-                    supplement.curIndex = 1;
-                supplementView.SelectedSupplementValues = supplement[supplement.curIndex];
-                supplementView.SelectedSupplementIndex = supplement.curIndex - 1; // Offset by 1 to skip fodder
+                if (supplement.CurIndex == 0)
+                    supplement.CurIndex = 1;
+                supplementView.SelectedSupplementValues = supplement[supplement.CurIndex];
+                supplementView.SelectedSupplementIndex = supplement.CurIndex - 1; // Offset by 1 to skip fodder
             }
             ConnectViewEvents();
         }
@@ -112,7 +112,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         private void OnSupplementSelected(object sender, TIntArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.SelectSupplementCommand(supplement, supplement.curIndex, e.value + 1)); // Offset by 1 to skip fodder
+            this.explorerPresenter.CommandHistory.Add(new Commands.SelectSupplementCommand(supplement, supplement.CurIndex, e.value + 1)); // Offset by 1 to skip fodder
         }
 
         /// <summary>
@@ -132,8 +132,8 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments</param>
         private void OnSupplementDeleted(object sender, System.EventArgs e)
         {
-            if (supplement.curIndex > 0) // Don't delete fodder
-                this.explorerPresenter.CommandHistory.Add(new Commands.DeleteSupplementCommand(supplement, supplement[supplement.curIndex]));
+            if (supplement.CurIndex > 0) // Don't delete fodder
+                this.explorerPresenter.CommandHistory.Add(new Commands.DeleteSupplementCommand(supplement, supplement[supplement.CurIndex]));
         }
 
         /// <summary>
@@ -144,11 +144,11 @@ namespace UserInterface.Presenters
         /// <param name="e">The event agruments</param>
         private void OnSupplementReset(object sender, System.EventArgs e)
         {
-            if (supplement.curIndex > 0)  
+            if (supplement.CurIndex > 0)  
             {
                 // Don't reset fodder
-                List<TSupplementItem> suppList = new List<TSupplementItem>(1);
-                suppList.Add(supplement[supplement.curIndex]);
+                List<SupplementItem> suppList = new List<SupplementItem>(1);
+                suppList.Add(supplement[supplement.CurIndex]);
                 this.explorerPresenter.CommandHistory.Add(new Commands.ResetSupplementCommand(supplement, suppList));
             }
         }
@@ -161,7 +161,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments</param>
         private void OnAllSupplementsReset(object sender, System.EventArgs e)
         {
-            List<TSupplementItem> suppList = new List<TSupplementItem>(supplement.NoStores - 1);
+            List<SupplementItem> suppList = new List<SupplementItem>(supplement.NoStores - 1);
             for (int i = 1; i < supplement.NoStores; i++)
             {
                 suppList.Add(supplement[i]);
@@ -181,50 +181,50 @@ namespace UserInterface.Presenters
             int attr = e.attr;
             if (attr == -2)
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.curIndex], "IsRoughage", e.attrVal != 0.0));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "IsRoughage", e.attrVal != 0.0));
             }
             else if (attr == -1)
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.curIndex], "Amount", e.attrVal));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "Amount", e.attrVal));
             }
             else if (attr >= 0)
             {
                 string propName = null;
-                TSupplement.TSuppAttribute tagEnum = (TSupplement.TSuppAttribute)e.attr;
+                FoodSupplement.SuppAttribute tagEnum = (FoodSupplement.SuppAttribute)e.attr;
                 switch (tagEnum)
                 {
-                    case TSupplement.TSuppAttribute.spaDMP:
-                        propName = "DM_Propn";
+                    case FoodSupplement.SuppAttribute.spaDMP:
+                        propName = "DMPropn";
                         break;
-                    case TSupplement.TSuppAttribute.spaDMD:
-                        propName = "DM_Digestibility";
+                    case FoodSupplement.SuppAttribute.spaDMD:
+                        propName = "DMDigestibility";
                         break;
-                    case TSupplement.TSuppAttribute.spaMEDM:
-                        propName = "ME_2_DM";
+                    case FoodSupplement.SuppAttribute.spaMEDM:
+                        propName = "ME2DM";
                         break;
-                    case TSupplement.TSuppAttribute.spaEE:
+                    case FoodSupplement.SuppAttribute.spaEE:
                         propName = "EtherExtract";
                         break;
-                    case TSupplement.TSuppAttribute.spaCP:
+                    case FoodSupplement.SuppAttribute.spaCP:
                         propName = "CrudeProt";
                         break;
-                    case TSupplement.TSuppAttribute.spaDG:
-                        propName = "DgProt";
+                    case FoodSupplement.SuppAttribute.spaDG:
+                        propName = "DegProt";
                         break;
-                    case TSupplement.TSuppAttribute.spaADIP:
-                        propName = "ADIP_2_CP";
+                    case FoodSupplement.SuppAttribute.spaADIP:
+                        propName = "ADIP2CP";
                         break;
-                    case TSupplement.TSuppAttribute.spaPH:
+                    case FoodSupplement.SuppAttribute.spaPH:
                         propName = "Phosphorus";
                         break;
-                    case TSupplement.TSuppAttribute.spaSU:
+                    case FoodSupplement.SuppAttribute.spaSU:
                         propName = "Sulphur";
                         break;
                     default:
                         break;
                 }
                 if (propName != null)
-                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.curIndex], propName, e.attrVal));
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], propName, e.attrVal));
             }
         }
 
@@ -235,7 +235,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         private void OnSuppNameChanged(object sender, TStringArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.curIndex], "Name", e.name));
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "Name", e.name));
         }
 
         /// <summary>
@@ -244,9 +244,9 @@ namespace UserInterface.Presenters
         private void PopulateDefaultNames()
         {
             List<string> names = new List<string>();
-            for (int i = 0; i < TSupplementLibrary.DefaultSuppConsts.Count; i++)
+            for (int i = 0; i < SupplementLibrary.DefaultSuppConsts.Count; i++)
             {
-                names.Add(TSupplementLibrary.DefaultSuppConsts[i].Name);
+                names.Add(SupplementLibrary.DefaultSuppConsts[i].Name);
             }
 
             this.supplementView.DefaultSuppNames = names.ToArray();
@@ -273,9 +273,9 @@ namespace UserInterface.Presenters
 
             this.supplementView.SupplementNames = names.ToArray();
 
-            if (names.Count > 0 && supplement.curIndex <= supplement.NoStores)
+            if (names.Count > 0 && supplement.CurIndex <= supplement.NoStores)
             {
-                supplementView.SelectedSupplementValues = supplement[supplement.curIndex];
+                supplementView.SelectedSupplementValues = supplement[supplement.CurIndex];
             }
         }
 
@@ -289,14 +289,14 @@ namespace UserInterface.Presenters
             {
                 DisconnectViewEvents();
                 PopulateSupplementNames();
-                if (supplement.curIndex >= 0)
-                    supplementView.SelectedSupplementValues = supplement[supplement.curIndex];
-                supplementView.SelectedSupplementIndex = supplement.curIndex - 1;  // Offset by 1 to skip fodder
+                if (supplement.CurIndex >= 0)
+                    supplementView.SelectedSupplementValues = supplement[supplement.CurIndex];
+                supplementView.SelectedSupplementIndex = supplement.CurIndex - 1;  // Offset by 1 to skip fodder
                 ConnectViewEvents();
             }
-            else if (changedModel is TSupplementItem && supplement.IndexOf(changedModel as TSupplementItem) >= 0)
+            else if (changedModel is SupplementItem && supplement.IndexOf(changedModel as SupplementItem) >= 0)
             {
-                supplementView.SelectedSupplementValues = supplement[supplement.curIndex];
+                supplementView.SelectedSupplementValues = supplement[supplement.CurIndex];
             }
         }
     }

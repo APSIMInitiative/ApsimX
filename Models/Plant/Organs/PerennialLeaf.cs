@@ -1,7 +1,7 @@
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.PMF.Functions;
+using Models.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
 using Models.PMF.Phen;
@@ -362,7 +362,7 @@ namespace Models.PMF.Organs
         #region Arbitrator Methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public virtual BiomassSupplyType CalculateDryMatterSupply()
+        public virtual BiomassSupplyType GetDryMatterSupply()
         {
             dryMatterSupply.Fixation = Photosynthesis.Value();
             dryMatterSupply.Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
@@ -371,7 +371,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public virtual BiomassSupplyType CalculateNitrogenSupply()
+        public virtual BiomassSupplyType GetNitrogenSupply()
         {
             double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
             Biomass Senescing = new Biomass();
@@ -385,7 +385,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public virtual BiomassPoolType CalculateDryMatterDemand()
+        public virtual BiomassPoolType GetDryMatterDemand()
         {
             StructuralDMDemand = DMDemandFunction.Value();
             StorageDMDemand = 0;
@@ -396,7 +396,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public virtual BiomassPoolType CalculateNitrogenDemand()
+        public virtual BiomassPoolType GetNitrogenDemand()
         {
             double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
             double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
@@ -440,7 +440,7 @@ namespace Models.PMF.Organs
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Phenology != null)
-                if (Phenology.OnDayOf("Emergence"))
+                if (Phenology.OnStartDayOf("Emergence"))
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
         }
@@ -749,11 +749,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
                 MicroClimatePresent = false;
                 Clear();
-            }
         }
 
         /// <summary>Kill a fraction of the green leaf</summary>

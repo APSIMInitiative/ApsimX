@@ -52,9 +52,9 @@ namespace Models.Soils.Arbitrator
             {
                 List<ZoneWaterAndN> uptake;
                 if (Type == CalcType.Water)
-                    uptake = crop.GetSWUptakes(soilstate);
+                    uptake = crop.GetWaterUptakeEstimates(soilstate);
                 else
-                    uptake = crop.GetNUptakes(soilstate);
+                    uptake = crop.GetNitrogenUptakeEstimates(soilstate);
 
                 if (uptake != null)
                 {

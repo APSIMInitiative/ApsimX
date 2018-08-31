@@ -44,7 +44,12 @@ namespace Models.Agroforestry
         [Link]
         Clock clock = null;
 
-        /// <summary>Gets or sets the table data.</summary>
+        /// <summary>
+        /// Gets or sets the table data.
+        /// Be careful when working with this property!
+        /// The first list contains the column headers (e.g. 1 row of data).
+        /// The subsequent lists all contain columns of data(?!).
+        /// </summary>
         /// <value>The table.</value>
         public List<List<string>> Table { get; set; }
 
@@ -167,13 +172,13 @@ namespace Models.Agroforestry
         /// Date list for tree heights over lime
         /// </summary>
         [Summary]
-        public DateTime[] dates { get; set; }
+        public DateTime[] Dates { get; set; }
 
         /// <summary>
         /// Tree heights
         /// </summary>
         [Summary]
-        public double[] heights { get; set; }
+        public double[] Heights { get; set; }
 
         /// <summary>
         /// Tree N demands
@@ -310,40 +315,40 @@ namespace Models.Agroforestry
 
         private double GetHeightToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, heights, out didInterp) / 1000;
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, Heights, out didInterp) / 1000;
         }
         private double GetNDemandToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
         }
 
         private double GetCanopyWidthToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, CanopyWidths, out didInterp);
         }
 
         private double GetTreeLeafAreaToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
         }
 
@@ -421,7 +426,7 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="soilstate"></param>
         /// <returns></returns>
-        public List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(Soils.Arbitrator.SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetWaterUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
             double Etz = treeZoneWater.Eo; //Eo of Tree Zone
 
@@ -497,7 +502,7 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="soilstate"></param>
         /// <returns></returns>
-        public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(Soils.Arbitrator.SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
             Zone treeZone = ZoneList[0] as Zone;
 
@@ -592,7 +597,7 @@ namespace Models.Agroforestry
         ///  Accepts the actual soil water uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        public void SetSWUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
             int i = 0;
             foreach (Zone SearchZ in forestryZones)
@@ -618,7 +623,7 @@ namespace Models.Agroforestry
         /// Accepts the actual soil Nitrogen uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        public void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
             foreach (ZoneWaterAndN ZI in info)
             {

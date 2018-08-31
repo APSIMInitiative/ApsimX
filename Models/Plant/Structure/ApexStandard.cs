@@ -1,24 +1,22 @@
-﻿using System;
-using Models.PMF.Interfaces;
-using Models.Core;
-
-namespace Models.PMF.Struct
+﻿namespace Models.PMF.Struct
 {
+    using System;
+    using Models.PMF.Interfaces;
+
     /// <summary>
     /// # [Name]
     /// Calculate cohort population using stem population.
     /// </summary>
     [Serializable]    
-    public class ApexStandard : Model, IApex
+    public class ApexStandard : ApexBase, IApex
     {
         /// <summary>
         /// Calculate cohort population at leaf appearance.
         /// </summary>
-        /// <param name="apexNumber"></param>
         /// <param name="population"></param>
         /// <param name="totalStemPopn"></param>
         /// <returns></returns>
-        public double Appearance(double apexNumber, double population, double totalStemPopn)
+        public override double Appearance(double population, double totalStemPopn)
         {
             return totalStemPopn;
         }
@@ -26,11 +24,10 @@ namespace Models.PMF.Struct
         /// <summary>
         /// Calculate cohort population at leaf tip appearance.
         /// </summary>
-        /// <param name="apexNumber"></param>
         /// <param name="population"></param>
         /// <param name="totalStemPopn"></param>
         /// <returns></returns>
-        public double LeafTipAppearance(double apexNumber, double population, double totalStemPopn)
+        public override double LeafTipAppearance(double population, double totalStemPopn)
         {
             return totalStemPopn;
         }

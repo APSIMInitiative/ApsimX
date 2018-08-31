@@ -146,7 +146,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// The total live herbage used as input in TGrazingInputs
+        /// The total live herbage used as input in GrazingInputs
         /// Units: the same as the forage object
         /// </summary>
         public double TotalLive
@@ -158,7 +158,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// The total dead herbage used as input in TGrazingInputs
+        /// The total dead herbage used as input in GrazingInputs
         /// Units: the same as the forage object
         /// </summary>
         public double TotalDead
@@ -169,7 +169,7 @@ namespace Models.GrazPlan
             }
         }
 
-        // The computed attributes of this "forage", in the form used by TAnimalGroup
+        // The computed attributes of this "forage", in the form used by AnimalGroup
         /// <summary>
         /// Use the forage data
         /// </summary>
@@ -177,7 +177,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The grazing forage data
         /// </summary>
-        protected GrazType.TGrazingInputs FForageData = new GrazType.TGrazingInputs();
+        protected GrazType.GrazingInputs FForageData = new GrazType.GrazingInputs();
         /// <summary>
         /// Green mass of the forage
         /// </summary>
@@ -307,12 +307,12 @@ namespace Models.GrazPlan
         ///   a single digestibility, as part of a distribution of digestibilities
         ///   *provided by the source component*.
         /// * We therefore calculate the DMD and then place all forage mass in the
-        ///   TAnimalGroup DMD class that contains that DMD value
+        ///   AnimalGroup DMD class that contains that DMD value
         /// </summary>
         /// <param name="dAvailPropn"></param>
         /// <param name="dBulkDensity"></param>
         /// <returns></returns>
-        public GrazType.TGrazingInputs convertChemistry_DigInDig(double dAvailPropn, double dBulkDensity)
+        public GrazType.GrazingInputs convertChemistry_DigInDig(double dAvailPropn, double dBulkDensity)
         {
             const int DDM = 0;
             const int IDM = 1;
@@ -321,7 +321,7 @@ namespace Models.GrazPlan
             double dMeanDMD;
             int iDMD;
 
-            GrazType.TGrazingInputs Result = new GrazType.TGrazingInputs();
+            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref Result);
             for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
                 Result.Herbage[iDMD].HeightRatio = 1.0;
@@ -374,12 +374,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// The providing forage component is specifying a quantity of forage with
         ///   a known average digestibility, and is signalling that *this* component
-        ///   should distribute the forage across the TAnimalGroup DMD pools
+        ///   should distribute the forage across the AnimalGroup DMD pools
         /// </summary>
         /// <param name="dAvailPropn"></param>
         /// <param name="dBulkDensity"></param>
         /// <returns></returns>
-        public GrazType.TGrazingInputs convertChemistry_MeanDMD(double dAvailPropn, double dBulkDensity)
+        public GrazType.GrazingInputs convertChemistry_MeanDMD(double dAvailPropn, double dBulkDensity)
         {
             const int DDM_MEAN = 0;
             const int IDM_MEAN = 1;
@@ -389,7 +389,7 @@ namespace Models.GrazPlan
             double[] dDMDPropns = new double[GrazType.DigClassNo + 1];
             int iDMD;
 
-            GrazType.TGrazingInputs Result = new GrazType.TGrazingInputs();
+            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
 
             for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
                 Result.Herbage[iDMD].HeightRatio = 1.0;
@@ -441,17 +441,17 @@ namespace Models.GrazPlan
         /// <summary>
         /// The providing forage component is specifying a list of quantities of forage,
         ///   each of which is assumed to have DMD uniformly distributed across one of
-        ///   the TAnimalGroup DMD pools
+        ///   the AnimalGroup DMD pools
         /// </summary>
         /// <param name="dAvailPropn"></param>
         /// <param name="dBulkDensity"></param>
         /// <returns></returns>
-        public GrazType.TGrazingInputs convertChemistry_DMDClasses6(double dAvailPropn, double dBulkDensity)
+        public GrazType.GrazingInputs convertChemistry_DMDClasses6(double dAvailPropn, double dBulkDensity)
         {
             int iChem;
             int iDMD;
 
-            GrazType.TGrazingInputs Result = new GrazType.TGrazingInputs();
+            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
             for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
                 Result.Herbage[iDMD].HeightRatio = 1.0;
 
@@ -623,7 +623,7 @@ namespace Models.GrazPlan
         /// <param name="dAvailPropn"></param>
         /// <param name="iDDM"></param>
         /// <param name="iIDM"></param>
-        public void populateSeedRecord(ref GrazType.TGrazingInputs GI, double dAvailPropn, int iDDM, int iIDM)
+        public void populateSeedRecord(ref GrazType.GrazingInputs GI, double dAvailPropn, int iDDM, int iIDM)
         {
             double dTotalDM;
             double dMeanDMD;
@@ -645,11 +645,11 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Set the LegumePropn, SelectFactor and TropLegume fields of a TGrazingInputs
+        /// Set the LegumePropn, SelectFactor and TropLegume fields of a GrazingInputs
         /// * Expects that the TotalGreen and TotalDead fields have already been computed
         /// </summary>
         /// <param name="GI"></param>
-        public void populateHerbageType(ref GrazType.TGrazingInputs GI)
+        public void populateHerbageType(ref GrazType.GrazingInputs GI)
         {
             if (GI.TotalGreen + GI.TotalDead > 0.0)
             {
@@ -689,11 +689,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// The herbage info
         /// </summary>
-        public GrazType.TPopnHerbageData HerbageData;
+        public GrazType.PopulationHerbageData HerbageData;
         /// <summary>
         /// Amount of this forage removed (output)
         /// </summary>
-        public GrazType.TGrazingOutputs RemovalKG;                                       
+        public GrazType.GrazingOutputs RemovalKG;                                       
 
         /// <summary>
         /// Construct a forage info
@@ -707,19 +707,19 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <param name="forageInputs"></param>
-        public void setAvailForage(GrazType.TGrazingInputs forageInputs)
+        public void setAvailForage(GrazType.GrazingInputs forageInputs)
         {
             FUseForageData = true;
             FForageData.CopyFrom(forageInputs);
         }
 
         /// <summary>
-        /// Calculates the TGrazingInputs values from the values stored during addForageData() 
+        /// Calculates the GrazingInputs values from the values stored during addForageData() 
         /// </summary>
         /// <returns></returns>
-        public GrazType.TGrazingInputs availForage()
+        public GrazType.GrazingInputs availForage()
         {
-            GrazType.TGrazingInputs Result = new GrazType.TGrazingInputs();
+            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
                         
             Result.CopyFrom(FForageData);
             
@@ -1001,7 +1001,7 @@ namespace Models.GrazPlan
         /// <param name="Grazing"></param>
         /// <param name="sUnit"></param>
         public void passGrazingInputs(ForageInfo forage,
-                                      GrazType.TGrazingInputs Grazing,
+                                      GrazType.GrazingInputs Grazing,
                                       string sUnit)
         {
             double fScale;
@@ -1020,14 +1020,14 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Copies a Plant/AgPasture object biomass organs into TGrazingInputs object
+        /// Copies a Plant/AgPasture object biomass organs into GrazingInputs object
         /// This object may then get scaled to kg/ha
         /// </summary>
         /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
         /// <returns>The grazing inputs</returns>
-        private GrazType.TGrazingInputs Crop2GrazingInputs(Object forageObj)
+        private GrazType.GrazingInputs Crop2GrazingInputs(Object forageObj)
         {
-            GrazType.TGrazingInputs result = new GrazType.TGrazingInputs();
+            GrazType.GrazingInputs result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
             
             result.TotalGreen = 0;
@@ -1109,7 +1109,7 @@ namespace Models.GrazPlan
             while (forage != null)
             {
                 double area = forage.InPaddock.fArea;
-                GrazType.TGrazingOutputs removed = forage.RemovalKG;
+                GrazType.GrazingOutputs removed = forage.RemovalKG;
 
                 // total the amount removed kg/ha
                 double totalRemoved = 0.0;
@@ -1137,7 +1137,6 @@ namespace Models.GrazPlan
                         removal.FractionDeadToRemove = prpnToRemove;
                         removal.FractionLiveToRemove = prpnToRemove;
                         organ.RemoveBiomass("Graze", removal);
-                        ((IPlant)this.ForageObj).BiomassRemovalComplete(prpnToRemove);
                     }
                 }
                 
@@ -1152,7 +1151,7 @@ namespace Models.GrazPlan
         /// <param name="forage"></param>
         /// <param name="sUnit"></param>
         /// <returns></returns>
-        public GrazType.TGrazingOutputs ReturnRemoval(ForageInfo forage, string sUnit)
+        public GrazType.GrazingOutputs ReturnRemoval(ForageInfo forage, string sUnit)
         {
             double fArea;
             double fScale;
@@ -1160,7 +1159,7 @@ namespace Models.GrazPlan
             int iSpecies;
             int iRipe;
 
-            GrazType.TGrazingOutputs Result = new GrazType.TGrazingOutputs();
+            GrazType.GrazingOutputs Result = new GrazType.GrazingOutputs();
 
             if (forage != null)
             {
@@ -1169,7 +1168,7 @@ namespace Models.GrazPlan
             }
             else
             {
-                Result = new GrazType.TGrazingOutputs();
+                Result = new GrazType.GrazingOutputs();
                 fArea = 0.0;
             }
 
@@ -1377,7 +1376,8 @@ namespace Models.GrazPlan
         /// CAREFUL - FForages does not own its members
         /// </summary>
         private ForageList FForages;                                       
-        private TSupplementRation FSuppInPadd;                                                  
+        private SupplementRation FSuppInPadd;
+        private bool feedSupplementFirst = false;                                                
         private bool FUseHerbageAmt;
 
         private void SetSlope(double fValue)
@@ -1421,7 +1421,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Supplement that is in the paddock
         /// </summary>
-        public TSupplementRation SuppInPadd
+        public SupplementRation SuppInPadd
         {
             get { return FSuppInPadd; }
         }
@@ -1432,13 +1432,22 @@ namespace Models.GrazPlan
         {
             get { return FForages; }
         }
+
+        /// <summary>
+        /// Feed the supplement first. Bail feeding.
+        /// </summary>
+        public bool FeedSuppFirst
+        {
+            get { return feedSupplementFirst; }
+        }
+
         /// <summary>
         /// Create the PaddockInfo
         /// </summary>
         public PaddockInfo()
         {
             FForages = new ForageList(false);
-            FSuppInPadd = new TSupplementRation();
+            FSuppInPadd = new SupplementRation();
             this.fArea = 1.0;
             FSlope = 0.0;
             iExcretionID = NOTTHERE;
@@ -1489,26 +1498,29 @@ namespace Models.GrazPlan
 
             SuppRemovalKG = 0.0;
             for (Jdx = 0; Jdx <= Forages.Count() - 1; Jdx++)
-                Forages.byIndex(Jdx).RemovalKG = new GrazType.TGrazingOutputs();
+                Forages.byIndex(Jdx).RemovalKG = new GrazType.GrazingOutputs();
         }
         /// <summary>
         /// Feed the supplement
         /// </summary>
         /// <param name="fNewAmount"></param>
         /// <param name="NewSupp"></param>
-        public void FeedSupplement(double fNewAmount, TSupplement NewSupp)
+        /// <param name="feedSuppFirst">Bail feeding</param>
+        public void FeedSupplement(double fNewAmount, FoodSupplement NewSupp, bool feedSuppFirst)
         {
-            TSupplement aSupp;
+            FoodSupplement aSupp;
             bool bFound;
             int Idx;
 
+            this.feedSupplementFirst = false;
             if (fNewAmount > 0.0)
             {
+                this.feedSupplementFirst = feedSuppFirst;
                 Idx = 0;
                 bFound = false;
                 while (!bFound && (Idx < SuppInPadd.Count))
                 {
-                    bFound = NewSupp.isSameAs(SuppInPadd[Idx]);
+                    bFound = NewSupp.IsSameAs(SuppInPadd[Idx]);
                     if (!bFound)
                         Idx++;
                 }
@@ -1516,7 +1528,7 @@ namespace Models.GrazPlan
                     SuppInPadd[Idx].Amount = SuppInPadd[Idx].Amount + fNewAmount;    
                 else
                 {
-                    aSupp = new TSupplement();
+                    aSupp = new FoodSupplement();
                     aSupp.Assign(NewSupp);
                     SuppInPadd.Add(aSupp, fNewAmount);
                 }

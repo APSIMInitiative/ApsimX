@@ -13,7 +13,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using System.Xml;
     using System.IO;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using System.Data;
 
     /// <summary>

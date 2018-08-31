@@ -32,7 +32,7 @@ namespace UserInterface.Views
         /// </summary>
         public TitleView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TitleView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.TitleView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             entry1 = (Entry)builder.GetObject("entry1");
             _mainWidget = hbox1;
@@ -53,14 +53,6 @@ namespace UserInterface.Views
         public void Populate(string title)
         {
             entry1.Text = title;
-        }
-
-        /// <summary>
-        /// When the user 'enters' the position combo box, save the current text value for later.
-        /// </summary>
-        private void OnTitleTextBoxEnter(object sender, EventArgs e)
-        {
-            OriginalText = entry1.Text;
         }
 
         /// <summary>

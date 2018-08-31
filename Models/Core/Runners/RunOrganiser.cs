@@ -16,6 +16,20 @@
         /// <summary>Simulation names being run</summary>
         public List<string> SimulationNamesBeingRun { get; private set; }
 
+        /// <summary>
+        /// Clocks of simulations that have begun running
+        /// </summary>
+        public List<IClock> SimClocks
+        {
+            get
+            {
+                if (simulationEnumerator as Runner.SimulationEnumerator != null)
+                    return (simulationEnumerator as Runner.SimulationEnumerator).simClocks;
+                else
+                    return null;
+            }
+        }
+
         /// <summary>All known simulation names</summary>
         public List<string> AllSimulationNames
         {

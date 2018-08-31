@@ -2,7 +2,7 @@
 namespace Models.Soils.Nutrient
 {
     using Core;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using System;
     using System.Reflection;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
-using Models.PMF.Functions;
+using Models.Functions;
 
 namespace Models.PMF.Struct
 {
@@ -15,9 +15,6 @@ namespace Models.PMF.Struct
     [Serializable]
     public class HeightFunction : Model, IFunction
     {
-        [Link]
-        private Plant plantModel = null;
-
         /// <summary>The potential height</summary>
         [Link]
         private IFunction PotentialHeight = null;
@@ -68,7 +65,6 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (sender == plantModel)
                 Clear();
         }
 
@@ -78,7 +74,6 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (sender == plantModel)
                 Clear();
         }
 

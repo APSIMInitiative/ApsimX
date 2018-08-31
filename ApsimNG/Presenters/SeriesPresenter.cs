@@ -9,6 +9,7 @@ namespace UserInterface.Presenters
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
+    using EventArguments;
     using System.Linq;
     using APSIM.Shared.Utilities;
     using Interfaces;
@@ -39,6 +40,11 @@ namespace UserInterface.Presenters
         /// <summary>The graph presenter</summary>
         private GraphPresenter graphPresenter;
 
+        /// <summary>
+        /// The intellisense.
+        /// </summary>
+        private IntellisensePresenter intellisense;
+
         /// <summary>Attach the model and view to this presenter.</summary>
         /// <param name="model">The graph model to work with</param>
         /// <param name="view">The series view to work with</param>
@@ -48,6 +54,8 @@ namespace UserInterface.Presenters
             this.series = model as Series;
             this.seriesView = view as SeriesView;
             this.explorerPresenter = explorerPresenter;
+            intellisense = new IntellisensePresenter(seriesView as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
             if (parentGraph != null)
@@ -66,6 +74,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             seriesView.EndEdit();
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             if (graphPresenter != null)
             {
                 graphPresenter.Detach();
@@ -96,6 +105,7 @@ namespace UserInterface.Presenters
             this.seriesView.YCumulative.Changed += OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed += OnCumulativeXChanged;
             this.seriesView.Filter.Changed += OnFilterChanged;
+            this.seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
         /// <summary>Disconnect all view events.</summary>
@@ -120,6 +130,7 @@ namespace UserInterface.Presenters
             this.seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             this.seriesView.XCumulative.Changed -= OnCumulativeXChanged;
             this.seriesView.Filter.Changed -= OnFilterChanged;
+            this.seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
         /// <summary>Set the value of the graph models property</summary>
@@ -129,6 +140,16 @@ namespace UserInterface.Presenters
         {
             Commands.ChangeProperty command = new Commands.ChangeProperty(series, name, value);
             this.explorerPresenter.CommandHistory.Add(command);
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense window.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            seriesView.Filter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
 
         #region Events from the view
@@ -334,6 +355,24 @@ namespace UserInterface.Presenters
         private void OnFilterChanged(object sender, EventArgs e)
         {
             this.SetModelProperty("Filter", this.seriesView.Filter.Value);
+        }
+
+        /// <summary>
+        /// Invoked when the user is asking for items for the intellisense.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemsNeeded(object sender, NeedContextItemsArgs args)
+        {
+            try
+            {
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, seriesView.DataSource.SelectedValue, storage))
+                    intellisense.Show(args.Coordinates.Item1, args.Coordinates.Item2);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         #endregion

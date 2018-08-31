@@ -143,13 +143,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>Get a screen shot of the manager grid.</summary>
-        /// <returns>An Image object</returns>
-        public Image GetScreenshot()
-        {
-            return this.managerView.GridView.GetScreenshot();
-        }
-
         /// <summary>
         /// Find the type in the name
         /// </summary>

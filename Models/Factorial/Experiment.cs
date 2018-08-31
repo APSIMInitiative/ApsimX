@@ -14,8 +14,8 @@
     /// Encapsulates a factorial experiment.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.FactorControlView")]
-    [PresenterName("UserInterface.Presenters.FactorControlPresenter")]
+    [ViewName("UserInterface.Views.ExperimentView")]
+    [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model, ISimulationGenerator, ICustomDocumentation
     {
@@ -59,13 +59,8 @@
             newSimulation.FileName = parentSimulations.FileName;
             Apsim.ParentAllChildren(newSimulation);
 
-            // Make substitutions.
-            parentSimulations.MakeSubstitutions(newSimulation);
-
-            // Call OnLoaded in all models.
-            Events events = new Events(newSimulation);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
+            // Make substitutions and issue Loaded event
+            parentSimulations.MakeSubsAndLoad(newSimulation);
 
             foreach (FactorValue value in combination)
                 value.ApplyToSimulation(newSimulation);
@@ -266,13 +261,8 @@
                     newSimulation.FileName = parentSimulations.FileName;
                     Apsim.ParentAllChildren(newSimulation);
 
-                    // Make substitutions.
-                    parentSimulations.MakeSubstitutions(newSimulation);
-
-                    // Connect events and links in our new  simulation.
-                    Events events = new Events(newSimulation);
-                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                    events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
+                    // Make substitutions and issue "Loaded" event
+                    parentSimulations.MakeSubsAndLoad(newSimulation);
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);

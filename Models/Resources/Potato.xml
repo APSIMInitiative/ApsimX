@@ -1,4 +1,4 @@
-<Plant>
+<Plant Version="36">
 	<Name>Potato</Name>
 	<Memo>
 		<Name>TitlePage</Name>
@@ -197,6 +197,8 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 	</OrganArbitrator>
 	<Structure>
 		<Name>Structure</Name>
+    <CohortInitialisationStage>Peeping</CohortInitialisationStage>
+    <LeafInitialisationStage>Emergence</LeafInitialisationStage>
 		<VariableReference>
 			<Name>ThermalTime</Name>
 			<IncludeInDocumentation>false</IncludeInDocumentation>
@@ -339,7 +341,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 		<Emerged>false</Emerged>
 		<CohortToInitialise>0</CohortToInitialise>
 		<TipToAppear>0</TipToAppear>
-		<ApexNum>0</ApexNum>
 	</Structure>
 	<GenericOrgan>
 		<Name>Tuber</Name>
@@ -394,49 +395,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 							<Name>ThermalTime</Name>
 							<XYPairs>
 								<Name>XYPairs</Name>
-								<Graph>
-									<Name>Graph</Name>
-									<Series>
-										<Name>Series</Name>
-										<IncludeInDocumentation>false</IncludeInDocumentation>
-										<Type>Scatter</Type>
-										<XAxis>Bottom</XAxis>
-										<YAxis>Left</YAxis>
-										<ColourArgb>-65536</ColourArgb>
-										<FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-										<FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-										<FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-										<Marker>None</Marker>
-										<MarkerSize>Normal</MarkerSize>
-										<Line>Solid</Line>
-										<LineThickness>Normal</LineThickness>
-										<XFieldName>.Simulations.Replacements.Potato.Tuber.DMDemandFunction.ThermalTime.XYPairs.X</XFieldName>
-										<YFieldName>.Simulations.Replacements.Potato.Tuber.DMDemandFunction.ThermalTime.XYPairs.Y</YFieldName>
-										<ShowInLegend>false</ShowInLegend>
-										<IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-										<Cumulative>false</Cumulative>
-										<CumulativeX>false</CumulativeX>
-									</Series>
-									<IncludeInDocumentation>false</IncludeInDocumentation>
-									<Axis>
-										<Type>Left</Type>
-										<Title>Y</Title>
-										<Inverted>false</Inverted>
-										<Minimum>NaN</Minimum>
-										<Maximum>NaN</Maximum>
-										<Interval>NaN</Interval>
-									</Axis>
-									<Axis>
-										<Type>Bottom</Type>
-										<Title>X</Title>
-										<Inverted>false</Inverted>
-										<Minimum>NaN</Minimum>
-										<Maximum>NaN</Maximum>
-										<Interval>NaN</Interval>
-									</Axis>
-									<LegendPosition>BottomRight</LegendPosition>
-									<DisabledSeries />
-								</Graph>
 								<IncludeInDocumentation>false</IncludeInDocumentation>
 								<X>
 									<double>2</double>
@@ -871,10 +829,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 	</Root>
 	<Leaf>
 		<Name>Leaf</Name>
-		<ApexStandard>
-			<Name>ApexStandard</Name>
-			<IncludeInDocumentation>false</IncludeInDocumentation>
-		</ApexStandard>
 		<VariableReference>
 			<Name>ThermalTime</Name>
 			<IncludeInDocumentation>false</IncludeInDocumentation>
@@ -907,8 +861,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<Rank>1</Rank>
 			<Area>900</Area>
 			<MaintenanceRespiration>0</MaintenanceRespiration>
-			<ApexGroupSize />
-			<ApexGroupAge />
 		</LeafCohort>
 		<LeafCohort>
 			<Name>InitialLeaf2</Name>
@@ -937,8 +889,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<Rank>2</Rank>
 			<Area>600</Area>
 			<MaintenanceRespiration>0</MaintenanceRespiration>
-			<ApexGroupSize />
-			<ApexGroupAge />
 		</LeafCohort>
 		<LeafCohort>
 			<Name>InitialLeaf3</Name>
@@ -967,8 +917,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 			<Rank>3</Rank>
 			<Area>300</Area>
 			<MaintenanceRespiration>0</MaintenanceRespiration>
-			<ApexGroupSize />
-			<ApexGroupAge />
 		</LeafCohort>
 		<LeafCohortParameters>
 			<Name>CohortParameters</Name>
@@ -1151,7 +1099,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 					</Y>
 				</XYPairs>
 				<IncludeInDocumentation>false</IncludeInDocumentation>
-				<XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
+				<XProperty>[Potato].Leaf.Fw</XProperty>
 			</LinearInterpolationFunction>
 			<Constant>
 				<Name>CriticalNConc</Name>
@@ -1366,7 +1314,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
 					</Y>
 				</XYPairs>
 				<IncludeInDocumentation>false</IncludeInDocumentation>
-				<XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
+				<XProperty>[Potato].Leaf.Fw</XProperty>
 			</LinearInterpolationFunction>
 			<IncludeInDocumentation>false</IncludeInDocumentation>
 		</MultiplyFunction>

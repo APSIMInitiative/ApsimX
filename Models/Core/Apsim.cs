@@ -14,8 +14,7 @@ namespace Models.Core
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Xml;
     using APSIM.Shared.Utilities;
-    using PMF.Functions;
-    using PMF;
+    using Functions;
     using Factorial;
 
     /// <summary>
@@ -457,6 +456,19 @@ namespace Models.Core
             {
                 child.Parent = model;
                 ParentAllChildren(child);
+            }
+        }
+
+        /// <summary>
+        /// Parent all children of 'model'.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void UnparentAllChildren(IModel model)
+        {
+            foreach (IModel child in model.Children)
+            {
+                child.Parent = null;
+                UnparentAllChildren(child);
             }
         }
 

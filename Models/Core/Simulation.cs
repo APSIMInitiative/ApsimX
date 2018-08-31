@@ -180,11 +180,8 @@ namespace Models.Core
                 // different. I'm not sure how to fix this yet. A brute force way is to recompile all manager 
                 // scripts after cloning.
                 // https://github.com/APSIMInitiative/ApsimX/issues/2603
-                Events events = new Events(simulationToRun);
-                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
 
-                simulationEngine.MakeSubstitutions(simulationToRun);
+                simulationEngine.MakeSubsAndLoad(simulationToRun);
             }
             return simulationToRun;
         }
@@ -201,10 +198,18 @@ namespace Models.Core
         public List<ISimulationGeneratorFactors> GetFactors()
         {
             List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
-            var factor = new SimulationGeneratorFactors("SimulationName", Name, "Simulation", Name);
-            factors.Add(factor);
+            // Add top level simulation zone. This is needed if Report is in top level.
+            factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
+                                                       new string[] { Name, Name },
+                                                       "Simulation", Name));
             foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
-                factor.AddFactor("Zone", zone.Name); 
+            {
+                var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
+                                                            new string[] { Name, zone.Name }, 
+                                                            "Simulation", Name);
+                factors.Add(factor);
+                factor.AddFactor("Zone", zone.Name);
+            }
             return factors;
         }
 

@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Models.CLEM.Groupings
 {
-    ///<summary>
+    /// <summary>
     /// Contains a group of filters to identify individual ruminants
-    ///</summary> 
+    /// </summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
