@@ -1287,7 +1287,7 @@ widget_class "*<GtkNotebook>*<GtkDrawingArea>" style "murrine-notebook-bg"
 widget_class "*<GtkNotebook>*<GtkLayout>" style "murrine-notebook-bg"
 widget_class "*.GtkNotebook.*.GtkViewport" style "murrine-notebook"
 
-widget_class "*<GtkButton>" style "murrine-button"
+widget_class "*<GtkButton>" style "murrine-default"
 widget_class "*<GtkButton>*<GtkLabel>" 		style "murrine-button"
 widget_class "*<GtkStatusbar>*" style "murrine-statusbar"
 widget_class "*<GtkProgress>" style "murrine-progressbar"
