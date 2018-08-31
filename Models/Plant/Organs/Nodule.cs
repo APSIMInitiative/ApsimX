@@ -466,9 +466,9 @@ namespace Models.PMF.Organs
             {
                 throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
             }
-            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
-            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
-        }
+            Live.MetabolicWt = Live.MetabolicWt - MathUtilities.Divide(respiration * Live.MetabolicWt , total, 0);
+            Live.StorageWt = Live.StorageWt - MathUtilities.Divide(respiration * Live.StorageWt , total, 0);
+         }
 
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
