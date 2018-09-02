@@ -18,7 +18,7 @@
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.GridPresenter")]
+    [PresenterName("UserInterface.Presenters.MorrisPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class Morris : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
