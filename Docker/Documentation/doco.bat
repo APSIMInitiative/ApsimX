@@ -29,5 +29,5 @@ for /r Documentation\PDF %%D in (*.pdf) do (
 	set "NEW_NAME=%%~nD%ISSUE_NUMBER%%%~xD"
 	rename "%%D" "%NEW_NAME%"
 	echo Uploading %NEW_NAME%
-	@curl -u %APSIM_SITE_CREDS% -T "%NEW_NAME%" ftp://www.apsim.info/APSIM/ApsimXFiles/
+	@curl -u %APSIM_SITE_CREDS% -T "%%~dpD%NEW_NAME%" ftp://www.apsim.info/APSIM/ApsimXFiles/
 )
