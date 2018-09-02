@@ -1203,33 +1203,49 @@
             //Add Metabolic Demand function
             ConverterUtilities.AddConstantFuntionIfNotExists(DMDemands, "Metabolic", "0.0");
             //Add Storage Demand function
-            XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageDemandFunction", "Storage");
             XmlNode structuralFraction = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
-            XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
-            ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
-            storageFraction.AppendChild(structuralFraction);
-            Storage.AppendChild(storageFraction);
-            DMDemands.AppendChild(Storage);
+            if (structuralFraction != null)
+            {
+                XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageDemandFunction", "Storage");
+                XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
+                ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
+                storageFraction.AppendChild(structuralFraction);
+                Storage.AppendChild(storageFraction);
+                DMDemands.AppendChild(Storage);
+            }
+            else
+            {
+                ConverterUtilities.AddConstantFuntionIfNotExists(DMDemands, "Storage", "0.0");
+            }
         }
         /// <summary>
         /// Upgrades to version 40. Replaces Refactorying parameterisation of DM demands.
         /// </summary>
         private static void UpgradeToVersion40(XmlNode node, string fileName)
         {
-           
+
             foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
             {
                 MakeDMDemandsNode(node, organNode);
             }
-         /*   foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
+            foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
             {
                 MakeDMDemandsNode(node, organNode);
             }
             foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "Nodule"))
             {
                 MakeDMDemandsNode(node, organNode);
-            } */
+            }
+            foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "PerennialLeaf"))
+            {
+                MakeDMDemandsNode(node, organNode);
+            }
+            foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
+            {
+                MakeDMDemandsNode(node, organNode);
+            }
+            ConverterUtilities.RenameVariable(node, ".DMDemandFunction.PartitionFraction.",
+                ".DMDemands.Structural.PartitionFraction.");
         }
-
     }
 }
