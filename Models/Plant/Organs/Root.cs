@@ -78,11 +78,11 @@ namespace Models.PMF.Organs
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
         private BiomassRemoval biomassRemovalModel = null;
-        
+
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]
-        private IFunction dmDemandFunction = null;
+        private BiomassDemand dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [ChildLinkByName]
@@ -139,11 +139,6 @@ namespace Models.PMF.Organs
         [ChildLinkByName]
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
-
-        /// <summary>The DM structural fraction</summary>
-        [ChildLinkByName(IsOptional = true)]
-        [Units("g/g")]
-        private IFunction structuralFraction = null;
 
         /// <summary>The maximum N concentration</summary>
         [ChildLinkByName]
@@ -228,15 +223,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
-
-        /// <summary>The structural DM demand</summary>
-        private double structuralDMDemand = 0.0;
-
-        /// <summary>The non structural DM demand</summary>
-        private double storageDMDemand = 0.0;
-
-        /// <summary>The metabolic DM demand</summary>
-        private double metabolicDMDemand = 0.0;
 
         /// <summary>The structural N demand</summary>
         private double structuralNDemand = 0.0;
@@ -540,12 +526,19 @@ namespace Models.PMF.Organs
         {
             if (Plant.SowingData?.Depth < PlantZone.Depth)
             {
-                structuralDMDemand = DemandedDMStructural();
-                storageDMDemand = DemandedDMStorage();
-                TotalDMDemand = structuralDMDemand + storageDMDemand + metabolicDMDemand;
+                if (dmConversionEfficiency.Value() > 0.0)
+                {
+                    DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
+                    DMDemand.Metabolic = 0;
+                }
+                else
+                { // Conversion efficiency is zero!!!!
+                    DMDemand.Structural = 0;
+                    DMDemand.Storage = 0;
+                    DMDemand.Metabolic = 0;
+                }
             }
-            DMDemand.Structural = structuralDMDemand;
-            DMDemand.Storage = storageDMDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
@@ -913,46 +906,6 @@ namespace Models.PMF.Organs
             {  // By default reallocation is turned off!!!!
                 return 0.0;
             }
-        }
-
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        private double DemandedDMStructural()
-        {
-            if (dmConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = dmDemandFunction.Value();
-                if (structuralFraction != null)
-                    demandedDM *= structuralFraction.Value() / dmConversionEfficiency.Value();
-                else
-                    demandedDM /= dmConversionEfficiency.Value();
-
-                return demandedDM;
-            }
-            // Conversion efficiency is zero!!!!
-            return 0.0;
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        private double DemandedDMStorage()
-        {
-            if ((dmConversionEfficiency.Value() > 0.0) && (structuralFraction != null))
-            {
-                double rootLiveStructuralWt = 0.0;
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                    {
-                        rootLiveStructuralWt += Z.LayerLive[i].StructuralWt;
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-                    }
-
-                double theoreticalMaximumDM = (rootLiveStructuralWt + structuralDMDemand) / structuralFraction.Value();
-                double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + structuralDMDemand;
-                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / dmConversionEfficiency.Value();
-                return demandedDM;
-            }
-            // Either there is no Storage fraction or conversion efficiency is zero!!!!
-            return 0.0;
         }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>

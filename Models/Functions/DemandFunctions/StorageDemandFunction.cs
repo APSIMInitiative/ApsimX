@@ -47,9 +47,10 @@ namespace Models.Functions.DemandFunctions
         public double Value(int arrayIndex = -1)
         {
             double structuralWt = parentOrgan.Live.StructuralWt + parentOrgan.DMDemand.Structural;
-            double storageMaximum = MathUtilities.Divide(structuralWt,storageFraction.Value() - 1, 0);
-            return storageMaximum - parentOrgan.Live.StorageWt;
-         }
+            double MaximumDM = MathUtilities.Divide(structuralWt,1-storageFraction.Value(), 0);
+            double AlreadyAllocated = structuralWt + parentOrgan.Live.StorageWt;
+            return MaximumDM - AlreadyAllocated;
+        }
 
     }
 }
