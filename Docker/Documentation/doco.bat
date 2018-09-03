@@ -1,4 +1,6 @@
 @echo off
+echo Adding Apsim registry entries...
+REG import C:\ie.reg
 set apsimx=C:\ApsimX
 if not exist %apsimx% (
 	echo %apsimx% does not exist. Aborting...
