@@ -1,0 +1,6 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION]
+
+"ApsimNG.exe"=dword:00002af8
+"ApsimNG.vshost.exe"=dword:00002af8
