@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Xml.Serialization;
     using Utilities;
 
     /// <summary>
@@ -45,6 +46,7 @@
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
+        [XmlIgnore]
         public DataTable Table
         {
             get
