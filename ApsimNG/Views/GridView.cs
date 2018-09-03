@@ -1486,7 +1486,7 @@
 
             Grid.Model = null;
             fixedColView.Model = null;
-            for (int row = 0; row < numRows; row++)
+            for (int row = 0; row <= numRows; row++)
             {
                 // We could store data into the grid model, but we don't.
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
