@@ -116,6 +116,20 @@ namespace UserInterface.Views
                    </html>";
         }
 
+        public string GetSelectedText()
+        {
+            wb.Document.ExecCommand("Copy", false, null);
+            dynamic document = wb.Document.DomDocument;
+            dynamic selection = document.selection;
+            dynamic text = selection.createRange().text;
+            return (string)text;
+        }
+
+        public void SelectAll()
+        {
+            wb.Document.ExecCommand("selectAll", false, null);
+        }
+
         public void Remap()
         {
             // There are some quirks in the use of GTK sockets. I don't know why, but
@@ -701,48 +715,12 @@ namespace UserInterface.Views
                 {
                     keyCode += 96;
                     if (keyCode == 'c')
-                    {
-                        // User pressed control + c, so we need to copy any selected text.
-                        mshtml.IHTMLSelectionObject selectionRange = (ieBrowser.wb.Document.DomDocument as mshtml.IHTMLDocument2).selection;
-                        if (selectionRange != null)
-                        {
-                            mshtml.IHTMLTxtRange textRange = selectionRange.createRange();
-                            if (textRange != null)
-                            {
-                                Copy?.Invoke(this, new CopyEventArgs { Text = textRange.text });
-                            }
-                        }
-                        // Prevent this event from propagating further.
-                        e.ReturnValue = true;
-                    }
+                        Copy?.Invoke(this, new CopyEventArgs() { Text = ieBrowser.GetSelectedText() });
                     else if (keyCode == 'a')
-                    {
-                        // User pressed control + a, so we need to select all.
-                        // Perhaps it's possible to do this via the .NET WebBrowser, but I haven't managed
-                        // to find a way. Instead, we will inject and run some javascript to do it for us.
-
-                        // First, check if a script to do this is already defined.
-                        if (ieBrowser.wb.Document.GetElementById("selectAllScript") == null)
-                        {
-                            // Script doesn't exist. This must be the first time the user has pressed control + a.
-                            // We add a script element to the document body, which contains a single function.
-                            HtmlElement head = ieBrowser.wb.Document.GetElementsByTagName("head")[0];
-                            HtmlElement selectAllScript = ieBrowser.wb.Document.CreateElement("script");
-                            selectAllScript.Id = "selectAllScript";
-                            mshtml.IHTMLScriptElement scriptDomElement = (mshtml.IHTMLScriptElement)selectAllScript.DomElement;
-                            scriptDomElement.text = "function selectAll() {"
-                                                                                + "range = document.body.createTextRange();"
-                                                                                + "range.moveToElementText(document.body);"
-                                                                                + "range.select();"
-                                                                        + "} ";
-                            head.AppendChild(selectAllScript);
-                        }
-                        // Execute the select all function.
-                        browser.ExecJavaScript("selectAll", null);
-                    }
+                        ieBrowser.SelectAll();
                     else if (keyCode == 'f')
-                        // We just send the appropriate keypress event to the WebBrowser. This doesn't seem to work well for 
-                        // ctrl + a, and doesn't work at all for ctrl + c. 
+                        // We just send the appropriate keypress event to the WebBrowser. This doesn't 
+                        // seem to work well for ctrl + a, and doesn't work at all for ctrl + c. 
                         SendKeys.SendWait("^f");
                 }
             }
