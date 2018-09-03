@@ -116,6 +116,9 @@ namespace UserInterface.Views
                    </html>";
         }
 
+        /// <summary>
+        /// Gets the text selected by the user.
+        /// </summary>
         public string GetSelectedText()
         {
             wb.Document.ExecCommand("Copy", false, null);
@@ -125,6 +128,9 @@ namespace UserInterface.Views
             return (string)text;
         }
 
+        /// <summary>
+        /// Selects all text in the document.
+        /// </summary>
         public void SelectAll()
         {
             wb.Document.ExecCommand("selectAll", false, null);
