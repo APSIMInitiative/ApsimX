@@ -740,6 +740,10 @@ namespace UserInterface.Views
                         // Execute the select all function.
                         browser.ExecJavaScript("selectAll", null);
                     }
+                    else if (keyCode == 'f')
+                        // We just send the appropriate keypress event to the WebBrowser. This doesn't seem to work well for 
+                        // ctrl + a, and doesn't work at all for ctrl + c. 
+                        SendKeys.SendWait("^f");
                 }
             }
         }
