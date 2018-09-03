@@ -3,15 +3,15 @@
     using Commands;
     using EventArguments;
     using Interfaces;
-    using Models;
+    using Models.Interfaces;
     using System;
 
-    class MorrisPresenter : GridPresenter, IPresenter
+    class TablePresenter : GridPresenter, IPresenter
     {
         /// <summary>
         /// The underlying model.
         /// </summary>
-        private Morris morrisModel;
+        private IModelAsTable tableModel;
 
         /// <summary>
         /// Attach the model to the view.
@@ -22,8 +22,8 @@
         public override void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
             base.Attach(model, view, parentPresenter);
-            morrisModel = model as Morris;
-            grid.DataSource = morrisModel.GetTable();
+            tableModel = model as IModelAsTable;
+            grid.DataSource = tableModel.Table;
             grid.CellsChanged += OnCellValueChanged;
             presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -34,6 +34,7 @@
         public override void Detach()
         {
             base.Detach();
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -51,12 +52,8 @@
                 {
                     if (e.InvalidValue)
                         throw new Exception("The value you entered was not valid for its datatype.");
-                    morrisModel.SetTable(grid.DataSource);
-                    presenter.MainPresenter.ShowMessage("Warning: actions in the Morris view not undo-able!", Models.Core.Simulation.MessageType.Warning);
-                    /*
-                    ChangeProperty cmd = new ChangeProperty(morrisModel, property.Name, value);
-                    presenter.CommandHistory.Add(cmd, true);
-                    */
+                    ChangeProperty cmd = new ChangeProperty(tableModel, "Table", grid.DataSource);
+                    presenter.CommandHistory.Add(cmd);
                 }
                 catch (Exception ex)
                 {
@@ -73,8 +70,8 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == morrisModel)
-                grid.DataSource = morrisModel.GetTable();
+            if (changedModel == tableModel)
+                grid.DataSource = tableModel.Table;
         }
     }
 }
