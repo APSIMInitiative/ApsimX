@@ -12,7 +12,7 @@ using APSIM.Shared.Utilities;
 using System.Data;
 using System.Net;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Reflection;
 using System.Text;
 
@@ -126,9 +126,9 @@ namespace Models.Utilities
             {
                 // If the file doesn't exist, we check the list of resources.
                 string script = string.Empty;
-                using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.Morris.R"))
-                using (StreamReader reader = new StreamReader(s))
-                    script = reader.ReadToEnd();
+                using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(scriptName))
+                    using (StreamReader reader = new StreamReader(s))
+                        script = reader.ReadToEnd();
                 scriptName = Path.GetTempFileName();
                 File.WriteAllText(scriptName, script);
             }
@@ -157,18 +157,17 @@ namespace Models.Utilities
         /// <param name="fileName">Path to an R script. May be a file on disk, or an embedded resource.</param>
         /// <param name="arguments">Command line arguments to pass to the script.</param>
         /// <returns>Output formatted as a <see cref="DataTable"/>.</returns>
+        /// <remarks>Not sure that this method really belongs in this class, but it can stay here for now.</remarks>
         public DataTable RunToTable(string fileName, string arguments = "")
         {
-            // Not sure that this method really belongs in this class, but it can stay here for now.
             string result = Run(fileName, arguments);
-
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
             if (!File.Exists(tempFile))
                 File.Create(tempFile).Close();
             
             File.WriteAllText(tempFile, result);
             DataTable table = ApsimTextFile.ToTable(tempFile);
-            System.Threading.Thread.Sleep(200);
+            Thread.Sleep(200);
             if (File.Exists(tempFile))
                 File.Delete(tempFile);
             return table;
@@ -191,8 +190,8 @@ namespace Models.Utilities
         {
             string script;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.GetPackage.R"))
-            using (StreamReader reader = new StreamReader(s))
-                script = reader.ReadToEnd();
+                using (StreamReader reader = new StreamReader(s))
+                    script = reader.ReadToEnd();
             string rFileName = Path.ChangeExtension(Path.GetTempFileName(), ".R");
             File.WriteAllText(rFileName, script);
 
@@ -241,10 +240,9 @@ namespace Models.Utilities
                 else
                     throw new Exception("Unable to find path to R binaries.");
             }
-            else if (ProcessUtilities.CurrentOS.IsLinux)
+            else if (ProcessUtilities.CurrentOS.IsUnix)
             {
-                // On Linux, we use the which utility
-
+                // On Unix systems, we use the which utility
                 // First, make sure R is installed.
                 if (string.IsNullOrEmpty(GetPathToPackage("R")))
                     throw new Exception("You need to install R to use this feature. https://cran.csiro.au/bin/ is a good place to start.");
@@ -258,9 +256,6 @@ namespace Models.Utilities
                 else
                     rScriptPath = rScriptPath.Trim(Environment.NewLine.ToCharArray());
             }
-            else if (ProcessUtilities.CurrentOS.IsMac)
-                // Theoretically, the Linux method should also work on macOS, but I'm yet to test it.
-                throw new NotImplementedException();
             else
                 // This is unlikely.
                 throw new NotImplementedException("Your OS is not supported.");
@@ -349,7 +344,7 @@ namespace Models.Utilities
                 if (File.Exists(fileName))
                     File.Delete(fileName);
                 WebClient web = new WebClient();
-                web.DownloadFileCompleted += (_, __) =>
+                web.DownloadFileCompleted += (sender, e) =>
                 {
                     OnDownloadCompleted?.Invoke();
                     InstallR(fileName);
