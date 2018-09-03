@@ -6,6 +6,9 @@
     using Models.Interfaces;
     using System;
 
+    /// <summary>
+    /// Presenter for any <see cref="IModelAsTable"/>.
+    /// </summary>
     class TablePresenter : GridPresenter, IPresenter
     {
         /// <summary>
