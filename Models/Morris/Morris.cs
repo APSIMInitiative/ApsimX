@@ -81,8 +81,7 @@
                         param.LowerBound = Convert.ToDouble(row["LowerBound"]);
                     if (!Convert.IsDBNull(row["UpperBound"]))
                         param.UpperBound = Convert.ToDouble(row["UpperBound"]);
-                    if (param.Name != null &&
-                        param.Path != null)
+                    if (param.Name != null || param.Path != null)
                         parameters.Add(param);
                 }
             }

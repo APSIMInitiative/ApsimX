@@ -48,8 +48,6 @@
         /// <param name="e">Event arguments.</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-
             foreach (IGridCell cell in e.ChangedCells)
             {
                 try
@@ -64,8 +62,6 @@
                     presenter.MainPresenter.ShowError(ex);
                 }
             }
-
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>

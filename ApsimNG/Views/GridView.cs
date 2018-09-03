@@ -1495,6 +1495,8 @@
                 // DataRow dataRow = this.DataSource.Rows[row];
                 // gridmodel.AppendValues(dataRow.ItemArray);
             }
+            if (CanGrow)
+                gridModel.Append();
             Grid.Model = gridModel;
 
             SetColumnHeaders(Grid);
