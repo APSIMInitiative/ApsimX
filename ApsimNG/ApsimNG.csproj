@@ -265,6 +265,7 @@
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
+    <Compile Include="Presenters\TablePresenter.cs" />
     <Compile Include="Presenters\NewAzureJobPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
