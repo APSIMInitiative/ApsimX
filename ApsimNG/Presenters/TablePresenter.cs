@@ -33,6 +33,7 @@
         /// </summary>
         public override void Detach()
         {
+            grid.CellsChanged -= OnCellValueChanged;
             base.Detach();
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
