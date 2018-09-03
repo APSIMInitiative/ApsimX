@@ -6,6 +6,7 @@ using Gtk;
 using WebKit;
 using MonoMac.AppKit;
 using APSIM.Shared.Utilities;
+using EventArguments;
 
 namespace UserInterface.Views
 {
@@ -426,18 +427,45 @@ namespace UserInterface.Views
     public class HTMLView : ViewBase, IHTMLView
     {
         /// <summary>
-        /// Path to find images on.
+        /// The VPaned object which holds the containers for the memo view and web browser.
         /// </summary>
-        public string ImagePath { get; set; }
-
         private VPaned vpaned1 = null;
+
+        /// <summary>
+        /// VBox obejct which holds the web browser.
+        /// </summary>
         private VBox vbox2 = null;
+
+        /// <summary>
+        /// Frame object which holds and is used to position <see cref="vbox2"/>.
+        /// </summary>
         private Frame frame1 = null;
+
+        /// <summary>
+        /// HBox which holds the memo view.
+        /// </summary>
         private HBox hbox1 = null;
 
+        /// <summary>
+        /// Only used on Windows. Holds the HTML element which responds to key
+        /// press events.
+        /// </summary>
+        private object keyPressObject = null;
+
+        /// <summary>
+        /// Web browser used to display HTML content.
+        /// </summary>
         protected IBrowserWidget browser = null;
-        private MemoView memoView1;
-        protected Gtk.Window popupWin = null;
+
+        /// <summary>
+        /// Memo view used to display markdown content.
+        /// </summary>
+        private MemoView memo;
+
+        /// <summary>
+        /// Used when exporting a map (e.g. autodocs).
+        /// </summary>
+        protected Gtk.Window popupWindow = null;
 
         /// <summary>
         /// Constructor
@@ -453,36 +481,117 @@ namespace UserInterface.Views
             // Handle a temporary browser created when we want to export a map.
             if (owner == null)
             {
-                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                popupWin.SetSizeRequest(500, 500);
+                popupWindow = new Gtk.Window(Gtk.WindowType.Popup);
+                popupWindow.SetSizeRequest(500, 500);
                 // Move the window offscreen; the user doesn't need to see it.
                 // This works with IE, but not with WebKit
                 // Not yet tested on OSX
                 if (ProcessUtilities.CurrentOS.IsWindows)
-                    popupWin.Move(-10000, -10000);
-                popupWin.Add(MainWidget);
-                popupWin.ShowAll();
+                    popupWindow.Move(-10000, -10000);
+                popupWindow.Add(MainWidget);
+                popupWindow.ShowAll();
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
             }
-            memoView1 = new MemoView(this);
-            hbox1.PackStart(memoView1.MainWidget, true, true, 0);
+            memo = new MemoView(this);
+            hbox1.PackStart(memo.MainWidget, true, true, 0);
             vpaned1.PositionSet = true;
             vpaned1.Position = 200;
             hbox1.Visible = false;
             hbox1.NoShowAll = true;
-            memoView1.ReadOnly = false;
-            memoView1.WordWrap = true;
-            memoView1.MemoChange += this.TextUpdate;
+            memo.ReadOnly = false;
+            memo.WordWrap = true;
+            memo.MemoChange += this.TextUpdate;
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// Path to find images on.
+        /// </summary>
+        public string ImagePath { get; set; }
+
+        /// <summary>
+        /// Invoked when the user wishes to copy data out of the HTMLView.
+        /// This is currently only used on Windows, as the other web 
+        /// browsers are capable of handling the copy event themselves.
+        /// </summary>
+        public event EventHandler<CopyEventArgs> Copy;
+
+        /// <summary>
+        /// Set the contents of the control. Can be RTF, HTML or MarkDown. If 
+        /// the contents are markdown and 'allowModification' = true then
+        /// user will be able to edit markdown.
+        /// </summary>
+        public void SetContents(string contents, bool allowModification, bool isURI = false)
+        {
+            TurnEditorOn(allowModification);
+            if (contents != null)
+            {
+                if (allowModification)
+                    memo.MemoText = contents;
+                else
+                    PopulateView(contents, isURI);
+            }
+        }
+
+        // Although this isn't the obvious way to handle window resizing,
+        // I couldn't find any better technique. 
+        public void OnWidgetExpose(object o, ExposeEventArgs args)
+        {
+            int height, width;
+            frame1.GdkWindow.GetSize(out width, out height);
+            frame1.SetSizeRequest(width, height);
+            if (browser is TWWebBrowserIE)
+            {
+                TWWebBrowserIE brow = browser as TWWebBrowserIE;
+                if (brow.unmapped)
+                {
+                    brow.Remap();
+                }
+
+                if (brow.wb.Height != height || brow.wb.Width != width)
+                {
+                    brow.socket.SetSizeRequest(width, height);
+                    brow.wb.Height = height;
+                    brow.wb.Width = width;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return the edited markdown.
+        /// </summary>
+        /// <returns></returns>
+        public string GetMarkdown()
+        {
+            return memo.MemoText;
+        }
+
+        /// <summary>
+        /// Tells view to use a mono spaced font.
+        /// </summary>
+        public void UseMonoSpacedFont()
+        {
+        }
+
+        /// <summary>
+        /// Enables or disables the Windows web browser.
+        /// </summary>
+        /// <param name="state">True to enable the browser, false to disable it.</param>
+        public void EnableWb(bool state)
+        {
+            if (browser is TWWebBrowserIE)
+                (browser as TWWebBrowserIE).wb.Parent.Enabled = state;
+        }
+
         protected void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            memoView1.MemoChange -= this.TextUpdate;
+            memo.MemoChange -= this.TextUpdate;
+            if (keyPressObject != null)
+                (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
             frame1.ExposeEvent -= OnWidgetExpose;
             hbox1.Realized -= Hbox1_Realized;
             if ((browser as TWWebBrowserIE) != null)
@@ -494,14 +603,18 @@ namespace UserInterface.Views
             }
             if (browser != null)
                 browser.Dispose();
-            if (popupWin != null)
+            if (popupWindow != null)
             {
-                popupWin.Destroy();
+                popupWindow.Destroy();
             }
-            memoView1.MainWidget.Destroy();
-            memoView1 = null;
+            memo.MainWidget.Destroy();
+            memo = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
+        }
+
+        protected virtual void NewTitle(string title)
+        {
         }
 
         private void Hbox1_Realized(object sender, EventArgs e)
@@ -519,23 +632,6 @@ namespace UserInterface.Views
         {
             if (MasterView.MainWindow != null)
                 MasterView.MainWindow.Focus(0);
-        }
-
-        /// <summary>
-        /// Set the contents of the control. Can be RTF, HTML or MarkDown. If 
-        /// the contents are markdown and 'allowModification' = true then
-        /// user will be able to edit markdown.
-        /// </summary>
-        public void SetContents(string contents, bool allowModification, bool isURI=false)
-        {
-            TurnEditorOn(allowModification);
-            if (contents != null)
-            {
-                if (allowModification)
-                    memoView1.MemoText = contents;
-                else
-                    PopulateView(contents, isURI);
-            }
         }
 
         /// <summary>
@@ -576,7 +672,76 @@ namespace UserInterface.Views
                 browser.Navigate(contents);
             else
                browser.LoadHTML(contents);
+
+            if (browser is TWWebBrowserIE)
+            {
+                keyPressObject = (browser as TWWebBrowserIE).wb.Document.ActiveElement;
+                (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+            }
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
+        }
+
+        /// <summary>
+        /// Handle's the Windows IE browser's key press events.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnKeyPress(object sender, HtmlElementEventArgs e)
+        {
+            if (browser is TWWebBrowserIE)
+            {
+                TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
+
+                // By default, we assume that the key press is not significant, so we set the
+                // event args' return value to false, so event propagation continues.
+                e.ReturnValue = false;
+
+                int keyCode = e.KeyPressedCode;
+                if (e.CtrlKeyPressed)
+                {
+                    keyCode += 96;
+                    if (keyCode == 'c')
+                    {
+                        // User pressed control + c, so we need to copy any selected text.
+                        mshtml.IHTMLSelectionObject selectionRange = (ieBrowser.wb.Document.DomDocument as mshtml.IHTMLDocument2).selection;
+                        if (selectionRange != null)
+                        {
+                            mshtml.IHTMLTxtRange textRange = selectionRange.createRange();
+                            if (textRange != null)
+                            {
+                                Copy?.Invoke(this, new CopyEventArgs { Text = textRange.text });
+                            }
+                        }
+                        // Prevent this event from propagating further.
+                        e.ReturnValue = true;
+                    }
+                    else if (keyCode == 'a')
+                    {
+                        // User pressed control + a, so we need to select all.
+                        // Perhaps it's possible to do this via the .NET WebBrowser, but I haven't managed
+                        // to find a way. Instead, we will inject and run some javascript to do it for us.
+
+                        // First, check if a script to do this is already defined.
+                        if (ieBrowser.wb.Document.GetElementById("selectAllScript") == null)
+                        {
+                            // Script doesn't exist. This must be the first time the user has pressed control + a.
+                            // We add a script element to the document body, which contains a single function.
+                            HtmlElement head = ieBrowser.wb.Document.GetElementsByTagName("head")[0];
+                            HtmlElement selectAllScript = ieBrowser.wb.Document.CreateElement("script");
+                            selectAllScript.Id = "selectAllScript";
+                            mshtml.IHTMLScriptElement scriptDomElement = (mshtml.IHTMLScriptElement)selectAllScript.DomElement;
+                            scriptDomElement.text = "function selectAll() {"
+                                                                                + "range = document.body.createTextRange();"
+                                                                                + "range.moveToElementText(document.body);"
+                                                                                + "range.select();"
+                                                                        + "} ";
+                            head.AppendChild(selectAllScript);
+                        }
+                        // Execute the select all function.
+                        browser.ExecJavaScript("selectAll", null);
+                    }
+                }
+            }
         }
 
         private IBrowserWidget CreateIEBrowser(Gtk.Box box)
@@ -594,54 +759,10 @@ namespace UserInterface.Views
             return new TWWebBrowserWK(box);
         }
 
-        protected virtual void NewTitle(string title)
-        {
-        }
-
-        // Although this isn't the obvious way to handle window resizing,
-        // I couldn't find any better technique. 
-        public void OnWidgetExpose(object o, ExposeEventArgs args)
-        {
-            int height, width;
-            frame1.GdkWindow.GetSize(out width, out height);
-            frame1.SetSizeRequest(width, height);
-            if (browser is TWWebBrowserIE)
-            {
-                TWWebBrowserIE brow = browser as TWWebBrowserIE;
-                if (brow.unmapped)
-                {
-                    brow.Remap();
-                }
-
-                if (brow.wb.Height != height || brow.wb.Width != width)
-                {
-                    brow.socket.SetSizeRequest(width, height);
-                    brow.wb.Height = height;
-                    brow.wb.Width = width;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Return the edited markdown.
-        /// </summary>
-        /// <returns></returns>
-        public string GetMarkdown()
-        {
-            return memoView1.MemoText;
-        }
-
-        /// <summary>
-        /// Tells view to use a mono spaced font.
-        /// </summary>
-        public void UseMonoSpacedFont()
-        {
-        }
-
         /// <summary>
         /// Turn the editor on or off.
         /// </summary>
-        /// <param name="turnOn"></param>
+        /// <param name="turnOn">Whether or not the editor should be turned on.</param>
         private void TurnEditorOn(bool turnOn)
         {
             hbox1.Visible = turnOn;
@@ -656,38 +777,38 @@ namespace UserInterface.Views
             TurnEditorOn(!editorIsOn);   // toggle preview / edit mode.
         }
 
-        #region Event Handlers
-
         /// <summary>
         /// User has clicked 'edit'
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event argument.</param>
         private void OnEditClick(object sender, EventArgs e)
         {
             TurnEditorOn(true);
         }
 
+        /// <summary>
+        /// Text has been changed.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event argument.</param>
         private void TextUpdate(object sender, EventArgs e)
         {
             MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
             markDown.ExtraMode = true;
-            string html = markDown.Transform(memoView1.MemoText);
+            string html = markDown.Transform(memo.MemoText);
             PopulateView(html);
         }
 
-        #endregion
-
+        /// <summary>
+        /// User has clicked the help button. 
+        /// Opens a web browser (outside of APSIM) and navigates to a help page on the Next Gen site.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event argument.</param>
         private void OnHelpClick(object sender, EventArgs e)
         {
             Process.Start("https://www.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
         }
-
-        public void EnableWb(bool state)
-        {
-            if (browser is TWWebBrowserIE)
-                (browser as TWWebBrowserIE).wb.Parent.Enabled = state;
-        }
-
     }
 }
