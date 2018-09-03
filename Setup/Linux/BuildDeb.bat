@@ -125,5 +125,5 @@ if not exist %apsimx%\Setup\Output (
 dir
 ar vr C:\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
 move C:\APSIMSetup.deb %apsimx%\Setup\Output\
-echo done
-exit %errorlevel%
+echo Finished creating installer.
+exit /b %errorlevel%
