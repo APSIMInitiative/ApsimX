@@ -1002,6 +1002,8 @@
                 tree.ChildNodes.Cast<XmlNode>().Where(n => n.Name == "dates").ToList().ForEach(n => ConverterUtilities.RenameNode(n, "dates", "Dates"));
                 tree.ChildNodes.Cast<XmlNode>().Where(n => n.Name == "heights").ToList().ForEach(n => ConverterUtilities.RenameNode(n, "heights", "Heights"));
             }
+        }
+
         /// <summary> Rename ThermalTime functions on phases to Progression </summary>
         private static void UpgradeToVersion40(XmlNode node, string fileName)
         {
