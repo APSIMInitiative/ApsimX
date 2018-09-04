@@ -4,7 +4,7 @@ if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
 if Exist Version.tmp Del Version.tmp
 if not exist %apsimx%\Bin\Models.exe exit /B 1
-
+cd %apsimx%\Setup\Linux
 rem Microsoft, in their infinite wisdom, decided that it would be a good idea for
 rem sysinternals such as sigcheck to spawn a popup window the first time you run them,
 rem which asks you to agree to their eula. To get around this, we just need to set a few
@@ -25,21 +25,29 @@ mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
 
 rem Create the main execution script; must have Unix newline
-echo 2.0>.\DebPackage\debian-binary
-dos2unix -q .\DebPackage\debian-binary
+rem For some reason, running dos2unix on a file inside a mounted volume in a docker container
+rem doesn't seem to work - some sort of permissions error. Instead, we run the command on a 
+rem file in %tmp%, and then manually move this file where we want it.
+cd DebPackage
+echo 2.0 > %tmp%\debian-binary
+dos2unix %tmp%\debian-binary
+move %tmp%\debian-binary .\
 
 (
 echo #!/bin/sh
 echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/ApsimNG.exe "$@"
-)> .\DebPackage\data\usr\local\bin\apsim
-dos2unix -q .\DebPackage\data\usr\local\bin\apsim
+)> %tmp%\apsim
+dos2unix %tmp%\apsim
+move %tmp%\apsim .\data\usr\local\bin\
 
 (
 echo #!/bin/sh
 echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/Models.exe "$@"
-)> .\DebPackage\data\usr\local\bin\Models
-dos2unix -q .\DebPackage\data\usr\local\bin\Models
+)> %tmp%\Models
+dos2unix %tmp%\Models
+move %tmp%\Models .\data\usr\local\bin\
 
+cd %apsimx%\Setup\Linux
 rem Delete all files from Windows' DeploymentSupport directory from Bin
 for /r %apsimx%\DeploymentSupport %%D in (*.dll) do (
 	if exist %apsimx%\Bin\%%~nD%%~xD (
@@ -105,14 +113,17 @@ cd ..\DEBIAN
 tar -cf ..\control.tar .
 gzip ..\control.tar
 cd ..
-
-if exist %setup%\Output\APSIMSetup.deb (
+if exist %apsimx%\Setup\Output\APSIMSetup.deb (
 	echo Deleting old installer...
-	del %setup%\Output\APSIMSetup.deb
+	del %apsimx%\Setup\Output\APSIMSetup.deb
 )
 
-if not exist %setup%\Output (
-	mkdir %setup%\Output
+if not exist %apsimx%\Setup\Output (
+	mkdir %apsimx%\Setup\Output
 )
-ar r %setup%\Output\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
-exit %errorlevel%
+
+dir
+ar vr C:\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
+move C:\APSIMSetup.deb %apsimx%\Setup\Output\
+echo Finished creating installer.
+exit /b %errorlevel%

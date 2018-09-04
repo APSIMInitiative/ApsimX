@@ -505,7 +505,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The paddock list
         /// </summary>
-        private TPaddockList paddockList;
+        private PaddockList paddockList;
 
         /// <summary>
         /// The list of enterprises to manage
@@ -544,7 +544,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the list of paddocks
         /// </summary>
-        public TPaddockList Paddocks
+        public PaddockList Paddocks
         {
             get { return this.paddockList; }
         }
@@ -629,7 +629,7 @@ namespace Models.GrazPlan
         private void SetAt(int posIdx, AnimalGroup animalGroup)
         {
             if ((posIdx == this.Count() + 1) && (animalGroup != null))
-                this.Add(animalGroup, this.Paddocks.byIndex(0), 0, 0);
+                this.Add(animalGroup, this.Paddocks.ByIndex(0), 0, 0);
             else
                 this.stock[posIdx].Animals = animalGroup;
         }
@@ -652,7 +652,7 @@ namespace Models.GrazPlan
         public string GetInPadd(int posIdx)
         {
             if ((posIdx >= 1) && (posIdx <= this.Count()))
-                return this.stock[posIdx].PaddOccupied.sName;
+                return this.stock[posIdx].PaddOccupied.Name;
             else
                 return string.Empty;
         }
@@ -666,7 +666,7 @@ namespace Models.GrazPlan
         {
             PaddockInfo paddock;
 
-            paddock = this.Paddocks.byName(value);
+            paddock = this.Paddocks.ByName(value);
             if (paddock == null)
                 throw new Exception("Stock: attempt to place animals in non-existent paddock: " + value);
             else
@@ -722,9 +722,9 @@ namespace Models.GrazPlan
         {
             PaddockInfo paddInfo;
 
-            paddInfo = this.paddockList.byID(paddIdx);
+            paddInfo = this.paddockList.ByID(paddIdx);
             if (paddInfo != null)
-                paddInfo.fWaterlog = value;
+                paddInfo.Waterlog = value;
         }
         
         /// <summary>
@@ -818,14 +818,14 @@ namespace Models.GrazPlan
             paddock = this.GetPaddInfo(posIdx);
 
             group.PaddSteep = paddock.Steepness;
-            group.WaterLogging = paddock.fWaterlog;
+            group.WaterLogging = paddock.Waterlog;
             group.RationFed.Assign(paddock.SuppInPadd);                              // fTotalAmount will be overridden       
 
             // ensure young are fed
             if (group.Young != null)
             {
                 group.Young.PaddSteep = paddock.Steepness;
-                group.Young.WaterLogging = paddock.fWaterlog;
+                group.Young.WaterLogging = paddock.Waterlog;
                 group.Young.RationFed.Assign(paddock.SuppInPadd);
             }
 
@@ -836,7 +836,7 @@ namespace Models.GrazPlan
                 if (this.stock[posIdx].StepForageInputs[jdx] == null)
                     this.stock[posIdx].StepForageInputs[jdx] = new GrazType.GrazingInputs();
 
-                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.byIndex(jdx).availForage();
+                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.ByIndex(jdx).AvailForage();
                 this.stock[posIdx].StepForageInputs[jdx].CopyFrom(this.stock[posIdx].InitForageInputs[jdx]);
             }
         }
@@ -862,8 +862,8 @@ namespace Models.GrazPlan
             group.Herbage.CopyFrom(this.stock[posIdx].PaddockInputs);
             group.RationFed.Assign(paddock.SuppInPadd);                               // fTotalAmount will be overridden       
 
-            if (paddock.fSummedPotIntake > 0.0)
-                propn = group.PotIntake / paddock.fSummedPotIntake;                  // This is the proportion of the total   
+            if (paddock.SummedPotIntake > 0.0)
+                propn = group.PotIntake / paddock.SummedPotIntake;                  // This is the proportion of the total   
             else                                                                        // supplement that one animal gets     
                 propn = 0.0;
 
@@ -873,8 +873,8 @@ namespace Models.GrazPlan
                 group.Young.Herbage.CopyFrom(this.stock[posIdx].PaddockInputs);
                 group.Young.RationFed.Assign(paddock.SuppInPadd);
 
-                if (paddock.fSummedPotIntake > 0.0)
-                    propn = group.Young.PotIntake / paddock.fSummedPotIntake;
+                if (paddock.SummedPotIntake > 0.0)
+                    propn = group.Young.PotIntake / paddock.SummedPotIntake;
                 else
                     propn = 0.0;
                 group.Young.RationFed.TotalAmount = propn * StdMath.DIM(paddock.SuppInPadd.TotalAmount, paddock.SuppRemovalKG);
@@ -904,7 +904,7 @@ namespace Models.GrazPlan
             while ((posn <= this.Count()) && (this.GetPaddInfo(posn) != paddock))          // this paddock                         
                 posn++;
 
-            if ((posn > this.Count()) || (paddock.fArea <= 0.0))
+            if ((posn > this.Count()) || (paddock.Area <= 0.0))
                 result = 1.0;
             else
             {
@@ -915,7 +915,7 @@ namespace Models.GrazPlan
                 {
                     if (this.stock[posn].PaddockInputs.Herbage[classIdx].Biomass > 0.0)
                     {
-                        removalRate = paddock.fSummedPotIntake * herbageRI[classIdx] / paddock.fArea;
+                        removalRate = paddock.SummedPotIntake * herbageRI[classIdx] / paddock.Area;
                         if (removalRate > 0.0)
                             removalTime = Math.Min(removalTime, this.stock[posn].PaddockInputs.Herbage[classIdx].Biomass / removalRate);
                     }
@@ -966,7 +966,7 @@ namespace Models.GrazPlan
             int classIdx;
             int ripeIdx;
 
-            if (paddock.fArea > 0.0)
+            if (paddock.Area > 0.0)
             {
                 for (posn = 1; posn <= this.Count(); posn++)
                 {
@@ -976,7 +976,7 @@ namespace Models.GrazPlan
 
                         for (forageIdx = 0; forageIdx <= paddock.Forages.Count() - 1; forageIdx++)
                         {
-                            forage = paddock.Forages.byIndex(forageIdx);
+                            forage = paddock.Forages.ByIndex(forageIdx);
 
                             for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
                             {
@@ -1008,13 +1008,13 @@ namespace Models.GrazPlan
                     {
                         for (forageIdx = 0; forageIdx <= paddock.Forages.Count() - 1; forageIdx++)
                         {
-                            forage = paddock.Forages.byIndex(forageIdx);
+                            forage = paddock.Forages.ByIndex(forageIdx);
 
                             for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
-                                this.stock[posn].StepForageInputs[forageIdx].Herbage[classIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Herbage[classIdx].Biomass, forage.RemovalKG.Herbage[classIdx] / paddock.fArea);
+                                this.stock[posn].StepForageInputs[forageIdx].Herbage[classIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Herbage[classIdx].Biomass, forage.RemovalKG.Herbage[classIdx] / paddock.Area);
 
                             for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
-                                this.stock[posn].StepForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass, forage.RemovalKG.Seed[1, ripeIdx] / paddock.fArea);
+                                this.stock[posn].StepForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass, forage.RemovalKG.Seed[1, ripeIdx] / paddock.Area);
                         } // _ loop over forages within paddock _
                     }
                 }
@@ -1068,14 +1068,14 @@ namespace Models.GrazPlan
             int classIdx;
 
             animalGroup.PaddSteep = paddock.Steepness;
-            animalGroup.WaterLogging = paddock.fWaterlog;
+            animalGroup.WaterLogging = paddock.Waterlog;
             animalGroup.RationFed.Assign(paddock.SuppInPadd);
             animalGroup.RationFed.TotalAmount = 0.0;                                        // No supplementary feed here            
 
             paddockInputs = new GrazType.GrazingInputs();
             for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
             {
-                forageInputs = paddock.Forages.byIndex(jdx).availForage();
+                forageInputs = paddock.Forages.ByIndex(jdx).AvailForage();
                 GrazType.addGrazingInputs(jdx + 1, forageInputs, ref paddockInputs);
             }
             animalGroup.Herbage = paddockInputs;
@@ -1294,7 +1294,7 @@ namespace Models.GrazPlan
                                             paddockIter++;
                                         }
                                         if (!found)
-                                            exclPaddocks.Add(this.Paddocks.byIndex(index).sName);           // add to the exclude list
+                                            exclPaddocks.Add(this.Paddocks.ByIndex(index).Name);           // add to the exclude list
                                     }
                                     tagNo = this.GrazingPeriods.GetTag(p, tagIter);
                                     this.Draft(tagNo, exclPaddocks); // now do the draft only for this tagno
@@ -1360,7 +1360,7 @@ namespace Models.GrazPlan
                     i = 1;
                     while (!found && (i < this.Paddocks.Count()))
                     {
-                        if (this.Paddocks.byIndex(i).sName == this.stock[posIdx].PaddOccupied.sName)
+                        if (this.Paddocks.ByIndex(i).Name == this.stock[posIdx].PaddOccupied.Name)
                         {
                             result = i;
                             found = true;
@@ -1389,7 +1389,7 @@ namespace Models.GrazPlan
                 // if this group belongs to this enterprise
                 if (tagNo == this.GetTag(g))                                     
                 {
-                    this.SetInPadd(g, this.Paddocks.byIndex(paddockIdx).sName);  // move them to this paddock
+                    this.SetInPadd(g, this.Paddocks.ByIndex(paddockIdx).Name);  // move them to this paddock
                 }
                 g++;
             }
@@ -1421,7 +1421,7 @@ namespace Models.GrazPlan
             this.RandFactory = randomFactory;                                               // store the ptr
             this.SetParamFile(string.Empty);                                                // Creates a default FBaseParams         
             Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
-            this.paddockList = new TPaddockList();
+            this.paddockList = new PaddockList();
             this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
             this.forageProviders = new ForageProviders();
@@ -1582,9 +1582,9 @@ namespace Models.GrazPlan
                     newGroup.Young.FleeceCutWeight = animalInits.YoungGFW;
             }
 
-            paddock = this.paddockList.byName(animalInits.Paddock.ToLower());
+            paddock = this.paddockList.ByName(animalInits.Paddock.ToLower());
             if (paddock == null)
-                paddock = this.paddockList.byIndex(0);
+                paddock = this.paddockList.ByIndex(0);
 
             return this.Add(newGroup, paddock, animalInits.Tag, animalInits.Priority);
         }
@@ -1708,7 +1708,7 @@ namespace Models.GrazPlan
         {
             PaddockInfo thePadd;
 
-            thePadd = this.Paddocks.byName(paddName);
+            thePadd = this.Paddocks.ByName(paddName);
             if (thePadd == null)
                 throw new Exception("Stock: attempt to feed supplement into non-existent paddock");
             else
@@ -1722,7 +1722,7 @@ namespace Models.GrazPlan
         /// </summary>
         public void BeginTimeStep()
         {
-            this.Paddocks.beginTimeStep();
+            this.Paddocks.BeginTimeStep();
         }
 
         /// <summary>
@@ -1744,8 +1744,8 @@ namespace Models.GrazPlan
 
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
             {
-                thePaddock = this.Paddocks.byIndex(paddIdx);
-                thePaddock.computeTotals();
+                thePaddock = this.Paddocks.ByIndex(paddIdx);
+                thePaddock.ComputeTotals();
             }
 
             for (idx = 1; idx <= this.Count(); idx++)
@@ -1778,7 +1778,7 @@ namespace Models.GrazPlan
             // Compute the total potential intake (used to distribute supplement between groups of animals)         
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)              
             {                                                                               
-                thePaddock = this.Paddocks.byIndex(paddIdx);                                  
+                thePaddock = this.Paddocks.ByIndex(paddIdx);                                  
                 totPotIntake = 0.0;
 
                 for (idx = 1; idx <= this.Count(); idx++)
@@ -1788,13 +1788,13 @@ namespace Models.GrazPlan
                         if (this.At(idx).Young != null)
                             totPotIntake = totPotIntake + (this.At(idx).Young.NoAnimals * this.At(idx).Young.PotIntake);
                     }
-                thePaddock.fSummedPotIntake = totPotIntake;
+                thePaddock.SummedPotIntake = totPotIntake;
             }
 
             // We loop over paddocks and then over animal groups within a paddock so that we can take account of herbage 
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
             {                                                                               
-                thePaddock = this.Paddocks.byIndex(paddIdx);
+                thePaddock = this.Paddocks.ByIndex(paddIdx);
                                                    
                 // removal & its effect on intake      
                 iterator = 1;                                                                  // This loop handles RDP insufficiency   
@@ -1835,7 +1835,7 @@ namespace Models.GrazPlan
                         done = (RDP == 1.0);                                              // Is there an animal group in this paddock with an RDP insufficiency?  
                         if (!done)                                                         
                         {
-                            thePaddock.zeroRemoval();
+                            thePaddock.ZeroRemoval();
 
                             // If so, we have to revert the state of the animal group ready for the second iteration.
                             for (idx = 1; idx <= this.Count(); idx++)                       
@@ -1871,7 +1871,7 @@ namespace Models.GrazPlan
             if (provider != null)
                 thePadd = provider.OwningPaddock;
             else
-                thePadd = this.paddockList.byID(paddID);
+                thePadd = this.paddockList.ByID(paddID);
 
             massKGHA = 0.0;
             if (thePadd != null)
@@ -1883,7 +1883,7 @@ namespace Models.GrazPlan
                         if (this.At(idx).Young != null)
                             massKGHA = massKGHA + (this.At(idx).Young.NoAnimals * this.At(idx).Young.LiveWeight);
                     }
-                massKGHA = massKGHA / thePadd.fArea;
+                massKGHA = massKGHA / thePadd.Area;
             }
 
             if (units == "kg/ha")
@@ -1998,17 +1998,17 @@ namespace Models.GrazPlan
             double area;
             int idx;
 
-            thePadd = this.paddockList.byID(paddID);
+            thePadd = this.paddockList.ByID(paddID);
 
             if (thePadd != null)
-                area = thePadd.fArea;
+                area = thePadd.Area;
             else if (this.paddockList.Count() == 0)
                 area = 1.0;
             else
             {
                 area = 0.0;
                 for (idx = 0; idx <= this.paddockList.Count() - 1; idx++)
-                    area = area + this.paddockList.byIndex(idx).fArea;
+                    area = area + this.paddockList.ByIndex(idx).Area;
             }
 
             excretion = new ExcretionInfo();
@@ -2634,11 +2634,11 @@ namespace Models.GrazPlan
                 } // if (ReproState = Empty) 
 
                 paddNo = 0;                                                                          // Newly bought animals have tag # zero and go in the first named paddock.  
-                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks.byIndex(paddNo).sName == string.Empty))   
+                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks.ByIndex(paddNo).Name == string.Empty))   
                     paddNo++;
                 if (paddNo >= this.Paddocks.Count())
                     paddNo = 0;
-                result = this.Add(newGroup, this.Paddocks.byIndex(paddNo), 0, 0);
+                result = this.Add(newGroup, this.Paddocks.ByIndex(paddNo), 0, 0);
             } // if AnimalInfo.Number > 0 
             return result;
         }
@@ -3041,7 +3041,7 @@ namespace Models.GrazPlan
 
                 // Only draft into pasture paddocks     
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
-                    available[paddIdx] = this.Paddocks.byIndex(paddIdx).Forages.Count() > 0;
+                    available[paddIdx] = this.Paddocks.ByIndex(paddIdx).Forages.Count() > 0;
 
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                           
@@ -3067,14 +3067,14 @@ namespace Models.GrazPlan
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                 
                 {
                     if (available[paddIdx])
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.byIndex(paddIdx), tempAnimals);
+                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
                     else
                         paddockRank[paddIdx] = 0.0;
                 }
                 tempAnimals = null;
 
                 prevPadd = 0;                                                                       // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.byIndex(prevPadd).sName == string.Empty))
+                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.ByIndex(prevPadd).Name == string.Empty))
                     prevPadd++;
 
                 prevPriority = 0;
@@ -3106,7 +3106,7 @@ namespace Models.GrazPlan
                     for (idx = 1; idx <= this.Count(); idx++)                                       
                     {
                         if (this.GetPriority(idx) == bestPriority)
-                            this.SetInPadd(idx, this.Paddocks.byIndex(bestPadd).sName);
+                            this.SetInPadd(idx, this.Paddocks.ByIndex(bestPadd).Name);
                     }
                     available[bestPadd] = false;
 
@@ -3141,7 +3141,7 @@ namespace Models.GrazPlan
 
                 // Only draft into pasture paddocks      
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                
-                    available[paddIdx] = (this.Paddocks.byIndex(paddIdx).Forages.Count() > 0);
+                    available[paddIdx] = (this.Paddocks.ByIndex(paddIdx).Forages.Count() > 0);
 
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                   
@@ -3168,14 +3168,14 @@ namespace Models.GrazPlan
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                            
                 {
                     if (available[paddIdx])                                                  // paddocks                            
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.byIndex(paddIdx), tempAnimals);
+                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
                     else
                         paddockRank[paddIdx] = 0.0;
                 }
                 tempAnimals = null;
 
                 prevPadd = 0;                                                              // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.byIndex(prevPadd).sName == string.Empty))
+                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.ByIndex(prevPadd).Name == string.Empty))
                     prevPadd++;
 
                 prevPriority = 0;
@@ -3205,7 +3205,7 @@ namespace Models.GrazPlan
                     for (idx = 1; idx <= this.Count(); idx++)                               
                     {
                         if ((this.GetTag(idx) == tagNo) && (this.GetPriority(idx) == bestPriority))
-                            this.SetInPadd(idx, this.Paddocks.byIndex(bestPadd).sName);
+                            this.SetInPadd(idx, this.Paddocks.ByIndex(bestPadd).Name);
                     }
 
                     available[bestPadd] = false;
@@ -3287,7 +3287,7 @@ namespace Models.GrazPlan
             else
                 tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, this.RandFactory);
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
-                paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.byIndex(paddIdx), tempAnimals);
+                paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
 
             paddockList.Clear();
             for (idx = 0; idx <= this.Paddocks.Count() - 1; idx++)
@@ -3302,7 +3302,7 @@ namespace Models.GrazPlan
                         bestRank = paddockRank[paddIdx];
                     }
                 }
-                paddockList.Add(this.Paddocks.byIndex(bestPadd).sName);
+                paddockList.Add(this.Paddocks.ByIndex(bestPadd).Name);
                 paddockRank[bestPadd] = -999.9;
             }
         }
