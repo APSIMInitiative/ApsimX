@@ -82,11 +82,6 @@ namespace UserInterface.Presenters
             temporalGridPresenter.Detach();
             propertyPresenter.Detach();
             SaveTable();
-            forestryModel.Dates = forestryViewer.Dates;
-            forestryModel.Heights = forestryViewer.Heights;
-            forestryModel.NDemands = forestryViewer.NDemands;
-            forestryModel.CanopyWidths = forestryViewer.CanopyWidths;
-            forestryModel.TreeLeafAreas = forestryViewer.TreeLeafAreas;
             forestryViewer.OnCellEndEdit -= OnCellEndEdit;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
