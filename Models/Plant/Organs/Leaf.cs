@@ -1107,20 +1107,20 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Leaves.Count == 0)
+                if (Leaves.Count == 0 || Leaves.Last().Apex == null)
                     return 0;
                 else
                     return Leaves.Last().Apex.Number;
             }
         }
-
+         
         /// <summary>Apex group size in plant</summary>
         [Description("Apex group size in plant")]
         public double[] ApexGroupSize
         {
             get
             {
-                if (Leaves.Count == 0)
+                if (Leaves.Count == 0 || Leaves.Last().Apex == null)
                     return new double[0];
                 else
                     return Leaves.Last().Apex.GroupSize;
@@ -1133,7 +1133,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Leaves.Count == 0)
+                if (Leaves.Count == 0 || Leaves.Last().Apex == null)
                     return new double[0];
                 else
                     return Leaves.Last().Apex.GroupAge;
