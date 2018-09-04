@@ -40,6 +40,49 @@ namespace Models.Core
                 WriteToFile(name, o);
         }
 
+        /// <summary>
+        /// Write a message line into checkpoint file
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="name"></param>
+        public void WriteMessageLine(string name, string message)
+        {
+            if (CheckPointFile == null)
+                MakeCheckPointFile(name);
+            CheckPointFile.WriteLine(message);
+        }
+
+        /// The checkpoint file to write to
+        public StreamWriter CheckPointFile = null;
+
+        /// <summary>
+        /// Adds the status of the model to the CheckPointFile
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="o"></param>
+        public void AddToCheckpointFile(string name, object o)
+        {
+            if (CheckPointFile == null)
+                MakeCheckPointFile(name);
+            AppendToFile(o);
+        }
+
+        private void MakeCheckPointFile(string name)
+        {
+            string fileName = Path.Combine(Path.GetDirectoryName(simulations.FileName), name);
+            fileName = Path.ChangeExtension(fileName, ".checkpoint.json");
+            CheckPointFile = new StreamWriter(fileName);
+        }
+
+        private void AppendToFile(object o)
+        {
+            CheckPointFile.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented,
+                    new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    }));
+        }
+        
         private void WriteToFile(string name, object o)
         {
             string fileName = Path.Combine(Path.GetDirectoryName(simulations.FileName), name);
