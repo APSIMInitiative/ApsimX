@@ -77,32 +77,26 @@ namespace Models.PMF.Organs
         virtual public double MaintenanceRespiration { get { return 0; } set { } }
 
         /// <summary>The dry matter demand</summary>
-        protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
+        public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
-        protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
+        public BiomassPoolType NDemand { get; set; }
 
-        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public  BiomassSupplyType GetNitrogenSupply()
-        {
-            return new BiomassSupplyType();
-        }
+        /// <summary>The dry matter supply</summary>
+        public BiomassSupplyType DMSupply { get; set; }
+
+        /// <summary>The nitrogen supply</summary>
+        public BiomassSupplyType NSupply { get;  set; }
 
         /// <summary>Sets the dm potential allocation.</summary>
         /// <summary>Sets the dry matter potential allocation.</summary>
          public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter) { }
-        /// <summary>Gets or sets the dm demand.</summary>
-        [XmlIgnore]
-         public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
-        /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
-
+        
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
          public double NFixationCost { get { return 0; } }
-        /// <summary>Gets or sets the n demand.</summary>
-        [XmlIgnore]
-         public BiomassPoolType NDemand { get { return nitrogenDemand; } }
-        /// <summary>Gets or sets the minimum nconc.</summary>
+
+        /// <summary>Minimum N concentration</summary>
         [XmlIgnore]
          public double MinNconc { get { return 0; } }
 
@@ -157,6 +151,10 @@ namespace Models.PMF.Organs
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
+            NDemand = new BiomassPoolType();
+            DMDemand = new BiomassPoolType();
+            NSupply = new BiomassSupplyType();
+            DMSupply = new BiomassSupplyType();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -223,22 +221,22 @@ namespace Models.PMF.Organs
         public double N { get { return Total.N; } }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public BiomassPoolType GetDryMatterDemand()
+        [EventSubscribe("SetDMDemand")]
+        private void SetDMDemand(object sender, EventArgs e)
         {
             double currentWt = (Live.Wt + Dead.Wt);
             double newHI = HI + HIIncrement.Value();
             double newWt = newHI * AboveGroundWt.Value();
             double demand = Math.Max(0.0, newWt - currentWt);
-            dryMatterDemand.Structural = demand;
-            return dryMatterDemand;
+            DMDemand.Structural = demand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public BiomassPoolType GetNitrogenDemand()
+        [EventSubscribe("SetNDemand")]
+        private void SetNDemand(object sender, EventArgs e)
         {
             double demand = Math.Max(0.0, (NConc.Value() * Live.Wt) - Live.N);
-            nitrogenDemand.Structural = demand;
-            return nitrogenDemand;
+            NDemand.Structural = demand;
         }
 
         /// <summary>Remove maintenance respiration from live component of organs.</summary>
@@ -267,14 +265,8 @@ namespace Models.PMF.Organs
         {
             Live.Clear();
             Dead.Clear();
-            dryMatterDemand.Clear();
-            nitrogenDemand.Clear();
-        }
-
-        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public BiomassSupplyType GetDryMatterSupply()
-        {
-            return new BiomassSupplyType();
+            DMDemand.Clear();
+            NDemand.Clear();
         }
     }
 }

@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Xml.Serialization;
     using Utilities;
 
     /// <summary>
@@ -18,7 +19,7 @@
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.GridPresenter")]
+    [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class Morris : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
@@ -42,47 +43,49 @@
             simulationNames = new List<string>();
         }
 
-        /// <summary>Return a table of user editable values</summary>
-        public DataTable GetTable()
+        /// <summary>
+        /// Gets or sets the table of values.
+        /// </summary>
+        [XmlIgnore]
+        public DataTable Table
         {
-            DataTable table = new DataTable();
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Path", typeof(string));
-            table.Columns.Add("LowerBound", typeof(double));
-            table.Columns.Add("UpperBound", typeof(double));
-
-            foreach (Parameter param in parameters)
+            get
             {
-                DataRow row = table.NewRow();
-                row["Name"] = param.Name;
-                row["Path"] = param.Path;
-                row["LowerBound"] = param.LowerBound;
-                row["UpperBound"] = param.UpperBound;
-                table.Rows.Add(row);
+                DataTable table = new DataTable();
+                table.Columns.Add("Name", typeof(string));
+                table.Columns.Add("Path", typeof(string));
+                table.Columns.Add("LowerBound", typeof(double));
+                table.Columns.Add("UpperBound", typeof(double));
+
+                foreach (Parameter param in parameters)
+                {
+                    DataRow row = table.NewRow();
+                    row["Name"] = param.Name;
+                    row["Path"] = param.Path;
+                    row["LowerBound"] = param.LowerBound;
+                    row["UpperBound"] = param.UpperBound;
+                    table.Rows.Add(row);
+                }
+
+                return table;
             }
-
-            return table;
-        }
-
-        /// <summary>User has edited the values - set the table back in the model</summary>
-        /// <param name="table">The values the user has edited.</param>
-        public void SetTable(DataTable table)
-        {
-            parameters.Clear();
-            foreach (DataRow row in table.Rows)
+            set
             {
-                Parameter param = new Parameter();
-                if (!Convert.IsDBNull(row["Name"]))
-                    param.Name = row["Name"].ToString();
-                if (!Convert.IsDBNull(row["Path"]))
-                    param.Path = row["Path"].ToString();
-                if (!Convert.IsDBNull(row["LowerBound"]))
-                    param.LowerBound = Convert.ToDouble(row["LowerBound"]);
-                if (!Convert.IsDBNull(row["UpperBound"]))
-                    param.UpperBound = Convert.ToDouble(row["UpperBound"]);
-                if (param.Name != null &&
-                    param.Path != null)
-                    parameters.Add(param);
+                parameters.Clear();
+                foreach (DataRow row in value.Rows)
+                {
+                    Parameter param = new Parameter();
+                    if (!Convert.IsDBNull(row["Name"]))
+                        param.Name = row["Name"].ToString();
+                    if (!Convert.IsDBNull(row["Path"]))
+                        param.Path = row["Path"].ToString();
+                    if (!Convert.IsDBNull(row["LowerBound"]))
+                        param.LowerBound = Convert.ToDouble(row["LowerBound"]);
+                    if (!Convert.IsDBNull(row["UpperBound"]))
+                        param.UpperBound = Convert.ToDouble(row["UpperBound"]);
+                    if (param.Name != null || param.Path != null)
+                        parameters.Add(param);
+                }
             }
         }
 

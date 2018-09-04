@@ -32,7 +32,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The presenter
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        private ExplorerPresenter presenter;
+
+        /// <summary>
+        /// The intellisense object used to generate completion options.
+        /// </summary>
+        private IntellisensePresenter intellisense;
 
         /// <summary>
         /// Attach the view
@@ -44,13 +49,13 @@ namespace UserInterface.Presenters
         {
             this.factor = model as Factor;
             this.factorView = view as IEditorView;
-            this.explorerPresenter = explorerPresenter;
-
+            this.presenter = explorerPresenter;
+            intellisense = new IntellisensePresenter(factorView as ViewBase);
             this.factorView.Lines = this.factor.Specifications.ToArray();
 
             this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
             this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
@@ -58,9 +63,10 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.factorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
-            this.factorView.ContextItemsNeeded -= this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;            
+            intellisense.Cleanup();
+            factorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
+            factorView.ContextItemsNeeded -= this.OnContextItemsNeeded;
+            presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
         /// <summary>
@@ -77,25 +83,47 @@ namespace UserInterface.Presenters
 
             try
             {
-                Experiment experiment = this.factor.Parent.Parent as Experiment;
-                if (experiment != null && experiment.BaseSimulation != null)
+                string currentLine = GetLine(e.Code, e.LineNo - 1);
+                if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                intellisense.ItemSelected += (o, args) =>
                 {
-                    object o = experiment.BaseSimulation.Get(e.ObjectName);
+                    if (args.ItemSelected == string.Empty)
+                        (sender as IEditorView).InsertAtCaret(args.ItemSelected);
+                    else
+                        (sender as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                };
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
+        }
 
-                    if (o != null)
-                    {
-                        foreach (IVariable property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            e.Items.Add(property.Name);
-                        }
+        /// <summary>
+        /// Gets a specific line of text, preserving empty lines.
+        /// </summary>
+        /// <param name="text">Text.</param>
+        /// <param name="lineNo">0-indexed line number.</param>
+        /// <returns>String containing a specific line of text.</returns>
+        /// <remarks>This method is a duplicate of ReportPresenter.GetLine().</remarks>
+        private string GetLine(string text, int lineNo)
+        {
+            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
+            // to use unix-style line endings, so every second element from the returned array is an empty string.
+            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
 
-                        e.Items.Sort();
-                    }
+            // TODO : move this to APSIM.Shared.Utilities.StringUtilities?
+            string currentLine;
+            using (System.IO.StringReader reader = new System.IO.StringReader(text))
+            {
+                int i = 0;
+                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
+                {
+                    i++;
                 }
             }
-            catch (Exception)
-            {
-            }
+            return currentLine;
         }
 
         /// <summary>
@@ -105,7 +133,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             List<string> newPaths = new List<string>();
             foreach (string line in this.factorView.Lines)
@@ -116,9 +144,9 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.factor, "Specifications", newPaths));
+            this.presenter.CommandHistory.Add(new Commands.ChangeProperty(this.factor, "Specifications", newPaths));
 
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>

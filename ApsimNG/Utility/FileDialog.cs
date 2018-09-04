@@ -142,7 +142,7 @@
             dialog.InitialDirectory = InitialDirectory;
             dialog.FileName = null;
 
-            string[] fileNames = null;
+            string[] fileNames = new string[0];
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 fileNames = dialog.FileNames;
             dialog = null;
