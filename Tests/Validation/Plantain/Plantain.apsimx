@@ -987,29 +987,6 @@ namespace Models
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
-      <Tests>
-        <Name>Tests</Name>
-        <Memo>
-          <Name>Note</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[
-Where:
- - n: The number of PO (predicted-observed) pairs for the given variable;  
- - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  
- - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  
- - SEslope: Standard error in the slope;  
- - SEintercept: Standard error in the intercept.;  
- - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  
- - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  
- - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -∞ to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  
- - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  
- - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  
- - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  
-
-]]></MemoText>
-        </Memo>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Tests>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
