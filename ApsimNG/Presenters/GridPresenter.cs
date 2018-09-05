@@ -49,6 +49,7 @@ namespace UserInterface.Presenters
             grid.CopyCells -= CopyCells;
             grid.PasteCells -= PasteCells;
             grid.DeleteCells -= DeleteCells;
+            grid.Dispose();
         }
 
         /// <summary>

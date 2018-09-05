@@ -199,6 +199,7 @@
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
+    <Compile Include="EventArguments\CopyEventArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellActionArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
+    <Compile Include="Presenters\TablePresenter.cs" />
     <Compile Include="Presenters\NewAzureJobPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />

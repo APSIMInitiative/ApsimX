@@ -106,6 +106,8 @@ namespace UserInterface.Views
             {
                 List<List<string>> newTable = new List<List<string>>();
                 newTable.Add(SpatialDataGrid.DataSource.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                List<DataRow> rawData = SpatialDataGrid.DataSource.AsEnumerable().ToList();
+                int lastNonEmptyRow = rawData.IndexOf(rawData.Last(r => !r.ItemArray.All(x => x == DBNull.Value || x == null || string.IsNullOrEmpty(x.ToString()))));
                 // i is the column index.
                 for (int col = 0; col < SpatialDataGrid.DataSource.Columns.Count; col++)
                 {
@@ -114,7 +116,7 @@ namespace UserInterface.Views
                     // The second list in the forestry model's table holds the first column,
                     // which holds the row names. We don't want to modify this either.
                     List<string> column = new List<string>();
-                    for (int row = 0; row < SpatialDataGrid.DataSource.Rows.Count; row++)
+                    for (int row = 0; row <= lastNonEmptyRow; row++)
                         column.Add(SpatialDataGrid.DataSource.Rows[row][col].ToString());
                     newTable.Add(column);
                 }

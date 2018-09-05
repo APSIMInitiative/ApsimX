@@ -1,6 +1,7 @@
 ﻿using Gtk;
 using System;
 using System.Collections.Generic;
+using EventArguments;
 
 namespace UserInterface.Views
 {
@@ -9,10 +10,29 @@ namespace UserInterface.Views
     /// </summary>
     public class SummaryView : ViewBase, ISummaryView
     {
+        /// <summary>
+        /// Gtk VBox which holds all other UI elements in the view.
+        /// </summary>
         private VBox vbox1 = null;
+
+        /// <summary>
+        /// Drop down box which displays the simulation names.
+        /// </summary>
         private ComboBox combobox1 = null;
+
+        /// <summary>
+        /// Model behind the dropdown box, which stores the simulation names.
+        /// </summary>
         private ListStore comboModel = new ListStore(typeof(string));
+
+        /// <summary>
+        /// The cell which displays the data in the drop down box.
+        /// </summary>
         private CellRendererText comboRender = new CellRendererText();
+
+        /// <summary>
+        /// View which displays the summary data.
+        /// </summary>
         private HTMLView htmlview;
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
@@ -27,17 +47,17 @@ namespace UserInterface.Views
             combobox1.Model = comboModel;
             combobox1.Changed += comboBox1_TextChanged;
             htmlview = new HTMLView(this);
+            htmlview.Copy += OnCopy;
             vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            _mainWidget.Destroyed += MainWidgetDestroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
-        {
-            comboModel.Dispose();
-            comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
-        }
+        /// <summary>
+        /// Invoked when the user wishes to copy data out of the HTMLView.
+        /// This is currently only used on Windows, as the other web 
+        /// browsers are capable of handling the copy event themselves.
+        /// </summary>
+        public event EventHandler<CopyEventArgs> Copy;
 
         /// <summary>Occurs when the name of the simulation is changed by the user</summary>
         public event EventHandler SimulationNameChanged;
@@ -53,7 +73,6 @@ namespace UserInterface.Views
                 else
                     return "";
             }
-
             set
             {
                 TreeIter iter;
@@ -75,14 +94,14 @@ namespace UserInterface.Views
         {
             get
             {
-                int nNames = comboModel.IterNChildren();
-                string[] result = new string[nNames];
+                int nameCount = comboModel.IterNChildren();
+                string[] result = new string[nameCount];
                 TreeIter iter;
                 int i = 0;
                 if (combobox1.GetActiveIter(out iter))
                     do
                         result[i++] = (string)comboModel.GetValue(iter, 0);
-                    while (comboModel.IterNext(ref iter) && i < nNames);
+                    while (comboModel.IterNext(ref iter) && i < nameCount);
                 return result;
             }
             set
@@ -104,10 +123,36 @@ namespace UserInterface.Views
             this.htmlview.SetContents(content, false);
         }
 
+        /// <summary>
+        /// Event handler which fires whenever the combo box's text changes.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             if (this.SimulationNameChanged != null)
                 this.SimulationNameChanged(this, e);
+        }
+
+        /// <summary>
+        /// Event handler for <see cref="htmlview"/>'s copy event.
+        /// Propagates the copy event up to the presenter.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnCopy(object sender, CopyEventArgs e)
+        {
+            Copy?.Invoke(sender, e);
+        }
+
+
+        private void MainWidgetDestroyed(object sender, EventArgs e)
+        {
+            comboModel.Dispose();
+            comboRender.Destroy();
+            _mainWidget.Destroyed -= MainWidgetDestroyed;
+            htmlview.Copy -= OnCopy;
+            _owner = null;
         }
     }
 }
