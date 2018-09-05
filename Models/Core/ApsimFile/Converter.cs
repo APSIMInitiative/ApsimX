@@ -1056,17 +1056,17 @@
         }
 
         /// <summary>
-        /// Upgrades to version 40. Upgrades parameterisation of DM demands.
+        /// Upgrades to version 41. Upgrades parameterisation of DM demands.
         /// </summary>
         private static void UpgradeToVersion41(XmlNode node, string fileName)
         {
             List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
             foreach (string org in organList)
                 foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
-                 {
+                {
                     string oldPath = "";
                     string organName = "";
-                    MakeDMDemandsNode(node, organNode,ref oldPath, ref organName);
+                    MakeDMDemandsNode(node, organNode, ref oldPath, ref organName);
                     string toReplace = organName + "." + oldPath;
                     string ReplaceWith = organName + ".DMDemands.Structural.";
                     ConverterUtilities.RenameVariable(node, toReplace, ReplaceWith);
@@ -1074,5 +1074,6 @@
                     ReplaceWith = "[" + organName + "]" + ".DMDemands.Structural.";
                     ConverterUtilities.RenameVariable(node, toReplace, ReplaceWith);
                 }
+        }
     }
 }
