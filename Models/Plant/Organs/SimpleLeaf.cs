@@ -320,16 +320,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events
-        /// <summary>Called when crop is sown</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private void OnSowing(object sender, SowPlant2Type data)
-        {
-            MicroClimatePresent = false;
-            Clear();
-        }
-
         /// <summary>Called when [phase changed].</summary>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
@@ -959,6 +949,7 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 Clear();
+                MicroClimatePresent = false;
                 Live.StructuralWt = initialWtFunction.Value();
                 Live.StorageWt = 0.0;
                 Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
