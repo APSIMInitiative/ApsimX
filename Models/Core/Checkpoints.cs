@@ -6,6 +6,8 @@ namespace Models.Core
     using System.Collections.Generic;
     using System.IO;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
+    using System.Linq;
 
     /// <summary>B
     /// Saves state of objects and has options to write to a file.
@@ -38,6 +40,20 @@ namespace Models.Core
             }
             else
                 WriteToFile(name, o);
+        }
+
+        private void WriteToFile(string name, object o)
+        {
+            string fileName = Path.Combine(Path.GetDirectoryName(simulations.FileName), name);
+            fileName = Path.ChangeExtension(fileName, ".checkpoint.json");
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                writer.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented,
+                    new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    }));
+            }
         }
 
         /// <summary>
@@ -79,22 +95,28 @@ namespace Models.Core
             CheckPointFile.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented,
                     new JsonSerializerSettings
                     {
+                        ContractResolver = new DynamicContractResolver(),
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                     }));
         }
-        
-        private void WriteToFile(string name, object o)
+
+        private class DynamicContractResolver : DefaultContractResolver
         {
-            string fileName = Path.Combine(Path.GetDirectoryName(simulations.FileName), name);
-            fileName = Path.ChangeExtension(fileName, ".checkpoint.json");
-            using (StreamWriter writer = new StreamWriter(fileName))
+            public DynamicContractResolver()
             {
-                writer.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented,
-                    new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    }));
             }
+
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
+
+                // only serializer properties that start with the specified character
+                properties =
+                    properties.Where(p => p.PropertyName != "Parent").ToList();
+
+                return properties;
+            }
+
         }
     }
 }
