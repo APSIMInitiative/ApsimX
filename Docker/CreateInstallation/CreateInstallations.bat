@@ -6,6 +6,8 @@ if not exist %apsimx% (
 	exit 1
 )
 
+set setup=%apsimx%\Setup
+
 if exist %apsimx%\bin.zip (
 	echo Unzipping %apsimx%\bin.zip...
 	powershell -Command Expand-Archive -Path %apsimx%\bin.zip -DestinationPath %apsimx%\Bin -Force
@@ -21,28 +23,16 @@ if not exist %bin% (
 	exit 1
 )
 
-set setup=%apsimx%\Setup
-
-if "%1"=="docs" (
-	goto :docs
-)
-
 if "%1"=="windows" (
 	goto :windows
 )
-if "%1"=="macos" (
-	goto :macos
-)
+
 if "%1"=="linux" (
 	goto :linux
 )
 
 rem User has not provided a valid first argument.
 echo Usage: %0 (windows ^| macos ^| linux ^| docs)
-
-:docs
-call %apsimx%\Documentation\GenerateDocumentation.bat
-exit %errorlevel%
 
 :windows
 echo.
@@ -95,8 +85,4 @@ if exist %setup%\Output\APSIMSetup.deb (
 	dir %setup%\Output
 	exit 1
 )
-exit %errorlevel%
-
-:macos
-%setup%\osx\BuildMacDist.bat
 exit %errorlevel%
