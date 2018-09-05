@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant Version="41">
+<Plant Version="39">
   <Name>Plantain</Name>
   <Memo>
     <Name>GeneralDescription</Name>
@@ -298,6 +298,13 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Enabled>true</Enabled>
     </MultiplyFunction>
     <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>1</FixedValue>
+      <Units>g/g</Units>
+    </Constant>
+    <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
@@ -482,6 +489,176 @@ The current model assumes generic responses to enviromental factors, such as tem
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
     </DivideFunction>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <Memo>
+        <Name>Description</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <MemoText><![CDATA[In the plantain model, the DM demand function attempts to keep the shoot to root ratio and then the stem to leaf ratio close to a target value (defined by the [TargetShootRootRatio].Value and [TargetStemsLeafRatio].Value), which may vary according to the phenolgical stage.  This approach ensures that the plantain plants will recovery after being cut or grazed.  In this case, biomass will be allocated to leaves preferably, even during reproductive phase.  
+]]></MemoText>
+      </Memo>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <PhaseLookupValue>
+          <Name>Vegetative</Name>
+          <DivideFunction>
+            <Name>LeafFraction</Name>
+            <MultiplyFunction>
+              <Name>Numerator</Name>
+              <VariableReference>
+                <Name>TargetSR1</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSR2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <AddFunction>
+              <Name>Denominator</Name>
+              <MultiplyFunction>
+                <Name>TargetSRs</Name>
+                <VariableReference>
+                  <Name>TargetSR1</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>TargetSR2</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </MultiplyFunction>
+              <VariableReference>
+                <Name>CurrentSR</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[ShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </AddFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </DivideFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Start>Emergence</Start>
+          <End>Flowering</End>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>Reproductive</Name>
+          <DivideFunction>
+            <Name>LeafFraction</Name>
+            <MultiplyFunction>
+              <Name>Numerator</Name>
+              <VariableReference>
+                <Name>TargetSR1</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSR2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>CurrentSL</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[StemsLeafRatio].Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <MultiplyFunction>
+              <Name>Denominator</Name>
+              <AddFunction>
+                <Name>SRs</Name>
+                <MultiplyFunction>
+                  <Name>TargetSRs</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentSR</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[ShootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <AddFunction>
+                <Name>SLs</Name>
+                <MultiplyFunction>
+                  <Name>TargetSLs</Name>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentSL</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[StemsLeafRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </DivideFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Start>Flowering</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+      </PhaseLookup>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -831,42 +1008,98 @@ The current model assumes generic responses to enviromental factors, such as tem
     <LeafInitialisationStage>Emergence</LeafInitialisationStage>
     <KDead>0</KDead>
     <LAIDead>0</LAIDead>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <Memo>
-          <Name>Description</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <MemoText><![CDATA[In the plantain model, the DM demand function attempts to keep the shoot to root ratio and then the stem to leaf ratio close to a target value (defined by the [TargetShootRootRatio].Value and [TargetStemsLeafRatio].Value), which may vary according to the phenolgical stage.  This approach ensures that the plantain plants will recovery after being cut or grazed.  In this case, biomass will be allocated to leaves preferably, even during reproductive phase.  
+  </SimpleLeaf>
+  <GenericOrgan>
+    <Name>Stem</Name>
+    <Memo>
+      <Name>Description</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <MemoText><![CDATA[__Note:__ this represents all the stems/stalks in the plant, without distinction between ages or placement in the canopy.  
 ]]></MemoText>
-        </Memo>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>Vegetative</Name>
-            <DivideFunction>
-              <Name>LeafFraction</Name>
-              <MultiplyFunction>
-                <Name>Numerator</Name>
-                <VariableReference>
-                  <Name>TargetSR1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSR2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
+    </Memo>
+    <Constant>
+      <Name>InitialWtFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>1E-06</FixedValue>
+      <Units>g/plant</Units>
+    </Constant>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>1</FixedValue>
+      <Units>g/g</Units>
+    </Constant>
+    <Constant>
+      <Name>MinimumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>0.005</FixedValue>
+      <Units>gN/gDM</Units>
+    </Constant>
+    <Constant>
+      <Name>MaximumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>0.02</FixedValue>
+      <Units>gN/gDM</Units>
+    </Constant>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <Memo>
+        <Name>Description</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <MemoText><![CDATA[A simple approach is used in the plantain model to define the allocation of biomass to various organs.  The proportion of the above ground biomass allocated to stems is determined based on the current state and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems can only occur during the reproductive phase.  
+]]></MemoText>
+      </Memo>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <PhaseLookupValue>
+          <Name>Reproductive</Name>
+          <DivideFunction>
+            <Name>StemFraction</Name>
+            <MultiplyFunction>
+              <Name>Numerator</Name>
+              <VariableReference>
+                <Name>TargetSR1</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-              </MultiplyFunction>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSR2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSL1</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSL2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>CurrentFS</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[FlowerStemRatio].Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <MultiplyFunction>
+              <Name>Denominator</Name>
               <AddFunction>
-                <Name>Denominator</Name>
+                <Name>SRs</Name>
                 <MultiplyFunction>
                   <Name>TargetSRs</Name>
                   <VariableReference>
@@ -893,32 +1126,25 @@ The current model assumes generic responses to enviromental factors, such as tem
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
               </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-            </DivideFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <Start>Emergence</Start>
-            <End>Flowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Reproductive</Name>
-            <DivideFunction>
-              <Name>LeafFraction</Name>
-              <MultiplyFunction>
-                <Name>Numerator</Name>
-                <VariableReference>
-                  <Name>TargetSR1</Name>
+              <AddFunction>
+                <Name>SLs</Name>
+                <MultiplyFunction>
+                  <Name>TargetSLs</Name>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSR2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
+                </MultiplyFunction>
                 <VariableReference>
                   <Name>CurrentSL</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -927,135 +1153,52 @@ The current model assumes generic responses to enviromental factors, such as tem
                 </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>Denominator</Name>
-                <AddFunction>
-                  <Name>SRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSRs</Name>
-                    <VariableReference>
-                      <Name>TargetSR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
+              </AddFunction>
+              <AddFunction>
+                <Name>FSs</Name>
+                <MultiplyFunction>
+                  <Name>TargetFSs</Name>
                   <VariableReference>
-                    <Name>CurrentSR</Name>
+                    <Name>TargetFS1</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Enabled>true</Enabled>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
                   </VariableReference>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
-                </AddFunction>
-                <AddFunction>
-                  <Name>SLs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSLs</Name>
-                    <VariableReference>
-                      <Name>TargetSL1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSL2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSL</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[StemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentFS</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
-                </AddFunction>
+                  <VariableName>[FlowerStemRatio].Value()</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-              </MultiplyFunction>
+              </AddFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-            </DivideFunction>
+            </MultiplyFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <Start>Flowering</Start>
-            <End>Ripening</End>
-          </PhaseLookupValue>
+          </DivideFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
-        </PhaseLookup>
+          <Start>Flowering</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <FixedValue>1</FixedValue>
-            <Units>g/g</Units>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
-  </SimpleLeaf>
-  <GenericOrgan>
-    <Name>Stem</Name>
-    <Memo>
-      <Name>Description</Name>
+      </PhaseLookup>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <MemoText><![CDATA[__Note:__ this represents all the stems/stalks in the plant, without distinction between ages or placement in the canopy.  
-]]></MemoText>
-    </Memo>
-    <Constant>
-      <Name>InitialWtFunction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <FixedValue>1E-06</FixedValue>
-      <Units>g/plant</Units>
-    </Constant>
-    <Constant>
-      <Name>MinimumNConc</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <FixedValue>0.005</FixedValue>
-      <Units>gN/gDM</Units>
-    </Constant>
-    <Constant>
-      <Name>MaximumNConc</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <FixedValue>0.02</FixedValue>
-      <Units>gN/gDM</Units>
-    </Constant>
+    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1298,183 +1441,6 @@ The current model assumes generic responses to enviromental factors, such as tem
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <Memo>
-          <Name>Description</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <MemoText><![CDATA[A simple approach is used in the plantain model to define the allocation of biomass to various organs.  The proportion of the above ground biomass allocated to stems is determined based on the current state and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems can only occur during the reproductive phase.  
-]]></MemoText>
-        </Memo>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>Reproductive</Name>
-            <DivideFunction>
-              <Name>StemFraction</Name>
-              <MultiplyFunction>
-                <Name>Numerator</Name>
-                <VariableReference>
-                  <Name>TargetSR1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSR2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSL1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSL2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>CurrentFS</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[FlowerStemRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>Denominator</Name>
-                <AddFunction>
-                  <Name>SRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSRs</Name>
-                    <VariableReference>
-                      <Name>TargetSR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <AddFunction>
-                  <Name>SLs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSLs</Name>
-                    <VariableReference>
-                      <Name>TargetSL1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSL2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSL</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[StemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <AddFunction>
-                  <Name>FSs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetFSs</Name>
-                    <VariableReference>
-                      <Name>TargetFS1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetFS2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentFS</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[FlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-            </DivideFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <Start>Flowering</Start>
-            <End>Ripening</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </PhaseLookup>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <FixedValue>1</FixedValue>
-            <Units>g/g</Units>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Inflorescence</Name>
@@ -1493,6 +1459,13 @@ The current model assumes generic responses to enviromental factors, such as tem
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>1</FixedValue>
+      <Units>g/g</Units>
+    </Constant>
+    <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
@@ -1506,6 +1479,165 @@ The current model assumes generic responses to enviromental factors, such as tem
       <FixedValue>0.06</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <Memo>
+        <Name>Description</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <MemoText><![CDATA[The plantain model uses a  simple approach to define the allocation of biomass to various organs.  The fraction of the above ground biomass allocated to inflorescence is determined based on the current proprotion and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation to inflorescence can only occur during the reproductive phase.  
+]]></MemoText>
+      </Memo>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <PhaseLookupValue>
+          <Name>Reproductive</Name>
+          <DivideFunction>
+            <Name>FlowerFraction</Name>
+            <MultiplyFunction>
+              <Name>Numerator</Name>
+              <VariableReference>
+                <Name>TargetSR1</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSR2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSL1</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetSL2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetFS1</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetFS2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <MultiplyFunction>
+              <Name>Denominator</Name>
+              <AddFunction>
+                <Name>SRs</Name>
+                <MultiplyFunction>
+                  <Name>TargetSRs</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentSR</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[ShootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <AddFunction>
+                <Name>SLs</Name>
+                <MultiplyFunction>
+                  <Name>TargetSLs</Name>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentSL</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[StemsLeafRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <AddFunction>
+                <Name>FSs</Name>
+                <MultiplyFunction>
+                  <Name>TargetFSs</Name>
+                  <VariableReference>
+                    <Name>TargetFS1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentFS</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[FlowerStemRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </DivideFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Start>Flowering</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+      </PhaseLookup>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1740,189 +1872,6 @@ The current model assumes generic responses to enviromental factors, such as tem
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <Memo>
-          <Name>Description</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <MemoText><![CDATA[The plantain model uses a  simple approach to define the allocation of biomass to various organs.  The fraction of the above ground biomass allocated to inflorescence is determined based on the current proprotion and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation to inflorescence can only occur during the reproductive phase.  
-]]></MemoText>
-        </Memo>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>Reproductive</Name>
-            <DivideFunction>
-              <Name>FlowerFraction</Name>
-              <MultiplyFunction>
-                <Name>Numerator</Name>
-                <VariableReference>
-                  <Name>TargetSR1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSR2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSL1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSL2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetFS1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetFS2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>Denominator</Name>
-                <AddFunction>
-                  <Name>SRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSRs</Name>
-                    <VariableReference>
-                      <Name>TargetSR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <AddFunction>
-                  <Name>SLs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSLs</Name>
-                    <VariableReference>
-                      <Name>TargetSL1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSL2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSL</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[StemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <AddFunction>
-                  <Name>FSs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetFSs</Name>
-                    <VariableReference>
-                      <Name>TargetFS1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetFS2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentFS</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[FlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-            </DivideFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <Start>Flowering</Start>
-            <End>Ripening</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </PhaseLookup>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <FixedValue>1</FixedValue>
-            <Units>g/g</Units>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Taproot</Name>
@@ -1942,6 +1891,13 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>0.1</FixedValue>
+      <Units>g/g</Units>
+    </Constant>
+    <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
@@ -1955,6 +1911,119 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <FixedValue>0.02</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <Memo>
+        <Name>Description</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <MemoText><![CDATA[The plantain model computes the allocation of biomass to taproots assuming that there is a target ratio the biomass of root and taproot (defined by [TaprootRootRatio].Value).  The existing literature does not provide values for this parameter, and based on other herbs, such as chicory, a simple value which is further modified by plant specific biomass is assumed in the model. This should be update when more data becomes available.
+]]></MemoText>
+      </Memo>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <PhaseLookupValue>
+          <Name>AllPhases</Name>
+          <DivideFunction>
+            <Name>TaprootFraction</Name>
+            <MultiplyFunction>
+              <Name>Numerator</Name>
+              <VariableReference>
+                <Name>CurrentSR</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[ShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetTR1</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>TargetTR2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <MultiplyFunction>
+              <Name>Denominator</Name>
+              <AddFunction>
+                <Name>SRs</Name>
+                <MultiplyFunction>
+                  <Name>TargetSRs</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentSR</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[ShootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <AddFunction>
+                <Name>TRs</Name>
+                <MultiplyFunction>
+                  <Name>TargetTRs</Name>
+                  <VariableReference>
+                    <Name>TargetTR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetTR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentTR</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[TaprootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </DivideFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Start>Emergence</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+      </PhaseLookup>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2140,143 +2209,6 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <Memo>
-          <Name>Description</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <MemoText><![CDATA[The plantain model computes the allocation of biomass to taproots assuming that there is a target ratio the biomass of root and taproot (defined by [TaprootRootRatio].Value).  The existing literature does not provide values for this parameter, and based on other herbs, such as chicory, a simple value which is further modified by plant specific biomass is assumed in the model. This should be update when more data becomes available.
-]]></MemoText>
-        </Memo>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>AllPhases</Name>
-            <DivideFunction>
-              <Name>TaprootFraction</Name>
-              <MultiplyFunction>
-                <Name>Numerator</Name>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetTR1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetTR2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>Denominator</Name>
-                <AddFunction>
-                  <Name>SRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSRs</Name>
-                    <VariableReference>
-                      <Name>TargetSR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <AddFunction>
-                  <Name>TRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetTRs</Name>
-                    <VariableReference>
-                      <Name>TargetTR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetTR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentTR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[TaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-            </DivideFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <Start>Emergence</Start>
-            <End>Ripening</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </PhaseLookup>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <FixedValue>0.1</FixedValue>
-            <Units>g/g</Units>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <Root>
     <Name>Root</Name>
@@ -2312,6 +2244,13 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
     </MultiplyFunction>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <FixedValue>1</FixedValue>
+      <Units>g/g</Units>
+    </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2652,6 +2591,113 @@ No effect of soil water content on root growth is currently captured in the mode
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
     </BiomassRemoval>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <Memo>
+          <Name>Description</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
+]]></MemoText>
+        </Memo>
+        <PhaseLookupValue>
+          <Name>AllPhases</Name>
+          <DivideFunction>
+            <Name>RootFraction</Name>
+            <MultiplyFunction>
+              <Name>Numerator</Name>
+              <VariableReference>
+                <Name>CurrentSR</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[ShootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>CurrentTR</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[TaprootRootRatio].Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <MultiplyFunction>
+              <Name>Denominator</Name>
+              <AddFunction>
+                <Name>SRs</Name>
+                <MultiplyFunction>
+                  <Name>TargetSRs</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentSR</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[ShootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <AddFunction>
+                <Name>TRs</Name>
+                <MultiplyFunction>
+                  <Name>TargetTRs</Name>
+                  <VariableReference>
+                    <Name>TargetTR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetTR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <VariableReference>
+                  <Name>CurrentTR</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <VariableName>[TaprootRootRatio].Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </AddFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </MultiplyFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </DivideFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <Start>Emergence</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+      </PhaseLookup>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2680,137 +2726,6 @@ No effect of soil water content on root growth is currently captured in the mode
     <Enabled>true</Enabled>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
-]]></MemoText>
-          </Memo>
-          <PhaseLookupValue>
-            <Name>AllPhases</Name>
-            <DivideFunction>
-              <Name>RootFraction</Name>
-              <MultiplyFunction>
-                <Name>Numerator</Name>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>CurrentTR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <VariableName>[TaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>Denominator</Name>
-                <AddFunction>
-                  <Name>SRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetSRs</Name>
-                    <VariableReference>
-                      <Name>TargetSR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetSR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentSR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[ShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <AddFunction>
-                  <Name>TRs</Name>
-                  <MultiplyFunction>
-                    <Name>TargetTRs</Name>
-                    <VariableReference>
-                      <Name>TargetTR1</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetTR2</Name>
-                      <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentTR</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <VariableName>[TaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                </AddFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-              </MultiplyFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-            </DivideFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <Start>Emergence</Start>
-            <End>Ripening</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </PhaseLookup>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <FixedValue>1</FixedValue>
-            <Units>g/g</Units>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </Root>
   <CompositeBiomass>
     <Name>AboveGround</Name>
