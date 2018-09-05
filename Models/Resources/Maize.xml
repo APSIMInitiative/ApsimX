@@ -1,4 +1,4 @@
-<Plant Version="40">
+<Plant Version="39">
   <Name>Maize</Name>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
@@ -68,7 +68,7 @@
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -79,7 +79,7 @@
     <GenericPhase>
       <Name>Photosensitive</Name>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -133,7 +133,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -150,7 +150,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -167,7 +167,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -184,7 +184,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -201,7 +201,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -926,6 +926,11 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Units>/d</Units>
     </Constant>
     <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
       <Name>MaximumRootDepth</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1000000</FixedValue>
@@ -942,6 +947,33 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <FixedValue>0.01</FixedValue>
       <Units>g/g</Units>
     </Constant>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <LinearInterpolationFunction>
+        <Name>PartitionFraction</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <X>
+            <double>0</double>
+            <double>2.99</double>
+            <double>3</double>
+            <double>6</double>
+            <double>7</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>0</double>
+            <double>0.2</double>
+            <double>0.2</double>
+            <double>0</double>
+          </Y>
+        </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <XProperty>[Phenology].Stage</XProperty>
+      </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PartitionFractionDemandFunction>
     <MultiplyFunction>
       <Name>RootFrontVelocity</Name>
       <PhaseLookup>
@@ -1121,55 +1153,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <LinearInterpolationFunction>
-          <Name>PartitionFraction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>0</double>
-              <double>2.99</double>
-              <double>3</double>
-              <double>6</double>
-              <double>7</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0</double>
-              <double>0.2</double>
-              <double>0.2</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </Root>
   <Leaf>
     <Name>Leaf</Name>
@@ -2005,6 +1988,119 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
   </Leaf>
   <GenericOrgan>
     <Name>Husk</Name>
+    <PopulationBasedDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+      </VariableReference>
+      <Constant>
+        <Name>StartStage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>5.5</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>GrowthDuration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>300</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>MaximumOrganWt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>25</FixedValue>
+      </Constant>
+      <VariableReference>
+        <Name>OrganPopulation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <VariableName>[Rachis].CobNumber.Value()</VariableName>
+      </VariableReference>
+      <Constant>
+        <Name>SenescenceRate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>0</FixedValue>
+        <Units>/d</Units>
+      </Constant>
+      <LinearInterpolationFunction>
+        <Name>ExpansionStress2</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <X>
+            <double>0</double>
+            <double>0.35</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>1</double>
+          </Y>
+        </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <XProperty>[Maize].Leaf.Fw</XProperty>
+      </LinearInterpolationFunction>
+      <MinimumFunction>
+        <Name>ExpansionStress</Name>
+        <LinearInterpolationFunction>
+          <Name>WaterStressEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0.1</double>
+              <double>0.7</double>
+              <double>1.3</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].WaterTensionFactor</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>TemperatureEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>12</double>
+              <double>14</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[IWeather].MeanT</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NitrogenStressEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>0.5</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Maize].Leaf.Fn</XProperty>
+        </LinearInterpolationFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </MinimumFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PopulationBasedDemandFunction>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2027,6 +2123,32 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>0.007</FixedValue>
       <Units>g/g</Units>
     </Constant>
+    <PhaseLookup>
+      <Name>StructuralFraction</Name>
+      <PhaseLookupValue>
+        <Name>PreStemElongation</Name>
+        <Constant>
+          <Name>StemFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.5</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>Emergence</Start>
+        <End>StartGrainFill</End>
+      </PhaseLookupValue>
+      <PhaseLookupValue>
+        <Name>StemElongation</Name>
+        <Constant>
+          <Name>StemFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>StartGrainFill</Start>
+        <End>HarvestRipe</End>
+      </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PhaseLookup>
     <Constant>
       <Name>SenescenceRate</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2126,162 +2248,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PopulationBasedDemandFunction>
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>ThermalTime</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
-        </VariableReference>
-        <Constant>
-          <Name>StartStage</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>5.5</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>GrowthDuration</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>300</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>MaximumOrganWt</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>25</FixedValue>
-        </Constant>
-        <VariableReference>
-          <Name>OrganPopulation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Rachis].CobNumber.Value()</VariableName>
-        </VariableReference>
-        <Constant>
-          <Name>SenescenceRate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
-          <Units>/d</Units>
-        </Constant>
-        <LinearInterpolationFunction>
-          <Name>ExpansionStress2</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>0</double>
-              <double>0.35</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Maize].Leaf.Fw</XProperty>
-        </LinearInterpolationFunction>
-        <MinimumFunction>
-          <Name>ExpansionStress</Name>
-          <LinearInterpolationFunction>
-            <Name>WaterStressEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0.1</double>
-                <double>0.7</double>
-                <double>1.3</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Root].WaterTensionFactor</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>TemperatureEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>12</double>
-                <double>14</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[IWeather].MeanT</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>NitrogenStressEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Maize].Leaf.Fn</XProperty>
-          </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MinimumFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PopulationBasedDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <PhaseLookup>
-            <Name>StructuralFraction</Name>
-            <PhaseLookupValue>
-              <Name>PreStemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.5</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>Emergence</Start>
-              <End>StartGrainFill</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>StemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>1</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>StartGrainFill</Start>
-              <End>HarvestRipe</End>
-            </PhaseLookupValue>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </PhaseLookup>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Rachis</Name>
@@ -2313,6 +2279,96 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </DivideFunction>
+    <PopulationBasedDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+      </VariableReference>
+      <Constant>
+        <Name>StartStage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>5.5</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>GrowthDuration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>300</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>MaximumOrganWt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>23</FixedValue>
+      </Constant>
+      <VariableReference>
+        <Name>OrganPopulation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <VariableName>[Rachis].CobNumber.Value()</VariableName>
+      </VariableReference>
+      <MinimumFunction>
+        <Name>ExpansionStress</Name>
+        <LinearInterpolationFunction>
+          <Name>WaterStressEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0.1</double>
+              <double>0.7</double>
+              <double>1.3</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].WaterTensionFactor</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>TemperatureEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>12</double>
+              <double>14</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[IWeather].MeanT</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NitrogenStressEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>0.5</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Maize].Leaf.Fn</XProperty>
+        </LinearInterpolationFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </MinimumFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PopulationBasedDemandFunction>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2333,6 +2389,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.008</FixedValue>
+      <Units>g/g</Units>
+    </Constant>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <Constant>
@@ -2451,122 +2513,35 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PopulationBasedDemandFunction>
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>ThermalTime</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
-        </VariableReference>
-        <Constant>
-          <Name>StartStage</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>5.5</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>GrowthDuration</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>300</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>MaximumOrganWt</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>23</FixedValue>
-        </Constant>
-        <VariableReference>
-          <Name>OrganPopulation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Rachis].CobNumber.Value()</VariableName>
-        </VariableReference>
-        <MinimumFunction>
-          <Name>ExpansionStress</Name>
-          <LinearInterpolationFunction>
-            <Name>WaterStressEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0.1</double>
-                <double>0.7</double>
-                <double>1.3</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Root].WaterTensionFactor</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>TemperatureEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>12</double>
-                <double>14</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[IWeather].MeanT</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>NitrogenStressEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>0</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Maize].Leaf.Fn</XProperty>
-          </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MinimumFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PopulationBasedDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-            <Units>g/g</Units>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
+    <PhaseLookup>
+      <Name>StructuralFraction</Name>
+      <PhaseLookupValue>
+        <Name>PreStemElongation</Name>
+        <Constant>
+          <Name>StemFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.5</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>Emergence</Start>
+        <End>StartGrainFill</End>
+      </PhaseLookupValue>
+      <PhaseLookupValue>
+        <Name>StemElongation</Name>
+        <Constant>
+          <Name>StemFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>StartGrainFill</Start>
+        <End>HarvestRipe</End>
+      </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PhaseLookup>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2640,6 +2615,33 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.1</FixedValue>
     </Constant>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <LinearInterpolationFunction>
+        <Name>PartitionFraction</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <X>
+            <double>3</double>
+            <double>5</double>
+            <double>6</double>
+            <double>7</double>
+            <double>7.0001</double>
+          </X>
+          <Y>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0</double>
+          </Y>
+        </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <XProperty>[Phenology].Stage</XProperty>
+      </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PartitionFractionDemandFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2749,76 +2751,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <LinearInterpolationFunction>
-          <Name>PartitionFraction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>3</double>
-              <double>5</double>
-              <double>6</double>
-              <double>7</double>
-              <double>7.0001</double>
-            </X>
-            <Y>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <PhaseLookup>
-            <Name>StructuralFraction</Name>
-            <PhaseLookupValue>
-              <Name>PreStemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.5</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>Emergence</Start>
-              <End>StartGrainFill</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>StemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>1</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>StartGrainFill</Start>
-              <End>HarvestRipe</End>
-            </PhaseLookupValue>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </PhaseLookup>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>

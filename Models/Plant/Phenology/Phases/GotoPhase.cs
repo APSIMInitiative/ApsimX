@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GotoPhase : Model, IPhase, IPhaseWithTarget
+    public class GotoPhase : Model, IPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -36,18 +36,9 @@ namespace Models.PMF.Phen
         [Description("PhaseNameToGoto")]
         public string PhaseNameToGoto { get; set; }
 
-        /// <summary>Gets the tt for today.</summary>
-        [XmlIgnore]
-        public double TTForTimeStep { get; set; }
-
-        /// <summary>Gets the tt in phase.</summary>
-        [XmlIgnore]
-        public double TTinPhase { get; set; }
-
         /// <summary>Gets the fraction complete.</summary>
         [XmlIgnore]
         public double FractionComplete { get;}
-
 
         /// <summary>Thermal time target</summary>
         [XmlIgnore]

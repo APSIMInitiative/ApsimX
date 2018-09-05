@@ -81,7 +81,7 @@ echo                                     __/ ^|                                 
 echo                                    ^|___/                                                               ^|___/      
 echo.
 echo.
-%setup%\Linux\builddeb.bat
+call %setup%\Linux\builddeb.bat
 if errorlevel 1 (
 	echo Errors encountered!
 	exit %errorlevel%

@@ -1,4 +1,4 @@
-<Plant Version="40">
+<Plant Version="39">
   <Name>Wheat</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -366,7 +366,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
     <GenericPhase>
       <Name>EarlyReproductive</Name>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -426,7 +426,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>120</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -442,7 +442,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>545</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -458,7 +458,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>35</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -474,7 +474,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>300</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -1330,6 +1330,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       <FixedValue>0.005</FixedValue>
     </Constant>
     <Constant>
+      <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
       <Name>MaximumRootDepth</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1000000</FixedValue>
@@ -1518,6 +1523,59 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[SoilWaterScale]</XProperty>
     </LinearInterpolationFunction>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <PhaseLookupValue>
+          <Name>PreEmergence</Name>
+          <Constant>
+            <Name>Value</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>Germination</Start>
+          <End>Emergence</End>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>PreFlowering</Name>
+          <LinearInterpolationFunction>
+            <Name>AgeFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>3</double>
+                <double>4</double>
+              </X>
+              <Y>
+                <double>0.5</double>
+                <double>0.2</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Phenology].Stage</XProperty>
+          </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>Emergence</Start>
+          <End>Flowering</End>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>PostFlowering</Name>
+          <Constant>
+            <Name>Value</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.2</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>Flowering</Start>
+          <End>EndGrainFill</End>
+        </PhaseLookupValue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </PhaseLookup>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PartitionFractionDemandFunction>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1534,81 +1592,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>PreEmergence</Name>
-            <Constant>
-              <Name>Value</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Germination</Start>
-            <End>Emergence</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>PreFlowering</Name>
-            <LinearInterpolationFunction>
-              <Name>AgeFactor</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <X>
-                  <double>3</double>
-                  <double>4</double>
-                </X>
-                <Y>
-                  <double>0.5</double>
-                  <double>0.2</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Phenology].Stage</XProperty>
-            </LinearInterpolationFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Emergence</Start>
-            <End>Flowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>PostFlowering</Name>
-            <Constant>
-              <Name>Value</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.2</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Flowering</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PhaseLookup>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </Root>
   <Leaf>
     <Name>Leaf</Name>
@@ -2448,6 +2431,35 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
   </Leaf>
   <GenericOrgan>
     <Name>Spike</Name>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <LinearInterpolationFunction>
+        <Name>PartitionFraction</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <X>
+            <double>3</double>
+            <double>4</double>
+            <double>4.7</double>
+            <double>5</double>
+            <double>7</double>
+            <double>7.000001</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>0</double>
+            <double>0.01</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0</double>
+          </Y>
+        </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <XProperty>[Phenology].Stage</XProperty>
+      </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PartitionFractionDemandFunction>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2506,6 +2518,32 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Phenology].Stage</XProperty>
     </LinearInterpolationFunction>
+    <PhaseLookup>
+      <Name>StructuralFraction</Name>
+      <PhaseLookupValue>
+        <Name>VegetativeGrowth</Name>
+        <Constant>
+          <Name>StructuralFractionEG</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.3</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>Emergence</Start>
+        <End>StartGrainFill</End>
+      </PhaseLookupValue>
+      <PhaseLookupValue>
+        <Name>ReproductiveGrowth</Name>
+        <Constant>
+          <Name>StructuralFractionGF</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>StartGrainFill</Start>
+        <End>EndGrainFill</End>
+      </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PhaseLookup>
     <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2680,81 +2718,35 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <LinearInterpolationFunction>
-          <Name>PartitionFraction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>3</double>
-              <double>4</double>
-              <double>4.7</double>
-              <double>5</double>
-              <double>7</double>
-              <double>7.000001</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0</double>
-              <double>0.01</double>
-              <double>0.7</double>
-              <double>0.7</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <PhaseLookup>
-            <Name>StructuralFraction</Name>
-            <PhaseLookupValue>
-              <Name>VegetativeGrowth</Name>
-              <Constant>
-                <Name>StructuralFractionEG</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.3</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>Emergence</Start>
-              <End>StartGrainFill</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>ReproductiveGrowth</Name>
-              <Constant>
-                <Name>StructuralFractionGF</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>StartGrainFill</Start>
-              <End>EndGrainFill</End>
-            </PhaseLookupValue>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </PhaseLookup>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
+    <PhaseLookup>
+      <Name>StructuralFraction</Name>
+      <PhaseLookupValue>
+        <Name>VegetativeGrowth</Name>
+        <Constant>
+          <Name>Fraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.3</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>Sowing</Start>
+        <End>StartGrainFill</End>
+      </PhaseLookupValue>
+      <PhaseLookupValue>
+        <Name>ReproductiveGrowth</Name>
+        <Constant>
+          <Name>Fraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.01</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Start>StartGrainFill</Start>
+        <End>HarvestRipe</End>
+      </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PhaseLookup>
     <LinearInterpolationFunction>
       <Name>SenescenceRate</Name>
       <XYPairs>
@@ -2871,6 +2863,53 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </PhaseLookupValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <Memo>
+          <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[]]></MemoText>
+        </Memo>
+        <PhaseLookupValue>
+          <Name>PreStemElongation</Name>
+          <Constant>
+            <Name>StemFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.2</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>Emergence</Start>
+          <End>TerminalSpikelet</End>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>StemElongation</Name>
+          <Constant>
+            <Name>StemFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.7</FixedValue>
+            <Units>0</Units>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>TerminalSpikelet</Start>
+          <End>StartGrainFill</End>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>EarEmergence</Name>
+          <Constant>
+            <Name>StemFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Start>StartGrainFill</Start>
+          <End>HarvestRipe</End>
+        </PhaseLookupValue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </PhaseLookup>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PartitionFractionDemandFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -2996,96 +3035,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <BiomassDemand name="DMDemands">
-      <Name>DMDemands</Name>
-      <PartitionFractionDemandFunction>
-        <Name>Structural</Name>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <Memo>
-            <Name>memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <PhaseLookupValue>
-            <Name>PreStemElongation</Name>
-            <Constant>
-              <Name>StemFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.2</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Emergence</Start>
-            <End>TerminalSpikelet</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>StemElongation</Name>
-            <Constant>
-              <Name>StemFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.7</FixedValue>
-              <Units>0</Units>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>TerminalSpikelet</Start>
-            <End>StartGrainFill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>EarEmergence</Name>
-            <Constant>
-              <Name>StemFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>StartGrainFill</Start>
-            <End>HarvestRipe</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PhaseLookup>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PartitionFractionDemandFunction>
-      <Constant>
-        <Name>Metabolic</Name>
-        <FixedValue>0.0</FixedValue>
-      </Constant>
-      <StorageDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <SubtractFunction name="StorageFraction">
-          <Name>StorageFraction</Name>
-          <Constant>
-            <Name>One</Name>
-            <FixedValue>1.0</FixedValue>
-          </Constant>
-          <PhaseLookup>
-            <Name>StructuralFraction</Name>
-            <PhaseLookupValue>
-              <Name>VegetativeGrowth</Name>
-              <Constant>
-                <Name>Fraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.3</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>Sowing</Start>
-              <End>StartGrainFill</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>ReproductiveGrowth</Name>
-              <Constant>
-                <Name>Fraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.01</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>StartGrainFill</Start>
-              <End>HarvestRipe</End>
-            </PhaseLookupValue>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </PhaseLookup>
-        </SubtractFunction>
-      </StorageDemandFunction>
-    </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
