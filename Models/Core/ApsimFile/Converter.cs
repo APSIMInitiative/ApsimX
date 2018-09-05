@@ -123,7 +123,7 @@
         }
 
         /// <summary>Upgrades to version 2. Change xml structure for cultivar aliases</summary>
-         private static void UpgradeToVersion2(XmlNode node, string fileName)
+        private static void UpgradeToVersion2(XmlNode node, string fileName)
         {
             foreach (XmlNode cultivarNode in XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"))
             {
@@ -163,7 +163,7 @@
         }
 
         /// <summary>Upgrades to version 4. Make sure all zones have a SoluteManager model.</summary>
-         private static void UpgradeToVersion4(XmlNode node, string fileName)
+        private static void UpgradeToVersion4(XmlNode node, string fileName)
         {
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
@@ -226,7 +226,7 @@
         }
 
         /// <summary> Add a DMDemandFunction constant function to all Root nodes that don't have one</summary>
-         private static void UpgradeToVersion9(XmlNode node, string fileName)
+        private static void UpgradeToVersion9(XmlNode node, string fileName)
         {
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
             {
@@ -242,7 +242,7 @@
         }
 
         /// <summary>Add default values for generic organ parameters that were previously optional</summary>
-         private static void UpgradeToVersion10(XmlNode node, string fileName)
+        private static void UpgradeToVersion10(XmlNode node, string fileName)
         {
             List<XmlNode> organs = XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan");
             organs.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
@@ -295,7 +295,7 @@
         }
 
         /// <summary> Rename Plant15 to Plant.</summary>
-         private static void UpgradeToVersion13(XmlNode node, string fileName)
+        private static void UpgradeToVersion13(XmlNode node, string fileName)
         {
             ConverterUtilities.RenameNode(node, "Plant15", "Plant");
             ConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
@@ -562,7 +562,7 @@
 
         }
         /// <summary> Upgrades to version 22. Alter MovingAverage Function XProperty values.</summary>
-         private static void UpgradeToVersion22(XmlNode node, string fileName)
+        private static void UpgradeToVersion22(XmlNode node, string fileName)
         {
             string StartStage = "";
             foreach (XmlNode EmergePhase in XmlUtilities.FindAllRecursivelyByType(node, "EmergingPhase"))
@@ -578,7 +578,7 @@
         }
 
         /// <summary> Upgrades to version 23. Add CarbonConcentration property to all organs. </summary>
-         private static void UpgradeToVersion23(XmlNode node, string fileName)
+        private static void UpgradeToVersion23(XmlNode node, string fileName)
         {
             List<XmlNode> nodeList = new List<XmlNode>();
 
@@ -609,7 +609,7 @@
         }
 
         /// <summary> Upgrades to version 24. Add second argument to SoluteManager.Add method</summary>
-          private static void UpgradeToVersion24(XmlNode node, string fileName)
+        private static void UpgradeToVersion24(XmlNode node, string fileName)
         {
             foreach (XmlNode managerNode in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -630,7 +630,7 @@
         }
 
         /// <summary>Upgrades to version 25. Add checkpoint fields and table to .db</summary>
-         private static void UpgradeToVersion25(XmlNode node, string fileName)
+        private static void UpgradeToVersion25(XmlNode node, string fileName)
         {
             string dbFileName = Path.ChangeExtension(fileName, ".db");
             if (File.Exists(dbFileName))
@@ -670,7 +670,7 @@
         }
 
         /// <summary> Upgrades to version 26. Add leaf development rate constant to perrenial leaf </summary>
-         private static void UpgradeToVersion26(XmlNode node, string fileName)
+        private static void UpgradeToVersion26(XmlNode node, string fileName)
         {
             foreach (XmlNode perennialLeaf in XmlUtilities.FindAllRecursivelyByType(node, "PerennialLeaf"))
                 ConverterUtilities.AddConstantFuntionIfNotExists(perennialLeaf, "LeafDevelopmentRate", "1.0");
@@ -678,7 +678,7 @@
 
 
         /// <summary> Upgrades to version 27. Some variables in Leaf became ints rather than doubles. Need to add convert.ToDouble(); </summary>
-          private static void UpgradeToVersion27(XmlNode node, string fileName)
+        private static void UpgradeToVersion27(XmlNode node, string fileName)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -693,7 +693,7 @@
         }
 
         /// <summary> Upgrades to version 28. Change ICrop to IPlant</summary>
-         private static void UpgradeToVersion28(XmlNode node, string fileName)
+        private static void UpgradeToVersion28(XmlNode node, string fileName)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -744,7 +744,7 @@
         }
 
         /// <summary> Upgrades to version 30. Change DisplayAttribute </summary>
-         private static void UpgradeToVersion30(XmlNode node, string fileName)
+        private static void UpgradeToVersion30(XmlNode node, string fileName)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -825,7 +825,7 @@
         }
 
         /// <summary> Create graph definitions for the specified model</summary>
-         private static List<KeyValuePair<string, string>> GetFactorNames(XmlNode node)
+        private static List<KeyValuePair<string, string>> GetFactorNames(XmlNode node)
         {
             string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
             var factors = new List<KeyValuePair<string, string>>();
@@ -846,7 +846,7 @@
 
 
         /// <summary>Build a list of simulation / zone pairs from the specified experiment</summary>
-         private static List<KeyValuePair<string, string>> BuildListFromExperiment(XmlNode node)
+        private static List<KeyValuePair<string, string>> BuildListFromExperiment(XmlNode node)
         {
             string[] zoneTypes = new string[] { "Zone", "AgroforestrySystem", "CircularZone", "ZoneCLEM", "RectangularZone", "StripCropZone" };
 
@@ -884,7 +884,7 @@
         }
 
         /// <summary>Build a list of simulation / zone pairs from the specified simulation</summary>
-         private static List<KeyValuePair<string, string>> BuildListFromSimulation(XmlNode node)
+        private static List<KeyValuePair<string, string>> BuildListFromSimulation(XmlNode node)
         {
             var simulationZonePairs = new List<KeyValuePair<string, string>>();
             simulationZonePairs.Add(new KeyValuePair<string, string>("Simulation", XmlUtilities.Value(node, "Name")));
@@ -948,7 +948,7 @@
             }
         }
         /// <summary> Change the stores object array in Supplement components to Stores</summary>
-          private static void UpgradeToVersion35(XmlNode node, string fileName)
+        private static void UpgradeToVersion35(XmlNode node, string fileName)
         {
             ConverterUtilities.RenameNode(node, "soil_heat_flux_fraction", "SoilHeatFluxFraction");
             ConverterUtilities.RenameNode(node, "night_interception_fraction", "NightInterceptionFraction");
@@ -956,7 +956,7 @@
         }
 
         /// <summary> Change the stores object array in Supplement components to Stores</summary>
-         private static void UpgradeToVersion36(XmlNode node, string fileName)
+        private static void UpgradeToVersion36(XmlNode node, string fileName)
         {
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
                 ConverterUtilities.SearchReplaceReportCode(report, ".WaterSupplyDemandRatio", ".Leaf.Fw");
@@ -964,8 +964,8 @@
                 if (n.InnerText.Contains(".WaterSupplyDemandRatio"))
                     n.InnerText = n.InnerText.Replace(".WaterSupplyDemandRatio", ".Leaf.Fw");
         }
-		
-		/// <summary> Remove apex nodes from leaf objects </summary>
+
+        /// <summary> Remove apex nodes from leaf objects </summary>
         private static void UpgradeToVersion37(XmlNode node, string fileName)
         {
             // Find all the Supplement components
@@ -1004,7 +1004,7 @@
             }
         }
 
-                /// <summary> Rename ThermalTime functions on phases to Progression </summary>
+        /// <summary> Rename ThermalTime functions on phases to Progression </summary>
         private static void UpgradeToVersion40(XmlNode node, string fileName)
         {
             ConverterUtilities.RenamePMFFunction(node, "GenericPhase", "ThermalTime", "Progression");
@@ -1016,24 +1016,14 @@
 
         }
 
-        private static void MakeDMDemandsNode(XmlNode node,XmlNode organNode, ref string oldPath, ref string organName)
-        {   //Get the orgnas Name
-            organName = organNode.FirstChild.InnerText;
-            
+        private static void MakeDMDemandsNode(XmlNode node, XmlNode organNode)
+        {   
             //Make DMDemand node
             XmlNode DMDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "DMDemands");
             organNode.AppendChild(DMDemands);
-            
+
             //Add Structural demand function
             XmlNode structural = ConverterUtilities.FindModelNode(organNode, "DMDemandFunction");
-            oldPath = "";
-            XmlNode CurrentNode = structural;
-            while (CurrentNode != organNode)
-            {
-                string CurrentLocation = CurrentNode.FirstChild.InnerText + ".";
-                oldPath = CurrentLocation + oldPath;
-                CurrentNode = CurrentNode.ParentNode;
-            }
             XmlUtilities.SetValue(structural, "Name", "Structural");
             DMDemands.AppendChild(structural);
             //Add Metabolic Demand function
@@ -1063,17 +1053,13 @@
             List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
             foreach (string org in organList)
                 foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
-                {
-                    string oldPath = "";
-                    string organName = "";
-                    MakeDMDemandsNode(node, organNode, ref oldPath, ref organName);
-                    string toReplace = organName + "." + oldPath;
-                    string ReplaceWith = organName + ".DMDemands.Structural.";
-                    ConverterUtilities.RenameVariable(node, toReplace, ReplaceWith);
-                    toReplace = "[" + organName + "]" + "." + oldPath;
-                    ReplaceWith = "[" + organName + "]" + ".DMDemands.Structural.";
-                    ConverterUtilities.RenameVariable(node, toReplace, ReplaceWith);
-                }
+                    MakeDMDemandsNode(node, organNode);
+            ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural");
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+            {
+                ConverterUtilities.SearchReplaceManagerCode(manager, "DMDemandFunction", "DMDemands.Structural");
+            }
         }
     }
 }
+
