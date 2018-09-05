@@ -80,7 +80,28 @@ namespace Models.PMF.Organs
         /// <summary>
         /// 
         /// </summary>
-        public int TipsAtEmergence { get; set; }
+        public int TipsAtEmergence
+        {
+            get
+            {
+                if (TipsAtEmergenceFunction != null)
+                {
+                    return (int)TipsAtEmergenceFunction.Value();
+                }
+                return _tipsAtEmergence;
+            }
+            set
+            {
+            }
+        }
+        private int _tipsAtEmergence = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Link(IsOptional = true)]
+        public IFunction TipsAtEmergenceFunction { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -307,6 +328,10 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double WaterAllocation { get; set; }
 
+        /// <summary>Allow DMSupply to be adjusted for root requirements in Sorghum.</summary>
+        [Link(IsOptional = true)]
+        IFunction DMSupplyFunction { get; set; }
+
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("SetDMSupply")]
         private void SetDMSupply(object sender, EventArgs e)
@@ -314,7 +339,14 @@ namespace Models.PMF.Organs
             DMSupply.Reallocation = AvailableDMReallocation();
             DMSupply.Retranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
-            DMSupply.Fixation = Photosynthesis.Value();
+            if(DMSupplyFunction != null)
+            {
+                DMSupply.Fixation = Photosynthesis.Value() + DMSupplyFunction.Value();
+            }
+            else
+            {
+                DMSupply.Fixation = Photosynthesis.Value();
+            }
         }
 
         #endregion
