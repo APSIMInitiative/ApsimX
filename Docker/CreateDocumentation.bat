@@ -1,5 +1,5 @@
 @echo off
-pushd .. >nul
+pushd %~dp0.. >nul
 set apsimx=%cd%
 popd >nul
 
