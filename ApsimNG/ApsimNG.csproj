@@ -199,6 +199,7 @@
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
+    <Compile Include="EventArguments\CopyEventArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellActionArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />

@@ -308,7 +308,8 @@ namespace Models.Agroforestry
                                                              System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
-                    getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
+                    if (!string.IsNullOrEmpty(Table[i][j]))
+                        getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
         }

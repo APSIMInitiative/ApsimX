@@ -48,4 +48,5 @@ Docs/.Rhistory
 Documentation/errors.txt
 .vs/ApsimX/v15/Server/sqlite3/storage.ide-wal
 .vs/ApsimX/v15/Server/sqlite3/storage.ide-shm
+.vscode/
 *.db
