@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="39">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="41">
   <Name>Slurp</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -213,16 +213,6 @@ This is important in SLURP as it is set for each species to represent their diff
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Constant>
-        <Name>PartitionFraction</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>0</FixedValue>
-        <Units>0-1</Units>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>SpecificRootLength</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -331,6 +321,27 @@ This is important in SLURP as it is set for each species to represent their diff
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <PartitionFractionDemandFunction>
+        <Name>Structural</Name>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </PartitionFractionDemandFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <Constant>
+        <Name>Storage</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+    </BiomassDemand>
   </Root>
   <SimpleLeaf>
     <Name>Leaf</Name>
@@ -394,16 +405,6 @@ This is important in SLURP as it is set for each species to represent their diff
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </AirTemperatureFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Constant>
-        <Name>PartitionFraction</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>1</FixedValue>
-        <Units>0-1</Units>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -426,12 +427,6 @@ This is important in SLURP as it is set for each species to represent their diff
       <Name>ExtinctionCoefficientFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.7</FixedValue>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.5</FixedValue>
-      <Units>0-1</Units>
     </Constant>
     <Constant>
       <Name>HeightFunction</Name>
@@ -544,6 +539,39 @@ This is important in SLURP as it is set for each species to represent their diff
     <MicroClimatePresent>true</MicroClimatePresent>
     <KDead>0</KDead>
     <LAIDead>0</LAIDead>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <PartitionFractionDemandFunction>
+        <Name>Structural</Name>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </PartitionFractionDemandFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>StructuralFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.5</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+        </SubtractFunction>
+      </StorageDemandFunction>
+    </BiomassDemand>
   </SimpleLeaf>
   <Cultivar>
     <Name>StaticCrop</Name>
