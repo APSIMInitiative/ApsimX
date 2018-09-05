@@ -6,7 +6,7 @@ if exist %apsimx%\bin.zip (
 	powershell -Command Expand-Archive -Path %apsimx%\bin.zip -DestinationPath %apsimx%\Bin -Force
 	if %errorlevel% neq 0 (
 		echo Error unzipping %apsimx%\bin.zip
-		exit %errorlevel%
+		exit /b %errorlevel%
 	)
 )
 
@@ -15,6 +15,7 @@ if exist %apsimx%\results.7z (
 	7z x -y %apsimx%\results.7z
 	if errorlevel 1 (
 		echo Error unzipping %apsimx%\results.7z
+		exit /b %errorlevel%
 	)
 )
 
