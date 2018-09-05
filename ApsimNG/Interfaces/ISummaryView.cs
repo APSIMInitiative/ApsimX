@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EventArguments;
 
 namespace UserInterface.Views
 {
@@ -20,5 +21,12 @@ namespace UserInterface.Views
         /// <summary>Sets the content of the summary window.</summary>
         /// <param name="content">The html content</param>
         void SetSummaryContent(string content);
+
+        /// <summary>
+        /// Invoked when the user wishes to copy data.
+        /// This is currently only used on Windows, as the other web 
+        /// browsers are capable of handling the copy event themselves.
+        /// </summary>
+        event EventHandler<CopyEventArgs> Copy;
     }
 }
