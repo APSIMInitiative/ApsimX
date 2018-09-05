@@ -13,5 +13,8 @@ namespace Models.PMF.Phen
     {
         /// <summary> ThermalTimeTarget</summary>
         double Target { get; }
+
+        /// <summary>Gets the t tin phase.</summary>
+        double ProgressThroughPhase { get; set; }
     }
 }
