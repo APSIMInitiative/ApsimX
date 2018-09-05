@@ -121,7 +121,7 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							call %cd%\\ApsimX\Docker\CreateDocumentation.bat
+							call %cd%\\ApsimX\\Docker\\CreateDocumentation.bat
 						'''
 						
 					}
