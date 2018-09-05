@@ -68,8 +68,8 @@ namespace Models.Core
             CheckPointFile.WriteLine(message);
         }
 
-        /// The checkpoint file to write to
-        public StreamWriter CheckPointFile = null;
+        
+        private StreamWriter CheckPointFile = null;
 
         /// <summary>
         /// Adds the status of the model to the CheckPointFile
@@ -83,6 +83,7 @@ namespace Models.Core
             AppendToFile(o);
         }
 
+        ///<summary> Makes a checkpoint file instance to write to </summary>
         private void MakeCheckPointFile(string name)
         {
             string fileName = Path.Combine(Path.GetDirectoryName(simulations.FileName), name);
@@ -90,6 +91,7 @@ namespace Models.Core
             CheckPointFile = new StreamWriter(fileName);
         }
 
+        ///<summary> Appends current checkpoint to checkpoint file </summary>
         private void AppendToFile(object o)
         {
             CheckPointFile.WriteLine(JsonConvert.SerializeObject(o, Formatting.Indented,
@@ -100,6 +102,8 @@ namespace Models.Core
                     }));
         }
 
+
+        ///<summary> Custom Contract resolver to stop deseralization of Parent properties </summary>
         private class DynamicContractResolver : DefaultContractResolver
         {
             public DynamicContractResolver()
