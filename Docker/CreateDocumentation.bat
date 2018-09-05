@@ -1,5 +1,7 @@
 @echo off
-set apsimx=%~dp0..
+pushd .. >nul
+set apsimx=%cd%
+popd >nul
 
 if exist %apsimx%\bin.zip (
 	echo Unzipping %apsimx%\bin.zip...
