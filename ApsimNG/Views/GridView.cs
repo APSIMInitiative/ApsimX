@@ -1144,7 +1144,7 @@
                     while (GLib.MainContext.Iteration()) ;
                     args.RetVal = true;
                 }
-                else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && IsPrintableChar(args.Event.Key))
+                else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && !ReadOnly && IsPrintableChar(args.Event.Key))
                 {
                     // Initiate cell editing when user starts typing.
                     Grid.SetCursor(new TreePath(new int[1] { rowIdx }), Grid.GetColumn(colIdx), true);
@@ -2360,7 +2360,7 @@
         /// </summary>
         private void EditSelectedCell()
         {
-            if ( !(GetColumn(selectedCellColumnIndex).ReadOnly || categoryRows.Contains(selectedCellRowIndex)) )
+            if ( !(ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || categoryRows.Contains(selectedCellRowIndex)) )
             {
                 userEditingCell = true;
                 Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);

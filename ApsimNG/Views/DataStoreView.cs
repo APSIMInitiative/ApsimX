@@ -51,7 +51,11 @@ namespace UserInterface.Views
             table1 = (Table)builder.GetObject("table1");
             hbox1 = (HBox)builder.GetObject("hbox1");
             _mainWidget = vbox1;
-            gridView = new GridView(this);
+            gridView = new GridView(this)
+            {
+                ReadOnly = true,
+                CanGrow = false
+            };
             vbox1.PackStart(gridView.MainWidget, true, true, 0);
             vbox1.ReorderChild(hbox1, 2);
             dropDownView1 = new DropDownView(this);
@@ -71,7 +75,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            gridView.MainWidget.Destroy();
+            gridView.Dispose();
             gridView = null;
             dropDownView1.MainWidget.Destroy();
             dropDownView1 = null;
