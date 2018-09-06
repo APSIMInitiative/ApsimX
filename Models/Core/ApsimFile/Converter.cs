@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 41; } }
+        public static int LatestVersion { get { return 42; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1063,7 +1063,7 @@
         }
 
         /// <summary>Rename CohortArrayLive functions which dont do anything and cause problems for checkpointing</summary>
-        private static void UpgradeToVersion41(XmlNode node, string fileName)
+        private static void UpgradeToVersion42(XmlNode node, string fileName)
         {
             // remove all live and dead cohortArrayLive nodes.
             foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayLive"))
