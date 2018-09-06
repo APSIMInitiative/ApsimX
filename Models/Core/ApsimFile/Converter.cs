@@ -1024,6 +1024,11 @@
 
             //Add Structural demand function
             XmlNode structuralFraction = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
+            if (structuralFraction == null)
+            {
+                structuralFraction = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "StructuralFraction");
+                XmlUtilities.SetValue(structuralFraction, "FixedValue", "1.0");
+            }
             XmlNode structural = XmlUtilities.CreateNode(node.OwnerDocument, "MultiplyFunction", "Structural");
             structural.AppendChild(ConverterUtilities.FindModelNode(organNode, "DMDemandFunction"));
             structural.AppendChild(structuralFraction);
