@@ -1061,6 +1061,16 @@
                 ConverterUtilities.SearchReplaceManagerCode(manager, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
             }
         }
+
+        /// <summary>Rename CohortArrayLive functions which dont do anything and cause problems for checkpointing</summary>
+        private static void UpgradeToVersion41(XmlNode node, string fileName)
+        {
+            // remove all live and dead cohortArrayLive nodes.
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayLive"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayDead"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+        }
     }
 }
 

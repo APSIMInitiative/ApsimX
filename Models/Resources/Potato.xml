@@ -1395,22 +1395,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <string>[Leaf].Dead</string>
       </Propertys>
     </CompositeBiomass>
-    <ArrayBiomass>
-      <Name>CohortArrayLive</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].Live</string>
-      </Propertys>
-      <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-    </ArrayBiomass>
-    <ArrayBiomass>
-      <Name>CohortArrayDead</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].Dead</string>
-      </Propertys>
-      <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-    </ArrayBiomass>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>

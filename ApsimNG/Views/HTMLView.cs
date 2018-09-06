@@ -247,6 +247,33 @@ namespace UserInterface.Views
             internal extern static IntPtr gtk_ns_view_new(IntPtr nsview);
         }
 
+        public partial class Safari : MonoMac.WebKit.WebView
+        {
+            public override void KeyDown(NSEvent theEvent)
+            {
+                base.KeyDown(theEvent);
+                if ((theEvent.ModifierFlags & NSEventModifierMask.CommandKeyMask) == NSEventModifierMask.CommandKeyMask)
+                {
+                   if (theEvent.Characters.ToLower() == "a")
+                    {
+                        MonoMac.WebKit.DomRange range = this.MainFrameDocument.CreateRange();
+                        range.SelectNodeContents(this.MainFrameDocument);
+                        // Ugh! This is what we need to call, but it's not in the "official" MonoMac.WebKit stuff
+                        // It requires a modified version. Be grateful for open source!
+                        this.SetSelectedDomRange(range, NSSelectionAffinity.Downstream);
+                    }
+                    else if (theEvent.Characters.ToLower() == "c")
+                    {
+                        this.Copy(this);
+                    }
+                }
+            }   
+
+            public Safari(System.Drawing.RectangleF frame, string frameName, string groupName)
+                : base(frame, frameName, groupName) {}
+
+        }
+
         public static Gtk.Widget NSViewToGtkWidget(NSView view)
         {
             return new Gtk.Widget(NativeMethods.gtk_ns_view_new((IntPtr)view.Handle));
@@ -276,7 +303,7 @@ namespace UserInterface.Views
 
         public void InitWebKit(Gtk.Box w)
         {
-            wb = new MonoMac.WebKit.WebView(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
+            wb = new Safari(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
             scrollWindow.AddWithViewport(NSViewToGtkWidget(wb));
             w.PackStart(scrollWindow, true, true, 0);
             w.ShowAll();
