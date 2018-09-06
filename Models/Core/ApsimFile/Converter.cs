@@ -1023,19 +1023,21 @@
             organNode.AppendChild(DMDemands);
 
             //Add Structural demand function
-            XmlNode structural = ConverterUtilities.FindModelNode(organNode, "DMDemandFunction");
-            XmlUtilities.SetValue(structural, "Name", "Structural");
+            XmlNode structuralFraction = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
+            XmlNode structural = XmlUtilities.CreateNode(node.OwnerDocument, "MultiplyFunction", "Structural");
+            structural.AppendChild(ConverterUtilities.FindModelNode(organNode, "DMDemandFunction"));
+            structural.AppendChild(structuralFraction);
             DMDemands.AppendChild(structural);
             //Add Metabolic Demand function
             ConverterUtilities.AddConstantFuntionIfNotExists(DMDemands, "Metabolic", "0.0");
             //Add Storage Demand function
-            XmlNode structuralFraction = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
-            if (structuralFraction != null)
+            XmlNode structuralFraction2 = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
+            if (structuralFraction2 != null)
             {
                 XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageDemandFunction", "Storage");
                 XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
                 ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
-                storageFraction.AppendChild(structuralFraction);
+                storageFraction.AppendChild(structuralFraction2);
                 Storage.AppendChild(storageFraction);
                 DMDemands.AppendChild(Storage);
             }
@@ -1055,11 +1057,11 @@
                 foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
                 {
                     MakeDMDemandsNode(node, organNode);
-                    ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural");
+                    ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
                 }
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
-                ConverterUtilities.SearchReplaceManagerCode(manager, "DMDemandFunction", "DMDemands.Structural");
+                ConverterUtilities.SearchReplaceManagerCode(manager, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
             }
         }
     }
