@@ -4252,7 +4252,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Grain].MaximumNConc.FixedValue = 0.026</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
         <Command>[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2</Command>
-        <Command>[Stem].DMDemand.Storage.StorageFraction.StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6</Command>
+        <Command>[Stem].DMDemands.Storage.StorageFraction.StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6</Command>
         <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
