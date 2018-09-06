@@ -16,7 +16,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.XYPairsView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.LinearAfterThresholdPresenter")]
     [Description("Use a linear function with a gradient after a trigger value is exceeded.")]
     public class LinearAfterThresholdFunction : Model, IFunction, ICustomDocumentation
     {
