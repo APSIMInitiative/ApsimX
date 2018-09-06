@@ -563,7 +563,7 @@ namespace Models.PMF.Organs
                 //Firstly allocate DM
                 if (value.Structural + value.Storage + value.Metabolic < -0.0000000001)
                     throw new Exception("-ve DM Allocation to Leaf Cohort");
-                if (value.Structural + value.Storage + value.Metabolic - (StructuralDMDemand + MetabolicDMDemand + StorageDMDemand) > 0.0001)
+                if (value.Structural + value.Storage + value.Metabolic - (StructuralDMDemand + MetabolicDMDemand + StorageDMDemand) > 0.001)
                     throw new Exception("DM Allocated to Leaf Cohort is in excess of its Demand");
                 if (StructuralDMDemand + MetabolicDMDemand + StorageDMDemand > 0)
                 {

@@ -1055,7 +1055,6 @@
                 foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
                 {
                     MakeDMDemandsNode(node, organNode);
-                    ConverterUtilities.RenameVariable(node, "StructuralFraction", "DMDemand.Storage.StorageFraction.StructuralFraction");
                     ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural");
                 }
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
