@@ -87,7 +87,7 @@ if errorlevel 1 (
 	exit %errorlevel%
 )
 if exist %setup%\Output\APSIMSetup.deb (
-	rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUENUMBER%.deb
+	rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUE_NUMBER%.deb
 	echo Uploading APSIMSetup%ISSUENUMBER%.deb
 	@curl -u %APSIM_SITE_CREDS% -T %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
 ) else (
