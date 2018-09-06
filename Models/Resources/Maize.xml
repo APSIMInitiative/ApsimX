@@ -1212,22 +1212,6 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Area>0</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
     </LeafCohort>
-    <ArrayBiomass>
-      <Name>CohortArrayLive</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].Live</string>
-      </Propertys>
-      <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-    </ArrayBiomass>
-    <ArrayBiomass>
-      <Name>CohortArrayDead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].Dead</string>
-      </Propertys>
-      <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-    </ArrayBiomass>
     <LeafCohortParameters>
       <Name>CohortParameters</Name>
       <Constant>

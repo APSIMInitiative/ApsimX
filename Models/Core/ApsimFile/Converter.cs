@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 40; } }
+        public static int LatestVersion { get { return 41; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1013,6 +1013,16 @@
             List<XmlNode> CultivarList = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"));
             foreach (XmlNode cult in CultivarList)
                 ConverterUtilities.SearchReplaceCultivarOverrides(cult, ".Vegetative.ThermalTime", ".Vegetative.Progression");
+        }
+
+        /// <summary>Rename CohortArrayLive functions which dont do anything and cause problems for checkpointing</summary>
+        private static void UpgradeToVersion41(XmlNode node, string fileName)
+        {
+            // remove all live and dead cohortArrayLive nodes.
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayLive"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayDead"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
         }
     }
 }
