@@ -1037,19 +1037,17 @@
             ConverterUtilities.AddConstantFuntionIfNotExists(DMDemands, "Metabolic", "0.0");
             //Add Storage Demand function
             XmlNode structuralFraction2 = ConverterUtilities.FindModelNode(organNode, "StructuralFraction");
-            if (structuralFraction2 != null)
+            if (structuralFraction2 == null)
             {
-                XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageDemandFunction", "Storage");
-                XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
-                ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
-                storageFraction.AppendChild(structuralFraction2);
-                Storage.AppendChild(storageFraction);
-                DMDemands.AppendChild(Storage);
+                structuralFraction2 = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "StructuralFraction");
+                XmlUtilities.SetValue(structuralFraction2, "FixedValue", "1.0");
             }
-            else
-            {
-                ConverterUtilities.AddConstantFuntionIfNotExists(DMDemands, "Storage", "0.0");
-            }
+            XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageDemandFunction", "Storage");
+            XmlNode storageFraction = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "StorageFraction");
+            ConverterUtilities.AddConstantFuntionIfNotExists(storageFraction, "One", "1.0");
+            storageFraction.AppendChild(structuralFraction2);
+            Storage.AppendChild(storageFraction);
+            DMDemands.AppendChild(Storage);
         }
 
         /// <summary>
