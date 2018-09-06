@@ -26,6 +26,11 @@
         private bool userEditingCell = false;
 
         /// <summary>
+        /// Iff true, the user can add new rows to the grid.
+        /// </summary>
+        private bool canGrow = true;
+
+        /// <summary>
         /// The value before the user starts editing a cell.
         /// </summary>
         private object valueBeforeEdit;
@@ -308,10 +313,20 @@
         }
 
         /// <summary>
-        /// Gets or sets the number of rows in grid.
-        /// Setting this when <see cref="CanGrow"/> is false will generate an exception.
+        /// Iff true, the user can add new rows to the grid.
         /// </summary>
-        public bool CanGrow { get; set; } = true;
+        public bool CanGrow
+        {
+            get
+            {
+                return canGrow;
+            }
+            set
+            {
+                canGrow = value;
+                PopulateGrid();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the currently selected cell. Null if none selected.
@@ -1486,7 +1501,7 @@
 
             Grid.Model = null;
             fixedColView.Model = null;
-            for (int row = 0; row <= numRows; row++)
+            for (int row = 0; row < numRows; row++)
             {
                 // We could store data into the grid model, but we don't.
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
