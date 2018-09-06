@@ -29,7 +29,7 @@ rem For some reason, running dos2unix on a file inside a mounted volume in a doc
 rem doesn't seem to work - some sort of permissions error. Instead, we run the command on a 
 rem file in %tmp%, and then manually move this file where we want it.
 cd DebPackage
-echo 2.0 > %tmp%\debian-binary
+echo 2.0> %tmp%\debian-binary
 dos2unix %tmp%\debian-binary
 move %tmp%\debian-binary .\
 
