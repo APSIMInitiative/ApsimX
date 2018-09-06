@@ -1053,8 +1053,11 @@
             List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
             foreach (string org in organList)
                 foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
+                {
                     MakeDMDemandsNode(node, organNode);
-            ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural");
+                    ConverterUtilities.RenameVariable(node, "StructuralFraction", "DMDemand.Storage.StorageFraction.StructuralFraction");
+                    ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural");
+                }
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
                 ConverterUtilities.SearchReplaceManagerCode(manager, "DMDemandFunction", "DMDemands.Structural");
