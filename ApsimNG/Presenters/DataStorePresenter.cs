@@ -119,8 +119,8 @@ namespace UserInterface.Presenters
                             i--;
                         }
                         else if (i >= numFrozenColumns &&
-                                 this.view.ColumnFilter.Value != string.Empty &&
-                                 !data.Columns[i].ColumnName.Contains(this.view.ColumnFilter.Value))
+                                 view.ColumnFilter.Value != string.Empty &&
+                                 !view.ColumnFilter.Value.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
                         {
                             data.Columns.RemoveAt(i);
                             i--;
