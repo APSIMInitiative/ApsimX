@@ -349,7 +349,7 @@ namespace UserInterface.Views
 				}
                 else if (args.Event.Characters.ToLower() == "g")
                 {
-                    _findForm.FindNext((args.Event.ModifierFlags & NSEventModifierMask.CommandKeyMask) != NSEventModifierMask.CommandKeyMask, null);
+                    _findForm.FindNext((args.Event.ModifierFlags & NSEventModifierMask.ShiftKeyMask) != NSEventModifierMask.ShiftKeyMask, null);
                 }
             }
         }
