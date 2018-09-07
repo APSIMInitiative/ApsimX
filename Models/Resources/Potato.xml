@@ -1,4 +1,4 @@
-<Plant Version="39">
+<Plant Version="42">
   <Name>Potato</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -344,81 +344,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
   </Structure>
   <GenericOrgan>
     <Name>Tuber</Name>
-    <PhaseLookup>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookupValue>
-        <Name>TuberFilling</Name>
-        <MultiplyFunction>
-          <Name>DailyDemand</Name>
-          <MultiplyFunction>
-            <Name>OrganNumber</Name>
-            <Constant>
-              <Name>TuberNumberPerStem</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <FixedValue>5</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>VariableReference</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemPopn</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>PotentialGrowthIncrement</Name>
-            <LinearInterpolationFunction>
-              <Name>PotentialGrowthIncrementPer_oCd</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <X>
-                  <double>4</double>
-                  <double>4.04</double>
-                  <double>4.32</double>
-                  <double>4.52</double>
-                  <double>4.95</double>
-                  <double>6.54</double>
-                </X>
-                <Y>
-                  <double>0.017</double>
-                  <double>0.017</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.018</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <XProperty>[Phenology].Stage</XProperty>
-            </LinearInterpolationFunction>
-            <AirTemperatureFunction>
-              <Name>ThermalTime</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <X>
-                  <double>2</double>
-                  <double>20</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>18</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </AirTemperatureFunction>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </MultiplyFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </MultiplyFunction>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <Start>TuberInitiation</Start>
-        <End>Maturity</End>
-      </PhaseLookupValue>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </PhaseLookup>
     <Constant>
       <Name>SenescenceRate</Name>
       <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -539,12 +464,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
-    <Constant>
       <Name>DetachmentRateFunction</Name>
       <IncludeInDocumentation>false</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -603,6 +522,111 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>false</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PhaseLookup>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookupValue>
+            <Name>TuberFilling</Name>
+            <MultiplyFunction>
+              <Name>DailyDemand</Name>
+              <MultiplyFunction>
+                <Name>OrganNumber</Name>
+                <Constant>
+                  <Name>TuberNumberPerStem</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <FixedValue>5</FixedValue>
+                </Constant>
+                <VariableReference>
+                  <Name>VariableReference</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <VariableName>[Structure].MainStemPopn</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </MultiplyFunction>
+              <MultiplyFunction>
+                <Name>PotentialGrowthIncrement</Name>
+                <LinearInterpolationFunction>
+                  <Name>PotentialGrowthIncrementPer_oCd</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <X>
+                      <double>4</double>
+                      <double>4.04</double>
+                      <double>4.32</double>
+                      <double>4.52</double>
+                      <double>4.95</double>
+                      <double>6.54</double>
+                    </X>
+                    <Y>
+                      <double>0.017</double>
+                      <double>0.017</double>
+                      <double>0.06</double>
+                      <double>0.06</double>
+                      <double>0.018</double>
+                      <double>0</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <XProperty>[Phenology].Stage</XProperty>
+                </LinearInterpolationFunction>
+                <AirTemperatureFunction>
+                  <Name>ThermalTime</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <X>
+                      <double>2</double>
+                      <double>20</double>
+                      <double>35</double>
+                    </X>
+                    <Y>
+                      <double>0</double>
+                      <double>18</double>
+                      <double>0</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                </AirTemperatureFunction>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </MultiplyFunction>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Start>TuberInitiation</Start>
+            <End>Maturity</End>
+          </PhaseLookupValue>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </PhaseLookup>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Tuber].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <Root>
     <Name>Root</Name>
@@ -749,47 +773,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <FixedValue>40</FixedValue>
       <Units>m/g</Units>
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>PhaseLookupValue</Name>
-          <Constant>
-            <Name>Constant</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <FixedValue>0.3</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>TuberInitiation</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>PhaseLookupValue</Name>
-          <Constant>
-            <Name>Constant</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <FixedValue>0.05</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Start>TuberInitiation</Start>
-          <End>FinalLeaf</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>PhaseLookupValue</Name>
-          <Constant>
-            <Name>Constant</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Start>FinalLeaf</Start>
-          <End>FullSenescence</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>KLModifier</Name>
       <Memo>
@@ -826,6 +809,75 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>PhaseLookupValue</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <FixedValue>0.3</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>TuberInitiation</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>PhaseLookupValue</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <FixedValue>0.05</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Start>TuberInitiation</Start>
+              <End>FinalLeaf</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>PhaseLookupValue</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Start>FinalLeaf</Start>
+              <End>FullSenescence</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant name="StructuralFraction">
+          <Name>StructuralFraction</Name>
+          <FixedValue>1.0</FixedValue>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDemandFunction>
+    </BiomassDemand>
   </Root>
   <Leaf>
     <Name>Leaf</Name>
@@ -1430,25 +1482,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
   </Leaf>
   <GenericOrgan>
     <Name>Stem</Name>
-    <MultiplyFunction>
-      <Name>DMDemandFunction</Name>
-      <VariableReference>
-        <Name>DeltaNodesPerStem</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <VariableName> [Structure].DeltaTipNumber</VariableName>
-      </VariableReference>
-      <Constant>
-        <Name>InterNodeWt</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <FixedValue>0.2</FixedValue>
-      </Constant>
-      <VariableReference>
-        <Name>StemNumber</Name>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-        <VariableName>[Structure].TotalStemPopn</VariableName>
-      </VariableReference>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </MultiplyFunction>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -1551,12 +1584,6 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
-    <Constant>
       <Name>DetachmentRateFunction</Name>
       <IncludeInDocumentation>false</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -1595,6 +1622,55 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>false</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <MultiplyFunction>
+          <Name>DMDemandFunction</Name>
+          <VariableReference>
+            <Name>DeltaNodesPerStem</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <VariableName> [Structure].DeltaTipNumber</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>InterNodeWt</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <FixedValue>0.2</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StemNumber</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <VariableName>[Structure].TotalStemPopn</VariableName>
+          </VariableReference>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </MultiplyFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
@@ -1677,7 +1753,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <Command>[Structure].FinalLeafNumber.FixedValue = 19</Command>
       <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11</Command>
       <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
-      <Command>[Tuber].DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3</Command>
+      <Command>[Tuber].DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3</Command>
       <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
     </Cultivar>
     <Cultivar>
