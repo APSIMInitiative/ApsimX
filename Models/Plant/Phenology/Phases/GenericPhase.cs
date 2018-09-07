@@ -25,7 +25,8 @@ namespace Models.PMF.Phen
         private IFunction target = null;
 
         [ChildLinkByName]
-        private IFunction thermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        private IFunction progression = null;
+
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -38,10 +39,6 @@ namespace Models.PMF.Phen
         [Description("End")]
         public string End { get; set; }
 
-        /// <summary>Gets the tt in phase.</summary>
-        [XmlIgnore]
-        public double TTinPhase { get; set; }
-
         /// <summary> Return a fraction of phase complete. </summary>
         [XmlIgnore]
         public double FractionComplete
@@ -51,52 +48,47 @@ namespace Models.PMF.Phen
                 if (Target == 0)
                     return 1;
                 else
-                    return TTinPhase / Target;
+                    return ProgressThroughPhase / Target;
             }
         }
 
-        /// <summary>Thermal time target.</summary>
+        /// <summary>Units of progress through phase on this time step.</summary>
+        [XmlIgnore]
+        public double ProgressionForTimeStep { get; set; }
+
+        /// <summary>Accumulated units of pregress through phase.</summary>
+        [XmlIgnore]
+        public double ProgressThroughPhase { get; set; }
+
+        /// <summary>Target that accumulated progression must meet to proceed to the next phase</summary>
         [XmlIgnore]
         public double Target { get { return target.Value(); } }
 
-        /// <summary>Gets the tt for today.</summary>
-        [XmlIgnore]
-        public double TTForTimeStep { get; set; }
-
-
-        //6. Public methode
+        //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
-        /// <summary>
-        /// This function increments thermal time accumulated in each phase and returns a non-zero value if the phase target is met today so
-        /// the phenology class knows to progress to the next phase and how much tt to pass it on the first day.
-        /// </summary>
+        /// <summary> This function increments pregression toward its target and returns true when the target has been met</summary>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = thermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForTimeStep;
+            ProgressionForTimeStep = progression.Value() * propOfDayToUse;
+            ProgressThroughPhase += ProgressionForTimeStep;
 
-            if (TTinPhase > Target)
+            if (ProgressThroughPhase > Target)
             {
-                if (TTForTimeStep > 0.0)
+                if (ProgressionForTimeStep > 0.0)
                 {
                     proceedToNextPhase = true;
-                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
-                    TTForTimeStep *= (1 - propOfDayToUse);
+                    propOfDayToUse = (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                    ProgressionForTimeStep *= (1 - propOfDayToUse);
                 }
-                TTinPhase = Target;
+                ProgressThroughPhase = Target;
             }
             
             return proceedToNextPhase;
         }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
-
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase() { TTinPhase = 0; }
+        public void ResetPhase() { ProgressThroughPhase = 0; }
         
         /// <summary>Writes the summary.</summary>
         public void WriteSummary(TextWriter writer)
@@ -107,6 +99,11 @@ namespace Models.PMF.Phen
 
         //7. Private method
         //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Called when [simulation commencing].</summary>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        { ResetPhase(); }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
