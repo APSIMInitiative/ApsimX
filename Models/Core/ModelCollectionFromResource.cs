@@ -120,6 +120,7 @@ namespace Models.Core
             foreach (Model child in ModelFromResource.Children)
             {
                 child.IsHidden = true;
+                child.ReadOnly = true;
                 SetNotVisible(child);
             }
         }
