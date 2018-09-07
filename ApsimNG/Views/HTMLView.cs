@@ -723,7 +723,8 @@ namespace UserInterface.Views
             if (browser is TWWebBrowserIE)
             {
                 keyPressObject = (browser as TWWebBrowserIE).wb.Document.ActiveElement;
-                (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+                if (keyPressObject != null)
+                    (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
             }
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
