@@ -1044,10 +1044,20 @@
             DMDemands.AppendChild(Storage);
         }
 
+        /// <summary>Rename CohortArrayLive functions which dont do anything and cause problems for checkpointing</summary>
+        private static void UpgradeToVersion41(XmlNode node, string fileName)
+        {
+            // remove all live and dead cohortArrayLive nodes.
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayLive"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayDead"))
+                childToDelete.ParentNode.RemoveChild(childToDelete);
+        }
+
         /// <summary>
         /// Upgrades to version 41. Upgrades parameterisation of DM demands.
         /// </summary>
-        private static void UpgradeToVersion41(XmlNode node, string fileName)
+        private static void UpgradeToVersion42(XmlNode node, string fileName)
         {
             List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
             foreach (string org in organList)
@@ -1056,20 +1066,6 @@
                     MakeDMDemandsNode(node, organNode);
                 }
             ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
-            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-            {
-                ConverterUtilities.SearchReplaceManagerCode(manager, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
-            }
-        }
-
-        /// <summary>Rename CohortArrayLive functions which dont do anything and cause problems for checkpointing</summary>
-        private static void UpgradeToVersion42(XmlNode node, string fileName)
-        {
-            // remove all live and dead cohortArrayLive nodes.
-            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayLive"))
-                childToDelete.ParentNode.RemoveChild(childToDelete);
-            foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayDead"))
-                childToDelete.ParentNode.RemoveChild(childToDelete);
         }
     }
 }
