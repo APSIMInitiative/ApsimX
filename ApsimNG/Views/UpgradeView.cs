@@ -18,7 +18,7 @@ namespace UserInterface.Forms
     /// <summary>
     /// An upgrade form.
     /// </summary>
-    public class UpgradeForm
+    public class UpgradeView : ViewBase
     {
         public class Upgrade
         {
@@ -68,12 +68,12 @@ namespace UserInterface.Forms
         private Alignment alignment7 = null;
 
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private Views.HTMLView HTMLview;
+        private HTMLView HTMLview;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UpgradeForm(IMainView explorerPresenter)
+        public UpgradeView(ViewBase owner) : base(owner)
         {
             Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeForm.glade");
             window1 = (Window)builder.GetObject("window1");
@@ -123,7 +123,8 @@ namespace UserInterface.Forms
 
             HTMLview = new HTMLView(new ViewBase(null));
             HTMLalign.Add(HTMLview.MainWidget);
-            this.tabbedExplorerView = explorerPresenter;
+            tabbedExplorerView = owner as IMainView;
+            window1.TransientFor = owner.MainWidget.Toplevel as Window;
             button1.Clicked += OnUpgrade;
             button2.Clicked += OnViewMoreDetail;
             window1.Destroyed += OnFormClosing;
@@ -168,7 +169,7 @@ namespace UserInterface.Forms
                 }
                 catch (Exception)
                 {
-                    ViewBase.MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                    MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
                     loadFailure = true;
                     return;
                 }

@@ -1130,7 +1130,7 @@
             {
                 if (this.AllowClose())
                 {
-                    Forms.UpgradeForm form = new Forms.UpgradeForm(this.view);
+                    Forms.UpgradeView form = new Forms.UpgradeView(view as ViewBase);
                     form.Show();
                 }
             }
