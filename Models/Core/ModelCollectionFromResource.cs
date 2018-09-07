@@ -32,6 +32,7 @@ namespace Models.Core
         {
             if (xmlSerialisation && ResourceName != null)
             {
+                SetNotVisible(this);
                 allModels = new List<Model>();
                 allModels.AddRange(Children);
 
