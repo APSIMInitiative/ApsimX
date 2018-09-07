@@ -1,4 +1,4 @@
-<Plant Version="41">
+<Plant Version="42">
   <Name>Maize</Name>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
@@ -3014,7 +3014,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 520</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue =  550</Command>
     </Cultivar>
     <Cultivar>
@@ -3057,7 +3057,7 @@ VShort duration variety released in New Zealand by Pioneer
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
       <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
       <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
       <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
     </Cultivar>
@@ -3076,7 +3076,7 @@ Maize variety used in trials at Wageningen University
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
       <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
       <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
       <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 2370</Command>
     </Cultivar>
@@ -3091,7 +3091,7 @@ Maize variety used in trials at Wageningen University
       <Command>[Phenology].GrainFilling.Target.FixedValue = 812</Command>
       <Command>[Phenology].Maturing.Target.FixedValue = 1</Command>
       <Command>[Phenology].MaturityToHarvestRipe.Target.FixedValue = 1</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue =  720</Command>
     </Cultivar>
     <Cultivar>
@@ -3103,7 +3103,7 @@ Maize variety used in trials at Wageningen University
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 101</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 694</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 550</Command>
     </Cultivar>
     <Cultivar>
@@ -3115,7 +3115,7 @@ Maize variety used in trials at Wageningen University
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 50</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 713</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue =  550</Command>
     </Cultivar>
     <Cultivar>
@@ -3127,7 +3127,7 @@ Maize variety used in trials at Wageningen University
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 50</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 713</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue =  550</Command>
     </Cultivar>
     <Cultivar>
@@ -3139,7 +3139,7 @@ Maize variety used in trials at Wageningen University
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 101</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 813</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 550</Command>
     </Cultivar>
     <Cultivar>
@@ -3158,7 +3158,7 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 600</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 360</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.217</Command>
     </Cultivar>
@@ -3178,7 +3178,7 @@ The variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod respons
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3198,7 +3198,7 @@ The variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod respons
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3218,7 +3218,7 @@ The variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod respons
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3238,7 +3238,7 @@ The variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod respons
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3258,7 +3258,7 @@ The variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3278,7 +3278,7 @@ The variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3298,7 +3298,7 @@ The variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 560</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 495</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3318,7 +3318,7 @@ The variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod re
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3338,7 +3338,7 @@ The variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 486</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3358,7 +3358,7 @@ The variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3378,7 +3378,7 @@ The variety Melkassa is a local early-medium maturing Ethiopian variety.
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 160</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 387</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.33</Command>
     </Cultivar>
@@ -3398,7 +3398,7 @@ The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3418,7 +3418,7 @@ The variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod res
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
     </Cultivar>
@@ -3438,7 +3438,7 @@ The variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 450</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
     </Cultivar>
@@ -3458,7 +3458,7 @@ The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 450</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
     </Cultivar>
@@ -3478,7 +3478,7 @@ The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 450</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
     </Cultivar>
@@ -3498,7 +3498,7 @@ The variety Makueni Composite is a kenyan variety with similar phenology but sli
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 120</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 530</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 432</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
     </Cultivar>
@@ -3518,7 +3518,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
       <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
       <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 120</Command>
       <Command>[Phenology].GrainFilling.Target.FixedValue = 530</Command>
-      <Command>[Rachis].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+      <Command>[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
       <Command>[Grain].MaximumGrainsPerCob.FixedValue = 405</Command>
       <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
     </Cultivar>

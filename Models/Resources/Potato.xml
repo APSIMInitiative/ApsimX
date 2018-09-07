@@ -1,4 +1,4 @@
-<Plant Version="41">
+<Plant Version="42">
   <Name>Potato</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1753,7 +1753,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       <Command>[Structure].FinalLeafNumber.FixedValue = 19</Command>
       <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11</Command>
       <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
-      <Command>[Tuber].DMDemands.Structural.DMDemands.Structural.DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3</Command>
+      <Command>[Tuber].DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3</Command>
       <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
     </Cultivar>
     <Cultivar>
