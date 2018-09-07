@@ -111,7 +111,7 @@
     <EmbeddedResource Include="Resources\Fonts\cour.ttf" />
     <EmbeddedResource Include="Resources\Glade\FindAndReplace.glade" />
     <EmbeddedResource Include="Resources\Glade\MainView.glade" />
-    <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
+    <EmbeddedResource Include="Resources\Glade\UpgradeView.glade" />
     <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
     <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />

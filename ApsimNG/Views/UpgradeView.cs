@@ -3,7 +3,7 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
-namespace UserInterface.Forms
+namespace UserInterface.Views
 {
     using System;
     using System.Diagnostics;
@@ -12,7 +12,6 @@ namespace UserInterface.Forms
     using System.Reflection;
     using APSIM.Shared.Utilities;
     using Gtk;
-    using Views;
     using Interfaces;
 
     /// <summary>
