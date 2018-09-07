@@ -347,8 +347,12 @@ namespace UserInterface.Views
                 {
 					_findForm.ShowFor(this);
 				}
+                else if (args.Event.Characters.ToLower() == "g")
+                {
+                    _findForm.FindNext((args.Event.ModifierFlags & NSEventModifierMask.CommandKeyMask) != NSEventModifierMask.CommandKeyMask, null);
+                }
             }
-		}
+        }
 
         public void Navigate(string uri)
         {
