@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Gtk;
-using Mono.TextEditor;
-using Cairo;
-using UserInterface.Views;
-
-namespace Utility
+﻿namespace Utility
 {
+	using System;
+    using Gtk;
+    using UserInterface.Views;
+
     public class FindInBrowserForm
     {
-        // Gtk Widgets
+
+		// Gtk Widgets
         private Window window1 = null;
         private CheckButton chkMatchCase = null;
         private CheckButton chkHighlightAll = null;
@@ -31,10 +29,13 @@ namespace Utility
             btnFindPrevious = (Button)builder.GetObject("btnFindPrevious");
             btnFindNext = (Button)builder.GetObject("btnFindNext");
 
+			txtLookFor.Changed += txtLookFor_Changed;
             btnFindNext.Clicked += btnFindNext_Click;
             btnFindPrevious.Clicked += btnFindPrevious_Click;
             btnCancel.Clicked += btnCancel_Click;
             chkHighlightAll.Clicked += chkHighlightAll_Click;
+			chkHighlightAll.Visible = false; // Hide this for now...
+			chkHighlightAll.NoShowAll = true;
             window1.DeleteEvent += Window1_DeleteEvent;
             window1.Destroyed += Window1_Destroyed;
             AccelGroup agr = new AccelGroup();
@@ -45,6 +46,7 @@ namespace Utility
 
         private void Window1_Destroyed(object sender, EventArgs e)
         {
+			txtLookFor.Changed -= txtLookFor_Changed;
             btnFindNext.Clicked -= btnFindNext_Click;
             btnFindPrevious.Clicked -= btnFindPrevious_Click;
             btnCancel.Clicked -= btnCancel_Click;
@@ -69,9 +71,12 @@ namespace Utility
         /// </summary>
         public void ShowMsg(string message)
         {
-            MessageDialog md = new MessageDialog(browser.HoldingWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
-            md.Run();
-            md.Destroy();
+			if (browser != null)
+			{
+                MessageDialog md = new MessageDialog(browser.HoldingWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
+                md.Run();
+                md.Destroy();
+			}
         }
 
         public void ShowFor(IBrowserWidget browser)
@@ -84,6 +89,11 @@ namespace Utility
             txtLookFor.GrabFocus();
         }
 
+		void txtLookFor_Changed(object sender, EventArgs e)
+        {
+			Find();
+        }
+
         private void btnFindPrevious_Click(object sender, EventArgs e)
         {
             FindNext(false, "Text not found");
@@ -94,26 +104,47 @@ namespace Utility
             FindNext(true, "Text not found");
         }
 
-
         public void FindNext(bool searchForward, string messageIfNotFound)
         {
+			chkHighlightAll_Click(this, new EventArgs());
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
-                ShowMsg("No string specified to look for!");
+                ShowMsg("No string specified to for search!");
                 return;
             }
             if (!browser.Search(txtLookFor.Text, searchForward, chkMatchCase.Active, true))
-                ShowMsg(messageIfNotFound);
+			{
+				if (!string.IsNullOrEmpty(messageIfNotFound))
+				    ShowMsg(messageIfNotFound);
+			}
+                    
         }
+
+		public void Find()
+		{
+			if (!string.IsNullOrEmpty(txtLookFor.Text))
+				FindNext(true,"");
+		}
+
+		private bool _isHighlighted = false;
 
         private void chkHighlightAll_Click(object sender, EventArgs e)
         {
-            // _editor.HighlightSearchPattern = true;
-            btnFindNext_Click(sender, e);
+			if (browser is TWWebBrowserWK)
+			{
+				bool highlight = chkHighlightAll.Active;
+				if (highlight != _isHighlighted)
+				{
+					(browser as TWWebBrowserWK).Highlight(txtLookFor.Text, chkMatchCase.Active, highlight);
+					_isHighlighted = highlight;
+				}
+			}
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+			// if (browser is TWWebBrowserWK)
+			//	(browser as TWWebBrowserWK).Highlight("", false, false);
             window1.Hide();
         }
 
