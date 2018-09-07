@@ -195,12 +195,6 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                string msg = err.Message;
-                if (err.InnerException != null)
-                {
-                    msg += " ---> " + err.InnerException.Message;
-                }
-
                 this.explorerPresenter.MainPresenter.ShowError(err);
             }
 

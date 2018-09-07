@@ -39,22 +39,22 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.axis = model as Axis;
+            axis = model as Axis;
             this.view = view as AxisView;
             this.explorerPresenter = explorerPresenter;
 
             // Trap change event from the model.
-            explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // Trap events from the view.
-            this.view.TitleChanged += this.OnTitleChanged;
-            this.view.InvertedChanged += this.OnInvertedChanged;
-            this.view.MinimumChanged += this.OnMinimumChanged;
-            this.view.MaximumChanged += this.OnMaximumChanged;
-            this.view.IntervalChanged += this.OnIntervalChanged;
+            this.view.TitleChanged += OnTitleChanged;
+            this.view.InvertedChanged += OnInvertedChanged;
+            this.view.MinimumChanged += OnMinimumChanged;
+            this.view.MaximumChanged += OnMaximumChanged;
+            this.view.IntervalChanged += OnIntervalChanged;
 
             // Tell the view to populate the axis.
-            this.PopulateView();
+            PopulateView();
         }
 
         /// <summary>
@@ -63,14 +63,14 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             // Trap change event from the model.
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             // Trap events from the view.
-            this.view.TitleChanged -= this.OnTitleChanged;
-            this.view.InvertedChanged -= this.OnInvertedChanged;
-            this.view.MinimumChanged -= this.OnMinimumChanged;
-            this.view.MaximumChanged -= this.OnMaximumChanged;
-            this.view.IntervalChanged -= this.OnIntervalChanged;
+            view.TitleChanged -= OnTitleChanged;
+            view.InvertedChanged -= OnInvertedChanged;
+            view.MinimumChanged -= OnMinimumChanged;
+            view.MaximumChanged -= OnMaximumChanged;
+            view.IntervalChanged -= OnIntervalChanged;
         }
 
         /// <summary>
@@ -78,11 +78,11 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateView()
         {
-            this.view.Title = this.axis.Title;
-            this.view.Inverted = this.axis.Inverted;
-            this.view.Minimum = this.axis.Minimum;
-            this.view.Maximum = this.axis.Maximum;
-            this.view.Interval = this.axis.Interval;
+            view.Title = axis.Title;
+            view.Inverted = axis.Inverted;
+            view.Minimum = axis.Minimum;
+            view.Maximum = axis.Maximum;
+            view.Interval = axis.Interval;
         }
         
         /// <summary>
@@ -91,9 +91,9 @@ namespace UserInterface.Presenters
         /// <param name="model">The model that was changed.</param>
         private void OnModelChanged(object model)
         {
-            if (model == this.axis)
+            if (model == axis)
             {
-                this.PopulateView();
+                PopulateView();
             }
         }
 
@@ -105,7 +105,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnTitleChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.axis, "Title", this.view.Title));
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "Title", view.Title));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -115,7 +122,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnInvertedChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.axis, "Inverted", this.view.Inverted));
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "Inverted", view.Inverted));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -125,7 +139,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnMinimumChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.axis, "Minimum", this.view.Minimum));
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "Minimum", view.Minimum));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -135,7 +156,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnMaximumChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.axis, "Maximum", this.view.Maximum));
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "Maximum", view.Maximum));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -145,7 +173,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnIntervalChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.axis, "Interval", this.view.Interval));
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "Interval", view.Interval));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
     }
 }

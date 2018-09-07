@@ -133,20 +133,25 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-            List<string> newPaths = new List<string>();
-            foreach (string line in this.factorView.Lines)
+            try
             {
-                if (line != string.Empty)
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                List<string> newPaths = new List<string>();
+                foreach (string line in factorView.Lines)
                 {
-                    newPaths.Add(line);
+                    if (line != string.Empty)
+                    {
+                        newPaths.Add(line);
+                    }
                 }
+
+                presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specifications", newPaths));
+                presenter.CommandHistory.ModelChanged += OnModelChanged;
             }
-
-            this.presenter.CommandHistory.Add(new Commands.ChangeProperty(this.factor, "Specifications", newPaths));
-
-            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -155,7 +160,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            this.factorView.Lines = this.factor.Specifications.ToArray();
+            factorView.Lines = factor.Specifications.ToArray();
         }
     }
 }
