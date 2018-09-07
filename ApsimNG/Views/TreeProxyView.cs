@@ -154,7 +154,7 @@ namespace UserInterface.Views
             {
                 List<DateTime> dates = new List<DateTime>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty((string)row[0]))
+                    if (row[0] is string && !string.IsNullOrEmpty((string)row[0]))
                         dates.Add(DateTime.Parse((string)row[0]));
                 return dates.ToArray();
             }
@@ -169,7 +169,7 @@ namespace UserInterface.Views
             {
                 List<double> heights = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty((string)row[1]))
+                    if (row[1] is string && !string.IsNullOrEmpty((string)row[1]))
                         heights.Add(Convert.ToDouble((string)row[1], System.Globalization.CultureInfo.InvariantCulture) * 1000.0);
                 return heights.ToArray();
             }
@@ -184,7 +184,7 @@ namespace UserInterface.Views
             {
                 List<double> NDemands = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty((string)row[2]))
+                    if (row[2] is string && !string.IsNullOrEmpty((string)row[2]))
                         NDemands.Add(Convert.ToDouble((string)row[2], System.Globalization.CultureInfo.InvariantCulture));
                 return NDemands.ToArray();
             }
@@ -199,7 +199,7 @@ namespace UserInterface.Views
             {
                 List<double> CanopyWidths = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty((string)row[3]))
+                    if (row[3] is string && !string.IsNullOrEmpty((string)row[3]))
                         CanopyWidths.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
                 return CanopyWidths.ToArray();
             }
@@ -214,7 +214,7 @@ namespace UserInterface.Views
             {
                 List<double> TreeLeafAreas = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty((string)row[4]))
+                    if (row[4] is string && !string.IsNullOrEmpty((string)row[4]))
                         TreeLeafAreas.Add(Convert.ToDouble((string)row[4], System.Globalization.CultureInfo.InvariantCulture));
                 return TreeLeafAreas.ToArray();
             }
@@ -243,7 +243,15 @@ namespace UserInterface.Views
                 table.Columns.Add(colLabels[i], typeof(string));
 
             for (int i = 0; i < dates.Length; i++)
-                table.Rows.Add(dates[i].ToShortDateString(), (heights[i] / 1000).ToString(), NDemands[i].ToString(), CanopyWidths[i].ToString(), TreeLeafAreas[i].ToString());
+            {
+                string date = dates.Length > i ? dates[i].ToShortDateString() : null;
+                string height = heights.Length > i ? (heights[i] / 1000).ToString() : null;
+                string nDemand = NDemands.Length > i ? NDemands[i].ToString() : null;
+                string canopyWidth = CanopyWidths.Length > i ? CanopyWidths[i].ToString() : null;
+                string treeLeafArea = TreeLeafAreas.Length > i ? TreeLeafAreas[i].ToString() : null;
+                table.Rows.Add(date, height, nDemand, canopyWidth, treeLeafArea);
+            }
+
             TemporalDataGrid.DataSource = table;
         }
 
