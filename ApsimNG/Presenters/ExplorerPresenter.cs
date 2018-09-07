@@ -893,26 +893,33 @@ namespace UserInterface.Presenters
         /// <param name="e">Event node arguments</param>
         private void OnRename(object sender, NodeRenameArgs e)
         {
-            e.CancelEdit = false;
-            if (e.NewName != null)
+            try
             {
-                if (this.IsValidName(e.NewName))
+                e.CancelEdit = false;
+                if (e.NewName != null)
                 {
-                    Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
-                    if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
+                    if (this.IsValidName(e.NewName))
                     {
-                        this.HideRightHandPanel();
-                        RenameModelCommand cmd = new RenameModelCommand(model,  e.NewName, this.view);
-                        CommandHistory.Add(cmd);
-                        this.ShowRightHandPanel();
-                        e.CancelEdit = model.Name != e.NewName;
+                        Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+                        if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
+                        {
+                            this.HideRightHandPanel();
+                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName, this.view);
+                            CommandHistory.Add(cmd);
+                            this.ShowRightHandPanel();
+                            e.CancelEdit = model.Name != e.NewName;
+                        }
+                    }
+                    else
+                    {
+                        MainPresenter.ShowError("Use alpha numeric characters only!");
+                        e.CancelEdit = true;
                     }
                 }
-                else
-                {
-                    MainPresenter.ShowError("Use alpha numeric characters only!");
-                    e.CancelEdit = true;
-                }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 
