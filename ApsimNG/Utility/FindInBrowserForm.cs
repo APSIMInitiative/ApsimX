@@ -91,7 +91,9 @@
 
 		void txtLookFor_Changed(object sender, EventArgs e)
         {
-			Find();
+            // No, this isn't quite right. It keeps searching forward, rather than resting on the current selection
+            // when the current selection matches. Disabling until a better way is found
+			// Find();
         }
 
         private void btnFindPrevious_Click(object sender, EventArgs e)
