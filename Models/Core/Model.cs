@@ -386,5 +386,10 @@ namespace Models.Core
                 return "Version " + version + ", built " + buildDate;
             }
         }
+
+        /// <summary>
+        /// Controls whether the model can be modified.
+        /// </summary>
+        public bool ReadOnly { get; set; }
     }
 }
