@@ -222,6 +222,10 @@ namespace UserInterface.Presenters
                         }
 
                     }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowError(err);
+                    }
                     finally
                     {
                         ViewBase.MasterView.WaitCursor = false;

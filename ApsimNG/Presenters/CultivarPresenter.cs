@@ -61,14 +61,21 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnCommandsChanged(object sender, EventArgs e)
         {
-            if (this.view.Lines != this.cultivar.Commands)
+            try
             {
-                this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+                if (this.view.Lines != this.cultivar.Commands)
+                {
+                    this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                Commands.ChangeProperty command = new Commands.ChangeProperty(this.cultivar, "Commands", this.view.Lines);
-                this.explorerPresenter.CommandHistory.Add(command);
+                    Commands.ChangeProperty command = new Commands.ChangeProperty(this.cultivar, "Commands", this.view.Lines);
+                    this.explorerPresenter.CommandHistory.Add(command);
 
-                this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                    this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

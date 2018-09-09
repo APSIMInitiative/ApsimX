@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Models.Surface;
     using Utility;
     using Views;
+    using Commands;
 
     /// <summary>
     /// <para>
@@ -557,46 +558,53 @@ namespace UserInterface.Presenters
         /// <param name="value">The value to set the property to</param>
         private void SetPropertyValue(IVariable property, object value)
         {
-            if (property.DataType.IsArray && value != null)
+            try
             {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.DataType == typeof(double[]))
+                if (property.DataType.IsArray && value != null)
                 {
-                    value = MathUtilities.StringsToDoubles(stringValues);
+                    string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (property.DataType == typeof(double[]))
+                    {
+                        value = MathUtilities.StringsToDoubles(stringValues);
+                    }
+                    else if (property.DataType == typeof(int[]))
+                    {
+                        value = MathUtilities.StringsToDoubles(stringValues);
+                    }
+                    else if (property.DataType == typeof(string[]))
+                    {
+                        value = stringValues;
+                    }
+                    else
+                    {
+                        throw new ApsimXException(model, "Invalid property type: " + property.DataType.ToString());
+                    }
                 }
-                else if (property.DataType == typeof(int[]))
+                else if (typeof(IPlant).IsAssignableFrom(property.DataType))
                 {
-                    value = MathUtilities.StringsToDoubles(stringValues);
+                    value = Apsim.Find(model, value.ToString()) as IPlant;
                 }
-                else if (property.DataType == typeof(string[]))
+                else if (property.DataType == typeof(DateTime))
                 {
-                    value = stringValues;
+                    value = Convert.ToDateTime(value);
                 }
-                else
+                else if (property.DataType.IsEnum)
                 {
-                    throw new ApsimXException(model, "Invalid property type: " + property.DataType.ToString());
+                    value = VariableProperty.ParseEnum(property.DataType, value.ToString());
                 }
-            }
-            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-            {
-                value = Apsim.Find(model, value.ToString()) as IPlant;
-            }
-            else if (property.DataType == typeof(DateTime))
-            {
-                value = Convert.ToDateTime(value);
-            }
-            else if (property.DataType.IsEnum)
-            {
-                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
-            }
-            else if (property.Display != null &&
-                     property.Display.Type == DisplayType.Model)
-            {
-                value = Apsim.Get(model, value.ToString());
-            }
+                else if (property.Display != null &&
+                         property.Display.Type == DisplayType.Model)
+                {
+                    value = Apsim.Get(model, value.ToString());
+                }
 
-            Commands.ChangeProperty cmd = new Commands.ChangeProperty(model, property.Name, value);
-            presenter.CommandHistory.Add(cmd, true);
+                ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
+                presenter.CommandHistory.Add(cmd);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>

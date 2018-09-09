@@ -25,6 +25,10 @@ namespace UserInterface.Commands
         /// </summary>
         public MoveModelCommand(Model FromModel, Model ToParent, TreeViewNode nodeDescription, IExplorerView explorerView)
         {
+            if (FromModel.ReadOnly)
+                throw new ApsimXException(FromModel, string.Format("Unable to move {0} to {1} - {0} is read-only.", FromModel.Name, ToParent.Name));
+            if (ToParent.ReadOnly)
+                throw new ApsimXException(ToParent, string.Format("Unable to move {0} to {1} - {1} is read-only.", FromModel.Name, ToParent.Name));
             this.FromModel = FromModel;
             this.ToParent = ToParent;
             this.nodeDescription = nodeDescription;

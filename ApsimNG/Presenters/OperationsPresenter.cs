@@ -102,32 +102,39 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            List<Operation> operations = new List<Operation>();
-            foreach (string line in this.view.Lines)
+            try
             {
-                string currentLine = line;
-                bool isComment = line.Trim().StartsWith("//");
-                if (isComment)
+                this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+                List<Operation> operations = new List<Operation>();
+                foreach (string line in this.view.Lines)
                 {
-                    int index = line.IndexOf("//");
-                    if (index >= 0)
-                        currentLine = currentLine.Remove(index, 2).Trim();
-                }
-                    
-                int pos = currentLine.IndexOf(' ');
-                if (pos != -1)
-                {
-                    Operation operation = new Operation();
-                    operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
-                    operation.Action = currentLine.Substring(pos + 1);
-                    operation.Enabled = !isComment;
-                    operations.Add(operation);
-                }
-            }
+                    string currentLine = line;
+                    bool isComment = line.Trim().StartsWith("//");
+                    if (isComment)
+                    {
+                        int index = line.IndexOf("//");
+                        if (index >= 0)
+                            currentLine = currentLine.Remove(index, 2).Trim();
+                    }
 
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Schedule", operations));
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                    int pos = currentLine.IndexOf(' ');
+                    if (pos != -1)
+                    {
+                        Operation operation = new Operation();
+                        operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
+                        operation.Action = currentLine.Substring(pos + 1);
+                        operation.Enabled = !isComment;
+                        operations.Add(operation);
+                    }
+                }
+
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Schedule", operations));
+                this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>

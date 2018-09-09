@@ -9,6 +9,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models.Graph;
     using Models.Soils;
+    using Commands;
 
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
@@ -81,33 +82,33 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateView()
         {
-            this.DisconnectViewEvents();
-            this.initialWaterView.PercentFull = Convert.ToInt32(this.initialWater.FractionFull * 100);
-            this.initialWaterView.PAW = (int)Math.Round(this.initialWater.PAW);
-            if (double.IsNaN(this.initialWater.DepthWetSoil))
+            DisconnectViewEvents();
+            initialWaterView.PercentFull = Convert.ToInt32(initialWater.FractionFull * 100);
+            initialWaterView.PAW = (int)Math.Round(initialWater.PAW);
+            if (double.IsNaN(initialWater.DepthWetSoil))
             {
-                this.initialWaterView.FilledByDepth = false;
-                this.initialWaterView.DepthOfWetSoil = int.MinValue;
+                initialWaterView.FilledByDepth = false;
+                initialWaterView.DepthOfWetSoil = int.MinValue;
             }
             else
             {
-                this.initialWaterView.FilledByDepth = true;
-                this.initialWaterView.DepthOfWetSoil = (int)Math.Round(this.initialWater.DepthWetSoil / 10); // mm to cm
+                initialWaterView.FilledByDepth = true;
+                initialWaterView.DepthOfWetSoil = (int)Math.Round(initialWater.DepthWetSoil / 10); // mm to cm
             }
 
-            this.initialWaterView.FilledFromTop = this.initialWater.PercentMethod == InitialWater.PercentMethodEnum.FilledFromTop;
-            this.initialWaterView.RelativeTo = this.initialWater.RelativeTo;
-            if (this.initialWaterView.RelativeTo == string.Empty)
+            initialWaterView.FilledFromTop = initialWater.PercentMethod == InitialWater.PercentMethodEnum.FilledFromTop;
+            initialWaterView.RelativeTo = initialWater.RelativeTo;
+            if (initialWaterView.RelativeTo == string.Empty)
             {
-                this.initialWaterView.RelativeTo = "LL15";
+                initialWaterView.RelativeTo = "LL15";
             }
 
-            this.ConnectViewEvents();
+            ConnectViewEvents();
 
             // Refresh the graph.
-            if (this.graph != null)
+            if (graph != null)
             {
-                this.graphPresenter.DrawGraph();
+                graphPresenter.DrawGraph();
             }
         }
 
@@ -116,12 +117,12 @@ namespace UserInterface.Presenters
         /// </summary>
         private void ConnectViewEvents()
         {
-            this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
-            this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
-            this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
-            this.initialWaterView.OnPercentFullChanged += this.OnPercentFullChanged;
-            this.initialWaterView.OnRelativeToChanged += this.OnRelativeToChanged;
-            this.initialWaterView.OnSpecifierChanged += this.OnSpecifierChanged;
+            initialWaterView.OnDepthWetSoilChanged += OnDepthWetSoilChanged;
+            initialWaterView.OnFilledFromTopChanged += OnFilledFromTopChanged;
+            initialWaterView.OnPAWChanged += OnPAWChanged;
+            initialWaterView.OnPercentFullChanged += OnPercentFullChanged;
+            initialWaterView.OnRelativeToChanged += OnRelativeToChanged;
+            initialWaterView.OnSpecifierChanged += OnSpecifierChanged;
         }
 
         /// <summary>
@@ -129,12 +130,12 @@ namespace UserInterface.Presenters
         /// </summary>
         private void DisconnectViewEvents()
         {
-            this.initialWaterView.OnDepthWetSoilChanged -= this.OnDepthWetSoilChanged;
-            this.initialWaterView.OnFilledFromTopChanged -= this.OnFilledFromTopChanged;
-            this.initialWaterView.OnPAWChanged -= this.OnPAWChanged;
-            this.initialWaterView.OnPercentFullChanged -= this.OnPercentFullChanged;
-            this.initialWaterView.OnRelativeToChanged -= this.OnRelativeToChanged;
-            this.initialWaterView.OnSpecifierChanged -= this.OnSpecifierChanged;
+            initialWaterView.OnDepthWetSoilChanged -= OnDepthWetSoilChanged;
+            initialWaterView.OnFilledFromTopChanged -= OnFilledFromTopChanged;
+            initialWaterView.OnPAWChanged -= OnPAWChanged;
+            initialWaterView.OnPercentFullChanged -= OnPercentFullChanged;
+            initialWaterView.OnRelativeToChanged -= OnRelativeToChanged;
+            initialWaterView.OnSpecifierChanged -= OnSpecifierChanged;
         }
 
         /// <summary>
@@ -142,12 +143,17 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnRelativeToChanged(object sender, System.EventArgs e)
+        private void OnRelativeToChanged(object sender, EventArgs e)
         {
-            Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "RelativeTo", this.initialWaterView.RelativeTo);
-
-            this.explorerPresenter.CommandHistory.Add(command);
+            try
+            {
+                ChangeProperty command = new ChangeProperty(initialWater, "RelativeTo", initialWaterView.RelativeTo);
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -155,13 +161,18 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnPercentFullChanged(object sender, System.EventArgs e)
+        private void OnPercentFullChanged(object sender, EventArgs e)
         {
-            double fractionFull = (this.initialWaterView.PercentFull * 1.0) / 100;
-            Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "FractionFull", fractionFull);
-
-            this.explorerPresenter.CommandHistory.Add(command);
+            try
+            {
+                double fractionFull = (initialWaterView.PercentFull * 1.0) / 100;
+                ChangeProperty command = new ChangeProperty(initialWater, "FractionFull", fractionFull);
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -169,12 +180,17 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnPAWChanged(object sender, System.EventArgs e)
+        private void OnPAWChanged(object sender, EventArgs e)
         {
-            Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "PAW", Convert.ToDouble(this.initialWaterView.PAW, System.Globalization.CultureInfo.InvariantCulture));
-
-            this.explorerPresenter.CommandHistory.Add(command);
+            try
+            {
+                ChangeProperty command = new ChangeProperty(initialWater, "PAW", Convert.ToDouble(initialWaterView.PAW, System.Globalization.CultureInfo.InvariantCulture));
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -182,22 +198,28 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnFilledFromTopChanged(object sender, System.EventArgs e)
+        private void OnFilledFromTopChanged(object sender, EventArgs e)
         {
-            InitialWater.PercentMethodEnum percentMethod;
-            if (this.initialWaterView.FilledFromTop)
+            try
             {
-                percentMethod = InitialWater.PercentMethodEnum.FilledFromTop;
+                InitialWater.PercentMethodEnum percentMethod;
+                if (initialWaterView.FilledFromTop)
+                {
+                    percentMethod = InitialWater.PercentMethodEnum.FilledFromTop;
+                }
+                else
+                {
+                    percentMethod = InitialWater.PercentMethodEnum.EvenlyDistributed;
+                }
+
+                ChangeProperty command = new ChangeProperty(initialWater, "PercentMethod", percentMethod);
+
+                explorerPresenter.CommandHistory.Add(command);
             }
-            else
+            catch (Exception err)
             {
-                percentMethod = InitialWater.PercentMethodEnum.EvenlyDistributed;
+                explorerPresenter.MainPresenter.ShowError(err);
             }
-
-            Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "PercentMethod", percentMethod);
-
-            this.explorerPresenter.CommandHistory.Add(command);
         }
 
         /// <summary>
@@ -205,17 +227,22 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnDepthWetSoilChanged(object sender, System.EventArgs e)
+        private void OnDepthWetSoilChanged(object sender, EventArgs e)
         {
-            double depthOfWetSoil;
-            if (this.initialWaterView.DepthOfWetSoil == int.MinValue)
-                depthOfWetSoil = Double.NaN;
-            else
-                depthOfWetSoil = Convert.ToDouble(this.initialWaterView.DepthOfWetSoil, System.Globalization.CultureInfo.InvariantCulture) * 10; // cm to mm
-            Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "DepthWetSoil", depthOfWetSoil);
-
-            this.explorerPresenter.CommandHistory.Add(command);
+            try
+            {
+                double depthOfWetSoil;
+                if (initialWaterView.DepthOfWetSoil == int.MinValue)
+                    depthOfWetSoil = Double.NaN;
+                else
+                    depthOfWetSoil = Convert.ToDouble(initialWaterView.DepthOfWetSoil, System.Globalization.CultureInfo.InvariantCulture) * 10; // cm to mm
+                ChangeProperty command = new ChangeProperty(initialWater, "DepthWetSoil", depthOfWetSoil);
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -223,20 +250,26 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnSpecifierChanged(object sender, System.EventArgs e)
+        private void OnSpecifierChanged(object sender, EventArgs e)
         {
-            double depthOfWetSoil;
-            if (this.initialWaterView.DepthOfWetSoil == int.MinValue)
-                depthOfWetSoil = Double.NaN;
-            else
-                depthOfWetSoil = this.initialWater.TotalSoilDepth() * Math.Min(1.0, this.initialWater.FractionFull);
+            try
+            {
+                double depthOfWetSoil;
+                if (initialWaterView.DepthOfWetSoil == int.MinValue)
+                    depthOfWetSoil = Double.NaN;
+                else
+                    depthOfWetSoil = initialWater.TotalSoilDepth() * Math.Min(1.0, initialWater.FractionFull);
 
-            // The InitialWater model uses the value of DepthWetSoil as a flag
-            // to inidicate whether specification is by depth or by fraction
-            Commands.ChangeProperty command = new Commands.ChangeProperty(
-                this.initialWater, "DepthWetSoil", depthOfWetSoil);
+                // The InitialWater model uses the value of DepthWetSoil as a flag
+                // to inidicate whether specification is by depth or by fraction
+                ChangeProperty command = new ChangeProperty(initialWater, "DepthWetSoil", depthOfWetSoil);
 
-            this.explorerPresenter.CommandHistory.Add(command);
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -247,7 +280,7 @@ namespace UserInterface.Presenters
         {
             if (changedModel == this.initialWater)
             {
-                this.PopulateView();
+                PopulateView();
             }
         }
     }

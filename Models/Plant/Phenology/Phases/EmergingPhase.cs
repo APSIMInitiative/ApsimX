@@ -51,7 +51,7 @@ namespace Models.PMF.Phen
                 if (Target == 0)
                     return 1;
                 else
-                    return TTinPhase / Target;
+                    return ProgressThroughPhase / Target;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Models.PMF.Phen
         /// <summary>Gets the t tin phase.</summary>
         /// <value>The t tin phase.</value>
         [XmlIgnore]
-        public double TTinPhase { get; set; }
+        public double ProgressThroughPhase { get; set; }
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -76,17 +76,17 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
             TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
-            TTinPhase += TTForTimeStep;
+            ProgressThroughPhase += TTForTimeStep;
 
-            if (TTinPhase > Target)
+            if (ProgressThroughPhase > Target)
             {
                 if (TTForTimeStep > 0.0)
                 {
                     proceedToNextPhase = true;
-                    propOfDayToUse = (TTinPhase - Target) / TTForTimeStep;
+                    propOfDayToUse = (ProgressThroughPhase - Target) / TTForTimeStep;
                     TTForTimeStep *= (1 - propOfDayToUse);
                 }
-                TTinPhase = Target;
+                ProgressThroughPhase = Target;
             }
             
             return proceedToNextPhase;
@@ -95,7 +95,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
         {
-            TTinPhase = 0;
+            ProgressThroughPhase = 0;
             Target = 0;
         }
         
