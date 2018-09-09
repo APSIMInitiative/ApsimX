@@ -782,7 +782,7 @@ namespace Models.PMF.Organs
                 // Documment DM demands.
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction.", indent));
-                IModel DMDemand = Apsim.Child(this, "DMDemandFunction");
+                IModel DMDemand = Apsim.Child(this, "dmDemands");
                 AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 1, indent);
 
                 // Document Nitrogen Demand
