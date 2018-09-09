@@ -260,6 +260,7 @@
     <Compile Include="Presenters\IntellisensePresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
+    <Compile Include="Presenters\LinearAfterThresholdPresenter.cs" />
     <Compile Include="Presenters\MainPresenter.cs" />
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
