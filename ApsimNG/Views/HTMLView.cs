@@ -51,7 +51,11 @@ namespace UserInterface.Views
         /// <returns></returns>
         string GetTitle();
 
+        Widget HoldingWidget { get; set; }
+
         void ExecJavaScript(string command, object[] args);
+
+        bool Search(string forString, bool forward, bool caseSensitive, bool wrap);
     }
 
 
@@ -70,9 +74,11 @@ namespace UserInterface.Views
         public System.Windows.Forms.WebBrowser wb = null;
         public Gtk.Socket socket = null;
         public bool unmapped = false;
+        public Widget HoldingWidget { get; set; }
 
         public void InitIE(Gtk.Box w)
         {
+            HoldingWidget = w;
             wb = new System.Windows.Forms.WebBrowser();
             w.SetSizeRequest(500, 500);
             wb.Height = 500; // w.GdkWindow.FrameExtents.Height;
@@ -193,6 +199,15 @@ namespace UserInterface.Views
             else
                 return String.Empty;
         }
+
+        public bool Search(string forString, bool forward, bool caseSensitive, bool wrap)
+        {
+            // The Windows.Forms.WebBrowser doesn't provide this as part of the basic interface
+            // It can be done using COM interfaces, but that involves pulling in the Windows-specific Microsoft.MSHTML assembly
+            // and I don't think this will play well on Mono.
+            return false; 
+        }
+
         public void ExecJavaScript(string command, object[] args)
         {
             wb.Document.InvokeScript(command, args);
@@ -246,27 +261,21 @@ namespace UserInterface.Views
             [DllImport(LIBQUARTZ)]
             internal extern static IntPtr gtk_ns_view_new(IntPtr nsview);
         }
+        
+		public class NSEventArgs : EventArgs
+		{
+			public NSEvent Event;
+		}
 
-        public partial class Safari : MonoMac.WebKit.WebView
+        public class Safari : MonoMac.WebKit.WebView
         {
+			public event EventHandler<NSEventArgs> OnKeyDown;
+
             public override void KeyDown(NSEvent theEvent)
             {
                 base.KeyDown(theEvent);
-                if ((theEvent.ModifierFlags & NSEventModifierMask.CommandKeyMask) == NSEventModifierMask.CommandKeyMask)
-                {
-                   if (theEvent.Characters.ToLower() == "a")
-                    {
-                        MonoMac.WebKit.DomRange range = this.MainFrameDocument.CreateRange();
-                        range.SelectNodeContents(this.MainFrameDocument);
-                        // Ugh! This is what we need to call, but it's not in the "official" MonoMac.WebKit stuff
-                        // It requires a modified version. Be grateful for open source!
-                        this.SetSelectedDomRange(range, NSSelectionAffinity.Downstream);
-                    }
-                    else if (theEvent.Characters.ToLower() == "c")
-                    {
-                        this.Copy(this);
-                    }
-                }
+				if (OnKeyDown != null)
+					OnKeyDown.Invoke(this, new NSEventArgs { Event = theEvent });
             }   
 
             public Safari(System.Drawing.RectangleF frame, string frameName, string groupName)
@@ -297,17 +306,52 @@ namespace UserInterface.Views
             return (NSView)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);
         }
 
-        public MonoMac.WebKit.WebView wb = null;
+        public Safari wb = null;
         public Gtk.Socket socket = new Gtk.Socket();
         public ScrolledWindow scrollWindow = new ScrolledWindow();
+        public Widget HoldingWidget { get; set; }
+
+		/// <summary>
+        /// The find form
+        /// </summary>
+        private Utility.FindInBrowserForm _findForm = new Utility.FindInBrowserForm();
 
         public void InitWebKit(Gtk.Box w)
         {
+            HoldingWidget = w;
             wb = new Safari(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
+			wb.OnKeyDown += OnKeyDown;
             scrollWindow.AddWithViewport(NSViewToGtkWidget(wb));
             w.PackStart(scrollWindow, true, true, 0);
             w.ShowAll();
             wb.ShouldCloseWithWindow = true;
+        }
+
+		private void OnKeyDown(object sender, NSEventArgs args)
+		{
+			if ((args.Event.ModifierFlags & NSEventModifierMask.CommandKeyMask) == NSEventModifierMask.CommandKeyMask)
+            {
+                if (args.Event.Characters.ToLower() == "a")
+                {
+                    MonoMac.WebKit.DomRange range = wb.MainFrameDocument.CreateRange();
+                    range.SelectNodeContents(wb.MainFrameDocument);
+                    // Ugh! This is what we need to call, but it's not in the "official" MonoMac.WebKit stuff
+                    // It requires a modified version. Be grateful for open source!
+                    wb.SetSelectedDomRange(range, NSSelectionAffinity.Downstream);
+                }
+                else if (args.Event.Characters.ToLower() == "c")
+                {
+					wb.Copy(wb);
+                }
+				else if (args.Event.Characters.ToLower() == "f")
+                {
+					_findForm.ShowFor(this);
+				}
+                else if (args.Event.Characters.ToLower() == "g")
+                {
+                    _findForm.FindNext((args.Event.ModifierFlags & NSEventModifierMask.ShiftKeyMask) != NSEventModifierMask.ShiftKeyMask, null);
+                }
+            }
         }
 
         public void Navigate(string uri)
@@ -337,6 +381,11 @@ namespace UserInterface.Views
             return wb.MainFrameTitle;
         }
 
+        public bool Search(string forString, bool forward, bool caseSensitive, bool wrap)
+        {
+            return wb.Search(forString, forward, caseSensitive, wrap);
+        }
+
         public void ExecJavaScript(string command, object[] args)
         {
             string argString = "";
@@ -357,6 +406,7 @@ namespace UserInterface.Views
         // Public implementation of Dispose pattern callable by consumers. 
         public void Dispose()
         {
+			wb.OnKeyDown -= OnKeyDown;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -384,16 +434,25 @@ namespace UserInterface.Views
 
     public class TWWebBrowserWK : IBrowserWidget
     {
-        public WebKit.WebView wb = null;
+
+		public WebKit.WebView wb = null;
         public ScrolledWindow scrollWindow = new ScrolledWindow();
+        public Widget HoldingWidget { get; set; }
+
+		/// <summary>
+        /// The find form
+        /// </summary>
+        private Utility.FindInBrowserForm _findForm = new Utility.FindInBrowserForm();
 
         public void InitWebKit(Gtk.Box w)
         {
+            HoldingWidget = w;
             wb = new WebKit.WebView();
             scrollWindow.Add(wb);
             // Hack to work around webkit bug; webkit will crash the app if a size is not provided
             // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=466360 for a related bug report
             wb.SetSizeRequest(2, 2);
+			wb.KeyPressEvent += Wb_KeyPressEvent;
             w.PackStart(scrollWindow, true, true, 0);
             w.ShowAll();
         }
@@ -426,6 +485,23 @@ namespace UserInterface.Views
             return wb.Title;
         }
 
+        public bool Search(string forString, bool forward, bool caseSensitive, bool wrap)
+        {
+            return wb.SearchText(forString, caseSensitive, forward, wrap);
+        }
+
+		public void Highlight(string text, bool caseSenstive, bool doHighlight)
+        {
+			// Doesn't seem to work as well as expected....
+ 			wb.SelectAll();
+			wb.UnmarkTextMatches();
+			if (doHighlight)
+			{
+			    wb.MarkTextMatches(text, caseSenstive, 0);
+			    wb.HighlightTextMatches = true;
+			}
+        }
+
         public void ExecJavaScript(string command, object[] args)
         {
             string argString = "";
@@ -442,9 +518,29 @@ namespace UserInterface.Views
         // Flag: Has Dispose already been called? 
         bool disposed = false;
 
+		[GLib.ConnectBefore]
+		void Wb_KeyPressEvent(object o, Gtk.KeyPressEventArgs args)
+        {
+			args.RetVal = false;
+			if ((args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
+			{
+			    if (args.Event.Key == Gdk.Key.f || args.Event.Key == Gdk.Key.F)
+				{
+				    _findForm.ShowFor(this);
+			    }
+				else if (args.Event.Key == Gdk.Key.g || args.Event.Key == Gdk.Key.G)
+				{	
+					_findForm.FindNext((args.Event.State & Gdk.ModifierType.ShiftMask) != Gdk.ModifierType.ShiftMask, null);
+				}
+			}
+			else if (args.Event.Key == Gdk.Key.F3)
+				_findForm.FindNext((args.Event.State & Gdk.ModifierType.ShiftMask) != Gdk.ModifierType.ShiftMask, null);
+        }
+
         // Public implementation of Dispose pattern callable by consumers. 
         public void Dispose()
         {
+			wb.KeyPressEvent -= Wb_KeyPressEvent;
             Dispose(true);
             GC.SuppressFinalize(this);
         }

@@ -117,6 +117,7 @@
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StockView.glade" />
+    <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -293,6 +294,7 @@
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\FileDialog.cs" />
+    <Compile Include="Utility\FindInBrowserForm.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
