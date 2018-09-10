@@ -468,7 +468,7 @@ namespace Models.Core
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
                     // resolve all links in cloned simulation.
-                    Links.Resolve(clonedSimulation);
+                    Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
