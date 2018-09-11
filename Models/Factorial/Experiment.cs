@@ -287,14 +287,19 @@
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
             if (Factors != null)
             {
-                bool doFullFactorial = false;
+                bool doFullFactorial = true;
                 foreach (Factor factor in Factors.factors)
                 {
                     if (factor.Enabled)
                     {
                         List<FactorValue> factorValues = factor.CreateValues();
+
+                        // Iff any of the factors modify the same model (e.g. have a duplicate path), then we do not want to do a full factorial.
+                        // This line should check if there are any such duplicates by checking each path in each factor value in the list of factor
+                        // values for the current factor against each path in each list of factor values in the list of all factors which we have
+                        // already added to the global list of list of factor values.
+                        doFullFactorial = doFullFactorial && !factorValues.Any(f => f.Paths.Any(fPath => allValues?.Any(a => a.Any(a2 => a2.Paths.Any(aPath => string.Equals(aPath, fPath, StringComparison.CurrentCulture)))) ?? false));
                         allValues.Add(factorValues);
-                        doFullFactorial = doFullFactorial || factorValues.Count > 1;
                     }
                 }
                 if (doFullFactorial)
@@ -312,7 +317,8 @@
         /// <returns></returns>
         public List<List<FactorValue>> EnabledCombinations()
         {
-            if (DisabledSimNames == null || DisabledSimNames.Count < 1) return AllCombinations();
+            if (DisabledSimNames == null || DisabledSimNames.Count < 1)
+                return AllCombinations();
 
             // easy but inefficient method (for testing purposes)
             return AllCombinations().Where(x => (DisabledSimNames.IndexOf(GetName(x)) < 0)).ToList();
