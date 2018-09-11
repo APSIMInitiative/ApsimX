@@ -295,10 +295,17 @@
                         List<FactorValue> factorValues = factor.CreateValues();
 
                         // Iff any of the factors modify the same model (e.g. have a duplicate path), then we do not want to do a full factorial.
-                        // This line should check if there are any such duplicates by checking each path in each factor value in the list of factor
+                        // This code should check if there are any such duplicates by checking each path in each factor value in the list of factor
                         // values for the current factor against each path in each list of factor values in the list of all factors which we have
                         // already added to the global list of list of factor values.
-                        doFullFactorial = doFullFactorial && !factorValues.Any(f => f.Paths.Any(fPath => allValues?.Any(a => a.Any(a2 => a2.Paths.Any(aPath => string.Equals(aPath, fPath, StringComparison.CurrentCulture)))) ?? false));
+                        foreach (FactorValue currentFactorValue in factorValues)
+                            foreach (string currentFactorPath in currentFactorValue.Paths)
+                                foreach (List<FactorValue> allFactorValues in allValues)
+                                    foreach (FactorValue globalValue in allFactorValues)
+                                        foreach (string globalPath in globalValue.Paths)
+                                            if (string.Equals(globalPath, currentFactorPath, StringComparison.CurrentCulture))
+                                                doFullFactorial = false;
+
                         allValues.Add(factorValues);
                     }
                 }
