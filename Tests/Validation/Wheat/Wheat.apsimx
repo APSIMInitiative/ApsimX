@@ -18454,7 +18454,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <Specifications>
-              <string>[SowingFertiliser].Script.Amount=0,30</string>
+              <string>[TopdressFertiliser].Script.Amount=0,30</string>
             </Specifications>
           </Factor>
           <Factor>
