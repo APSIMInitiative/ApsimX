@@ -1091,9 +1091,12 @@
                         List<XmlNode> ExptFactorNodes = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(parent, "Factor"));
                         foreach (XmlNode f in ExptFactorNodes)
                         {
-                            ExptFactors.Add(f.Name);
+                            if (XmlUtilities.IsType(f.ParentNode,"Factors"))
+                            ExptFactors.Add(f.FirstChild.InnerText);
                         }
-
+                        XmlNode CurrentColor = XmlUtilities.FindByType(seriesNode, "FactorToVaryColours");
+                        if (CurrentColor != null)
+                            seriesNode.RemoveChild(CurrentColor);
                         XmlElement colorFactor = seriesNode.OwnerDocument.CreateElement("FactorToVaryColours");
                         colorFactor.InnerText = ExptFactors[0];
                         seriesNode.AppendChild(colorFactor);
@@ -1101,12 +1104,18 @@
                         {
                             if(lines)
                             {
+                                XmlNode CurrentLine = XmlUtilities.FindByType(seriesNode, "FactorToVaryLines");
+                                if (CurrentLine != null)
+                                    seriesNode.RemoveChild(CurrentLine);
                                 XmlElement lineFactor = seriesNode.OwnerDocument.CreateElement("FactorToVaryLines");
                                 lineFactor.InnerText = ExptFactors[1];
                                 seriesNode.AppendChild(lineFactor);
                             }
                             if (markers)
                             {
+                                XmlNode CurrentMarker = XmlUtilities.FindByType(seriesNode, "FactorToVaryMarkers");
+                                if (CurrentMarker != null)
+                                    seriesNode.RemoveChild(CurrentMarker);
                                 XmlElement MarkerFactor = seriesNode.OwnerDocument.CreateElement("FactorToVaryMarkers");
                                 MarkerFactor.InnerText = ExptFactors[1];
                                 seriesNode.AppendChild(MarkerFactor);
