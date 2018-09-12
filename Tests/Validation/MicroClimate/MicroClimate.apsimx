@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="40">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="42">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>TitlePage</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+    <MemoText><![CDATA[# APSIM MicroClimate Model]]></MemoText>
+  </Memo>
   <Replacements>
     <Name>Replacements</Name>
     <Soil>
@@ -11,6 +18,7 @@
           <Name>WheatSoil</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <LL>
             <double>0.1</double>
             <double>0.1</double>
@@ -43,6 +51,7 @@
           <Name>MaizeSoil</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <LL>
             <double>0.1</double>
             <double>0.1</double>
@@ -73,6 +82,7 @@
         </SoilCrop>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -141,6 +151,7 @@
         <Name>SoilWater</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <SummerDate>1-Mar</SummerDate>
         <SummerU>2</SummerU>
         <SummerCona>2</SummerCona>
@@ -181,6 +192,7 @@
         <Name>SoilNitrogen</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <fom_type>
           <string>default</string>
           <string>manure</string>
@@ -218,6 +230,7 @@
         <Name>SoilOrganicMatter</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <RootCN>40</RootCN>
         <RootWt>1000</RootWt>
         <SoilCN>14</SoilCN>
@@ -274,6 +287,7 @@
         <Name>Analysis</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -299,6 +313,7 @@
         <Name>InitialWater</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <PercentMethod>EvenlyDistributed</PercentMethod>
         <FractionFull>1</FractionFull>
         <DepthWetSoil>NaN</DepthWetSoil>
@@ -307,6 +322,7 @@
         <Name>InitialN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -344,9 +360,11 @@
         <Name>CERESSoilTemperature</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </CERESSoilTemperature>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <RecordNumber>0</RecordNumber>
       <ASCOrder />
       <ASCSubOrder />
@@ -369,6 +387,7 @@
       <Name>WURReport</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
@@ -421,6 +440,7 @@
     </Report>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -428,6 +448,7 @@
       <Name>Observed</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
@@ -435,6 +456,7 @@
     </ExcelInput>
     <IncludeInDocumentation>false</IncludeInDocumentation>
     <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </DataStore>
   <Folder>
     <Name>ScopingTest</Name>
@@ -444,6 +466,7 @@
         <Name>Clock</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>1900-01-01T00:00:00</StartDate>
         <EndDate>1900-12-31T00:00:00</EndDate>
       </Clock>
@@ -451,11 +474,13 @@
         <Name>SummaryFile</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
       </Weather>
       <Zone>
@@ -464,6 +489,7 @@
           <Name>Report</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -478,6 +504,7 @@
           <Name>Fertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -487,6 +514,7 @@
               <Name>WheatSoil</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -517,6 +545,7 @@
             </SoilCrop>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -585,6 +614,7 @@
             <Name>SoilWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -625,6 +655,7 @@
             <Name>SoilNitrogen</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -662,6 +693,7 @@
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -718,6 +750,7 @@
             <Name>Analysis</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -743,6 +776,7 @@
             <Name>InitialWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -751,6 +785,7 @@
             <Name>InitialN</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -842,9 +877,11 @@
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -867,6 +904,7 @@
           <Name>SurfaceOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -880,6 +918,7 @@
           <Name>Wheat</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
@@ -887,6 +926,7 @@
           <Name>MicroClimate</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
@@ -900,6 +940,7 @@
           <Name>SowingFertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>20</Amount>
             <CropName>wheat</CropName>
@@ -942,6 +983,7 @@ namespace Models
           <Name>SowingRule</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-may</StartDate>
             <EndDate>10-jul</EndDate>
@@ -1022,9 +1064,11 @@ namespace Models
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -1034,6 +1078,7 @@ namespace Models
           <Name>Report</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1048,6 +1093,7 @@ namespace Models
           <Name>Fertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -1057,6 +1103,7 @@ namespace Models
               <Name>WheatSoil</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -1087,6 +1134,7 @@ namespace Models
             </SoilCrop>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1155,6 +1203,7 @@ namespace Models
             <Name>SoilWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -1195,6 +1244,7 @@ namespace Models
             <Name>SoilNitrogen</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -1232,6 +1282,7 @@ namespace Models
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -1288,6 +1339,7 @@ namespace Models
             <Name>Analysis</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1313,6 +1365,7 @@ namespace Models
             <Name>InitialWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -1321,6 +1374,7 @@ namespace Models
             <Name>InitialN</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1412,9 +1466,11 @@ namespace Models
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -1437,6 +1493,7 @@ namespace Models
           <Name>SurfaceOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -1450,6 +1507,7 @@ namespace Models
           <Name>Wheat</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
@@ -1457,6 +1515,7 @@ namespace Models
           <Name>MicroClimate</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
@@ -1470,6 +1529,7 @@ namespace Models
           <Name>SowingFertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>20</Amount>
             <CropName>wheat</CropName>
@@ -1512,6 +1572,7 @@ namespace Models
           <Name>SowingRule</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-may</StartDate>
             <EndDate>10-jul</EndDate>
@@ -1592,9 +1653,11 @@ namespace Models
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -1604,6 +1667,7 @@ namespace Models
           <Name>Report</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1618,6 +1682,7 @@ namespace Models
           <Name>Fertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -1627,6 +1692,7 @@ namespace Models
               <Name>WheatSoil</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -1657,6 +1723,7 @@ namespace Models
             </SoilCrop>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1725,6 +1792,7 @@ namespace Models
             <Name>SoilWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -1765,6 +1833,7 @@ namespace Models
             <Name>SoilNitrogen</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -1802,6 +1871,7 @@ namespace Models
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -1858,6 +1928,7 @@ namespace Models
             <Name>Analysis</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1883,6 +1954,7 @@ namespace Models
             <Name>InitialWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -1891,6 +1963,7 @@ namespace Models
             <Name>InitialN</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1982,9 +2055,11 @@ namespace Models
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -2007,6 +2082,7 @@ namespace Models
           <Name>SurfaceOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -2020,6 +2096,7 @@ namespace Models
           <Name>Wheat</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
@@ -2027,6 +2104,7 @@ namespace Models
           <Name>MicroClimate</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
@@ -2040,6 +2118,7 @@ namespace Models
           <Name>SowingFertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>300</Amount>
             <CropName>wheat</CropName>
@@ -2082,6 +2161,7 @@ namespace Models
           <Name>SowingRule</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-may</StartDate>
             <EndDate>10-jul</EndDate>
@@ -2162,9 +2242,11 @@ namespace Models
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -2174,6 +2256,7 @@ namespace Models
           <Name>Series</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2194,6 +2277,7 @@ namespace Models
         </Series>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2215,9 +2299,11 @@ namespace Models
         <Name>SoilArbitrator</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Simulation>
       <Name>MicrometTopLevel</Name>
@@ -2225,6 +2311,7 @@ namespace Models
         <Name>Clock</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>1900-01-01T00:00:00</StartDate>
         <EndDate>1900-12-31T00:00:00</EndDate>
       </Clock>
@@ -2232,17 +2319,20 @@ namespace Models
         <Name>SummaryFile</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
       </Weather>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -2258,6 +2348,7 @@ namespace Models
           <Name>Report</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -2272,6 +2363,7 @@ namespace Models
           <Name>Fertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -2281,6 +2373,7 @@ namespace Models
               <Name>WheatSoil</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -2311,6 +2404,7 @@ namespace Models
             </SoilCrop>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2379,6 +2473,7 @@ namespace Models
             <Name>SoilWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -2419,6 +2514,7 @@ namespace Models
             <Name>SoilNitrogen</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -2456,6 +2552,7 @@ namespace Models
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -2512,6 +2609,7 @@ namespace Models
             <Name>Analysis</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2537,6 +2635,7 @@ namespace Models
             <Name>InitialWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -2545,6 +2644,7 @@ namespace Models
             <Name>InitialN</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2636,9 +2736,11 @@ namespace Models
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -2661,6 +2763,7 @@ namespace Models
           <Name>SurfaceOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -2670,7 +2773,7 @@ namespace Models
           <InitialCNR>100</InitialCNR>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-		<Plant>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -2682,6 +2785,7 @@ namespace Models
           <Name>SowingFertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>20</Amount>
             <CropName>wheat</CropName>
@@ -2724,6 +2828,7 @@ namespace Models
           <Name>SowingRule</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-may</StartDate>
             <EndDate>10-jul</EndDate>
@@ -2804,11 +2909,13 @@ namespace Models
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <MicroClimate>
           <Name>MicroClimate</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
@@ -2820,6 +2927,7 @@ namespace Models
         </MicroClimate>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -2829,6 +2937,7 @@ namespace Models
           <Name>Report</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -2843,6 +2952,7 @@ namespace Models
           <Name>Fertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -2852,6 +2962,7 @@ namespace Models
               <Name>WheatSoil</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -2882,6 +2993,7 @@ namespace Models
             </SoilCrop>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2950,6 +3062,7 @@ namespace Models
             <Name>SoilWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -2990,6 +3103,7 @@ namespace Models
             <Name>SoilNitrogen</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -3027,6 +3141,7 @@ namespace Models
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -3083,6 +3198,7 @@ namespace Models
             <Name>Analysis</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3108,6 +3224,7 @@ namespace Models
             <Name>InitialWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -3116,6 +3233,7 @@ namespace Models
             <Name>InitialN</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3207,9 +3325,11 @@ namespace Models
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -3232,6 +3352,7 @@ namespace Models
           <Name>SurfaceOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -3249,10 +3370,11 @@ namespace Models
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
-		<Manager>
+        <Manager>
           <Name>SowingFertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>20</Amount>
             <CropName>wheat</CropName>
@@ -3295,6 +3417,7 @@ namespace Models
           <Name>SowingRule</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-may</StartDate>
             <EndDate>10-jul</EndDate>
@@ -3375,9 +3498,11 @@ namespace Models
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -3387,6 +3512,7 @@ namespace Models
           <Name>Report</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -3401,6 +3527,7 @@ namespace Models
           <Name>Fertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -3410,6 +3537,7 @@ namespace Models
               <Name>WheatSoil</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -3440,6 +3568,7 @@ namespace Models
             </SoilCrop>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3508,6 +3637,7 @@ namespace Models
             <Name>SoilWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -3548,6 +3678,7 @@ namespace Models
             <Name>SoilNitrogen</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -3585,6 +3716,7 @@ namespace Models
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -3641,6 +3773,7 @@ namespace Models
             <Name>Analysis</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3666,6 +3799,7 @@ namespace Models
             <Name>InitialWater</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -3674,6 +3808,7 @@ namespace Models
             <Name>InitialN</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3765,9 +3900,11 @@ namespace Models
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -3790,6 +3927,7 @@ namespace Models
           <Name>SurfaceOrganicMatter</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -3803,6 +3941,7 @@ namespace Models
           <Name>Wheat</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
@@ -3810,6 +3949,7 @@ namespace Models
           <Name>SowingFertiliser</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>300</Amount>
             <CropName>wheat</CropName>
@@ -3852,6 +3992,7 @@ namespace Models
           <Name>SowingRule</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-may</StartDate>
             <EndDate>10-jul</EndDate>
@@ -3932,9 +4073,11 @@ namespace Models
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -3944,6 +4087,7 @@ namespace Models
           <Name>Series</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3964,6 +4108,7 @@ namespace Models
         </Series>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3985,16 +4130,19 @@ namespace Models
         <Name>SoilArbitrator</Name>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Graph>
       <Name>Graph</Name>
       <Series>
         <Name>Series</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4014,8 +4162,9 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -4033,8 +4182,9 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
     </Graph>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
     <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
     <ShowPageOfGraphs>false</ShowPageOfGraphs>
   </Folder>
   <Folder>
@@ -4043,26 +4193,30 @@ namespace Models
       <Name>StripCropExample</Name>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>1990-01-01T00:00:00</StartDate>
         <EndDate>1991-06-30T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
       </Weather>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -4074,8 +4228,9 @@ namespace Models
       </MicroClimate>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <StripCropZone>
         <Name>StripCropZone</Name>
@@ -4083,8 +4238,9 @@ namespace Models
           <Name>MaizeStrip</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4105,8 +4261,9 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </Fertiliser>
           <Soil>
             <Name>Soil</Name>
@@ -4114,8 +4271,9 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>MaizeSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
                 <LL>
                   <double>0.261</double>
                   <double>0.248</double>
@@ -4144,8 +4302,9 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4212,8 +4371,9 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -4252,8 +4412,9 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4289,8 +4450,9 @@ namespace Models
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -4345,8 +4507,9 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4370,16 +4533,18 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4469,11 +4634,13 @@ namespace Models
             </Sample>
             <CERESSoilTemperature>
               <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
             </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -4494,8 +4661,9 @@ namespace Models
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <ResourceName>SurfaceOrganicMatter</ResourceName>
             <InitialResidueName>wheat_stubble</InitialResidueName>
             <InitialResidueType>wheat</InitialResidueType>
@@ -4507,15 +4675,17 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant>
             <Name>Maize</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
           </Plant>
           <Manager>
             <Name>SowingFertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Script>
               <Amount>160</Amount>
               <CropName>maize</CropName>
@@ -4556,8 +4726,9 @@ namespace Models
           </Manager>
           <Manager>
             <Name>SowingRule</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Script>
               <StartDate>1-oct</StartDate>
               <EndDate>10-jan</EndDate>
@@ -4636,8 +4807,9 @@ namespace Models
           </Manager>
           <Manager>
             <Name>Harvesting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4685,11 +4857,13 @@ namespace Models
           </Manager>
           <SoluteManager>
             <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -4697,8 +4871,9 @@ namespace Models
           <Name>WheatStrip</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4722,8 +4897,9 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </Fertiliser>
           <Soil>
             <Name>Soil</Name>
@@ -4731,8 +4907,9 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
                 <LL>
                   <double>0.261</double>
                   <double>0.248</double>
@@ -4761,8 +4938,9 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4829,8 +5007,9 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -4869,8 +5048,9 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4906,8 +5086,9 @@ namespace Models
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -4962,8 +5143,9 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4987,16 +5169,18 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -5086,11 +5270,13 @@ namespace Models
             </Sample>
             <CERESSoilTemperature>
               <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
             </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -5111,8 +5297,9 @@ namespace Models
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <ResourceName>SurfaceOrganicMatter</ResourceName>
             <InitialResidueName>wheat_stubble</InitialResidueName>
             <InitialResidueType>wheat</InitialResidueType>
@@ -5126,13 +5313,15 @@ namespace Models
             <Name>Wheat</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <ResourceName>Wheat</ResourceName>
             <CropType>Wheat</CropType>
           </Plant>
           <Manager>
             <Name>SowingFertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Script>
               <Amount>160</Amount>
               <CropName>wheat</CropName>
@@ -5173,8 +5362,9 @@ namespace Models
           </Manager>
           <Manager>
             <Name>Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
@@ -5207,13 +5397,15 @@ namespace Models
           </Manager>
           <SoluteManager>
             <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </SoluteManager>
           <Manager>
             <Name>SowingRule1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Script>
               <StartDate>1-jun</StartDate>
               <EndDate>10-jul</EndDate>
@@ -5291,8 +5483,9 @@ namespace Models
 }
 ]]></Code>
           </Manager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -5300,8 +5493,9 @@ namespace Models
           <Name>Biomass</Name>
           <Series>
             <Name>Maize</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5321,8 +5515,9 @@ namespace Models
           </Series>
           <Series>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5340,8 +5535,9 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -5359,8 +5555,9 @@ namespace Models
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>0</Area>
         <Slope>0</Slope>
         <Length>0</Length>
@@ -5370,8 +5567,9 @@ namespace Models
         <Name>SoilWater</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5389,8 +5587,9 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -5412,8 +5611,9 @@ namespace Models
         <Name>Biomass</Name>
         <Series>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5433,8 +5633,9 @@ namespace Models
         </Series>
         <Series>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5452,8 +5653,9 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -5471,33 +5673,38 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Simulation>
       <Name>SoleCropExample</Name>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>1990-01-01T00:00:00</StartDate>
         <EndDate>1991-06-30T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
       </Weather>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -5509,15 +5716,17 @@ namespace Models
       </MicroClimate>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <Zone>
         <Name>SoleMaize</Name>
         <Report>
           <Name>Report</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -5538,8 +5747,9 @@ namespace Models
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -5547,8 +5757,9 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>MaizeSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -5577,8 +5788,9 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -5645,8 +5857,9 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -5685,8 +5898,9 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -5722,8 +5936,9 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -5778,8 +5993,9 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -5803,16 +6019,18 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>InitialWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>InitialN</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -5902,11 +6120,13 @@ namespace Models
           </Sample>
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -5927,8 +6147,9 @@ namespace Models
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -5940,15 +6161,17 @@ namespace Models
         </SurfaceOrganicMatter>
         <Plant>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Maize</ResourceName>
           <CropType>Maize</CropType>
         </Plant>
         <Manager>
           <Name>SowingFertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>160</Amount>
             <CropName>maize</CropName>
@@ -5989,8 +6212,9 @@ namespace Models
         </Manager>
         <Manager>
           <Name>SowingRule</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-oct</StartDate>
             <EndDate>10-jan</EndDate>
@@ -6069,8 +6293,9 @@ namespace Models
         </Manager>
         <Manager>
           <Name>Harvesting</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script />
           <Code><![CDATA[using System;
 using Models.Core;
@@ -6118,11 +6343,13 @@ namespace Models
         </Manager>
         <SoluteManager>
           <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6130,8 +6357,9 @@ namespace Models
         <Name>SoleWheat</Name>
         <Report>
           <Name>Report</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -6155,8 +6383,9 @@ namespace Models
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -6164,8 +6393,9 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -6194,8 +6424,9 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -6262,8 +6493,9 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -6302,8 +6534,9 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -6339,8 +6572,9 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -6395,8 +6629,9 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -6420,16 +6655,18 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>InitialWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>InitialN</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -6519,11 +6756,13 @@ namespace Models
           </Sample>
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -6544,8 +6783,9 @@ namespace Models
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -6559,13 +6799,15 @@ namespace Models
           <Name>Wheat</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
         <Manager>
           <Name>SowingFertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>160</Amount>
             <CropName>wheat</CropName>
@@ -6606,8 +6848,9 @@ namespace Models
         </Manager>
         <Manager>
           <Name>Harvest</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script />
           <Code><![CDATA[using System;
 using Models.Core;
@@ -6640,13 +6883,15 @@ namespace Models
         </Manager>
         <SoluteManager>
           <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <Manager>
           <Name>SowingRule1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-jun</StartDate>
             <EndDate>10-jul</EndDate>
@@ -6724,8 +6969,9 @@ namespace Models
 }
 ]]></Code>
         </Manager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6733,8 +6979,9 @@ namespace Models
         <Name>SoilWater</Name>
         <Series>
           <Name>Predicted</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6754,8 +7001,9 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -6777,8 +7025,9 @@ namespace Models
         <Name>Biomass</Name>
         <Series>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6799,8 +7048,9 @@ namespace Models
         </Series>
         <Series>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6819,8 +7069,9 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -6838,8 +7089,9 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Graph>
       <Name>SoilWater</Name>
@@ -6847,6 +7099,7 @@ namespace Models
         <Name>Predicted</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -6868,6 +7121,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -6891,6 +7145,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -6913,6 +7168,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -6933,6 +7189,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -6952,6 +7209,7 @@ namespace Models
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
@@ -6960,27 +7218,31 @@ namespace Models
       <Name>WUR2013SoleWheat</Name>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>2013-03-01T00:00:00</StartDate>
         <EndDate>2013-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>Volkel.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -6992,15 +7254,17 @@ namespace Models
       </MicroClimate>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <Zone>
         <Name>SoleWheat</Name>
         <Report>
           <Name>WURReport</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -7027,13 +7291,15 @@ namespace Models
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -7049,8 +7315,9 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -7081,8 +7348,9 @@ namespace Models
             </SoilCrop>
             <SoilCrop>
               <Name>MaizeSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -7111,8 +7379,9 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -7179,8 +7448,9 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Apr</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -7219,8 +7489,9 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -7256,8 +7527,9 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>14</SoilCN>
@@ -7312,8 +7584,9 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -7337,16 +7610,18 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>InitialWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>InitialN</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -7436,11 +7711,13 @@ namespace Models
           </Sample>
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -7461,8 +7738,9 @@ namespace Models
         </Soil>
         <Operations>
           <Name>Operations</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2013-03-21</Date>
             <Action>[Wheat].Sow(population: 250, cultivar: Tybalt, depth: 30, rowSpacing: 125); </Action>
@@ -7531,61 +7809,71 @@ namespace Models
         </Operations>
         <SoluteManager>
           <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <Plant>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
         <Plant>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Maize</ResourceName>
           <CropType>Maize</CropType>
         </Plant>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Irrigation>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Simulation>
       <Name>WUR2013SoleMaize</Name>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>2013-03-01T00:00:00</StartDate>
         <EndDate>2013-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>Volkel.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -7597,15 +7885,17 @@ namespace Models
       </MicroClimate>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <Zone>
         <Name>SoleMaize</Name>
         <Report>
           <Name>WURReport</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -7626,8 +7916,9 @@ namespace Models
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>WURSoil</Name>
@@ -7635,8 +7926,9 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>MaizeSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -7665,8 +7957,9 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -7733,8 +8026,9 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -7773,8 +8067,9 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -7810,8 +8105,9 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>14</SoilCN>
@@ -7866,8 +8162,9 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -7891,16 +8188,18 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>InitialWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>InitialN</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -7990,11 +8289,13 @@ namespace Models
           </Sample>
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -8015,8 +8316,9 @@ namespace Models
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -8028,18 +8330,21 @@ namespace Models
         </SurfaceOrganicMatter>
         <SoluteManager>
           <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Irrigation>
         <Operations>
           <Name>Operations</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2013-05-14</Date>
             <Action>[Maize].Sow(population: 10, cultivar: Atrium, depth: 30, rowSpacing: 750); </Action>
@@ -8108,25 +8413,29 @@ namespace Models
         </Operations>
         <Plant>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Maize</ResourceName>
           <CropType>Maize</CropType>
         </Plant>
         <Plant>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -8134,6 +8443,7 @@ namespace Models
         <Name>MaizeBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8155,6 +8465,7 @@ namespace Models
         <Name>MaizeEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8176,6 +8487,7 @@ namespace Models
         <Name>WheatBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8198,6 +8510,7 @@ namespace Models
         <Name>WheatEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8219,6 +8532,7 @@ namespace Models
         <Name>ObservedMaizeBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8240,6 +8554,7 @@ namespace Models
         <Name>ObservedWheatBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8261,6 +8576,7 @@ namespace Models
         <Name>ObservedMaizeEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8282,6 +8598,7 @@ namespace Models
         <Name>ObservedWheatEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8301,6 +8618,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8324,6 +8642,7 @@ namespace Models
         <Name>PreWheatTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8346,6 +8665,7 @@ namespace Models
         <Name>PreWheatCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8367,6 +8687,7 @@ namespace Models
         <Name>ObsWheatTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8388,6 +8709,7 @@ namespace Models
         <Name>ObsWheatCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8409,6 +8731,7 @@ namespace Models
         <Name>PreMaizeTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8431,6 +8754,7 @@ namespace Models
         <Name>PreMaizeCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8452,6 +8776,7 @@ namespace Models
         <Name>ObsMaizeTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8474,6 +8799,7 @@ namespace Models
         <Name>ObsMaizeCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8496,6 +8822,7 @@ namespace Models
         <Name>Photoperiod</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8516,6 +8843,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8539,6 +8867,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8561,6 +8890,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8583,6 +8913,7 @@ namespace Models
         <Name>ObservedMaize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8604,6 +8935,7 @@ namespace Models
         <Name>ObservedWheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8623,6 +8955,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8646,6 +8979,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8668,6 +9002,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8688,6 +9023,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8711,6 +9047,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8731,6 +9068,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8754,6 +9092,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8774,6 +9113,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8797,6 +9137,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8819,6 +9160,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8839,6 +9181,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8862,6 +9205,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8884,6 +9228,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8906,6 +9251,7 @@ namespace Models
         <Name>ObservedMaize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8927,6 +9273,7 @@ namespace Models
         <Name>ObservedWheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8946,6 +9293,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -8969,6 +9317,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -8991,6 +9340,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -9013,6 +9363,7 @@ namespace Models
         <Name>ObservedMaize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -9034,6 +9385,7 @@ namespace Models
         <Name>ObservedWheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -9053,6 +9405,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -9072,6 +9425,7 @@ namespace Models
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
@@ -9080,27 +9434,31 @@ namespace Models
       <Name>WUR2014SoleWheat</Name>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>2014-01-01T00:00:00</StartDate>
         <EndDate>2014-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>Volkel.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -9112,15 +9470,17 @@ namespace Models
       </MicroClimate>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <Zone>
         <Name>SoleWheat</Name>
         <Report>
           <Name>WURReport</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -9147,13 +9507,15 @@ namespace Models
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -9169,8 +9531,9 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -9201,8 +9564,9 @@ namespace Models
             </SoilCrop>
             <SoilCrop>
               <Name>MaizeSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -9231,8 +9595,9 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -9299,8 +9664,9 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Apr</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -9339,8 +9705,9 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -9376,8 +9743,9 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>14</SoilCN>
@@ -9432,8 +9800,9 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -9457,16 +9826,18 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>InitialWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>InitialN</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -9556,11 +9927,13 @@ namespace Models
           </Sample>
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -9581,8 +9954,9 @@ namespace Models
         </Soil>
         <Operations>
           <Name>Operations</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2014-03-13</Date>
             <Action>[Wheat].Sow(population: 250, cultivar: Tybalt, depth: 30, rowSpacing: 125); </Action>
@@ -9636,13 +10010,15 @@ namespace Models
         </Operations>
         <SoluteManager>
           <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <Plant>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
@@ -9650,8 +10026,9 @@ namespace Models
           <Name>Stress</Name>
           <Series>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -9671,8 +10048,9 @@ namespace Models
           </Series>
           <Series>
             <Name>Wheat1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -9690,8 +10068,9 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -9713,8 +10092,9 @@ namespace Models
           <Name>RootDepth</Name>
           <Series>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -9732,8 +10112,9 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -9753,18 +10134,21 @@ namespace Models
         </Graph>
         <Plant>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Maize</ResourceName>
           <CropType>Maize</CropType>
         </Plant>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Irrigation>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -9772,8 +10156,9 @@ namespace Models
         <Name>Biomass</Name>
         <Series>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -9793,8 +10178,9 @@ namespace Models
         </Series>
         <Series>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -9812,8 +10198,9 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -9835,8 +10222,9 @@ namespace Models
         <Name>LeafTips</Name>
         <Series>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -9856,8 +10244,9 @@ namespace Models
         </Series>
         <Series>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -9875,8 +10264,9 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -9894,34 +10284,39 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Simulation>
       <Name>WUR2014SoleMaize</Name>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>2014-01-01T00:00:00</StartDate>
         <EndDate>2014-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>Volkel.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -9933,15 +10328,17 @@ namespace Models
       </MicroClimate>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <Zone>
         <Name>SoleMaize</Name>
         <Report>
           <Name>WURReport</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -9962,8 +10359,9 @@ namespace Models
         </Report>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>WURSoil</Name>
@@ -9971,8 +10369,9 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>MaizeSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.1</double>
                 <double>0.1</double>
@@ -10001,8 +10400,9 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -10069,8 +10469,9 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -10109,8 +10510,9 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -10146,8 +10548,9 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>14</SoilCN>
@@ -10202,8 +10605,9 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -10227,16 +10631,18 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>InitialWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>InitialN</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -10326,11 +10732,13 @@ namespace Models
           </Sample>
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -10351,8 +10759,9 @@ namespace Models
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>SurfaceOrganicMatter</ResourceName>
           <InitialResidueName>wheat_stubble</InitialResidueName>
           <InitialResidueType>wheat</InitialResidueType>
@@ -10364,13 +10773,15 @@ namespace Models
         </SurfaceOrganicMatter>
         <SoluteManager>
           <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <Operations>
           <Name>Operations</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2014-05-07</Date>
             <Action>[Maize].Sow(population: 10, cultivar: Atrium, depth: 30, rowSpacing: 750); </Action>
@@ -10424,30 +10835,35 @@ namespace Models
         </Operations>
         <Plant>
           <Name>Maize</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Maize</ResourceName>
           <CropType>Maize</CropType>
         </Plant>
         <Plant>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Irrigation>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
@@ -10455,6 +10871,7 @@ namespace Models
         <Name>MaizeBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10476,6 +10893,7 @@ namespace Models
         <Name>MaizeEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10497,6 +10915,7 @@ namespace Models
         <Name>WheatBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10519,6 +10938,7 @@ namespace Models
         <Name>WheatEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10540,6 +10960,7 @@ namespace Models
         <Name>ObservedMaizeBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10561,6 +10982,7 @@ namespace Models
         <Name>ObservedWheatBiomass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10582,6 +11004,7 @@ namespace Models
         <Name>ObservedMaizeEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10603,6 +11026,7 @@ namespace Models
         <Name>ObservedWheatEar</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10622,6 +11046,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -10645,6 +11070,7 @@ namespace Models
         <Name>PreWheatTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10667,6 +11093,7 @@ namespace Models
         <Name>PreWheatCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10688,6 +11115,7 @@ namespace Models
         <Name>ObsWheatTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10709,6 +11137,7 @@ namespace Models
         <Name>ObsWheatCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10730,6 +11159,7 @@ namespace Models
         <Name>PreMaizeTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10752,6 +11182,7 @@ namespace Models
         <Name>PreMaizeCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10773,6 +11204,7 @@ namespace Models
         <Name>ObsMaizeTips</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10795,6 +11227,7 @@ namespace Models
         <Name>ObsMaizeCollars</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10815,6 +11248,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -10838,6 +11272,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10860,6 +11295,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10882,6 +11318,7 @@ namespace Models
         <Name>ObservedMaize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10903,6 +11340,7 @@ namespace Models
         <Name>ObservedWheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10922,6 +11360,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -10945,6 +11384,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10967,6 +11407,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -10987,6 +11428,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -11010,6 +11452,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11032,6 +11475,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11054,6 +11498,7 @@ namespace Models
         <Name>ObservedMaize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11075,6 +11520,7 @@ namespace Models
         <Name>ObservedWheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11094,6 +11540,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -11117,6 +11564,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11139,6 +11587,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11159,6 +11608,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -11182,6 +11632,7 @@ namespace Models
         <Name>Maize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11204,6 +11655,7 @@ namespace Models
         <Name>Wheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11226,6 +11678,7 @@ namespace Models
         <Name>ObservedMaize</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11247,6 +11700,7 @@ namespace Models
         <Name>ObservedWheat</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11266,6 +11720,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -11289,6 +11744,7 @@ namespace Models
         <Name>MaizeBiomassN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11310,6 +11766,7 @@ namespace Models
         <Name>MaizeGrainN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11331,6 +11788,7 @@ namespace Models
         <Name>WheatBiomassN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11353,6 +11811,7 @@ namespace Models
         <Name>WheatGrainN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11374,6 +11833,7 @@ namespace Models
         <Name>ObservedMaizeBiomassN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11395,6 +11855,7 @@ namespace Models
         <Name>ObservedWheatBiomassN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11416,6 +11877,7 @@ namespace Models
         <Name>ObservedMaizeGrainN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11437,6 +11899,7 @@ namespace Models
         <Name>ObservedWheatGrainN</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -11456,6 +11919,7 @@ namespace Models
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -11475,9 +11939,11 @@ namespace Models
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <Enabled>true</Enabled>
+  <ReadOnly>false</ReadOnly>
   <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
