@@ -14,7 +14,9 @@ if exist %apsimx%\bin.zip (
 
 if exist %apsimx%\results.7z (
 	echo Unzipping %apsimx%\results.7z...
+	pushd %apsimx% > nul
 	7z x -y %apsimx%\results.7z
+	popd >nul
 	if errorlevel 1 (
 		echo Error unzipping %apsimx%\results.7z
 		exit /b %errorlevel%
