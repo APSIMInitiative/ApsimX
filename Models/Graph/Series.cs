@@ -415,11 +415,17 @@ namespace Models.Graph
                 seriesDefinition.xFieldUnits = storage.GetUnits(TableName, XFieldName);
                 seriesDefinition.yFieldUnits = storage.GetUnits(TableName, YFieldName);
                 seriesDefinition.showInLegend = ShowInLegend;
-                factor.Factors.ForEach(f => seriesDefinition.title += f.Value);
-                if (IncludeSeriesNameInLegend)
+                if (factor.Factors.Count == 1 && factor.Factors[0].Key == "Graph series")
+                    seriesDefinition.title = Name;
+                else
                 {
-                    seriesDefinition.title += ": " + Name;
+                    factor.Factors.ForEach(f => seriesDefinition.title += f.Value);
+                    if (IncludeSeriesNameInLegend || seriesDefinition.title == "?")
+                    {
+                        seriesDefinition.title += ": " + Name;
+                    }
                 }
+
                 if (Checkpoint != "Current")
                     seriesDefinition.title += " (" + Checkpoint + ")";
                 DataView data = new DataView(baseData);
