@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using System.Linq;
     using Utility;
     using Views;
 
@@ -1025,11 +1026,9 @@ namespace UserInterface.Presenters
             description.Name = model.Name;
 
             description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
-
             ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
-            if (info == null)
+            if (info == null || (typeof(IModel).Assembly.DefinedTypes.Any(t => string.Equals(t.Name, model.Name, StringComparison.Ordinal)) && model.GetType().Name != model.Name))
                 description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
-
             if (typeof(Models.Functions.IFunction).IsAssignableFrom(model.GetType()))
                 description.ToolTip = model.GetType().Name;
 
