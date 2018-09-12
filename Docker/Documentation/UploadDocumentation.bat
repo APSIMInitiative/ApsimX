@@ -18,6 +18,3 @@ for /r %apsimx%\Documentation\PDF %%D in (*.pdf) do (
 	echo  Uploading "!FILE!"
 	@curl -u !APSIM_SITE_CREDS! -T !FILE! ftp://www.apsim.info/APSIM/ApsimXFiles/
 )
-dir PDF
-del /q %apsimx%\Documentation\PDF\* >nul
-copy /y %apsimx%\Documentation\backup\* %apsimx%\Documentation\PDF\ >nul

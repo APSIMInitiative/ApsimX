@@ -23,9 +23,7 @@ if exist %apsimx%\results.7z (
 	)
 )
 
-if not exist %apsimx%\lib (
-	robocopy /e /NJS /np %apsimx%\DeploymentSupport\Windows\lib %apsimx%\lib
-)
+robocopy /e /NJS /np %apsimx%\DeploymentSupport\Windows\Bin64\lib %apsimx%\lib
 
 call %apsimx%\Documentation\GenerateDocumentation.bat
 
