@@ -74,7 +74,7 @@ namespace UserInterface.Views
         /// </summary>
         public UpgradeView(ViewBase owner) : base(owner)
         {
-            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeForm.glade");
+            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeView.glade");
             window1 = (Window)builder.GetObject("window1");
             button1 = (Button)builder.GetObject("button1");
             button2 = (Button)builder.GetObject("button2");
