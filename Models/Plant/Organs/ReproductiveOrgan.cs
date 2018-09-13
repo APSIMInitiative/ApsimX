@@ -154,12 +154,12 @@ namespace Models.PMF.Organs
         [Units("/m^2")]
         public double Number { get; set; }
 
-        /// <summary>The Maximum potential size of grains</summary>
+        /// <summary>The maximum potential size of grains</summary>
         [XmlIgnore]
         [Units("/m^2")]
         public double MaximumSize { get; set; }
 
-        /// <summary>Gets the live f wt.</summary>
+        /// <summary>Gets the live fresh weight of grains.</summary>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -172,7 +172,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the size.</summary>
+        /// <summary>Gets the individual grain size.</summary>
         [Units("g")]
         public double Size
         {
@@ -185,7 +185,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the size of the f.</summary>
+        /// <summary>Gets the size of grain using the fresh weight (including water content).</summary>
         [Units("g")]
         private double FSize
         {
