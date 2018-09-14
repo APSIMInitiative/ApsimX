@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 42; } }
+        public static int LatestVersion { get { return 43; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1069,17 +1069,17 @@
         }
 
         /// <summary>
-        /// Upgrades to version 41. Upgrades parameterisation of DM demands.
+        /// Upgrades to version 43. Upgrades SimpleLeaf to allow SLN calculations for N Demands.
         /// </summary>
-        private static void UpgradeToVersion45(XmlNode node, string fileName)
+        private static void UpgradeToVersion43(XmlNode node, string fileName)
         {
-            List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
-            foreach (string org in organList)
-                foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
-                {
-                    MakeDMDemandsNode(node, organNode);
-                }
-            ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
+            List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf");
+
+            foreach (XmlNode organ in nodeList)
+            {
+                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "slnNEmandFunction", "0.0");
+            }
+
         }
     }
 }
