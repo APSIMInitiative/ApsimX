@@ -461,6 +461,11 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
+        /// <summary>Calculate N using SLN</summary>
+        [ChildLinkByName]
+        [Units("g/g")]
+        private IFunction slnDemandFunction = null;
+
         /// <summary>The proportion of biomass respired each day</summary>
         [ChildLinkByName]
         [Units("/d")]
@@ -662,12 +667,19 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
-            double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocating) - Live.N);
-            NDeficit *= nitrogenDemandSwitch.Value();
+            if(SLNDemandFunction != null)
+            {
 
-            NDemand.Structural = Math.Min(NDeficit, potentialStructuralDMAllocation * minimumNConc.Value());
-            NDemand.Metabolic = Math.Min(NDeficit, potentialStructuralDMAllocation * (criticalNConc.Value() - minimumNConc.Value()));
-            NDemand.Storage = Math.Max(0, NDeficit - NDemand.Structural - NDemand.Metabolic);
+            }
+            else
+            {
+                double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocating) - Live.N);
+                NDeficit *= nitrogenDemandSwitch.Value();
+
+                NDemand.Structural = Math.Min(NDeficit, potentialStructuralDMAllocation * minimumNConc.Value());
+                NDemand.Metabolic = Math.Min(NDeficit, potentialStructuralDMAllocation * (criticalNConc.Value() - minimumNConc.Value()));
+                NDemand.Storage = Math.Max(0, NDeficit - NDemand.Structural - NDemand.Metabolic);
+            }
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>

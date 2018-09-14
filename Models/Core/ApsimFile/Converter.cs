@@ -1067,6 +1067,20 @@
                 }
             ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
         }
+
+        /// <summary>
+        /// Upgrades to version 41. Upgrades parameterisation of DM demands.
+        /// </summary>
+        private static void UpgradeToVersion45(XmlNode node, string fileName)
+        {
+            List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
+            foreach (string org in organList)
+                foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
+                {
+                    MakeDMDemandsNode(node, organNode);
+                }
+            ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
+        }
     }
 }
 
