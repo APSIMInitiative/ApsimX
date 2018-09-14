@@ -1077,7 +1077,7 @@
 
             foreach (XmlNode organ in nodeList)
             {
-                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "slnNEmandFunction", "0.0");
+                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "slnDemandFunction", "0.0");
             }
 
         }
