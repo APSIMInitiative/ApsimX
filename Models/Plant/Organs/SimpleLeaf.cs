@@ -667,9 +667,9 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
-            if(SLNDemandFunction != null)
+            if(slnDemandFunction != null)
             {
-
+                NDemand.Structural = Math.Max(0.0, slnDemandFunction.Value());
             }
             else
             {
