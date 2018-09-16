@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="42">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="43">
   <Name>Chicory</Name>
   <Memo>
     <Name>GeneralDescription</Name>
@@ -1043,6 +1043,10 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         </SubtractFunction>
       </StorageDemandFunction>
     </BiomassDemand>
+    <Constant>
+      <Name>slnDemandFunction</Name>
+      <FixedValue>0.0</FixedValue>
+    </Constant>
   </SimpleLeaf>
   <GenericOrgan>
     <Name>Stem</Name>

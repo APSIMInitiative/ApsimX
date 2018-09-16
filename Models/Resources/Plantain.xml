@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant Version="42">
+<Plant Version="43">
   <Name>Plantain</Name>
   <Memo>
     <Name>GeneralDescription</Name>
@@ -1032,6 +1032,10 @@ The current model assumes generic responses to enviromental factors, such as tem
         </SubtractFunction>
       </StorageDemandFunction>
     </BiomassDemand>
+    <Constant>
+      <Name>slnDemandFunction</Name>
+      <FixedValue>0.0</FixedValue>
+    </Constant>
   </SimpleLeaf>
   <GenericOrgan>
     <Name>Stem</Name>

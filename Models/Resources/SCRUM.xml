@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="42">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="43">
   <Name>SCRUM</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1189,6 +1189,10 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
         </SubtractFunction>
       </StorageDemandFunction>
     </BiomassDemand>
+    <Constant>
+      <Name>slnDemandFunction</Name>
+      <FixedValue>0.0</FixedValue>
+    </Constant>
   </SimpleLeaf>
   <Root>
     <Name>Root</Name>
