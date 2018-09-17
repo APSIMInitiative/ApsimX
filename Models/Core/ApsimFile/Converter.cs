@@ -1089,7 +1089,6 @@
         {
             foreach (XmlNode StorageFunction in XmlUtilities.FindAllRecursivelyByType(node, "StorageDemandFunction"))
                 XmlUtilities.ChangeType(StorageFunction, "StorageDMDemandFunction");
-
         }
     }
 }
