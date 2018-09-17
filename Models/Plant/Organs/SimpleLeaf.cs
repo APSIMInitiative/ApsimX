@@ -225,8 +225,9 @@ namespace Models.PMF.Organs
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
-        
 
+        /// <summary>Method for calculating Nitrogen demands</summary>
+        public bool UseSLNCalculation { get; set; } = false;
 
         #endregion
 
@@ -667,7 +668,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
-            if(slnDemandFunction != null)
+            if(UseSLNCalculation)
             {
                 NDemand.Structural = Math.Max(0.0, slnDemandFunction.Value());
             }
