@@ -217,7 +217,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.Functions.DemandFunctions.BerryFillingRateFunction))]
         [XmlElement(typeof(Models.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.Functions.SupplyFunctions.RUEModel))]
-        [XmlElement(typeof(Models.Functions.DemandFunctions.StorageDemandFunction))]
+        [XmlElement(typeof(Models.Functions.DemandFunctions.StorageDMDemandFunction))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
         [XmlElement(typeof(Models.PMF.CultivarFolder))]
