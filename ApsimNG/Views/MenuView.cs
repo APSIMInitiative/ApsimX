@@ -91,6 +91,10 @@ namespace UserInterface.Views
                     }
                 }
                 item.Activated += description.OnClick;
+                if (description.FollowsSeparator && (menu.Children.Length > 0))
+                {
+                    menu.Append(new SeparatorMenuItem());
+                }
                 menu.Append(item);
 
             }

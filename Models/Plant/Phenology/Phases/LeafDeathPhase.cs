@@ -15,6 +15,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class LeafDeathPhase : Model, IPhase
     {
         // 1. Links
@@ -49,21 +50,12 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.FinalLeafNumber.Value() - DeadNodeNoAtStart);
+                double F = (leaf.DeadCohortNo - DeadNodeNoAtStart) / (structure.finalLeafNumber.Value() - DeadNodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return F;
             }
         }
-
-        /// <summary>Gets the tt for today.</summary>
-        public double TTForTimeStep { get; set; }
-
-        /// <summary>Gets the t tin phase.</summary>
-        /// <value>The t tin phase.</value>
-        [XmlIgnore]
-        public double TTinPhase { get; set; }
-
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -72,30 +64,24 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
-                        
+
             if (First)
             {
                 DeadNodeNoAtStart = leaf.DeadCohortNo;
                 First = false;
             }
 
-            if ((leaf.DeadCohortNo >= structure.FinalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
+            if ((leaf.DeadCohortNo >= structure.finalLeafNumber.Value()) || (leaf.CohortsInitialised == false))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
-                TTForTimeStep *= (1 - propOfDayToUse);
             }
-
-            TTinPhase += TTForTimeStep;
-
             return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            TTinPhase = 0;
             DeadNodeNoAtStart = 0;
             First = true;
         }

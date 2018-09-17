@@ -3,24 +3,30 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using EventArguments;
+using System;
+using System.IO;
+using System.Linq;
+using Models;
+using Models.Core;
+using Models.Factorial;
+using UserInterface.Views;
+
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using Models;
-    using Models.Core;
-    using Models.Factorial;
-    using Views;
+
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
     {
         /// <summary>The summary model to work with.</summary>
-        private Summary summary;
+        private Summary summaryModel;
 
         /// <summary>The view model to work with.</summary>
         private ISummaryView view;
+
+        /// <summary>The explorer presenter which manages this presenter.</summary>
+        private ExplorerPresenter presenter;
 
         /// <summary>Our data store</summary>
         [Link]
@@ -32,16 +38,16 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.summary = model as Summary;
+            this.summaryModel = model as Summary;
+            this.presenter = explorerPresenter;
             this.view = view as ISummaryView;
-
             // populate the simulation names in the view.
-            Simulation simulation = Apsim.Parent(this.summary, typeof(Simulation)) as Simulation;
-            if (simulation != null)
+            Simulation parentSimulation = Apsim.Parent(this.summaryModel, typeof(Simulation)) as Simulation;
+            if (parentSimulation != null)
             {
-                if (simulation.Parent is Experiment)
+                if (parentSimulation.Parent is Experiment)
                 {
-                    Experiment experiment = simulation.Parent as Experiment;
+                    Experiment experiment = parentSimulation.Parent as Experiment;
                     string[] simulationNames = experiment.GetSimulationNames().ToArray();
                     this.view.SimulationNames = simulationNames;
                     if (simulationNames.Length > 0)
@@ -51,15 +57,18 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    this.view.SimulationNames = new string[] { simulation.Name };
-                    this.view.SimulationName = simulation.Name;
+                    this.view.SimulationNames = new string[] { parentSimulation.Name };
+                    this.view.SimulationName = parentSimulation.Name;
                 }
 
-                // populate the view
+                // Populate the view.
                 this.SetHtmlInView();
 
-                // subscribe to the simulation name changed event.
+                // Subscribe to the simulation name changed event.
                 this.view.SimulationNameChanged += this.OnSimulationNameChanged;
+
+                // Subscribe to the view's copy event.
+                this.view.Copy += OnCopy;
             }
         }
 
@@ -67,6 +76,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.view.SimulationNameChanged -= this.OnSimulationNameChanged;
+            this.view.Copy -= OnCopy;
         }
 
         /// <summary>Populate the summary view.</summary>
@@ -84,6 +94,16 @@ namespace UserInterface.Presenters
         private void OnSimulationNameChanged(object sender, EventArgs e)
         {
             this.SetHtmlInView();
+        }
+
+        /// <summary>
+        /// Event handler for the view's copy event.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnCopy(object sender, CopyEventArgs e)
+        {
+            this.presenter.SetClipboardText(e.Text, "CLIPBOARD");
         }
     }
 }

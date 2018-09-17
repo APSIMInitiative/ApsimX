@@ -7,8 +7,9 @@ RUN 			Install-PackageProvider -Name Chocolatey            -Force -RequiredVersi
 RUN 			Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex; 	\
 				choco feature disable –name showDownloadProgress;                                        							\
 				choco feature enable -n allowGlobalConfirmation;                                         							\
-				choco install r.project;																							\		
-				choco install nunit-console-runner;
+				choco install r.project;																							\
+				choco install nunit-console-runner;																					\
+				choco install 7zip;
 				
 COPY 			master.bat master.bat
 

@@ -198,10 +198,18 @@ namespace Models.Core
         public List<ISimulationGeneratorFactors> GetFactors()
         {
             List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
-            var factor = new SimulationGeneratorFactors("SimulationName", Name, "Simulation", Name);
-            factors.Add(factor);
+            // Add top level simulation zone. This is needed if Report is in top level.
+            factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
+                                                       new string[] { Name, Name },
+                                                       "Simulation", Name));
             foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
-                factor.AddFactor("Zone", zone.Name); 
+            {
+                var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
+                                                            new string[] { Name, zone.Name }, 
+                                                            "Simulation", Name);
+                factors.Add(factor);
+                factor.AddFactor("Zone", zone.Name);
+            }
             return factors;
         }
 

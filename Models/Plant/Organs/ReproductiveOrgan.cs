@@ -58,35 +58,20 @@ namespace Models.PMF.Organs
         virtual public double MaintenanceRespiration { get { return 0; } set { } }
 
         /// <summary>The dry matter demand</summary>
-        protected BiomassPoolType dryMatterDemand = new BiomassPoolType();
+        public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
-        protected BiomassPoolType nitrogenDemand = new BiomassPoolType();
+        public BiomassPoolType NDemand { get; set; }
 
-        /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public BiomassSupplyType GetDryMatterSupply()
-        {
-            return new BiomassSupplyType();
-        }
+        /// <summary>The dry matter supply</summary>
+        public BiomassSupplyType DMSupply { get; set; }
 
-        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public BiomassSupplyType GetNitrogenSupply()
-        {
-            return new BiomassSupplyType();
-        }
-
-        /// <summary>Gets or sets the dm demand.</summary>
-        [XmlIgnore]
-        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
-        /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
+        /// <summary>The nitrogen supply</summary>
+        public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         public double NFixationCost { get { return 0; } }
-        /// <summary>Gets or sets the n demand.</summary>
-        [XmlIgnore]
-        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
-
 
         /// <summary>The water content</summary>
         [Link]
@@ -169,12 +154,12 @@ namespace Models.PMF.Organs
         [Units("/m^2")]
         public double Number { get; set; }
 
-        /// <summary>The Maximum potential size of grains</summary>
+        /// <summary>The maximum potential size of grains</summary>
         [XmlIgnore]
         [Units("/m^2")]
         public double MaximumSize { get; set; }
 
-        /// <summary>Gets the live f wt.</summary>
+        /// <summary>Gets the live fresh weight of grains.</summary>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -187,7 +172,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the size.</summary>
+        /// <summary>Gets the individual grain size.</summary>
         [Units("g")]
         public double Size
         {
@@ -200,7 +185,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the size of the f.</summary>
+        /// <summary>Gets the size of grain using the fresh weight (including water content).</summary>
         [Units("g")]
         private double FSize
         {
@@ -259,8 +244,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-                Clear();
+            Clear();
         }
 
         #endregion
@@ -289,15 +273,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-            if (sender == Plant)
-            {
                 Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
                 Live.Clear();
                 Dead.Clear();
                 Number = 0;
                 _ReadyForHarvest = false;
-            }
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -320,20 +301,19 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public BiomassPoolType GetDryMatterDemand()
+        [EventSubscribe("SetDMDemand")]
+        private void SetDMDemand(object sender, EventArgs e)
         {
-            dryMatterDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
-            return dryMatterDemand;
+            DMDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public BiomassPoolType GetNitrogenDemand()
+        [EventSubscribe("SetNDemand")]
+        private void SetNDemand(object sender, EventArgs e)
         {
             double demand = NFillingRate.Value();
             demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
-            nitrogenDemand.Structural = demand;
-
-            return nitrogenDemand;
+            NDemand.Structural = demand;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -346,6 +326,10 @@ namespace Models.PMF.Organs
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
+            NDemand = new BiomassPoolType();
+            DMDemand = new BiomassPoolType();
+            NSupply = new BiomassSupplyType();
+            DMSupply = new BiomassSupplyType();
         }
 
 

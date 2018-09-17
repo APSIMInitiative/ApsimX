@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="37">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -2088,7 +2088,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <XProperty>[Oats].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[Oats].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <HeightFunction>
             <Name>HeightModel</Name>
@@ -2304,7 +2304,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <XProperty>[Oats].WaterSupplyDemandRatio</XProperty>
+              <XProperty>[Oats].Leaf.Fw</XProperty>
             </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -2473,12 +2473,8 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Initialised>false</Initialised>
-        <Germinated>false</Germinated>
-        <Emerged>false</Emerged>
-        <CohortToInitialise>0</CohortToInitialise>
-        <TipToAppear>0</TipToAppear>
-        <ApexNum>0</ApexNum>
+        <CohortInitialisationStage>Germination</CohortInitialisationStage>
+        <LeafInitialisationStage>Emergence</LeafInitialisationStage>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -2991,8 +2987,6 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -3022,8 +3016,6 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
@@ -3309,7 +3301,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
-              <XProperty>[Oats].WaterSupplyDemandRatio</XProperty>
+              <XProperty>[Oats].Leaf.Fw</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NitrogenStressFactor</Name>
@@ -4868,7 +4860,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <XProperty>[Oats].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Oats].Leaf.Fw</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -4909,7 +4901,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <XProperty>[Oats].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Oats].Leaf.Fw</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -6668,11 +6660,6 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Enabled>true</Enabled>
           <FixedValue>1</FixedValue>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexStandard>
         <Constant>
           <Name>RemobilisationCost</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -9032,7 +9019,7 @@ assumed to be 0°C ([Chakwizira_etal_2016a]).]]></MemoText>
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[FodderBeet].Leaf.Fw</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -9395,12 +9382,8 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
-        <Initialised>false</Initialised>
-        <Germinated>false</Germinated>
-        <Emerged>false</Emerged>
-        <CohortToInitialise>0</CohortToInitialise>
-        <TipToAppear>0</TipToAppear>
-        <ApexNum>0</ApexNum>
+        <CohortInitialisationStage>Germination</CohortInitialisationStage>
+        <LeafInitialisationStage>PreEmerge</LeafInitialisationStage>
       </Structure>
       <GenericOrgan>
         <Name>StorageRoot</Name>
@@ -9667,8 +9650,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
           <Rank>1</Rank>
           <Area>50</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexGroupSize />
-          <ApexGroupAge />
         </LeafCohort>
         <CompositeBiomass>
           <Name>Total</Name>
@@ -9814,7 +9795,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[FodderBeet].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -10141,7 +10122,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
-            <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
+            <XProperty>[FodderBeet].Leaf.Fw</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>MinimumNConc</Name>
@@ -10299,7 +10280,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[FodderBeet].Leaf.Fw</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -10340,7 +10321,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
-                <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[FodderBeet].Leaf.Fw</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -10463,11 +10444,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
           <Enabled>true</Enabled>
           <FixedValue>1</FixedValue>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-        </ApexStandard>
         <Constant>
           <Name>RemobilisationCost</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -12951,13 +12927,9 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <sun_angle>15</sun_angle>
-          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-          <night_interception_fraction>0.5</night_interception_fraction>
-          <refheight>2</refheight>
-          <albedo>0.29366217672824863</albedo>
-          <emissivity>0.96</emissivity>
-          <RadIntTotal>0</RadIntTotal>
+          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+          <NightInterceptionFraction>0.5</NightInterceptionFraction>
+          <ReferenceHeight>2</ReferenceHeight>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -13545,6 +13517,8 @@ Soil parameterisation was based on the two description of the soil at the Rainsh
             <string>[CropOperations].Script.CropAction</string>
             <string>[ClimateControl].Script.RainshelterCover</string>
             <string>[FodderBeet].Phenology.Stage </string>
+            <string>[FodderBeet].Phenology.CurrentPhaseName</string>
+            <string>[FodderBeet].Phenology.CurrentStageName</string>
             <string>[Oats].Phenology.Stage </string>
             <string />
             <string>[FodderBeet].Structure.MainStemPopn</string>
@@ -13575,7 +13549,7 @@ Soil parameterisation was based on the two description of the soil at the Rainsh
             <string>[FodderBeet].Root.Depth</string>
             <string>[FodderBeet].Leaf.Fn</string>
             <string>[FodderBeet].Leaf.Fw</string>
-            <string>[FodderBeet].WaterSupplyDemandRatio</string>
+            <string>[FodderBeet].Leaf.Fw</string>
             <string />
             <string>[Oats].Structure.MainStemPopn</string>
             <string>[Oats].AboveGroundLive.Wt as Oats.AboveGround.Live.Wt</string>
@@ -13618,7 +13592,7 @@ Soil parameterisation was based on the two description of the soil at the Rainsh
             <string>[Oats].Root.Depth</string>
             <string>[Oats].Leaf.Fn</string>
             <string>[Oats].Leaf.Fw</string>
-            <string>[Oats].WaterSupplyDemandRatio</string>
+            <string>[Oats].Leaf.Fw</string>
             <string />
             <string>[Weather].Rain</string>
             <string>[Irrigation].IrrigationApplied</string>

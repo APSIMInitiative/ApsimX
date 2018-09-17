@@ -44,7 +44,7 @@ namespace Models.PostSimulationTools
         {
             dataStore.DeleteDataInTable(this.Name);
 
-            DataTable simulationData = dataStore.GetData("*", this.TableName);
+            DataTable simulationData = dataStore.GetData(TableName, fieldNames: dataStore.GetTableColumns(TableName));
             if (simulationData != null)
             {
                 // Add all the necessary columns to our data table.

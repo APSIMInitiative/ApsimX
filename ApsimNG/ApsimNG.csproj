@@ -111,12 +111,13 @@
     <EmbeddedResource Include="Resources\Fonts\cour.ttf" />
     <EmbeddedResource Include="Resources\Glade\FindAndReplace.glade" />
     <EmbeddedResource Include="Resources\Glade\MainView.glade" />
-    <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
+    <EmbeddedResource Include="Resources\Glade\UpgradeView.glade" />
     <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
     <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StockView.glade" />
+    <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -137,12 +138,15 @@
     </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
+    <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
+    <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
     <Compile Include="Classes\CustomButton.cs" />
     <Compile Include="Classes\DirectedGraph\BezierCurve.cs" />
     <Compile Include="Classes\DirectedGraph\DGArc.cs" />
     <Compile Include="Classes\DirectedGraph\DGNode.cs" />
     <Compile Include="Classes\DirectedGraph\DGObject.cs" />
-    <Compile Include="Classes\GridCell.cs" />
+    <Compile Include="Classes\Grid\GridCell.cs" />
     <Compile Include="Classes\HtmlToMigraDoc.cs" />
     <Compile Include="Classes\Intellisense\CodeCompletionResult.cs" />
     <Compile Include="Classes\Intellisense\CompletionData.cs" />
@@ -179,7 +183,6 @@
     <Compile Include="Cloud\PoolSettings.cs" />
     <Compile Include="Cloud\StorageConstants.cs" />
     <Compile Include="Cloud\StorageCredentials.cs" />
-    <Compile Include="Cloud\TaskDetails.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
@@ -194,19 +197,28 @@
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
+    <Compile Include="EventArguments\ErrorArgs.cs" />
+    <Compile Include="EventArguments\FileActionArgs.cs" />
+    <Compile Include="EventArguments\GridCellPasteArgs.cs" />
+    <Compile Include="EventArguments\CopyEventArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
+    <Compile Include="EventArguments\GridCellActionArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\IntellisenseItemSelectedArgs.cs" />
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
-    <Compile Include="Forms\UpgradeForm.cs" />
-    <Compile Include="Classes\GridColumn.cs" />
+    <Compile Include="Views\UpgradeView.cs" />
+    <Compile Include="Classes\Grid\GridColumn.cs" />
     <Compile Include="Interfaces\IAxisView.cs" />
     <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
+    <Compile Include="Interfaces\IFileConverterView.cs" />
+    <Compile Include="Interfaces\IFileDialog.cs" />
+    <Compile Include="Interfaces\IExperimentView.cs" />
+    <Compile Include="Interfaces\IMainView.cs" />
     <Compile Include="Interfaces\IMenuView.cs" />
     <Compile Include="Interfaces\IToolStripView.cs" />
     <Compile Include="Interfaces\ITreeView.cs" />
@@ -235,9 +247,8 @@
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
-    <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
-    <Compile Include="Presenters\FactorControlPresenter.cs" />
+    <Compile Include="Presenters\ExperimentPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\GenericPresenter.cs" />
@@ -250,11 +261,13 @@
     <Compile Include="Presenters\IntellisensePresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
+    <Compile Include="Presenters\LinearAfterThresholdPresenter.cs" />
     <Compile Include="Presenters\MainPresenter.cs" />
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
+    <Compile Include="Presenters\TablePresenter.cs" />
     <Compile Include="Presenters\NewAzureJobPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
@@ -277,13 +290,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
-    <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
-    <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
-    <Compile Include="Utility\DateTimeCellType.cs" />
     <Compile Include="Utility\Excel.cs" />
+    <Compile Include="Utility\FileDialog.cs" />
+    <Compile Include="Utility\FindInBrowserForm.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
@@ -302,11 +313,12 @@
     <Compile Include="Views\EditBoxView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ErrorView.cs" />
+    <Compile Include="Views\FileConverterView.cs" />
     <Compile Include="Views\MenuView.cs" />
     <Compile Include="Views\ToolStripView.cs" />
     <Compile Include="Views\TreeView.cs" />
     <Compile Include="Views\ExplorerView.cs" />
-    <Compile Include="Views\FactorControlView.cs" />
+    <Compile Include="Views\ExperimentView.cs" />
     <Compile Include="Views\FolderView.cs" />
     <Compile Include="Views\GeneralView.cs" />
     <Compile Include="Views\DirectedGraphView.cs" />
@@ -617,6 +629,9 @@
     <EmbeddedResource Include="Resources\CompletionImages\VirtualMethod.png" />
     <EmbeddedResource Include="Resources\StockGroupsExample.png" />
     <EmbeddedResource Include="Resources\LargeImages\Plantain.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Clear Status.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -643,7 +658,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SummaryFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Summary.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Summariser.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Sugarcane.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SubtractFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Structure.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StageBasedInterpolation.png" />
@@ -920,9 +935,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\MonoMac.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0996\lib\net45\OxyPlot.dll</HintPath>

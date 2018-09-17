@@ -143,13 +143,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>Get a screen shot of the manager grid.</summary>
-        /// <returns>An Image object</returns>
-        public Image GetScreenshot()
-        {
-            return this.managerView.GridView.GetScreenshot();
-        }
-
         /// <summary>
         /// Find the type in the name
         /// </summary>
@@ -202,12 +195,6 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                string msg = err.Message;
-                if (err.InnerException != null)
-                {
-                    msg += " ---> " + err.InnerException.Message;
-                }
-
                 this.explorerPresenter.MainPresenter.ShowError(err);
             }
 

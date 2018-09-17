@@ -44,7 +44,12 @@ namespace Models.Agroforestry
         [Link]
         Clock clock = null;
 
-        /// <summary>Gets or sets the table data.</summary>
+        /// <summary>
+        /// Gets or sets the table data.
+        /// Be careful when working with this property!
+        /// The first list contains the column headers (e.g. 1 row of data).
+        /// The subsequent lists all contain columns of data(?!).
+        /// </summary>
         /// <value>The table.</value>
         public List<List<string>> Table { get; set; }
 
@@ -167,13 +172,13 @@ namespace Models.Agroforestry
         /// Date list for tree heights over lime
         /// </summary>
         [Summary]
-        public DateTime[] dates { get; set; }
+        public DateTime[] Dates { get; set; }
 
         /// <summary>
         /// Tree heights
         /// </summary>
         [Summary]
-        public double[] heights { get; set; }
+        public double[] Heights { get; set; }
 
         /// <summary>
         /// Tree N demands
@@ -303,47 +308,48 @@ namespace Models.Agroforestry
                                                              System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
-                    getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
+                    if (!string.IsNullOrEmpty(Table[i][j]))
+                        getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
         }
 
         private double GetHeightToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, heights, out didInterp) / 1000;
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, Heights, out didInterp) / 1000;
         }
         private double GetNDemandToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
         }
 
         private double GetCanopyWidthToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, CanopyWidths, out didInterp);
         }
 
         private double GetTreeLeafAreaToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
         }
 

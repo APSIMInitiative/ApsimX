@@ -460,6 +460,19 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Parent all children of 'model'.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void UnparentAllChildren(IModel model)
+        {
+            foreach (IModel child in model.Children)
+            {
+                child.Parent = null;
+                UnparentAllChildren(child);
+            }
+        }
+
+        /// <summary>
         /// Subscribe to an event. Will throw if namePath doesn't point to a event publisher.
         /// </summary>
         /// <param name="model">The model containing the handler</param>

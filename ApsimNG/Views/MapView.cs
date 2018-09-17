@@ -104,7 +104,7 @@ namespace UserInterface.Views
             html += "    var mymap = L.map('mapid', {";
             html += "center: new L.LatLng(" + center.Latitude.ToString() + ", " + center.Longitude.ToString() + ")";
             html += ", zoom: " + zoom.ToString();
-            if (popupWin != null) // Exporting to a report, so leave off the zoom control
+            if (popupWindow != null) // Exporting to a report, so leave off the zoom control
                 html += ", zoomControl: false";
             html += "});";
 
@@ -157,7 +157,7 @@ namespace UserInterface.Views
         /// Returns the Popup window used for exporting
         /// </summary>
         /// <returns></returns>
-        public Gtk.Window GetPopupWin() { return popupWin; }
+        public Gtk.Window GetPopupWin() { return popupWindow; }
 
         /// <summary>
         /// Export the map to an image.
@@ -213,7 +213,7 @@ namespace UserInterface.Views
             {
                 _zoom = Math.Truncate(value + 0.5);
                 browser.ExecJavaScript("SetZoom", new object[] { (int)_zoom });
-                if (popupWin != null)
+                if (popupWindow != null)
                 {
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
@@ -239,7 +239,7 @@ namespace UserInterface.Views
 
                 // With WebKit, it appears we need to give it time to actually update the display
                 // Really only a problem with the temporary windows used for generating documentation
-                if (popupWin != null)
+                if (popupWindow != null)
                 {
                     Stopwatch watch = new Stopwatch();
                     watch.Start();

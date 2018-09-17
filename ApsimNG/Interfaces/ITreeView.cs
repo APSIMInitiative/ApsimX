@@ -3,9 +3,10 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using UserInterface.Views;
 namespace UserInterface.Interfaces
 {
-    using global::UserInterface.Views;
+    
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;

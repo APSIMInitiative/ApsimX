@@ -11,12 +11,12 @@ namespace UserInterface.Views
         /// <summary>
         /// This button closes the view.
         /// </summary>
-        private Button BtnClose;
+        private Button closeButton;
 
         /// <summary>
         /// This button copies the contents of the error message to the clipboard.
         /// </summary>
-        private Button BtnCopy;
+        private Button copyButton;
 
         /// <summary>
         /// Text area which the error information is written to.
@@ -64,18 +64,18 @@ namespace UserInterface.Views
             scroll.Add(textArea);
             Error = information;
 
-            BtnClose = new Button("Close");
-            BtnClose.Clicked += Close;
+            closeButton = new Button("Close");
+            closeButton.Clicked += Close;
             Alignment alignCloseButton = new Alignment(1, 1, 0, 0)
             {
-                BtnClose
+                closeButton
             };
             
-            BtnCopy = new Button("Copy");
-            BtnCopy.Clicked += Copy;
+            copyButton = new Button("Copy");
+            copyButton.Clicked += Copy;
             Alignment alignCopyButton = new Alignment(0, 1, 0, 0)
             {
-                BtnCopy
+                copyButton
             };
 
             HBox buttonContainer = new HBox();
@@ -122,8 +122,8 @@ namespace UserInterface.Views
         /// </summary>
         public void Destroy()
         {
-            BtnCopy.Clicked -= Copy;
-            BtnClose.Clicked -= Close;
+            copyButton.Clicked -= Copy;
+            closeButton.Clicked -= Close;
             if (errorWindow != null)
                 errorWindow.Destroy();
         }
