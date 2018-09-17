@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 42; } }
+        public static int LatestVersion { get { return 43; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1017,7 +1017,7 @@
         }
 
         private static void MakeDMDemandsNode(XmlNode node, XmlNode organNode)
-        {   
+        {
             //Make DMDemand node
             XmlNode DMDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "DMDemands");
             organNode.AppendChild(DMDemands);
@@ -1055,7 +1055,7 @@
         }
 
         /// <summary>
-        /// Upgrades to version 41. Upgrades parameterisation of DM demands.
+        /// Upgrades to version 42. Upgrades parameterisation of DM demands.
         /// </summary>
         private static void UpgradeToVersion42(XmlNode node, string fileName)
         {
@@ -1066,6 +1066,72 @@
                     MakeDMDemandsNode(node, organNode);
                 }
             ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
+        }
+
+        /// <summary>
+        /// Upgrades to version 43. Upgrades parameterisation of DM demands.
+        /// </summary>
+        private static void UpgradeToVersion43(XmlNode node, string fileName)
+        {
+            foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
+            {
+                bool lines = true;
+                bool markers = true;
+                if (XmlUtilities.FindByType(seriesNode, "Line").InnerText == "None")
+                    lines = false;
+                if (XmlUtilities.FindByType(seriesNode, "Marker").InnerText == "None")
+                    markers = false;
+                XmlNode parent = seriesNode.ParentNode;
+                bool DetermineIfExperiment = false;
+                List<string> ExptFactors = new List<string>();
+                while (DetermineIfExperiment == false)
+                {
+                    if (XmlUtilities.IsType(parent, "Experiment"))
+                    {
+                        List<XmlNode> ExptFactorNodes = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(parent, "Factor"));
+                        foreach (XmlNode f in ExptFactorNodes)
+                        {
+                            if (XmlUtilities.IsType(f.ParentNode,"Factors"))
+                            ExptFactors.Add(f.FirstChild.InnerText);
+                        }
+                        XmlNode CurrentColor = XmlUtilities.FindByType(seriesNode, "FactorToVaryColours");
+                        if (CurrentColor != null)
+                            seriesNode.RemoveChild(CurrentColor);
+                        XmlElement colorFactor = seriesNode.OwnerDocument.CreateElement("FactorToVaryColours");
+                        colorFactor.InnerText = ExptFactors[0];
+                        seriesNode.AppendChild(colorFactor);
+                        if ( ExptFactors.Count() > 1)
+                        {
+                            if(lines)
+                            {
+                                XmlNode CurrentLine = XmlUtilities.FindByType(seriesNode, "FactorToVaryLines");
+                                if (CurrentLine != null)
+                                    seriesNode.RemoveChild(CurrentLine);
+                                XmlElement lineFactor = seriesNode.OwnerDocument.CreateElement("FactorToVaryLines");
+                                lineFactor.InnerText = ExptFactors[1];
+                                seriesNode.AppendChild(lineFactor);
+                            }
+                            if (markers)
+                            {
+                                XmlNode CurrentMarker = XmlUtilities.FindByType(seriesNode, "FactorToVaryMarkers");
+                                if (CurrentMarker != null)
+                                    seriesNode.RemoveChild(CurrentMarker);
+                                XmlElement MarkerFactor = seriesNode.OwnerDocument.CreateElement("FactorToVaryMarkers");
+                                MarkerFactor.InnerText = ExptFactors[1];
+                                seriesNode.AppendChild(MarkerFactor);
+                            }
+                        }
+                        DetermineIfExperiment = true;
+
+                    }
+                    if (XmlUtilities.IsType(parent,"Simulation") || XmlUtilities.IsType(parent, "Simulations"))
+                    {
+                        DetermineIfExperiment = true;
+                    }
+                    parent = parent.ParentNode;
+                }
+
+            }
         }
     }
 }
