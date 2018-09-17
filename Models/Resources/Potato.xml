@@ -1,4 +1,4 @@
-<Plant Version="42">
+<Plant Version="43">
   <Name>Potato</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -612,7 +612,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -625,7 +625,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <VariableName>[Tuber].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <Root>
@@ -863,7 +863,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -876,7 +876,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </Root>
   <Leaf>
@@ -1656,7 +1656,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1669,7 +1669,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>

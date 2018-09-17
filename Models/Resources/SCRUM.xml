@@ -500,7 +500,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -513,7 +513,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
             <VariableName>[Product].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <SimpleLeaf>
@@ -1174,7 +1174,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1187,7 +1187,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
             <VariableName>[Stover].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
     <Constant>
       <Name>slnDemandFunction</Name>
@@ -1551,7 +1551,7 @@ This is the proportion of total biomass that is paritioned into the roots and is
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1564,7 +1564,7 @@ This is the proportion of total biomass that is paritioned into the roots and is
             <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </Root>
   <Nodule>
@@ -1724,7 +1724,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1737,7 +1737,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
             <VariableName>[Nodule].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </Nodule>
   <CompositeBiomass>
