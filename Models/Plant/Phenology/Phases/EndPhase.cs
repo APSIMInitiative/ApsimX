@@ -11,11 +11,9 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class EndPhase : Model, IPhase, IPhaseWithTarget
+    [ValidParent(ParentType = typeof(Phenology))]
+    public class EndPhase : Model, IPhase
     {
-        [Link]
-        private Phenology phenology = null;
-
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -26,14 +24,6 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Models.Core.Description("End")]
         public string End { get; set; }
-
-        /// <summary>Gets the t tin phase.</summary>
-        [XmlIgnore]
-        public double TTinPhase { get; set; }
-
-        /// <summary>Gets the tt for today.</summary>
-        [XmlIgnore]
-        public double TTForTimeStep { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
         [XmlIgnore]
@@ -52,14 +42,11 @@ namespace Models.PMF.Phen
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
-            TTForTimeStep = phenology.thermalTime.Value() * PropOfDayToUse;
-            TTinPhase += TTForTimeStep;
-            
             return false;
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase()  { TTinPhase = 0; }
+        public void ResetPhase()  { }
         
 
         /// <summary>Writes the summary.</summary>

@@ -18,6 +18,8 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using System.Linq;
+    using Utility;
     using Views;
 
     /// <summary>
@@ -415,20 +417,20 @@ namespace UserInterface.Presenters
                     MainPresenter.ShowError(new Exception("Invalid XML. Are you sure you're trying to paste an APSIM model?", err));
                 }
 
-                object newModel = XmlUtilities.Deserialise(document.DocumentElement, this.ApsimXFile.GetType().Assembly);
+                object newModel = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly);
 
                 // See if the presenter is happy with this model being added.
-                Model parentModel = Apsim.Get(this.ApsimXFile, parentPath) as Model;
+                Model parentModel = Apsim.Get(ApsimXFile, parentPath) as Model;
                 AllowDropArgs allowDropArgs = new AllowDropArgs();
                 allowDropArgs.NodePath = parentPath;
                 allowDropArgs.DragObject = new DragObject()
                 {
                     NodePath = null,
                     ModelType = newModel.GetType(),
-                    Xml = this.GetClipboardText()
+                    Xml = GetClipboardText()
                 };
 
-                this.OnAllowDrop(null, allowDropArgs);
+                OnAllowDrop(null, allowDropArgs);
 
                 // If it is happy then issue an AddModelCommand.
                 if (allowDropArgs.Allow)
@@ -465,15 +467,15 @@ namespace UserInterface.Presenters
                         document.LoadXml(newDoc.DocumentElement.InnerXml);
                     }
 
-                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, this.ApsimXFile.GetType().Assembly) as IModel;
+                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly) as IModel;
 
-                    AddModelCommand command = new AddModelCommand(parentModel, document.DocumentElement, this.GetNodeDescription(child), this.view);
-                    this.CommandHistory.Add(command, true);
+                    AddModelCommand command = new AddModelCommand(parentModel, document.DocumentElement, GetNodeDescription(child), view);
+                    CommandHistory.Add(command, true);
                 }
             }
             catch (Exception err)
             {
-                this.MainPresenter.ShowError(err);
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -481,24 +483,45 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to delete.</param>
         public void Delete(IModel model)
         {
-            DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model), this.view);
-            this.CommandHistory.Add(command, true);
+            try
+            {
+                DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model), this.view);
+                CommandHistory.Add(command, true);
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>Moves the specified model up.</summary>
         /// <param name="model">The model to move.</param>
         public void MoveUp(IModel model)
         {
-            MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true, this.view);
-            this.CommandHistory.Add(command, true);
+            try
+            {
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true, this.view);
+                CommandHistory.Add(command, true);
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>Moves the specified model down.</summary>
         /// <param name="model">The model to move.</param>
         public void MoveDown(IModel model)
         {
-            MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false, this.view);
-            this.CommandHistory.Add(command, true);
+            try
+            {
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false, this.view);
+                CommandHistory.Add(command, true);
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -507,7 +530,7 @@ namespace UserInterface.Presenters
         /// <returns>Clipboard text</returns>
         public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
-            return ViewBase.GetClipboardText(clipboardName);
+            return ViewBase.MasterView.GetClipboardText(clipboardName);
         }
 
         /// <summary>
@@ -516,7 +539,7 @@ namespace UserInterface.Presenters
         /// <param name="text">The text to be stored in the clipboard</param>
         public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
-            ViewBase.SetClipboardText(text, clipboardName);
+            ViewBase.MasterView.SetClipboardText(text, clipboardName);
         }
 
         /// <summary>
@@ -560,6 +583,7 @@ namespace UserInterface.Presenters
                         desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
                         desc.ShortcutKey = contextMenuAttr.ShortcutKey;
                         desc.ShowCheckbox = contextMenuAttr.IsToggle;
+                        desc.FollowsSeparator = contextMenuAttr.FollowsSeparator;
 
                         // Check for an enable method
                         MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");
@@ -617,8 +641,13 @@ namespace UserInterface.Presenters
 
             if (string.IsNullOrEmpty(path))
             {
-                path = ViewBase.AskUserForDirectory("Select a directory to save model files to.");
-                if (path == null)
+                IFileDialog fileChooser = new FileDialog()
+                {
+                    Prompt = "Select a directory to save model files to.",
+                    Action = FileDialog.FileActionType.SelectFolder
+                };
+                path = fileChooser.GetFile();
+                if (string.IsNullOrEmpty(path))
                     return false;
             }
             
@@ -626,7 +655,7 @@ namespace UserInterface.Presenters
                 Directory.CreateDirectory(path);
             List<Exception> errors = new List<Exception>();
             int i = 0;
-            children.ForEach(sim =>
+            foreach (IModel sim in children)
             {
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
                 MainPresenter.ShowProgress(100 * i / children.Count, false);
@@ -641,7 +670,7 @@ namespace UserInterface.Presenters
                 }
 
                 i++;
-            });
+            }
             if (errors.Count < 1)
             {
                 MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
@@ -676,33 +705,40 @@ namespace UserInterface.Presenters
         /// <summary>Display a view on the right hand panel in view.</summary>
         public void ShowRightHandPanel()
         {
-            if (this.view.Tree.SelectedNode != string.Empty)
+            try
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
-
-                if (model != null)
+                if (this.view.Tree.SelectedNode != string.Empty)
                 {
-                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                    object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
 
-                    if (descriptionName != null)
+                    if (model != null)
                     {
-                        viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                    }
+                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                        PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                        DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-                    if (viewName == null && presenterName == null)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
-                    }
+                        if (descriptionName != null)
+                        {
+                            viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                        }
 
-                    if (viewName != null && presenterName != null)
-                    {
-                        this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                        if (viewName == null && presenterName == null)
+                        {
+                            viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
+                        }
+
+                        if (viewName != null && presenterName != null)
+                        {
+                            this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                        }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -726,9 +762,9 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                if (err is System.Reflection.TargetInvocationException)
+                if (err is TargetInvocationException)
                 {
-                    err = (err as System.Reflection.TargetInvocationException).InnerException;
+                    err = (err as TargetInvocationException).InnerException;
                 }
 
                 string message = err.Message;
@@ -845,32 +881,39 @@ namespace UserInterface.Presenters
         /// <param name="e">Drop arguments</param>
         private void OnDrop(object sender, DropArgs e)
         {
-            string toParentPath = e.NodePath;
-            Model toParent = Apsim.Get(this.ApsimXFile, toParentPath) as Model;
-
-            DragObject dragObject = e.DragObject as DragObject;
-            if (dragObject != null && toParent != null)
+            try
             {
-                string fromModelXml = dragObject.Xml;
-                string fromParentPath = StringUtilities.ParentName(dragObject.NodePath);
+                string toParentPath = e.NodePath;
+                Model toParent = Apsim.Get(this.ApsimXFile, toParentPath) as Model;
 
-                ICommand cmd = null;
-                if (e.Copied)
+                DragObject dragObject = e.DragObject as DragObject;
+                if (dragObject != null && toParent != null)
                 {
-                    this.Add(fromModelXml, toParentPath);
-                }
-                else if (e.Moved)
-                {
-                    if (fromParentPath != toParentPath)
+                    string fromModelXml = dragObject.Xml;
+                    string fromParentPath = StringUtilities.ParentName(dragObject.NodePath);
+
+                    ICommand cmd = null;
+                    if (e.Copied)
                     {
-                        Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
-                        if (fromModel != null)
+                        this.Add(fromModelXml, toParentPath);
+                    }
+                    else if (e.Moved)
+                    {
+                        if (fromParentPath != toParentPath)
                         {
-                            cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this.view);
-                            CommandHistory.Add(cmd);
+                            Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
+                            if (fromModel != null)
+                            {
+                                cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this.view);
+                                CommandHistory.Add(cmd);
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -879,26 +922,33 @@ namespace UserInterface.Presenters
         /// <param name="e">Event node arguments</param>
         private void OnRename(object sender, NodeRenameArgs e)
         {
-            e.CancelEdit = false;
-            if (e.NewName != null)
+            try
             {
-                if (this.IsValidName(e.NewName))
+                e.CancelEdit = false;
+                if (e.NewName != null)
                 {
-                    Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
-                    if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
+                    if (this.IsValidName(e.NewName))
                     {
-                        this.HideRightHandPanel();
-                        RenameModelCommand cmd = new RenameModelCommand(model,  e.NewName, this.view);
-                        CommandHistory.Add(cmd);
-                        this.ShowRightHandPanel();
-                        e.CancelEdit = model.Name != e.NewName;
+                        Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+                        if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
+                        {
+                            this.HideRightHandPanel();
+                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName, this.view);
+                            CommandHistory.Add(cmd);
+                            this.ShowRightHandPanel();
+                            e.CancelEdit = model.Name != e.NewName;
+                        }
+                    }
+                    else
+                    {
+                        MainPresenter.ShowError("Use alpha numeric characters only!");
+                        e.CancelEdit = true;
                     }
                 }
-                else
-                {
-                    MainPresenter.ShowError("Use alpha numeric characters only!");
-                    e.CancelEdit = true;
-                }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -907,15 +957,22 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnMoveUp(object sender, EventArgs e)
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode) as Model;
-            
-            if (model != null && model.Parent != null)
+            try
             {
-                IModel firstModel = model.Parent.Children[0];
-                if (model != firstModel)
+                Model model = Apsim.Get(ApsimXFile, view.Tree.SelectedNode) as Model;
+
+                if (model != null && model.Parent != null)
                 {
-                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(model, true, this.view));
+                    IModel firstModel = model.Parent.Children[0];
+                    if (model != firstModel)
+                    {
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, true, view));
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -924,15 +981,22 @@ namespace UserInterface.Presenters
         /// <param name="e">The args</param>
         private void OnMoveDown(object sender, EventArgs e)
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode) as Model;
-
-            if (model != null && model.Parent != null)
+            try
             {
-                IModel lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
-                if (model != lastModel)
+                Model model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode) as Model;
+
+                if (model != null && model.Parent != null)
                 {
-                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(model, false, this.view));
+                    IModel lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
+                    if (model != lastModel)
+                    {
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, false, this.view));
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
         }
 
@@ -962,11 +1026,9 @@ namespace UserInterface.Presenters
             description.Name = model.Name;
 
             description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
-
             ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
-            if (info == null)
+            if (info == null || (typeof(IModel).Assembly.DefinedTypes.Any(t => string.Equals(t.Name, model.Name, StringComparison.Ordinal)) && model.GetType().Name != model.Name))
                 description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
-
             if (typeof(Models.Functions.IFunction).IsAssignableFrom(model.GetType()))
                 description.ToolTip = model.GetType().Name;
 

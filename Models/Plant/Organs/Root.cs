@@ -78,11 +78,11 @@ namespace Models.PMF.Organs
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
         private BiomassRemoval biomassRemovalModel = null;
-        
+
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]
-        private IFunction dmDemandFunction = null;
+        private BiomassDemand dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [ChildLinkByName]
@@ -139,11 +139,6 @@ namespace Models.PMF.Organs
         [ChildLinkByName]
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
-
-        /// <summary>The DM structural fraction</summary>
-        [ChildLinkByName(IsOptional = true)]
-        [Units("g/g")]
-        private IFunction structuralFraction = null;
 
         /// <summary>The maximum N concentration</summary>
         [ChildLinkByName]
@@ -203,16 +198,16 @@ namespace Models.PMF.Organs
         private Biomass deadBiomass = new Biomass();
 
         /// <summary>The dry matter supply</summary>
-        private BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+        public BiomassSupplyType DMSupply {get; set;}
 
         /// <summary>The nitrogen supply</summary>
-        private BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+        public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>The dry matter demand</summary>
-        private BiomassPoolType dryMatterDemand = new BiomassPoolType();
+        public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
-        private BiomassPoolType nitrogenDemand = new BiomassPoolType();
+        public BiomassPoolType NDemand { get; set; }
 
         /// <summary>The dry matter potentially being allocated</summary>
         private BiomassPoolType potentialDMAllocation = new BiomassPoolType();
@@ -228,15 +223,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
-
-        /// <summary>The structural DM demand</summary>
-        private double structuralDMDemand = 0.0;
-
-        /// <summary>The non structural DM demand</summary>
-        private double storageDMDemand = 0.0;
-
-        /// <summary>The metabolic DM demand</summary>
-        private double metabolicDMDemand = 0.0;
 
         /// <summary>The structural N demand</summary>
         private double structuralNDemand = 0.0;
@@ -482,22 +468,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Removed { get; set; }
 
-        /// <summary>Gets the dry matter supply.</summary>
-        [XmlIgnore]
-        public BiomassSupplyType DMSupply { get { return dryMatterSupply; } }
-        
-        /// <summary>Gets dry matter demand.</summary>
-        [XmlIgnore]
-        public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
-
-        /// <summary>Gets the nitrogen supply.</summary>
-        [XmlIgnore]
-        public BiomassSupplyType NSupply { get { return nitrogenSupply; } }
-        
-        /// <summary>Gets the nitrogen demand.</summary>
-        [XmlIgnore]
-        public BiomassPoolType NDemand { get { return nitrogenDemand; } }
-
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
 
@@ -532,45 +502,48 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
-        public BiomassSupplyType GetDryMatterSupply()
+        [EventSubscribe("SetDMSupply")]
+        private void SetDMSupply(object sender, EventArgs e)
         {
-            dryMatterSupply.Fixation = 0.0;
-            dryMatterSupply.Retranslocation = dmRetranslocationSupply;
-            dryMatterSupply.Reallocation = dmMReallocationSupply;
-            return dryMatterSupply;
+            DMSupply.Fixation = 0.0;
+            DMSupply.Retranslocation = dmRetranslocationSupply;
+            DMSupply.Reallocation = dmMReallocationSupply;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        public BiomassSupplyType GetNitrogenSupply()
+        [EventSubscribe("SetNSupply")]
+        private void SetNSupply(object sender, EventArgs e)
         {
-            nitrogenSupply.Fixation = 0.0;
-            nitrogenSupply.Uptake = 0.0;
-            nitrogenSupply.Retranslocation = nRetranslocationSupply;
-            nitrogenSupply.Reallocation = nReallocationSupply;
-
-            return nitrogenSupply;
+            NSupply.Fixation = 0.0;
+            NSupply.Uptake = 0.0;
+            NSupply.Retranslocation = nRetranslocationSupply;
+            NSupply.Reallocation = nReallocationSupply;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        public BiomassPoolType GetDryMatterDemand()
+        [EventSubscribe("SetDMDemand")]
+        private void SetDMDemand(object sender, EventArgs e)
         {
-            if (Plant.SowingData.Depth < PlantZone.Depth)
+            if (Plant.SowingData?.Depth < PlantZone.Depth)
             {
-                structuralDMDemand = DemandedDMStructural();
-                storageDMDemand = DemandedDMStorage();
-                TotalDMDemand = structuralDMDemand + storageDMDemand + metabolicDMDemand;
-                ////This sum is currently not necessary as demand is not calculated on a layer basis.
-                //// However it might be some day... and can consider non structural too
+                if (dmConversionEfficiency.Value() > 0.0)
+                {
+                    DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
+                    DMDemand.Metabolic = 0;
+                }
+                else
+                { // Conversion efficiency is zero!!!!
+                    DMDemand.Structural = 0;
+                    DMDemand.Storage = 0;
+                    DMDemand.Metabolic = 0;
+                }
             }
-
-            dryMatterDemand.Structural = structuralDMDemand;
-            dryMatterDemand.Storage = storageDMDemand;
-
-            return dryMatterDemand;
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        public BiomassPoolType GetNitrogenDemand()
+        [EventSubscribe("SetNDemand")]
+        private void SetNDemand(object sender, EventArgs e)
         {
             // This is basically the old/original function with added metabolicN.
             // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
@@ -598,10 +571,9 @@ namespace Models.PMF.Organs
                     storageNDemand += Z.StorageNDemand[i];
                 }
             }
-            nitrogenDemand.Structural = structuralNDemand;
-            nitrogenDemand.Storage = storageNDemand;
-            nitrogenDemand.Metabolic = metabolicNDemand;
-            return nitrogenDemand;
+            NDemand.Structural = structuralNDemand;
+            NDemand.Storage = storageNDemand;
+            NDemand.Metabolic = metabolicNDemand;
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
@@ -614,7 +586,7 @@ namespace Models.PMF.Organs
             if (PlantZone.Depth <= 0)
                 return; //cannot allocate growth where no length
 
-            if (dryMatterDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
+            if (DMDemand.Structural == 0 && dryMatter.Structural > 0.000000000001)
                 throw new Exception("Invalid allocation of potential DM in" + Name);
 
 
@@ -936,46 +908,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Computes the amount of structural DM demanded.</summary>
-        private double DemandedDMStructural()
-        {
-            if (dmConversionEfficiency.Value() > 0.0)
-            {
-                double demandedDM = dmDemandFunction.Value();
-                if (structuralFraction != null)
-                    demandedDM *= structuralFraction.Value() / dmConversionEfficiency.Value();
-                else
-                    demandedDM /= dmConversionEfficiency.Value();
-
-                return demandedDM;
-            }
-            // Conversion efficiency is zero!!!!
-            return 0.0;
-        }
-
-        /// <summary>Computes the amount of non structural DM demanded.</summary>
-        private double DemandedDMStorage()
-        {
-            if ((dmConversionEfficiency.Value() > 0.0) && (structuralFraction != null))
-            {
-                double rootLiveStructuralWt = 0.0;
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                    {
-                        rootLiveStructuralWt += Z.LayerLive[i].StructuralWt;
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-                    }
-
-                double theoreticalMaximumDM = (rootLiveStructuralWt + structuralDMDemand) / structuralFraction.Value();
-                double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + structuralDMDemand;
-                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / dmConversionEfficiency.Value();
-                return demandedDM;
-            }
-            // Either there is no Storage fraction or conversion efficiency is zero!!!!
-            return 0.0;
-        }
-
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         private double AvailableDMRetranslocation()
         {
@@ -1027,6 +959,10 @@ namespace Models.PMF.Organs
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
+            NDemand = new BiomassPoolType();
+            DMDemand = new BiomassPoolType();
+            NSupply = new BiomassSupplyType();
+            DMSupply = new BiomassSupplyType();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -1050,13 +986,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-            {
-                PlantZone.Initialise(Plant.SowingData.Depth, initialDM.Value(), Plant.Population, maximumNConc.Value());
-                InitialiseZones();
-                needToRecalculateLiveDead = true;
-            }
+            PlantZone.Initialise(Plant.SowingData.Depth, initialDM.Value(), Plant.Population, maximumNConc.Value());
+            InitialiseZones();
+            needToRecalculateLiveDead = true;
         }
+        
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>

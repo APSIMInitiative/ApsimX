@@ -109,7 +109,7 @@
                     links = new Core.Links(Services);
 
                 // Resolve links and events.
-                links.Resolve(simulationToRun);
+                links.Resolve(simulationToRun, allLinks:true);
                 events.ConnectEvents();
 
                 simulationToRun.ClearCaches();
@@ -142,7 +142,7 @@
                 // Cleanup the simulation
                 if (events != null)
                     events.DisconnectEvents();
-                links.Unresolve(simulationToRun);
+                links.Unresolve(simulationToRun, allLinks:true);
 
                 timer.Stop();
                 Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(fileName) +

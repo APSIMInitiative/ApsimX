@@ -15,6 +15,7 @@ namespace Models.PMF.Phen
     [Description("This phase extends from the end of the previous phase until the Completion Leaf Number is achieved.  The duration of this phase is determined by leaf appearance rate and the completion leaf number target.")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class NodeNumberPhase : Model, IPhase
     {
         // 1. Links
@@ -23,7 +24,7 @@ namespace Models.PMF.Phen
         [Link]
         Structure structure = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction CompletionNodeNumber = null;
 
         //2. Private and protected fields
@@ -61,22 +62,12 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Gets the tt for today.</summary>
-        [XmlIgnore]
-        public double TTForTimeStep { get; set; }
-
-        /// <summary>Gets the t tin phase.</summary>
-        [XmlIgnore]
-        public double TTinPhase { get; set; }
-
-
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = structure.ThermalTime.Value() * propOfDayToUse;
             
             if (First)
             {
@@ -90,10 +81,7 @@ namespace Models.PMF.Phen
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001; //assumes we use most of the Tt today to get to specified node number.  Should be calculated as a function of the phyllochron
-                TTForTimeStep *= (1 - propOfDayToUse);
             }
-
-            TTinPhase += TTForTimeStep;
 
             return proceedToNextPhase;
         }
@@ -101,7 +89,6 @@ namespace Models.PMF.Phen
         /// <summary>Reset phase</summary>
         public void ResetPhase()
         {
-            TTinPhase = 0;
             NodeNoAtStart = 0;
             FractionCompleteYesterday = 0;
             First = true;

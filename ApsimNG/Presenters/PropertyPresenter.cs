@@ -16,7 +16,9 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Models.Surface;
+    using Utility;
     using Views;
+    using Commands;
 
     /// <summary>
     /// <para>
@@ -32,7 +34,7 @@ namespace UserInterface.Presenters
     /// We don't want properties to be on both the ProfileGrid and the PropertyGrid.
     /// </para>
     /// </summary>
-    public class PropertyPresenter : IPresenter
+    public class PropertyPresenter : GridPresenter
     {
         /// <summary>
         /// Linked storage reader
@@ -41,19 +43,9 @@ namespace UserInterface.Presenters
         private IStorageReader storage = null;
 
         /// <summary>
-        /// The underlying grid control to work with.
-        /// </summary>
-        private IGridView grid;
-
-        /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
         private Model model;
-
-        /// <summary>
-        /// The parent ExplorerPresenter.
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// A list of all properties found in the Model.
@@ -66,29 +58,18 @@ namespace UserInterface.Presenters
         private IntellisensePresenter intellisense;
 
         /// <summary>
-        /// Gets a value indicating whether the grid is empty (i.e. no rows).
-        /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return this.grid.RowCount == 0;
-            }
-        }
-
-        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model to connect to</param>
         /// <param name="view">The view to connect to</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public override void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.grid = view as IGridView;
-            this.grid.ContextItemsNeeded += GetContextItems;
+            base.Attach(model, view, explorerPresenter);
+            grid.ContextItemsNeeded += GetContextItems;
+            grid.CanGrow = false;
             this.model = model as Model;
-            this.explorerPresenter = explorerPresenter;
-            this.intellisense = new IntellisensePresenter(grid as ViewBase);
+            intellisense = new IntellisensePresenter(grid as ViewBase);
 
             // The grid does not have control-space intellisense (for now).
             intellisense.ItemSelected += (sender, e) => grid.InsertText(e.ItemSelected);
@@ -97,42 +78,46 @@ namespace UserInterface.Presenters
             if (testModel != null)
             {
                 testModel.Test(false, true);
-                this.grid.ReadOnly = true;
+                grid.ReadOnly = true;
             }
 
-            string[] split;
-
-            this.grid.NumericFormat = "G6"; 
-            this.FindAllProperties(this.model);
-            if (this.grid.DataSource == null)
+            grid.NumericFormat = "G6"; 
+            FindAllProperties(this.model);
+            if (grid.DataSource == null)
             {
-                this.PopulateGrid(this.model);
+                PopulateGrid(this.model);
             }
             else
             {
-                this.FormatTestGrid();
+                FormatTestGrid();
             }
 
-            this.grid.CellsChanged += this.OnCellValueChanged;
-            this.grid.ButtonClick += this.OnFileBrowseClick;
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
-            if (model != null)
+            grid.CellsChanged += OnCellValueChanged;
+            grid.ButtonClick += OnFileBrowseClick;
+            this.presenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the grid is empty (i.e. no rows).
+        /// </summary>
+        public bool IsEmpty
+        {
+            get
             {
-                split = this.model.GetType().ToString().Split('.');
-                this.grid.ModelName = split[split.Length - 1];
-                this.grid.LoadImage();
+                return grid.RowCount == 0;
             }
         }
 
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
-        public void Detach()
+        public override void Detach()
         {
-            this.grid.EndEdit();
-            this.grid.CellsChanged -= this.OnCellValueChanged;
-            this.grid.ButtonClick -= this.OnFileBrowseClick;
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            base.Detach();
+            grid.EndEdit();
+            grid.CellsChanged -= OnCellValueChanged;
+            grid.ButtonClick -= OnFileBrowseClick;
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
             intellisense.Cleanup();
         }
 
@@ -142,19 +127,18 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to examine for properties</param>
         public void PopulateGrid(Model model)
         {
-            IGridCell selectedCell = this.grid.GetCurrentCell;
+            IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
             DataTable table = new DataTable();
-            bool hasData = this.properties.Count > 0;
+            bool hasData = properties.Count > 0;
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
-            this.grid.PropertyMode = true;
-            this.FillTable(table);
-            this.FormatGrid();
+            FillTable(table);
+            FormatGrid();
             if (selectedCell != null)
             {
-                this.grid.GetCurrentCell = selectedCell;
+                grid.GetCurrentCell = selectedCell;
             }
         }
 
@@ -167,16 +151,16 @@ namespace UserInterface.Presenters
             foreach (VariableProperty property in propertysToRemove)
             {
                 // Try and find the description in our list of properties.
-                int i = this.properties.FindIndex(p => p.Description == property.Description);
+                int i = properties.FindIndex(p => p.Description == property.Description);
 
                 // If found then remove the property.
                 if (i != -1)
                 {
-                    this.properties.RemoveAt(i);
+                    properties.RemoveAt(i);
                 }
             }
 
-            this.PopulateGrid(this.model);
+            PopulateGrid(model);
         }
         
         /// <summary>
@@ -186,18 +170,14 @@ namespace UserInterface.Presenters
         public void FindAllProperties(Model model)
         {
             this.model = model;
-            this.properties.Clear();
+            properties.Clear();
             if (this.model != null)
             {
-                var members = from member in this.model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public)
-                                 where Attribute.IsDefined(member, typeof(DescriptionAttribute)) &&
-                                       (member is PropertyInfo || member is FieldInfo)
-                                 orderby ((DescriptionAttribute)member
-                                           .GetCustomAttributes(typeof(DescriptionAttribute), false)
-                                           .Single()).LineNumber
-                                 select member;
+                var members = model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
+                members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
+                var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber);
 
-                foreach (MemberInfo member in members)
+                foreach (MemberInfo member in orderedMembers)
                 {
                     IVariable property = null;
                     if (member is PropertyInfo)
@@ -222,10 +202,10 @@ namespace UserInterface.Presenters
                             properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
                         }
                         if (includeProperty)
-                            this.properties.Add(property);
+                            properties.Add(property);
 
                         if (property.DataType == typeof(DataTable))
-                            this.grid.DataSource = property.Value as DataTable;
+                            grid.DataSource = property.Value as DataTable;
                     }
                 }
             }
@@ -242,28 +222,28 @@ namespace UserInterface.Presenters
             this.model = model;
             if (this.model != null)
             {
-                IGridCell curCell = this.grid.GetCurrentCell;
-                for (int i = 0; i < this.properties.Count; i++)
+                IGridCell curCell = grid.GetCurrentCell;
+                for (int i = 0; i < properties.Count; i++)
                 {
-                    IGridCell cell = this.grid.GetCell(1, i);
+                    IGridCell cell = grid.GetCell(1, i);
                     if (curCell != null && cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
                     {
                         continue;
                     }
 
-                    if (this.properties[i].Display != null &&
-                        this.properties[i].Display.Type == DisplayType.CultivarName)
+                    if (properties[i].Display != null &&
+                        properties[i].Display.Type == DisplayType.CultivarName)
                     {
-                        IPlant crop = this.GetCrop(this.properties);
+                        IPlant crop = GetCrop(properties);
                         if (crop != null)
                         {
-                            cell.DropDownStrings = this.GetCultivarNames(crop);
+                            cell.DropDownStrings = GetCultivarNames(crop);
                         }
                     }
-                    else if (this.properties[i].Display != null &&
-                             this.properties[i].Display.Type == DisplayType.FieldName)
+                    else if (properties[i].Display != null &&
+                             properties[i].Display.Type == DisplayType.FieldName)
                     {
-                        string[] fieldNames = this.GetFieldNames();
+                        string[] fieldNames = GetFieldNames();
                         if (fieldNames != null)
                         {
                             cell.DropDownStrings = fieldNames;
@@ -282,7 +262,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.MainPresenter.ShowError(err);
             }
             
         }
@@ -293,7 +273,7 @@ namespace UserInterface.Presenters
         /// <param name="table">The table that needs to be filled</param>
         private void FillTable(DataTable table)
         {
-            foreach (IVariable property in this.properties)
+            foreach (IVariable property in properties)
             {
                 if (property is VariableObject)
                     table.Rows.Add(new object[] { property.Value , null });
@@ -303,7 +283,7 @@ namespace UserInterface.Presenters
                     table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
             }
 
-            this.grid.DataSource = table;
+            grid.DataSource = table;
         }
 
         /// <summary>
@@ -311,11 +291,11 @@ namespace UserInterface.Presenters
         /// </summary>
         private void FormatTestGrid()
         {
-            int numCols = this.grid.DataSource.Columns.Count;
+            int numCols = grid.DataSource.Columns.Count;
 
             for (int i = 0; i < numCols; i++)
             {
-                this.grid.GetColumn(i).Format = "F4";
+                grid.GetColumn(i).Format = "F4";
             }
         }
 
@@ -324,50 +304,50 @@ namespace UserInterface.Presenters
         /// </summary>
         private void FormatGrid()
         {
-            for (int i = 0; i < this.properties.Count; i++)
+            for (int i = 0; i < properties.Count; i++)
             {
-                IGridCell cell = this.grid.GetCell(1, i);
+                IGridCell cell = grid.GetCell(1, i);
                     
-                if (this.properties[i] is VariableObject)
+                if (properties[i] is VariableObject)
                 {
                     cell.EditorType = EditorTypeEnum.TextBox;
 
                     grid.SetRowAsSeparator(i, true);
                 }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.TableName)
+                else if (properties[i].Display != null && 
+                         properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    cell.DropDownStrings = this.storage.TableNames.ToArray();
+                    cell.DropDownStrings = storage.TableNames.ToArray();
                 }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.CultivarName)
+                else if (properties[i].Display != null && 
+                         properties[i].Display.Type == DisplayType.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    IPlant crop = this.GetCrop(this.properties);
+                    IPlant crop = GetCrop(properties);
                     if (crop != null)
                     {
-                        cell.DropDownStrings = this.GetCultivarNames(crop);
+                        cell.DropDownStrings = GetCultivarNames(crop);
                     }
                 }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.FileName)
+                else if (properties[i].Display != null && 
+                         properties[i].Display.Type == DisplayType.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
                 }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.FieldName)
+                else if (properties[i].Display != null && 
+                         properties[i].Display.Type == DisplayType.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    string[] fieldNames = this.GetFieldNames();
+                    string[] fieldNames = GetFieldNames();
                     if (fieldNames != null)
                     {
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.ResidueName &&
-                         this.model is Models.Surface.SurfaceOrganicMatter)
+                else if (properties[i].Display != null && 
+                         properties[i].Display.Type == DisplayType.ResidueName &&
+                         model is SurfaceOrganicMatter)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     string[] fieldNames = GetResidueNames();
@@ -376,7 +356,7 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (this.properties[i].Display != null && 
+                else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.Model)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
@@ -387,7 +367,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    object cellValue = this.properties[i].ValueWithArrayHandling;
+                    object cellValue = properties[i].ValueWithArrayHandling;
                     if (cellValue is DateTime)
                     {
                         cell.EditorType = EditorTypeEnum.DateTime;
@@ -408,16 +388,16 @@ namespace UserInterface.Presenters
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(this.model, typeof(IPlant)))
+                        foreach (Model crop in Apsim.FindAll(model, typeof(IPlant)))
                         {
                             cropNames.Add(crop.Name);
                         }
 
                         cell.DropDownStrings = cropNames.ToArray();
                     }
-                    else if (this.properties[i].DataType == typeof(IPlant))
+                    else if (properties[i].DataType == typeof(IPlant))
                     {
-                        List<string> plantNames = Apsim.FindAll(this.model, typeof(IPlant)).Select(m => m.Name).ToList();
+                        List<string> plantNames = Apsim.FindAll(model, typeof(IPlant)).Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
                     }
@@ -428,11 +408,11 @@ namespace UserInterface.Presenters
                 }
             }
 
-            IGridColumn descriptionColumn = this.grid.GetColumn(0);
+            IGridColumn descriptionColumn = grid.GetColumn(0);
             descriptionColumn.Width = -1;
             descriptionColumn.ReadOnly = true;
 
-            IGridColumn valueColumn = this.grid.GetColumn(1);
+            IGridColumn valueColumn = grid.GetColumn(1);
             valueColumn.Width = -1;
         }
 
@@ -474,17 +454,17 @@ namespace UserInterface.Presenters
         private string[] GetFieldNames()
         {
             string[] fieldNames = null;
-            for (int i = 0; i < this.properties.Count; i++)
+            for (int i = 0; i < properties.Count; i++)
             {
-                if (this.properties[i].Display.Type == DisplayType.TableName)
+                if (properties[i].Display.Type == DisplayType.TableName)
                 {
-                    IGridCell cell = this.grid.GetCell(1, i);
+                    IGridCell cell = grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
                         string tableName = cell.Value.ToString();
                         DataTable data = null;
                         if (storage.TableNames.Contains(tableName))
-                            data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
+                            data = storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
                             fieldNames = DataTableUtilities.GetColumnNames(data);
                     }
@@ -515,12 +495,12 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
+            return Apsim.Find(model, typeof(IPlant)) as IPlant;
         }
 
         private string[] GetResidueNames()
         {
-            if (this.model is Models.Surface.SurfaceOrganicMatter)
+            if (model is SurfaceOrganicMatter)
             {
                 List<string> names = new List<string>();
                 names = (this.model as SurfaceOrganicMatter).ResidueTypeNames();
@@ -534,9 +514,9 @@ namespace UserInterface.Presenters
         {
             List<IModel> models;
             if (t == null)
-                models = Apsim.FindAll(this.model);
+                models = Apsim.FindAll(model);
             else
-                models = Apsim.FindAll(this.model, t);
+                models = Apsim.FindAll(model, t);
 
             List<string> modelNames = new List<string>();
             foreach (IModel model in models)
@@ -551,25 +531,24 @@ namespace UserInterface.Presenters
         /// <param name="e">Event parameters</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             foreach (IGridCell cell in e.ChangedCells)
             {
-                if (e.invalidValue)
-                {
-                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
-                }
                 try
                 {
-                    this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
+                    if (e.InvalidValue)
+                        throw new Exception("The value you entered was not valid for its datatype.");
+                    if (cell.RowIndex < properties.Count)
+                        SetPropertyValue(properties[cell.RowIndex], cell.Value);
                 }
                 catch (Exception ex)
                 {
-                    explorerPresenter.MainPresenter.ShowError(ex);
+                    presenter.MainPresenter.ShowError(ex);
                 }
             }
             
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -579,46 +558,53 @@ namespace UserInterface.Presenters
         /// <param name="value">The value to set the property to</param>
         private void SetPropertyValue(IVariable property, object value)
         {
-            if (property.DataType.IsArray && value != null)
+            try
             {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.DataType == typeof(double[]))
+                if (property.DataType.IsArray && value != null)
                 {
-                    value = MathUtilities.StringsToDoubles(stringValues);
+                    string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (property.DataType == typeof(double[]))
+                    {
+                        value = MathUtilities.StringsToDoubles(stringValues);
+                    }
+                    else if (property.DataType == typeof(int[]))
+                    {
+                        value = MathUtilities.StringsToDoubles(stringValues);
+                    }
+                    else if (property.DataType == typeof(string[]))
+                    {
+                        value = stringValues;
+                    }
+                    else
+                    {
+                        throw new ApsimXException(model, "Invalid property type: " + property.DataType.ToString());
+                    }
                 }
-                else if (property.DataType == typeof(int[]))
+                else if (typeof(IPlant).IsAssignableFrom(property.DataType))
                 {
-                    value = MathUtilities.StringsToDoubles(stringValues);
+                    value = Apsim.Find(model, value.ToString()) as IPlant;
                 }
-                else if (property.DataType == typeof(string[]))
+                else if (property.DataType == typeof(DateTime))
                 {
-                    value = stringValues;
+                    value = Convert.ToDateTime(value);
                 }
-                else
+                else if (property.DataType.IsEnum)
                 {
-                    throw new ApsimXException(this.model, "Invalid property type: " + property.DataType.ToString());
+                    value = VariableProperty.ParseEnum(property.DataType, value.ToString());
                 }
-            }
-            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-            {
-                value = Apsim.Find(this.model, value.ToString()) as IPlant;
-            }
-            else if (property.DataType == typeof(DateTime))
-            {
-                value = Convert.ToDateTime(value);
-            }
-            else if (property.DataType.IsEnum)
-            {
-                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
-            }
-            else if (property.Display != null &&
-                     property.Display.Type == DisplayType.Model)
-            {
-                value = Apsim.Get(this.model, value.ToString());
-            }
+                else if (property.Display != null &&
+                         property.Display.Type == DisplayType.Model)
+                {
+                    value = Apsim.Get(model, value.ToString());
+                }
 
-            Commands.ChangeProperty cmd = new Commands.ChangeProperty(this.model, property.Name, value);
-            this.explorerPresenter.CommandHistory.Add(cmd, true);
+                ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
+                presenter.CommandHistory.Add(cmd);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -627,26 +613,34 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that has changed</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.model)
+            if (changedModel == model)
             {
-                this.PopulateGrid(this.model);
+                PopulateGrid(model);
             }
         }
 
         /// <summary>
         /// Called when user clicks on a file name.
-        /// Does creation of the dialog belong here, or in the view?
         /// </summary>
+        /// <remarks>
+        /// Does creation of the dialog belong here, or in the view?
+        /// </remarks>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = ViewBase.AskUserForFileName("Select file path", string.Empty, Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
+            IFileDialog fileChooser = new FileDialog()
+            {
+                Action = FileDialog.FileActionType.Open,
+                Prompt = "Select file path",
+                InitialDirectory = e.ChangedCells[0].Value.ToString()
+            };
+            string fileName = fileChooser.GetFile();
             if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
             {
                 e.ChangedCells[0].Value = fileName;
-                this.OnCellValueChanged(sender, e);
-                this.PopulateGrid(this.model);
+                OnCellValueChanged(sender, e);
+                PopulateGrid(model);
             }
         }
     }

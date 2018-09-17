@@ -27,7 +27,10 @@ namespace Models.Core
         /// <summary>The _ file name</summary>
         private string _FileName;
 
+        [NonSerialized]
         private Links links;
+
+        private Checkpoints checkpoints;
 
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
@@ -88,8 +91,9 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = ApsimFile.Converter.LastestVersion;
+            Version = ApsimFile.Converter.LatestVersion;
             LoadErrors = new List<Exception>();
+            checkpoints = new Checkpoints(this);
         }
 
         /// <summary>
@@ -391,6 +395,7 @@ namespace Models.Core
             if (storage != null)
                 services.Add(storage);
             services.Add(this);
+            services.Add(checkpoints);
             links = new Links(services);
         }
 
@@ -463,7 +468,7 @@ namespace Models.Core
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
                     // resolve all links in cloned simulation.
-                    Links.Resolve(clonedSimulation);
+                    Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
@@ -473,7 +478,7 @@ namespace Models.Core
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
-                    Links.Unresolve(clonedSimulation);
+                    Links.Unresolve(clonedSimulation, allLinks: true);
                 }
             }
         }

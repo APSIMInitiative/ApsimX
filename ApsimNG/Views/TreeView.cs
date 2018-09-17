@@ -303,7 +303,7 @@ namespace UserInterface.Views
         private void RefreshNode(TreeIter node, TreeViewNode description)
         {
             Gdk.Pixbuf pixbuf = null;
-            if (hasResource(description.ResourceNameForImage))
+            if (MasterView.HasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
             string tick = description.Checked ? "✔" : "";
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);

@@ -70,7 +70,7 @@ namespace UserInterface.Views
 
         public SupplementView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SupplementView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.SupplementView.glade");
             table1 = (Table)builder.GetObject("table1");
             tbSulph = (Entry)builder.GetObject("tbSulph");
             tbPhos = (Entry)builder.GetObject("tbPhos");
@@ -190,7 +190,7 @@ namespace UserInterface.Views
                         case FoodSupplement.SuppAttribute.spaPH:
                         case FoodSupplement.SuppAttribute.spaSU:
                         case FoodSupplement.SuppAttribute.spaADIP:
-                            maxVal = 200.0;  // Why 200?
+                            maxVal = 100.0;  
                             scale = 0.01;
                             break;
                         default:
@@ -323,18 +323,30 @@ namespace UserInterface.Views
             set
             {
                 tbName.Text = value.Name;
-                tbAmount.Text = value.Amount.ToString("F");
+                SetEditValue(tbAmount, value.Amount.ToString("F"));
                 cbxRoughage.Active = value.IsRoughage;
-                tbDM.Text = (value.DMPropn * 100.0).ToString("F");
-                tbDMD.Text = (value.DMDigestibility * 100.0).ToString("F");
-                tbME.Text = value.ME2DM.ToString("F");
-                tbEE.Text = (value.EtherExtract * 100.0).ToString("F");
-                tbCP.Text = (value.CrudeProt * 100.0).ToString("F");
-                tbProtDegrad.Text = (value.DegProt * 100.0).ToString("F");
-                tbADIP2CP.Text = (value.ADIP2CP * 100.0).ToString("F");
-                tbPhos.Text = (value.Phosphorus * 100.0).ToString("F");
-                tbSulph.Text = (value.Sulphur * 100.0).ToString("F");
+                SetEditValue(tbDM, (value.DMPropn * 100.0).ToString("F"));
+                SetEditValue(tbDMD, (value.DMDigestibility * 100.0).ToString("F"));
+                SetEditValue(tbME, value.ME2DM.ToString("F"));
+                SetEditValue(tbEE, (value.EtherExtract * 100.0).ToString("F"));
+                SetEditValue(tbCP, (value.CrudeProt * 100.0).ToString("F"));
+                SetEditValue(tbProtDegrad, (value.DegProt * 100.0).ToString("F"));
+                SetEditValue(tbADIP2CP, (value.ADIP2CP * 100.0).ToString("F"));
+                SetEditValue(tbPhos, (value.Phosphorus * 100.0).ToString("F"));
+                SetEditValue(tbSulph, (value.Sulphur * 100.0).ToString("F"));
             }
+        }
+
+        /// <summary>
+        /// We do this a bit indirectly, so that if we've just modified a value in a Entry widget,
+        /// and that widget still has focus, we don't try to change its value
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="text"></param>
+        private void SetEditValue(Entry entry, string text)
+        {
+            if (!entry.IsFocus)
+                entry.Text = text;
         }
 
         private bool internalSelect = false;

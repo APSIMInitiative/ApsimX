@@ -206,7 +206,7 @@ namespace UserInterface.Presenters
                         this.weatherDataView.ShowExcelSheets(false);
                     }
 
-                    (this.weatherDataView as TabbedMetDataView).WaitCursor = true;
+                    ViewBase.MasterView.WaitCursor = true;
                     try
                     {
                         this.weatherData.ExcelWorkSheetName = sheetName;
@@ -222,9 +222,13 @@ namespace UserInterface.Presenters
                         }
 
                     }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowError(err);
+                    }
                     finally
                     {
-                        (this.weatherDataView as TabbedMetDataView).WaitCursor = false;
+                        ViewBase.MasterView.WaitCursor = false;
                         this.weatherData.CloseDataFile();
                     }
                 }

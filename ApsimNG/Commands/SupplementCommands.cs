@@ -26,6 +26,8 @@ namespace UserInterface.Commands
 
         public AddSupplementCommand(Supplement parent, string suppName)
         {
+            if (parent.ReadOnly)
+                throw new ApsimXException(parent, string.Format("Unable to add supplement to {0} - it is read-only.", parent.Name));
             this.parent = parent;
             this.supplementName = suppName;
         }
@@ -76,6 +78,8 @@ namespace UserInterface.Commands
 
         public DeleteSupplementCommand(Supplement parent, SupplementItem supplementItem)
         {
+            if (parent.ReadOnly)
+                throw new ApsimXException(parent, string.Format("Unable to delete {0} - it is read-only.", parent.Name));
             this.parent = parent;
             this.supplementToDelete = supplementItem;
         }
@@ -123,6 +127,8 @@ namespace UserInterface.Commands
         /// <param name="newIdx">The new index.</param>
         public SelectSupplementCommand(Supplement parent, int oldIdx, int newIdx)
         {
+            if (parent.ReadOnly)
+                throw new ApsimXException(parent, string.Format("Unable to select supplement in {0} - it is read-only.", parent.Name));
             this.parent = parent;
             this.prevSuppIdx = oldIdx;
             this.newSuppIdx = newIdx;
@@ -168,6 +174,8 @@ namespace UserInterface.Commands
         /// <param name="supplements">List of supplements to reset</param>
         public ResetSupplementCommand(Supplement parent, List<SupplementItem> supplements)
         {
+            if (parent.ReadOnly)
+                throw new ApsimXException(parent, string.Format("Unable to reset {0} - it is read-only.", parent.Name));
             this.parent = parent;
             this.suppList = supplements;
         }
@@ -176,6 +184,8 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
+            if (parent.ReadOnly)
+                throw new ApsimXException(parent, string.Format("Unable to modify {0} - it is read-only.", parent.Name));
             if (!supplementsReset) // First call; store a copy of the original values
             {
                 prevList = new List<SupplementItem>(this.suppList.Count);
