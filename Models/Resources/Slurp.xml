@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="42">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="43">
   <Name>Slurp</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -344,7 +344,7 @@ This is important in SLURP as it is set for each species to represent their diff
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -357,7 +357,7 @@ This is important in SLURP as it is set for each species to represent their diff
             <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </Root>
   <SimpleLeaf>
@@ -581,7 +581,7 @@ This is important in SLURP as it is set for each species to represent their diff
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -594,7 +594,7 @@ This is important in SLURP as it is set for each species to represent their diff
             <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </SimpleLeaf>
   <Cultivar>

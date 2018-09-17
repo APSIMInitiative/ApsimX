@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="42">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="43">
   <Name>Chicory</Name>
   <Memo>
     <Name>GeneralDescription</Name>
@@ -1028,7 +1028,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1041,7 +1041,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </SimpleLeaf>
   <GenericOrgan>
@@ -1603,7 +1603,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1616,7 +1616,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
@@ -2093,7 +2093,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -2106,7 +2106,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Inflorescence].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
@@ -2556,7 +2556,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -2569,7 +2569,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Taproot].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <Root>
@@ -3060,7 +3060,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -3073,7 +3073,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
     </BiomassDemand>
   </Root>
   <CompositeBiomass>

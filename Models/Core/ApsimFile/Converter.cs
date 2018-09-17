@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 42; } }
+        public static int LatestVersion { get { return 43; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1017,7 +1017,7 @@
         }
 
         private static void MakeDMDemandsNode(XmlNode node, XmlNode organNode)
-        {   
+        {
             //Make DMDemand node
             XmlNode DMDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "DMDemands");
             organNode.AppendChild(DMDemands);
@@ -1066,6 +1066,17 @@
                     MakeDMDemandsNode(node, organNode);
                 }
             ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
+        }
+
+
+        ///<summary>
+        ///Upgrades to version 43, renaming StorageDemandFunction to StorageDMDemandFunction
+        /// </summary>
+        private static void UpgradeToVersion43(XmlNode node, string fileName)
+        {
+            foreach (XmlNode StorageFunction in XmlUtilities.FindAllRecursivelyByType(node, "StorageDemandFunction"))
+                XmlUtilities.ChangeType(StorageFunction, "StorageDMDemandFunction");
+
         }
     }
 }
