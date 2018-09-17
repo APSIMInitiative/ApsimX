@@ -162,8 +162,14 @@ namespace Models.Graph
                 DataTable baseData = GetBaseData(storage, factors);
 
                 // Get data for each simulation / zone object
-                if (baseData != null && baseData.Rows.Count > 0)
-                    ourDefinitions = ConvertToSeriesDefinitions(factors, storage, baseData);
+                if (baseData != null)
+                {
+                    if (baseData.Rows.Count > 0)
+                        ourDefinitions = ConvertToSeriesDefinitions(factors, storage, baseData);
+                    else if (Apsim.Parent(this, typeof(Simulation)).Parent is Experiment)
+                        throw new Exception("Unable to find any data points - should this graph be directly under an experiment?");
+                }
+                    
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
