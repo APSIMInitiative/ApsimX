@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="44">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="43">
   <Name>Slurp</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -359,49 +359,6 @@ This is important in SLURP as it is set for each species to represent their diff
         </SubtractFunction>
       </StorageDMDemandFunction>
     </BiomassDemand>
-    <BiomassDemand name="NDemands">
-      <Name>NDemands</Name>
-      <MultiplyFunction name="Structural">
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>MinNconc</Name>
-          <VariableName>[Root].MinNconc.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <MultiplyFunction name="Metabolic">
-        <Name>Metabolic</Name>
-        <SubtractFunction name="MetabolicNconc">
-          <Name>MetabolicNconc</Name>
-          <VariableReference>
-            <Name>CritNconc</Name>
-            <VariableName>[Root].criticalNConc.Value()</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>MinNconc</Name>
-            <VariableName>[Root].MinNconc.Value()</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <StorageNDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <VariableReference>
-          <Name>NitrogenDemandSwitch</Name>
-          <VariableName>[Root].NDemandSwitch.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MaxNconc</Name>
-          <VariableName>[Root].MaxNconc.Value()</VariableName>
-        </VariableReference>
-      </StorageNDemandFunction>
-    </BiomassDemand>
   </Root>
   <SimpleLeaf>
     <Name>Leaf</Name>
@@ -638,49 +595,6 @@ This is important in SLURP as it is set for each species to represent their diff
           </VariableReference>
         </SubtractFunction>
       </StorageDMDemandFunction>
-    </BiomassDemand>
-    <BiomassDemand name="NDemands">
-      <Name>NDemands</Name>
-      <MultiplyFunction name="Structural">
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>MinNconc</Name>
-          <VariableName>[Leaf].MinNconc.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <MultiplyFunction name="Metabolic">
-        <Name>Metabolic</Name>
-        <SubtractFunction name="MetabolicNconc">
-          <Name>MetabolicNconc</Name>
-          <VariableReference>
-            <Name>CritNconc</Name>
-            <VariableName>[Leaf].criticalNConc.Value()</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>MinNconc</Name>
-            <VariableName>[Leaf].MinNconc.Value()</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <StorageNDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <VariableReference>
-          <Name>NitrogenDemandSwitch</Name>
-          <VariableName>[Leaf].NDemandSwitch.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MaxNconc</Name>
-          <VariableName>[Leaf].MaxNconc.Value()</VariableName>
-        </VariableReference>
-      </StorageNDemandFunction>
     </BiomassDemand>
   </SimpleLeaf>
   <Cultivar>
