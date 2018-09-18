@@ -331,6 +331,7 @@ namespace Models.PMF.Organs
             DMDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
         }
 
 
