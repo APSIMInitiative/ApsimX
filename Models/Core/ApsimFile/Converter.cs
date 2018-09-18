@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 44; } }
+        public static int LatestVersion { get { return 45; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1094,7 +1094,7 @@
         /// <summary>
         /// Upgrades to version 41. Upgrades parameterisation of DM demands.
         /// </summary>
-        private static void UpgradeToVersion44(XmlNode node, string fileName)
+        private static void UpgradeToVersion45(XmlNode node, string fileName)
         {
             List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
             foreach (string org in organList)
