@@ -951,9 +951,44 @@
                         ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", simulationNamesBeingRun, ") AND CheckpointID=" + currentCheckpointID);
             }
 
+            List<string> simulationNamesToAdd = new List<string>();
+            if (tables.First(t => t.Name == "_Simulations").Columns.Find(c => c.Name == "FolderName") == null)
+            {
+                // If the Simulations table doesn't contain a FolderName column, we delete all data from the table,
+                // add the new column, and fill the table with all known simulation names.
+                connection.ExecuteNonQuery("DELETE FROM _Simulations");
+                connection.ExecuteNonQuery("ALTER TABLE _Simulations ADD FolderName TEXT COLLATE NOCASE");
+                simulationNamesToAdd = knownSimulationNames.Keys.ToList();
+            }
+            else
+            {
+                // The Simulations table already contains a FolderName column. All we need to do is add any simulation name which either
+                // doesn't already exist in the table, or exists with an incorrect folder name.
+                DataTable simulationTable = connection.ExecuteQuery("SELECT ID, Name, FolderName FROM _Simulations ORDER BY Name");
+                foreach (KeyValuePair<string, string> sim in knownSimulationNames)
+                {
+                    bool found = false;
+                    foreach (DataRow row in simulationTable.Rows)
+                    {
+                        if ((string)row["Name"] == sim.Key)
+                        {
+                            if ((string)row["FolderName"] != sim.Value)
+                            {
+                                connection.ExecuteNonQuery("DELETE FROM _Simulations WHERE ID=" + (string)row["ID"]);
+                                simulationNamesToAdd.Add(sim.Key);
+                            }
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        simulationNamesToAdd.Add(sim.Key);
+                }
+            }
+
             // Make sure each known simulation name has an ID in the simulations table in the .db
             // We only insert those simulations which are not already present in the simulations table.
-            ExecuteInsertQuery("_Simulations", "Name, FolderName", knownSimulationNames.Where(s => !simulationIDs.Keys.Contains(s.Key)).Select(s => string.Format("{0}', '{1}", s.Key, s.Value)));
+            ExecuteInsertQuery("_Simulations", "Name, FolderName", simulationNamesToAdd.Select(s => string.Format("{0}', '{1}", s, knownSimulationNames[s])));
 
             // Refresh our simulation table in memory now that we have removed unwanted ones.
             Refresh();
