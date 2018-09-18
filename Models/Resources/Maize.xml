@@ -1,4 +1,4 @@
-<Plant Version="43">
+<Plant Version="44">
   <Name>Maize</Name>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
@@ -1177,6 +1177,49 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         </SubtractFunction>
       </StorageDMDemandFunction>
     </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].MinNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].MinNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].NDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].MaxNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </Root>
   <Leaf>
     <Name>Leaf</Name>
@@ -2280,6 +2323,49 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </SubtractFunction>
       </StorageDMDemandFunction>
     </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Husk].MinNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Husk].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Husk].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Husk].MinNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Husk].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Husk].NDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Husk].MaxNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Rachis</Name>
@@ -2569,6 +2655,49 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </SubtractFunction>
       </StorageDMDemandFunction>
     </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Rachis].MinNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Rachis].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Rachis].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Rachis].MinNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Rachis].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Rachis].NDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Rachis].MaxNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
@@ -2830,6 +2959,49 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </VariableReference>
         </SubtractFunction>
       </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Stem].MinNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Stem].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Stem].MinNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Stem].NDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Stem].MaxNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>
