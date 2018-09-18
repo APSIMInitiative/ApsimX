@@ -33,7 +33,7 @@ namespace Models.PMF
                 if ((StructuralRequirement + MetabolicRequirement) > 0.0)
                 {
                     double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand);
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i] / BAT.TotalStructuralDemand);
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * MathUtilities.Divide(BAT.StructuralDemand[i], BAT.TotalStructuralDemand, 0));
                     double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * (1 - StructuralFraction) * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;
