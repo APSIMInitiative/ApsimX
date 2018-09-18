@@ -1112,21 +1112,21 @@
 
             //Add Structural demand function
             XmlNode structural = XmlUtilities.CreateNode(node.OwnerDocument, "MultiplyFunction", "Structural");
-            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(structural, "MinNconc", "[" + organNode.FirstChild.InnerText + "].MinNconc.Value()");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(structural, "MinNconc", "[" + organNode.FirstChild.InnerText + "].minimumNconc.Value()");
             ConverterUtilities.AddVariableReferenceFuntionIfNotExists(structural, "PotentialDMAllocation", "[" + organNode.FirstChild.InnerText + "].potentialDMAllocation.Structural");
             NDemands.AppendChild(structural);
             //Add Metabolic Demand function
             XmlNode metabolic = XmlUtilities.CreateNode(node.OwnerDocument, "MultiplyFunction", "Metabolic");
             XmlNode CritN = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "MetabolicNconc");
             ConverterUtilities.AddVariableReferenceFuntionIfNotExists(CritN, "CritNconc", "[" + organNode.FirstChild.InnerText + "].criticalNConc.Value()");
-            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(CritN, "MinNconc", "[" + organNode.FirstChild.InnerText + "].MinNconc.Value()");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(CritN, "MinNconc", "[" + organNode.FirstChild.InnerText + "].minimumNconc.Value()");
             metabolic.AppendChild(CritN);
             ConverterUtilities.AddVariableReferenceFuntionIfNotExists(metabolic, "PotentialDMAllocation", "[" + organNode.FirstChild.InnerText + "].potentialDMAllocation.Structural");
             NDemands.AppendChild(metabolic);
             //Add Storage Demand function
             XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageNDemandFunction", "Storage");
             ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "NitrogenDemandSwitch", "[" + organNode.FirstChild.InnerText + "].NDemandSwitch.Value()");
-            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "MaxNconc", "[" + organNode.FirstChild.InnerText + "].MaxNconc.Value()");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "MaxNconc", "[" + organNode.FirstChild.InnerText + "].maximumNconc.Value()");
             NDemands.AppendChild(Storage);
         }
     }
