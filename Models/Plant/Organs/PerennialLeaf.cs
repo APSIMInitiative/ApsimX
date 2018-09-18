@@ -405,7 +405,9 @@ namespace Models.PMF.Organs
         private void SetNDemand(object sender, EventArgs e)
         {
             NDemand.Structural = nDemands.Structural.Value();
-            NDemand.Metabolic = nDemands.Metabolic.Value();
+            //NDemand.Metabolic = nDemands.Metabolic.Value();
+            //FixMe.  I have commented this out because perennial leaf has no critical N concentration.
+            //However the converter has put a metabolic N demand into perennial leaf organs
             NDemand.Storage = nDemands.Storage.Value();
         }
 
