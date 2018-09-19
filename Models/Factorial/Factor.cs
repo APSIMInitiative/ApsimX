@@ -146,9 +146,14 @@ namespace Models.Factorial
                         factorName += pathValue.value.ToString();
                 }
             }
-            else if (pathsForFactor.Count == 1 && valuesForFactor.Count == 1 && valuesForFactor[0] is string && !(Parent is Factor))
+            else if (pathsForFactor.Count == 1 && valuesForFactor.Count == 1 && !(Parent is Factor))
             {
-                factorName += valuesForFactor[0];
+                if (valuesForFactor[0] is string)
+                    factorName += valuesForFactor[0];
+                else if (valuesForFactor[0] is IModel)
+                    factorName += (valuesForFactor[0] as IModel).Name;
+                else
+                    factorName += valuesForFactor.ToString();
             }
 
             if (pathsForFactor.Count > 0)
