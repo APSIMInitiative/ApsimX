@@ -204,14 +204,6 @@
             }
         }
         /// <summary>
-        /// Clone the apex instance
-        /// </summary>
-        public virtual IApex Clone()
-        {
-            ApexBase newApex = (ApexBase)MemberwiseClone();          
-            return newApex;
-        }
-        /// <summary>
         /// Reset the apex instance
         /// </summary>
         public void Reset()
@@ -243,17 +235,6 @@
         protected void OnPlantEnding(object sender, EventArgs e)
         {
             Reset();
-        }
-
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            
-
-
         }
     }
 }

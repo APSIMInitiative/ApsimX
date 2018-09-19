@@ -41,9 +41,5 @@ namespace Models.PMF.Interfaces
         /// Reset the apex instance
         /// </summary>
         void Reset();
-        /// <summary>
-        /// Clone the apex instance
-        /// </summary>
-        IApex Clone();
     }
 }
