@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="44">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="43">
   <Name>Chicory</Name>
   <Memo>
     <Name>GeneralDescription</Name>
@@ -1028,7 +1028,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDMDemandFunction name="Storage">
+      <StorageDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1041,55 +1041,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDMDemandFunction>
+      </StorageDemandFunction>
     </BiomassDemand>
     <Constant>
       <Name>slnDemandFunction</Name>
       <FixedValue>0.0</FixedValue>
     </Constant>
-    <BiomassDemand name="NDemands">
-      <Name>NDemands</Name>
-      <MultiplyFunction name="Structural">
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>MinNconc</Name>
-          <VariableName>[Leaf].minimumNconc.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <MultiplyFunction name="Metabolic">
-        <Name>Metabolic</Name>
-        <SubtractFunction name="MetabolicNconc">
-          <Name>MetabolicNconc</Name>
-          <VariableReference>
-            <Name>CritNconc</Name>
-            <VariableName>[Leaf].criticalNConc.Value()</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>MinNconc</Name>
-            <VariableName>[Leaf].minimumNconc.Value()</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <StorageNDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <VariableReference>
-          <Name>NitrogenDemandSwitch</Name>
-          <VariableName>[Leaf].NDemandSwitch.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MaxNconc</Name>
-          <VariableName>[Leaf].maximumNconc.Value()</VariableName>
-        </VariableReference>
-      </StorageNDemandFunction>
-    </BiomassDemand>
   </SimpleLeaf>
   <GenericOrgan>
     <Name>Stem</Name>
@@ -1650,7 +1607,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDMDemandFunction name="Storage">
+      <StorageDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1663,50 +1620,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDMDemandFunction>
-    </BiomassDemand>
-    <BiomassDemand name="NDemands">
-      <Name>NDemands</Name>
-      <MultiplyFunction name="Structural">
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>MinNconc</Name>
-          <VariableName>[Stem].minimumNconc.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <MultiplyFunction name="Metabolic">
-        <Name>Metabolic</Name>
-        <SubtractFunction name="MetabolicNconc">
-          <Name>MetabolicNconc</Name>
-          <VariableReference>
-            <Name>CritNconc</Name>
-            <VariableName>[Stem].criticalNConc.Value()</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>MinNconc</Name>
-            <VariableName>[Stem].minimumNconc.Value()</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <StorageNDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <VariableReference>
-          <Name>NitrogenDemandSwitch</Name>
-          <VariableName>[Stem].NDemandSwitch.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MaxNconc</Name>
-          <VariableName>[Stem].maximumNconc.Value()</VariableName>
-        </VariableReference>
-      </StorageNDemandFunction>
+      </StorageDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
@@ -2183,7 +2097,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDMDemandFunction name="Storage">
+      <StorageDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -2196,50 +2110,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Inflorescence].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDMDemandFunction>
-    </BiomassDemand>
-    <BiomassDemand name="NDemands">
-      <Name>NDemands</Name>
-      <MultiplyFunction name="Structural">
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>MinNconc</Name>
-          <VariableName>[Inflorescence].minimumNconc.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Inflorescence].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <MultiplyFunction name="Metabolic">
-        <Name>Metabolic</Name>
-        <SubtractFunction name="MetabolicNconc">
-          <Name>MetabolicNconc</Name>
-          <VariableReference>
-            <Name>CritNconc</Name>
-            <VariableName>[Inflorescence].criticalNConc.Value()</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>MinNconc</Name>
-            <VariableName>[Inflorescence].minimumNconc.Value()</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Inflorescence].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <StorageNDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <VariableReference>
-          <Name>NitrogenDemandSwitch</Name>
-          <VariableName>[Inflorescence].NDemandSwitch.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MaxNconc</Name>
-          <VariableName>[Inflorescence].maximumNconc.Value()</VariableName>
-        </VariableReference>
-      </StorageNDemandFunction>
+      </StorageDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
@@ -2689,7 +2560,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDMDemandFunction name="Storage">
+      <StorageDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -2702,50 +2573,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Taproot].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDMDemandFunction>
-    </BiomassDemand>
-    <BiomassDemand name="NDemands">
-      <Name>NDemands</Name>
-      <MultiplyFunction name="Structural">
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>MinNconc</Name>
-          <VariableName>[Taproot].minimumNconc.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Taproot].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <MultiplyFunction name="Metabolic">
-        <Name>Metabolic</Name>
-        <SubtractFunction name="MetabolicNconc">
-          <Name>MetabolicNconc</Name>
-          <VariableReference>
-            <Name>CritNconc</Name>
-            <VariableName>[Taproot].criticalNConc.Value()</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>MinNconc</Name>
-            <VariableName>[Taproot].minimumNconc.Value()</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Taproot].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <StorageNDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <VariableReference>
-          <Name>NitrogenDemandSwitch</Name>
-          <VariableName>[Taproot].NDemandSwitch.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MaxNconc</Name>
-          <VariableName>[Taproot].maximumNconc.Value()</VariableName>
-        </VariableReference>
-      </StorageNDemandFunction>
+      </StorageDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <Root>
@@ -3236,7 +3064,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDMDemandFunction name="Storage">
+      <StorageDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -3249,50 +3077,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
             <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDMDemandFunction>
-    </BiomassDemand>
-    <BiomassDemand name="NDemands">
-      <Name>NDemands</Name>
-      <MultiplyFunction name="Structural">
-        <Name>Structural</Name>
-        <VariableReference>
-          <Name>MinNconc</Name>
-          <VariableName>[Root].minimumNconc.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <MultiplyFunction name="Metabolic">
-        <Name>Metabolic</Name>
-        <SubtractFunction name="MetabolicNconc">
-          <Name>MetabolicNconc</Name>
-          <VariableReference>
-            <Name>CritNconc</Name>
-            <VariableName>[Root].criticalNConc.Value()</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>MinNconc</Name>
-            <VariableName>[Root].minimumNconc.Value()</VariableName>
-          </VariableReference>
-        </SubtractFunction>
-        <VariableReference>
-          <Name>PotentialDMAllocation</Name>
-          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
-        </VariableReference>
-      </MultiplyFunction>
-      <StorageNDemandFunction name="Storage">
-        <Name>Storage</Name>
-        <VariableReference>
-          <Name>NitrogenDemandSwitch</Name>
-          <VariableName>[Root].NDemandSwitch.Value()</VariableName>
-        </VariableReference>
-        <VariableReference>
-          <Name>MaxNconc</Name>
-          <VariableName>[Root].maximumNconc.Value()</VariableName>
-        </VariableReference>
-      </StorageNDemandFunction>
+      </StorageDemandFunction>
     </BiomassDemand>
   </Root>
   <CompositeBiomass>

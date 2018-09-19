@@ -1125,7 +1125,7 @@
             NDemands.AppendChild(metabolic);
             //Add Storage Demand function
             XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageNDemandFunction", "Storage");
-            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "NitrogenDemandSwitch", "[" + organNode.FirstChild.InnerText + "].NDemandSwitch.Value()");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "NitrogenDemandSwitch", "[" + organNode.FirstChild.InnerText + "].nitrogenDemandSwitch.Value()");
             ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "MaxNconc", "[" + organNode.FirstChild.InnerText + "].maximumNconc.Value()");
             NDemands.AppendChild(Storage);
         }
