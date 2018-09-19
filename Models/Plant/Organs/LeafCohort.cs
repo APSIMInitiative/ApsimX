@@ -1083,21 +1083,6 @@ namespace Models.PMF.Organs
                 double _lagDuration;
                 double _senescenceDuration;
                 double lsn = 0;
-                if (Age > 0)
-                {
-                    double a = 0;
-                    a = a + 1;
-                }
-                if (Age > 0 & CohortPopulation != Apex.Number * Plant.Population)
-                {
-                    double a = 0;
-                    a = a + 1;
-                }
-                if (CohortPopulation > 1700)
-                {
-                    double a = 0;
-                    a = a + 1;
-                }
                 for (int i = 0; i < Apex.GroupAge.Length; i++)
                 {
                     
