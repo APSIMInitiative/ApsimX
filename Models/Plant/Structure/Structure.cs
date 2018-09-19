@@ -334,7 +334,10 @@ namespace Models.PMF.Struct
                         ProportionBranchMortality = PropnMortality;
 
                     }
-                    Apex.DoCalculations();
+                    if (Apex != null)
+                    {
+                        Apex.DoCalculations();
+                    }
                 }
             }
         }
