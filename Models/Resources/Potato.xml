@@ -1,4 +1,4 @@
-<Plant Version="42">
+<Plant Version="45">
   <Name>Potato</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -612,7 +612,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -625,7 +625,50 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <VariableName>[Tuber].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Tuber].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Tuber].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Tuber].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Tuber].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Tuber].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Tuber].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Tuber].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <Root>
@@ -863,7 +906,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -876,7 +919,50 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
     </BiomassDemand>
   </Root>
   <Leaf>
@@ -1656,7 +1742,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1669,7 +1755,50 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
             <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Stem].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Stem].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Stem].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Stem].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Stem].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>
