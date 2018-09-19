@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 42; } }
+        public static int LatestVersion { get { return 45; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1017,7 +1017,7 @@
         }
 
         private static void MakeDMDemandsNode(XmlNode node, XmlNode organNode)
-        {   
+        {
             //Make DMDemand node
             XmlNode DMDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "DMDemands");
             organNode.AppendChild(DMDemands);
@@ -1066,6 +1066,68 @@
                     MakeDMDemandsNode(node, organNode);
                 }
             ConverterUtilities.RenameVariable(node, "DMDemandFunction", "DMDemands.Structural.DMDemandFunction");
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 43. Upgrades SimpleLeaf to allow SLN calculations for N Demands.
+        /// </summary>
+        private static void UpgradeToVersion43(XmlNode node, string fileName)
+        {
+            List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf");
+
+            foreach (XmlNode organ in nodeList)
+            {
+                ConverterUtilities.AddConstantFuntionIfNotExists(organ, "slnDemandFunction", "0.0");
+            }
+        }
+
+        ///<summary>
+        ///Upgrades to version 44, renaming StorageDemandFunction to StorageDMDemandFunction
+        /// </summary>
+        private static void UpgradeToVersion44(XmlNode node, string fileName)
+        {
+            foreach (XmlNode StorageFunction in XmlUtilities.FindAllRecursivelyByType(node, "StorageDemandFunction"))
+                XmlUtilities.ChangeType(StorageFunction, "StorageDMDemandFunction");
+        }
+
+        /// <summary>
+        /// Upgrades to version 41. Upgrades parameterisation of DM demands.
+        /// </summary>
+        private static void UpgradeToVersion45(XmlNode node, string fileName)
+        {
+            List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
+            foreach (string org in organList)
+                foreach (XmlNode organNode in XmlUtilities.FindAllRecursivelyByType(node, org))
+                {
+                    MakeNDemandsNode(node, organNode);
+                }
+        }
+
+        private static void MakeNDemandsNode(XmlNode node, XmlNode organNode)
+        {
+            //Make DMDemand node
+            XmlNode NDemands = XmlUtilities.CreateNode(node.OwnerDocument, "BiomassDemand", "NDemands");
+            organNode.AppendChild(NDemands);
+
+            //Add Structural demand function
+            XmlNode structural = XmlUtilities.CreateNode(node.OwnerDocument, "MultiplyFunction", "Structural");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(structural, "MinNconc", "[" + organNode.FirstChild.InnerText + "].minimumNconc.Value()");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(structural, "PotentialDMAllocation", "[" + organNode.FirstChild.InnerText + "].potentialDMAllocation.Structural");
+            NDemands.AppendChild(structural);
+            //Add Metabolic Demand function
+            XmlNode metabolic = XmlUtilities.CreateNode(node.OwnerDocument, "MultiplyFunction", "Metabolic");
+            XmlNode CritN = XmlUtilities.CreateNode(node.OwnerDocument, "SubtractFunction", "MetabolicNconc");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(CritN, "CritNconc", "[" + organNode.FirstChild.InnerText + "].criticalNConc.Value()");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(CritN, "MinNconc", "[" + organNode.FirstChild.InnerText + "].minimumNconc.Value()");
+            metabolic.AppendChild(CritN);
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(metabolic, "PotentialDMAllocation", "[" + organNode.FirstChild.InnerText + "].potentialDMAllocation.Structural");
+            NDemands.AppendChild(metabolic);
+            //Add Storage Demand function
+            XmlNode Storage = XmlUtilities.CreateNode(node.OwnerDocument, "StorageNDemandFunction", "Storage");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "NitrogenDemandSwitch", "[" + organNode.FirstChild.InnerText + "].nitrogenDemandSwitch.Value()");
+            ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "MaxNconc", "[" + organNode.FirstChild.InnerText + "].maximumNconc.Value()");
+            NDemands.AppendChild(Storage);
         }
     }
 }

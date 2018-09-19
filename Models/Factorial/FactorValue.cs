@@ -75,6 +75,17 @@ namespace Models.Factorial
         public List<object> Values { get { return values; } }
 
         /// <summary>
+        /// Gets all paths.
+        /// </summary>
+        public List<string> Paths
+        {
+            get
+            {
+                return paths;
+            }
+        }
+
+        /// <summary>
         /// Apply this FactorValue to the specified simulation
         /// </summary>
         public void ApplyToSimulation(Simulation newSimulation)
