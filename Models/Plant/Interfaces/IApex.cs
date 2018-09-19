@@ -35,12 +35,15 @@ namespace Models.PMF.Interfaces
         /// <summary>
         /// TODO: This method needs documentation
         /// </summary>
-        /// <param name="NewLeaf"></param>
-        void DoCalculations(LeafCohort NewLeaf);
+        void DoCalculations();
 
         /// <summary>
         /// Reset the apex instance
         /// </summary>
         void Reset();
+        /// <summary>
+        /// Clone the apex instance
+        /// </summary>
+        IApex Clone();
     }
 }

@@ -61,8 +61,7 @@ namespace Models.PMF.Organs
         private Leaf Leaf = null;
 
         /// <summary>The leaf apex model</summary>
-        [Link(IsOptional = true)]
-        public IApex Apex = null;
+        public ApexGroup Apex;
 
         /// <summary>The clock</summary>
         [Link]
@@ -705,7 +704,6 @@ namespace Models.PMF.Organs
             newLeaf.Dead = new Biomass();
             newLeaf.Detached = new Biomass();
             newLeaf.Removed = new Biomass();
-            newLeaf.Apex = Apex;
             return newLeaf;
         }
 
@@ -714,8 +712,6 @@ namespace Models.PMF.Organs
         {
             IsInitialised = true;
             Age = 0;
-            if (Apex != null)
-                Apex.DoCalculations(this);
         }
 
         /// <summary>Does the appearance.</summary>
@@ -723,8 +719,16 @@ namespace Models.PMF.Organs
         /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
         public void DoAppearance(ApparingLeafParams cohortParams, Leaf.LeafCohortParameters leafCohortParameters)
         {
-            if (Apex != null)
-                CohortPopulation = Apex.LeafTipAppearance(Plant.Population, cohortParams.TotalStemPopn);
+            if (Structure.Apex != null)
+            {
+                Apex = new ApexGroup
+                {
+                    GroupAge = Plant.Structure.Apex.GroupAge,
+                    GroupSize = Plant.Structure.Apex.GroupSize,
+                    Number = Plant.Structure.Apex.Number
+                };
+                CohortPopulation = Structure.Apex.LeafTipAppearance(Plant.Population, cohortParams.TotalStemPopn);
+            }
             else
                 CohortPopulation = Structure.TotalStemPopn;
             Age = cohortParams.CohortAge;
@@ -1066,10 +1070,12 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Live leaf number</summary>
-        /// 
-
         public double LiveStemNumber (Leaf.LeafCohortParameters leafCohortParameters)
         {
+            if (Age <=0)
+            {
+                return 0;
+            }
             if (Apex == null)
                 return 0;
             else
@@ -1077,8 +1083,24 @@ namespace Models.PMF.Organs
                 double _lagDuration;
                 double _senescenceDuration;
                 double lsn = 0;
+                if (Age > 0)
+                {
+                    double a = 0;
+                    a = a + 1;
+                }
+                if (Age > 0 & CohortPopulation != Apex.Number * Plant.Population)
+                {
+                    double a = 0;
+                    a = a + 1;
+                }
+                if (CohortPopulation > 1700)
+                {
+                    double a = 0;
+                    a = a + 1;
+                }
                 for (int i = 0; i < Apex.GroupAge.Length; i++)
                 {
+                    
                     if (i == 0)
                     {
                         _lagDuration = LagDuration;
@@ -1086,8 +1108,8 @@ namespace Models.PMF.Organs
                     }
                     else
                     {
-                        _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)Apex.GroupAge[i]);
-                        _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)Apex.GroupAge[i]);
+                        _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)Apex.GroupAge[i] - 1);
+                        _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)Apex.GroupAge[i] - 1);
                     }
 
                     if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2)
@@ -1126,8 +1148,8 @@ namespace Models.PMF.Organs
                     }
                     else
                     {
-                        _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)Apex.GroupAge[i]);
-                        _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)Apex.GroupAge[i]);
+                        _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)Apex.GroupAge[i] - 1);
+                        _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)Apex.GroupAge[i] - 1);
                     }
 
                     double ttInSenPhase = Math.Max(0.0, Age + tt - _lagDuration - GrowthDuration);
