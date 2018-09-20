@@ -118,14 +118,18 @@
         public double NumByAge(double age)
         {
             double num = 0;
-            for (int i = 0; i < apexGroupAge.Count; i++)
+            double sAge = structure.LeafTipsAppeared - age;
+            for (int i = apexGroupAge.Count; i >0 ; i--)
             {
-                if (apexGroupAge[i] <= age)
+                if (apexGroupAge[i - 1] < age)
                 {
-                    num += apexGroupSize[i];
+                    num += apexGroupSize[i - 1];
+                } else
+                {
+                    num += (1 - (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared))) * apexGroupSize[i - 1];
+                    break;
                 }
             }
-
             return num;
         }
 
@@ -157,13 +161,7 @@
                     // Apex calculation
                     Number += structure.branchingRate.Value() * structure.PrimaryBudNo;
 
-                    if (phenology.Stage > 4 & !SenescenceByAge)
-                    {
-                        double senescenceNum = NumByAge(stemSenescenceAge.Value());
-                        Number -= senescenceNum;
-                        SenescenceByAge = true;
-                        structure.TotalStemPopn -= senescenceNum * plant.Population;
-                    }
+                    
                     // update age of cohorts
                     for (int i = 0; i < apexGroupAge.Count; i++)
                         apexGroupAge[i]++;
@@ -212,7 +210,22 @@
             apexGroupSize.Clear();
             SenescenceByAge = false;
         }
-        
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            if (phenology.Stage > 4 & !SenescenceByAge)
+            {
+                double senescenceNum = NumByAge(stemSenescenceAge.Value());
+                Number -= senescenceNum;
+                SenescenceByAge = true;
+                structure.TotalStemPopn -= senescenceNum * plant.Population;
+            }
+        }
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">sender of the event.</param>
         /// <param name="Sow">Sowing data to initialise from.</param>
@@ -236,5 +249,6 @@
         {
             Reset();
         }
+        
     }
 }
