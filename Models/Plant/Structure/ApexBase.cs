@@ -215,7 +215,7 @@
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (phenology.Stage > 4 & !SenescenceByAge)
             {
