@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="45">
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
   <Name>Slurp</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -639,10 +639,6 @@ This is important in SLURP as it is set for each species to represent their diff
         </SubtractFunction>
       </StorageDMDemandFunction>
     </BiomassDemand>
-    <Constant>
-      <Name>slnDemandFunction</Name>
-      <FixedValue>0.0</FixedValue>
-    </Constant>
     <BiomassDemand name="NDemands">
       <Name>NDemands</Name>
       <MultiplyFunction name="Structural">
