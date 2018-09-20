@@ -80,7 +80,7 @@
         private IFunction stemSenescenceAge = null;
 
         /// <summary>The apex group.</summary>
-        public List<double> apexGroupSize = new List<double>();
+        private List<double> apexGroupSize = new List<double>();
 
         /// <summary>The age of apex in age group.</summary>
         private List<double> apexGroupAge = new List<double>();
