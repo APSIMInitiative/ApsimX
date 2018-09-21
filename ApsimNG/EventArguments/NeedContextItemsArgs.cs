@@ -15,6 +15,7 @@ namespace UserInterface.EventArguments
     using System.Text;
     using APSIM.Shared.Utilities;
     using Intellisense;
+    using System.Xml;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -98,7 +99,7 @@ namespace UserInterface.EventArguments
                         item.IsEvent = false;
                         item.IsWriteable = !var.IsReadOnly;
                         item.TypeName = var.DataType.Name;
-                        item.Descr = var.Description;
+                        item.Descr = GetDescription(property);
                         item.Units = var.Units;
                         allItems.Add(item);
                     }
@@ -393,6 +394,45 @@ namespace UserInterface.EventArguments
                 squareBracketIndex = -1;
             }
              return node;
+        }
+
+        /// <summary>
+        /// Gets the contents of a property's summary tag, or, if the summary tag doesn't exist,
+        /// a <see cref="DescriptionAttribute"/>.
+        /// </summary>
+        /// <param name="property">Property whose documentation will be retrieved.</param>
+        /// <returns>
+        /// Contents of a summary tag (if available), or a description attribute,
+        /// or an empty string if neither of these are available.
+        /// </returns>
+        private static string GetDescription(PropertyInfo property)
+        {
+            if (property == null)
+                return string.Empty;
+
+            // The property's documentation doesn't reside in the compiled assembly - it's actually stored in
+            // an xml documentation file which usually sits next to the assembly on disk.
+            string documentationFile = System.IO.Path.ChangeExtension(property.Module.Assembly.Location, "xml");
+            if (!System.IO.File.Exists(documentationFile))
+            {
+                // If the documentation file doesn't exist, this property is probably a property from a manager script.
+                // These properties usually have a description attribute which can be used instead.
+                Attribute description = property.GetCustomAttribute(typeof(DescriptionAttribute));
+                // If the property has no description attribute, just return an empty string.
+                return description == null ? string.Empty : description.ToString();
+            }
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(documentationFile);
+            // This XPath will only work for properties. To work for other types of members, P: would have to be replaced with
+            // the prefix that is used by the documentation file for that member type - e.g. M: for a method, T: for a class, etc.
+            string xPath = string.Format("//member[starts-with(@name, 'P:{0}.{1}')]/summary[1]", property.DeclaringType.FullName, property.Name);
+            XmlNode summaryNode = doc.SelectSingleNode(xPath);
+            if (summaryNode == null || summaryNode.ChildNodes.Count < 1)
+                return string.Empty;
+            // The summary tag often spans multiple lines, which means that the text inside usually
+            // starts and ends with newlines (and indentation), which we don't want to display.
+            return summaryNode.InnerText.Trim(Environment.NewLine.ToCharArray()).Trim();
         }
         
         /// <summary>
