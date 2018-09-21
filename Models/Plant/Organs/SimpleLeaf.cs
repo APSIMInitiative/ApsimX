@@ -226,9 +226,6 @@ namespace Models.PMF.Organs
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
 
-        /// <summary>Method for calculating Nitrogen demands</summary>
-        public bool UseSLNCalculation { get; set; } = false;
-
         #endregion
 
         #region States and variables
@@ -464,11 +461,6 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
-        /// <summary>Calculate N using SLN</summary>
-        [ChildLinkByName]
-        [Units("g/g")]
-        private IFunction slnDemandFunction = null;
-
         /// <summary>The proportion of biomass respired each day</summary>
         [ChildLinkByName]
         [Units("/d")]
@@ -661,16 +653,9 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
-            if(UseSLNCalculation)
-            {
-                NDemand.Structural = Math.Max(0.0, slnDemandFunction.Value());
-            }
-            else
-            {
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
-            }
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
