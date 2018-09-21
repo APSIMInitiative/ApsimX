@@ -93,14 +93,16 @@ namespace UserInterface.EventArguments
                     foreach (PropertyInfo property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                     {
                         VariableProperty var = new VariableProperty(atype, property);
-                        NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
-                        item.Name = var.Name;
-                        item.IsProperty = true;
-                        item.IsEvent = false;
-                        item.IsWriteable = !var.IsReadOnly;
-                        item.TypeName = var.DataType.Name;
-                        item.Descr = GetDescription(property);
-                        item.Units = var.Units;
+                        ContextItem item = new ContextItem
+                        {
+                            Name = var.Name,
+                            IsProperty = true,
+                            IsEvent = false,
+                            IsWriteable = !var.IsReadOnly,
+                            TypeName = var.DataType.Name,
+                            Descr = GetDescription(property),
+                            Units = var.Units
+                        };
                         allItems.Add(item);
                     }
                 }
@@ -111,16 +113,16 @@ namespace UserInterface.EventArguments
                     {
                         if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
                         {
-                            DescriptionAttribute descriptionAttribute = ReflectionUtilities.GetAttribute(atype, typeof(DescriptionAttribute), false) as DescriptionAttribute;
-                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
-                            item.Name = method.Name;
-                            item.IsProperty = false;
-                            item.IsEvent = true;
-                            item.IsWriteable = false;
-                            item.TypeName = method.ReturnType.Name;
-                            if (descriptionAttribute != null)
-                                item.Descr = descriptionAttribute.ToString();
-                            item.Units = string.Empty;
+                            ContextItem item = new ContextItem
+                            {
+                                Name = method.Name,
+                                IsProperty = false,
+                                IsEvent = true,
+                                IsWriteable = false,
+                                TypeName = method.ReturnType.Name,
+                                Descr = GetDescription(method),
+                                Units = string.Empty
+                            };
 
                             // build a parameter string representation
                             ParameterInfo[] allparams = method.GetParameters();
@@ -153,7 +155,7 @@ namespace UserInterface.EventArguments
                         item.IsEvent = true;
                         item.IsWriteable = false;
                         item.TypeName = evnt.ReflectedType.Name;
-                        item.Descr = "";
+                        item.Descr = GetDescription(evnt);
                         item.Units = "";
                         allItems.Add(item);
                     }
@@ -268,7 +270,7 @@ namespace UserInterface.EventArguments
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node != null)
             {
-                contextItems = NeedContextItemsArgs.ExamineObjectForContextItems(node, properties, methods, events);
+                contextItems = ExamineObjectForContextItems(node, properties, methods, events);
             }
             return contextItems;
         }
@@ -400,33 +402,42 @@ namespace UserInterface.EventArguments
         /// Gets the contents of a property's summary tag, or, if the summary tag doesn't exist,
         /// a <see cref="DescriptionAttribute"/>.
         /// </summary>
-        /// <param name="property">Property whose documentation will be retrieved.</param>
+        /// <param name="member">Property whose documentation will be retrieved.</param>
         /// <returns>
         /// Contents of a summary tag (if available), or a description attribute,
         /// or an empty string if neither of these are available.
         /// </returns>
-        private static string GetDescription(PropertyInfo property)
+        private static string GetDescription(MemberInfo member)
         {
-            if (property == null)
+            if (member == null)
                 return string.Empty;
 
-            // The property's documentation doesn't reside in the compiled assembly - it's actually stored in
+            // The member's documentation doesn't reside in the compiled assembly - it's actually stored in
             // an xml documentation file which usually sits next to the assembly on disk.
-            string documentationFile = System.IO.Path.ChangeExtension(property.Module.Assembly.Location, "xml");
+            string documentationFile = System.IO.Path.ChangeExtension(member.Module.Assembly.Location, "xml");
             if (!System.IO.File.Exists(documentationFile))
             {
-                // If the documentation file doesn't exist, this property is probably a property from a manager script.
-                // These properties usually have a description attribute which can be used instead.
-                Attribute description = property.GetCustomAttribute(typeof(DescriptionAttribute));
+                // If the documentation file doesn't exist, this member is probably a member of a manager script.
+                // These members usually have a description attribute which can be used instead.
+                Attribute description = member.GetCustomAttribute(typeof(DescriptionAttribute));
                 // If the property has no description attribute, just return an empty string.
                 return description == null ? string.Empty : description.ToString();
             }
 
             XmlDocument doc = new XmlDocument();
             doc.Load(documentationFile);
-            // This XPath will only work for properties. To work for other types of members, P: would have to be replaced with
-            // the prefix that is used by the documentation file for that member type - e.g. M: for a method, T: for a class, etc.
-            string xPath = string.Format("//member[starts-with(@name, 'P:{0}.{1}')]/summary[1]", property.DeclaringType.FullName, property.Name);
+            string memberPrefix = string.Empty;
+            if (member is PropertyInfo)
+                memberPrefix = "P";
+            else if (member is FieldInfo)
+                // This shouldn't be run for public fields, but it doesn't hurt to be thorough.
+                memberPrefix = "F";
+            else if (member is MethodInfo)
+                memberPrefix = "M";
+            else if (member is EventInfo)
+                memberPrefix = "E";
+
+            string xPath = string.Format("//member[starts-with(@name, '{0}:{1}.{2}')]/summary[1]", memberPrefix, member.DeclaringType.FullName, member.Name);
             XmlNode summaryNode = doc.SelectSingleNode(xPath);
             if (summaryNode == null || summaryNode.ChildNodes.Count < 1)
                 return string.Empty;
@@ -434,7 +445,7 @@ namespace UserInterface.EventArguments
             // starts and ends with newlines (and indentation), which we don't want to display.
             return summaryNode.InnerText.Trim(Environment.NewLine.ToCharArray()).Trim();
         }
-        
+
         /// <summary>
         /// Complete context item information
         /// </summary>
