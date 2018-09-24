@@ -4,6 +4,8 @@
     using Interfaces;
     using System;
     using System.Drawing;
+    using System.Collections.Generic;
+    using Classes.Intellisense;
 
     /// <summary>
     /// View for a small intellisense window which displays the 
@@ -43,6 +45,16 @@
         private Point previousLocation;
 
         /// <summary>
+        /// Index of the visible method completion.
+        /// </summary>
+        private int visibleCompletionIndex = 0;
+
+        /// <summary>
+        /// List of method completions for all overloads of this method.
+        /// </summary>
+        private List<MethodCompletion> completions;
+
+        /// <summary>
         /// Prepares the view for use, but doesn't show it. 
         /// After calling this constructor, set <see cref="Visible"/> to true to display the popup.
         /// </summary>
@@ -79,50 +91,45 @@
         }
 
         /// <summary>
-        /// Gets or sets the method signature.
+        /// List of method completions for all overloads of this method.
         /// </summary>
-        public string MethodSignature
+        public List<MethodCompletion> Completions
         {
             get
             {
-                return lblMethodSignature.Text;
+                return completions;
             }
             set
             {
-                lblMethodSignature.Text = value;
+                completions = value;
+                if (completions.Count > 0)
+                {
+                    VisibleCompletionIndex = 0;
+                }
             }
         }
 
         /// <summary>
-        /// Gets or sets the method summary.
+        /// Index of the visible method completion.
         /// </summary>
-        public string MethodSummary
+        public int VisibleCompletionIndex
         {
             get
             {
-                return lblMethodSummary.Text;
+                return visibleCompletionIndex;
             }
             set
             {
-                lblMethodSummary.Text = value;
+                if (value >= 0)
+                {
+                    visibleCompletionIndex = value;
+                    MethodCompletion completion = completions[visibleCompletionIndex];
+                    lblMethodSignature.Text = completion.Signature;
+                    lblMethodSummary.Text = completion.Summary;
+                    lblArgumentSummaries.Text = completion.ParameterDocumentation;
+                }
             }
         }
-
-        /// <summary>
-        /// Gets or sets the argument summaries.
-        /// </summary>
-        public string ArgumentSummaries
-        {
-            get
-            {
-                return lblArgumentSummaries.Text;
-            }
-            set
-            {
-                lblArgumentSummaries.Text = value;
-            }
-        }
-
         /// <summary>
         /// Gets or sets the visibility of the window.
         /// </summary>

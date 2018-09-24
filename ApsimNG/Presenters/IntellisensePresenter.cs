@@ -15,6 +15,7 @@
     using System.Drawing;
     using System.Reflection;
     using System.Text;
+    using Classes.Intellisense;
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -341,13 +342,16 @@
                 foreach (System.Xml.XmlElement parameter in APSIM.Shared.Utilities.XmlUtilities.ChildNodesRecursively(doc.FirstChild, "param"))
                     argumentSummariesList.Add(string.Format("{0}: {1}", parameter.GetAttribute("name"), parameter.InnerText));
 
-                string methodSignature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y)));
-                string methodSummary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim();
-                string argumentSummaries = argumentSummariesList.Aggregate((x, y) => x + Environment.NewLine + y);
+                MethodCompletion completion = new MethodCompletion()
+                {
+                    Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y))),
+                    Summary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim(),
+                    ParameterDocumentation = argumentSummariesList.Aggregate((x, y) => x + Environment.NewLine + y)
+                };
 
-                methodCompletionView.MethodSignature = methodSignature;
-                methodCompletionView.MethodSummary = methodSummary;
-                methodCompletionView.ArgumentSummaries = argumentSummaries;
+                methodCompletionView.MethodSignature = completion.Signature;
+                methodCompletionView.MethodSummary = completion.Summary;
+                methodCompletionView.ArgumentSummaries = completion.ParameterDocumentation;
                 methodCompletionView.Location = location;
                 methodCompletionView.Visible = true;
             }
@@ -390,6 +394,7 @@
 
             if (method == null)
                 return;
+            MethodCompletion completion = new MethodCompletion();
 
             List<string> parameterStrings = new List<string>();
             StringBuilder parameterDocumentation = new StringBuilder();
@@ -403,9 +408,13 @@
             }
             string parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
 
-            methodCompletionView.MethodSignature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
-            methodCompletionView.MethodSummary = NeedContextItemsArgs.GetDescription(method);
-            methodCompletionView.ArgumentSummaries = parameterDocumentation.ToString();
+            completion.Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
+            completion.Summary = NeedContextItemsArgs.GetDescription(method);
+            completion.ParameterDocumentation = parameterDocumentation.ToString();
+
+            methodCompletionView.MethodSignature = completion.Signature;
+            methodCompletionView.MethodSummary = completion.Summary;
+            methodCompletionView.ArgumentSummaries = completion.ParameterDocumentation;
             methodCompletionView.Location = location;
             methodCompletionView.Visible = true;
         }

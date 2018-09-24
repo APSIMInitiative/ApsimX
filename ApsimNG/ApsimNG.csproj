@@ -160,6 +160,7 @@
     <Compile Include="Classes\Intellisense\ImportCompletionData.cs" />
     <Compile Include="Classes\Intellisense\IOverloadProvider.cs" />
     <Compile Include="Classes\Intellisense\IScriptProvider.cs" />
+    <Compile Include="Classes\Intellisense\MethodCompletion.cs" />
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />

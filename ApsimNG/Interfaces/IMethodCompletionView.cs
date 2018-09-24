@@ -1,7 +1,8 @@
 ﻿namespace UserInterface.Interfaces
 {
     using System.Drawing;
-
+    using Classes.Intellisense;
+    using System.Collections.Generic;
     /// <summary>
     /// Interface for a small intellisense window which displays the 
     /// completion options for a method.
@@ -9,19 +10,9 @@
     interface IMethodCompletionView
     {
         /// <summary>
-        /// Gets or sets the method signature.
+        /// List of method completions for all overloads of this method.
         /// </summary>
-        string MethodSignature { get; set; }
-
-        /// <summary>
-        /// Gets or sets the method summary.
-        /// </summary>
-        string MethodSummary { get; set; }
-
-        /// <summary>
-        /// Gets or sets the argument summaries.
-        /// </summary>
-        string ArgumentSummaries { get; set; }
+        List<MethodCompletion> Completions { get; set; }
 
         /// <summary>
         /// Gets or sets the visibility of the window.
