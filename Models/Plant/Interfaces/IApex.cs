@@ -33,11 +33,6 @@ namespace Models.PMF.Interfaces
         double Appearance(double population, double totalStemPopn);
 
         /// <summary>
-        /// TODO: This method needs documentation
-        /// </summary>
-        void DoCalculations();
-
-        /// <summary>
         /// Reset the apex instance
         /// </summary>
         void Reset();

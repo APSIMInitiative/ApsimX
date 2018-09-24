@@ -96,7 +96,8 @@
 
         /// <summary>Total apex number in plant.</summary>
         [Description("Total apex number in plant")]
-        public double[] GroupSize {
+        public double[] GroupSize
+        {
             get
             {
                 return apexGroupSize.ToArray();
@@ -106,7 +107,8 @@
 
         /// <summary>Total apex number in plant.</summary>
         [Description("Total apex number in plant")]
-        public double[] GroupAge {
+        public double[] GroupAge
+        {
             get
             {
                 return apexGroupAge.ToArray();
@@ -119,12 +121,13 @@
         {
             double num = 0;
             double sAge = structure.LeafTipsAppeared - age;
-            for (int i = apexGroupAge.Count; i >0 ; i--)
+            for (int i = apexGroupAge.Count; i > 0; i--)
             {
                 if (apexGroupAge[i - 1] < age)
                 {
                     num += apexGroupSize[i - 1];
-                } else
+                }
+                else
                 {
                     num += (1 - (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared))) * apexGroupSize[i - 1];
                     break;
@@ -148,59 +151,7 @@
         /// <param name="totalStemPopn"></param>
         /// <returns></returns>
         public abstract double LeafTipAppearance(double population, double totalStemPopn);
-        
-        /// <summary>
-        /// TODO: This method needs documentation
-        /// </summary>
-        public void DoCalculations()
-        {
-            if (plant.IsEmerged)
-            {
-                if (structure.TimeForAnotherLeaf && structure.AllLeavesAppeared == false)
-                {
-                    // Apex calculation
-                    Number += structure.branchingRate.Value() * structure.PrimaryBudNo;
 
-                    
-                    // update age of cohorts
-                    for (int i = 0; i < apexGroupAge.Count; i++)
-                        apexGroupAge[i]++;
-
-                }
-            }
-            // Reduce the apex number by branching mortality
-            Number -= structure.branchMortality.Value() * (Number - 1);
-
-            
-            // check for increase in apex size, add new group if needed
-            // (ApexNum should be an integer, but need to check in case of flag leaf)
-            double deltaApex = apexGroupSize.Sum() - Number;
-            if (deltaApex < -1E-12)
-            {
-                if (apexGroupSize.Count == 0)
-                    apexGroupSize.Add(Number);
-                else
-                    apexGroupSize.Add(-deltaApex);
-                apexGroupAge.Add(1);
-            }
-
-            // check for reduction in the apex size
-            if ((apexGroupSize.Count > 0) && (deltaApex > 1E-12))
-            {
-                double remainingRemoveApex = deltaApex;
-                for (int i = apexGroupSize.Count - 1; i > 0; i--)
-                {
-                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
-                    apexGroupSize[i] -= remove;
-                    remainingRemoveApex -= remove;
-                    if (remainingRemoveApex <= 0.0)
-                        break;
-                }
-
-                if (remainingRemoveApex > 0.0)
-                    throw new Exception("There are not enough apex to remove from plant.");
-            }
-        }
         /// <summary>
         /// Reset the apex instance
         /// </summary>
@@ -217,12 +168,58 @@
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (phenology.Stage > 4 & !SenescenceByAge)
+            if (plant.IsEmerged)
             {
-                double senescenceNum = NumByAge(stemSenescenceAge.Value());
-                Number -= senescenceNum;
-                SenescenceByAge = true;
-                structure.TotalStemPopn -= senescenceNum * plant.Population;
+                if (structure.TimeForAnotherLeaf && structure.AllLeavesAppeared == false)
+                {
+                    // Apex calculation
+                    Number += structure.branchingRate.Value() * structure.PrimaryBudNo;
+
+
+                    // update age of cohorts
+                    for (int i = 0; i < apexGroupAge.Count; i++)
+                        apexGroupAge[i]++;
+
+                }
+                // Reduce the apex number by branching mortality
+                Number -= structure.branchMortality.Value() * (Number - 1);
+
+
+                // check for increase in apex size, add new group if needed
+                // (ApexNum should be an integer, but need to check in case of flag leaf)
+                double deltaApex = apexGroupSize.Sum() - Number;
+                if (deltaApex < -1E-12)
+                {
+                    if (apexGroupSize.Count == 0)
+                        apexGroupSize.Add(Number);
+                    else
+                        apexGroupSize.Add(-deltaApex);
+                    apexGroupAge.Add(1);
+                }
+
+                // check for reduction in the apex size
+                if ((apexGroupSize.Count > 0) && (deltaApex > 1E-12))
+                {
+                    double remainingRemoveApex = deltaApex;
+                    for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                    {
+                        double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                        apexGroupSize[i] -= remove;
+                        remainingRemoveApex -= remove;
+                        if (remainingRemoveApex <= 0.0)
+                            break;
+                    }
+
+                    if (remainingRemoveApex > 0.0)
+                        throw new Exception("There are not enough apex to remove from plant.");
+                }
+                if (phenology.Stage > 4 & !SenescenceByAge)
+                {
+                    double senescenceNum = NumByAge(stemSenescenceAge.Value());
+                    Number -= senescenceNum;
+                    SenescenceByAge = true;
+                    structure.TotalStemPopn -= senescenceNum * plant.Population;
+                }
             }
         }
 
@@ -249,6 +246,6 @@
         {
             Reset();
         }
-        
+
     }
 }

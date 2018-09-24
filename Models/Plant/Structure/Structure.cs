@@ -81,9 +81,6 @@ namespace Models.PMF.Struct
         [Link]
         public IFunction branchMortality = null;
 
-        /// <summary>The leaf apex model</summary>
-        [Link(IsOptional = true)]
-        public IApex Apex = null;
 
         /// <summary>The Stage that cohorts are initialised on</summary>
         [Description("The Stage that cohorts are initialised on")]
@@ -334,10 +331,7 @@ namespace Models.PMF.Struct
                         ProportionBranchMortality = PropnMortality;
 
                     }
-                    if (Apex != null)
-                    {
-                        Apex.DoCalculations();
-                    }
+                    
                 }
             }
         }
