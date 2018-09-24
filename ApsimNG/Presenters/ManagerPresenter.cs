@@ -102,7 +102,7 @@ namespace UserInterface.Presenters
             try
             {
                 if (e.ControlShiftSpace)
-                    intellisense.ShowMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                    intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
                 else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
             }

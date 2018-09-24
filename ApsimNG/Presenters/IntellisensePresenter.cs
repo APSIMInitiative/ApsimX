@@ -276,6 +276,91 @@
         /// <param name="relativeTo">Model to be used as a reference when searching for completion data.</param>
         /// <param name="code">Code for which we want to generate completion data.</param>
         /// <param name="offset">Offset of the cursor/caret in the code.</param>
+        public void ShowScriptMethodCompletion(IModel relativeTo, string code, int offset, Point location)
+        {
+            string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
+            string currentLine = contentsToCursor.Split(Environment.NewLine.ToCharArray()).Last().Trim();
+
+            int indexOfMethodCall = currentLine.LastIndexOf('('); // Remember, we've already removed everything after the cursor
+            if (indexOfMethodCall < 0)
+                return;
+
+            int indexOfLastPeriod = currentLine.LastIndexOf('.');
+            indexOfLastPeriod = Math.Max(indexOfLastPeriod, 0);
+
+            string methodName = currentLine.Substring(indexOfLastPeriod, indexOfMethodCall - indexOfLastPeriod).Trim('.');
+
+            string objectName = currentLine.Substring(0, indexOfLastPeriod);
+            indexOfLastPeriod = Math.Max(objectName.LastIndexOf('.'), 0);
+            objectName = objectName.Substring(indexOfLastPeriod);
+
+            CSharpParser parser = new CSharpParser();
+            SyntaxTree syntaxTree = parser.Parse(code);
+            string fileName = Path.GetTempFileName();
+            if (!File.Exists(fileName))
+                File.Create(fileName).Close();
+            File.WriteAllText(fileName, code);
+            syntaxTree.FileName = fileName;
+            syntaxTree.Freeze();
+
+            // Should probably take into account which namespaces the user is using and load the needed assemblies into the CSharpCompletion object
+            // string usings = syntaxTree.Descendants.OfType<UsingDeclaration>().Select(x => x.ToString()).Aggregate((x, y) => x + /* Environment.NewLine + */ y);
+
+            IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
+            var test = completion.GetMethodCompletion(document, offset, false);
+
+            if (test.OverloadProvider != null)
+            {
+                if (test.OverloadProvider.Count > 1)
+                {
+                    // TODO : something clever
+                }
+                else if (test.OverloadProvider.Count == 1)
+                {
+                    ICSharpCode.NRefactory.TypeSystem.IParameterizedMember method = test.OverloadProvider.Items.First().Method;
+                    string name = method.Name;
+                    List<string> arguments = new List<string>();
+                    foreach (var parameter in method.Parameters)
+                    {
+                        string parameterString = string.Format("{0} {1}", parameter.Type.Name, parameter.Name);
+                        if (parameter.ConstantValue != null)
+                            parameterString += string.Format(" = {0}", parameter.ConstantValue.ToString());
+                        arguments.Add(parameterString);
+                    }
+                    string methodSignature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y)));
+                    string methodSummary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim();
+                    methodCompletionView.MethodSignature = methodSignature;
+                    methodCompletionView.MethodSummary = methodSummary;
+                    methodCompletionView.Location = location;
+                    methodCompletionView.Visible = true;
+                }
+            }
+            /*
+            if (method == null)
+                return;
+
+            List<string> parameterStrings = new List<string>();
+            foreach (ParameterInfo parameter in method.GetParameters())
+            {
+                string parameterString = string.Format("{0} {1}", parameter.ParameterType.Name, parameter.Name);
+                if (parameter.DefaultValue != DBNull.Value)
+                    parameterString += string.Format(" = {0}", parameter.DefaultValue.ToString());
+            }
+            string parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
+
+            methodCompletionView.MethodSignature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
+            methodCompletionView.MethodSummary = NeedContextItemsArgs.GetDescription(method);
+            methodCompletionView.Location = location;
+            methodCompletionView.Visible = true;
+            */
+        }
+
+        /// <summary>
+        /// Shows completion information for a method call.
+        /// </summary>
+        /// <param name="relativeTo">Model to be used as a reference when searching for completion data.</param>
+        /// <param name="code">Code for which we want to generate completion data.</param>
+        /// <param name="offset">Offset of the cursor/caret in the code.</param>
         public void ShowMethodCompletion(IModel relativeTo, string code, int offset, Point location)
         {
             string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
