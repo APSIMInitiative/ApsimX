@@ -7,6 +7,7 @@ namespace Models.PMF
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
@@ -27,7 +28,7 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(CultivarFolder))]
-    public class Cultivar : Model
+    public class Cultivar : Model, ICustomDocumentation
     {
         /// <summary>
         /// The properties for each command
@@ -146,6 +147,23 @@ namespace Models.PMF
 
             this.properties.Clear();
             this.oldPropertyValues.Clear();
+        }
+
+        /// <summary>
+        /// Writes documentation for this function by adding to the list of documentation tags.
+        /// </summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                tags.Add(new AutoDocumentation.Paragraph("Cultivar class for holding cultivar overrides.", indent));
+                tags.Add(new AutoDocumentation.Paragraph(Name + " makes the following changes:", indent));
+                tags.Add(new AutoDocumentation.Paragraph(Commands.Aggregate((a, b) => a + "<br>" + b), indent));
+            }
         }
     }
 }
