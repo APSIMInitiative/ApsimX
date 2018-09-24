@@ -28,7 +28,15 @@
         /// </summary>
         private Label lblMethodSummary;
 
+        /// <summary>
+        /// Label which holds summaries for the method's arguments.
+        /// </summary>
         private Label lblArgumentSummaries;
+
+        /// <summary>
+        /// Label which shows the user the number of available overloads for this method.
+        /// </summary>
+        private Label lblOverloadIndex;
 
         /// <summary>
         /// When the user is finished typing their method call (e.g. when they press the ')' key),
@@ -72,19 +80,31 @@
             lblMethodSignature = new Label();
             lblMethodSummary = new Label();
             lblArgumentSummaries = new Label();
+            lblOverloadIndex = new Label();
 
             // Left-align text
             lblMethodSignature.Xalign = 0f;
             lblMethodSummary.Xalign = 0f;
             lblArgumentSummaries.Xalign = 0f;
+            lblOverloadIndex.Xalign = 1f;
+            lblOverloadIndex.Yalign = 1f;
+
+            lblArgumentSummaries.Wrap = true;
+            lblArgumentSummaries.LineWrapMode = Pango.WrapMode.Word;
+
+            HBox bottomRow = new HBox();
+            bottomRow.PackStart(lblArgumentSummaries, false, false, 0);
+            bottomRow.PackStart(lblOverloadIndex, true, true, 0);
 
             VBox container = new VBox();
             container.PackStart(lblMethodSignature, false, false, 0);
             container.PackStart(lblMethodSummary, false, false, 0);
-            container.PackStart(lblArgumentSummaries, false, false, 0);
+            container.PackStart(bottomRow, false, false, 0);
+            container.ResizeMode = ResizeMode.Immediate;
 
             mainWindow.Add(container);
             Window masterWindow = owner.MainWidget.Toplevel as Window;
+            mainWindow.Resizable = false;
             masterWindow.KeyPressEvent += OnKeyPress;
             masterWindow.FocusOutEvent += OnFocusOut;
             Visible = false;
@@ -120,16 +140,19 @@
             }
             set
             {
-                if (value >= 0)
-                {
-                    visibleCompletionIndex = value;
-                    MethodCompletion completion = completions[visibleCompletionIndex];
-                    lblMethodSignature.Text = completion.Signature;
-                    lblMethodSummary.Text = completion.Summary;
-                    lblArgumentSummaries.Text = completion.ParameterDocumentation;
-                }
+                if (value >= completions.Count)
+                    value = 0;
+                else if (value < 0)
+                    value = completions.Count - 1;
+                visibleCompletionIndex = value;
+                MethodCompletion completion = completions[visibleCompletionIndex];
+                lblMethodSignature.Text = completion.Signature;
+                lblMethodSummary.Text = completion.Summary;
+                lblArgumentSummaries.Text = completion.ParameterDocumentation;
+                lblOverloadIndex.Text = string.Format("{0} of {1}", visibleCompletionIndex + 1, completions.Count);
             }
         }
+
         /// <summary>
         /// Gets or sets the visibility of the window.
         /// </summary>
@@ -198,6 +221,20 @@
                         bracketIndex--;
                         if (bracketIndex <= 0)
                             Visible = false;
+                    }
+                    else if (args.Event.Key == Gdk.Key.Up)
+                    {
+                        VisibleCompletionIndex--;
+                        // If the user pressed an arrow key, we don't want them to move up or down a row in the text editor.
+                        // To stop propagation of this keypress event, we set args.RetVal to true.
+                        args.RetVal = true;
+                    }
+                    else if (args.Event.Key == Gdk.Key.Down)
+                    {
+                        VisibleCompletionIndex++;
+                        // If the user pressed an arrow key, we don't want them to move up or down a row in the text editor.
+                        // To stop propagation of this keypress event, we set args.RetVal to true.
+                        args.RetVal = true;
                     }
                 }
             }

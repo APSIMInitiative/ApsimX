@@ -312,46 +312,40 @@
 
             if (test.OverloadProvider != null)
             {
-                ICSharpCode.NRefactory.TypeSystem.IParameterizedMember method;
-                if (test.OverloadProvider.Count > 1)
+                if (test.OverloadProvider.Count < 1)
+                    return;
+                List<MethodCompletion> completions = new List<MethodCompletion>();
+                foreach (ICSharpCode.NRefactory.TypeSystem.IParameterizedMember method in test.OverloadProvider.Items.Select(x => x.Method))
                 {
-                    // TODO : Parse and store documentation for all overloads of a method.
-                    // For now, just display information for the 'first' overload that was found.
-                    method = test.OverloadProvider.Items.First().Method;
+                    // Generate argument signatures - e.g. string foo, int bar
+                    List<string> arguments = new List<string>();
+                    foreach (var parameter in method.Parameters)
+                    {
+                        string parameterString = string.Format("{0} {1}", parameter.Type.Name, parameter.Name);
+                        if (parameter.ConstantValue != null)
+                            parameterString += string.Format(" = {0}", parameter.ConstantValue.ToString());
+                        arguments.Add(parameterString);
+                    }
+
+                    // The NRefactory Implementation we are using doesn't do anything more than read the xml file.
+                    // Therefore, we need to parse this XML to get the parameter summaries.
+                    System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                    doc.LoadXml(string.Format("<documentation>{0}</documentation>", method.Documentation.Xml.Text));
+                    List<string> argumentSummariesList = new List<string>();
+                    foreach (System.Xml.XmlElement parameter in APSIM.Shared.Utilities.XmlUtilities.ChildNodesRecursively(doc.FirstChild, "param"))
+                        argumentSummariesList.Add(string.Format("{0}: {1}", parameter.GetAttribute("name"), parameter.InnerText));
+
+                    MethodCompletion completion = new MethodCompletion()
+                    {
+                        Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y))),
+                        Summary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim(),
+                        ParameterDocumentation = argumentSummariesList.Aggregate((x, y) => x + Environment.NewLine + y)
+                    };
+                    completions.Add(completion);
                 }
-                else if (test.OverloadProvider.Count == 1)
-                    method = test.OverloadProvider.Items.First().Method;
-                else
-                    return; // No matches
 
-                // Generate argument signatures - e.g. string foo, int bar
-                List<string> arguments = new List<string>();
-                foreach (var parameter in method.Parameters)
-                {
-                    string parameterString = string.Format("{0} {1}", parameter.Type.Name, parameter.Name);
-                    if (parameter.ConstantValue != null)
-                        parameterString += string.Format(" = {0}", parameter.ConstantValue.ToString());
-                    arguments.Add(parameterString);
-                }
 
-                // The NRefactory Implementation we are using doesn't do anything more than read the xml file.
-                // Therefore, we need to parse this XML to get the parameter summaries.
-                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                doc.LoadXml(string.Format("<documentation>{0}</documentation>", method.Documentation.Xml.Text));
-                List<string> argumentSummariesList = new List<string>();
-                foreach (System.Xml.XmlElement parameter in APSIM.Shared.Utilities.XmlUtilities.ChildNodesRecursively(doc.FirstChild, "param"))
-                    argumentSummariesList.Add(string.Format("{0}: {1}", parameter.GetAttribute("name"), parameter.InnerText));
-
-                MethodCompletion completion = new MethodCompletion()
-                {
-                    Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y))),
-                    Summary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim(),
-                    ParameterDocumentation = argumentSummariesList.Aggregate((x, y) => x + Environment.NewLine + y)
-                };
-
-                methodCompletionView.MethodSignature = completion.Signature;
-                methodCompletionView.MethodSummary = completion.Summary;
-                methodCompletionView.ArgumentSummaries = completion.ParameterDocumentation;
+                methodCompletionView.Completions = completions;
                 methodCompletionView.Location = location;
                 methodCompletionView.Visible = true;
             }
@@ -412,9 +406,7 @@
             completion.Summary = NeedContextItemsArgs.GetDescription(method);
             completion.ParameterDocumentation = parameterDocumentation.ToString();
 
-            methodCompletionView.MethodSignature = completion.Signature;
-            methodCompletionView.MethodSummary = completion.Summary;
-            methodCompletionView.ArgumentSummaries = completion.ParameterDocumentation;
+            methodCompletionView.Completions = new List<MethodCompletion>() { completion };
             methodCompletionView.Location = location;
             methodCompletionView.Visible = true;
         }
@@ -551,12 +543,15 @@
         {
             if (args.IsMethod)
             {
-                methodCompletionView.MethodSignature = string.Format("{0} {1}{2}", args.TypeName, args.Name, args.ParamString);
+                MethodCompletion completion = new MethodCompletion()
+                {
+                    Signature = string.Format("{0} {1}{2}", args.TypeName, args.Name, args.ParamString),
+                    Summary = args.Descr.Trim(),
+                };
                 methodCompletionView.Location = recentLocation;
                 methodCompletionView.Visible = true;
-                methodCompletionView.MethodSummary = args.Descr.Trim();
-                methodCompletionView.Visible = true;
             }
+
             IntellisenseItemSelectedArgs itemSelectedArgs = new IntellisenseItemSelectedArgs()
             {
                 TriggerWord = triggerWord,
