@@ -27,11 +27,6 @@
         private Label lblMethodSummary;
 
         /// <summary>
-        /// Label which holds the summary of the argument which the user is typing.
-        /// </summary>
-        private Label lblArgumentSummary;
-
-        /// <summary>
         /// When the user is finished typing their method call (e.g. when they press the ')' key),
         /// this popup must be hidden, but what if one of their arguments contains a set of brackets?
         /// This field is used to count the number of bracket characters they type. Typing a (
@@ -62,17 +57,14 @@
 
             lblMethodSignature = new Label();
             lblMethodSummary = new Label();
-            lblArgumentSummary = new Label();
 
             // Left-align text
             lblMethodSignature.Xalign = 0f;
             lblMethodSummary.Xalign = 0f;
-            lblArgumentSummary.Xalign = 0f;
 
             VBox container = new VBox();
             container.PackStart(lblMethodSignature, false, false, 0);
             container.PackStart(lblMethodSummary, false, false, 0);
-            container.PackStart(lblArgumentSummary, false, false, 0);
 
             mainWindow.Add(container);
             Window masterWindow = owner.MainWidget.Toplevel as Window;
@@ -108,21 +100,6 @@
             set
             {
                 lblMethodSummary.Text = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the argument summary.
-        /// </summary>
-        public string ArgumentSummary
-        {
-            get
-            {
-                return lblArgumentSummary.Text;
-            }
-            set
-            {
-                lblArgumentSummary.Text = value;
             }
         }
 
