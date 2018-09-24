@@ -8,6 +8,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using APSIM.Shared.Utilities;
     using EventArguments;
     using Models;
@@ -146,7 +147,9 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(operations, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
             }
             catch (Exception err)

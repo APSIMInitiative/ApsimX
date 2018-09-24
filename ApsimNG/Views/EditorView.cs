@@ -423,6 +423,7 @@ namespace UserInterface.Views
                 : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
 
             bool controlSpace = IsControlSpace(e.Event);
+            bool controlShiftSpace = IsControlShiftSpace(e.Event);
             string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
             double x; // unused, but needed as an out parameter.
             if (e.Event.Key == Gdk.Key.F3)
@@ -434,7 +435,7 @@ namespace UserInterface.Views
                 e.RetVal = true;
             }
             // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
-            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) )
+            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace || controlShiftSpace) )
             {
                 // If the user entered a period, we need to take that into account when generating intellisense options.
                 // To do this, we insert a period manually and stop the Gtk signal from propagating further.
@@ -452,6 +453,7 @@ namespace UserInterface.Views
                     Code = textEditor.Text,
                     Offset = this.Offset,
                     ControlSpace = controlSpace,
+                    ControlShiftSpace = controlShiftSpace,
                     LineNo = textEditor.Caret.Line,
                     ColNo = textEditor.Caret.Column - 1
                 };
@@ -479,6 +481,16 @@ namespace UserInterface.Views
         private bool IsControlSpace(Gdk.EventKey e)
         {
             return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && (e.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask;
+        }
+
+        /// <summary>
+        /// Checks whether a keypress is a control-shift-space event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        /// <returns>True iff the event represents a control + shift + space click.</returns>
+        private bool IsControlShiftSpace(Gdk.EventKey e)
+        {
+            return IsControlSpace(e) && (e.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
         }
 
         /// <summary>

@@ -158,25 +158,26 @@
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
-            if (Visible)
+            try
             {
-                if (args.Event.Key == Gdk.Key.Escape)
-                    Visible = false;
-                else if (args.Event.Key == Gdk.Key.parenleft)
-                    bracketIndex++;
-                else if (args.Event.Key == Gdk.Key.parenright)
+                if (Visible)
                 {
-                    bracketIndex--;
-                    if (bracketIndex <= 0)
+                    if (args.Event.Key == Gdk.Key.Escape)
                         Visible = false;
-                }
-                else if (args.Event.Key == Gdk.Key.comma)
-                {
-                    // TODO - display summary of next argument
+                    else if (args.Event.Key == Gdk.Key.parenleft)
+                        bracketIndex++;
+                    else if (args.Event.Key == Gdk.Key.parenright)
+                    {
+                        bracketIndex--;
+                        if (bracketIndex <= 0)
+                            Visible = false;
+                    }
                 }
             }
-            else if ((args.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask && (args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space && !string.IsNullOrEmpty(MethodSummary))
-                Visible = true;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -186,7 +187,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnFocusOut(object sender, EventArgs args)
         {
-            Visible = false;
+            try
+            {
+                Visible = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

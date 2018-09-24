@@ -146,7 +146,9 @@ namespace UserInterface.Presenters
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
-                if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(report, currentLine, e.Offset, new System.Drawing.Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
                 intellisense.ItemSelected += (o, args) => 
                 {

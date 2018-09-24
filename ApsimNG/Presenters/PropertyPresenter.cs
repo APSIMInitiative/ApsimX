@@ -19,6 +19,7 @@ namespace UserInterface.Presenters
     using Utility;
     using Views;
     using Commands;
+    using System.Drawing;
 
     /// <summary>
     /// <para>
@@ -257,7 +258,9 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(model, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
             }
             catch (Exception err)

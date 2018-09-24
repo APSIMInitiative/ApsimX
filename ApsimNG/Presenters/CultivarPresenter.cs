@@ -6,6 +6,7 @@
 namespace UserInterface.Presenters
 {
     using System;
+    using System.Drawing;
     using EventArguments;
     using Models.PMF;
     using Views;
@@ -86,7 +87,9 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, cultivar, true, false, false, e.ControlSpace))
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(cultivar, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, cultivar, true, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
             }
             catch (Exception err)

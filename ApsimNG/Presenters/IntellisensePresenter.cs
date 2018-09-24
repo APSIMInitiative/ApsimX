@@ -13,6 +13,8 @@
     using Models.Core;
     using System.Globalization;
     using System.Drawing;
+    using System.Reflection;
+    using System.Text;
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -188,7 +190,7 @@
                 if (modelNameIndex >= 0)
                     objectName = objectName.Substring(modelNameIndex);
             }
-            
+
             List<NeedContextItemsArgs.ContextItem> results = NeedContextItemsArgs.ExamineModelForContextItemsV2(model as Model, objectName, properties, methods, events);
             view.Populate(results);
             return results.Any();
@@ -266,6 +268,59 @@
             if (intellisenseOptions.Any())
                 view.Populate(intellisenseOptions);
             return intellisenseOptions.Any();
+        }
+
+        /// <summary>
+        /// Shows completion information for a method call.
+        /// </summary>
+        /// <param name="relativeTo">Model to be used as a reference when searching for completion data.</param>
+        /// <param name="code">Code for which we want to generate completion data.</param>
+        /// <param name="offset">Offset of the cursor/caret in the code.</param>
+        public void ShowMethodCompletion(IModel relativeTo, string code, int offset, Point location)
+        {
+            string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
+
+            // Ignore everything before the most recent comma.
+            contentsToCursor = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
+
+            string currentLine = contentsToCursor.Split(Environment.NewLine.ToCharArray()).Last().Trim();
+            // Set the trigger word for later use.
+            triggerWord = GetTriggerWord(currentLine);
+            
+            // Ignore everything before most recent model name in square brackets.
+            // I'm assuming that model/node names cannot start with a number.
+            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
+            string objectName = currentLine;
+            var matches = System.Text.RegularExpressions.Regex.Matches(code, modelNamePattern);
+            if (matches.Count > 0)
+            {
+                int modelNameIndex = currentLine.LastIndexOf(matches[matches.Count - 1].Value);
+                if (modelNameIndex >= 0)
+                {
+                    currentLine = currentLine.Substring(modelNameIndex);
+                    int lastPeriod = currentLine.LastIndexOf('.');
+                    objectName = lastPeriod >= 0 ? currentLine.Substring(0, lastPeriod) : currentLine;
+                }
+            }
+            string methodName = triggerWord.TrimEnd('(');
+            MethodInfo method = NeedContextItemsArgs.GetMethodInfo(relativeTo as Model, methodName, objectName);
+
+            if (method == null)
+                return;
+
+            List<string> parameterStrings = new List<string>();
+            foreach (ParameterInfo parameter in method.GetParameters())
+            {
+                string parameterString = string.Format("{0} {1}", parameter.ParameterType.Name, parameter.Name);
+                if (parameter.DefaultValue != DBNull.Value)
+                    parameterString += string.Format(" = {0}", parameter.DefaultValue.ToString());
+            }
+            string parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
+
+            methodCompletionView.MethodSignature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
+            methodCompletionView.MethodSummary = NeedContextItemsArgs.GetDescription(method);
+            methodCompletionView.Location = location;
+            methodCompletionView.Visible = true;
         }
 
         /// <summary>

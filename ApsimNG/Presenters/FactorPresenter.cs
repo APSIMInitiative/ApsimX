@@ -8,6 +8,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Reflection;
     using EventArguments;
     using Models.Core;
@@ -84,7 +85,9 @@ namespace UserInterface.Presenters
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
-                if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(factor, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
                 intellisense.ItemSelected += (o, args) =>
                 {
