@@ -33,12 +33,6 @@ namespace Models.PMF.Interfaces
         double Appearance(double population, double totalStemPopn);
 
         /// <summary>
-        /// TODO: This method needs documentation
-        /// </summary>
-        /// <param name="NewLeaf"></param>
-        void DoCalculations(LeafCohort NewLeaf);
-
-        /// <summary>
         /// Reset the apex instance
         /// </summary>
         void Reset();
