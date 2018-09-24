@@ -117,7 +117,8 @@ namespace UserInterface.EventArguments
                             {
                                 Name = method.Name,
                                 IsProperty = false,
-                                IsEvent = true,
+                                IsEvent = false,
+                                IsMethod = true,
                                 IsWriteable = false,
                                 TypeName = method.ReturnType.Name,
                                 Descr = GetDescription(method),
@@ -133,6 +134,8 @@ namespace UserInterface.EventArguments
                                 {
                                     ParameterInfo parameter = allparams[p];
                                     paramText.Append(parameter.ParameterType.Name + " " + parameter.Name);
+                                    if (parameter.DefaultValue != DBNull.Value)
+                                        paramText.Append(" = " + parameter.DefaultValue.ToString());
                                     if (p < allparams.Count() - 1)
                                         paramText.Append(", ");
                                 }
@@ -153,6 +156,7 @@ namespace UserInterface.EventArguments
                         item.Name = evnt.Name;
                         item.IsProperty = true;
                         item.IsEvent = true;
+                        item.IsMethod = false;
                         item.IsWriteable = false;
                         item.TypeName = evnt.ReflectedType.Name;
                         item.Descr = GetDescription(evnt);
@@ -472,9 +476,14 @@ namespace UserInterface.EventArguments
             public string Descr;
 
             /// <summary>
-            /// This is an event/method
+            /// This is an event.
             /// </summary>
             public bool IsEvent;
+
+            /// <summary>
+            /// This is a method.
+            /// </summary>
+            public bool IsMethod;
 
             /// <summary>
             /// String that represents the parameter list

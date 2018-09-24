@@ -209,6 +209,8 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Interfaces\IMethodCompletionView.cs" />
+    <Compile Include="Views\MethodCompletionView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
     <Compile Include="Interfaces\IAxisView.cs" />

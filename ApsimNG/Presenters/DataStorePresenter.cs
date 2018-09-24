@@ -46,7 +46,7 @@ namespace UserInterface.Presenters
             dataStore = model as IStorageReader;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
-            this.intellisense = new IntellisensePresenter(this.view as ViewBase);
+            intellisense = new IntellisensePresenter(this.view as ViewBase);
             intellisense.ItemSelected += OnInsertIntellisenseItem;
 
             this.view.TableList.IsEditable = false;
