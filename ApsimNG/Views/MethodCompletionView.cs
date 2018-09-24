@@ -26,6 +26,8 @@
         /// </summary>
         private Label lblMethodSummary;
 
+        private Label lblArgumentSummaries;
+
         /// <summary>
         /// When the user is finished typing their method call (e.g. when they press the ')' key),
         /// this popup must be hidden, but what if one of their arguments contains a set of brackets?
@@ -57,14 +59,17 @@
 
             lblMethodSignature = new Label();
             lblMethodSummary = new Label();
+            lblArgumentSummaries = new Label();
 
             // Left-align text
             lblMethodSignature.Xalign = 0f;
             lblMethodSummary.Xalign = 0f;
+            lblArgumentSummaries.Xalign = 0f;
 
             VBox container = new VBox();
             container.PackStart(lblMethodSignature, false, false, 0);
             container.PackStart(lblMethodSummary, false, false, 0);
+            container.PackStart(lblArgumentSummaries, false, false, 0);
 
             mainWindow.Add(container);
             Window masterWindow = owner.MainWidget.Toplevel as Window;
@@ -100,6 +105,21 @@
             set
             {
                 lblMethodSummary.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the argument summaries.
+        /// </summary>
+        public string ArgumentSummaries
+        {
+            get
+            {
+                return lblArgumentSummaries.Text;
+            }
+            set
+            {
+                lblArgumentSummaries.Text = value;
             }
         }
 

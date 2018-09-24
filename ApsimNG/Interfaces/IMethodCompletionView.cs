@@ -19,6 +19,11 @@
         string MethodSummary { get; set; }
 
         /// <summary>
+        /// Gets or sets the argument summaries.
+        /// </summary>
+        string ArgumentSummaries { get; set; }
+
+        /// <summary>
         /// Gets or sets the visibility of the window.
         /// </summary>
         bool Visible { get; set; }

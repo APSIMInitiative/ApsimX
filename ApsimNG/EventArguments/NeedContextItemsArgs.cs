@@ -464,6 +464,33 @@ namespace UserInterface.EventArguments
         }
 
         /// <summary>
+        /// Gets the XML documentation for a particular parameter of a method.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="parameterName">The parameter.</param>
+        public static string GetDescription(MethodInfo method, string parameterName)
+        {
+            if (method == null)
+                return string.Empty;
+
+            // The method's documentation doesn't reside in the compiled assembly - it's actually stored in
+            // an xml documentation file which usually sits next to the assembly on disk.
+            string documentationFile = System.IO.Path.ChangeExtension(method.Module.Assembly.Location, "xml");
+            if (!System.IO.File.Exists(documentationFile))
+                return string.Empty;
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(documentationFile);
+            string xPath = string.Format("//member[starts-with(@name, 'M:{0}.{1}')]/param[@name='{2}']", method.DeclaringType.FullName, method.Name, parameterName);
+            XmlNode paramNode = doc.SelectSingleNode(xPath);
+            if (paramNode == null || paramNode.ChildNodes.Count < 1)
+                return string.Empty;
+            // The summary tag often spans multiple lines, which means that the text inside usually
+            // starts and ends with newlines (and indentation), which we don't want to display.
+            return paramNode.InnerText.Trim(Environment.NewLine.ToCharArray()).Trim();
+        }
+
+        /// <summary>
         /// Complete context item information
         /// </summary>
         public class ContextItem
