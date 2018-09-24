@@ -154,7 +154,6 @@ Source: ..\Bin\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
 Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
-Source: ..\ApsimNG\Assemblies\MonoMac.dll; DestDir: {app}\Bin; Flags: ignoreversion;
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
