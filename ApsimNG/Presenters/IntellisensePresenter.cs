@@ -344,7 +344,6 @@
                     completions.Add(completion);
                 }
 
-
                 methodCompletionView.Completions = completions;
                 methodCompletionView.Location = location;
                 methodCompletionView.Visible = true;
@@ -438,6 +437,7 @@
         {
             view.ItemSelected -= ContextItemSelected;
             view?.Cleanup();
+            methodCompletionView.Visible = false;
         }
 
         /// <summary>

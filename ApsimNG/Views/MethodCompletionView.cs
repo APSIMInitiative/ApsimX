@@ -88,25 +88,25 @@
             lblArgumentSummaries.Xalign = 0f;
             lblOverloadIndex.Xalign = 1f;
             lblOverloadIndex.Yalign = 1f;
-
-            lblArgumentSummaries.Wrap = true;
-            lblArgumentSummaries.LineWrapMode = Pango.WrapMode.Word;
+            lblArgumentSummaries.WidthChars = 100;
+            //lblArgumentSummaries.Ellipsize = Pango.EllipsizeMode.Start;
+            lblArgumentSummaries.LineWrap = true;
 
             HBox bottomRow = new HBox();
-            bottomRow.PackStart(lblArgumentSummaries, false, false, 0);
-            bottomRow.PackStart(lblOverloadIndex, true, true, 0);
+            bottomRow.PackStart(lblArgumentSummaries, true, true, 0);
+            bottomRow.PackEnd(lblOverloadIndex, false, false, 0);
 
             VBox container = new VBox();
             container.PackStart(lblMethodSignature, false, false, 0);
             container.PackStart(lblMethodSummary, false, false, 0);
             container.PackStart(bottomRow, false, false, 0);
-            container.ResizeMode = ResizeMode.Immediate;
 
             mainWindow.Add(container);
             Window masterWindow = owner.MainWidget.Toplevel as Window;
             mainWindow.Resizable = false;
             masterWindow.KeyPressEvent += OnKeyPress;
             masterWindow.FocusOutEvent += OnFocusOut;
+            masterWindow.ButtonPressEvent += OnFocusOut;
             Visible = false;
         }
 
@@ -148,7 +148,8 @@
                 MethodCompletion completion = completions[visibleCompletionIndex];
                 lblMethodSignature.Text = completion.Signature;
                 lblMethodSummary.Text = completion.Summary;
-                lblArgumentSummaries.Text = completion.ParameterDocumentation;
+                lblArgumentSummaries.Markup = System.Text.RegularExpressions.Regex.Replace(completion.ParameterDocumentation, @"^([^:]+:)", @"<b>$1</b>", System.Text.RegularExpressions.RegexOptions.Multiline);
+                lblArgumentSummaries.WidthChars = Math.Max(completion.Signature.Length, completion.Summary.Length);
                 lblOverloadIndex.Text = string.Format("{0} of {1}", visibleCompletionIndex + 1, completions.Count);
             }
         }
