@@ -558,17 +558,6 @@
         /// <param name="args">Event Arguments.</param>
         private void ContextItemSelected(object sender, NeedContextItemsArgs.ContextItem args)
         {
-            if (args.IsMethod)
-            {
-                MethodCompletion completion = new MethodCompletion()
-                {
-                    Signature = string.Format("{0} {1}{2}", args.TypeName, args.Name, args.ParamString),
-                    Summary = args.Descr.Trim(),
-                };
-                methodCompletionView.Location = recentLocation;
-                methodCompletionView.Visible = true;
-            }
-
             IntellisenseItemSelectedArgs itemSelectedArgs = new IntellisenseItemSelectedArgs()
             {
                 TriggerWord = triggerWord,
