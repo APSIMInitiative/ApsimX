@@ -282,22 +282,6 @@
         /// <param name="offset">Offset of the cursor/caret in the code.</param>
         public void ShowScriptMethodCompletion(IModel relativeTo, string code, int offset, Point location)
         {
-            string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
-            string currentLine = contentsToCursor.Split(Environment.NewLine.ToCharArray()).Last().Trim();
-
-            int indexOfMethodCall = currentLine.LastIndexOf('('); // Remember, we've already removed everything after the cursor
-            if (indexOfMethodCall < 0)
-                return;
-
-            int indexOfLastPeriod = currentLine.Substring(0, indexOfMethodCall).LastIndexOf('.');
-            indexOfLastPeriod = Math.Max(indexOfLastPeriod, 0);
-
-            string methodName = currentLine.Substring(indexOfLastPeriod, indexOfMethodCall - indexOfLastPeriod).Trim('.');
-
-            string objectName = currentLine.Substring(0, indexOfLastPeriod);
-            indexOfLastPeriod = Math.Max(objectName.LastIndexOf('.'), 0);
-            objectName = objectName.Substring(indexOfLastPeriod);
-
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
             string fileName = Path.GetTempFileName();
@@ -420,7 +404,7 @@
 
             completion.Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
             completion.Summary = NeedContextItemsArgs.GetDescription(method);
-            completion.ParameterDocumentation = parameterDocumentation.ToString();
+            completion.ParameterDocumentation = parameterDocumentation.ToString().Trim(Environment.NewLine.ToCharArray());
 
             methodCompletionView.Completions = new List<MethodCompletion>() { completion };
             methodCompletionView.Location = location;
@@ -561,7 +545,7 @@
             IntellisenseItemSelectedArgs itemSelectedArgs = new IntellisenseItemSelectedArgs()
             {
                 TriggerWord = triggerWord,
-                ItemSelected = args.Name,
+                ItemSelected = args.Name + (args.IsMethod ? "(" : ""),
                 IsMethod = args.IsMethod
             };
             onItemSelected?.Invoke(this, itemSelectedArgs);

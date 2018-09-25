@@ -75,7 +75,7 @@ namespace UserInterface.Presenters
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
 
@@ -229,7 +229,7 @@ namespace UserInterface.Presenters
             try
             {
                 if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore))
-                    intellisense.Show(args.Coordinates.Item1, args.Coordinates.Item2);
+                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)
             {

@@ -89,7 +89,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
 
@@ -103,9 +103,9 @@ namespace UserInterface.Presenters
             try
             {
                 if (e.ControlShiftSpace)
-                    intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                    intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
                 else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -236,6 +236,10 @@ namespace UserInterface.Presenters
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             managerView.Editor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            if (args.IsMethod)
+            {
+                intellisense.ShowScriptMethodCompletion(manager, managerView.Editor.Text, managerView.Editor.Offset, managerView.Editor.GetPositionOfCursor());
+            }
         }
     }
 }

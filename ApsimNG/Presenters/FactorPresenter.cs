@@ -88,9 +88,9 @@ namespace UserInterface.Presenters
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 if (e.ControlShiftSpace)
-                    intellisense.ShowMethodCompletion(factor, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                    intellisense.ShowMethodCompletion(factor, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
                 else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -170,9 +170,9 @@ namespace UserInterface.Presenters
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             if (string.IsNullOrEmpty(args.ItemSelected))
-                (sender as IEditorView).InsertAtCaret(args.ItemSelected);
+                factorView.InsertAtCaret(args.ItemSelected);
             else
-                (sender as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                factorView.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
     }
 }

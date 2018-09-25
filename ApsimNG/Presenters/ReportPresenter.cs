@@ -24,6 +24,13 @@ namespace UserInterface.Presenters
     public class ReportPresenter : IPresenter
     {
         /// <summary>
+        /// Used by the intellisense to keep track of which editor the user is currently using.
+        /// Without this, it's difficult to know which editor (variables or events) to
+        /// insert an intellisense item into.
+        /// </summary>
+        private IEditorView currentEditor;
+
+        /// <summary>
         /// The report object
         /// </summary>
         private Report report;
@@ -148,10 +155,9 @@ namespace UserInterface.Presenters
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
-                if (e.ControlShiftSpace)
-                    intellisense.ShowMethodCompletion(report, currentLine, e.Offset, new System.Drawing.Point(e.Coordinates.Item1, e.Coordinates.Item2));
-                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                currentEditor = sender as IEditorView;
+                if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -238,9 +244,11 @@ namespace UserInterface.Presenters
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             if (string.IsNullOrEmpty(args.ItemSelected))
-                (sender as IEditorView).InsertAtCaret(args.ItemSelected);
+                return;
+            else if (string.IsNullOrEmpty(args.TriggerWord))
+                currentEditor.InsertAtCaret(args.ItemSelected);
             else
-                (sender as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                currentEditor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
     }
 }

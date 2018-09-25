@@ -16,6 +16,7 @@ namespace UserInterface.EventArguments
     using APSIM.Shared.Utilities;
     using Intellisense;
     using System.Xml;
+    using System.Drawing;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -46,7 +47,7 @@ namespace UserInterface.EventArguments
         /// <summary>
         /// Co-ordinates at which the intellisense window should be displayed.
         /// </summary>
-        public Tuple<int, int> Coordinates { get; set; }
+        public Point Coordinates { get; set; }
 
         /// <summary>
         /// Source code for which we need completion options.

@@ -89,9 +89,9 @@ namespace UserInterface.Presenters
             try
             {
                 if (e.ControlShiftSpace)
-                    intellisense.ShowMethodCompletion(cultivar, e.Code, e.Offset, new Point(e.Coordinates.Item1, e.Coordinates.Item2));
+                    intellisense.ShowMethodCompletion(cultivar, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
                 else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, cultivar, true, false, false, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {

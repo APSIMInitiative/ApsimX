@@ -325,7 +325,7 @@
             {
                 IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
                 string description = descriptionLines.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines.Aggregate((x, y) => x + Environment.NewLine + y);
-                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText);
+                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText, item.IsMethod);
             }
         }
 
