@@ -65,6 +65,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
             this.view.VariableList.ScriptMode = false;
             this.view.EventList.ScriptMode = false;
             this.view.VariableList.Lines = report.VariableNames;
@@ -112,6 +113,7 @@ namespace UserInterface.Presenters
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             dataStorePresenter.Detach();
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
 
@@ -150,13 +152,6 @@ namespace UserInterface.Presenters
                     intellisense.ShowMethodCompletion(report, currentLine, e.Offset, new System.Drawing.Point(e.Coordinates.Item1, e.Coordinates.Item2));
                 else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
                     intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
-                intellisense.ItemSelected += (o, args) => 
-                {
-                    if (args.ItemSelected == string.Empty)
-                        (sender as IEditorView).InsertAtCaret(args.ItemSelected);
-                    else
-                        (sender as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
-                };
             }
             catch (Exception err)
             {
@@ -232,6 +227,20 @@ namespace UserInterface.Presenters
                 view.VariableList.Lines = report.VariableNames;
                 view.EventList.Lines = report.EventNames;
             }
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            if (string.IsNullOrEmpty(args.ItemSelected))
+                (sender as IEditorView).InsertAtCaret(args.ItemSelected);
+            else
+                (sender as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace UserInterface.Presenters
             intellisense = new IntellisensePresenter(grid as ViewBase);
 
             // The grid does not have control-space intellisense (for now).
-            intellisense.ItemSelected += (sender, e) => grid.InsertText(e.ItemSelected);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
             // if the model is Testable, run the test method.
             ITestable testModel = model as ITestable;
             if (testModel != null)
@@ -119,6 +119,7 @@ namespace UserInterface.Presenters
             grid.CellsChanged -= OnCellValueChanged;
             grid.ButtonClick -= OnFileBrowseClick;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
 
@@ -645,6 +646,17 @@ namespace UserInterface.Presenters
                 OnCellValueChanged(sender, e);
                 PopulateGrid(model);
             }
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            grid.InsertText(args.ItemSelected);
         }
     }
 }

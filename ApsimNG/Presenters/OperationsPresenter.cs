@@ -51,16 +51,7 @@ namespace UserInterface.Presenters
             this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
-            intellisense.ItemSelected += (sender, e) =>
-            {
-                if (e.TriggerWord == string.Empty)
-                    this.view.InsertAtCaret(e.ItemSelected);
-                else
-                {
-                    int position = this.view.Text.Substring(0, this.view.Offset).LastIndexOf(e.TriggerWord);
-                    this.view.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
-                }
-            };
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             this.PopulateEditorView();
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -76,6 +67,7 @@ namespace UserInterface.Presenters
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser -= this.OnTextHasChangedByUser;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
             this.intellisense.Cleanup();
         }
 
@@ -165,6 +157,23 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             this.PopulateEditorView();
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            if (args.TriggerWord == string.Empty)
+                view.InsertAtCaret(args.ItemSelected);
+            else
+            {
+                int position = view.Text.Substring(0, view.Offset).LastIndexOf(args.TriggerWord);
+                view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            }
         }
     }
 }

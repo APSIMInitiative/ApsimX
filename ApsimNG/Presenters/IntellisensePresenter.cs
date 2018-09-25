@@ -561,7 +561,8 @@
             IntellisenseItemSelectedArgs itemSelectedArgs = new IntellisenseItemSelectedArgs()
             {
                 TriggerWord = triggerWord,
-                ItemSelected = args.Name
+                ItemSelected = args.Name,
+                IsMethod = args.IsMethod
             };
             onItemSelected?.Invoke(this, itemSelectedArgs);
         }
