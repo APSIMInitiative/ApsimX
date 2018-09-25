@@ -736,12 +736,13 @@ namespace Models.PMF.Organs
             }
             else
                 CohortPopulation = Structure.TotalStemPopn;
+            CohortPopulation *= cohortParams.FinalFraction;
             Age = cohortParams.CohortAge;
 
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
 
-            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * cohortParams.FinalFraction;
+            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameters.GrowthDuration.Value() * cohortParams.FinalFraction;
             LagDuration = leafCohortParameters.LagDuration.Value();
