@@ -16,6 +16,9 @@
     using System.Reflection;
     using System.Text;
     using Classes.Intellisense;
+    using System.Xml;
+    using ICSharpCode.NRefactory.TypeSystem;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -286,7 +289,7 @@
             if (indexOfMethodCall < 0)
                 return;
 
-            int indexOfLastPeriod = currentLine.LastIndexOf('.');
+            int indexOfLastPeriod = currentLine.Substring(0, indexOfMethodCall).LastIndexOf('.');
             indexOfLastPeriod = Math.Max(indexOfLastPeriod, 0);
 
             string methodName = currentLine.Substring(indexOfLastPeriod, indexOfMethodCall - indexOfLastPeriod).Trim('.');
@@ -304,9 +307,6 @@
             syntaxTree.FileName = fileName;
             syntaxTree.Freeze();
 
-            // Should probably take into account which namespaces the user is using and load the needed assemblies into the CSharpCompletion object
-            // string usings = syntaxTree.Descendants.OfType<UsingDeclaration>().Select(x => x.ToString()).Aggregate((x, y) => x + /* Environment.NewLine + */ y);
-
             IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
             var test = completion.GetMethodCompletion(document, offset, false);
 
@@ -315,7 +315,7 @@
                 if (test.OverloadProvider.Count < 1)
                     return;
                 List<MethodCompletion> completions = new List<MethodCompletion>();
-                foreach (ICSharpCode.NRefactory.TypeSystem.IParameterizedMember method in test.OverloadProvider.Items.Select(x => x.Method))
+                foreach (IParameterizedMember method in test.OverloadProvider.Items.Select(x => x.Method))
                 {
                     // Generate argument signatures - e.g. string foo, int bar
                     List<string> arguments = new List<string>();
@@ -327,20 +327,37 @@
                         arguments.Add(parameterString);
                     }
 
-                    // The NRefactory Implementation we are using doesn't do anything more than read the xml file.
-                    // Therefore, we need to parse this XML to get the parameter summaries.
-                    System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                    doc.LoadXml(string.Format("<documentation>{0}</documentation>", method.Documentation.Xml.Text));
-                    List<string> argumentSummariesList = new List<string>();
-                    foreach (System.Xml.XmlElement parameter in APSIM.Shared.Utilities.XmlUtilities.ChildNodesRecursively(doc.FirstChild, "param"))
-                        argumentSummariesList.Add(string.Format("{0}: {1}", parameter.GetAttribute("name"), parameter.InnerText));
-
                     MethodCompletion completion = new MethodCompletion()
                     {
-                        Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y))),
-                        Summary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim(),
-                        ParameterDocumentation = argumentSummariesList.Aggregate((x, y) => x + Environment.NewLine + y)
+                        Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y)))
                     };
+
+                    if (method.Documentation == null)
+                    {
+                        completion.Summary = string.Empty;
+                        completion.ParameterDocumentation = string.Empty;
+                    }
+                    else
+                    {
+                        if (method.Documentation.Xml.Text.Contains("<summary>") && method.Documentation.Xml.Text.Contains("</summary>"))
+                            completion.Summary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim();
+                        else
+                            completion.Summary = string.Empty;
+
+                        // NRefactory doesn't do anything more than read the xml documentation file.
+                        // Therefore, we need to parse this XML to get the parameter summaries.
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(string.Format("<documentation>{0}</documentation>", method.Documentation.Xml.Text));
+                        List<string> argumentSummariesList = new List<string>();
+                        foreach (XmlElement parameter in XmlUtilities.ChildNodesRecursively(doc.FirstChild, "param"))
+                            argumentSummariesList.Add(string.Format("{0}: {1}", parameter.GetAttribute("name"), parameter.InnerText));
+
+                        if (argumentSummariesList.Any())
+                            completion.ParameterDocumentation = argumentSummariesList.Aggregate((x, y) => x + Environment.NewLine + y);
+                        else
+                            completion.ParameterDocumentation = string.Empty;
+                    }
+
                     completions.Add(completion);
                 }
 

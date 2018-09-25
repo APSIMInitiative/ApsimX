@@ -145,12 +145,7 @@
                 else if (value < 0)
                     value = completions.Count - 1;
                 visibleCompletionIndex = value;
-                MethodCompletion completion = completions[visibleCompletionIndex];
-                lblMethodSignature.Text = completion.Signature;
-                lblMethodSummary.Text = completion.Summary;
-                lblArgumentSummaries.Markup = System.Text.RegularExpressions.Regex.Replace(completion.ParameterDocumentation, @"^([^:]+:)", @"<b>$1</b>", System.Text.RegularExpressions.RegexOptions.Multiline);
-                lblArgumentSummaries.WidthChars = Math.Max(completion.Signature.Length, completion.Summary.Length);
-                lblOverloadIndex.Text = string.Format("{0} of {1}", visibleCompletionIndex + 1, completions.Count);
+                Refresh();
             }
         }
 
@@ -260,6 +255,20 @@
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Updates the view. Typically called after the user cycles through the
+        /// available method overloads.
+        /// </summary>
+        private void Refresh()
+        {
+            MethodCompletion completion = completions[visibleCompletionIndex];
+            lblMethodSignature.Text = completion.Signature;
+            lblMethodSummary.Text = completion.Summary;
+            lblArgumentSummaries.Markup = System.Text.RegularExpressions.Regex.Replace(completion.ParameterDocumentation, @"^([^:]+:)", @"<b>$1</b>", System.Text.RegularExpressions.RegexOptions.Multiline);
+            lblArgumentSummaries.WidthChars = Math.Max(completion.Signature.Length, completion.Summary.Length);
+            lblOverloadIndex.Text = string.Format("{0} of {1}", visibleCompletionIndex + 1, completions.Count);
         }
     }
 }
