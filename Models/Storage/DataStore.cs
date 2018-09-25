@@ -238,10 +238,12 @@
         /// <param name="filter">Optional filter</param>
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
+        /// <param name="orderBy">Optional column name to order by</param>
         /// <returns></returns>
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                                  string filter = null,
-                                 int from = 0, int count = 0)
+                                 int from = 0, int count = 0, 
+                                 string orderBy = null)
         {
             Open(readOnly: true);
 
@@ -317,11 +319,18 @@
             }
 
             // Write ORDER BY clause
-            if (hasSimulationName)
+            if (orderBy == null)
             {
-                sql.Append(" ORDER BY S.ID");
-                if (hasToday)
-                    sql.Append(", T.[Clock.Today]");
+                if (hasSimulationName)
+                {
+                    sql.Append(" ORDER BY S.ID");
+                    if (hasToday)
+                        sql.Append(", T.[Clock.Today]");
+                }
+            }
+            else
+            {
+                sql.Append(" ORDER BY " + orderBy);
             }
 
             // Write LIMIT/OFFSET clause

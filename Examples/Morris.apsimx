@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="31">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
   <Name>Simulations</Name>
   <Morris>
     <Name>Morris</Name>
@@ -8,27 +8,37 @@
       <Clock>
         <Name>Clock</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <StartDate>1900-01-01T00:00:00</StartDate>
         <EndDate>1900-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </Summary>
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>SoilArbitrator</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </SoilArbitrator>
       <Zone>
         <Name>Field</Name>
         <Report>
           <Name>Report</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -52,6 +62,8 @@
         <Fertiliser>
           <Name>Fertiliser</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -60,6 +72,8 @@
             <SoilCrop>
               <Name>WheatSoil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.261</double>
                 <double>0.248</double>
@@ -89,6 +103,8 @@
               </XF>
             </SoilCrop>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -156,6 +172,8 @@
           <SoilWater>
             <Name>SoilWater</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -190,11 +208,13 @@
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
-            <residueinterception>0</residueinterception>
+            <ResidueInterception>0</ResidueInterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -231,6 +251,8 @@
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>1000</RootWt>
             <SoilCN>12</SoilCN>
@@ -286,6 +308,8 @@
           <Analysis>
             <Name>Analysis</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -310,6 +334,8 @@
           <InitialWater>
             <Name>InitialWater</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <PercentMethod>EvenlyDistributed</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
@@ -317,6 +343,8 @@
           <Sample>
             <Name>InitialN</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -407,8 +435,12 @@
           <CERESSoilTemperature>
             <Name>CERESSoilTemperature</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
           </CERESSoilTemperature>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -430,65 +462,44 @@
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-          <Pools>
-            <Pool>
-              <PoolName>wheat_stubble</PoolName>
-              <ResidueType>wheat</ResidueType>
-              <Mass>500</Mass>
-              <CNRatio>100</CNRatio>
-              <CPRatio>NaN</CPRatio>
-              <StandingFraction>0</StandingFraction>
-            </Pool>
-          </Pools>
-          <PoolName>wheat_stubble</PoolName>
-          <type>wheat</type>
-          <mass>500</mass>
-          <standing_fraction>0</standing_fraction>
-          <cpr />
-          <cnr>100</cnr>
-          <CriticalResidueWeight>2000</CriticalResidueWeight>
-          <OptimumDecompTemp>20</OptimumDecompTemp>
-          <MaxCumulativeEOS>20</MaxCumulativeEOS>
-          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-          <TotalLeachRain>25</TotalLeachRain>
-          <MinRainToLeach>10</MinRainToLeach>
-          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-          <DefaultCPRatio>0</DefaultCPRatio>
-          <DefaultStandingFraction>0</DefaultStandingFraction>
-          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ResourceName>SurfaceOrganicMatter</ResourceName>
+          <InitialResidueName>wheat_stubble</InitialResidueName>
+          <InitialResidueType>wheat</InitialResidueType>
+          <InitialResidueMass>500</InitialResidueMass>
+          <InitialStandingFraction>0</InitialStandingFraction>
+          <InitialCPR>0</InitialCPR>
+          <InitialCNR>100</InitialCNR>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <sun_angle>15</sun_angle>
-          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-          <night_interception_fraction>0.5</night_interception_fraction>
-          <refheight>2</refheight>
-          <albedo>0.15</albedo>
-          <emissivity>0.96</emissivity>
-          <RadIntTotal>0</RadIntTotal>
+          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+          <NightInterceptionFraction>0.5</NightInterceptionFraction>
+          <ReferenceHeight>2</ReferenceHeight>
         </MicroClimate>
         <Manager>
           <Name>SowingFertiliser</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <Amount>160</Amount>
             <CropName>wheat</CropName>
@@ -530,6 +541,8 @@ namespace Models
         <Manager>
           <Name>Harvest</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script />
           <Code><![CDATA[using System;
 using Models.Core;
@@ -563,10 +576,14 @@ namespace Models
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </SoluteManager>
         <Manager>
           <Name>SowingRule1</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Script>
             <StartDate>1-may</StartDate>
             <EndDate>10-jul</EndDate>
@@ -645,6 +662,8 @@ namespace Models
 ]]></Code>
         </Manager>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -653,6 +672,8 @@ namespace Models
         <Series>
           <Name>Wheat Yield</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -671,6 +692,8 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -691,8 +714,12 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
     </Simulation>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
     <parameters>
       <Parameter>
         <Name>CONA</Name>
@@ -708,600 +735,580 @@ namespace Models
       </Parameter>
     </parameters>
     <simulationNames>
-      <string>MorrisCONA5.263158CN277.89474</string>
-      <string>MorrisCONA10CN277.89474</string>
-      <string>MorrisCONA10CN246.31579</string>
-      <string>MorrisCONA1.947368CN284.21053</string>
-      <string>MorrisCONA1.947368CN252.63158</string>
-      <string>MorrisCONA6.68421CN252.63158</string>
-      <string>MorrisCONA2.421053CN249.47368</string>
-      <string>MorrisCONA2.421053CN281.05264</string>
-      <string>MorrisCONA7.157895CN281.05264</string>
-      <string>MorrisCONA1CN265.26316</string>
-      <string>MorrisCONA5.736842CN265.26316</string>
-      <string>MorrisCONA5.736842CN296.8421</string>
-      <string>MorrisCONA5.263158CN277.89474</string>
-      <string>MorrisCONA5.263158CN246.31579</string>
-      <string>MorrisCONA10CN246.31579</string>
-      <string>MorrisCONA10CN271.57895</string>
-      <string>MorrisCONA5.263158CN271.57895</string>
-      <string>MorrisCONA5.263158CN240</string>
-      <string>MorrisCONA9.526316CN249.47368</string>
-      <string>MorrisCONA9.526316CN281.05264</string>
-      <string>MorrisCONA4.789474CN281.05264</string>
-      <string>MorrisCONA4.789474CN281.05264</string>
-      <string>MorrisCONA4.789474CN249.47368</string>
-      <string>MorrisCONA9.526316CN249.47368</string>
-      <string>MorrisCONA5.736842CN296.8421</string>
-      <string>MorrisCONA1CN296.8421</string>
-      <string>MorrisCONA1CN265.26316</string>
-      <string>MorrisCONA1CN293.68421</string>
-      <string>MorrisCONA1CN262.10526</string>
-      <string>MorrisCONA5.736842CN262.10526</string>
-      <string>MorrisCONA9.526316CN246.31579</string>
-      <string>MorrisCONA9.526316CN277.89474</string>
-      <string>MorrisCONA4.789474CN277.89474</string>
-      <string>MorrisCONA7.631579CN262.10526</string>
-      <string>MorrisCONA7.631579CN293.68421</string>
-      <string>MorrisCONA2.894737CN293.68421</string>
-      <string>MorrisCONA4.31579CN243.15789</string>
-      <string>MorrisCONA4.31579CN274.73684</string>
-      <string>MorrisCONA9.052631CN274.73684</string>
-      <string>MorrisCONA10CN284.21053</string>
-      <string>MorrisCONA10CN252.63158</string>
-      <string>MorrisCONA5.263158CN252.63158</string>
-      <string>MorrisCONA4.789474CN274.73684</string>
-      <string>MorrisCONA4.789474CN243.15789</string>
-      <string>MorrisCONA9.526316CN243.15789</string>
-      <string>MorrisCONA9.052631CN268.42105</string>
-      <string>MorrisCONA9.052631CN2100</string>
-      <string>MorrisCONA4.31579CN2100</string>
-      <string>MorrisCONA8.105263CN2100</string>
-      <string>MorrisCONA3.368421CN2100</string>
-      <string>MorrisCONA3.368421CN268.42105</string>
-      <string>MorrisCONA5.263158CN258.94737</string>
-      <string>MorrisCONA5.263158CN290.52631</string>
-      <string>MorrisCONA10CN290.52631</string>
-      <string>MorrisCONA6.68421CN284.21053</string>
-      <string>MorrisCONA6.68421CN252.63158</string>
-      <string>MorrisCONA1.947368CN252.63158</string>
-      <string>MorrisCONA8.578947CN255.78947</string>
-      <string>MorrisCONA3.842105CN255.78947</string>
-      <string>MorrisCONA3.842105CN287.36842</string>
-      <string>MorrisCONA8.105263CN271.57895</string>
-      <string>MorrisCONA8.105263CN240</string>
-      <string>MorrisCONA3.368421CN240</string>
-      <string>MorrisCONA9.052631CN274.73684</string>
-      <string>MorrisCONA9.052631CN243.15789</string>
-      <string>MorrisCONA4.31579CN243.15789</string>
-      <string>MorrisCONA5.263158CN287.36842</string>
-      <string>MorrisCONA5.263158CN255.78947</string>
-      <string>MorrisCONA10CN255.78947</string>
-      <string>MorrisCONA7.631579CN290.52631</string>
-      <string>MorrisCONA7.631579CN258.94737</string>
-      <string>MorrisCONA2.894737CN258.94737</string>
-      <string>MorrisCONA6.210526CN268.42105</string>
-      <string>MorrisCONA6.210526CN2100</string>
-      <string>MorrisCONA1.473684CN2100</string>
-      <string>MorrisCONA6.68421CN262.10526</string>
-      <string>MorrisCONA1.947368CN262.10526</string>
-      <string>MorrisCONA1.947368CN293.68421</string>
-      <string>MorrisCONA7.157895CN271.57895</string>
-      <string>MorrisCONA7.157895CN240</string>
-      <string>MorrisCONA2.421053CN240</string>
-      <string>MorrisCONA9.526316CN277.89474</string>
-      <string>MorrisCONA4.789474CN277.89474</string>
-      <string>MorrisCONA4.789474CN246.31579</string>
-      <string>MorrisCONA3.842105CN240</string>
-      <string>MorrisCONA8.578947CN240</string>
-      <string>MorrisCONA8.578947CN271.57895</string>
-      <string>MorrisCONA3.368421CN249.47368</string>
-      <string>MorrisCONA3.368421CN281.05264</string>
-      <string>MorrisCONA8.105263CN281.05264</string>
-      <string>MorrisCONA1.473684CN281.05264</string>
-      <string>MorrisCONA6.210526CN281.05264</string>
-      <string>MorrisCONA6.210526CN249.47368</string>
-      <string>MorrisCONA1CN258.94737</string>
-      <string>MorrisCONA5.736842CN258.94737</string>
-      <string>MorrisCONA5.736842CN290.52631</string>
-      <string>MorrisCONA3.368421CN274.73684</string>
-      <string>MorrisCONA8.105263CN274.73684</string>
-      <string>MorrisCONA8.105263CN243.15789</string>
-      <string>MorrisCONA6.210526CN281.05264</string>
-      <string>MorrisCONA1.473684CN281.05264</string>
-      <string>MorrisCONA1.473684CN249.47368</string>
-      <string>MorrisCONA6.68421CN240</string>
-      <string>MorrisCONA1.947368CN240</string>
-      <string>MorrisCONA1.947368CN271.57895</string>
-      <string>MorrisCONA4.789474CN296.8421</string>
-      <string>MorrisCONA9.526316CN296.8421</string>
-      <string>MorrisCONA9.526316CN265.26316</string>
-      <string>MorrisCONA2.421053CN2100</string>
-      <string>MorrisCONA7.157895CN2100</string>
-      <string>MorrisCONA7.157895CN268.42105</string>
-      <string>MorrisCONA6.210526CN277.89474</string>
-      <string>MorrisCONA1.473684CN277.89474</string>
-      <string>MorrisCONA1.473684CN246.31579</string>
-      <string>MorrisCONA4.31579CN277.89474</string>
-      <string>MorrisCONA9.052631CN277.89474</string>
-      <string>MorrisCONA9.052631CN246.31579</string>
-      <string>MorrisCONA7.631579CN287.36842</string>
-      <string>MorrisCONA2.894737CN287.36842</string>
-      <string>MorrisCONA2.894737CN255.78947</string>
-      <string>MorrisCONA3.368421CN281.05264</string>
-      <string>MorrisCONA3.368421CN249.47368</string>
-      <string>MorrisCONA8.105263CN249.47368</string>
-      <string>MorrisCONA9.052631CN284.21053</string>
-      <string>MorrisCONA4.31579CN284.21053</string>
-      <string>MorrisCONA4.31579CN252.63158</string>
-      <string>MorrisCONA5.736842CN265.26316</string>
-      <string>MorrisCONA5.736842CN296.8421</string>
-      <string>MorrisCONA1CN296.8421</string>
-      <string>MorrisCONA1CN287.36842</string>
-      <string>MorrisCONA5.736842CN287.36842</string>
-      <string>MorrisCONA5.736842CN255.78947</string>
-      <string>MorrisCONA1.473684CN252.63158</string>
-      <string>MorrisCONA1.473684CN284.21053</string>
-      <string>MorrisCONA6.210526CN284.21053</string>
-      <string>MorrisCONA5.736842CN243.15789</string>
-      <string>MorrisCONA5.736842CN274.73684</string>
-      <string>MorrisCONA1CN274.73684</string>
-      <string>MorrisCONA2.894737CN277.89474</string>
-      <string>MorrisCONA2.894737CN246.31579</string>
-      <string>MorrisCONA7.631579CN246.31579</string>
-      <string>MorrisCONA1.473684CN268.42105</string>
-      <string>MorrisCONA6.210526CN268.42105</string>
-      <string>MorrisCONA6.210526CN2100</string>
-      <string>MorrisCONA8.578947CN290.52631</string>
-      <string>MorrisCONA3.842105CN290.52631</string>
-      <string>MorrisCONA3.842105CN258.94737</string>
-      <string>MorrisCONA7.631579CN265.26316</string>
-      <string>MorrisCONA7.631579CN296.8421</string>
-      <string>MorrisCONA2.894737CN296.8421</string>
-      <string>MorrisCONA7.631579CN252.63158</string>
-      <string>MorrisCONA7.631579CN284.21053</string>
-      <string>MorrisCONA2.894737CN284.21053</string>
-      <string>MorrisCONA1.473684CN243.15789</string>
-      <string>MorrisCONA6.210526CN243.15789</string>
-      <string>MorrisCONA6.210526CN274.73684</string>
-      <string>MorrisCONA2.894737CN258.94737</string>
-      <string>MorrisCONA7.631579CN258.94737</string>
-      <string>MorrisCONA7.631579CN290.52631</string>
-      <string>MorrisCONA4.789474CN258.94737</string>
-      <string>MorrisCONA4.789474CN290.52631</string>
-      <string>MorrisCONA9.526316CN290.52631</string>
-      <string>MorrisCONA1CN268.42105</string>
-      <string>MorrisCONA5.736842CN268.42105</string>
-      <string>MorrisCONA5.736842CN2100</string>
-      <string>MorrisCONA7.631579CN281.05264</string>
-      <string>MorrisCONA2.894737CN281.05264</string>
-      <string>MorrisCONA2.894737CN249.47368</string>
-      <string>MorrisCONA6.68421CN249.47368</string>
-      <string>MorrisCONA1.947368CN249.47368</string>
-      <string>MorrisCONA1.947368CN281.05264</string>
-      <string>MorrisCONA2.894737CN243.15789</string>
-      <string>MorrisCONA7.631579CN243.15789</string>
-      <string>MorrisCONA7.631579CN274.73684</string>
-      <string>MorrisCONA4.789474CN271.57895</string>
-      <string>MorrisCONA4.789474CN240</string>
-      <string>MorrisCONA9.526316CN240</string>
-      <string>MorrisCONA10CN258.94737</string>
-      <string>MorrisCONA10CN290.52631</string>
-      <string>MorrisCONA5.263158CN290.52631</string>
-      <string>MorrisCONA5.736842CN296.8421</string>
-      <string>MorrisCONA5.736842CN265.26316</string>
-      <string>MorrisCONA1CN265.26316</string>
-      <string>MorrisCONA8.105263CN284.21053</string>
-      <string>MorrisCONA3.368421CN284.21053</string>
-      <string>MorrisCONA3.368421CN252.63158</string>
-      <string>MorrisCONA4.789474CN293.68421</string>
-      <string>MorrisCONA9.526316CN293.68421</string>
-      <string>MorrisCONA9.526316CN262.10526</string>
-      <string>MorrisCONA1CN268.42105</string>
-      <string>MorrisCONA1CN2100</string>
-      <string>MorrisCONA5.736842CN2100</string>
-      <string>MorrisCONA2.894737CN265.26316</string>
-      <string>MorrisCONA2.894737CN296.8421</string>
-      <string>MorrisCONA7.631579CN296.8421</string>
-      <string>MorrisCONA2.894737CN252.63158</string>
-      <string>MorrisCONA2.894737CN284.21053</string>
-      <string>MorrisCONA7.631579CN284.21053</string>
-      <string>MorrisCONA3.368421CN265.26316</string>
-      <string>MorrisCONA8.105263CN265.26316</string>
-      <string>MorrisCONA8.105263CN296.8421</string>
-      <string>MorrisCONA6.68421CN281.05264</string>
-      <string>MorrisCONA1.947368CN281.05264</string>
-      <string>MorrisCONA1.947368CN249.47368</string>
-      <string>MorrisCONA8.578947CN293.68421</string>
-      <string>MorrisCONA8.578947CN262.10526</string>
-      <string>MorrisCONA3.842105CN262.10526</string>
-      <string>MorrisCONA1.947368CN281.05264</string>
-      <string>MorrisCONA6.68421CN281.05264</string>
-      <string>MorrisCONA6.68421CN249.47368</string>
-      <string>MorrisCONA3.842105CN240</string>
-      <string>MorrisCONA3.842105CN271.57895</string>
-      <string>MorrisCONA8.578947CN271.57895</string>
-      <string>MorrisCONA1CN284.21053</string>
-      <string>MorrisCONA5.736842CN284.21053</string>
-      <string>MorrisCONA5.736842CN252.63158</string>
-      <string>MorrisCONA5.736842CN252.63158</string>
-      <string>MorrisCONA5.736842CN284.21053</string>
-      <string>MorrisCONA1CN284.21053</string>
-      <string>MorrisCONA8.578947CN274.73684</string>
-      <string>MorrisCONA8.578947CN243.15789</string>
-      <string>MorrisCONA3.842105CN243.15789</string>
-      <string>MorrisCONA6.68421CN268.42105</string>
-      <string>MorrisCONA1.947368CN268.42105</string>
-      <string>MorrisCONA1.947368CN2100</string>
-      <string>MorrisCONA2.421053CN268.42105</string>
-      <string>MorrisCONA7.157895CN268.42105</string>
-      <string>MorrisCONA7.157895CN2100</string>
-      <string>MorrisCONA7.631579CN249.47368</string>
-      <string>MorrisCONA2.894737CN249.47368</string>
-      <string>MorrisCONA2.894737CN281.05264</string>
-      <string>MorrisCONA8.578947CN274.73684</string>
-      <string>MorrisCONA3.842105CN274.73684</string>
-      <string>MorrisCONA3.842105CN243.15789</string>
-      <string>MorrisCONA9.526316CN290.52631</string>
-      <string>MorrisCONA9.526316CN258.94737</string>
-      <string>MorrisCONA4.789474CN258.94737</string>
-      <string>MorrisCONA8.105263CN268.42105</string>
-      <string>MorrisCONA3.368421CN268.42105</string>
-      <string>MorrisCONA3.368421CN2100</string>
-      <string>MorrisCONA5.263158CN252.63158</string>
-      <string>MorrisCONA5.263158CN284.21053</string>
-      <string>MorrisCONA10CN284.21053</string>
-      <string>MorrisCONA9.526316CN240</string>
-      <string>MorrisCONA4.789474CN240</string>
-      <string>MorrisCONA4.789474CN271.57895</string>
-      <string>MorrisCONA3.368421CN290.52631</string>
-      <string>MorrisCONA8.105263CN290.52631</string>
-      <string>MorrisCONA8.105263CN258.94737</string>
-      <string>MorrisCONA9.526316CN290.52631</string>
-      <string>MorrisCONA4.789474CN290.52631</string>
-      <string>MorrisCONA4.789474CN258.94737</string>
-      <string>MorrisCONA8.105263CN2100</string>
-      <string>MorrisCONA8.105263CN268.42105</string>
-      <string>MorrisCONA3.368421CN268.42105</string>
-      <string>MorrisCONA3.368421CN240</string>
-      <string>MorrisCONA3.368421CN271.57895</string>
-      <string>MorrisCONA8.105263CN271.57895</string>
-      <string>MorrisCONA2.894737CN284.21053</string>
-      <string>MorrisCONA7.631579CN284.21053</string>
-      <string>MorrisCONA7.631579CN252.63158</string>
-      <string>MorrisCONA3.842105CN293.68421</string>
-      <string>MorrisCONA8.578947CN293.68421</string>
-      <string>MorrisCONA8.578947CN262.10526</string>
-      <string>MorrisCONA7.631579CN284.21053</string>
-      <string>MorrisCONA7.631579CN252.63158</string>
-      <string>MorrisCONA2.894737CN252.63158</string>
-      <string>MorrisCONA6.210526CN287.36842</string>
-      <string>MorrisCONA6.210526CN255.78947</string>
-      <string>MorrisCONA1.473684CN255.78947</string>
-      <string>MorrisCONA8.105263CN281.05264</string>
-      <string>MorrisCONA8.105263CN249.47368</string>
-      <string>MorrisCONA3.368421CN249.47368</string>
-      <string>MorrisCONA7.631579CN296.8421</string>
-      <string>MorrisCONA2.894737CN296.8421</string>
-      <string>MorrisCONA2.894737CN265.26316</string>
-      <string>MorrisCONA2.421053CN265.26316</string>
-      <string>MorrisCONA2.421053CN296.8421</string>
-      <string>MorrisCONA7.157895CN296.8421</string>
-      <string>MorrisCONA2.421053CN240</string>
-      <string>MorrisCONA7.157895CN240</string>
-      <string>MorrisCONA7.157895CN271.57895</string>
-      <string>MorrisCONA3.368421CN277.89474</string>
-      <string>MorrisCONA3.368421CN246.31579</string>
-      <string>MorrisCONA8.105263CN246.31579</string>
-      <string>MorrisCONA3.842105CN265.26316</string>
-      <string>MorrisCONA8.578947CN265.26316</string>
-      <string>MorrisCONA8.578947CN296.8421</string>
-      <string>MorrisCONA4.789474CN287.36842</string>
-      <string>MorrisCONA9.526316CN287.36842</string>
-      <string>MorrisCONA9.526316CN255.78947</string>
-      <string>MorrisCONA9.526316CN249.47368</string>
-      <string>MorrisCONA4.789474CN249.47368</string>
-      <string>MorrisCONA4.789474CN281.05264</string>
-      <string>MorrisCONA2.421053CN265.26316</string>
-      <string>MorrisCONA7.157895CN265.26316</string>
-      <string>MorrisCONA7.157895CN296.8421</string>
-      <string>MorrisCONA4.31579CN284.21053</string>
-      <string>MorrisCONA9.052631CN284.21053</string>
-      <string>MorrisCONA9.052631CN252.63158</string>
-      <string>MorrisCONA7.157895CN249.47368</string>
-      <string>MorrisCONA7.157895CN281.05264</string>
-      <string>MorrisCONA2.421053CN281.05264</string>
-      <string>MorrisCONA1.473684CN246.31579</string>
-      <string>MorrisCONA1.473684CN277.89474</string>
-      <string>MorrisCONA6.210526CN277.89474</string>
-      <string>MorrisCONA3.842105CN268.42105</string>
-      <string>MorrisCONA3.842105CN2100</string>
-      <string>MorrisCONA8.578947CN2100</string>
-      <string>MorrisCONA1.947368CN246.31579</string>
-      <string>MorrisCONA1.947368CN277.89474</string>
-      <string>MorrisCONA6.68421CN277.89474</string>
-      <string>MorrisCONA10CN262.10526</string>
-      <string>MorrisCONA10CN293.68421</string>
-      <string>MorrisCONA5.263158CN293.68421</string>
-      <string>MorrisCONA1.947368CN265.26316</string>
-      <string>MorrisCONA1.947368CN296.8421</string>
-      <string>MorrisCONA6.68421CN296.8421</string>
-      <string>MorrisCONA1CN271.57895</string>
-      <string>MorrisCONA5.736842CN271.57895</string>
-      <string>MorrisCONA5.736842CN240</string>
-      <string>MorrisCONA1CN290.52631</string>
-      <string>MorrisCONA5.736842CN290.52631</string>
-      <string>MorrisCONA5.736842CN258.94737</string>
-      <string>MorrisCONA4.789474CN265.26316</string>
-      <string>MorrisCONA9.526316CN265.26316</string>
-      <string>MorrisCONA9.526316CN296.8421</string>
-      <string>MorrisCONA7.631579CN296.8421</string>
-      <string>MorrisCONA7.631579CN265.26316</string>
-      <string>MorrisCONA2.894737CN265.26316</string>
-      <string>MorrisCONA1.473684CN246.31579</string>
-      <string>MorrisCONA6.210526CN246.31579</string>
-      <string>MorrisCONA6.210526CN277.89474</string>
-      <string>MorrisCONA4.789474CN290.52631</string>
-      <string>MorrisCONA4.789474CN258.94737</string>
-      <string>MorrisCONA9.526316CN258.94737</string>
-      <string>MorrisCONA8.105263CN255.78947</string>
-      <string>MorrisCONA3.368421CN255.78947</string>
-      <string>MorrisCONA3.368421CN287.36842</string>
-      <string>MorrisCONA6.210526CN246.31579</string>
-      <string>MorrisCONA1.473684CN246.31579</string>
-      <string>MorrisCONA1.473684CN277.89474</string>
-      <string>MorrisCONA1.947368CN2100</string>
-      <string>MorrisCONA1.947368CN268.42105</string>
-      <string>MorrisCONA6.68421CN268.42105</string>
-      <string>MorrisCONA8.105263CN274.73684</string>
-      <string>MorrisCONA8.105263CN243.15789</string>
-      <string>MorrisCONA3.368421CN243.15789</string>
-      <string>MorrisCONA1.473684CN265.26316</string>
-      <string>MorrisCONA6.210526CN265.26316</string>
-      <string>MorrisCONA6.210526CN296.8421</string>
-      <string>MorrisCONA7.157895CN287.36842</string>
-      <string>MorrisCONA2.421053CN287.36842</string>
-      <string>MorrisCONA2.421053CN255.78947</string>
-      <string>MorrisCONA3.368421CN258.94737</string>
-      <string>MorrisCONA3.368421CN290.52631</string>
-      <string>MorrisCONA8.105263CN290.52631</string>
-      <string>MorrisCONA2.421053CN240</string>
-      <string>MorrisCONA2.421053CN271.57895</string>
-      <string>MorrisCONA7.157895CN271.57895</string>
-      <string>MorrisCONA4.31579CN249.47368</string>
-      <string>MorrisCONA9.052631CN249.47368</string>
-      <string>MorrisCONA9.052631CN281.05264</string>
-      <string>MorrisCONA3.842105CN281.05264</string>
-      <string>MorrisCONA3.842105CN249.47368</string>
-      <string>MorrisCONA8.578947CN249.47368</string>
-      <string>MorrisCONA3.368421CN284.21053</string>
-      <string>MorrisCONA3.368421CN252.63158</string>
-      <string>MorrisCONA8.105263CN252.63158</string>
-      <string>MorrisCONA1.947368CN287.36842</string>
-      <string>MorrisCONA6.68421CN287.36842</string>
-      <string>MorrisCONA6.68421CN255.78947</string>
-      <string>MorrisCONA3.368421CN293.68421</string>
-      <string>MorrisCONA3.368421CN262.10526</string>
-      <string>MorrisCONA8.105263CN262.10526</string>
-      <string>MorrisCONA3.368421CN277.89474</string>
-      <string>MorrisCONA8.105263CN277.89474</string>
-      <string>MorrisCONA8.105263CN246.31579</string>
-      <string>MorrisCONA6.210526CN255.78947</string>
-      <string>MorrisCONA1.473684CN255.78947</string>
-      <string>MorrisCONA1.473684CN287.36842</string>
-      <string>MorrisCONA2.421053CN274.73684</string>
-      <string>MorrisCONA7.157895CN274.73684</string>
-      <string>MorrisCONA7.157895CN243.15789</string>
-      <string>MorrisCONA9.526316CN271.57895</string>
-      <string>MorrisCONA4.789474CN271.57895</string>
-      <string>MorrisCONA4.789474CN240</string>
-      <string>MorrisCONA4.789474CN246.31579</string>
-      <string>MorrisCONA4.789474CN277.89474</string>
-      <string>MorrisCONA9.526316CN277.89474</string>
-      <string>MorrisCONA5.736842CN258.94737</string>
-      <string>MorrisCONA5.736842CN290.52631</string>
-      <string>MorrisCONA1CN290.52631</string>
-      <string>MorrisCONA7.631579CN274.73684</string>
-      <string>MorrisCONA2.894737CN274.73684</string>
-      <string>MorrisCONA2.894737CN243.15789</string>
-      <string>MorrisCONA2.894737CN265.26316</string>
-      <string>MorrisCONA7.631579CN265.26316</string>
-      <string>MorrisCONA7.631579CN296.8421</string>
-      <string>MorrisCONA7.157895CN284.21053</string>
-      <string>MorrisCONA2.421053CN284.21053</string>
-      <string>MorrisCONA2.421053CN252.63158</string>
-      <string>MorrisCONA8.578947CN243.15789</string>
-      <string>MorrisCONA8.578947CN274.73684</string>
-      <string>MorrisCONA3.842105CN274.73684</string>
-      <string>MorrisCONA6.68421CN287.36842</string>
-      <string>MorrisCONA6.68421CN255.78947</string>
-      <string>MorrisCONA1.947368CN255.78947</string>
-      <string>MorrisCONA10CN293.68421</string>
-      <string>MorrisCONA5.263158CN293.68421</string>
-      <string>MorrisCONA5.263158CN262.10526</string>
-      <string>MorrisCONA3.368421CN252.63158</string>
-      <string>MorrisCONA3.368421CN284.21053</string>
-      <string>MorrisCONA8.105263CN284.21053</string>
-      <string>MorrisCONA4.31579CN281.05264</string>
-      <string>MorrisCONA9.052631CN281.05264</string>
-      <string>MorrisCONA9.052631CN249.47368</string>
-      <string>MorrisCONA7.157895CN262.10526</string>
-      <string>MorrisCONA2.421053CN262.10526</string>
-      <string>MorrisCONA2.421053CN293.68421</string>
-      <string>MorrisCONA9.052631CN2100</string>
-      <string>MorrisCONA4.31579CN2100</string>
-      <string>MorrisCONA4.31579CN268.42105</string>
-      <string>MorrisCONA2.421053CN293.68421</string>
-      <string>MorrisCONA7.157895CN293.68421</string>
-      <string>MorrisCONA7.157895CN262.10526</string>
-      <string>MorrisCONA9.526316CN265.26316</string>
-      <string>MorrisCONA4.789474CN265.26316</string>
-      <string>MorrisCONA4.789474CN296.8421</string>
-      <string>MorrisCONA1CN255.78947</string>
-      <string>MorrisCONA1CN287.36842</string>
-      <string>MorrisCONA5.736842CN287.36842</string>
-      <string>MorrisCONA1.473684CN240</string>
-      <string>MorrisCONA6.210526CN240</string>
-      <string>MorrisCONA6.210526CN271.57895</string>
-      <string>MorrisCONA7.157895CN2100</string>
-      <string>MorrisCONA2.421053CN2100</string>
-      <string>MorrisCONA2.421053CN268.42105</string>
-      <string>MorrisCONA8.578947CN296.8421</string>
-      <string>MorrisCONA3.842105CN296.8421</string>
-      <string>MorrisCONA3.842105CN265.26316</string>
-      <string>MorrisCONA7.631579CN271.57895</string>
-      <string>MorrisCONA7.631579CN240</string>
-      <string>MorrisCONA2.894737CN240</string>
-      <string>MorrisCONA9.052631CN268.42105</string>
-      <string>MorrisCONA4.31579CN268.42105</string>
-      <string>MorrisCONA4.31579CN2100</string>
-      <string>MorrisCONA1.473684CN249.47368</string>
-      <string>MorrisCONA6.210526CN249.47368</string>
-      <string>MorrisCONA6.210526CN281.05264</string>
-      <string>MorrisCONA5.263158CN284.21053</string>
-      <string>MorrisCONA5.263158CN252.63158</string>
-      <string>MorrisCONA10CN252.63158</string>
-      <string>MorrisCONA9.052631CN290.52631</string>
-      <string>MorrisCONA4.31579CN290.52631</string>
-      <string>MorrisCONA4.31579CN258.94737</string>
-      <string>MorrisCONA5.263158CN243.15789</string>
-      <string>MorrisCONA10CN243.15789</string>
-      <string>MorrisCONA10CN274.73684</string>
-      <string>MorrisCONA6.68421CN246.31579</string>
-      <string>MorrisCONA6.68421CN277.89474</string>
-      <string>MorrisCONA1.947368CN277.89474</string>
-      <string>MorrisCONA2.421053CN271.57895</string>
-      <string>MorrisCONA2.421053CN240</string>
-      <string>MorrisCONA7.157895CN240</string>
-      <string>MorrisCONA7.157895CN296.8421</string>
-      <string>MorrisCONA7.157895CN265.26316</string>
-      <string>MorrisCONA2.421053CN265.26316</string>
-      <string>MorrisCONA9.052631CN293.68421</string>
-      <string>MorrisCONA9.052631CN262.10526</string>
-      <string>MorrisCONA4.31579CN262.10526</string>
-      <string>MorrisCONA5.263158CN287.36842</string>
-      <string>MorrisCONA10CN287.36842</string>
-      <string>MorrisCONA10CN255.78947</string>
-      <string>MorrisCONA10CN290.52631</string>
-      <string>MorrisCONA10CN258.94737</string>
-      <string>MorrisCONA5.263158CN258.94737</string>
-      <string>MorrisCONA7.631579CN246.31579</string>
-      <string>MorrisCONA2.894737CN246.31579</string>
-      <string>MorrisCONA2.894737CN277.89474</string>
-      <string>MorrisCONA6.210526CN255.78947</string>
-      <string>MorrisCONA6.210526CN287.36842</string>
-      <string>MorrisCONA1.473684CN287.36842</string>
-      <string>MorrisCONA1CN293.68421</string>
-      <string>MorrisCONA5.736842CN293.68421</string>
-      <string>MorrisCONA5.736842CN262.10526</string>
-      <string>MorrisCONA1.473684CN277.89474</string>
-      <string>MorrisCONA1.473684CN246.31579</string>
-      <string>MorrisCONA6.210526CN246.31579</string>
-      <string>MorrisCONA2.421053CN243.15789</string>
-      <string>MorrisCONA7.157895CN243.15789</string>
-      <string>MorrisCONA7.157895CN274.73684</string>
-      <string>MorrisCONA7.631579CN277.89474</string>
-      <string>MorrisCONA2.894737CN277.89474</string>
-      <string>MorrisCONA2.894737CN246.31579</string>
-      <string>MorrisCONA3.842105CN265.26316</string>
-      <string>MorrisCONA3.842105CN296.8421</string>
-      <string>MorrisCONA8.578947CN296.8421</string>
-      <string>MorrisCONA9.526316CN258.94737</string>
-      <string>MorrisCONA4.789474CN258.94737</string>
-      <string>MorrisCONA4.789474CN290.52631</string>
-      <string>MorrisCONA1.473684CN271.57895</string>
-      <string>MorrisCONA6.210526CN271.57895</string>
-      <string>MorrisCONA6.210526CN240</string>
-      <string>MorrisCONA6.210526CN243.15789</string>
-      <string>MorrisCONA1.473684CN243.15789</string>
-      <string>MorrisCONA1.473684CN274.73684</string>
-      <string>MorrisCONA3.842105CN2100</string>
-      <string>MorrisCONA3.842105CN268.42105</string>
-      <string>MorrisCONA8.578947CN268.42105</string>
-      <string>MorrisCONA8.578947CN284.21053</string>
-      <string>MorrisCONA8.578947CN252.63158</string>
-      <string>MorrisCONA3.842105CN252.63158</string>
-      <string>MorrisCONA1.947368CN243.15789</string>
-      <string>MorrisCONA1.947368CN274.73684</string>
-      <string>MorrisCONA6.68421CN274.73684</string>
-      <string>MorrisCONA4.31579CN246.31579</string>
-      <string>MorrisCONA4.31579CN277.89474</string>
-      <string>MorrisCONA9.052631CN277.89474</string>
-      <string>MorrisCONA2.421053CN287.36842</string>
-      <string>MorrisCONA2.421053CN255.78947</string>
-      <string>MorrisCONA7.157895CN255.78947</string>
-      <string>MorrisCONA9.526316CN268.42105</string>
-      <string>MorrisCONA9.526316CN2100</string>
-      <string>MorrisCONA4.789474CN2100</string>
-      <string>MorrisCONA6.68421CN296.8421</string>
-      <string>MorrisCONA6.68421CN265.26316</string>
-      <string>MorrisCONA1.947368CN265.26316</string>
-      <string>MorrisCONA2.894737CN277.89474</string>
-      <string>MorrisCONA7.631579CN277.89474</string>
-      <string>MorrisCONA7.631579CN246.31579</string>
-      <string>MorrisCONA6.210526CN287.36842</string>
-      <string>MorrisCONA1.473684CN287.36842</string>
-      <string>MorrisCONA1.473684CN255.78947</string>
-      <string>MorrisCONA10CN246.31579</string>
-      <string>MorrisCONA10CN277.89474</string>
-      <string>MorrisCONA5.263158CN277.89474</string>
-      <string>MorrisCONA2.421053CN281.05264</string>
-      <string>MorrisCONA7.157895CN281.05264</string>
-      <string>MorrisCONA7.157895CN249.47368</string>
-      <string>MorrisCONA6.68421CN2100</string>
-      <string>MorrisCONA1.947368CN2100</string>
-      <string>MorrisCONA1.947368CN268.42105</string>
+      <string>Simulation1</string>
+      <string>Simulation2</string>
+      <string>Simulation3</string>
+      <string>Simulation4</string>
+      <string>Simulation5</string>
+      <string>Simulation6</string>
+      <string>Simulation7</string>
+      <string>Simulation8</string>
+      <string>Simulation9</string>
+      <string>Simulation10</string>
+      <string>Simulation11</string>
+      <string>Simulation12</string>
+      <string>Simulation13</string>
+      <string>Simulation14</string>
+      <string>Simulation15</string>
+      <string>Simulation16</string>
+      <string>Simulation17</string>
+      <string>Simulation18</string>
+      <string>Simulation19</string>
+      <string>Simulation20</string>
+      <string>Simulation21</string>
+      <string>Simulation22</string>
+      <string>Simulation23</string>
+      <string>Simulation24</string>
+      <string>Simulation25</string>
+      <string>Simulation26</string>
+      <string>Simulation27</string>
+      <string>Simulation28</string>
+      <string>Simulation29</string>
+      <string>Simulation30</string>
+      <string>Simulation31</string>
+      <string>Simulation32</string>
+      <string>Simulation33</string>
+      <string>Simulation34</string>
+      <string>Simulation35</string>
+      <string>Simulation36</string>
+      <string>Simulation37</string>
+      <string>Simulation38</string>
+      <string>Simulation39</string>
+      <string>Simulation40</string>
+      <string>Simulation41</string>
+      <string>Simulation42</string>
+      <string>Simulation43</string>
+      <string>Simulation44</string>
+      <string>Simulation45</string>
+      <string>Simulation46</string>
+      <string>Simulation47</string>
+      <string>Simulation48</string>
+      <string>Simulation49</string>
+      <string>Simulation50</string>
+      <string>Simulation51</string>
+      <string>Simulation52</string>
+      <string>Simulation53</string>
+      <string>Simulation54</string>
+      <string>Simulation55</string>
+      <string>Simulation56</string>
+      <string>Simulation57</string>
+      <string>Simulation58</string>
+      <string>Simulation59</string>
+      <string>Simulation60</string>
+      <string>Simulation61</string>
+      <string>Simulation62</string>
+      <string>Simulation63</string>
+      <string>Simulation64</string>
+      <string>Simulation65</string>
+      <string>Simulation66</string>
+      <string>Simulation67</string>
+      <string>Simulation68</string>
+      <string>Simulation69</string>
+      <string>Simulation70</string>
+      <string>Simulation71</string>
+      <string>Simulation72</string>
+      <string>Simulation73</string>
+      <string>Simulation74</string>
+      <string>Simulation75</string>
+      <string>Simulation76</string>
+      <string>Simulation77</string>
+      <string>Simulation78</string>
+      <string>Simulation79</string>
+      <string>Simulation80</string>
+      <string>Simulation81</string>
+      <string>Simulation82</string>
+      <string>Simulation83</string>
+      <string>Simulation84</string>
+      <string>Simulation85</string>
+      <string>Simulation86</string>
+      <string>Simulation87</string>
+      <string>Simulation88</string>
+      <string>Simulation89</string>
+      <string>Simulation90</string>
+      <string>Simulation91</string>
+      <string>Simulation92</string>
+      <string>Simulation93</string>
+      <string>Simulation94</string>
+      <string>Simulation95</string>
+      <string>Simulation96</string>
+      <string>Simulation97</string>
+      <string>Simulation98</string>
+      <string>Simulation99</string>
+      <string>Simulation100</string>
+      <string>Simulation101</string>
+      <string>Simulation102</string>
+      <string>Simulation103</string>
+      <string>Simulation104</string>
+      <string>Simulation105</string>
+      <string>Simulation106</string>
+      <string>Simulation107</string>
+      <string>Simulation108</string>
+      <string>Simulation109</string>
+      <string>Simulation110</string>
+      <string>Simulation111</string>
+      <string>Simulation112</string>
+      <string>Simulation113</string>
+      <string>Simulation114</string>
+      <string>Simulation115</string>
+      <string>Simulation116</string>
+      <string>Simulation117</string>
+      <string>Simulation118</string>
+      <string>Simulation119</string>
+      <string>Simulation120</string>
+      <string>Simulation121</string>
+      <string>Simulation122</string>
+      <string>Simulation123</string>
+      <string>Simulation124</string>
+      <string>Simulation125</string>
+      <string>Simulation126</string>
+      <string>Simulation127</string>
+      <string>Simulation128</string>
+      <string>Simulation129</string>
+      <string>Simulation130</string>
+      <string>Simulation131</string>
+      <string>Simulation132</string>
+      <string>Simulation133</string>
+      <string>Simulation134</string>
+      <string>Simulation135</string>
+      <string>Simulation136</string>
+      <string>Simulation137</string>
+      <string>Simulation138</string>
+      <string>Simulation139</string>
+      <string>Simulation140</string>
+      <string>Simulation141</string>
+      <string>Simulation142</string>
+      <string>Simulation143</string>
+      <string>Simulation144</string>
+      <string>Simulation145</string>
+      <string>Simulation146</string>
+      <string>Simulation147</string>
+      <string>Simulation148</string>
+      <string>Simulation149</string>
+      <string>Simulation150</string>
+      <string>Simulation151</string>
+      <string>Simulation152</string>
+      <string>Simulation153</string>
+      <string>Simulation154</string>
+      <string>Simulation155</string>
+      <string>Simulation156</string>
+      <string>Simulation157</string>
+      <string>Simulation158</string>
+      <string>Simulation159</string>
+      <string>Simulation160</string>
+      <string>Simulation161</string>
+      <string>Simulation162</string>
+      <string>Simulation163</string>
+      <string>Simulation164</string>
+      <string>Simulation165</string>
+      <string>Simulation166</string>
+      <string>Simulation167</string>
+      <string>Simulation168</string>
+      <string>Simulation169</string>
+      <string>Simulation170</string>
+      <string>Simulation171</string>
+      <string>Simulation172</string>
+      <string>Simulation173</string>
+      <string>Simulation174</string>
+      <string>Simulation175</string>
+      <string>Simulation176</string>
+      <string>Simulation177</string>
+      <string>Simulation178</string>
+      <string>Simulation179</string>
+      <string>Simulation180</string>
+      <string>Simulation181</string>
+      <string>Simulation182</string>
+      <string>Simulation183</string>
+      <string>Simulation184</string>
+      <string>Simulation185</string>
+      <string>Simulation186</string>
+      <string>Simulation187</string>
+      <string>Simulation188</string>
+      <string>Simulation189</string>
+      <string>Simulation190</string>
+      <string>Simulation191</string>
+      <string>Simulation192</string>
+      <string>Simulation193</string>
+      <string>Simulation194</string>
+      <string>Simulation195</string>
+      <string>Simulation196</string>
+      <string>Simulation197</string>
+      <string>Simulation198</string>
+      <string>Simulation199</string>
+      <string>Simulation200</string>
+      <string>Simulation201</string>
+      <string>Simulation202</string>
+      <string>Simulation203</string>
+      <string>Simulation204</string>
+      <string>Simulation205</string>
+      <string>Simulation206</string>
+      <string>Simulation207</string>
+      <string>Simulation208</string>
+      <string>Simulation209</string>
+      <string>Simulation210</string>
+      <string>Simulation211</string>
+      <string>Simulation212</string>
+      <string>Simulation213</string>
+      <string>Simulation214</string>
+      <string>Simulation215</string>
+      <string>Simulation216</string>
+      <string>Simulation217</string>
+      <string>Simulation218</string>
+      <string>Simulation219</string>
+      <string>Simulation220</string>
+      <string>Simulation221</string>
+      <string>Simulation222</string>
+      <string>Simulation223</string>
+      <string>Simulation224</string>
+      <string>Simulation225</string>
+      <string>Simulation226</string>
+      <string>Simulation227</string>
+      <string>Simulation228</string>
+      <string>Simulation229</string>
+      <string>Simulation230</string>
+      <string>Simulation231</string>
+      <string>Simulation232</string>
+      <string>Simulation233</string>
+      <string>Simulation234</string>
+      <string>Simulation235</string>
+      <string>Simulation236</string>
+      <string>Simulation237</string>
+      <string>Simulation238</string>
+      <string>Simulation239</string>
+      <string>Simulation240</string>
+      <string>Simulation241</string>
+      <string>Simulation242</string>
+      <string>Simulation243</string>
+      <string>Simulation244</string>
+      <string>Simulation245</string>
+      <string>Simulation246</string>
+      <string>Simulation247</string>
+      <string>Simulation248</string>
+      <string>Simulation249</string>
+      <string>Simulation250</string>
+      <string>Simulation251</string>
+      <string>Simulation252</string>
+      <string>Simulation253</string>
+      <string>Simulation254</string>
+      <string>Simulation255</string>
+      <string>Simulation256</string>
+      <string>Simulation257</string>
+      <string>Simulation258</string>
+      <string>Simulation259</string>
+      <string>Simulation260</string>
+      <string>Simulation261</string>
+      <string>Simulation262</string>
+      <string>Simulation263</string>
+      <string>Simulation264</string>
+      <string>Simulation265</string>
+      <string>Simulation266</string>
+      <string>Simulation267</string>
+      <string>Simulation268</string>
+      <string>Simulation269</string>
+      <string>Simulation270</string>
+      <string>Simulation271</string>
+      <string>Simulation272</string>
+      <string>Simulation273</string>
+      <string>Simulation274</string>
+      <string>Simulation275</string>
+      <string>Simulation276</string>
+      <string>Simulation277</string>
+      <string>Simulation278</string>
+      <string>Simulation279</string>
+      <string>Simulation280</string>
+      <string>Simulation281</string>
+      <string>Simulation282</string>
+      <string>Simulation283</string>
+      <string>Simulation284</string>
+      <string>Simulation285</string>
+      <string>Simulation286</string>
+      <string>Simulation287</string>
+      <string>Simulation288</string>
+      <string>Simulation289</string>
+      <string>Simulation290</string>
+      <string>Simulation291</string>
+      <string>Simulation292</string>
+      <string>Simulation293</string>
+      <string>Simulation294</string>
+      <string>Simulation295</string>
+      <string>Simulation296</string>
+      <string>Simulation297</string>
+      <string>Simulation298</string>
+      <string>Simulation299</string>
+      <string>Simulation300</string>
+      <string>Simulation301</string>
+      <string>Simulation302</string>
+      <string>Simulation303</string>
+      <string>Simulation304</string>
+      <string>Simulation305</string>
+      <string>Simulation306</string>
+      <string>Simulation307</string>
+      <string>Simulation308</string>
+      <string>Simulation309</string>
+      <string>Simulation310</string>
+      <string>Simulation311</string>
+      <string>Simulation312</string>
+      <string>Simulation313</string>
+      <string>Simulation314</string>
+      <string>Simulation315</string>
+      <string>Simulation316</string>
+      <string>Simulation317</string>
+      <string>Simulation318</string>
+      <string>Simulation319</string>
+      <string>Simulation320</string>
+      <string>Simulation321</string>
+      <string>Simulation322</string>
+      <string>Simulation323</string>
+      <string>Simulation324</string>
+      <string>Simulation325</string>
+      <string>Simulation326</string>
+      <string>Simulation327</string>
+      <string>Simulation328</string>
+      <string>Simulation329</string>
+      <string>Simulation330</string>
+      <string>Simulation331</string>
+      <string>Simulation332</string>
+      <string>Simulation333</string>
+      <string>Simulation334</string>
+      <string>Simulation335</string>
+      <string>Simulation336</string>
+      <string>Simulation337</string>
+      <string>Simulation338</string>
+      <string>Simulation339</string>
+      <string>Simulation340</string>
+      <string>Simulation341</string>
+      <string>Simulation342</string>
+      <string>Simulation343</string>
+      <string>Simulation344</string>
+      <string>Simulation345</string>
+      <string>Simulation346</string>
+      <string>Simulation347</string>
+      <string>Simulation348</string>
+      <string>Simulation349</string>
+      <string>Simulation350</string>
+      <string>Simulation351</string>
+      <string>Simulation352</string>
+      <string>Simulation353</string>
+      <string>Simulation354</string>
+      <string>Simulation355</string>
+      <string>Simulation356</string>
+      <string>Simulation357</string>
+      <string>Simulation358</string>
+      <string>Simulation359</string>
+      <string>Simulation360</string>
+      <string>Simulation361</string>
+      <string>Simulation362</string>
+      <string>Simulation363</string>
+      <string>Simulation364</string>
+      <string>Simulation365</string>
+      <string>Simulation366</string>
+      <string>Simulation367</string>
+      <string>Simulation368</string>
+      <string>Simulation369</string>
+      <string>Simulation370</string>
+      <string>Simulation371</string>
+      <string>Simulation372</string>
+      <string>Simulation373</string>
+      <string>Simulation374</string>
+      <string>Simulation375</string>
+      <string>Simulation376</string>
+      <string>Simulation377</string>
+      <string>Simulation378</string>
+      <string>Simulation379</string>
+      <string>Simulation380</string>
+      <string>Simulation381</string>
+      <string>Simulation382</string>
+      <string>Simulation383</string>
+      <string>Simulation384</string>
+      <string>Simulation385</string>
+      <string>Simulation386</string>
+      <string>Simulation387</string>
+      <string>Simulation388</string>
+      <string>Simulation389</string>
+      <string>Simulation390</string>
+      <string>Simulation391</string>
+      <string>Simulation392</string>
+      <string>Simulation393</string>
+      <string>Simulation394</string>
+      <string>Simulation395</string>
+      <string>Simulation396</string>
+      <string>Simulation397</string>
+      <string>Simulation398</string>
+      <string>Simulation399</string>
+      <string>Simulation400</string>
+      <string>Simulation401</string>
+      <string>Simulation402</string>
+      <string>Simulation403</string>
+      <string>Simulation404</string>
+      <string>Simulation405</string>
+      <string>Simulation406</string>
+      <string>Simulation407</string>
+      <string>Simulation408</string>
+      <string>Simulation409</string>
+      <string>Simulation410</string>
+      <string>Simulation411</string>
+      <string>Simulation412</string>
+      <string>Simulation413</string>
+      <string>Simulation414</string>
+      <string>Simulation415</string>
+      <string>Simulation416</string>
+      <string>Simulation417</string>
+      <string>Simulation418</string>
+      <string>Simulation419</string>
+      <string>Simulation420</string>
+      <string>Simulation421</string>
+      <string>Simulation422</string>
+      <string>Simulation423</string>
+      <string>Simulation424</string>
+      <string>Simulation425</string>
+      <string>Simulation426</string>
+      <string>Simulation427</string>
+      <string>Simulation428</string>
+      <string>Simulation429</string>
+      <string>Simulation430</string>
+      <string>Simulation431</string>
+      <string>Simulation432</string>
+      <string>Simulation433</string>
+      <string>Simulation434</string>
+      <string>Simulation435</string>
+      <string>Simulation436</string>
+      <string>Simulation437</string>
+      <string>Simulation438</string>
+      <string>Simulation439</string>
+      <string>Simulation440</string>
+      <string>Simulation441</string>
+      <string>Simulation442</string>
+      <string>Simulation443</string>
+      <string>Simulation444</string>
+      <string>Simulation445</string>
+      <string>Simulation446</string>
+      <string>Simulation447</string>
+      <string>Simulation448</string>
+      <string>Simulation449</string>
+      <string>Simulation450</string>
+      <string>Simulation451</string>
+      <string>Simulation452</string>
+      <string>Simulation453</string>
+      <string>Simulation454</string>
+      <string>Simulation455</string>
+      <string>Simulation456</string>
+      <string>Simulation457</string>
+      <string>Simulation458</string>
+      <string>Simulation459</string>
+      <string>Simulation460</string>
+      <string>Simulation461</string>
+      <string>Simulation462</string>
+      <string>Simulation463</string>
+      <string>Simulation464</string>
+      <string>Simulation465</string>
+      <string>Simulation466</string>
+      <string>Simulation467</string>
+      <string>Simulation468</string>
+      <string>Simulation469</string>
+      <string>Simulation470</string>
+      <string>Simulation471</string>
+      <string>Simulation472</string>
+      <string>Simulation473</string>
+      <string>Simulation474</string>
+      <string>Simulation475</string>
+      <string>Simulation476</string>
+      <string>Simulation477</string>
+      <string>Simulation478</string>
+      <string>Simulation479</string>
+      <string>Simulation480</string>
+      <string>Simulation481</string>
+      <string>Simulation482</string>
+      <string>Simulation483</string>
+      <string>Simulation484</string>
+      <string>Simulation485</string>
+      <string>Simulation486</string>
+      <string>Simulation487</string>
+      <string>Simulation488</string>
+      <string>Simulation489</string>
+      <string>Simulation490</string>
+      <string>Simulation491</string>
+      <string>Simulation492</string>
+      <string>Simulation493</string>
+      <string>Simulation494</string>
+      <string>Simulation495</string>
+      <string>Simulation496</string>
+      <string>Simulation497</string>
+      <string>Simulation498</string>
+      <string>Simulation499</string>
+      <string>Simulation500</string>
+      <string>Simulation501</string>
+      <string>Simulation502</string>
+      <string>Simulation503</string>
+      <string>Simulation504</string>
+      <string>Simulation505</string>
+      <string>Simulation506</string>
+      <string>Simulation507</string>
+      <string>Simulation508</string>
+      <string>Simulation509</string>
+      <string>Simulation510</string>
+      <string>Simulation511</string>
+      <string>Simulation512</string>
+      <string>Simulation513</string>
+      <string>Simulation514</string>
+      <string>Simulation515</string>
+      <string>Simulation516</string>
+      <string>Simulation517</string>
+      <string>Simulation518</string>
+      <string>Simulation519</string>
+      <string>Simulation520</string>
+      <string>Simulation521</string>
+      <string>Simulation522</string>
+      <string>Simulation523</string>
+      <string>Simulation524</string>
+      <string>Simulation525</string>
+      <string>Simulation526</string>
+      <string>Simulation527</string>
+      <string>Simulation528</string>
+      <string>Simulation529</string>
+      <string>Simulation530</string>
+      <string>Simulation531</string>
+      <string>Simulation532</string>
+      <string>Simulation533</string>
+      <string>Simulation534</string>
+      <string>Simulation535</string>
+      <string>Simulation536</string>
+      <string>Simulation537</string>
     </simulationNames>
   </Morris>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </DataStore>
   <Graph>
-    <Name>Elemental Effects</Name>
+    <Name>Elementary Effects</Name>
     <Series>
-      <Name>CN2</Name>
+      <Name>series1</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16777216</ColourArgb>
+      <FactorToVaryColours>MorrisVariable</FactorToVaryColours>
       <Marker>None</Marker>
       <MarkerSize>Normal</MarkerSize>
       <Line>Solid</Line>
       <LineThickness>Normal</LineThickness>
       <Checkpoint>Current</Checkpoint>
-      <TableName>MuStar</TableName>
+      <TableName>MorrisMuStarByPath</TableName>
       <XFieldName>Path</XFieldName>
       <YFieldName>Wheat.AboveGround.Wt.MuStar</YFieldName>
       <ShowInLegend>true</ShowInLegend>
-      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>
       <CumulativeX>false</CumulativeX>
-      <Filter>Variable='CN2'</Filter>
-    </Series>
-    <Series>
-      <Name>CONA</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-1663232</ColourArgb>
-      <Marker>None</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>Solid</Line>
-      <LineThickness>Normal</LineThickness>
-      <Checkpoint>Current</Checkpoint>
-      <TableName>MuStar</TableName>
-      <XFieldName>Path</XFieldName>
-      <YFieldName>Wheat.AboveGround.Wt.MuStar</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
-      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-      <Filter>Variable='CONA'</Filter>
+      <Filter />
     </Series>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
     <Axis>
       <Type>Bottom</Type>
       <Inverted>false</Inverted>
@@ -1324,6 +1331,8 @@ namespace Models
     <Series>
       <Name>CN2</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
@@ -1344,6 +1353,8 @@ namespace Models
       <Filter />
     </Series>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
     <Axis>
       <Type>Bottom</Type>
       <Inverted>false</Inverted>
@@ -1358,9 +1369,11 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <LegendPosition>TopRight</LegendPosition>
+    <LegendPosition>BottomRight</LegendPosition>
     <DisabledSeries />
   </Graph>
   <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
+  <ReadOnly>false</ReadOnly>
   <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

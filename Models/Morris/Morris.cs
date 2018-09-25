@@ -123,7 +123,30 @@
             foreach (FactorValue value in combination)
                 value.ApplyToSimulation(newSimulation);
 
+            PushFactorsToReportModels(newSimulation, combination);
+
             return newSimulation;
+        }
+
+        /// <summary>Find all report models and give them the factor values.</summary>
+        /// <param name="factorValues">The factor values to send to each report model.</param>
+        /// <param name="simulation">The simulation to search for report models.</param>
+        private void PushFactorsToReportModels(Simulation simulation, List<FactorValue> factorValues)
+        {
+            List<string> names = new List<string>();
+            List<string> values = new List<string>();
+
+            foreach (FactorValue factor in factorValues)
+            {
+                names.Add(factor.Name);
+                values.Add(factor.Values[0].ToString());
+            }
+
+            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
+            {
+                report.ExperimentFactorNames = names;
+                report.ExperimentFactorValues = values;
+            }
         }
 
         /// <summary>
@@ -185,28 +208,22 @@
                 if (parameterValues == null || parameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");
 
+                int simulationNumber = 1;
+                simulationNames.Clear();
                 foreach (DataRow parameterRow in parameterValues.Rows)
                 {
                     List<FactorValue> factors = new List<FactorValue>();
                     foreach (Parameter param in parameters)
                     {
-                        FactorValue f = new FactorValue(null, param.Name, param.Path, parameterRow[param.Name]);
+                        object value = Convert.ToDouble(parameterRow[param.Name]);
+                        FactorValue f = new FactorValue(null, param.Name, param.Path, value);
                         factors.Add(f);
                     }
 
-                    allCombinations.Add(factors);
-                }
-
-                // Work out simulation names;
-                simulationNames.Clear();
-                foreach (List<FactorValue> combination in allCombinations)
-                {
-                    string newSimulationName = Name;
-
-                    foreach (FactorValue value in combination)
-                        newSimulationName += value.Name + value.Values[0];
-
+                    string newSimulationName = "Simulation" + simulationNumber;
                     simulationNames.Add(newSimulationName);
+                    allCombinations.Add(factors);
+                    simulationNumber++;
                 }
             }
         }
@@ -308,11 +325,11 @@
             DataTable predictedData = dataStore.GetData("Report");
             if (predictedData != null)
             {
-                DataTable elementalEffects = CreateElementalEffectsTable(predictedData);
-                dataStore.DeleteDataInTable(elementalEffects.TableName);
-                dataStore.WriteTable(elementalEffects);
+                DataTable elementaryEffects = CreateElementaryEffectsTable(predictedData);
+                dataStore.DeleteDataInTable(elementaryEffects.TableName);
+                dataStore.WriteTable(elementaryEffects);
 
-                DataTable muStarByPath = CreateMuStarByPath(elementalEffects);
+                DataTable muStarByPath = CreateMuStarByPath(elementaryEffects);
                 dataStore.DeleteDataInTable(muStarByPath.TableName);
                 dataStore.WriteTable(muStarByPath);
 
@@ -323,14 +340,14 @@
         }
 
         /// <summary>
-        /// Create an elemental effects table.
+        /// Create an elementary effects table.
         /// </summary>
         /// <param name="predictedData"></param>
-        private DataTable CreateElementalEffectsTable(DataTable predictedData)
+        private DataTable CreateElementaryEffectsTable(DataTable predictedData)
         {
             // Add all the necessary columns to our data table.
             DataTable eeTable = new DataTable();
-            eeTable.TableName = Name + "ElementalEffects";
+            eeTable.TableName = Name + "ElementaryEffects";
             eeTable.Columns.Add("Variable", typeof(string));
             eeTable.Columns.Add("Path", typeof(int));
             foreach (DataColumn column in predictedData.Columns)
