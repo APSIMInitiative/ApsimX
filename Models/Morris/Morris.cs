@@ -29,10 +29,14 @@
         /// <summary>A list of factors that we are to run</summary>
         private List<List<FactorValue>> allCombinations = new List<List<FactorValue>>();
 
+        /// <summary>A number of the currently running sim</summary>
+        private int simulationNumber;
+
         /// <summary>List of parameters</summary>
         public List<Parameter> parameters { get; set; }
 
         /// <summary>List of simulation names from last run</summary>
+        [XmlIgnore]
         public List<string> simulationNames { get; set; }
 
         /// <summary>Constructor</summary>
@@ -97,6 +101,7 @@
         private void OnBeginRun()
         {
             Initialise();
+            simulationNumber = 1;
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -107,12 +112,9 @@
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
-            string newSimulationName = Name;
-            foreach (FactorValue value in combination)
-                newSimulationName += value.Name + value.Values[0];
 
             Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
-            newSimulation.Name = newSimulationName;
+            newSimulation.Name = "Simulation" + simulationNumber;
             newSimulation.Parent = null;
             newSimulation.FileName = parentSimulations.FileName;
             Apsim.ParentAllChildren(newSimulation);
@@ -125,6 +127,7 @@
 
             PushFactorsToReportModels(newSimulation, combination);
 
+            simulationNumber++;
             return newSimulation;
         }
 
@@ -135,6 +138,8 @@
         {
             List<string> names = new List<string>();
             List<string> values = new List<string>();
+            names.Add("SimulationName");
+            values.Add(simulation.Name);
 
             foreach (FactorValue factor in factorValues)
             {
@@ -443,8 +448,9 @@
                     muStarTable.Columns.Add(column.ColumnName, typeof(double));
             }
 
-            muStarTable.ImportRow(muStarByPathTable.Rows[muStarByPathTable.Rows.Count - 2]);
-            muStarTable.ImportRow(muStarByPathTable.Rows[muStarByPathTable.Rows.Count - 1]);
+            // Take the last 4 rows of the table.
+            for (int i = 1; i <= parameters.Count; i++)
+                muStarTable.ImportRow(muStarByPathTable.Rows[muStarByPathTable.Rows.Count - i]);
             return muStarTable;
         }
 
