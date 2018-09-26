@@ -237,9 +237,7 @@ namespace UserInterface.Presenters
         {
             managerView.Editor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
             if (args.IsMethod)
-            {
                 intellisense.ShowScriptMethodCompletion(manager, managerView.Editor.Text, managerView.Editor.Offset, managerView.Editor.GetPositionOfCursor());
-            }
         }
     }
 }

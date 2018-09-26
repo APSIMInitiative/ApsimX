@@ -123,9 +123,7 @@
             {
                 completions = value;
                 if (completions.Count > 0)
-                {
                     VisibleCompletionIndex = 0;
-                }
             }
         }
 
@@ -266,6 +264,11 @@
             MethodCompletion completion = completions[visibleCompletionIndex];
             lblMethodSignature.Text = completion.Signature;
             lblMethodSummary.Text = completion.Summary;
+            // For each line in the argument summaries, we need to make the argument name bold. 
+            // We can do this by putting it inside html <b></b> tags. To get the name by itself,
+            // we look for all text between the start of a line and the first colon : on that line.
+            // This makes a lot of assumptions about how the data is formatted by the presenter,
+            // but it's good enough for now.
             lblArgumentSummaries.Markup = System.Text.RegularExpressions.Regex.Replace(completion.ParameterDocumentation, @"^([^:]+:)", @"<b>$1</b>", System.Text.RegularExpressions.RegexOptions.Multiline);
             lblArgumentSummaries.WidthChars = Math.Max(completion.Signature.Length, completion.Summary.Length);
             lblOverloadIndex.Text = string.Format("{0} of {1}", visibleCompletionIndex + 1, completions.Count);
