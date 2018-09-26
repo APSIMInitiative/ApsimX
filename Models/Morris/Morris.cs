@@ -36,6 +36,7 @@
         public List<Parameter> parameters { get; set; }
 
         /// <summary>List of simulation names from last run</summary>
+        [XmlIgnore]
         public List<string> simulationNames { get; set; }
 
         /// <summary>Constructor</summary>
