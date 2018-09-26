@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 45; } }
+        public static int LatestVersion { get { return 46; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -1129,6 +1129,19 @@
             ConverterUtilities.AddVariableReferenceFuntionIfNotExists(Storage, "MaxNconc", "[" + organNode.FirstChild.InnerText + "].maximumNconc.Value()");
             NDemands.AppendChild(Storage);
         }
+
+        /// <summary>Remove slnDemandFunction in SimpleLeaf as it has been made redundant</summary>
+        private static void UpgradeToVersion46(XmlNode node, string fileName)
+        {
+            List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf");
+
+            foreach (XmlNode organ in nodeList)
+            {
+                foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(organ, "Constant", "slnDemandFunction"))
+                    childToDelete.ParentNode.RemoveChild(childToDelete);
+            }
+        }
+
     }
 }
 
