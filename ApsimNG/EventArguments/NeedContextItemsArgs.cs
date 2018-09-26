@@ -304,15 +304,25 @@ namespace UserInterface.EventArguments
         private static object GetNodeFromPath(Model relativeTo, string objectName)
         {       
             string modelNamePattern = @"\[[A-Za-z\s]+[A-Za-z0-9\s_]*\]";
+            object node = null;
             var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
             if (matches.Count <= 0)
-                return null;
+            {
+                // object name doesn't contain square brackets.
+                string textBeforeFirstDot = objectName;
+                if (objectName.Contains("."))
+                    textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
+                node = Apsim.Child(relativeTo, textBeforeFirstDot);
+            }
+            else
+            {
+                // Get the raw model name without square brackets.
+                string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
-            // Get the raw model name without square brackets.
-            string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
+                // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
+                node = Apsim.ChildrenRecursively(Apsim.Parent(relativeTo, typeof(Simulations))).FirstOrDefault(child => child.Name == modelName);
 
-            // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-            object node = Apsim.ChildrenRecursively(Apsim.Parent(relativeTo, typeof(Simulations))).FirstOrDefault(child => child.Name == modelName);
+            }
 
             // If the object name string does not contain any children/properties 
             // (e.g. it doesn't contain any periods), we can return immediately.

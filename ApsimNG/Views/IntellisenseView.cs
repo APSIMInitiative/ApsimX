@@ -417,10 +417,16 @@
                 // If user clicks ENTER and the context list is visible then insert the currently
                 // selected item from the list into the TextBox and close the list.
                 if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+                {
                     HandleItemSelected();
+                    e.RetVal = true;
+                }
                 // If the user presses ESC and the context list is visible then close the list.
                 else if (e.Event.Key == Gdk.Key.Escape && completionView.Visible)
+                {
                     completionForm.Hide();
+                    e.RetVal = true;
+                }
             }
             catch (Exception err)
             {
@@ -437,7 +443,10 @@
         private void OnKeyRelease(object sender, KeyReleaseEventArgs e)
         {            
             if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+            {
                 HandleItemSelected();
+                e.RetVal = true;
+            }
         }
 
         /// <summary>

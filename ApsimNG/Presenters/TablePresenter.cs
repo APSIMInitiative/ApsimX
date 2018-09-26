@@ -5,6 +5,8 @@
     using Interfaces;
     using Models.Interfaces;
     using System;
+    using Views;
+    using Models.Core;
 
     /// <summary>
     /// Presenter for any <see cref="IModelAsTable"/>.
@@ -15,6 +17,11 @@
         /// The underlying model.
         /// </summary>
         private IModelAsTable tableModel;
+
+        /// <summary>
+        /// The intellisense.
+        /// </summary>
+        private IntellisensePresenter intellisense;
 
         /// <summary>
         /// Attach the model to the view.
@@ -29,6 +36,10 @@
             grid.DataSource = tableModel.Table;
             grid.CellsChanged += OnCellValueChanged;
             presenter.CommandHistory.ModelChanged += OnModelChanged;
+
+            intellisense = new IntellisensePresenter(grid as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            grid.ContextItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
         /// <summary>
@@ -36,6 +47,8 @@
         /// </summary>
         public override void Detach()
         {
+            grid.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
+            grid.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
             grid.CellsChanged -= OnCellValueChanged;
             base.Detach();
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
@@ -72,6 +85,43 @@
         {
             if (changedModel == tableModel)
                 grid.DataSource = tableModel.Table;
+        }
+
+        /// <summary>
+        /// Invoked when the view is asking for completion options.
+        /// Generates and displays these completion options.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Evenet arguments.</param>
+        private void OnIntellisenseItemsNeeded(object sender, NeedContextItemsArgs args)
+        {
+            try
+            {
+                if (intellisense.GenerateGridCompletions(args.Code, args.Offset, (tableModel as IModel).Children[0], true, false, false, args.ControlSpace))
+                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            try
+            {
+                grid.InsertText(args.ItemSelected);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
     }
 }

@@ -404,6 +404,8 @@
                     cell.CellBackgroundGdk = Grid.Style.Base(cellState);
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                     textRenderer.Editable = true;
+                    if (CellIsSelected(rowNo, colNo))
+                        Console.WriteLine(string.Format("Highlighting cell ({0}, {1})", rowNo, colNo));
                 }
 
                 if (view == Grid)
@@ -1176,10 +1178,13 @@
 
                         // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
                         // before the period is inserted by the Gtk event handler. Therefore, we insert it manually now, and stop
-                        // this signal from propagating further.
-                        // editable.Text += ".";
-                        editable.InsertText(".", ref caretLocation);
-                        editable.Position = caretLocation;
+                        // this signal from propagating further. 
+                        int position = editable.Position;
+                        editable.Text = editable.Text.Substring(0, position) + "." + editable.Text.Substring(position);
+                        editable.Position = position + 1;
+                        args.RetVal = true;
+                        while (GLib.MainContext.Iteration()) ;
+                        caretLocation = position + 1;
                     }
                     else
                     {
@@ -1696,7 +1701,12 @@
             try
             {
                 if (GetCurrentCell == null)
-                    return;
+                {
+                    if (selectedCellColumnIndex >= 0 && selectedCellRowIndex >= 0)
+                        GetCurrentCell = new GridCell(this, selectedCellColumnIndex, selectedCellRowIndex);
+                    else
+                        return;
+                }
 
                 string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
                 string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
