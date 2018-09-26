@@ -312,7 +312,7 @@ namespace UserInterface.EventArguments
                 string textBeforeFirstDot = objectName;
                 if (objectName.Contains("."))
                     textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
-                node = Apsim.Child(relativeTo, textBeforeFirstDot);
+                node = Apsim.Find(relativeTo, textBeforeFirstDot);
             }
             else
             {
@@ -333,7 +333,7 @@ namespace UserInterface.EventArguments
 
             // Iterate over the 'child' models/properties.
             // childName is the next child we're looking for. e.g. in "[Wheat].Leaf", the first childName will be "Leaf".
-            string[] namePathBits = APSIM.Shared.Utilities.StringUtilities.SplitStringHonouringBrackets(objectName, '.', '[', ']');
+            string[] namePathBits = StringUtilities.SplitStringHonouringBrackets(objectName, '.', '[', ']');
             for (int i = 0; i < namePathBits.Length; i++)
             {
                 if (node == null)
