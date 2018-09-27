@@ -252,23 +252,26 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info, bool doUptake = true)
         {
             SWUptake = info[0].Water;
             EP = MathUtilities.Sum(SWUptake);
 
-            Soil.SoilWater.RemoveWater(SWUptake);
+            if (doUptake) Soil.SoilWater.RemoveWater(SWUptake);
         }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info, bool doUptake = true)
         {
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
-            solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
+            if (doUptake)
+            {
+                solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
+                solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
+            }
         }
 
 

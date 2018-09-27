@@ -27,11 +27,11 @@ namespace Models.Interfaces
         /// <summary>
         /// Set the sw uptake for today.
         /// </summary>
-        void SetActualWaterUptake(List<ZoneWaterAndN> info);
+        void SetActualWaterUptake(List<ZoneWaterAndN> info, bool doUptake = true);
         
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        void SetActualNitrogenUptakes(List<ZoneWaterAndN> info);
+        void SetActualNitrogenUptakes(List<ZoneWaterAndN> info, bool doUptake = true);
     }
 }

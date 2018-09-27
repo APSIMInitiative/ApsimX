@@ -12096,13 +12096,15 @@ namespace Models
         /// Set the sw uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
+        /// <param name="doUptake"></param>
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info, bool doUptake = true)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
+        /// <param name="doUptake"></param>
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info, bool doUptake = true)
         { }
 
 

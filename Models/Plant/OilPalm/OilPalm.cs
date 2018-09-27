@@ -877,12 +877,12 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info, bool doUptake = true)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info, bool doUptake = true)
         { }
 
         /// <summary>Does the flower abortion.</summary>

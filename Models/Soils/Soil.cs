@@ -469,6 +469,16 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Plant available water at standard thickness. Units:mm</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, Thickness);
+            }
+        }
+
         /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
         [Units("mm/mm")]
         public double[] PAWInitial
