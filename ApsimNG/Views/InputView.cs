@@ -114,7 +114,7 @@ namespace UserInterface.Views
             {
                 if (BrowseButtonClicked != null)
                 {
-                    string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "*.*", FileName);
+                    string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "All Files (*.*) | *.*", FileName);
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         OpenDialogArgs args = new OpenDialogArgs();
