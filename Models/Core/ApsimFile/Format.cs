@@ -1,112 +1,54 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Format.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core.ApsimFile
+﻿namespace Models.Core.ApsimFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using APSIM.Shared.Utilities;
-    using System.Xml;
+    using System;
     using System.IO;
     using System.Reflection;
-    using System.Xml.Serialization;
-    using System.Xml.Schema;
-    using Models;
-
+    using System.Linq;
+    using Newtonsoft.Json;
+    using System.Xml;
 
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
     /// </summary>
     public class Format
     {
-        /// <summary>Constructor</summary>
-        public Format()
+        /// <summary>
+        /// Convert a string (json or xml) to a model
+        /// </summary>
+        /// <param name="st">The string to convert</param>
+        public static T StringToModel<T>(string st)
         {
-        }
+            // Run the converter.
+            T modelToReturn;
 
-        /// <summary>Convert the specified model to XML</summary>
-        /// <param name="rootNode">The root model to serialise.</param>
-        /// <returns>The XML</returns>
-        public string WriteXML(ModelWrapper rootNode)
-        {
-            StringWriter s = new StringWriter();
-            Writer writer = new Writer(s);
-            writer.Formatting = Formatting.Indented;
-            XmlUtilities.SerialiseWithOptions(rootNode, false, null, null, writer);
-            return s.ToString();
-        }
+            int offset = st.TakeWhile(c => char.IsWhiteSpace(c)).Count();
+            char firstNonBlankChar = st[offset];
 
-        /// <summary>Write the specified simulation set to the specified filename</summary>
-        /// <param name="model">The model to write.</param>
-        /// <param name="fileName">Name of the file.</param>
-        public void WriteFile(Simulations model, string fileName)
-        {
-            //string tempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(fileName));
-            //StreamWriter writer = new StreamWriter(tempFileName);
-            //writer.Write(WriteXML(model));
-            //writer.Close();
+            if (firstNonBlankChar == '{')
+            {
+                JsonSerializer serializer = new JsonSerializer()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto
+                };
+                using (var sw = new StringReader(st))
+                using (var reader = new JsonTextReader(sw))
+                {
+                    modelToReturn = serializer.Deserialize<T>(reader);
+                }
+            }
+            else
+            {
+                //using (Stream inStream = Converter.ConvertToLatestVersion(FileName))
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(st);
+                modelToReturn = (T) XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly());
+            }
 
-            //// If we get this far without an exception then copy the tempfilename over our filename,
-            //// creating a backup (.bak) in the process.
-            //string bakFileName = fileName + ".bak";
-            //File.Delete(bakFileName);
-            //if (File.Exists(fileName))
-            //    File.Move(fileName, bakFileName);
-            //File.Move(tempFileName, fileName);
-        }
+            //if (simulations.Version > ApsimFile.Converter.LatestVersion)
+            //    throw new Exception("This file has previously been opened with a more recent version of Apsim. Please upgrade to a newer version to open this file.");
 
-        /// <summary>Convert XML to an object model.</summary>
-        /// <param name="xml">The XML</param>
-        /// <returns>The newly deserialised model.</returns>
-        public ModelWrapper ReadXML(string xml)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xml);
-
-            return Read(doc.DocumentElement);
-        }
-
-        /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="fileName">Name of the file.</param>
-        public ModelWrapper ReadFile(string fileName)
-        {
-            return ReadXML(File.ReadAllText(fileName));
-        }
-
-        /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="s">The stream to read from.</param>
-        public ModelWrapper Read(Stream s)
-        {
-            XmlReader reader = new Reader(s);
-            reader.Read();
-
-            Assembly modelsAssembly = null;
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
-                if (!a.IsDynamic && Path.GetFileName(a.Location) == "Models.exe")
-                    modelsAssembly = a;
-
-            return XmlUtilities.Deserialise(reader, modelsAssembly) as ModelWrapper;
-        }
-
-        /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="node">XML node to read from.</param>
-        public ModelWrapper Read(XmlNode node)
-        {
-            Converter.ConvertToLatestVersion(node, null);
-            
-            XmlReader reader = new Reader(node);
-            reader.Read();
-
-            Assembly modelsAssembly = null;
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
-                if (!a.IsDynamic && Path.GetFileName(a.Location) == "Models.exe")
-                    modelsAssembly = a;
-
-            return XmlUtilities.Deserialise(reader, modelsAssembly) as ModelWrapper;
+            return modelToReturn;
         }
     }
 }

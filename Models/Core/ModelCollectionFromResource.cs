@@ -73,12 +73,10 @@ namespace Models.Core
                 // lookup the resource get the xml and then deserialise to a model.
                 if (ResourceName != null && ResourceName != "")
                 {
-                    string xml = Properties.Resources.ResourceManager.GetString(ResourceName);
-                    if (xml != null)
+                    string contents = Properties.Resources.ResourceManager.GetString(ResourceName);
+                    if (contents != null)
                     {
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(xml);
-                        Model ModelFromResource = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as Model;
+                        Model ModelFromResource = ApsimFile.Format.StringToModel<Model>(contents);
                         Children.AddRange(ModelFromResource.Children);
                         CopyPropertiesFrom(ModelFromResource);
                         SetNotVisible(ModelFromResource);

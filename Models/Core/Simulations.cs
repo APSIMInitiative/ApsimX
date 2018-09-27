@@ -11,6 +11,8 @@ using System.Linq;
 using Models.Core.Interfaces;
 using Models.Core.Runners;
 using Models.Storage;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Models.Core
 {
@@ -153,27 +155,22 @@ namespace Models.Core
         }
 
         /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="FileName">Name of the file.</param>
+        /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
-        public static Simulations Read(string FileName)
+        public static Simulations Read(string fileName)
         {
-            if (!File.Exists(FileName))
-                throw new Exception("Cannot read file: " + FileName + ". File does not exist.");
+            if (!File.Exists(fileName))
+                throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
             // Run the converter.
-            Stream inStream = ApsimFile.Converter.ConvertToLatestVersion(FileName);
-
-            // Deserialise
-            Simulations simulations = XmlUtilities.Deserialise(inStream, Assembly.GetExecutingAssembly()) as Simulations;
-            if (simulations.Version > ApsimFile.Converter.LatestVersion)
-                throw new Exception("This file has previously been opened with a more recent version of Apsim. Please upgrade to a newer version to open this file.");
-            inStream.Close();
+            string contents = File.ReadAllText(fileName);
+            Simulations simulations = ApsimFile.Format.StringToModel<Simulations>(contents);
 
             if (simulations != null)
             {
                 // Set the filename
-                simulations.FileName = FileName;
+                simulations.FileName = fileName;
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnDeserialised method in each model.
@@ -325,12 +322,55 @@ namespace Models.Core
 
             try
             {
-                stream.Write(XmlUtilities.Serialise(this, true));
+                JsonSerializer serializer = new JsonSerializer()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    ContractResolver = new WritablePropertiesOnlyResolver()
+
+                };
+                using (var writer = new JsonTextWriter(stream))
+                {
+                    serializer.Serialize(writer, this);
+                }
+                //stream.Write(XmlUtilities.Serialise(this, true));
             }
             finally
             {
                 events.Publish("Serialised", args);
             }
+        }
+
+
+        class WritablePropertiesOnlyResolver : DefaultContractResolver
+        {
+            protected override List<MemberInfo> GetSerializableMembers(Type objectType)
+            {
+                var result = base.GetSerializableMembers(objectType);
+                result.RemoveAll(m => m is PropertyInfo &&
+                                      !(m as PropertyInfo).CanWrite);
+                result.RemoveAll(m => m.GetCustomAttribute(typeof(XmlIgnoreAttribute)) != null);
+                return result;
+            }
+        }
+
+        ///<summary> Custom Contract resolver to stop deseralization of Parent properties </summary>
+        private class DynamicContractResolver : DefaultContractResolver
+        {
+            public DynamicContractResolver()
+            {
+            }
+
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
+
+                // only serializer properties that start with the specified character
+                properties =
+                    properties.Where(p => p.PropertyName != "Parent").ToList();
+
+                return properties;
+            }
+
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>

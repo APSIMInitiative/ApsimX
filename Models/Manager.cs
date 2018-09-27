@@ -70,12 +70,11 @@ namespace Models
 
         /// <summary>Gets or sets the code c data.</summary>
         [XmlElement("Code")]
-        public XmlNode CodeCData
+        public string CodeCData
         {
             get
             {
-                XmlDocument dummy = new XmlDocument();
-                return dummy.CreateCDataSection(Code);
+                return Code;
             }
             set
             {
@@ -85,7 +84,7 @@ namespace Models
                     return;
                 }
 
-                Code = value.Value;
+                Code = value;
             }
         }
 

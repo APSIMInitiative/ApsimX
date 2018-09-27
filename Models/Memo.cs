@@ -22,19 +22,15 @@ namespace Models
 
         /// <summary>Gets or sets the code c data.</summary>
         [XmlElement("MemoText")]
-        public XmlNode CodeCData
+        public string CodeCData
         {
             get
             {
-                XmlDocument dummy = new XmlDocument();
-                return dummy.CreateCDataSection(MemoText);
+                return MemoText;
             }
             set
             {
-                if (value != null)
-                {
-                    MemoText = value.InnerText;
-                }
+                MemoText = value;
             }
         }
 

@@ -166,7 +166,9 @@ namespace Models.PMF
         {
             get
             {
-                return Phenology.Emerged;
+                if (Phenology != null)
+                    return Phenology.Emerged;
+                return false;
             }
         }
 
