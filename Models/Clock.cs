@@ -259,17 +259,17 @@ namespace Models
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
 
-                if (DoActualPlantPartioning != null)
-                    DoActualPlantPartioning.Invoke(this, args);
-
-                if (DoActualPlantGrowth != null)
-                    DoActualPlantGrowth.Invoke(this, args);
-
                 if (DoWaterArbitration != null)
                     DoWaterArbitration.Invoke(this, args);
 
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);
+
+                if (DoActualPlantPartioning != null)
+                    DoActualPlantPartioning.Invoke(this, args);
+
+                if (DoActualPlantGrowth != null)
+                    DoActualPlantGrowth.Invoke(this, args);
 
                 if (DoUpdate != null)
                     DoUpdate.Invoke(this, args);
