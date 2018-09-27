@@ -263,10 +263,10 @@ namespace Models
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
 
-                if (DoWaterArbitrationWithoutUptake != null)
+                if (DoWaterArbitrationWithoutUptake != null) 
                     DoWaterArbitrationWithoutUptake.Invoke(this, args);
 
-                if (DoNutrientArbitrationWithoutUptake != null)
+                if (DoNutrientArbitrationWithoutUptake != null) 
                     DoNutrientArbitrationWithoutUptake.Invoke(this, args);
 
                 if (DoPhenology != null)
