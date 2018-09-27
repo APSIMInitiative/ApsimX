@@ -213,8 +213,15 @@ namespace Models.PMF
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will do pass the uptake to the soil water balance.
             if (doUptake)
+            {
+                fraction = 1;
+                if (waterSupply > 0) fraction = Math.Max(0.0, Math.Min(1.0, WDemand / waterSupply));
                 foreach (ZoneWaterAndN Z in zones)
-                    Plant.Root.DoWaterUptake(Z.Water, Z.Zone.Name);
+                {
+                    double[] uptake = MathUtilities.Multiply_Value(Z.Water, fraction);
+                    Plant.Root.DoWaterUptake(uptake, Z.Zone.Name);
+                }
+            }
         }
 
         /// <summary>
