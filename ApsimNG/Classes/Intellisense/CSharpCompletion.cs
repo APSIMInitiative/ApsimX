@@ -191,6 +191,40 @@ namespace UserInterface.Intellisense
             return result;
         }
 
+        public CodeCompletionResult GetMethodCompletion(IDocument document, int offset, bool controlSpace)
+        {
+            var result = new CodeCompletionResult();
+
+            if (String.IsNullOrEmpty(document.FileName))
+                return result;
+
+            var completionContext = new CSharpCompletionContext(document, offset, projectContent, null, null, null);
+
+            var completionFactory = new CSharpCompletionDataFactory(completionContext.TypeResolveContextAtCaret, completionContext);
+            var cce = new CSharpCompletionEngine(
+                completionContext.Document,
+                completionContext.CompletionContextProvider,
+                completionFactory,
+                completionContext.ProjectContent,
+                completionContext.TypeResolveContextAtCaret
+                );
+
+            cce.EolMarker = Environment.NewLine;
+            cce.FormattingPolicy = FormattingOptionsFactory.CreateSharpDevelop();
+            var completionChar = completionContext.Document.GetCharAt(completionContext.Offset - 1);
+            var pce = new CSharpParameterCompletionEngine(
+                    completionContext.Document,
+                    completionContext.CompletionContextProvider,
+                    completionFactory,
+                    completionContext.ProjectContent,
+                    completionContext.TypeResolveContextAtCaret
+                );
+
+            var parameterDataProvider = pce.GetParameterDataProvider(completionContext.Offset, completionChar);
+            result.OverloadProvider = parameterDataProvider as IOverloadProvider;
+            return result;
+        }
+
         /// <summary>
         /// Gets the XML documentation associated with a dll file.
         /// </summary>
