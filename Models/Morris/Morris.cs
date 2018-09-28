@@ -32,6 +32,9 @@
         /// <summary>A number of the currently running sim</summary>
         private int simulationNumber;
 
+        /// <summary>Parameter values coming back from R</summary>
+        public DataTable ParameterValues { get; set; }
+
         /// <summary>List of parameters</summary>
         public List<Parameter> parameters { get; set; }
 
@@ -209,13 +212,13 @@
         {
             if (allCombinations.Count == 0)
             {
-                DataTable parameterValues = CalculateMorrisParameterValues();
-                if (parameterValues == null || parameterValues.Rows.Count == 0)
+                ParameterValues = CalculateMorrisParameterValues();
+                if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");
 
                 int simulationNumber = 1;
                 simulationNames.Clear();
-                foreach (DataRow parameterRow in parameterValues.Rows)
+                foreach (DataRow parameterRow in ParameterValues.Rows)
                 {
                     List<FactorValue> factors = new List<FactorValue>();
                     foreach (Parameter param in parameters)
@@ -247,6 +250,27 @@
             script = script.Replace("%PARAMNAMES%", StringUtilities.Build(parameters.Select(p => p.Name), ",", "\"", "\""));
             script = script.Replace("%PARAMLOWERS%", StringUtilities.Build(parameters.Select(p => p.LowerBound), ","));
             script = script.Replace("%PARAMUPPERS%", StringUtilities.Build(parameters.Select(p => p.UpperBound), ","));
+            string rFileName = Path.GetTempFileName();
+            File.WriteAllText(rFileName, script);
+            R r = new R();
+            Console.WriteLine(r.GetPackage("sensitivity"));
+            return r.RunToTable(rFileName);
+        }
+
+        /// <summary>
+        /// Get a list of morris values (ee, mustar, sigmastar) from R
+        /// </summary>
+        private DataTable CalculateMorrisValues()
+        {
+            string tempFileName = Path.GetTempFileName();
+
+            string script = string.Format
+                            ("T <- read.csv(\"{0}\"" + Environment.NewLine +
+                             "DF <- as.data.frame(T)" + Environment.NewLine +
+                             "APSIMMorris$X <- DF" + Environment.NewLine +
+                             "tell(APSIMMorris)" + Environment.NewLine,
+                             tempFileName);
+
             string rFileName = Path.GetTempFileName();
             File.WriteAllText(rFileName, script);
             R r = new R();
@@ -330,128 +354,153 @@
             DataTable predictedData = dataStore.GetData("Report");
             if (predictedData != null)
             {
-                DataTable elementaryEffects = CreateElementaryEffectsTable(predictedData);
-                dataStore.DeleteDataInTable(elementaryEffects.TableName);
-                dataStore.WriteTable(elementaryEffects);
-
-                DataTable muStarByPath = CreateMuStarByPath(elementaryEffects);
-                dataStore.DeleteDataInTable(muStarByPath.TableName);
-                dataStore.WriteTable(muStarByPath);
-
-                DataTable muStar = CreateMuStar(muStarByPath);
-                dataStore.DeleteDataInTable(muStar.TableName);
-                dataStore.WriteTable(muStar);
-            }
-        }
-
-        /// <summary>
-        /// Create an elementary effects table.
-        /// </summary>
-        /// <param name="predictedData"></param>
-        private DataTable CreateElementaryEffectsTable(DataTable predictedData)
-        {
-            // Add all the necessary columns to our data table.
-            DataTable eeTable = new DataTable();
-            eeTable.TableName = Name + "ElementaryEffects";
-            eeTable.Columns.Add("Variable", typeof(string));
-            eeTable.Columns.Add("Path", typeof(int));
-            foreach (DataColumn column in predictedData.Columns)
-            {
-                if (column.DataType == typeof(double))
-                    eeTable.Columns.Add(column.ColumnName, typeof(double));
-            }
-
-            int path = 1;
-            for (int rowIndex = 1; rowIndex < predictedData.Rows.Count; rowIndex++)
-            {
-                for (int parameterIndex = 0; parameterIndex < parameters.Count; parameterIndex++)
+                // Add all the necessary rows and columns to our ee data table.
+                DataTable eeTable = new DataTable();
+                eeTable.TableName = Name + "ElementaryEffects";
+                eeTable.Columns.Add("Variable", typeof(string));
+                eeTable.Columns.Add("Path", typeof(int));
+                foreach (DataColumn column in predictedData.Columns)
                 {
-                    DataRow newRow = eeTable.NewRow();
-                    newRow["Variable"] = parameters[parameterIndex].Name;
-                    newRow["Path"] = path;
-                    foreach (DataColumn column in predictedData.Columns)
+                    if (column.DataType == typeof(double))
+                        eeTable.Columns.Add(column.ColumnName, typeof(double));
+                }
+                for (int i = 0; i < parameters.Count * numPaths; i++)
+                    eeTable.Rows.Add();
+
+                // Add all the necessary columns to our muStar data table.
+                DataTable muStarTable = new DataTable();
+                muStarTable.TableName = Name + "MuStar";
+                muStarTable.Columns.Add("Variable", typeof(string));
+                foreach (DataColumn column in predictedData.Columns)
+                {
+                    if (column.DataType == typeof(double))
                     {
-                        if (column.DataType == typeof(double))
+                        muStarTable.Columns.Add(column.ColumnName + ".Mu", typeof(double));
+                        muStarTable.Columns.Add(column.ColumnName + ".MuStar", typeof(double));
+                        muStarTable.Columns.Add(column.ColumnName + ".SigmaStar", typeof(double));
+                    }
+                }
+                for (int i = 0; i < parameters.Count; i++)
+                    muStarTable.Rows.Add();
+
+                // Setup some file names
+                string morrisParametersFileName = Path.Combine(Path.GetTempPath(), "parameters.csv");
+                string apsimVariableFileName = Path.Combine(Path.GetTempPath(), "apsimvariable.csv");
+                string eeFileName = Path.Combine(Path.GetTempPath(), "ee.csv");
+                string muFileName = Path.Combine(Path.GetTempPath(), "mu.csv");
+                string muStarFileName = Path.Combine(Path.GetTempPath(), "mustar.csv");
+                string sigmaFileName = Path.Combine(Path.GetTempPath(), "sigma.csv");
+                string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+
+
+                foreach (DataColumn predictedColumn in predictedData.Columns)
+                {
+                    if (predictedColumn.DataType == typeof(double))
+                    {
+                        // Write parameters
+                        using (StreamWriter writer = new StreamWriter(morrisParametersFileName))
+                            DataTableUtilities.DataTableToText(ParameterValues, 0, ",", true, writer);
+
+                        // write apsim variable
+                        using (StreamWriter writer = new StreamWriter(apsimVariableFileName))
                         {
-                            double thisValue = Convert.ToDouble(predictedData.Rows[rowIndex][column.ColumnName]);
-                            double previousValue = Convert.ToDouble(predictedData.Rows[rowIndex - 1][column.ColumnName]);
-                            newRow[column.ColumnName] = Math.Abs(thisValue - previousValue);
+                            writer.WriteLine(predictedColumn.ColumnName);
+                            foreach (DataRow row in predictedData.Rows)
+                                writer.WriteLine(row[predictedColumn]);
+                        }
+
+                        // write script
+                        string paramNames = StringUtilities.Build(parameters.Select(p => p.Name), ",", "\"", "\"");
+                        string lowerBounds = StringUtilities.Build(parameters.Select(p => p.LowerBound), ",");
+                        string upperBounds = StringUtilities.Build(parameters.Select(p => p.UpperBound), ",");
+                        string script = string.Format
+                                        ("library('sensitivity')" + Environment.NewLine +
+                                         "Params <- c({0})" + Environment.NewLine +
+                                         "APSIMMorris<-morris(model=NULL" + Environment.NewLine +
+                                         "    ,Params #string vector of parameter names" + Environment.NewLine +
+                                         "    ,{1} #no of paths within the total parameter space" + Environment.NewLine +
+                                         "    ,design=list(type=\"oat\",levels=20,grid.jump=10)" + Environment.NewLine +
+                                         "    ,binf=c({2}) #min for each parameter" + Environment.NewLine +
+                                         "    ,bsup=c({3}) #max for each parameter" + Environment.NewLine +
+                                         "    ,scale=T" + Environment.NewLine +
+                                         "    )" + Environment.NewLine +
+                                         "APSIMMorris$X <- as.data.frame(read.csv(\"{4}\"))" + Environment.NewLine +
+                                         "Y <- read.csv(\"{5}\")" + Environment.NewLine +
+                                         "APSIMMorris$y <- as.vector(Y${6})" + Environment.NewLine +
+                                         "tell(APSIMMorris)" + Environment.NewLine +
+                                         "write.csv(APSIMMorris$ee,\"{7}\", row.names=FALSE)" + Environment.NewLine +
+                                         "write.csv(apply(APSIMMorris$ee, 2, mean), \"{8}\", row.names=FALSE)" + Environment.NewLine +
+                                         "write.csv(apply(APSIMMorris$ee, 2, function(x) mean(abs(x))), \"{9}\", row.names=FALSE)" + Environment.NewLine +
+                                         "write.csv(apply(APSIMMorris$ee, 2, sd), \"{10}\", row.names=FALSE)",
+                                         paramNames, numPaths, lowerBounds, upperBounds,
+                                         morrisParametersFileName.Replace("\\", "/"),
+                                         apsimVariableFileName.Replace("\\", "/"),
+                                         predictedColumn.ColumnName,
+                                         eeFileName.Replace("\\", "/"),
+                                         muFileName.Replace("\\", "/"),
+                                         muStarFileName.Replace("\\", "/"),
+                                         sigmaFileName.Replace("\\", "/"));
+                        File.WriteAllText(rFileName, script);
+
+                        // Run R
+                        R r = new R();
+                        Console.WriteLine(r.GetPackage("sensitivity"));
+                        r.RunToTable(rFileName);
+
+                        // Get ee data from R and store in ee table.
+                        List<double> values = new List<double>();
+                        DataTable eeDataRaw = ApsimTextFile.ToTable(eeFileName);
+                        int rowIndex = 0;
+                        foreach (DataColumn col in eeDataRaw.Columns)
+                        {
+                            values.Clear();
+                            for (int path = 1; path <= eeDataRaw.Rows.Count; path++)
+                            {
+                                values.Add(Math.Abs(Convert.ToDouble(eeDataRaw.Rows[path - 1][col])));
+
+                                eeTable.Rows[rowIndex]["Variable"] = col.ColumnName;
+                                eeTable.Rows[rowIndex]["Path"] = path;
+                                eeTable.Rows[rowIndex][predictedColumn.ColumnName] = MathUtilities.Average(values);
+                                rowIndex++;
+                            }
+                        }
+
+                        // Get mustar data from R and store in MuStar table.
+                        DataTable muDataRaw = ApsimTextFile.ToTable(muFileName);
+                        rowIndex = 0;
+                        foreach (var parameter in parameters)
+                        {
+                            muStarTable.Rows[rowIndex]["Variable"] = parameter.Name;
+                            muStarTable.Rows[rowIndex][predictedColumn + ".Mu"] = muDataRaw.Rows[rowIndex][0];
+                            rowIndex++;
+                        }
+
+                        // Get mustar data from R and store in MuStar table.
+                        DataTable muStarDataRaw = ApsimTextFile.ToTable(muStarFileName);
+                        rowIndex = 0;
+                        foreach (var parameter in parameters)
+                        {
+                            muStarTable.Rows[rowIndex]["Variable"] = parameter.Name;
+                            muStarTable.Rows[rowIndex][predictedColumn + ".MuStar"] = muStarDataRaw.Rows[rowIndex][0];
+                            rowIndex++;
+                        }
+
+                        // Get mustar data from R and store in MuStar table.
+                        DataTable sigmaStarDataRaw = ApsimTextFile.ToTable(sigmaFileName);
+                        rowIndex = 0;
+                        foreach (var parameter in parameters)
+                        {
+                            muStarTable.Rows[rowIndex]["Variable"] = parameter.Name;
+                            muStarTable.Rows[rowIndex][predictedColumn + ".SigmaStar"] = sigmaStarDataRaw.Rows[rowIndex][0];
+                            rowIndex++;
                         }
                     }
-                    eeTable.Rows.Add(newRow);
-
-                    rowIndex++;
                 }
-
-                path++;
+                dataStore.DeleteDataInTable(eeTable.TableName);
+                dataStore.WriteTable(eeTable);
+                dataStore.DeleteDataInTable(muStarTable.TableName);
+                dataStore.WriteTable(muStarTable);
             }
-            return eeTable;
-        }
-
-        /// <summary>
-        /// Create a MuStar by path number table - running mean mustar
-        /// </summary>
-        private DataTable CreateMuStarByPath(DataTable eeTable)
-        {
-            // Add all the necessary columns to our data table.
-            DataTable muStarTable = new DataTable();
-            muStarTable.TableName = Name + "MuStarByPath";
-            muStarTable.Columns.Add("Variable", typeof(string));
-            muStarTable.Columns.Add("Path", typeof(int));
-            foreach (DataColumn column in eeTable.Columns)
-            {
-                if (column.DataType == typeof(double))
-                {
-                    muStarTable.Columns.Add(column.ColumnName + ".MuStar", typeof(double));
-                    muStarTable.Columns.Add(column.ColumnName + ".SigmaStar", typeof(double));
-                }
-            }
-
-            int numPathsFound = eeTable.Rows.Count / parameters.Count;
-            DataView eeView = new DataView(eeTable);
-            for (int path = 1; path <= numPathsFound; path++)
-            {
-                for (int parameterIndex = 0; parameterIndex < parameters.Count; parameterIndex++)
-                {
-                    DataRow newRow = muStarTable.NewRow();
-                    newRow["Variable"] = parameters[parameterIndex].Name;
-                    newRow["Path"] = path;
-
-                    eeView.RowFilter = "Path <= " + path + " and Variable = '" + parameters[parameterIndex].Name + "'";
-                    foreach (DataColumn column in eeTable.Columns)
-                    {
-                        if (column.DataType == typeof(double))
-                        {
-                            double[] values = DataTableUtilities.GetColumnAsDoubles(eeView, column.ColumnName);
-                            newRow[column.ColumnName + ".MuStar"] = MathUtilities.Average(values);
-                            newRow[column.ColumnName + ".SigmaStar"] = MathUtilities.StandardDeviation(values);
-                        }
-                    }
-                    muStarTable.Rows.Add(newRow);
-                }
-            }
-            return muStarTable;
-        }
-
-        /// <summary>
-        /// Create a MuStar by path number table - running mean mustar
-        /// </summary>
-        private DataTable CreateMuStar(DataTable muStarByPathTable)
-        {
-            // Add all the necessary columns to our data table.
-            DataTable muStarTable = new DataTable();
-            muStarTable.TableName = Name + "MuStar";
-            muStarTable.Columns.Add("Variable", typeof(string));
-            foreach (DataColumn column in muStarByPathTable.Columns)
-            {
-                if (column.DataType == typeof(double))
-                    muStarTable.Columns.Add(column.ColumnName, typeof(double));
-            }
-
-            // Take the last 4 rows of the table.
-            for (int i = 1; i <= parameters.Count; i++)
-                muStarTable.ImportRow(muStarByPathTable.Rows[muStarByPathTable.Rows.Count - i]);
-            return muStarTable;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
