@@ -132,7 +132,24 @@ namespace UnitTests
             Assert.AreEqual(Apsim.Parent(graph, typeof(Zone)).Name, "Field2");
         }
 
+        /// <summary>
+        /// A test for the Apsim.Ancestor method.
+        /// </summary>
+        [Test]
+        public void AncestorTest()
+        {
+            // Passing in null should return null.
+            Assert.Null(Apsim.Ancestor<IModel>(null));
 
+            // Passing in the top-level simulations object should return null.
+            Assert.Null(Apsim.Ancestor<IModel>(simulations));
+
+            // Passing in an object should never return that object
+            Assert.AreNotEqual(simulation, Apsim.Ancestor<Simulation>(simulation));
+
+            // Searching for any IModel ancestor should return the node's parent.
+            Assert.AreEqual(simulation.Parent, Apsim.Ancestor<IModel>(simulation));
+        }
 
         /// <summary>
         /// Tests for the get method
