@@ -6,6 +6,7 @@
 namespace UserInterface.Presenters
 {
     using System;
+    using System.Drawing;
     using EventArguments;
     using Models.PMF;
     using Views;
@@ -39,7 +40,7 @@ namespace UserInterface.Presenters
 
             this.view.Lines = this.cultivar.Commands;
             intellisense = new IntellisensePresenter(this.view as ViewBase);
-            intellisense.ItemSelected += (sender, e) => this.view.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             this.view.LeaveEditor += this.OnCommandsChanged;
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -53,6 +54,7 @@ namespace UserInterface.Presenters
             this.view.LeaveEditor -= this.OnCommandsChanged;
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
 
@@ -86,8 +88,10 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, cultivar, true, false, false, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(cultivar, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, cultivar, true, false, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -101,6 +105,17 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             this.view.Lines = this.cultivar.Commands;
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
     }
 }
