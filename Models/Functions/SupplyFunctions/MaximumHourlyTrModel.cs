@@ -21,6 +21,8 @@ namespace Models.Functions.SupplyFunctions
     ///   NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
     public class MaximumHourlyTrModel : Model, IFunction
     {
@@ -53,18 +55,6 @@ namespace Models.Functions.SupplyFunctions
         [Units("kPa/gC/m^2/mm water")]
         IFunction TEC = null;
 
-        /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
-        [Link]
-        [Description("Maximum hourlyVPD when hourly transpiration rate cease to further increase")]
-        [Units("kPa")]
-        IFunction MaxVPD = null;
-
-        /// <summary>The maximum hourly transpiration rate</summary>
-        [Link]
-        [Description("Maximum hourly transpiration rate")]
-        [Units("mm/hr")]
-        IFunction MaxTr = null;
-
         /// <summary>The CO2 impact on RUE</summary>
         [Link]
         IFunction FCO2 = null;
@@ -96,6 +86,19 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyTrCappedTr;
         private List<double> hourlyTr;
         private List<double> hourlyDM;
+        //------------------------------------------------------------------------------------------------
+
+        /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
+        [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase")]
+        [Bounds(Lower = 0.1, Upper = 1000)]
+        [Units("kPa")]
+        public double MaxVPD { get; set; } = 999;
+
+        /// <summary>The maximum hourly transpiration rate</summary>
+        [Description("Maximum hourly transpiration rate")]
+        [Bounds(Lower = 0.01, Upper = 1000.0)]
+        [Units("mm/hr")]
+        public double MaxTr { get; set; } = 999;
         //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>
@@ -242,14 +245,14 @@ namespace Models.Functions.SupplyFunctions
         {
             hourlyVPDCappedTr = new List<double>();
             for (int i = 0; i < 24; i++)
-                hourlyVPDCappedTr.Add((hourlyRad[i] * RueAct) * Math.Min(hourlyVPD[i], MaxVPD.Value()) / transpEffCoef);
+                hourlyVPDCappedTr.Add((hourlyRad[i] * RueAct) * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
         private void CalcTrCappedTr()
         {
             hourlyTrCappedTr = new List<double>();
-            foreach (double hDemand in hourlyVPDCappedTr) hourlyTrCappedTr.Add(Math.Min(MaxTr.Value(), hDemand));
+            foreach (double hDemand in hourlyVPDCappedTr) hourlyTrCappedTr.Add(Math.Min(MaxTr, hDemand));
         }
         //------------------------------------------------------------------------------------------------
 
@@ -280,7 +283,8 @@ namespace Models.Functions.SupplyFunctions
         private void CalcBiomass()
         {
             hourlyDM = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
+            for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / Math.Min(hourlyVPD[i], MaxVPD));
+            //for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef /hourlyVPD[i]);
         }
         //------------------------------------------------------------------------------------------------
 

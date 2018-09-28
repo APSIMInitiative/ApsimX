@@ -257,7 +257,7 @@ namespace Models
                 if (DoWaterArbitrationWithoutUptake != null)
                     DoWaterArbitrationWithoutUptake.Invoke(this, args);
 
-                if (DoNutrientArbitrationWithoutUptake != null)
+                if (DoNutrientArbitrationWithoutUptake == null) // Should not run as it changes N status in the crop organs
                     DoNutrientArbitrationWithoutUptake.Invoke(this, args);
 
                 if (DoPhenology != null)
