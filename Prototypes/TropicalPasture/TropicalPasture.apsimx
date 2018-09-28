@@ -19,7 +19,7 @@ The model consists of:
   <Replacements>
     <Name>Replacements</Name>
     <Plant>
-      <Name>Bambatsi</Name>
+      <Name>TropicalPasture</Name>
       <AccumulateFunction>
         <Name>Age</Name>
         <Constant>
@@ -538,7 +538,7 @@ For the Brazilian Brachiaria data (Piata cultivar), the extinction coefficient w
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <XProperty>[Bambatsi].Age</XProperty>
+            <XProperty>[TropicalPasture].Age</XProperty>
           </LinearInterpolationFunction>
           <Memo>
             <Name>Memo</Name>
@@ -777,7 +777,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <XProperty>[Bambatsi].Age</XProperty>
+            <XProperty>[TropicalPasture].Age</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>WaterFactor</Name>
@@ -891,7 +891,7 @@ But their data suggests a value of 0.3]]></MemoText>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
-                  <XProperty>[Bambatsi].Age</XProperty>
+                  <XProperty>[TropicalPasture].Age</XProperty>
                 </LinearInterpolationFunction>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
@@ -1287,7 +1287,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <XProperty>[Bambatsi].Age</XProperty>
+            <XProperty>[TropicalPasture].Age</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LAIfactor</Name>
@@ -1473,7 +1473,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
-                <XProperty>[Bambatsi].Age</XProperty>
+                <XProperty>[TropicalPasture].Age</XProperty>
               </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -1804,7 +1804,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <XProperty>[Bambatsi].Age</XProperty>
+          <XProperty>[TropicalPasture].Age</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>DMReallocationFactor</Name>
@@ -1879,7 +1879,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
-                  <XProperty>[Bambatsi].Age</XProperty>
+                  <XProperty>[TropicalPasture].Age</XProperty>
                 </LinearInterpolationFunction>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
@@ -2189,7 +2189,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <XProperty>[Bambatsi].Age</XProperty>
+            <XProperty>[TropicalPasture].Age</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LAIfactor</Name>
@@ -2218,7 +2218,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <XProperty>[Bambatsi].Photoperiod.Value</XProperty>
+            <XProperty>[TropicalPasture].Photoperiod.Value</XProperty>
           </LinearInterpolationFunction>
           <Memo>
             <Name>Memo</Name>
@@ -2351,7 +2351,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <XProperty>[Bambatsi].Age</XProperty>
+          <XProperty>[TropicalPasture].Age</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>DMReallocationFactor</Name>
@@ -2433,7 +2433,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
-                  <XProperty>[Bambatsi].Age</XProperty>
+                  <XProperty>[TropicalPasture].Age</XProperty>
                 </LinearInterpolationFunction>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
@@ -2589,10 +2589,17 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
         <ReadOnly>false</ReadOnly>
         <Command />
       </Cultivar>
+      <Cultivar>
+        <Name>Brachiaria</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Command />
+      </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <ReadOnly>false</ReadOnly>
-      <CropType>Bambatsi</CropType>
+      <CropType>TropicalPasture</CropType>
     </Plant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Enabled>true</Enabled>
@@ -2676,7 +2683,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>BambatsiSoil</Name>
+                  <Name>TropicalPastureSoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
@@ -3274,11 +3281,11 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               <ReferenceHeight>2</ReferenceHeight>
             </MicroClimate>
             <Plant>
-              <Name>Bambatsi</Name>
+              <Name>TropicalPasture</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <CropType>Bambatsi</CropType>
+              <CropType>TropicalPasture</CropType>
             </Plant>
             <Operations>
               <Name>Operations</Name>
@@ -3292,12 +3299,12 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1995-01-01</Date>
-                <Action>[Bambatsi].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);</Action>
+                <Action>[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1995-10-09</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3307,22 +3314,22 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1995-12-01</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1996-01-30</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1996-02-28</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1996-11-26</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3332,12 +3339,12 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1997-01-14</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1997-03-04</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3347,12 +3354,12 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1997-11-17</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1998-04-07</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3362,17 +3369,17 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1998-12-17</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1999-02-16</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1999-06-02</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3382,12 +3389,12 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1999-09-29</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2000-02-02</Date>
-                <Action>[Bambatsi].Harvest();</Action>
+                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
             </Operations>
@@ -3400,9 +3407,9 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Clock].Today</string>
-                <string>[Bambatsi].Phenology.CurrentPhaseName</string>
-                <string>[Bambatsi].Phenology.StageCode.Value()</string>
-                <string>[Bambatsi].Root.NSupplyUptake</string>
+                <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
+                <string>[TropicalPasture].Phenology.StageCode.Value()</string>
+                <string>[TropicalPasture].Root.NSupplyUptake</string>
                 <string>[Soil].SoilWater.Eo</string>
                 <string>[Soil].SoilWater.Es</string>
                 <string>[Soil].SoilWater.Drainage</string>
@@ -3415,65 +3422,65 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
                 <string>sum([Soil].SoilWater.SWmm[10:11]) as SW170_210cm</string>
                 <string>sum([Soil].SoilWater.SWmm[12:13]) as SW210_250cm</string>
                 <string>sum([Soil].SoilWater.SWmm[2:13]) as SW10_250cm</string>
-                <string>[Bambatsi].AboveGround.Wt</string>
-                <string>[Bambatsi].AboveGroundLive.Wt</string>
-                <string>[Bambatsi].AboveGroundDead.Wt</string>
-                <string>[Bambatsi].BelowGround.Wt</string>
-                <string>[Bambatsi].Total.Wt</string>
-                <string>[Bambatsi].Leaf.Dead.Wt</string>
-                <string>[Bambatsi].Leaf.Live.Wt</string>
-                <string>[Bambatsi].Stem.Dead.Wt</string>
-                <string>[Bambatsi].Stem.Live.Wt</string>
-                <string>[Bambatsi].Root.Dead.Wt</string>
-                <string>[Bambatsi].Root.Live.Wt</string>
-                <string>[Bambatsi].AboveGround.N</string>
-                <string>[Bambatsi].BelowGround.N</string>
-                <string>[Bambatsi].Total.N</string>
-                <string>[Bambatsi].TotalLive.N</string>
-                <string>[Bambatsi].TotalDead.N</string>
-                <string>[Bambatsi].Leaf.Dead.N</string>
-                <string>[Bambatsi].Leaf.Live.N</string>
-                <string>[Bambatsi].Stem.Dead.N</string>
-                <string>[Bambatsi].Stem.Live.N</string>
-                <string>[Bambatsi].Branch.Live.Wt</string>
-                <string>[Bambatsi].Branch.Live.N</string>
-                <string>[Bambatsi].Wood.Wt</string>
-                <string>[Bambatsi].Root.Live.N</string>
-                <string>[Bambatsi].Root.Dead.N</string>
-                <string>[Bambatsi].Leaf.Live.NConc</string>
-                <string>[Bambatsi].Leaf.Dead.NConc</string>
-                <string>[Bambatsi].Stem.Live.NConc</string>
-                <string>[Bambatsi].Root.Live.NConc</string>
-                <string>[Bambatsi].Root.WaterSupply</string>
-                <string>[Bambatsi].Root.WaterUptake</string>
-                <string>[Bambatsi].Leaf.Transpiration</string>
-                <string>[Bambatsi].Leaf.WaterDemand</string>
-                <string>[Bambatsi].Root.Depth</string>
-                <string>[Bambatsi].Leaf.CoverGreen</string>
-                <string>[Bambatsi].Leaf.CoverTotal</string>
-                <string>[Bambatsi].Leaf.CoverDead</string>
-                <string>[Bambatsi].Leaf.LAI</string>
-                <string>[Bambatsi].Leaf.LAIDead</string>
-                <string>[Bambatsi].Leaf.Fn</string>
-                <string>[Bambatsi].Leaf.Fw</string>
-                <string>[Bambatsi].Leaf.Photosynthesis.FT.Value()</string>
-                <string>[Bambatsi].Leaf.Photosynthesis.FVPD.Value()</string>
-                <string>[Bambatsi].Leaf.Photosynthesis.RueAct</string>
-                <string>[Bambatsi].Stem.MinimumNConc.Value()</string>
-                <string>[Bambatsi].Root.MinimumNConc.Value()</string>
-                <string>[Bambatsi].Stem.MaximumNConc.Value()</string>
-                <string>[Bambatsi].Root.MaximumNConc.Value()</string>
-                <string>[Bambatsi].TotalLive.Wt</string>
-                <string>[Bambatsi].Stem.Live.StructuralWt</string>
-                <string>[Bambatsi].Stem.Live.StorageWt</string>
-                <string>[Bambatsi].Leaf.SpecificArea</string>
-                <string>[Bambatsi].TotalDead.Wt</string>
+                <string>[TropicalPasture].AboveGround.Wt</string>
+                <string>[TropicalPasture].AboveGroundLive.Wt</string>
+                <string>[TropicalPasture].AboveGroundDead.Wt</string>
+                <string>[TropicalPasture].BelowGround.Wt</string>
+                <string>[TropicalPasture].Total.Wt</string>
+                <string>[TropicalPasture].Leaf.Dead.Wt</string>
+                <string>[TropicalPasture].Leaf.Live.Wt</string>
+                <string>[TropicalPasture].Stem.Dead.Wt</string>
+                <string>[TropicalPasture].Stem.Live.Wt</string>
+                <string>[TropicalPasture].Root.Dead.Wt</string>
+                <string>[TropicalPasture].Root.Live.Wt</string>
+                <string>[TropicalPasture].AboveGround.N</string>
+                <string>[TropicalPasture].BelowGround.N</string>
+                <string>[TropicalPasture].Total.N</string>
+                <string>[TropicalPasture].TotalLive.N</string>
+                <string>[TropicalPasture].TotalDead.N</string>
+                <string>[TropicalPasture].Leaf.Dead.N</string>
+                <string>[TropicalPasture].Leaf.Live.N</string>
+                <string>[TropicalPasture].Stem.Dead.N</string>
+                <string>[TropicalPasture].Stem.Live.N</string>
+                <string>[TropicalPasture].Branch.Live.Wt</string>
+                <string>[TropicalPasture].Branch.Live.N</string>
+                <string>[TropicalPasture].Wood.Wt</string>
+                <string>[TropicalPasture].Root.Live.N</string>
+                <string>[TropicalPasture].Root.Dead.N</string>
+                <string>[TropicalPasture].Leaf.Live.NConc</string>
+                <string>[TropicalPasture].Leaf.Dead.NConc</string>
+                <string>[TropicalPasture].Stem.Live.NConc</string>
+                <string>[TropicalPasture].Root.Live.NConc</string>
+                <string>[TropicalPasture].Root.WaterSupply</string>
+                <string>[TropicalPasture].Root.WaterUptake</string>
+                <string>[TropicalPasture].Leaf.Transpiration</string>
+                <string>[TropicalPasture].Leaf.WaterDemand</string>
+                <string>[TropicalPasture].Root.Depth</string>
+                <string>[TropicalPasture].Leaf.CoverGreen</string>
+                <string>[TropicalPasture].Leaf.CoverTotal</string>
+                <string>[TropicalPasture].Leaf.CoverDead</string>
+                <string>[TropicalPasture].Leaf.LAI</string>
+                <string>[TropicalPasture].Leaf.LAIDead</string>
+                <string>[TropicalPasture].Leaf.Fn</string>
+                <string>[TropicalPasture].Leaf.Fw</string>
+                <string>[TropicalPasture].Leaf.Photosynthesis.FT.Value()</string>
+                <string>[TropicalPasture].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[TropicalPasture].Leaf.Photosynthesis.RueAct</string>
+                <string>[TropicalPasture].Stem.MinimumNConc.Value()</string>
+                <string>[TropicalPasture].Root.MinimumNConc.Value()</string>
+                <string>[TropicalPasture].Stem.MaximumNConc.Value()</string>
+                <string>[TropicalPasture].Root.MaximumNConc.Value()</string>
+                <string>[TropicalPasture].TotalLive.Wt</string>
+                <string>[TropicalPasture].Stem.Live.StructuralWt</string>
+                <string>[TropicalPasture].Stem.Live.StorageWt</string>
+                <string>[TropicalPasture].Leaf.SpecificArea</string>
+                <string>[TropicalPasture].TotalDead.Wt</string>
                 <string>[Soil].SoilWater.SWmm</string>
                 <string>[Soil].NO3N</string>
-                <string>[Bambatsi].Arbitrator.N.TotalPlantDemand</string>
-                <string>[Bambatsi].Leaf.LAIFunction.SpecificLeafArea.Value()</string>
-                <string>[Bambatsi].IndividualTreeLiveWt.Value()</string>
-                <string>[Bambatsi].Age.Value()</string>
+                <string>[TropicalPasture].Arbitrator.N.TotalPlantDemand</string>
+                <string>[TropicalPasture].Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+                <string>[TropicalPasture].IndividualTreeLiveWt.Value()</string>
+                <string>[TropicalPasture].Age.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -3485,6 +3492,67 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
             </SoluteManager>
+            <Manager>
+              <Name>CuttingManagement</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Script />
+              <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [ScopedLinkByName] Plant TropicalPasture;
+        [Link] Clock Clock;
+
+    
+        [XmlIgnore] private RemovalFractions Remove { get; set; }
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Remove = new RemovalFractions();
+        }
+
+        public void DoCut(double LeafResidue, double StemResidue)
+        {
+            double L = (double)Apsim.Get(TropicalPasture, "Leaf.Live.Wt");
+            double LeafRemovalFraction = 0;
+            if (L > 0)
+                LeafRemovalFraction = (L - LeafResidue) / L;
+            if (LeafRemovalFraction < 0)
+                LeafRemovalFraction = 0;
+               
+            double S = (double)Apsim.Get(TropicalPasture, "Stem.Live.Wt");
+            double StemRemovalFraction = 0;
+            if (S > 0)
+                StemRemovalFraction = (S - StemResidue) / S;               
+            if (StemRemovalFraction < 0)
+                StemRemovalFraction = 0;
+               
+               
+            Remove.SetFractionToRemove("Leaf", LeafRemovalFraction);
+            Remove.SetFractionToRemove("Stem", StemRemovalFraction);
+            Remove.SetFractionToResidue("Leaf", 0.0);
+            Remove.SetFractionToResidue("Stem", 0.0);
+            TropicalPasture.RemoveBiomass("Cut", Remove);
+        }
+        
+    }
+}
+                
+]]></Code>
+            </Manager>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -3513,7 +3581,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGround.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3535,7 +3603,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGround.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3581,7 +3649,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3603,7 +3671,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3649,7 +3717,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3671,7 +3739,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3693,7 +3761,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundDead.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundDead.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3715,7 +3783,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundDead.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundDead.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3761,7 +3829,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Photosynthesis.FVPD.Value()</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Photosynthesis.FVPD.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3783,7 +3851,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Fw</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Fw</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4356,7 +4424,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <StartDate>1-Nov</StartDate>
             <EndDate>30-Mar</EndDate>
             <PanFraction>0.75</PanFraction>
-            <RainDays>14</RainDays>
+            <RainDays>28</RainDays>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -4433,33 +4501,33 @@ namespace Models
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
                 <Operation>
-                  <Date>1982-01-12</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
+                  <Date>1982-03-01</Date>
+                  <Action>[Irrigation].Apply(50);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>1982-01-15</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
+                  <Date>1982-10-05</Date>
+                  <Action>[Irrigation].Apply(50);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>1982-01-18</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
+                  <Date>1982-11-01</Date>
+                  <Action>[Irrigation].Apply(50);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>1982-01-21</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
+                  <Date>1983-01-30</Date>
+                  <Action>[Irrigation].Apply(75);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>1982-01-24</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
+                  <Date>1983-02-17</Date>
+                  <Action>[Irrigation].Apply(75);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>1982-01-27</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
+                  <Date>1984-03-05</Date>
+                  <Action>[Irrigation].Apply(50);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -4468,36 +4536,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
-                <Operation>
-                  <Date>1982-01-12</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1982-01-15</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1982-01-18</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1982-01-21</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1982-01-24</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
-                <Operation>
-                  <Date>1982-01-27</Date>
-                  <Action>[Irrigation].Apply(5);</Action>
-                  <Enabled>true</Enabled>
-                </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
@@ -4547,7 +4585,7 @@ namespace Models
                 <Water>
                   <Name>Water</Name>
                   <SoilCrop>
-                    <Name>BambatsiSoil</Name>
+                    <Name>TropicalPastureSoil</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
@@ -4562,11 +4600,11 @@ namespace Models
                       <double>0.41</double>
                     </LL>
                     <KL>
+                      <double>0.05</double>
+                      <double>0.05</double>
                       <double>0.04</double>
                       <double>0.04</double>
                       <double>0.03</double>
-                      <double>0.02</double>
-                      <double>0.02</double>
                       <double>0.02</double>
                       <double>0.02</double>
                       <double>0.02</double>
@@ -4663,10 +4701,10 @@ namespace Models
                   <ReadOnly>false</ReadOnly>
                   <SummerDate>1-Nov</SummerDate>
                   <SummerU>6</SummerU>
-                  <SummerCona>4</SummerCona>
+                  <SummerCona>3.5</SummerCona>
                   <WinterDate>1-Apr</WinterDate>
                   <WinterU>6</WinterU>
-                  <WinterCona>4</WinterCona>
+                  <WinterCona>35</WinterCona>
                   <DiffusConst>40</DiffusConst>
                   <DiffusSlope>16</DiffusSlope>
                   <Salb>0.13</Salb>
@@ -4969,11 +5007,11 @@ namespace Models
                 <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <Plant>
-                <Name>Bambatsi</Name>
+                <Name>TropicalPasture</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
-                <CropType>Bambatsi</CropType>
+                <CropType>TropicalPasture</CropType>
               </Plant>
               <Operations>
                 <Name>Operations</Name>
@@ -4982,7 +5020,7 @@ namespace Models
                 <ReadOnly>false</ReadOnly>
                 <Operation>
                   <Date>1982-01-12</Date>
-                  <Action>[Bambatsi].Sow(population: 200, cultivar: Bambatsi, depth: 100, rowSpacing: 100);</Action>
+                  <Action>[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
@@ -5027,7 +5065,7 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>1982-08-01</Date>
-                  <Action>[Bambatsi].Harvest();</Action>
+                  <Action>[TropicalPasture].Harvest();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
@@ -5037,7 +5075,7 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>1983-08-01</Date>
-                  <Action>[Bambatsi].Harvest();</Action>
+                  <Action>[TropicalPasture].Harvest();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
@@ -5047,7 +5085,7 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>1984-08-01</Date>
-                  <Action>[Bambatsi].Harvest();</Action>
+                  <Action>[TropicalPasture].Harvest();</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -5060,10 +5098,10 @@ namespace Models
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Clock].Today</string>
-                  <string>[Bambatsi].Phenology.CurrentPhaseName</string>
-                  <string>[Bambatsi].Phenology.StageCode.Value()</string>
-                  <string>[Bambatsi].Photoperiod.Value()</string>
-                  <string>[Bambatsi].Root.NSupplyUptake</string>
+                  <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
+                  <string>[TropicalPasture].Phenology.StageCode.Value()</string>
+                  <string>[TropicalPasture].Photoperiod.Value()</string>
+                  <string>[TropicalPasture].Root.NSupplyUptake</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[Soil].SoilWater.Drainage</string>
@@ -5074,67 +5112,67 @@ namespace Models
                   <string>sum([Soil].SoilWater.SWmm[6:8]) as SW100_190cm</string>
                   <string>sum([Soil].SoilWater.SWmm[1:8]) as SW0_190cm</string>
                   <string>sum([Soil].SoilNitrogen.NO3[1:8]) as TotalNO3</string>
-                  <string>[Bambatsi].AboveGround.Wt</string>
-                  <string>[Bambatsi].AboveGroundLive.Wt</string>
-                  <string>[Bambatsi].AboveGroundDead.Wt</string>
-                  <string>[Bambatsi].BelowGround.Wt</string>
-                  <string>[Bambatsi].Total.Wt</string>
-                  <string>[Bambatsi].Leaf.Dead.Wt</string>
-                  <string>[Bambatsi].Leaf.Live.Wt</string>
-                  <string>[Bambatsi].Stem.Dead.Wt</string>
-                  <string>[Bambatsi].Stem.Live.Wt</string>
-                  <string>[Bambatsi].Root.Dead.Wt</string>
-                  <string>[Bambatsi].Root.Live.Wt</string>
-                  <string>[Bambatsi].AboveGround.N</string>
-                  <string>[Bambatsi].BelowGround.N</string>
-                  <string>[Bambatsi].Total.N</string>
-                  <string>[Bambatsi].TotalLive.N</string>
-                  <string>[Bambatsi].TotalDead.N</string>
-                  <string>[Bambatsi].Leaf.Dead.N</string>
-                  <string>[Bambatsi].Leaf.Live.N</string>
-                  <string>[Bambatsi].Stem.Dead.N</string>
-                  <string>[Bambatsi].Stem.Live.N</string>
-                  <string>[Bambatsi].Branch.Live.Wt</string>
-                  <string>[Bambatsi].Branch.Live.N</string>
-                  <string>[Bambatsi].Wood.Wt</string>
-                  <string>[Bambatsi].Root.Live.N</string>
-                  <string>[Bambatsi].Root.Dead.N</string>
-                  <string>[Bambatsi].Leaf.Live.NConc</string>
-                  <string>[Bambatsi].Leaf.Dead.NConc</string>
-                  <string>[Bambatsi].Stem.Live.NConc</string>
-                  <string>[Bambatsi].Root.Live.NConc</string>
-                  <string>[Bambatsi].Root.WaterSupply</string>
-                  <string>[Bambatsi].Root.WaterUptake</string>
-                  <string>[Bambatsi].Leaf.Transpiration</string>
-                  <string>[Bambatsi].Leaf.PotentialEP</string>
-                  <string>[Bambatsi].Root.Depth</string>
-                  <string>[Bambatsi].Leaf.CoverGreen</string>
-                  <string>[Bambatsi].Leaf.CoverTotal</string>
-                  <string>[Bambatsi].Leaf.CoverDead</string>
-                  <string>[Bambatsi].Leaf.LAI</string>
-                  <string>[Bambatsi].Leaf.LAIDead</string>
-                  <string>[Bambatsi].Leaf.Fn</string>
-                  <string>[Bambatsi].Leaf.Fw</string>
-                  <string>[Bambatsi].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[Bambatsi].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[Bambatsi].Leaf.Photosynthesis.RueAct</string>
-                  <string>[Bambatsi].Stem.MinimumNConc.Value()</string>
-                  <string>[Bambatsi].Root.MinimumNConc.Value()</string>
-                  <string>[Bambatsi].Stem.MaximumNConc.Value()</string>
-                  <string>[Bambatsi].Root.MaximumNConc.Value()</string>
-                  <string>[Bambatsi].TotalLive.Wt</string>
-                  <string>[Bambatsi].Stem.Live.StructuralWt</string>
-                  <string>[Bambatsi].Stem.Live.StorageWt</string>
-                  <string>[Bambatsi].Leaf.SpecificArea</string>
-                  <string>[Bambatsi].TotalDead.Wt</string>
+                  <string>[TropicalPasture].AboveGround.Wt</string>
+                  <string>[TropicalPasture].AboveGroundLive.Wt</string>
+                  <string>[TropicalPasture].AboveGroundDead.Wt</string>
+                  <string>[TropicalPasture].BelowGround.Wt</string>
+                  <string>[TropicalPasture].Total.Wt</string>
+                  <string>[TropicalPasture].Leaf.Dead.Wt</string>
+                  <string>[TropicalPasture].Leaf.Live.Wt</string>
+                  <string>[TropicalPasture].Stem.Dead.Wt</string>
+                  <string>[TropicalPasture].Stem.Live.Wt</string>
+                  <string>[TropicalPasture].Root.Dead.Wt</string>
+                  <string>[TropicalPasture].Root.Live.Wt</string>
+                  <string>[TropicalPasture].AboveGround.N</string>
+                  <string>[TropicalPasture].BelowGround.N</string>
+                  <string>[TropicalPasture].Total.N</string>
+                  <string>[TropicalPasture].TotalLive.N</string>
+                  <string>[TropicalPasture].TotalDead.N</string>
+                  <string>[TropicalPasture].Leaf.Dead.N</string>
+                  <string>[TropicalPasture].Leaf.Live.N</string>
+                  <string>[TropicalPasture].Stem.Dead.N</string>
+                  <string>[TropicalPasture].Stem.Live.N</string>
+                  <string>[TropicalPasture].Branch.Live.Wt</string>
+                  <string>[TropicalPasture].Branch.Live.N</string>
+                  <string>[TropicalPasture].Wood.Wt</string>
+                  <string>[TropicalPasture].Root.Live.N</string>
+                  <string>[TropicalPasture].Root.Dead.N</string>
+                  <string>[TropicalPasture].Leaf.Live.NConc</string>
+                  <string>[TropicalPasture].Leaf.Dead.NConc</string>
+                  <string>[TropicalPasture].Stem.Live.NConc</string>
+                  <string>[TropicalPasture].Root.Live.NConc</string>
+                  <string>[TropicalPasture].Root.WaterSupply</string>
+                  <string>[TropicalPasture].Root.WaterUptake</string>
+                  <string>[TropicalPasture].Leaf.Transpiration</string>
+                  <string>[TropicalPasture].Leaf.PotentialEP</string>
+                  <string>[TropicalPasture].Root.Depth</string>
+                  <string>[TropicalPasture].Leaf.CoverGreen</string>
+                  <string>[TropicalPasture].Leaf.CoverTotal</string>
+                  <string>[TropicalPasture].Leaf.CoverDead</string>
+                  <string>[TropicalPasture].Leaf.LAI</string>
+                  <string>[TropicalPasture].Leaf.LAIDead</string>
+                  <string>[TropicalPasture].Leaf.Fn</string>
+                  <string>[TropicalPasture].Leaf.Fw</string>
+                  <string>[TropicalPasture].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[TropicalPasture].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[TropicalPasture].Leaf.Photosynthesis.RueAct</string>
+                  <string>[TropicalPasture].Stem.MinimumNConc.Value()</string>
+                  <string>[TropicalPasture].Root.MinimumNConc.Value()</string>
+                  <string>[TropicalPasture].Stem.MaximumNConc.Value()</string>
+                  <string>[TropicalPasture].Root.MaximumNConc.Value()</string>
+                  <string>[TropicalPasture].TotalLive.Wt</string>
+                  <string>[TropicalPasture].Stem.Live.StructuralWt</string>
+                  <string>[TropicalPasture].Stem.Live.StorageWt</string>
+                  <string>[TropicalPasture].Leaf.SpecificArea</string>
+                  <string>[TropicalPasture].TotalDead.Wt</string>
                   <string>[Soil].SoilWater.SWmm</string>
                   <string>[Soil].NO3N</string>
-                  <string>[Bambatsi].Arbitrator.N.TotalPlantDemand</string>
-                  <string>[Bambatsi].Leaf.LAIFunction.SpecificLeafArea.Value()</string>
-                  <string>[Bambatsi].IndividualTreeLiveWt.Value()</string>
-                  <string>[Bambatsi].Age.Value()</string>
-                  <string>[Bambatsi].Root.LengthDensity</string>
-                  <string>[Bambatsi].Leaf.Height</string>
+                  <string>[TropicalPasture].Arbitrator.N.TotalPlantDemand</string>
+                  <string>[TropicalPasture].Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+                  <string>[TropicalPasture].IndividualTreeLiveWt.Value()</string>
+                  <string>[TropicalPasture].Age.Value()</string>
+                  <string>[TropicalPasture].Root.LengthDensity</string>
+                  <string>[TropicalPasture].Leaf.Height</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
                 </VariableNames>
@@ -5142,18 +5180,23 @@ namespace Models
                   <string>[Clock].DoReport</string>
                 </EventNames>
               </Report>
-              <Operations>
-                <Name>IrrigationSchedule</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-              </Operations>
               <SoluteManager>
                 <Name>SoluteManager</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
               </SoluteManager>
+              <Operations>
+                <Name>IrrigationSchedule</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <Operation>
+                  <Date>1982-01-12</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
+                  <Enabled>true</Enabled>
+                </Operation>
+              </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
@@ -5183,7 +5226,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fw</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fw</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5230,7 +5273,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fn</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fn</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5307,7 +5350,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Transpiration</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Transpiration</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5353,7 +5396,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.PotentialEP</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.PotentialEP</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5443,7 +5486,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.CoverTotal</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.CoverTotal</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5466,7 +5509,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.CoverGreen</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.CoverGreen</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5511,7 +5554,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Height</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Height</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5548,6 +5591,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16747854</ColourArgb>
+              <FactorToVaryColours>Irr</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -5555,7 +5599,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>MicroClimate.peta</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.PotentialEP</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5570,6 +5614,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-2793984</ColourArgb>
+              <FactorToVaryColours>Irr</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Dash</Line>
@@ -5577,7 +5622,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>MicroClimate.petr</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Transpiration</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5667,7 +5712,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5690,7 +5735,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5713,7 +5758,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Photoperiod.Value()</YFieldName>
+              <YFieldName>TropicalPasture.Photoperiod.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5765,7 +5810,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Photosynthesis.RueAct</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Photosynthesis.RueAct</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5787,7 +5832,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fw</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fw</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5844,7 +5889,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5867,7 +5912,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5912,7 +5957,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGround.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5935,7 +5980,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGround.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5958,7 +6003,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5981,7 +6026,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6026,7 +6071,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6049,7 +6094,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6420,7 +6465,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(1)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6443,7 +6488,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(1)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6488,7 +6533,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(2)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6511,7 +6556,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(2)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6556,7 +6601,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(3)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6579,7 +6624,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(3)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6624,7 +6669,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(4)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6647,7 +6692,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(4)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6692,7 +6737,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(5)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6715,7 +6760,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(5)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6760,7 +6805,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(6)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6783,7 +6828,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(6)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6828,7 +6873,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(7)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6851,7 +6896,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(7)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6896,7 +6941,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(8)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(8)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6919,7 +6964,7 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.LengthDensity(8)</YFieldName>
+            <YFieldName>TropicalPasture.Root.LengthDensity(8)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7534,7 +7579,7 @@ namespace Models
                 <Water>
                   <Name>Water</Name>
                   <SoilCrop>
-                    <Name>BambatsiSoil</Name>
+                    <Name>TropicalPastureSoil</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
@@ -7985,11 +8030,11 @@ namespace Models
                 <ReferenceHeight>2</ReferenceHeight>
               </MicroClimate>
               <Plant>
-                <Name>Bambatsi</Name>
+                <Name>TropicalPasture</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
-                <CropType>Bambatsi</CropType>
+                <CropType>TropicalPasture</CropType>
               </Plant>
               <Operations>
                 <Name>Operations</Name>
@@ -7998,7 +8043,7 @@ namespace Models
                 <ReadOnly>false</ReadOnly>
                 <Operation>
                   <Date>2011-02-18</Date>
-                  <Action>[Bambatsi].Sow(population: 225, cultivar: Bambatsi, depth: 100, rowSpacing: 200);</Action>
+                  <Action>[TropicalPasture].Sow(population: 225, cultivar: Brachiaria, depth: 100, rowSpacing: 200);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
@@ -8093,7 +8138,7 @@ namespace Models
     [System.Xml.Serialization.XmlInclude(typeof(Model))]
     public class Script : Model
     {
-        [ScopedLinkByName] Plant Bambatsi;
+        [ScopedLinkByName] Plant TropicalPasture;
         [Link] Clock Clock;
 
     
@@ -8107,14 +8152,14 @@ namespace Models
 
         public void DoCut(double LeafResidue, double StemResidue)
         {
-            double L = (double)Apsim.Get(Bambatsi, "Leaf.Live.Wt");
+            double L = (double)Apsim.Get(TropicalPasture, "Leaf.Live.Wt");
             double LeafRemovalFraction = 0;
             if (L > 0)
                 LeafRemovalFraction = (L - LeafResidue) / L;
             if (LeafRemovalFraction < 0)
                 LeafRemovalFraction = 0;
                
-            double S = (double)Apsim.Get(Bambatsi, "Stem.Live.Wt");
+            double S = (double)Apsim.Get(TropicalPasture, "Stem.Live.Wt");
             double StemRemovalFraction = 0;
             if (S > 0)
                 StemRemovalFraction = (S - StemResidue) / S;               
@@ -8126,7 +8171,7 @@ namespace Models
             Remove.SetFractionToRemove("Stem", StemRemovalFraction);
             Remove.SetFractionToResidue("Leaf", 0.0);
             Remove.SetFractionToResidue("Stem", 0.0);
-            Bambatsi.RemoveBiomass("Cut", Remove);
+            TropicalPasture.RemoveBiomass("Cut", Remove);
         }
         
     }
@@ -8144,11 +8189,11 @@ namespace Models
                 <VariableNames>
                   <string>[Clock].Today</string>
                   <string>[Clock].Today.Year</string>
-                  <string>[Bambatsi].Phenology.CurrentPhaseName</string>
-                  <string>[Bambatsi].Phenology.StageCode.Value</string>
-                  <string>[Bambatsi].Photoperiod.Value</string>
-                  <string>[Bambatsi].Root.NUptake</string>
-                  <string>[Bambatsi].Root.NSupply.Uptake</string>
+                  <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
+                  <string>[TropicalPasture].Phenology.StageCode.Value</string>
+                  <string>[TropicalPasture].Photoperiod.Value</string>
+                  <string>[TropicalPasture].Root.NUptake</string>
+                  <string>[TropicalPasture].Root.NSupply.Uptake</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
                   <string>[Soil].SoilWater.Drainage</string>
@@ -8181,77 +8226,77 @@ namespace Models
                   <string>sum ([soil].SoilWater.FlowNH4) as NH4flow</string>
                   <string>[soil].SoilWater.FlowNO3[10] as NO3flow</string>
                   <string>[soil].SoilWater.Flow_urea[10] as Ureaflow</string>
-                  <string>[Bambatsi].AboveGround.Wt</string>
-                  <string>[Bambatsi].AboveGroundLive.Wt</string>
-                  <string>[Bambatsi].AboveGroundDead.Wt</string>
-                  <string>[Bambatsi].BelowGround.Wt</string>
-                  <string>[Bambatsi].Crown.Wt</string>
-                  <string>[Bambatsi].Crown.Live.Wt</string>
-                  <string>[Bambatsi].Crown.Live.StructuralWt</string>
-                  <string>[Bambatsi].Crown.Live.StorageWt</string>
-                  <string>[Bambatsi].Crown.Live.StructuralN</string>
-                  <string>[Bambatsi].Crown.Live.StorageN</string>
-                  <string>[Bambatsi].Crown.Dead.N</string>
-                  <string>[Bambatsi].Total.Wt</string>
-                  <string>[Bambatsi].Leaf.Dead.Wt</string>
-                  <string>[Bambatsi].Leaf.Live.Wt</string>
-                  <string>[Bambatsi].Stem.Dead.Wt</string>
-                  <string>[Bambatsi].Stem.Live.Wt</string>
-                  <string>[Bambatsi].Root.Dead.Wt</string>
-                  <string>[Bambatsi].Root.Live.Wt</string>
-                  <string>[Bambatsi].AboveGround.N</string>
-                  <string>[Bambatsi].AboveGroundLive.NConc</string>
-                  <string>[Bambatsi].BelowGround.N</string>
-                  <string>[Bambatsi].Total.N</string>
-                  <string>[Bambatsi].TotalLive.N</string>
-                  <string>[Bambatsi].TotalDead.N</string>
-                  <string>[Bambatsi].Leaf.Dead.N</string>
-                  <string>[Bambatsi].Leaf.Live.N</string>
-                  <string>[Bambatsi].Stem.Dead.N</string>
-                  <string>[Bambatsi].Stem.Live.N</string>
-                  <string>[Bambatsi].Branch.Live.Wt</string>
-                  <string>[Bambatsi].Branch.Live.N</string>
-                  <string>[Bambatsi].Wood.Wt</string>
-                  <string>[Bambatsi].Root.Live.N</string>
-                  <string>[Bambatsi].Root.Dead.N</string>
-                  <string>[Bambatsi].Leaf.Live.NConc</string>
-                  <string>[Bambatsi].Leaf.Dead.NConc</string>
-                  <string>[Bambatsi].Stem.Live.NConc</string>
-                  <string>[Bambatsi].Root.Live.NConc</string>
-                  <string>[Bambatsi].Root.WaterSupply</string>
-                  <string>[Bambatsi].Root.WaterUptake</string>
-                  <string>[Bambatsi].Leaf.Transpiration</string>
-                  <string>[Bambatsi].Leaf.PotentialEP</string>
-                  <string>[Bambatsi].Root.Depth</string>
-                  <string>[Bambatsi].Leaf.CoverGreen</string>
-                  <string>[Bambatsi].Leaf.CoverTotal</string>
-                  <string>[Bambatsi].Leaf.CoverDead</string>
-                  <string>[Bambatsi].Leaf.LAI</string>
-                  <string>[Bambatsi].Leaf.LAIDead</string>
-                  <string>[Bambatsi].Leaf.SpecificLeafArea</string>
-                  <string>[Bambatsi].Leaf.Fn</string>
-                  <string>[Bambatsi].Leaf.Fw</string>
-                  <string>[Bambatsi].Leaf.Photosynthesis.FT.Value</string>
-                  <string>[Bambatsi].Leaf.Photosynthesis.FVPD.Value</string>
-                  <string>[Bambatsi].Leaf.Photosynthesis.RueAct</string>
-                  <string>[Bambatsi].Stem.MinimumNConc.Value</string>
-                  <string>[Bambatsi].Root.MinimumNConc.Value</string>
-                  <string>[Bambatsi].Stem.MaximumNConc.Value</string>
-                  <string>[Bambatsi].Root.MaximumNConc.Value</string>
-                  <string>[Bambatsi].TotalLive.Wt</string>
-                  <string>[Bambatsi].Stem.Live.StructuralWt</string>
-                  <string>[Bambatsi].Stem.Live.StorageWt</string>
-                  <string>[Bambatsi].Stem.Live.StructuralN</string>
-                  <string>[Bambatsi].Stem.Live.StorageN</string>
-                  <string>[Bambatsi].TotalDead.Wt</string>
-                  <string>[Bambatsi].PlantLiveWt</string>
+                  <string>[TropicalPasture].AboveGround.Wt</string>
+                  <string>[TropicalPasture].AboveGroundLive.Wt</string>
+                  <string>[TropicalPasture].AboveGroundDead.Wt</string>
+                  <string>[TropicalPasture].BelowGround.Wt</string>
+                  <string>[TropicalPasture].Crown.Wt</string>
+                  <string>[TropicalPasture].Crown.Live.Wt</string>
+                  <string>[TropicalPasture].Crown.Live.StructuralWt</string>
+                  <string>[TropicalPasture].Crown.Live.StorageWt</string>
+                  <string>[TropicalPasture].Crown.Live.StructuralN</string>
+                  <string>[TropicalPasture].Crown.Live.StorageN</string>
+                  <string>[TropicalPasture].Crown.Dead.N</string>
+                  <string>[TropicalPasture].Total.Wt</string>
+                  <string>[TropicalPasture].Leaf.Dead.Wt</string>
+                  <string>[TropicalPasture].Leaf.Live.Wt</string>
+                  <string>[TropicalPasture].Stem.Dead.Wt</string>
+                  <string>[TropicalPasture].Stem.Live.Wt</string>
+                  <string>[TropicalPasture].Root.Dead.Wt</string>
+                  <string>[TropicalPasture].Root.Live.Wt</string>
+                  <string>[TropicalPasture].AboveGround.N</string>
+                  <string>[TropicalPasture].AboveGroundLive.NConc</string>
+                  <string>[TropicalPasture].BelowGround.N</string>
+                  <string>[TropicalPasture].Total.N</string>
+                  <string>[TropicalPasture].TotalLive.N</string>
+                  <string>[TropicalPasture].TotalDead.N</string>
+                  <string>[TropicalPasture].Leaf.Dead.N</string>
+                  <string>[TropicalPasture].Leaf.Live.N</string>
+                  <string>[TropicalPasture].Stem.Dead.N</string>
+                  <string>[TropicalPasture].Stem.Live.N</string>
+                  <string>[TropicalPasture].Branch.Live.Wt</string>
+                  <string>[TropicalPasture].Branch.Live.N</string>
+                  <string>[TropicalPasture].Wood.Wt</string>
+                  <string>[TropicalPasture].Root.Live.N</string>
+                  <string>[TropicalPasture].Root.Dead.N</string>
+                  <string>[TropicalPasture].Leaf.Live.NConc</string>
+                  <string>[TropicalPasture].Leaf.Dead.NConc</string>
+                  <string>[TropicalPasture].Stem.Live.NConc</string>
+                  <string>[TropicalPasture].Root.Live.NConc</string>
+                  <string>[TropicalPasture].Root.WaterSupply</string>
+                  <string>[TropicalPasture].Root.WaterUptake</string>
+                  <string>[TropicalPasture].Leaf.Transpiration</string>
+                  <string>[TropicalPasture].Leaf.PotentialEP</string>
+                  <string>[TropicalPasture].Root.Depth</string>
+                  <string>[TropicalPasture].Leaf.CoverGreen</string>
+                  <string>[TropicalPasture].Leaf.CoverTotal</string>
+                  <string>[TropicalPasture].Leaf.CoverDead</string>
+                  <string>[TropicalPasture].Leaf.LAI</string>
+                  <string>[TropicalPasture].Leaf.LAIDead</string>
+                  <string>[TropicalPasture].Leaf.SpecificLeafArea</string>
+                  <string>[TropicalPasture].Leaf.Fn</string>
+                  <string>[TropicalPasture].Leaf.Fw</string>
+                  <string>[TropicalPasture].Leaf.Photosynthesis.FT.Value</string>
+                  <string>[TropicalPasture].Leaf.Photosynthesis.FVPD.Value</string>
+                  <string>[TropicalPasture].Leaf.Photosynthesis.RueAct</string>
+                  <string>[TropicalPasture].Stem.MinimumNConc.Value</string>
+                  <string>[TropicalPasture].Root.MinimumNConc.Value</string>
+                  <string>[TropicalPasture].Stem.MaximumNConc.Value</string>
+                  <string>[TropicalPasture].Root.MaximumNConc.Value</string>
+                  <string>[TropicalPasture].TotalLive.Wt</string>
+                  <string>[TropicalPasture].Stem.Live.StructuralWt</string>
+                  <string>[TropicalPasture].Stem.Live.StorageWt</string>
+                  <string>[TropicalPasture].Stem.Live.StructuralN</string>
+                  <string>[TropicalPasture].Stem.Live.StorageN</string>
+                  <string>[TropicalPasture].TotalDead.Wt</string>
+                  <string>[TropicalPasture].PlantLiveWt</string>
                   <string>[Soil].SoilWater.SWmm</string>
-                  <string>[Bambatsi].Arbitrator.NDemand</string>
-                  <string>[Bambatsi].IndividualTreeLiveWt.Value</string>
-                  <string>[Bambatsi].Age</string>
-                  <string>[Bambatsi].Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value</string>
-                  <string>[Bambatsi].Root.LengthDensity</string>
-                  <string>[Bambatsi].Leaf.Height</string>
+                  <string>[TropicalPasture].Arbitrator.NDemand</string>
+                  <string>[TropicalPasture].IndividualTreeLiveWt.Value</string>
+                  <string>[TropicalPasture].Age</string>
+                  <string>[TropicalPasture].Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value</string>
+                  <string>[TropicalPasture].Root.LengthDensity</string>
+                  <string>[TropicalPasture].Leaf.Height</string>
                   <string>[Leaf].RadIntTot</string>
                   <string>[MicroClimate].peta</string>
                   <string>[MicroClimate].petr</string>
@@ -8260,18 +8305,18 @@ namespace Models
                   <string>[Weather].Radn</string>
                   <string>[Weather].Rain</string>
                   <string>[SurfaceOrganicMatter].Wt</string>
-                  <string>([Bambatsi].AboveGround.Wt + ([SurfaceOrganicMatter].Wt / 10)) as DeadWt</string>
-                  <string>[Bambatsi].Leaf.Live.NConc</string>
-                  <string>[Bambatsi].Leaf.Dead.NConc</string>
-                  <string>[Bambatsi].Leaf.Live.StructuralN</string>
-                  <string>[Bambatsi].Leaf.Live.StorageN</string>
-                  <string>[Bambatsi].Leaf.Live.StructuralWt</string>
-                  <string>[Bambatsi].Leaf.Live.StorageWt</string>
-                  <string>[Bambatsi].Root.Live.StructuralN</string>
-                  <string>[Bambatsi].Root.Live.StorageN</string>
-                  <string>[Bambatsi].Root.Live.StructuralWt</string>
-                  <string>[Bambatsi].Root.Live.StorageWt</string>
-                  <string>[Bambatsi].Leaf.NDemand.Total</string>
+                  <string>([TropicalPasture].AboveGround.Wt + ([SurfaceOrganicMatter].Wt / 10)) as DeadWt</string>
+                  <string>[TropicalPasture].Leaf.Live.NConc</string>
+                  <string>[TropicalPasture].Leaf.Dead.NConc</string>
+                  <string>[TropicalPasture].Leaf.Live.StructuralN</string>
+                  <string>[TropicalPasture].Leaf.Live.StorageN</string>
+                  <string>[TropicalPasture].Leaf.Live.StructuralWt</string>
+                  <string>[TropicalPasture].Leaf.Live.StorageWt</string>
+                  <string>[TropicalPasture].Root.Live.StructuralN</string>
+                  <string>[TropicalPasture].Root.Live.StorageN</string>
+                  <string>[TropicalPasture].Root.Live.StructuralWt</string>
+                  <string>[TropicalPasture].Root.Live.StorageWt</string>
+                  <string>[TropicalPasture].Leaf.NDemand.Total</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -8321,7 +8366,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Live.NConc</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Live.NConc</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8367,7 +8412,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fn</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fn</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8467,7 +8512,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fn</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fn</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8521,7 +8566,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Dead.N</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Dead.N</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8568,7 +8613,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Stem.Dead.N</YFieldName>
+              <YFieldName>TropicalPasture.Stem.Dead.N</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8615,7 +8660,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Crown.Dead.N</YFieldName>
+              <YFieldName>TropicalPasture.Crown.Dead.N</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8662,7 +8707,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Root.Dead.N</YFieldName>
+              <YFieldName>TropicalPasture.Root.Dead.N</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8961,7 +9006,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fn</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fn</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9038,7 +9083,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fn</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fn</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9137,7 +9182,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Transpiration</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Transpiration</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9183,7 +9228,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.PotentialEP</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.PotentialEP</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9228,7 +9273,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fw</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fw</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9349,7 +9394,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.CoverTotal</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.CoverTotal</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9372,7 +9417,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.CoverGreen</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.CoverGreen</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9417,7 +9462,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Height</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Height</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9528,7 +9573,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9551,7 +9596,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9574,7 +9619,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Photoperiod.Value</YFieldName>
+              <YFieldName>TropicalPasture.Photoperiod.Value</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9626,7 +9671,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Photosynthesis.RueAct</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Photosynthesis.RueAct</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9648,7 +9693,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Fw</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Fw</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9700,7 +9745,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9747,7 +9792,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Age</YFieldName>
+              <YFieldName>TropicalPasture.Age</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9794,7 +9839,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Photoperiod.Value</YFieldName>
+              <YFieldName>TropicalPasture.Photoperiod.Value</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9817,7 +9862,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Stem.Live.Wt</YFieldName>
+              <YFieldName>TropicalPasture.Stem.Live.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9917,7 +9962,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Dead.NConc</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Dead.NConc</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9964,7 +10009,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Transpiration</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Transpiration</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -10015,7 +10060,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10038,7 +10083,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10083,7 +10128,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.SpecificLeafArea</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.SpecificLeafArea</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10106,7 +10151,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.SpecificLeafArea</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.SpecificLeafArea</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10151,7 +10196,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10174,7 +10219,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10219,7 +10264,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10242,7 +10287,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10265,7 +10310,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Age</YFieldName>
+            <YFieldName>TropicalPasture.Age</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10317,7 +10362,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10340,7 +10385,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10363,7 +10408,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Age</YFieldName>
+            <YFieldName>TropicalPasture.Age</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10415,7 +10460,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Crown.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Crown.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10438,7 +10483,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Crown.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Crown.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10506,7 +10551,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundDead.Wt</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundDead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10551,7 +10596,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10574,7 +10619,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.Wt</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10625,8 +10670,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>PredictedObserved</TableName>
-            <XFieldName>Observed.Bambatsi.AboveGroundLive.Wt</XFieldName>
-            <YFieldName>Predicted.Bambatsi.AboveGroundLive.Wt</YFieldName>
+            <XFieldName>Observed.TropicalPasture.AboveGroundLive.Wt</XFieldName>
+            <YFieldName>Predicted.TropicalPasture.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10677,8 +10722,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>PredictedObserved</TableName>
-            <XFieldName>Observed.Bambatsi.Leaf.Live.Wt</XFieldName>
-            <YFieldName>Predicted.Bambatsi.Leaf.Live.Wt</YFieldName>
+            <XFieldName>Observed.TropicalPasture.Leaf.Live.Wt</XFieldName>
+            <YFieldName>Predicted.TropicalPasture.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10729,8 +10774,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>PredictedObserved</TableName>
-            <XFieldName>Observed.Bambatsi.Stem.Live.Wt</XFieldName>
-            <YFieldName>Predicted.Bambatsi.Stem.Live.Wt</YFieldName>
+            <XFieldName>Observed.TropicalPasture.Stem.Live.Wt</XFieldName>
+            <YFieldName>Predicted.TropicalPasture.Stem.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10781,8 +10826,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>PredictedObserved</TableName>
-            <XFieldName>Observed.Bambatsi.Crown.Live.Wt</XFieldName>
-            <YFieldName>Predicted.Bambatsi.Crown.Live.Wt</YFieldName>
+            <XFieldName>Observed.TropicalPasture.Crown.Live.Wt</XFieldName>
+            <YFieldName>Predicted.TropicalPasture.Crown.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10833,8 +10878,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>PredictedObserved</TableName>
-            <XFieldName>Observed.Bambatsi.Leaf.LAI</XFieldName>
-            <YFieldName>Predicted.Bambatsi.Leaf.LAI</YFieldName>
+            <XFieldName>Observed.TropicalPasture.Leaf.LAI</XFieldName>
+            <YFieldName>Predicted.TropicalPasture.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10885,8 +10930,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <LineThickness>Normal</LineThickness>
             <Checkpoint>Current</Checkpoint>
             <TableName>PredictedObserved</TableName>
-            <XFieldName>Observed.Bambatsi.Leaf.SpecificLeafArea</XFieldName>
-            <YFieldName>Predicted.Bambatsi.Leaf.SpecificLeafArea</YFieldName>
+            <XFieldName>Observed.TropicalPasture.Leaf.SpecificLeafArea</XFieldName>
+            <YFieldName>Predicted.TropicalPasture.Leaf.SpecificLeafArea</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11731,7 +11776,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.AboveGroundLive.NConc</YFieldName>
+            <YFieldName>TropicalPasture.AboveGroundLive.NConc</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11776,7 +11821,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Live.StructuralWt</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Live.StructuralWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11800,7 +11845,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Live.StorageWt</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Live.StorageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11845,7 +11890,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Live.StructuralN</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11869,7 +11914,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Leaf.Live.StorageN</YFieldName>
+            <YFieldName>TropicalPasture.Leaf.Live.StorageN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11915,7 +11960,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.StructuralWt</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.StructuralWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11939,7 +11984,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.StorageWt</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.StorageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11984,7 +12029,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.StructuralN</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12008,7 +12053,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Root.Live.StorageN</YFieldName>
+            <YFieldName>TropicalPasture.Root.Live.StorageN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12054,7 +12099,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Live.StructuralWt</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Live.StructuralWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12078,7 +12123,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Live.StorageWt</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Live.StorageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12123,7 +12168,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Live.StructuralN</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12147,7 +12192,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Stem.Live.StorageN</YFieldName>
+            <YFieldName>TropicalPasture.Stem.Live.StorageN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12193,7 +12238,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Crown.Live.StructuralWt</YFieldName>
+            <YFieldName>TropicalPasture.Crown.Live.StructuralWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12217,7 +12262,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Crown.Live.StorageWt</YFieldName>
+            <YFieldName>TropicalPasture.Crown.Live.StorageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12262,7 +12307,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Crown.Live.StructuralN</YFieldName>
+            <YFieldName>TropicalPasture.Crown.Live.StructuralN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12286,7 +12331,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Crown.Live.StorageN</YFieldName>
+            <YFieldName>TropicalPasture.Crown.Live.StorageN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12349,8 +12394,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
           <LineThickness>Normal</LineThickness>
           <Checkpoint>Current</Checkpoint>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Bambatsi.AboveGroundLive.Wt</XFieldName>
-          <YFieldName>Predicted.Bambatsi.AboveGroundLive.Wt</YFieldName>
+          <XFieldName>Observed.TropicalPasture.AboveGroundLive.Wt</XFieldName>
+          <YFieldName>Predicted.TropicalPasture.AboveGroundLive.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12427,7 +12472,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Water>
               <Name>Water</Name>
               <SoilCrop>
-                <Name>BambatsiSoil</Name>
+                <Name>TropicalPastureSoil</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
@@ -13025,11 +13070,11 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <ReferenceHeight>2</ReferenceHeight>
           </MicroClimate>
           <Plant>
-            <Name>Bambatsi</Name>
+            <Name>TropicalPasture</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <CropType>Bambatsi</CropType>
+            <CropType>TropicalPasture</CropType>
           </Plant>
           <Operations>
             <Name>Operations</Name>
@@ -13043,7 +13088,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             </Operation>
             <Operation>
               <Date>1995-01-01</Date>
-              <Action>[Bambatsi].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);</Action>
+              <Action>[TropicalPasture].Sow(population: 100, cultivar: TropicalPasture, depth: 100, rowSpacing: 100);</Action>
               <Enabled>true</Enabled>
             </Operation>
             <Operation>
@@ -13151,9 +13196,9 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Bambatsi].Phenology.CurrentPhaseName</string>
-              <string>[Bambatsi].Phenology.StageCode.Value()</string>
-              <string>[Bambatsi].Root.NSupplyUptake</string>
+              <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
+              <string>[TropicalPasture].Phenology.StageCode.Value()</string>
+              <string>[TropicalPasture].Root.NSupplyUptake</string>
               <string>[Soil].SoilWater.Eo</string>
               <string>[Soil].SoilWater.Es</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -13166,65 +13211,65 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <string>sum([Soil].SoilWater.SWmm[10:11]) as SW170_210cm</string>
               <string>sum([Soil].SoilWater.SWmm[12:13]) as SW210_250cm</string>
               <string>sum([Soil].SoilWater.SWmm[2:13]) as SW10_250cm</string>
-              <string>[Bambatsi].AboveGround.Wt</string>
-              <string>[Bambatsi].AboveGroundLive.Wt</string>
-              <string>[Bambatsi].AboveGroundDead.Wt</string>
-              <string>[Bambatsi].BelowGround.Wt</string>
-              <string>[Bambatsi].Total.Wt</string>
-              <string>[Bambatsi].Leaf.Dead.Wt</string>
-              <string>[Bambatsi].Leaf.Live.Wt</string>
-              <string>[Bambatsi].Stem.Dead.Wt</string>
-              <string>[Bambatsi].Stem.Live.Wt</string>
-              <string>[Bambatsi].Root.Dead.Wt</string>
-              <string>[Bambatsi].Root.Live.Wt</string>
-              <string>[Bambatsi].AboveGround.N</string>
-              <string>[Bambatsi].BelowGround.N</string>
-              <string>[Bambatsi].Total.N</string>
-              <string>[Bambatsi].TotalLive.N</string>
-              <string>[Bambatsi].TotalDead.N</string>
-              <string>[Bambatsi].Leaf.Dead.N</string>
-              <string>[Bambatsi].Leaf.Live.N</string>
-              <string>[Bambatsi].Stem.Dead.N</string>
-              <string>[Bambatsi].Stem.Live.N</string>
-              <string>[Bambatsi].Branch.Live.Wt</string>
-              <string>[Bambatsi].Branch.Live.N</string>
-              <string>[Bambatsi].Wood.Wt</string>
-              <string>[Bambatsi].Root.Live.N</string>
-              <string>[Bambatsi].Root.Dead.N</string>
-              <string>[Bambatsi].Leaf.Live.NConc</string>
-              <string>[Bambatsi].Leaf.Dead.NConc</string>
-              <string>[Bambatsi].Stem.Live.NConc</string>
-              <string>[Bambatsi].Root.Live.NConc</string>
-              <string>[Bambatsi].Root.WaterSupply</string>
-              <string>[Bambatsi].Root.WaterUptake</string>
-              <string>[Bambatsi].Leaf.Transpiration</string>
-              <string>[Bambatsi].Leaf.WaterDemand</string>
-              <string>[Bambatsi].Root.Depth</string>
-              <string>[Bambatsi].Leaf.CoverGreen</string>
-              <string>[Bambatsi].Leaf.CoverTotal</string>
-              <string>[Bambatsi].Leaf.CoverDead</string>
-              <string>[Bambatsi].Leaf.LAI</string>
-              <string>[Bambatsi].Leaf.LAIDead</string>
-              <string>[Bambatsi].Leaf.Fn</string>
-              <string>[Bambatsi].Leaf.Fw</string>
-              <string>[Bambatsi].Leaf.Photosynthesis.FT.Value()</string>
-              <string>[Bambatsi].Leaf.Photosynthesis.FVPD.Value()</string>
-              <string>[Bambatsi].Leaf.Photosynthesis.RueAct</string>
-              <string>[Bambatsi].Stem.MinimumNConc.Value()</string>
-              <string>[Bambatsi].Root.MinimumNConc.Value()</string>
-              <string>[Bambatsi].Stem.MaximumNConc.Value()</string>
-              <string>[Bambatsi].Root.MaximumNConc.Value()</string>
-              <string>[Bambatsi].TotalLive.Wt</string>
-              <string>[Bambatsi].Stem.Live.StructuralWt</string>
-              <string>[Bambatsi].Stem.Live.StorageWt</string>
-              <string>[Bambatsi].Leaf.SpecificArea</string>
-              <string>[Bambatsi].TotalDead.Wt</string>
+              <string>[TropicalPasture].AboveGround.Wt</string>
+              <string>[TropicalPasture].AboveGroundLive.Wt</string>
+              <string>[TropicalPasture].AboveGroundDead.Wt</string>
+              <string>[TropicalPasture].BelowGround.Wt</string>
+              <string>[TropicalPasture].Total.Wt</string>
+              <string>[TropicalPasture].Leaf.Dead.Wt</string>
+              <string>[TropicalPasture].Leaf.Live.Wt</string>
+              <string>[TropicalPasture].Stem.Dead.Wt</string>
+              <string>[TropicalPasture].Stem.Live.Wt</string>
+              <string>[TropicalPasture].Root.Dead.Wt</string>
+              <string>[TropicalPasture].Root.Live.Wt</string>
+              <string>[TropicalPasture].AboveGround.N</string>
+              <string>[TropicalPasture].BelowGround.N</string>
+              <string>[TropicalPasture].Total.N</string>
+              <string>[TropicalPasture].TotalLive.N</string>
+              <string>[TropicalPasture].TotalDead.N</string>
+              <string>[TropicalPasture].Leaf.Dead.N</string>
+              <string>[TropicalPasture].Leaf.Live.N</string>
+              <string>[TropicalPasture].Stem.Dead.N</string>
+              <string>[TropicalPasture].Stem.Live.N</string>
+              <string>[TropicalPasture].Branch.Live.Wt</string>
+              <string>[TropicalPasture].Branch.Live.N</string>
+              <string>[TropicalPasture].Wood.Wt</string>
+              <string>[TropicalPasture].Root.Live.N</string>
+              <string>[TropicalPasture].Root.Dead.N</string>
+              <string>[TropicalPasture].Leaf.Live.NConc</string>
+              <string>[TropicalPasture].Leaf.Dead.NConc</string>
+              <string>[TropicalPasture].Stem.Live.NConc</string>
+              <string>[TropicalPasture].Root.Live.NConc</string>
+              <string>[TropicalPasture].Root.WaterSupply</string>
+              <string>[TropicalPasture].Root.WaterUptake</string>
+              <string>[TropicalPasture].Leaf.Transpiration</string>
+              <string>[TropicalPasture].Leaf.WaterDemand</string>
+              <string>[TropicalPasture].Root.Depth</string>
+              <string>[TropicalPasture].Leaf.CoverGreen</string>
+              <string>[TropicalPasture].Leaf.CoverTotal</string>
+              <string>[TropicalPasture].Leaf.CoverDead</string>
+              <string>[TropicalPasture].Leaf.LAI</string>
+              <string>[TropicalPasture].Leaf.LAIDead</string>
+              <string>[TropicalPasture].Leaf.Fn</string>
+              <string>[TropicalPasture].Leaf.Fw</string>
+              <string>[TropicalPasture].Leaf.Photosynthesis.FT.Value()</string>
+              <string>[TropicalPasture].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[TropicalPasture].Leaf.Photosynthesis.RueAct</string>
+              <string>[TropicalPasture].Stem.MinimumNConc.Value()</string>
+              <string>[TropicalPasture].Root.MinimumNConc.Value()</string>
+              <string>[TropicalPasture].Stem.MaximumNConc.Value()</string>
+              <string>[TropicalPasture].Root.MaximumNConc.Value()</string>
+              <string>[TropicalPasture].TotalLive.Wt</string>
+              <string>[TropicalPasture].Stem.Live.StructuralWt</string>
+              <string>[TropicalPasture].Stem.Live.StorageWt</string>
+              <string>[TropicalPasture].Leaf.SpecificArea</string>
+              <string>[TropicalPasture].TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
-              <string>[Bambatsi].Arbitrator.N.TotalPlantDemand</string>
-              <string>[Bambatsi].Leaf.LAIFunction.SpecificLeafArea.Value()</string>
-              <string>[Bambatsi].IndividualTreeLiveWt.Value()</string>
-              <string>[Bambatsi].Age.Value()</string>
+              <string>[TropicalPasture].Arbitrator.N.TotalPlantDemand</string>
+              <string>[TropicalPasture].Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+              <string>[TropicalPasture].IndividualTreeLiveWt.Value()</string>
+              <string>[TropicalPasture].Age.Value()</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -13250,7 +13295,7 @@ namespace Models
     [System.Xml.Serialization.XmlInclude(typeof(Model))]
     public class Script : Model
     {
-        [Link] Plant Bambatsi;
+        [Link] Plant TropicalPasture;
         [Link] Clock Clock;
 
     
@@ -13264,14 +13309,14 @@ namespace Models
 
         public void DoCut(double LeafResidue, double StemResidue)
         {
-            double L = (double)Apsim.Get(Bambatsi, "Leaf.Live.Wt");
+            double L = (double)Apsim.Get(TropicalPasture, "Leaf.Live.Wt");
             double LeafRemovalFraction = 0;
             if (L > 0)
                 LeafRemovalFraction = (L - LeafResidue) / L;
             if (LeafRemovalFraction < 0)
                 LeafRemovalFraction = 0;
                
-            double S = (double)Apsim.Get(Bambatsi, "Stem.Live.Wt");
+            double S = (double)Apsim.Get(TropicalPasture, "Stem.Live.Wt");
             double StemRemovalFraction = 0;
             if (S > 0)
                 StemRemovalFraction = (S - StemResidue) / S;               
@@ -13283,7 +13328,7 @@ namespace Models
             Remove.SetFractionToRemove("Stem", StemRemovalFraction);
             Remove.SetFractionToResidue("Leaf", 0.0);
             Remove.SetFractionToResidue("Stem", 0.0);
-            Bambatsi.RemoveBiomass("Cut", Remove);
+            TropicalPasture.RemoveBiomass("Cut", Remove);
         }
         
     }
@@ -13309,7 +13354,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.Live.Wt</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.Live.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13331,7 +13376,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Stem.Live.Wt</YFieldName>
+              <YFieldName>TropicalPasture.Stem.Live.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -13375,7 +13420,7 @@ namespace Models
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
+              <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
