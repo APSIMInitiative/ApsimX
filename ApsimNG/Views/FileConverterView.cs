@@ -247,8 +247,8 @@
         /// the window. This means we don't have to re-initialise
         /// the window each time the user opens it.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnDelete(object sender, DeleteEventArgs args)
         {

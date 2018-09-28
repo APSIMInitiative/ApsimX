@@ -79,7 +79,7 @@
 
         /// <summary>Returns the file name of the .db file</summary>
         [XmlIgnore]
-        public string FileName { get; private set; }
+        public string FileName { get; set; }
 
         /// <summary>Constructor</summary>
         public DataStore()
@@ -938,7 +938,7 @@
         }
 
         /// <summary>Close the database.</summary>
-        private void Close()
+        public void Close()
         {
             if (connection != null)
             {

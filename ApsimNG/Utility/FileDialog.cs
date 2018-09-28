@@ -138,8 +138,13 @@
                 return WindowsDirectoryDialog(selectMultiple);
 
             dialog.Title = Prompt;
-            if (!String.IsNullOrEmpty(FileType))
-                dialog.Filter = FileType + "|All files (*.*)|*.*";
+
+            if (string.IsNullOrEmpty(FileType))
+                dialog.Filter = "All files (*.*)|*.*";
+            else if (FileType.Contains("|"))
+                dialog.Filter = FileType;
+            else
+                dialog.Filter = FileType + "|" + FileType;
 
             // This almost works, but Windows is buggy.
             // If the file name is long, it doesn't display in a sensible way. ¯\_(ツ)_/¯
