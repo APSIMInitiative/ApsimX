@@ -74,10 +74,11 @@
                 {
                     string folderName = Apsim.Parent(simulation as IModel, typeof(Folder)).Name;
                     foreach (string simulationName in simulation.GetSimulationNames())
-                        if (!simAndFolderNames.ContainsKey(simulationName))
-                            // It would be better to throw here rather than silently skip any duplicate simulations.
-                            // Once #2984 has been resolved, this should be changed.
-                            simAndFolderNames.Add(simulationName, folderName);
+                    {
+                        if (simAndFolderNames.ContainsKey(simulationName))
+                            throw new Exception(string.Format("Duplicate simulation names found: {0} in simulation {1}", simulationName, (simulation as IModel).Name));
+                        simAndFolderNames.Add(simulationName, folderName);
+                    }
                 }
                 events.Publish("RunCommencing", new object[] { simAndFolderNames, SimulationNamesBeingRun });
             }
