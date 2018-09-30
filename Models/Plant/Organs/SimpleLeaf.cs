@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     /// **Nitrogen Supplies**
     /// 
     /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
-    /// A fraction of Storage N is made available to the arbitrator as NRetranslocationSupply
+    /// A fraction of Storage N is made available to the arbitrator as NRetranslocationSupply.
     /// 
     /// **Biomass Senescence and Detachment**
     /// 
