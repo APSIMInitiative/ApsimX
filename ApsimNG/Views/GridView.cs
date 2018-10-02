@@ -404,8 +404,6 @@
                     cell.CellBackgroundGdk = Grid.Style.Base(cellState);
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                     textRenderer.Editable = true;
-                    if (CellIsSelected(rowNo, colNo))
-                        Console.WriteLine(string.Format("Highlighting cell ({0}, {1})", rowNo, colNo));
                 }
 
                 if (view == Grid)

@@ -80,6 +80,12 @@ namespace UserInterface.EventArguments
         public int ColNo { get; set; }
 
         /// <summary>
+        /// A dictionary mapping assemblies to their xml documentation.
+        /// Used to cache the xml documents, speeding up intellisense operations.
+        /// </summary>
+        private static Dictionary<string, XmlDocument> documentation = new Dictionary<string, XmlDocument>();
+
+        /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
         /// <param name="atype">Data type for which we want completion options.</param>
@@ -453,7 +459,13 @@ namespace UserInterface.EventArguments
             }
 
             XmlDocument doc = new XmlDocument();
-            doc.Load(documentationFile);
+            if (documentation.ContainsKey(documentationFile))
+                doc = documentation[documentationFile];
+            else
+            {
+                doc.Load(documentationFile);
+                documentation.Add(documentationFile, doc);
+            }
             string memberPrefix = string.Empty;
             if (member is PropertyInfo)
                 memberPrefix = "P";
@@ -491,7 +503,15 @@ namespace UserInterface.EventArguments
                 return string.Empty;
 
             XmlDocument doc = new XmlDocument();
-            doc.Load(documentationFile);
+
+            if (documentation.ContainsKey(documentationFile))
+                doc = documentation[documentationFile];
+            else
+            {
+                doc.Load(documentationFile);
+                documentation.Add(documentationFile, doc);
+            }
+
             string xPath = string.Format("//member[starts-with(@name, 'M:{0}.{1}')]/param[@name='{2}']", method.DeclaringType.FullName, method.Name, parameterName);
             XmlNode paramNode = doc.SelectSingleNode(xPath);
             if (paramNode == null || paramNode.ChildNodes.Count < 1)
