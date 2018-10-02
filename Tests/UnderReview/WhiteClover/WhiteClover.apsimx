@@ -32750,7 +32750,8 @@ namespace Models
     <ReadOnly>false</ReadOnly>
     <MemoText><![CDATA[
 ## Acknowledgements
-This model was developed with help from Ellen Hume gathering plant parameters and organising data. Datasets were produced by the Forages for Reduced Nitrogen Leaching (FRNL) programme.  
+This model was developed with support and datasets provided by the Forages for Reduced Nitrogen Leaching (FRNL) programme, funded by the New Zealand Ministry of Business, Innovation and Employment.  The programme is a partnership between DairyNZ, AgResearch, Plant & Food Research, Lincoln University, the Foundation for Arable Research, and Landcare Research.  
+It should be recognised that the model was also build upon the work of several people, especially at AgResearch, that have been developing the understanding and modelling of pastural systems over many years.  The author is also thankfull to Ellen Hume for her help on gathering plant parameters and organising the dataset.  
 ]]></MemoText>
   </Memo>
   <IncludeInDocumentation>true</IncludeInDocumentation>
