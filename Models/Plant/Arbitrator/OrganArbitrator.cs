@@ -14,8 +14,8 @@ namespace Models.PMF
     /// The Arbitrator class determines the allocation of dry matter (DM) and Nitrogen between each of the organs in the crop model. Each organ can have up to three different pools of biomass:
     /// 
     /// * **Structural biomass** which is essential for growth and remains within the organ once it is allocated there.
-    /// * **Metabolic biomass** which generally remains within an organ but is able to be re-allocated when the organ senesces and may be re-translocated when demand is high relative to supply.
-    /// * **Storage biomass** which is partitioned to organs when supply is high relative to demand and is available for re-translocation to other organs whenever supply from uptake, fixation, or re-allocation is lower than demand.
+    /// * **Metabolic biomass** which generally remains within an organ but is able to be re-allocated when the organ senesces and may be retranslocated when demand is high relative to supply.
+    /// * **Storage biomass** which is partitioned to organs when supply is high relative to demand and is available for retranslocation to other organs whenever supply from uptake, fixation, or re-allocation is lower than demand.
     /// 
     /// The process followed for biomass arbitration is shown in Figure [FigureNumber]. Arbitration calculations are triggered by a series of events (shown below) that are raised every day.  For these calculations, at each step the Arbitrator exchange information with each organ, so the basic computations of demand and supply are done at the organ level, using their specific parameters. 
     /// 

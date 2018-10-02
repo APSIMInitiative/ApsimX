@@ -424,7 +424,7 @@ namespace Models.PMF.Organs
                 {
                     if (nitrogenDemandSwitch.Value() == 1.0)
                     {
-                        //Dont bother docummenting as is does nothing
+                        //Don't bother documenting as is does nothing
                     }
                     else
                     {
@@ -449,7 +449,7 @@ namespace Models.PMF.Organs
                 }
                 else
                 {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM tha is allocated each day is quantified by the DMReallocationFactor.", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 1, indent);
                 }
                 IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
@@ -462,7 +462,7 @@ namespace Models.PMF.Organs
                 }
                 else
                 {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM tha is allocated each day is quantified by the DMReallocationFactor.", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 1, indent);
                 }
 
@@ -478,7 +478,7 @@ namespace Models.PMF.Organs
                 }
                 else
                 {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N tha is allocated each day is quantified by the NReallocationFactor.", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 1, indent);
                 }
                 IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
@@ -501,7 +501,7 @@ namespace Models.PMF.Organs
                 if (Sen.GetType() == typeof(Constant))
                 {
                     if (senescenceRate.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomss in this organ will remain live.", indent));
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain live.", indent));
                     else
                         tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + senescenceRate.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
                 }
@@ -515,7 +515,7 @@ namespace Models.PMF.Organs
                 if (Sen.GetType() == typeof(Constant))
                 {
                     if (detachmentRateFunction.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomss in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
                     else
                         tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + detachmentRateFunction.Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition.", indent));
                 }
