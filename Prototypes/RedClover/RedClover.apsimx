@@ -47,7 +47,7 @@ To include red clover in a simulation the procedure is the same as any other APS
  * - The red clover object can be dragged or copied from the Crop folder in the toolbox into a Field in your simulation;
  * - To become active and grow, the red clover crop needs to be sown using a manager script with a sowing rule. e.g.:
 <pre><code class='language-cs'>
- RedClover.Sow(cultivar: Tuscan, population: 450, depth: 5, rowSpacing: 100);  
+ RedClover.Sow(cultivar: Colenso, population: 450, depth: 5, rowSpacing: 100);  
 </code></pre>
 If a specified cultivar is not available, a fatal error will be thrown.
 
@@ -6750,73 +6750,13 @@ Published data for the shoot-to-root ratio in red clover show a considerable var
       <CultivarFolder>
         <Name>Cultivars</Name>
         <Cultivar>
-          <Name>Huia</Name>
+          <Name>Colenso</Name>
           <Memo>
             <Name>Description</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[*Huia* is the basic red clover cultivar in the model.  It is the oldest selected strain from New Zealand, develop from wild plants growing in Hawkes Bay and Canterbury (Caradus).  *Huia* is a medium-leaved cultivar, with generic perfomance - producing good yields and being reasonably persistent. It has been mostly superseeded by cultivars with more specific usage (e.g. for dairying or for hill country conditions).  
-]]></MemoText>
-          </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <Command />
-        </Cultivar>
-        <Cultivar>
-          <Name>Kopu</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The *Kopu* cultivar was selected from crosses with north-american ladino cultivars for resitance to nematodes and high yield. It is intended for lowland pastures.  
-]]></MemoText>
-          </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <Command />
-        </Cultivar>
-        <Cultivar>
-          <Name>Kotare</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[This is a large-leaved cultivar with medium stem density. *Kotare* can produce high yields with good summer growth.  It is aimed at dairying of finishing systems.   
-]]></MemoText>
-          </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <Command />
-        </Cultivar>
-        <Cultivar>
-          <Name>Weka</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[*Weka* is a medium-leaved cultivar and with high stem density.  It is considered high yielding and can be used in all grazing systems.  *Weka* also shows good persitence, being tollerant to dry condition and hard grazing, as well as having strong spreading habit.  
-]]></MemoText>
-          </Memo>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <Command />
-        </Cultivar>
-        <Cultivar>
-          <Name>Apex</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The *Apex* cultivar was selected for persistent and high yield. It has a high stem density and is drought-tolerant; it is also resistant diseases and has good root weevil tolerance. It is intended for lowland pastures.  
+            <MemoText><![CDATA[*Colenso* is the basic red clover cultivar in the model.  
 ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -8782,7 +8722,7 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
                 <ReadOnly>false</ReadOnly>
                 <Operation>
                   <Date>2014-03-20</Date>
-                  <Action> [RedClover].Sow(population: 500, cultivar: "Kopu", depth: 5, rowSpacing: 150)</Action>
+                  <Action> [RedClover].Sow(population: 500, cultivar: "Colenso", depth: 5, rowSpacing: 150)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -21740,7 +21680,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <ReadOnly>false</ReadOnly>
                 <Operation>
                   <Date>2014-10-24</Date>
-                  <Action> [RedClover].Sow(population: 500, cultivar: "Kopu", depth: 5, rowSpacing: 150)</Action>
+                  <Action> [RedClover].Sow(population: 500, cultivar: "Colenso", depth: 5, rowSpacing: 150)</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
