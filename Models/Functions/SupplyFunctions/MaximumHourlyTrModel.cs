@@ -283,8 +283,8 @@ namespace Models.Functions.SupplyFunctions
         private void CalcBiomass()
         {
             hourlyDM = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / Math.Min(hourlyVPD[i], MaxVPD));
-            //for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef /hourlyVPD[i]);
+            for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef /hourlyVPD[i]);
+            //for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / Math.Min(hourlyVPD[i], MaxVPD));
         }
         //------------------------------------------------------------------------------------------------
 
