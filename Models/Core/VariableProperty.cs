@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="VariableProperty.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
+// Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
 namespace Models.Core
@@ -51,7 +51,7 @@ namespace Models.Core
             {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
-            
+
             this.Object = model;
             this.property = property;
             if (arraySpecifier != null)
@@ -95,12 +95,12 @@ namespace Models.Core
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public override string Name 
-        { 
-            get 
+        public override string Name
+        {
+            get
             {
-                return this.property.Name; 
-            } 
+                return this.property.Name;
+            }
         }
 
         /// <summary>
@@ -226,14 +226,14 @@ namespace Models.Core
             FieldInfo fi = value.GetType().GetField(value.ToString());
 
             DescriptionAttribute[] attributes =
-                (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
                 return attributes[0].ToString();
             else
                 return value.ToString();
         }
-        
+
         /// <summary>
         /// Simple structure to hold both a name and an associated label
         /// </summary>
@@ -410,7 +410,27 @@ namespace Models.Core
                 }
                 else
                 {
-                    this.property.SetValue(this.Object, value, null);
+                    if (this.lowerArraySpecifier != 0)
+                    {
+                        object obj = null;
+                        try
+                        {
+                            obj = this.property.GetValue(this.Object, null);
+                        }
+                        catch (Exception err)
+                        {
+                            throw err.InnerException;
+                        }
+                        IList array = obj as IList;
+
+                        if (obj != null && obj is IList)
+                        {
+                            array[lowerArraySpecifier - 1] = value;
+                            this.property.SetValue(this.Object, obj, null);
+                        }
+                    }
+                    else
+                        this.property.SetValue(this.Object, value, null);
                 }
             }
         }
@@ -538,7 +558,7 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return property.CanRead && property.CanWrite; } }
-    
+
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
         /// </summary>

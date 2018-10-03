@@ -235,10 +235,13 @@ namespace Models.Graph
                 foreach (var factorToRemove in factorsToRemove)
                     factor.RemoveFactor(factorToRemove);
 
-            // Make sure each factor has the factors we want to keep.
-            foreach (var factor in factors)
-                foreach (var factorToKeep in factorsToKeep)
-                    factor.AddFactorIfNotExist(factorToKeep, "?");
+            // Remove empty factors
+            factors.RemoveAll(f => f.Factors.Count == 0);
+
+            //// Make sure each factor has the factors we want to keep.
+            //foreach (var factor in factors)
+            //    foreach (var factorToKeep in factorsToKeep)
+            //        factor.AddFactorIfNotExist(factorToKeep, "?");
         }
 
         /// <summary>
