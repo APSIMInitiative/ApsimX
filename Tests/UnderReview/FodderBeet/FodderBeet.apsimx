@@ -718,17 +718,17 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionLiveToRemove>0.95</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>100</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
@@ -740,7 +740,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -748,10 +748,10 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToRemove>0.95</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <VariableReference>
             <Name>CriticalNConc</Name>
@@ -820,8 +820,8 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
                         <double>0</double>
                         <double>0</double>
                         <double>0</double>
+                        <double>0.7</double>
                         <double>0.8</double>
-                        <double>0.85</double>
                       </Y>
                     </XYPairs>
                     <Memo>
@@ -871,7 +871,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <FixedValue>0.5</FixedValue>
+              <FixedValue>0.95</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -1824,10 +1824,10 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToResidue>100</FractionLiveToResidue>
+            <FractionDeadToResidue>100</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
@@ -1854,10 +1854,10 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionDeadToResidue>100</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -2031,10 +2031,10 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToResidue>1</FractionLiveToResidue>
+            <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
@@ -2061,10 +2061,10 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
