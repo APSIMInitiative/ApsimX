@@ -63,7 +63,7 @@ namespace Models.Functions
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, -1, indent + 1);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
     }
