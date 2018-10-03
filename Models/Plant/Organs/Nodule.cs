@@ -571,6 +571,10 @@ namespace Models.PMF.Organs
 
                 if (biomassRemovalModel != null)
                     biomassRemovalModel.Document(tags, headingLevel + 1, indent);
+
+                IModel fixationRate = Apsim.Child(this, "FixationRate");
+                if (fixationRate != null)
+                    AutoDocumentation.DocumentModel(fixationRate, tags, headingLevel + 1, indent);
             }
         }
 
