@@ -748,7 +748,7 @@ namespace Models.PMF.Organs
 
                 // document initial DM weight
                 IModel iniWt = Apsim.Child(this, "initialWtFunction");
-                AutoDocumentation.DocumentModel(iniWt, tags, headingLevel + 2, indent);
+                AutoDocumentation.DocumentModel(iniWt, tags, headingLevel + 1, indent);
 
                 // document DM demands
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
@@ -815,9 +815,10 @@ namespace Models.PMF.Organs
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 2, indent);
                 }
+
+                // document photosynthesis
                 IModel PhotosynthesisModel = Apsim.Child(this, "Photosynthesis");
                 AutoDocumentation.DocumentModel(PhotosynthesisModel, tags, headingLevel + 2, indent);
-
 
                 // document N supplies
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
