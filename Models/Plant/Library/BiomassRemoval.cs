@@ -16,6 +16,8 @@ namespace Models.PMF.Library
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.BiomassRemovalPresenter")]
     public class BiomassRemoval : Model, ICustomDocumentation
     {
         [Link]

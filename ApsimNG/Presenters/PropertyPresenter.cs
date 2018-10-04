@@ -137,6 +137,7 @@ namespace UserInterface.Presenters
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
             FillTable(table);
+            grid.DataSource = table;
             FormatGrid();
             if (selectedCell != null)
             {
@@ -164,7 +165,20 @@ namespace UserInterface.Presenters
 
             PopulateGrid(model);
         }
-        
+
+        /// <summary>
+        /// Gets all public instance members of a given type,
+        /// sorted by the line number of the member's declaration.
+        /// </summary>
+        /// <param name="o">Object whose members will be retrieved.</param>
+        public static List<MemberInfo> GetMembers(object o)
+        {
+            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
+            members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
+            var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber).ToList();
+            return orderedMembers;
+        }
+
         /// <summary>
         /// Find all properties from the model and fill this.properties.
         /// </summary>
@@ -175,9 +189,7 @@ namespace UserInterface.Presenters
             properties.Clear();
             if (this.model != null)
             {
-                var members = model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
-                members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
-                var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber);
+                var orderedMembers = GetMembers(model);
 
                 foreach (MemberInfo member in orderedMembers)
                 {
@@ -274,7 +286,7 @@ namespace UserInterface.Presenters
         /// Fill the specified table with columns and rows based on this.Properties
         /// </summary>
         /// <param name="table">The table that needs to be filled</param>
-        private void FillTable(DataTable table)
+        public void FillTable(DataTable table)
         {
             foreach (IVariable property in properties)
             {
@@ -285,8 +297,6 @@ namespace UserInterface.Presenters
                 else
                     table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
             }
-
-            grid.DataSource = table;
         }
 
         /// <summary>
