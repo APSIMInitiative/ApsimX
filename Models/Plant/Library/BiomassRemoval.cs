@@ -241,6 +241,9 @@ namespace Models.PMF.Library
                     row["% Dead To Residue"] = removal.FractionDeadToResidue * 100;
                 }
 
+                foreach (Memo childMemo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(childMemo, tags, headingLevel + 1, indent);
+
                 tags.Add(new AutoDocumentation.Table(data, indent));
             }
         }
