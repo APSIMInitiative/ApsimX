@@ -210,7 +210,7 @@ namespace Models.PMF.Organs
         public BiomassPoolType NDemand { get; set; }
 
         /// <summary>The dry matter potentially being allocated</summary>
-        private BiomassPoolType potentialDMAllocation = new BiomassPoolType();
+        public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
@@ -963,6 +963,7 @@ namespace Models.PMF.Organs
             DMDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

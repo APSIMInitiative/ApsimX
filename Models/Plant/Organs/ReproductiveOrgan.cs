@@ -134,8 +134,9 @@ namespace Models.PMF.Organs
         public string RipeStage { get; set; }
         /// <summary>The _ ready for harvest</summary>
         protected bool _ReadyForHarvest = false;
-        /// <summary>The potential dm allocation</summary>
-        private double PotentialDMAllocation = 0;
+        
+        /// <summary>The dry matter potentially being allocated</summary>
+        public BiomassPoolType potentialDMAllocation { get; set; }
         #endregion
 
         #region Class Properties
@@ -154,12 +155,12 @@ namespace Models.PMF.Organs
         [Units("/m^2")]
         public double Number { get; set; }
 
-        /// <summary>The Maximum potential size of grains</summary>
+        /// <summary>The maximum potential size of grains</summary>
         [XmlIgnore]
         [Units("/m^2")]
         public double MaximumSize { get; set; }
 
-        /// <summary>Gets the live f wt.</summary>
+        /// <summary>Gets the live fresh weight of grains.</summary>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -172,7 +173,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the size.</summary>
+        /// <summary>Gets the individual grain size.</summary>
         [Units("g")]
         public double Size
         {
@@ -185,7 +186,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the size of the f.</summary>
+        /// <summary>Gets the size of grain using the fresh weight (including water content).</summary>
         [Units("g")]
         private double FSize
         {
@@ -312,7 +313,7 @@ namespace Models.PMF.Organs
         private void SetNDemand(object sender, EventArgs e)
         {
             double demand = NFillingRate.Value();
-            demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
+            demand = Math.Min(demand, MaximumNConc.Value() * potentialDMAllocation.Structural);
             NDemand.Structural = demand;
         }
 
@@ -330,6 +331,7 @@ namespace Models.PMF.Organs
             DMDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
         }
 
 
@@ -360,7 +362,7 @@ namespace Models.PMF.Organs
                 if (dryMatter.Structural < 0.000000000001) { }//All OK
                 else
                     throw new Exception("Invalid allocation of potential DM in" + Name);
-            PotentialDMAllocation = dryMatter.Structural;
+            potentialDMAllocation.Structural = dryMatter.Structural;
             // PotentialDailyGrowth = value.Structural;
         }
         /// <summary>Sets the dry matter allocation.</summary>

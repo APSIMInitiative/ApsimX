@@ -1,4 +1,4 @@
-<Plant Version="42">
+<Plant Version="45">
   <Name>Wheat</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1601,7 +1601,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -1614,7 +1614,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
     </BiomassDemand>
   </Root>
   <Leaf>
@@ -2735,7 +2778,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -2748,7 +2791,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Spike].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Spike].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Spike].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Spike].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Spike].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Spike].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Spike].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Spike].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
@@ -3076,7 +3162,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Metabolic</Name>
         <FixedValue>0.0</FixedValue>
       </Constant>
-      <StorageDemandFunction name="Storage">
+      <StorageDMDemandFunction name="Storage">
         <Name>Storage</Name>
         <SubtractFunction name="StorageFraction">
           <Name>StorageFraction</Name>
@@ -3089,7 +3175,50 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
-      </StorageDemandFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Stem].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Stem].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Stem].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Stem].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Stem].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
     </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>

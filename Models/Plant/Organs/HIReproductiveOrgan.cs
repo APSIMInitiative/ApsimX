@@ -40,6 +40,9 @@ namespace Models.PMF.Organs
         [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
+        /// <summary>The dry matter potentially being allocated</summary>
+        public BiomassPoolType potentialDMAllocation { get; set; }
+
         /// <summary>The daily growth</summary>
         private double DailyGrowth = 0;
 

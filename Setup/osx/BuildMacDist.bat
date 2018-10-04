@@ -30,7 +30,6 @@ xcopy /S /I /Y /Q %apsimx%\Examples .\MacBundle\APSIM%APSIM_VERSION%.app\Content
 xcopy /I /Y /Q %apsimx%\Bin\*.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %apsimx%\Bin\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\MonoMac.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %apsimx%\Bin\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %apsimx%\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources

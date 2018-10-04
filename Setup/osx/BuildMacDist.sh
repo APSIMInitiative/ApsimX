@@ -19,7 +19,6 @@ do
 	rm -rf $apsimx/Bin/$(basename -- $f)
 done
 
-cp $apsimx/ApsimNG/Assemblies/MonoMac.dll $apsimx/Bin/
 export version=$(mono $apsimx/Bin/Models.exe /Version | grep -oP '(\d+\.){3}\d+')
 export short_version=$(echo $version | cut -d'.' -f 1,2)
 export issue_id=$(echo $version | cut -d'.' -f 4)

@@ -175,6 +175,9 @@ namespace Models
         {
             get
             {
+                if (Today == DateTime.MinValue)
+                    return 0;
+
                 TimeSpan fullSim = EndDate - StartDate;
                 if (fullSim.Equals(TimeSpan.Zero))
                     return 1.0;

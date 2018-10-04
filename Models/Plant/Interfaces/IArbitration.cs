@@ -43,6 +43,9 @@ namespace Models.PMF.Interfaces
         /// <summary>Returns the organs N supply</summary>
         BiomassSupplyType NSupply { get; }
 
+        /// <summary>Returns the DM that can be paritioned to the organ of N is not limited </summary>
+        BiomassPoolType potentialDMAllocation { get; }
+
         /// <summary>Sets the dry matter potential allocation.</summary>
         void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter);
 
