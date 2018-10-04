@@ -375,14 +375,6 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </GenericPhase>
         <GotoPhase>
           <Name>PhenologyRewind</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[At the end of reproductive phase, phenology is reset to 'Vegetative'.
-]]></MemoText>
-          </Memo>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
@@ -541,7 +533,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[There has been a number of studies on the photosynthetesis rate of white clover (e.g. [McCreeTroughton1966]; [WoledgeEtAl1991_Photo]; [MalinowskiEtAl1998]; [HerautBronEtAl2000]; [HofmannEtAl2007]), including its variation due to water and N deficiency, shading and CO2 changes. The values and trends for CO2 assimilation rates are generally consistent across the various studies and these have been used to help defining the limiting factor for photoynthesis in the model. Reported values RUE for white clover are in general around 2.5-3.0 g DM/MJ ([FaurieEtAl1996]; [ManderscheidEtAl1997]; [NassiriThesis1998]).  
+            <MemoText><![CDATA[There has been a number of studies on the photosynthetesis rate of white clover (e.g. [McCreeTroughton1966]; [WoledgeEtAl1991_Photo]; [MalinowskiEtAl1998]; [HerautBronEtAl2000]; [HofmannEtAl2007]), including its variation due to water and N deficiency, shading and CO<sub>2</sub> changes. The values and trends for CO<sub>2</sub> assimilation rates are generally consistent across the various studies and these have been used to help defining the limiting factor for photoynthesis in the model. Reported values RUE for white clover are in general around 2.5-3.0 g DM/MJ ([FaurieEtAl1996]; [ManderscheidEtAl1997]; [NassiriThesis1998]).  
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -669,6 +661,13 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>RadnInt</Name>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <MemoText><![CDATA[The value of radiation intercepted by this plant as computed by the MicroClimate model.]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -825,6 +824,246 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
         </PhaseLookup>
+        <BiomassDemand>
+          <Name>DMDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The DM demand as calculated here is a potential value, or a weighting factor, which is used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a base and a deficit demands.  The base demand is simply defined by the target proportion of leaf biomass, whereas the deficit demand is defined by the difference between the actual and targeted proportions.  This approach ensures promptly regrowth of aboveground organs after defoliation, but relies in the assumption that a target biomass proportion for each organ exist.  The target proportion is calculated based on a target shoot-to-root ratio and then a biomass proportion for each organ, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Structural</Name>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <MemoText><![CDATA[The partitioning of daily demand towards structural biomass is based on the structural fraction:
+]]></MemoText>
+            </Memo>
+            <AddFunction>
+              <Name>DMDemandFunction</Name>
+              <PartitionFractionDemandFunction>
+                <Name>BaseBiomassDemand</Name>
+                <MultiplyFunction>
+                  <Name>PartitionFraction</Name>
+                  <VariableReference>
+                    <Name>TargetAboveGroundProp</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                    <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetOrganProp</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                    <VariableName>[Leaf].TargetBiomassProportion.Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                </MultiplyFunction>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+              </PartitionFractionDemandFunction>
+              <MaximumFunction>
+                <Name>DeficitBiomassDemand</Name>
+                <Constant>
+                  <Name>Zero</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <SubtractFunction>
+                  <Name>Deficit</Name>
+                  <MultiplyFunction>
+                    <Name>TargetBiomass</Name>
+                    <VariableReference>
+                      <Name>TargetAboveGroundProp</Name>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                      <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>TargetOrganProp</Name>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                      <VariableName>[Leaf].TargetBiomassProportion.Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>TotalBiomass</Name>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                      <VariableName>[TotalLive].Wt</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                  </MultiplyFunction>
+                  <VariableReference>
+                    <Name>CurrentBiomass</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                    <VariableName>[Leaf].Live.Wt</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                </SubtractFunction>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+              </MaximumFunction>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </AddFunction>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <FixedValue>0.95</FixedValue>
+              <Units>g/g</Units>
+            </Constant>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </MultiplyFunction>
+          <Constant>
+            <Name>Metabolic</Name>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <MemoText><![CDATA[Currently there is no metabolic biomass in SimpleLeaf]]></MemoText>
+            </Memo>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <StorageDMDemandFunction>
+            <Name>Storage</Name>
+            <SubtractFunction>
+              <Name>StorageFraction</Name>
+              <Constant>
+                <Name>One</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <VariableReference>
+                <Name>StructuralFraction</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </SubtractFunction>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </StorageDMDemandFunction>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </BiomassDemand>
+        <BiomassDemand>
+          <Name>NDemands</Name>
+          <MultiplyFunction>
+            <Name>Structural</Name>
+            <VariableReference>
+              <Name>MinNconc</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>PotentialDMAllocation</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </MultiplyFunction>
+          <MultiplyFunction>
+            <Name>Metabolic</Name>
+            <SubtractFunction>
+              <Name>MetabolicNconc</Name>
+              <VariableReference>
+                <Name>CritNconc</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Leaf].criticalNConc.Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>MinNconc</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </SubtractFunction>
+            <VariableReference>
+              <Name>PotentialDMAllocation</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </MultiplyFunction>
+          <StorageNDemandFunction>
+            <Name>Storage</Name>
+            <VariableReference>
+              <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Leaf].nitrogenDemandSwitch.Value()</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>MaxNconc</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Leaf].maximumNconc.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </StorageNDemandFunction>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </BiomassDemand>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Memo>
@@ -918,7 +1157,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[Due to the near horizontal placement of its leaves, white clover has a high capacity for light interception. Values for the light extinction coefficient reported in the literature are quite variable, depending on what light fraction they are related to and whether plants are considered in mixed swards or as separated plants; these vary from 0.70 up to 1.0 ([LantingaEtAl1999]; [SonohatEtAl2002]; [denHollanderEtAl2007]). ]]></MemoText>
+            <MemoText><![CDATA[Due to the near horizontal placement of its leaves, white clover has a high capacity for light interception. Values for the light extinction coefficient reported in the literature are quite variable, depending on which radiation was considered (total, direct, or PAR) to and whether plants were in mixed swards or in monoculture; these vary from 0.70 up to 1.0 ([LantingaEtAl1999]; [SonohatEtAl2002]; [denHollanderEtAl2007]). ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -941,7 +1180,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The average height of white clover is assumed here as a simple function of leaf biomass; generically the petiole determines the height, but this are linked to leaf growth. Inflorescence are ignored as the height is mostly used for co puting light interception and transpiration.  The petiole length varies with cultivar, tipically between 5 and 15 cm ([Brougham1958_LeafDev]; [BissuelBelaygueEtAl2002_flower]; [denHollanderEtAl2007]).  The inflorescence is typically one third higher than the leaves. Sward population and competition with other plant may have an influence on the relationship between biomass and height, but this is not currently accounted for by the model.  
+            <MemoText><![CDATA[The average height of white clover is assumed here as a simple function of leaf biomass; generically the petiole determines the height, but the development of this organ is linked to leaf growth, so a general function as used here should be sufficient.  Inflorescence are ignored as the plant height is mostly used for computing light interception and transpiration.  The petiole length, and thus plant height, varies with cultivar, being tipically between 5 and 20 cm ([Brougham1958_LeafDev]; [McCreeTroughton1966]; [BissuelBelaygueEtAl2002_flower]; [denHollanderEtAl2007]).  The inflorescence is typically one third higher than the leaves.  Sward population and competition with other plant may have an influence on the relationship between biomass and height, but this is not currently accounted for by the model.  
 ]]></MemoText>
           </Memo>
           <XYPairs>
@@ -976,7 +1215,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[White clover has a relatively high rate of leaf senescence, with leaf area estabilising when LAI reaches about 5.0 m2/m2 ([Brougham1958_LeafDev]; [HartChapter1987]; [NicholsEtAl2014_Drought]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
+            <MemoText><![CDATA[White clover has a relatively high rate of leaf senescence, with leaf area estabilising when LAI reaches about 5.0 ([Brougham1958_LeafDev]; [HartChapter1987]; [NicholsEtAl2014_Drought]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
           </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
@@ -1184,7 +1423,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[A generic relationship between retranslocation and environmental factors is assumed, this is done so that retranslocation is enhanced when conditions are good for growth. Retranslocation from leaves is enabled any time.  
+            <MemoText><![CDATA[A generic relationship between retranslocation and environmental factors is assumed, this is done so that retranslocation is favoured when conditions are good for growth.  Retranslocation from leaves is enabled any time.  
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -1315,238 +1554,6 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
         </BiomassRemoval>
-        <BiomassDemand>
-          <Name>DMDemands</Name>
-          <MultiplyFunction>
-            <Name>Structural</Name>
-            <AddFunction>
-              <Name>DMDemandFunction</Name>
-              <Memo>
-                <Name>Description</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <MemoText><![CDATA[The DM demand as defined here is a weighting factor, actual values are computed by the OrganArbitrator. The value is computed as the sum of a base demand, simply based on the potential partition according to the target proportions, and a deficit demand, which diverts more biomass to organs that deviate from their targeted proportions. This ensures faster regrowth of above ground organs after defoliation. The target proportion may vary with growth stage and environmental conditions.  
-]]></MemoText>
-              </Memo>
-              <PartitionFractionDemandFunction>
-                <Name>BaseBiomassDemand</Name>
-                <MultiplyFunction>
-                  <Name>PartitionFraction</Name>
-                  <VariableReference>
-                    <Name>TargetAboveGroundProp</Name>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                    <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetOrganProp</Name>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                    <VariableName>[Leaf].TargetBiomassProportion.Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <ReadOnly>false</ReadOnly>
-                </MultiplyFunction>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-              </PartitionFractionDemandFunction>
-              <MaximumFunction>
-                <Name>DeficitBiomassDemand</Name>
-                <Constant>
-                  <Name>Zero</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <ReadOnly>false</ReadOnly>
-                  <FixedValue>0</FixedValue>
-                </Constant>
-                <SubtractFunction>
-                  <Name>Deficit</Name>
-                  <MultiplyFunction>
-                    <Name>TargetBiomass</Name>
-                    <VariableReference>
-                      <Name>TargetAboveGroundProp</Name>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                      <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TargetOrganProp</Name>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                      <VariableName>[Leaf].TargetBiomassProportion.Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TotalBiomass</Name>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                      <VariableName>[TotalLive].Wt</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentBiomass</Name>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                    <VariableName>[Leaf].Live.Wt</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <ReadOnly>false</ReadOnly>
-                </SubtractFunction>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-              </MaximumFunction>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </AddFunction>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Memo>
-                <Name>Description</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
-              </Memo>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <FixedValue>0.95</FixedValue>
-              <Units>g/g</Units>
-            </Constant>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
-          <Constant>
-            <Name>Metabolic</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <StorageDMDemandFunction>
-            <Name>Storage</Name>
-            <SubtractFunction>
-              <Name>StorageFraction</Name>
-              <Constant>
-                <Name>One</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <FixedValue>1</FixedValue>
-              </Constant>
-              <VariableReference>
-                <Name>StructuralFraction</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </SubtractFunction>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </StorageDMDemandFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </BiomassDemand>
-        <BiomassDemand>
-          <Name>NDemands</Name>
-          <MultiplyFunction>
-            <Name>Structural</Name>
-            <VariableReference>
-              <Name>MinNconc</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Leaf].minimumNconc.Value()</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>PotentialDMAllocation</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>Metabolic</Name>
-            <SubtractFunction>
-              <Name>MetabolicNconc</Name>
-              <VariableReference>
-                <Name>CritNconc</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Leaf].criticalNConc.Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>MinNconc</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Leaf].minimumNconc.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </SubtractFunction>
-            <VariableReference>
-              <Name>PotentialDMAllocation</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
-          <StorageNDemandFunction>
-            <Name>Storage</Name>
-            <VariableReference>
-              <Name>NitrogenDemandSwitch</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Leaf].nitrogenDemandSwitch.Value()</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>MaxNconc</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Leaf].maximumNconc.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </StorageNDemandFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </BiomassDemand>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
