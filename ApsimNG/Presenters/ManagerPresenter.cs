@@ -63,7 +63,7 @@ namespace UserInterface.Presenters
             this.managerView = view as IManagerView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(managerView as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            intellisense.ItemSelected += (sender, e) => managerView.Editor.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
 
             this.propertyPresenter.Attach(this.manager.Script, this.managerView.GridView, this.explorerPresenter);
             this.managerView.Editor.ScriptMode = true;
@@ -89,7 +89,6 @@ namespace UserInterface.Presenters
             this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
 
@@ -102,10 +101,8 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (e.ControlShiftSpace)
-                    intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+                if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
             }
             catch (Exception err)
             {
@@ -225,19 +222,6 @@ namespace UserInterface.Presenters
             string newText = formatter.Format(this.managerView.Editor.Text);
             this.managerView.Editor.Text = newText;
             this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", newText));
-        }
-
-        /// <summary>
-        /// Invoked when the user selects an item in the intellisense.
-        /// Inserts the selected item at the caret.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
-        {
-            managerView.Editor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
-            if (args.IsMethod)
-                intellisense.ShowScriptMethodCompletion(manager, managerView.Editor.Text, managerView.Editor.Offset, managerView.Editor.GetPositionOfCursor());
         }
     }
 }

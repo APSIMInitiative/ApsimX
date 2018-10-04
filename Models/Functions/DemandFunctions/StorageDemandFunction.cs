@@ -13,7 +13,7 @@ namespace Models.Functions.DemandFunctions
     [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StorageDMDemandFunction : Model, IFunction
+    public class StorageDemandFunction : Model, IFunction
     {
         /// <summary>The Storage Fraction</summary>
         [Description("StorageFraction")]

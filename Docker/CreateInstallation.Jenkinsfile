@@ -40,7 +40,7 @@ pipeline {
 						exit 1
 					)
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
-					docker run -m 16g --cpu-count 16 --cpu-percent 100 -e PULL_ID -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e PULL_ID -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true

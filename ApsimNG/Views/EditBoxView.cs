@@ -147,7 +147,7 @@ namespace UserInterface.Views
                 {
                     int x, y;
                     textentry1.GdkWindow.GetOrigin(out x, out y);
-                    System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.SizeRequest().Height);
+                    Tuple<int, int> coordinates = new Tuple<int, int>(x, y + textentry1.SizeRequest().Height);
                     NeedContextItemsArgs e = new NeedContextItemsArgs()
                     {
                         Coordinates = coordinates,

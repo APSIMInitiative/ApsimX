@@ -93,8 +93,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
-                                              typeof(Folder),
-                                              typeof(Morris)},
+                                              typeof(Folder) },
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {

@@ -31,7 +31,5 @@ namespace UserInterface.Intellisense
         /// Gets the current content.
         /// </summary>
         object CurrentContent { get; }
-
-        CSharpInsightItem[] Items { get; }
     }
 }

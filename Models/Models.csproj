@@ -194,13 +194,8 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
-<<<<<<< HEAD
     <Compile Include="Functions\DemandFunctions\StorageDemandFunction.cs" />
     <Compile Include="Functions\SupplyFunctions\MaximumHourlyTrModel.cs" />
-=======
-    <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
-    <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
->>>>>>> upstream/master
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />

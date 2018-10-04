@@ -63,6 +63,7 @@ xcopy /I /Y /Q %apsimx%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_V
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %apsimx%\Bin\Models.xml .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %apsimx%\APSIM.bib .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%
 

@@ -140,15 +140,5 @@ namespace UserInterface.Intellisense
 
             return "Unknown";
         }
-
-        public bool IsMethod
-        {
-            get
-            {
-                if (this is EntityCompletionData)
-                    return (this as EntityCompletionData).Entity.SymbolKind == ICSharpCode.NRefactory.TypeSystem.SymbolKind.Method;
-                return false;
-            }
-        }
     }
 }

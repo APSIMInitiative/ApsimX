@@ -237,7 +237,7 @@ namespace Models.Storage
         private string LookupUnitsForColumn(IDatabaseConnection connection, string columnName)
         {
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT Units FROM [_Units] WHERE TableName='");
+            sql.Append("SELECT Units FROM _Units WHERE TableName='");
             sql.Append(Name);
             sql.Append("' AND ColumnHeading='");
             sql.Append(columnName.Trim('\''));
@@ -285,7 +285,8 @@ namespace Models.Storage
                         else
                             dataTypeString = col.DatabaseDataType;
 
-                        connection.AddColumn(Name, col.Name, dataTypeString);
+                        string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + col.Name + "] " + dataTypeString;
+                        connection.ExecuteNonQuery(sql);
                     }
                 }
             }

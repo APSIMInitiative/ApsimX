@@ -8,7 +8,6 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using APSIM.Shared.Utilities;
     using EventArguments;
     using Models;
@@ -51,7 +50,16 @@ namespace UserInterface.Presenters
             this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            intellisense.ItemSelected += (sender, e) =>
+            {
+                if (e.TriggerWord == string.Empty)
+                    this.view.InsertAtCaret(e.ItemSelected);
+                else
+                {
+                    int position = this.view.Text.Substring(0, this.view.Offset).LastIndexOf(e.TriggerWord);
+                    this.view.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
+                }
+            };
 
             this.PopulateEditorView();
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -67,7 +75,6 @@ namespace UserInterface.Presenters
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser -= this.OnTextHasChangedByUser;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             this.intellisense.Cleanup();
         }
 
@@ -139,10 +146,8 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (e.ControlShiftSpace)
-                    intellisense.ShowMethodCompletion(operations, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
             }
             catch (Exception err)
             {
@@ -157,30 +162,6 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             this.PopulateEditorView();
-        }
-
-        /// <summary>
-        /// Invoked when the user selects an item in the intellisense.
-        /// Inserts the selected item at the caret.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
-        {
-            if (string.IsNullOrEmpty(args.TriggerWord))
-                view.InsertAtCaret(args.ItemSelected);
-            else
-            {
-                int position = view.Text.Substring(0, view.Offset).LastIndexOf(args.TriggerWord);
-                view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
-            }
-
-            if (args.IsMethod)
-            {
-                Point cursor = view.GetPositionOfCursor();
-                intellisense.ShowMethodCompletion(operations, view.Text, view.Offset, new Point(cursor.X, cursor.Y));
-            }
-                
         }
     }
 }

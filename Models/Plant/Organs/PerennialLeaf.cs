@@ -233,12 +233,6 @@ namespace Models.PMF.Organs
         [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
-
-        /// <summary>The N demand function</summary>
-        [ChildLinkByName]
-        [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
-
         /// <summary>The extinction coefficient function</summary>
         [Link]
         IFunction ExtinctionCoefficient = null;
@@ -404,9 +398,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)
         {
-            NDemand.Structural = nDemands.Structural.Value();
-            NDemand.Metabolic = 0.0; // nDemands.Metabolic.Value();
-            NDemand.Storage =  nDemands.Storage.Value();
+            double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
+
+            NDemand.Structural = StructuralDemand;
+            NDemand.Storage = NDeficit;
         }
 
 
@@ -439,6 +435,9 @@ namespace Models.PMF.Organs
             Height = 0;
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
+            PotentialDMAllocation = 0;
+            PotentialStructuralDMAllocation = 0;
+            PotentialMetabolicDMAllocation = 0;
             LiveFWt = 0;
             DMDemand.Clear();
             DMSupply.Clear();
@@ -505,8 +504,12 @@ namespace Models.PMF.Organs
         private double StartNRetranslocationSupply = 0;
         /// <summary>The start n reallocation supply</summary>
         private double StartNReallocationSupply = 0;
-        /// <summary>The dry matter potentially being allocated</summary>
-        public BiomassPoolType potentialDMAllocation { get; set; }
+        /// <summary>The potential dm allocation</summary>
+        protected double PotentialDMAllocation = 0;
+        /// <summary>The potential structural dm allocation</summary>
+        protected double PotentialStructuralDMAllocation = 0;
+        /// <summary>The potential metabolic dm allocation</summary>
+        protected double PotentialMetabolicDMAllocation = 0;
         
         #endregion
 
@@ -617,8 +620,9 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
-            potentialDMAllocation.Metabolic = dryMatter.Metabolic;
-            potentialDMAllocation.Structural = dryMatter.Structural;
+            PotentialMetabolicDMAllocation = dryMatter.Metabolic;
+            PotentialStructuralDMAllocation = dryMatter.Structural;
+            PotentialDMAllocation = dryMatter.Structural + dryMatter.Metabolic;
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
@@ -715,7 +719,6 @@ namespace Models.PMF.Organs
             DMDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
             Clear();
         }
 

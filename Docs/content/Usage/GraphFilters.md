@@ -29,7 +29,7 @@ The filter box in the graph configuration is very flexible - see examples below.
 **Other examples**
 
 ```
-[Wheat.SowingData.Cultivar] = 'Hartog'
+[Predicted.Wheat.SowingData.Cultivar] = 'Hartog'
 [SimulationName] LIKE 'ExperimentFactorOneSlurp_Minus'
 [SimulationName] LIKE 'ExperimentFactorOneSlurp_%'
 ```

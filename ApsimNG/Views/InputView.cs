@@ -110,22 +110,15 @@ namespace UserInterface.Views
         /// </summary>
         private void OnBrowseButtonClick(object sender, EventArgs e)
         {
-            try
+            if (BrowseButtonClicked != null)
             {
-                if (BrowseButtonClicked != null)
+                string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "*.*", FileName);
+                if (!String.IsNullOrEmpty(fileName))
                 {
-                    string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "All Files (*.*) | *.*", FileName);
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        OpenDialogArgs args = new OpenDialogArgs();
-                        args.FileName = fileName;
-                        BrowseButtonClicked.Invoke(this, args);
-                    }
+                    OpenDialogArgs args = new OpenDialogArgs();
+                    args.FileName = fileName;
+                    BrowseButtonClicked.Invoke(this, args);
                 }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
             }
         }
     }

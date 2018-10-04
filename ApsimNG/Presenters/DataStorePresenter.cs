@@ -46,8 +46,8 @@ namespace UserInterface.Presenters
             dataStore = model as IStorageReader;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
-            intellisense = new IntellisensePresenter(this.view as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            this.intellisense = new IntellisensePresenter(this.view as ViewBase);
+            intellisense.ItemSelected += OnInsertIntellisenseItem;
 
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
@@ -75,8 +75,6 @@ namespace UserInterface.Presenters
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            intellisense.Cleanup();
         }
 
         /// <summary>Populate the grid control with data.</summary>
@@ -229,7 +227,7 @@ namespace UserInterface.Presenters
             try
             {
                 if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore))
-                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+                    intellisense.Show(args.Coordinates.Item1, args.Coordinates.Item2);
             }
             catch (Exception err)
             {
@@ -237,7 +235,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        private void OnInsertIntellisenseItem(object sender, IntellisenseItemSelectedArgs args)
         {
             try
             {

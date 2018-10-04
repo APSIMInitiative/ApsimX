@@ -52,9 +52,6 @@ namespace Models.Core
             set
             {
                 _FileName = value;
-                DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
-                storage.Close();
-                storage.FileName = null;
             }
         }
 
@@ -169,8 +166,7 @@ namespace Models.Core
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(inStream, Assembly.GetExecutingAssembly()) as Simulations;
-            if (simulations.Version > ApsimFile.Converter.LatestVersion)
-                throw new Exception("This file has previously been opened with a more recent version of Apsim. Please upgrade to a newer version to open this file.");
+
             inStream.Close();
 
             if (simulations != null)

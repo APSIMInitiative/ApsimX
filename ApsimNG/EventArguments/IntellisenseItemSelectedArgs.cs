@@ -16,10 +16,5 @@ namespace UserInterface.EventArguments
         /// The word for which we have generated completion options.
         /// </summary>
         public string TriggerWord { get; set; }
-
-        /// <summary>
-        /// True iff the selected item is a method.
-        /// </summary>
-        public bool IsMethod { get; set; }
     }
 }

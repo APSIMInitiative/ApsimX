@@ -4,7 +4,6 @@ using Models.Functions;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.Interfaces;
-using Models.PMF.Interfaces;
 
 namespace Models.PMF.Struct
 {
@@ -80,7 +79,6 @@ namespace Models.PMF.Struct
         /// <summary>Branch mortality</summary>
         [Link]
         public IFunction branchMortality = null;
-
 
         /// <summary>The Stage that cohorts are initialised on</summary>
         [Description("The Stage that cohorts are initialised on")]
@@ -331,7 +329,6 @@ namespace Models.PMF.Struct
                         ProportionBranchMortality = PropnMortality;
 
                     }
-                    
                 }
             }
         }

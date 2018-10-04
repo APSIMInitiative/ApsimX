@@ -291,7 +291,7 @@
             {
                 List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
                 int i = 0;
-                foreach (List<FactorValue> factors in allSims)
+                foreach (List<FactorValue> factors in model.AllCombinations())
                 {
                     if (!getAllData && i > maxSimsToDisplay)
                         break;

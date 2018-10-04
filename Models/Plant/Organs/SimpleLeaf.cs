@@ -225,6 +225,8 @@ namespace Models.PMF.Organs
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
+        
+
 
         #endregion
 
@@ -342,6 +344,9 @@ namespace Models.PMF.Organs
             DMDemand.Clear();
             NDemand.Clear();
             potentialDMAllocation.Clear();
+            potentialDMAllocating = 0.0;
+            potentialStructuralDMAllocation = 0.0;
+            potentialMetabolicDMAllocation = 0.0;
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -436,11 +441,6 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
-        /// <summary>The N demand function</summary>
-        [ChildLinkByName]
-        [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
-
         /// <summary>The initial biomass dry matter weight</summary>
         [ChildLinkByName]
         [Units("g/m2")]
@@ -498,7 +498,16 @@ namespace Models.PMF.Organs
         public BiomassPoolType NDemand { get; set; }
 
         /// <summary>The dry matter potentially being allocated</summary>
-        public BiomassPoolType potentialDMAllocation { get; set; }
+        private BiomassPoolType potentialDMAllocation = new BiomassPoolType();
+
+        /// <summary>The potential DM allocation</summary>
+        private double potentialDMAllocating = 0.0;
+
+        /// <summary>The potential structural DM allocation</summary>
+        private double potentialStructuralDMAllocation = 0.0;
+
+        /// <summary>The potential metabolic DM allocation</summary>
+        private double potentialMetabolicDMAllocation = 0.0;
 
         /// <summary>Constructor</summary>
         public SimpleLeaf()
@@ -653,15 +662,21 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
-            NDemand.Structural = nDemands.Structural.Value();
-            NDemand.Metabolic = nDemands.Metabolic.Value();
-            NDemand.Storage = nDemands.Storage.Value();
+            double NDeficit = Math.Max(0.0, maximumNConc.Value() * (Live.Wt + potentialDMAllocating) - Live.N);
+            NDeficit *= nitrogenDemandSwitch.Value();
+
+            NDemand.Structural = Math.Min(NDeficit, potentialStructuralDMAllocation * minimumNConc.Value());
+            NDemand.Metabolic = Math.Min(NDeficit, potentialStructuralDMAllocation * (criticalNConc.Value() - minimumNConc.Value()));
+            NDemand.Storage = Math.Max(0, NDeficit - NDemand.Structural - NDemand.Metabolic);
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
         /// <param name="dryMatter">The potential amount of drymatter allocation</param>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
+            potentialMetabolicDMAllocation = dryMatter.Metabolic;
+            potentialStructuralDMAllocation = dryMatter.Structural;
+            potentialDMAllocating = dryMatter.Structural + dryMatter.Metabolic;
             potentialDMAllocation.Structural = dryMatter.Structural;
             potentialDMAllocation.Metabolic = dryMatter.Metabolic;
             potentialDMAllocation.Storage = dryMatter.Storage;
@@ -900,7 +915,6 @@ namespace Models.PMF.Organs
             DMDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
             startLive = new Biomass();
             Allocated = new Biomass();
             Senesced = new Biomass();

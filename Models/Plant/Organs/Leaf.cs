@@ -92,9 +92,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the n fixation cost.</summary>
         public double NFixationCost { get { return 0; } }
 
-        /// <summary>The dry matter potentially being allocated</summary>
-        public BiomassPoolType potentialDMAllocation { get; set; }
-
         #region Canopy interface
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
