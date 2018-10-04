@@ -106,7 +106,7 @@
             set
             {
                 NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
-                
+
                 Parameters.Clear();
                 foreach (DataRow row in value[1].Rows)
                 {
@@ -146,7 +146,7 @@
             allCombinations.RemoveAt(0);
 
             Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
-            newSimulation.Name = "Simulation" + simulationNumber;
+            newSimulation.Name = Name + "Simulation" + simulationNumber;
             newSimulation.Parent = null;
             newSimulation.FileName = parentSimulations.FileName;
             Apsim.ParentAllChildren(newSimulation);
@@ -222,12 +222,12 @@
                 foreach (var year in Years)
                 {
                     factors.Add(new SimulationGeneratorFactors(columnNames, new string[] { param.Name, year.ToString() },
-                                                               "ParameterxYear", param.Name + year));
-                    factors.Add(new SimulationGeneratorFactors(new string[] { "Year" } , new string[] { year.ToString() },
-                                                               "Year", year.ToString()));
+                    "ParameterxYear", param.Name + year));
+                    factors.Add(new SimulationGeneratorFactors(new string[] { "Year" }, new string[] { year.ToString() },
+                    "Year", year.ToString()));
                 }
                 factors.Add(new SimulationGeneratorFactors(new string[] { "Param" }, new string[] { param.Name },
-                                                           "Parameter", param.Name));
+                "Parameter", param.Name));
             }
             return factors;
         }
@@ -267,7 +267,7 @@
                         factors.Add(f);
                     }
 
-                    string newSimulationName = "Simulation" + simulationNumber;
+                    string newSimulationName = Name + "Simulation" + simulationNumber;
                     simulationNames.Add(newSimulationName);
                     allCombinations.Add(factors);
                     simulationNumber++;
@@ -282,8 +282,8 @@
         {
             string script;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.Morris.R"))
-                using (StreamReader reader = new StreamReader(s))
-                    script = reader.ReadToEnd();
+            using (StreamReader reader = new StreamReader(s))
+                script = reader.ReadToEnd();
 
             script = script.Replace("%NUMPATHS%", NumPaths.ToString());
             script = script.Replace("%PARAMNAMES%", StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\""));
@@ -304,11 +304,11 @@
             string tempFileName = Path.GetTempFileName();
 
             string script = string.Format
-                            ("T <- read.csv(\"{0}\"" + Environment.NewLine +
-                             "DF <- as.data.frame(T)" + Environment.NewLine +
-                             "APSIMMorris$X <- DF" + Environment.NewLine +
-                             "tell(APSIMMorris)" + Environment.NewLine,
-                             tempFileName);
+            ("T <- read.csv(\"{0}\"" + Environment.NewLine +
+            "DF <- as.data.frame(T)" + Environment.NewLine +
+            "APSIMMorris$X <- DF" + Environment.NewLine +
+            "tell(APSIMMorris)" + Environment.NewLine,
+            tempFileName);
 
             string rFileName = Path.GetTempFileName();
             File.WriteAllText(rFileName, script);
@@ -328,69 +328,12 @@
             }
         }
 
-        /// <summary>
-        /// Create a specific simulation.
-        /// </summary>
-        public Simulation CreateSpecificSimulation(string name)
-        {
-            //List<List<FactorValue>> allCombinations = AllCombinations();
-            //Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            //Simulations parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-
-            //foreach (List<FactorValue> combination in allCombinations)
-            //{
-            //    string newSimulationName = Name;
-            //    foreach (FactorValue value in combination)
-            //        newSimulationName += value.Name;
-
-            //    if (newSimulationName == name)
-            //    {
-            //        Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-            //        newSimulation.Name = newSimulationName;
-            //        newSimulation.Parent = null;
-            //        newSimulation.FileName = parentSimulations.FileName;
-            //        Apsim.ParentAllChildren(newSimulation);
-
-            //        // Make substitutions.
-            //        parentSimulations.MakeSubstitutions(newSimulation);
-
-            //        // Connect events and links in our new  simulation.
-            //        Events events = new Events(newSimulation);
-            //        LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            //        events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
-
-            //        foreach (FactorValue value in combination)
-            //            value.ApplyToSimulation(newSimulation);
-
-            //        PushFactorsToReportModels(newSimulation, combination);
-
-            //        return newSimulation;
-            //    }
-            //}
-
-            return null;
-        }
-
-        /// <summary>
-        /// Generates the name for a combination of FactorValues.
-        /// </summary>
-        /// <param name="factors"></param>
-        /// <returns></returns>
-        private string GetName(List<FactorValue> factors)
-        {
-            string str = Name;
-            foreach (FactorValue factor in factors)
-            {
-                str += factor.Name;
-            }
-            return str;
-        }
-
         /// <summary>Main run method for performing our post simulation calculations</summary>
         /// <param name="dataStore">The data store.</param>
         public void Run(IStorageReader dataStore)
         {
-            DataTable predictedData = dataStore.GetData("Report");
+            string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%'";
+            DataTable predictedData = dataStore.RunQuery(sql);
             if (predictedData != null)
             {
                 // Setup some file names
@@ -402,7 +345,7 @@
 
                 // Determine how many years we have per simulation
                 DataView view = new DataView(predictedData);
-                view.RowFilter = "SimulationName='Simulation1'";
+                view.RowFilter = "SimulationName='" + Name + "Simulation1'";
                 Years = DataTableUtilities.GetColumnAsIntegers(view, "Clock.Today.Year");
 
                 // Write parameters
@@ -447,46 +390,46 @@
                 string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
                 string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
                 string script = string.Format
-                                ("library('sensitivity')" + Environment.NewLine +
-                                 "params <- c({0})" + Environment.NewLine +
-                                 "apsimMorris<-morris(model=NULL" + Environment.NewLine +
-                                 "    ,params #string vector of parameter names" + Environment.NewLine +
-                                 "    ,{1} #no of paths within the total parameter space" + Environment.NewLine +
-                                 "    ,design=list(type=\"oat\",levels=20,grid.jump=10)" + Environment.NewLine +
-                                 "    ,binf=c({2}) #min for each parameter" + Environment.NewLine +
-                                 "    ,bsup=c({3}) #max for each parameter" + Environment.NewLine +
-                                 "    ,scale=T" + Environment.NewLine +
-                                 "    )" + Environment.NewLine +
-                                 "apsimMorris$X <- read.csv(\"{4}\")" + Environment.NewLine +
-                                 "values = read.csv(\"{5}\")" + Environment.NewLine +
-                                 "allEE <- data.frame()" + Environment.NewLine +
-                                 "allStats <- data.frame()" + Environment.NewLine +
-                                 "for (columnName in colnames(values))" + Environment.NewLine +
-                                 "{{" + Environment.NewLine +
-                                 "   apsimMorris$y <- values[[columnName]]" + Environment.NewLine +
-                                 "   tell(apsimMorris)" + Environment.NewLine +
+                ("library('sensitivity')" + Environment.NewLine +
+                "params <- c({0})" + Environment.NewLine +
+                "apsimMorris<-morris(model=NULL" + Environment.NewLine +
+                " ,params #string vector of parameter names" + Environment.NewLine +
+                " ,{1} #no of paths within the total parameter space" + Environment.NewLine +
+                " ,design=list(type=\"oat\",levels=20,grid.jump=10)" + Environment.NewLine +
+                " ,binf=c({2}) #min for each parameter" + Environment.NewLine +
+                " ,bsup=c({3}) #max for each parameter" + Environment.NewLine +
+                " ,scale=T" + Environment.NewLine +
+                " )" + Environment.NewLine +
+                "apsimMorris$X <- read.csv(\"{4}\")" + Environment.NewLine +
+                "values = read.csv(\"{5}\")" + Environment.NewLine +
+                "allEE <- data.frame()" + Environment.NewLine +
+                "allStats <- data.frame()" + Environment.NewLine +
+                "for (columnName in colnames(values))" + Environment.NewLine +
+                "{{" + Environment.NewLine +
+                " apsimMorris$y <- values[[columnName]]" + Environment.NewLine +
+                " tell(apsimMorris)" + Environment.NewLine +
 
-                                 "   ee <- data.frame(apsimMorris$ee)" + Environment.NewLine +
-                                 "   ee$variable <- columnName" + Environment.NewLine +
-                                 "   ee$path <- c(1:{1})" + Environment.NewLine +
-                                 "   allEE <- rbind(allEE, ee)" + Environment.NewLine +
+                " ee <- data.frame(apsimMorris$ee)" + Environment.NewLine +
+                " ee$variable <- columnName" + Environment.NewLine +
+                " ee$path <- c(1:{1})" + Environment.NewLine +
+                " allEE <- rbind(allEE, ee)" + Environment.NewLine +
 
-                                 "   mu <- apply(apsimMorris$ee, 2, mean)" + Environment.NewLine +
-                                 "   mustar <- apply(apsimMorris$ee, 2, function(x) mean(abs(x)))" + Environment.NewLine +
-                                 "   sigma <- apply(apsimMorris$ee, 2, sd)" + Environment.NewLine +
-                                 "   stats <- data.frame(mu, mustar, sigma)" + Environment.NewLine +
-                                 "   stats$param <- params" + Environment.NewLine +
-                                 "   stats$variable <- columnName" + Environment.NewLine +
-                                 "   allStats <- rbind(allStats, stats)" + Environment.NewLine +
+                " mu <- apply(apsimMorris$ee, 2, mean)" + Environment.NewLine +
+                " mustar <- apply(apsimMorris$ee, 2, function(x) mean(abs(x)))" + Environment.NewLine +
+                " sigma <- apply(apsimMorris$ee, 2, sd)" + Environment.NewLine +
+                " stats <- data.frame(mu, mustar, sigma)" + Environment.NewLine +
+                " stats$param <- params" + Environment.NewLine +
+                " stats$variable <- columnName" + Environment.NewLine +
+                " allStats <- rbind(allStats, stats)" + Environment.NewLine +
 
-                                 "}}" + Environment.NewLine +
-                                 "write.csv(allEE,\"{6}\", row.names=FALSE)" + Environment.NewLine +
-                                 "write.csv(allStats, \"{7}\", row.names=FALSE)" + Environment.NewLine,
-                                    paramNames, NumPaths, lowerBounds, upperBounds,
-                                    morrisParametersFileName.Replace("\\", "/"),
-                                    apsimVariableFileName.Replace("\\", "/"),
-                                    eeFileName.Replace("\\", "/"),
-                                    statsFileName.Replace("\\", "/"));
+                "}}" + Environment.NewLine +
+                "write.csv(allEE,\"{6}\", row.names=FALSE)" + Environment.NewLine +
+                "write.csv(allStats, \"{7}\", row.names=FALSE)" + Environment.NewLine,
+                paramNames, NumPaths, lowerBounds, upperBounds,
+                morrisParametersFileName.Replace("\\", "/"),
+                apsimVariableFileName.Replace("\\", "/"),
+                eeFileName.Replace("\\", "/"),
+                statsFileName.Replace("\\", "/"));
                 File.WriteAllText(rFileName, script);
 
                 // Run R
@@ -497,18 +440,18 @@
 
                 // Get ee data from R and store in ee table.
                 // EE data from R looks like:
-                //         "ResidueWt",             "FASW",               "CN2",          "Cona",             "variable","path"
-                //   - 22.971008269563,0.00950570342209862,-0.00379987333757356,56.7587080430652,"FallowEvaporation1996",1
-                //   - 25.790599484188, 0.0170777988614538, -0.0265991133629069,58.0240658644712,"FallowEvaporation1996",2
-                //   - 26.113599477728, 0.0113851992409871,  0.0113996200126667,57.9689677010766,"FallowEvaporation1996",3
-                //   - 33.284199334316, 0.0323193916349732,  -0.334388853704853,60.5376820772641,"FallowEvaporation1996",4
+                // "ResidueWt", "FASW", "CN2", "Cona", "variable","path"
+                // - 22.971008269563,0.00950570342209862,-0.00379987333757356,56.7587080430652,"FallowEvaporation1996",1
+                // - 25.790599484188, 0.0170777988614538, -0.0265991133629069,58.0240658644712,"FallowEvaporation1996",2
+                // - 26.113599477728, 0.0113851992409871, 0.0113996200126667,57.9689677010766,"FallowEvaporation1996",3
+                // - 33.284199334316, 0.0323193916349732, -0.334388853704853,60.5376820772641,"FallowEvaporation1996",4
                 DataTable eeDataRaw = ApsimTextFile.ToTable(eeFileName);
                 DataView eeView = new DataView(eeDataRaw);
 
-                DataTable eeTable = new DataTable(Name + "ElementaryEffects");
+                DataTable eeTable = new DataTable(Name + "PathAnalysis");
                 IndexedDataTable eeTableKey = new IndexedDataTable(eeTable, new string[] { "Param", "Year" });
 
-                // Create a path variable.               
+                // Create a path variable. 
                 var pathValues = Enumerable.Range(1, NumPaths).ToArray();
 
                 foreach (var parameter in Parameters)
@@ -524,25 +467,27 @@
                         eeTableKey.SetIndex(new object[] { parameter.Name, year });
 
                         List<double> values = DataTableUtilities.GetColumnAsDoubles(eeView, parameter.Name).ToList();
+                        for (int i = 0; i < values.Count; i++)
+                            values[i] = Math.Abs(values[i]);
                         var runningMean = MathUtilities.RunningAverage(values);
 
                         eeTableKey.SetValues("Path", pathValues);
-                        eeTableKey.SetValues(variableName, runningMean);
+                        eeTableKey.SetValues(variableName + ".MuStar", runningMean);
                     }
                 }
 
                 // Get stats data from R and store in MuStar table.
                 // Stats data coming back from R looks like:
-                //                "mu",         "mustar",          "sigma",    "param","variable"
-                //   -30.7331368183818, 30.7331368183818, 5.42917964248002,"ResidueWt","FallowEvaporation1996"
-                // -0.0731299918470997,0.105740687296631,0.450848277601353,     "FASW","FallowEvaporation1996"
-                //   -0.83061431285624,0.839772007599748, 1.75541097254145,      "CN2","FallowEvaporation1996"
-                //    62.6942591520838, 62.6942591520838, 5.22778043503867,     "Cona","FallowEvaporation1996"
-                //    -17.286285468283, 19.4018404625051, 24.1361388348929,"ResidueWt","FallowRunoff1996"
-                //    8.09850688306722, 8.09852589447407, 15.1988107373113,     "FASW","FallowRunoff1996"
-                //    18.6196168461051, 18.6196168461051, 15.1496277765849,      "CN2","FallowRunoff1996"
-                //   -7.12794888887507, 7.12794888887507, 5.54014788597839,     "Cona","FallowRunoff1996"
-                DataTable muStarTable = new DataTable(Name + "MuStar");
+                // "mu", "mustar", "sigma", "param","variable"
+                // -30.7331368183818, 30.7331368183818, 5.42917964248002,"ResidueWt","FallowEvaporation1996"
+                // -0.0731299918470997,0.105740687296631,0.450848277601353, "FASW","FallowEvaporation1996"
+                // -0.83061431285624,0.839772007599748, 1.75541097254145, "CN2","FallowEvaporation1996"
+                // 62.6942591520838, 62.6942591520838, 5.22778043503867, "Cona","FallowEvaporation1996"
+                // -17.286285468283, 19.4018404625051, 24.1361388348929,"ResidueWt","FallowRunoff1996"
+                // 8.09850688306722, 8.09852589447407, 15.1988107373113, "FASW","FallowRunoff1996"
+                // 18.6196168461051, 18.6196168461051, 15.1496277765849, "CN2","FallowRunoff1996"
+                // -7.12794888887507, 7.12794888887507, 5.54014788597839, "Cona","FallowRunoff1996"
+                DataTable muStarTable = new DataTable(Name + "Statistics");
                 IndexedDataTable tableKey = new IndexedDataTable(muStarTable, new string[2] { "Param", "Year" });
 
                 DataTable statsDataRaw = ApsimTextFile.ToTable(statsFileName);
@@ -553,9 +498,9 @@
                     variable = variable.Substring(0, variable.Length - 4);
                     tableKey.SetIndex(new object[] { row["param"], year });
 
-                    tableKey.Set(variable + ".mu", row["mu"]);
-                    tableKey.Set(variable + ".mustar", row["mustar"]);
-                    tableKey.Set(variable + ".sigma", row["sigma"]);
+                    tableKey.Set(variable + ".Mu", row["mu"]);
+                    tableKey.Set(variable + ".MuStar", row["mustar"]);
+                    tableKey.Set(variable + ".Sigma", row["sigma"]);
 
                     // Need to bring in the descriptive values.
                     view.RowFilter = "Clock.Today.Year=" + year;
@@ -566,7 +511,7 @@
                             tableKey.Set(descriptiveColumnName, view[0][descriptiveColumnName]);
                     }
                 }
-                
+
                 dataStore.DeleteDataInTable(eeTable.TableName);
                 dataStore.WriteTable(eeTable);
                 dataStore.DeleteDataInTable(muStarTable.TableName);
