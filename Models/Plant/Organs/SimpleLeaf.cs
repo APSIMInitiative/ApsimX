@@ -12,41 +12,21 @@ namespace Models.PMF.Organs
     using Models.PMF.Phen;
     using Models.PMF.Struct;
     /// <summary>
-    /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It is parameterised as follows.
+    /// This plant organ is parameterised using a SimpleLeaf organ type, this provides the core functions of intercepting radiation, providing
+    ///  a photosynthesis supply, and a transpiration demand.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
     /// 
-    /// **Dry Matter Supply**
-    /// 
-    /// DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.
-    /// DM is not retranslocated out of this organ.
-    /// 
-    /// **Dry Matter Demands**
-    /// 
-    /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
-    /// 
-    /// **Nitrogen Demands**
-    /// 
-    /// The daily Storage N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
-    /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
-    /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
-    /// 
-    /// **Nitrogen Supplies**
-    /// 
-    /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
-    /// A fraction of Storage N is made available to the arbitrator as NRetranslocationSupply.
-    /// 
-    /// **Biomass Senescence and Detachment**
-    /// 
-    /// Senescence is calculated as a proportion of the live dry matter.
-    /// Detachment of biomass into the surface organic matter pool is calculated daily as a proportion of the dead DM.
-    /// 
-    /// **Canopy**
-    /// 
-    /// The user can model the canopy by specifying either the LAI and an extinction coefficient, or by specifying the canopy cover directly.  If the cover is specified, LAI is calculated using an inverted Beer-Lambert equation with the specified cover value.
-    /// 
-    /// The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop.
-    /// The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf. 
-    ///
+    /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
+    ///  competition between different plants when more than one is present in the simulation.  The values of Cover, LAI, and plant Height,
+    ///  defined below, are passed by SimpleLeaf to the MicroClimate model which uses an implementation of the Beer-Lambert equation to
+    ///  compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  These values are then given
+    ///  back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     /// </summary>
+    /// <remarks>
+    /// NOTE: the summary above is used in the Apsim's autodoc.
+    /// 
+    /// SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
+    /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -758,26 +738,37 @@ namespace Models.PMF.Organs
         {
             if (IncludeInDocumentation)
             {
-                // add a heading.
+                // add a heading, the name of this organ
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write description of this class.
+                // write the basic description of this class, given in the <summary>
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // Document DM demands.
-                tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction.", indent));
-                IModel DMDemand = Apsim.Child(this, "dmDemands");
-                AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 1, indent);
+                //// List the parameters, properties, and processes from this organ that need to be documented:
 
-                // Document Nitrogen Demand
+                // document initial DM weight
+                IModel iniWt = Apsim.Child(this, "initialWtFunction");
+                AutoDocumentation.DocumentModel(iniWt, tags, headingLevel + 2, indent);
+
+                // document DM demands
+                tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
+                tags.Add(new AutoDocumentation.Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
+                IModel DMDemand = Apsim.Child(this, "dmDemands");
+                AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 2, indent);
+
+                // document N demands
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand is the product of Total DM demand and a Minimum N concentration", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool:", indent));
+                IModel NDemand = Apsim.Child(this, "nDemands");
+                AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
+
+                // document N concentration thresholds
                 IModel MinN = Apsim.Child(this, "MinimumNConc");
-                AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 1, indent);
-                tags.Add(new AutoDocumentation.Paragraph("The daily Storage N demand is the product of Total DM demand and a Maximum N concentration.", indent));
+                AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 2, indent);
+                IModel CritN = Apsim.Child(this, "CriticalNConc");
+                AutoDocumentation.DocumentModel(CritN, tags, headingLevel + 2, indent);
                 IModel MaxN = Apsim.Child(this, "MaximumNConc");
-                AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 1, indent);
+                AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
                 IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
                 if (NDemSwitch.GetType() == typeof(Constant))
                 {
@@ -793,10 +784,10 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandFactor.", indent));
-                    AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 2, indent);
                 }
 
-                //Document DM supplies
+                // document DM supplies
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
                 IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
                 if (DMReallocFac.GetType() == typeof(Constant))
@@ -809,7 +800,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
                 }
                 IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
                 if (DMRetransFac.GetType() == typeof(Constant))
@@ -822,10 +813,13 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 2, indent);
                 }
+                IModel PhotosynthesisModel = Apsim.Child(this, "Photosynthesis");
+                AutoDocumentation.DocumentModel(PhotosynthesisModel, tags, headingLevel + 2, indent);
 
-                //Document N supplies
+
+                // document N supplies
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
                 IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
                 if (NReallocFac.GetType() == typeof(Constant))
@@ -838,7 +832,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
                 }
                 IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
                 if (NRetransFac.GetType() == typeof(Constant))
@@ -851,27 +845,46 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(NRetransFac, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(NRetransFac, tags, headingLevel + 2, indent);
                 }
 
-                //Document Biomass Senescence and Detachment
+                // document canopy
+                tags.Add(new AutoDocumentation.Heading("Canopy Properties", headingLevel + 1));
+                IModel laiF = Apsim.Child(this, "LAIFunction");
+                IModel coverF = Apsim.Child(this, "CoverFunction");
+                if (laiF != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a LAIFunction, cover is calculated using the Beer-Lambert equation.", indent));
+                    AutoDocumentation.DocumentModel(laiF, tags, headingLevel + 2, indent);
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a CoverFunction. LAI is calculated using an inverted Beer-Lambert equation", indent));
+                    AutoDocumentation.DocumentModel(coverF, tags, headingLevel + 2, indent);
+                }
+                IModel exctF = Apsim.Child(this, "ExtinctionCoefficientFunction");
+                AutoDocumentation.DocumentModel(exctF, tags, headingLevel + 2, indent);
+                IModel heightF = Apsim.Child(this, "HeightFunction");
+                AutoDocumentation.DocumentModel(heightF, tags, headingLevel + 2, indent);
+
+                // document senescence and detachment
                 tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
-                IModel Sen = Apsim.Child(this, "SenescenceRate");
-                if (Sen.GetType() == typeof(Constant))
+                IModel SenRate = Apsim.Child(this, "SenescenceRate");
+                if (SenRate.GetType() == typeof(Constant))
                 {
                     if (senescenceRate.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain live.", indent));
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive.", indent));
                     else
                         tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + senescenceRate.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
                 }
                 else
                 {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceFraction.", indent));
-                    AutoDocumentation.DocumentModel(Sen, tags, headingLevel + 1, indent);
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate.", indent));
+                    AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
                 }
 
-                IModel Det = Apsim.Child(this, "DetachmentRateFunction");
-                if (Sen.GetType() == typeof(Constant))
+                IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
+                if (DetRate.GetType() == typeof(Constant))
                 {
                     if (detachmentRateFunction.Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
@@ -881,7 +894,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.", indent));
-                    AutoDocumentation.DocumentModel(Det, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(DetRate, tags, headingLevel + 2, indent);
                 }
 
                 if (biomassRemovalModel != null)
