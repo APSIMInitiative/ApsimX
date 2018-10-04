@@ -6,7 +6,8 @@ using System;
 namespace Models.PMF
 {
     /// <summary>
-    /// Class that holds the functions for calculating Structural, Metabolic and Storage demands
+    /// # [Name]
+    /// This class holds the functions for calculating Structural, Metabolic and Storage demands.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]

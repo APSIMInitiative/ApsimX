@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
@@ -6,17 +7,16 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions.DemandFunctions
 {
     /// <summary>
-    /// # [Name]
-    /// Calculate partitioning of daily growth based upon allometric relationship
+    /// The partitioning of daily growth to storage biomass is based on the maximum N concentration.
     /// </summary>
     [Serializable]
-    [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
+    [Description("This function calculates...")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StorageNDemandFunction : Model, IFunction
+    public class StorageNDemandFunction : Model, IFunction, ICustomDocumentation
     {
-        /// <summary>The maximimum N concentration of the organ</summary>
-        [Description("The maximum N concenctration of the organ")]
+        /// <summary>The maximum N concentration of the organ</summary>
+        [Description("The maximum N concentration of the organ")]
         [Link]
         private IFunction maxNConc = null;
 
@@ -58,5 +58,28 @@ namespace Models.Functions.DemandFunctions
             return Math.Max(0, NDeficit - parentOrgan.NDemand.Structural - parentOrgan.NDemand.Metabolic);
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // get description of this class.
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
+        }
     }
 }
