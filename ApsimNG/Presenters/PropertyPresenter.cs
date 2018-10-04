@@ -565,6 +565,55 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// This method takes a value from the grid and formats it appropriately,
+        /// based on the data type of the property to which the value is going to
+        /// be assigned.
+        /// </summary>
+        /// <param name="property">Property to which the value will be assigned.</param>
+        /// <param name="value">Value which is going to be assigned to property.</param>
+        public static object FormatValueForProperty(IVariable property, object value)
+        {
+            if (property.DataType.IsArray && value != null)
+            {
+                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (property.DataType == typeof(double[]))
+                {
+                    value = MathUtilities.StringsToDoubles(stringValues);
+                }
+                else if (property.DataType == typeof(int[]))
+                {
+                    value = MathUtilities.StringsToDoubles(stringValues);
+                }
+                else if (property.DataType == typeof(string[]))
+                {
+                    value = stringValues;
+                }
+                else
+                {
+                    throw new ApsimXException(property.Object as IModel, "Invalid property type: " + property.DataType.ToString());
+                }
+            }
+            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
+            {
+                value = Apsim.Find(property.Object as IModel, value.ToString()) as IPlant;
+            }
+            else if (property.DataType == typeof(DateTime))
+            {
+                value = Convert.ToDateTime(value);
+            }
+            else if (property.DataType.IsEnum)
+            {
+                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
+            }
+            else if (property.Display != null &&
+                     property.Display.Type == DisplayType.Model)
+            {
+                value = Apsim.Get(property.Object as IModel, value.ToString());
+            }
+            return value;
+        }
+
+        /// <summary>
         /// Set the value of the specified property
         /// </summary>
         /// <param name="property">The property to set the value of</param>
@@ -573,44 +622,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (property.DataType.IsArray && value != null)
-                {
-                    string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (property.DataType == typeof(double[]))
-                    {
-                        value = MathUtilities.StringsToDoubles(stringValues);
-                    }
-                    else if (property.DataType == typeof(int[]))
-                    {
-                        value = MathUtilities.StringsToDoubles(stringValues);
-                    }
-                    else if (property.DataType == typeof(string[]))
-                    {
-                        value = stringValues;
-                    }
-                    else
-                    {
-                        throw new ApsimXException(model, "Invalid property type: " + property.DataType.ToString());
-                    }
-                }
-                else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                {
-                    value = Apsim.Find(model, value.ToString()) as IPlant;
-                }
-                else if (property.DataType == typeof(DateTime))
-                {
-                    value = Convert.ToDateTime(value);
-                }
-                else if (property.DataType.IsEnum)
-                {
-                    value = VariableProperty.ParseEnum(property.DataType, value.ToString());
-                }
-                else if (property.Display != null &&
-                         property.Display.Type == DisplayType.Model)
-                {
-                    value = Apsim.Get(model, value.ToString());
-                }
-
+                value = FormatValueForProperty(property, value);
                 ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
                 presenter.CommandHistory.Add(cmd);
             }

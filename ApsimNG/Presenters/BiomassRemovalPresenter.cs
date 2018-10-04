@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Views;
     using Interfaces;
     using Models.PMF;
@@ -15,6 +13,10 @@
     using Commands;
     using System.Reflection;
 
+    /// <summary>
+    /// Presenter for the <see cref="BiomassRemoval"/> class.
+    /// Displays the properties for all <see cref="OrganBiomassRemovalType"/> children.
+    /// </summary>
     class BiomassRemovalPresenter : GridPresenter, IPresenter
     {
         /// <summary>
@@ -68,11 +70,12 @@
 
         /// <summary>
         /// Each row in the grid displays a property of a RemovalType model.
-        /// This method finds the model whose data is being displayed on a given row.
+        /// This method finds the index of the model whose data is being 
+        /// displayed on a given row.
         /// </summary>
         /// <param name="row">Index of the row.</param>
-        /// <returns>The model, or null if not found.</returns>
-        private int GetRemovalType(int row)
+        /// <returns>Index of the model, or -1 if not found.</returns>
+        private int GetModelIndex(int row)
         {
             if (row >= grid.DataSource.Rows.Count)
                 throw new Exception(string.Format("Attempted to get the removal type for row {0}, but the grid only contains {1} rows.", row + 1, grid.DataSource.Rows.Count));
@@ -99,13 +102,22 @@
                     throw new Exception("The value you entered was not valid for its datatype.");
                 foreach (IGridCell cell in args.ChangedCells)
                 {
-                    int index = GetRemovalType(cell.RowIndex);
+                    int index = GetModelIndex(cell.RowIndex);
                     IModel removalType = Apsim.Child(model, grid.GetCell(0, index).Value.ToString());
                     if (removalType != null)
                     {
                         List<MemberInfo> members = PropertyPresenter.GetMembers(removalType);
-                        string propertyName = members[cell.RowIndex - index - 1].Name;
-                        ChangeProperty command = new ChangeProperty(removalType, propertyName, cell.Value);
+                        MemberInfo member = members[cell.RowIndex - index - 1];
+                        IVariable property = null;
+                        if (member is PropertyInfo)
+                            property = new VariableProperty(model, member as PropertyInfo);
+                        else if (member is FieldInfo)
+                            property = new VariableField(model, member as FieldInfo);
+                        else
+                            throw new Exception(string.Format("Unable to find property {0} in model {1}", grid.GetCell(0, cell.RowIndex).Value.ToString(), removalType.Name));
+                        object value = PropertyPresenter.FormatValueForProperty(property, cell.Value);
+
+                        ChangeProperty command = new ChangeProperty(removalType, property.Name, value);
                         presenter.CommandHistory.Add(command);
                     }
                 }
