@@ -444,6 +444,8 @@ namespace Models.PMF.Phen
                     row[1] = child.Name;
                     row[2] = (child as IPhase).Start;
                     row[3] = (child as IPhase).End;
+                    if (child is GotoPhase)
+                        row[3] = (child as GotoPhase).PhaseNameToGoto;
                     tableData.Rows.Add(row);
                     N++;
                 }
