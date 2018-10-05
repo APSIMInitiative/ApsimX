@@ -228,20 +228,22 @@ namespace Models.Graph
             if (FactorToVaryMarkers != null)
                 factorsToKeep.Add(FactorToVaryMarkers);
             factorsToKeep = factorsToKeep.Distinct().ToList();
+            if (factorsToKeep.Count != 0)
+            {
+                var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
 
-            var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
+                foreach (var factor in factors)
+                    foreach (var factorToRemove in factorsToRemove)
+                        factor.RemoveFactor(factorToRemove);
 
-            foreach (var factor in factors)
-                foreach (var factorToRemove in factorsToRemove)
-                    factor.RemoveFactor(factorToRemove);
+                // Remove empty factors
+                factors.RemoveAll(f => f.Factors.Count == 0);
 
-            // Remove empty factors
-            factors.RemoveAll(f => f.Factors.Count == 0);
-
-            //// Make sure each factor has the factors we want to keep.
-            //foreach (var factor in factors)
-            //    foreach (var factorToKeep in factorsToKeep)
-            //        factor.AddFactorIfNotExist(factorToKeep, "?");
+                //// Make sure each factor has the factors we want to keep.
+                //foreach (var factor in factors)
+                //    foreach (var factorToKeep in factorsToKeep)
+                //        factor.AddFactorIfNotExist(factorToKeep, "?");
+            }
         }
 
         /// <summary>

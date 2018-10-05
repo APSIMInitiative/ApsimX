@@ -21,6 +21,7 @@
     [ViewName("UserInterface.Views.DualGridView")]
     [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
+    [ValidParent(ParentType = typeof(Folder))]
     public class Morris : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
         /// <summary>A list of factors that we are to run</summary>
@@ -32,8 +33,14 @@
         /// <summary>Parameter values coming back from R</summary>
         public DataTable ParameterValues { get; set; }
 
-        /// <summary>The numebr of paths to run</summary>
+        /// <summary>The number of paths to run</summary>
         public int NumPaths { get; set; } = 200;
+
+        /// <summary>The number of intervals</summary>
+        public int NumIntervals { get; set; } = 20;
+
+        /// <summary>The jump parameter</summary>
+        public int Jump { get; set; } = 10;
 
         /// <summary>
         /// List of parameters
@@ -81,6 +88,17 @@
                 constantRow["Property"] = "Number of paths:";
                 constantRow["Value"] = NumPaths;
                 constant.Rows.Add(constantRow);
+
+                constantRow = constant.NewRow();
+                constantRow["Property"] = "Number of intervals:";
+                constantRow["Value"] = NumIntervals;
+                constant.Rows.Add(constantRow);
+
+                constantRow = constant.NewRow();
+                constantRow["Property"] = "Jump:";
+                constantRow["Value"] = Jump;
+                constant.Rows.Add(constantRow);
+
                 tables.Add(constant);
 
                 // Add a parameter table
@@ -106,6 +124,8 @@
             set
             {
                 NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
+                NumIntervals = Convert.ToInt32(value[0].Rows[1][1]);
+                Jump = Convert.ToInt32(value[0].Rows[2][1]);
 
                 Parameters.Clear();
                 foreach (DataRow row in value[1].Rows)
@@ -173,6 +193,11 @@
             names.Add("SimulationName");
             values.Add(simulation.Name);
 
+            // Add path to report files
+            int path = (simulationNumber - 1) / (Parameters.Count + 1) + 1;
+            names.Add("Path");
+            values.Add(path.ToString());
+
             foreach (FactorValue factor in factorValues)
             {
                 names.Add(factor.Name);
@@ -213,7 +238,7 @@
         /// <summary>Gets a list of factors</summary>
         public List<ISimulationGeneratorFactors> GetFactors()
         {
-            string[] columnNames = new string[] { "Param", "Year" };
+            string[] columnNames = new string[] { "Parameter", "Year" };
             string[] columnValues = new string[2];
 
             var factors = new List<ISimulationGeneratorFactors>();
@@ -226,7 +251,7 @@
                     factors.Add(new SimulationGeneratorFactors(new string[] { "Year" }, new string[] { year.ToString() },
                     "Year", year.ToString()));
                 }
-                factors.Add(new SimulationGeneratorFactors(new string[] { "Param" }, new string[] { param.Name },
+                factors.Add(new SimulationGeneratorFactors(new string[] { "Parameter" }, new string[] { param.Name },
                 "Parameter", param.Name));
             }
             return factors;
@@ -286,6 +311,8 @@
                 script = reader.ReadToEnd();
 
             script = script.Replace("%NUMPATHS%", NumPaths.ToString());
+            script = script.Replace("%NUMINTERVALS%", (NumIntervals + 1).ToString());
+            script = script.Replace("%JUMP%", Jump.ToString());
             script = script.Replace("%PARAMNAMES%", StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\""));
             script = script.Replace("%PARAMLOWERS%", StringUtilities.Build(Parameters.Select(p => p.LowerBound), ","));
             script = script.Replace("%PARAMUPPERS%", StringUtilities.Build(Parameters.Select(p => p.UpperBound), ","));
@@ -332,7 +359,7 @@
         /// <param name="dataStore">The data store.</param>
         public void Run(IStorageReader dataStore)
         {
-            string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%'";
+            string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
             DataTable predictedData = dataStore.RunQuery(sql);
             if (predictedData != null)
             {
@@ -395,13 +422,13 @@
                 "apsimMorris<-morris(model=NULL" + Environment.NewLine +
                 " ,params #string vector of parameter names" + Environment.NewLine +
                 " ,{1} #no of paths within the total parameter space" + Environment.NewLine +
-                " ,design=list(type=\"oat\",levels=20,grid.jump=10)" + Environment.NewLine +
-                " ,binf=c({2}) #min for each parameter" + Environment.NewLine +
-                " ,bsup=c({3}) #max for each parameter" + Environment.NewLine +
+                " ,design=list(type=\"oat\",levels={2},grid.jump={3})" + Environment.NewLine +
+                " ,binf=c({4}) #min for each parameter" + Environment.NewLine +
+                " ,bsup=c({5}) #max for each parameter" + Environment.NewLine +
                 " ,scale=T" + Environment.NewLine +
                 " )" + Environment.NewLine +
-                "apsimMorris$X <- read.csv(\"{4}\")" + Environment.NewLine +
-                "values = read.csv(\"{5}\")" + Environment.NewLine +
+                "apsimMorris$X <- read.csv(\"{6}\")" + Environment.NewLine +
+                "values = read.csv(\"{7}\")" + Environment.NewLine +
                 "allEE <- data.frame()" + Environment.NewLine +
                 "allStats <- data.frame()" + Environment.NewLine +
                 "for (columnName in colnames(values))" + Environment.NewLine +
@@ -423,9 +450,9 @@
                 " allStats <- rbind(allStats, stats)" + Environment.NewLine +
 
                 "}}" + Environment.NewLine +
-                "write.csv(allEE,\"{6}\", row.names=FALSE)" + Environment.NewLine +
-                "write.csv(allStats, \"{7}\", row.names=FALSE)" + Environment.NewLine,
-                paramNames, NumPaths, lowerBounds, upperBounds,
+                "write.csv(allEE,\"{8}\", row.names=FALSE)" + Environment.NewLine +
+                "write.csv(allStats, \"{9}\", row.names=FALSE)" + Environment.NewLine,
+                paramNames, NumPaths, NumIntervals+1, Jump, lowerBounds, upperBounds,
                 morrisParametersFileName.Replace("\\", "/"),
                 apsimVariableFileName.Replace("\\", "/"),
                 eeFileName.Replace("\\", "/"),
@@ -449,7 +476,7 @@
                 DataView eeView = new DataView(eeDataRaw);
 
                 DataTable eeTable = new DataTable(Name + "PathAnalysis");
-                IndexedDataTable eeTableKey = new IndexedDataTable(eeTable, new string[] { "Param", "Year" });
+                IndexedDataTable eeTableKey = new IndexedDataTable(eeTable, new string[] { "Parameter", "Year" });
 
                 // Create a path variable. 
                 var pathValues = Enumerable.Range(1, NumPaths).ToArray();
@@ -488,7 +515,7 @@
                 // 18.6196168461051, 18.6196168461051, 15.1496277765849, "CN2","FallowRunoff1996"
                 // -7.12794888887507, 7.12794888887507, 5.54014788597839, "Cona","FallowRunoff1996"
                 DataTable muStarTable = new DataTable(Name + "Statistics");
-                IndexedDataTable tableKey = new IndexedDataTable(muStarTable, new string[2] { "Param", "Year" });
+                IndexedDataTable tableKey = new IndexedDataTable(muStarTable, new string[2] { "Parameter", "Year" });
 
                 DataTable statsDataRaw = ApsimTextFile.ToTable(statsFileName);
                 foreach (DataRow row in statsDataRaw.Rows)
