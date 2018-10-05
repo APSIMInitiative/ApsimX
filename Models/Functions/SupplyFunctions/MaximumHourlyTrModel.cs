@@ -262,13 +262,13 @@ namespace Models.Functions.SupplyFunctions
             // change to scaling each hour until sum of hourlyTr = dailySupply
             hourlyTr = new List<double>(hourlyTrCappedTr);
             
-            while (hourlyTr.Sum() > myRoot.TotalWaterSupply)
+            while (hourlyTr.Sum() > myRoot.TotalExtractableWater)
             {
                 for (int i = 23; i >= 0; i--)
                 {
                     double sumTR = 0;
                     for (int j = 0; j < i; j++) sumTR += hourlyTr[j];
-                    double remTR = Math.Max(0.0, Math.Min(myRoot.TotalWaterSupply - sumTR, hourlyTr[i]));
+                    double remTR = Math.Max(0.0, Math.Min(myRoot.TotalExtractableWater - sumTR, hourlyTr[i]));
                     hourlyTr[i] = remTR;
                     if (remTR > 0) break;
                 }
@@ -277,13 +277,13 @@ namespace Models.Functions.SupplyFunctions
             //double reduction = 0.99;
             //double maxHourlyT = hourlyTr.Max();
 
-            //while (hourlyTr.Sum() > myRoot.TotalWaterSupply)
+            //while (hourlyTr.Sum() > myRoot.TotalExtractableWater)
             //{
             //    maxHourlyT *= reduction;
             //    for (int i = 0; i < 24; i++)
             //        if (hourlyTr[i] >= maxHourlyT)
             //        {
-            //            if (myRoot.TotalWaterSupply == 0)
+            //            if (myRoot.TotalExtractableWater == 0)
             //                hourlyTr[i] = 0;
             //            else
             //                hourlyTr[i] = maxHourlyT;

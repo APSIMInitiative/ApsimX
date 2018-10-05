@@ -243,8 +243,8 @@ namespace Models.PMF.Organs
             ZoneInitialDM = new List<double>();
         }
 
-        /// <summary>Total water supply</summary>
-        public double TotalWaterSupply { get; set; }
+        /// <summary>Total extractable water as a function of root depth and crop LL</summary>
+        public double TotalExtractableWater { get; set; }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return false; } }
@@ -842,7 +842,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
         private void DoSupplyCalculations()
         {
-            AvailableWater();
+            CalcExtractableWater();
             dmMReallocationSupply = AvailableDMReallocation();
             dmRetranslocationSupply = AvailableDMRetranslocation();
             nReallocationSupply = AvailableNReallocation();
@@ -850,15 +850,21 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes root total water supply.</summary>
-        private void AvailableWater()
+        private void CalcExtractableWater()
         {
+            double[] LL = PlantZone.soil.LL(Plant.Name);
+            double[] KL = PlantZone.soil.KL(Plant.Name);
+            double[] SWmm = PlantZone.soil.Water;
+            double[] DZ = PlantZone.soil.Thickness;
+
             double supply = 0;
-            for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
+            for (int layer = 0; layer < LL.Length; layer++)
             {
                 if (layer <= Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness))
-                    supply += PlantZone.soil.Water[layer] * Soil.ProportionThroughLayer(layer, Depth, PlantZone.soil.Thickness);
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
+                        Soil.ProportionThroughLayer(layer, Depth, DZ));
             }
-            TotalWaterSupply = supply;
+            TotalExtractableWater = supply;
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>
