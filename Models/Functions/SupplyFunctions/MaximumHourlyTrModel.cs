@@ -36,13 +36,13 @@ namespace Models.Functions.SupplyFunctions
         [Link]
         private Clock myClock = null;
 
-        /// <summary>The Soil</summary>
-        [Link]
-        private Soil mySoil = null;
-
         /// <summary>The Leaf organ</summary>
         [Link]
         private Leaf myLeaf = null;
+
+        /// <summary>The Root organ</summary>
+        [Link]
+        private Root myRoot = null;
 
         /// <summary>The radiation use efficiency</summary>
         [Link]
@@ -261,22 +261,34 @@ namespace Models.Functions.SupplyFunctions
             // set hourlyTr = hourlyVPDCappedTr (hourlyTr becomes uptake)
             // change to scaling each hour until sum of hourlyTr = dailySupply
             hourlyTr = new List<double>(hourlyTrCappedTr);
-
-            double reduction = 0.99;
-            double maxHourlyT = hourlyTr.Max();
-
-            while (hourlyTr.Sum() > mySoil.PAWmm.Sum())
+            
+            while (hourlyTr.Sum() > myRoot.TotalWaterSupply)
             {
-                maxHourlyT *= reduction;
-                for (int i = 0; i < 24; i++)
-                    if (hourlyTr[i] >= maxHourlyT)
-                    {
-                        if (mySoil.PAWmm.Sum() == 0)
-                            hourlyTr[i] = 0;
-                        else
-                            hourlyTr[i] = maxHourlyT;
-                    }
+                for (int i = 23; i >= 0; i--)
+                {
+                    double sumTR = 0;
+                    for (int j = 0; j < i; j++) sumTR += hourlyTr[j];
+                    double remTR = Math.Max(0.0, Math.Min(myRoot.TotalWaterSupply - sumTR, hourlyTr[i]));
+                    hourlyTr[i] = remTR;
+                    if (remTR > 0) break;
+                }
             }
+
+            //double reduction = 0.99;
+            //double maxHourlyT = hourlyTr.Max();
+
+            //while (hourlyTr.Sum() > myRoot.TotalWaterSupply)
+            //{
+            //    maxHourlyT *= reduction;
+            //    for (int i = 0; i < 24; i++)
+            //        if (hourlyTr[i] >= maxHourlyT)
+            //        {
+            //            if (myRoot.TotalWaterSupply == 0)
+            //                hourlyTr[i] = 0;
+            //            else
+            //                hourlyTr[i] = maxHourlyT;
+            //        }
+            //}
         }
         //------------------------------------------------------------------------------------------------
 

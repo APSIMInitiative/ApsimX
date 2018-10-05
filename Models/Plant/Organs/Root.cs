@@ -11,6 +11,7 @@ namespace Models.PMF.Organs
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using System.Linq;
 
     ///<summary>
     /// # [Name]
@@ -241,6 +242,9 @@ namespace Models.PMF.Organs
             ZoneRootDepths = new List<double>();
             ZoneInitialDM = new List<double>();
         }
+
+        /// <summary>Total water supply</summary>
+        public double TotalWaterSupply { get; set; }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return false; } }
@@ -838,10 +842,23 @@ namespace Models.PMF.Organs
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
         private void DoSupplyCalculations()
         {
+            AvailableWater();
             dmMReallocationSupply = AvailableDMReallocation();
             dmRetranslocationSupply = AvailableDMRetranslocation();
             nReallocationSupply = AvailableNReallocation();
             nRetranslocationSupply = AvailableNRetranslocation();
+        }
+
+        /// <summary>Computes root total water supply.</summary>
+        private void AvailableWater()
+        {
+            double supply = 0;
+            for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
+            {
+                if (layer <= Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness))
+                    supply += PlantZone.soil.Water[layer] * Soil.ProportionThroughLayer(layer, Depth, PlantZone.soil.Thickness);
+            }
+            TotalWaterSupply = supply;
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>
