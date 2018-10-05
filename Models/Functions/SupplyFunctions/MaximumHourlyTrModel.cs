@@ -129,7 +129,7 @@ namespace Models.Functions.SupplyFunctions
             {
                 hourlyDM = new List<double>();
                 for (int i = 0; i < 24; i++) hourlyDM.Add(0.0);
-                //myLeaf.PotentialEP = 0;
+                myLeaf.PotentialEP = 0;
             }
             return hourlyDM.Sum();
         }
@@ -283,8 +283,7 @@ namespace Models.Functions.SupplyFunctions
         private void CalcBiomass()
         {
             hourlyDM = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef /hourlyVPD[i]);
-            //for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / Math.Min(hourlyVPD[i], MaxVPD));
+            for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -310,11 +309,11 @@ namespace Models.Functions.SupplyFunctions
         private double GlobalRadiation(double oTime, double latitude, double solarDec, double dayLH, double solar)
         {
             double Alpha = Math.Asin(Math.Sin(latitude) * Math.Sin(solarDec) +
-                  Math.Cos(latitude) * Math.Cos(solarDec) * Math.Cos((Math.PI / 12.0) * dayLH * (oTime - 0.5))); //global variable
-            double ITot = solar * (1.0 + Math.Sin(2.0 * Math.PI * oTime + 1.5 * Math.PI)) / (dayLH * 60.0 * 60.0); //global variable
-            double IDiff = 0.17 * 1360.0 * Math.Sin(Alpha) / 1000000.0; //global variable
+                  Math.Cos(latitude) * Math.Cos(solarDec) * Math.Cos((Math.PI / 12.0) * dayLH * (oTime - 0.5)));
+            double ITot = solar * (1.0 + Math.Sin(2.0 * Math.PI * oTime + 1.5 * Math.PI)) / (dayLH * 60.0 * 60.0);
+            double IDiff = 0.17 * 1360.0 * Math.Sin(Alpha) / 1000000.0;
             if (IDiff > ITot) IDiff = ITot;
-            return ITot - IDiff; //global variable
+            return ITot - IDiff;
         }
         //------------------------------------------------------------------------------------------------       
     }
