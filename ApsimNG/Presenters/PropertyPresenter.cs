@@ -137,6 +137,7 @@ namespace UserInterface.Presenters
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
             FillTable(table);
+            grid.DataSource = table;
             FormatGrid();
             if (selectedCell != null)
             {
@@ -164,7 +165,20 @@ namespace UserInterface.Presenters
 
             PopulateGrid(model);
         }
-        
+
+        /// <summary>
+        /// Gets all public instance members of a given type,
+        /// sorted by the line number of the member's declaration.
+        /// </summary>
+        /// <param name="o">Object whose members will be retrieved.</param>
+        public static List<MemberInfo> GetMembers(object o)
+        {
+            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
+            members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
+            var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber).ToList();
+            return orderedMembers;
+        }
+
         /// <summary>
         /// Find all properties from the model and fill this.properties.
         /// </summary>
@@ -175,9 +189,7 @@ namespace UserInterface.Presenters
             properties.Clear();
             if (this.model != null)
             {
-                var members = model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
-                members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
-                var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber);
+                var orderedMembers = GetMembers(model);
 
                 foreach (MemberInfo member in orderedMembers)
                 {
@@ -274,7 +286,7 @@ namespace UserInterface.Presenters
         /// Fill the specified table with columns and rows based on this.Properties
         /// </summary>
         /// <param name="table">The table that needs to be filled</param>
-        private void FillTable(DataTable table)
+        public void FillTable(DataTable table)
         {
             foreach (IVariable property in properties)
             {
@@ -285,8 +297,6 @@ namespace UserInterface.Presenters
                 else
                     table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
             }
-
-            grid.DataSource = table;
         }
 
         /// <summary>
@@ -555,6 +565,55 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// This method takes a value from the grid and formats it appropriately,
+        /// based on the data type of the property to which the value is going to
+        /// be assigned.
+        /// </summary>
+        /// <param name="property">Property to which the value will be assigned.</param>
+        /// <param name="value">Value which is going to be assigned to property.</param>
+        public static object FormatValueForProperty(IVariable property, object value)
+        {
+            if (property.DataType.IsArray && value != null)
+            {
+                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (property.DataType == typeof(double[]))
+                {
+                    value = MathUtilities.StringsToDoubles(stringValues);
+                }
+                else if (property.DataType == typeof(int[]))
+                {
+                    value = MathUtilities.StringsToDoubles(stringValues);
+                }
+                else if (property.DataType == typeof(string[]))
+                {
+                    value = stringValues;
+                }
+                else
+                {
+                    throw new ApsimXException(property.Object as IModel, "Invalid property type: " + property.DataType.ToString());
+                }
+            }
+            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
+            {
+                value = Apsim.Find(property.Object as IModel, value.ToString()) as IPlant;
+            }
+            else if (property.DataType == typeof(DateTime))
+            {
+                value = Convert.ToDateTime(value);
+            }
+            else if (property.DataType.IsEnum)
+            {
+                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
+            }
+            else if (property.Display != null &&
+                     property.Display.Type == DisplayType.Model)
+            {
+                value = Apsim.Get(property.Object as IModel, value.ToString());
+            }
+            return value;
+        }
+
+        /// <summary>
         /// Set the value of the specified property
         /// </summary>
         /// <param name="property">The property to set the value of</param>
@@ -563,44 +622,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (property.DataType.IsArray && value != null)
-                {
-                    string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (property.DataType == typeof(double[]))
-                    {
-                        value = MathUtilities.StringsToDoubles(stringValues);
-                    }
-                    else if (property.DataType == typeof(int[]))
-                    {
-                        value = MathUtilities.StringsToDoubles(stringValues);
-                    }
-                    else if (property.DataType == typeof(string[]))
-                    {
-                        value = stringValues;
-                    }
-                    else
-                    {
-                        throw new ApsimXException(model, "Invalid property type: " + property.DataType.ToString());
-                    }
-                }
-                else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                {
-                    value = Apsim.Find(model, value.ToString()) as IPlant;
-                }
-                else if (property.DataType == typeof(DateTime))
-                {
-                    value = Convert.ToDateTime(value);
-                }
-                else if (property.DataType.IsEnum)
-                {
-                    value = VariableProperty.ParseEnum(property.DataType, value.ToString());
-                }
-                else if (property.Display != null &&
-                         property.Display.Type == DisplayType.Model)
-                {
-                    value = Apsim.Get(model, value.ToString());
-                }
-
+                value = FormatValueForProperty(property, value);
                 ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
                 presenter.CommandHistory.Add(cmd);
             }
