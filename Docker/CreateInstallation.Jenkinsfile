@@ -40,7 +40,7 @@ pipeline {
 						exit 1
 					)
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
-					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e PULL_ID -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+					docker run -m 16g --cpu-count 16 --cpu-percent 100 -e PULL_ID -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true
@@ -215,7 +215,7 @@ pipeline {
 					)
 					call ApsimX\\Docker\\cleanup.bat
 					docker build -m 16g -t deploy ApsimX\\Docker\\Deploy
-					docker run -m 16g -e "PASSWORD=%CHANGE_DB_CREDS_PSW%" -e NUMBER_OF_PROCESSORS -e ISSUE_NUMBER -e PULL_ID -e ISSUE_TITLE -e RELEASED deploy
+					docker run -m 16g -e "PASSWORD=%CHANGE_DB_CREDS_PSW%" -e ISSUE_NUMBER -e PULL_ID -e ISSUE_TITLE -e RELEASED deploy
 				'''
 			}
 		}

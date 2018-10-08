@@ -162,7 +162,8 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
                 tags.Add(new AutoDocumentation.Paragraph("Cultivar class for holding cultivar overrides.", indent));
                 tags.Add(new AutoDocumentation.Paragraph(Name + " makes the following changes:", indent));
-                tags.Add(new AutoDocumentation.Paragraph(Commands.Aggregate((a, b) => a + "<br>" + b), indent));
+                if (Commands != null)
+                    tags.Add(new AutoDocumentation.Paragraph(Commands.Aggregate((a, b) => a + "<br>" + b), indent));
             }
         }
     }
