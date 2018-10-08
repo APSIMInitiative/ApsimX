@@ -584,6 +584,7 @@ namespace UserInterface.Commands
                     if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
+                        para.Format.KeepWithNext = true;
                         if (heading.headingLevel == 1)
                             para.Format.OutlineLevel = OutlineLevel.Level1;
                         else if (heading.headingLevel == 2)

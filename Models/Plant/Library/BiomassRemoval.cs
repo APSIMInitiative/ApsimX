@@ -16,6 +16,8 @@ namespace Models.PMF.Library
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.BiomassRemovalPresenter")]
     public class BiomassRemoval : Model, ICustomDocumentation
     {
         [Link]
@@ -240,6 +242,9 @@ namespace Models.PMF.Library
                     row["% Live To Residue"] = removal.FractionLiveToResidue * 100;
                     row["% Dead To Residue"] = removal.FractionDeadToResidue * 100;
                 }
+
+                foreach (Memo childMemo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(childMemo, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Table(data, indent));
             }

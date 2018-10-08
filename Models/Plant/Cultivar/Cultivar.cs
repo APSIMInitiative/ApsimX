@@ -162,7 +162,8 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
                 tags.Add(new AutoDocumentation.Paragraph("This cultivar is defined by overriding some of the base parameters of the plant model.", indent));
                 tags.Add(new AutoDocumentation.Paragraph(Name + " makes the following changes:", indent));
-                tags.Add(new AutoDocumentation.Paragraph(Commands.Aggregate((a, b) => a + "<br>" + b), indent));
+                if (Commands != null)
+                    tags.Add(new AutoDocumentation.Paragraph(Commands.Aggregate((a, b) => a + "<br>" + b), indent));
             }
         }
     }
