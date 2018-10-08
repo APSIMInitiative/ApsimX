@@ -1,19 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IModelAsTable.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Interfaces
+﻿namespace Models.Interfaces
 {
-    using System;
+    using System.Collections.Generic;
     using System.Data;
 
     /// <summary>This interface describes the way a grid presenter talks to a model via a data table.</summary>
     public interface IModelAsTable
     {
         /// <summary>
-        /// Gets or sets the table of values.
+        /// Gets or sets the tables of values.
         /// </summary>
-        DataTable Table { get; set; }
+        List<DataTable> Tables { get; set; }
     }
 }
