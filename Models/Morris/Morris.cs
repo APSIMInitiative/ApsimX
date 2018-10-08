@@ -276,7 +276,7 @@
         {
             if (allCombinations.Count == 0)
             {
-                ParameterValues = CalculateMorrisParameterValues();
+                ParameterValues = RunRToGetParameterValues();
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");
 
@@ -301,50 +301,6 @@
         }
 
         /// <summary>
-        /// Get a list of parameter values that we are to run. Call R to do this.
-        /// </summary>
-        private DataTable CalculateMorrisParameterValues()
-        {
-            string script;
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.Morris.R"))
-            using (StreamReader reader = new StreamReader(s))
-                script = reader.ReadToEnd();
-
-            script = script.Replace("%NUMPATHS%", NumPaths.ToString());
-            script = script.Replace("%NUMINTERVALS%", (NumIntervals + 1).ToString());
-            script = script.Replace("%JUMP%", Jump.ToString());
-            script = script.Replace("%PARAMNAMES%", StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\""));
-            script = script.Replace("%PARAMLOWERS%", StringUtilities.Build(Parameters.Select(p => p.LowerBound), ","));
-            script = script.Replace("%PARAMUPPERS%", StringUtilities.Build(Parameters.Select(p => p.UpperBound), ","));
-            string rFileName = Path.GetTempFileName();
-            File.WriteAllText(rFileName, script);
-            R r = new R();
-            Console.WriteLine(r.GetPackage("sensitivity"));
-            return r.RunToTable(rFileName);
-        }
-
-        /// <summary>
-        /// Get a list of morris values (ee, mustar, sigmastar) from R
-        /// </summary>
-        private DataTable CalculateMorrisValues()
-        {
-            string tempFileName = Path.GetTempFileName();
-
-            string script = string.Format
-            ("T <- read.csv(\"{0}\"" + Environment.NewLine +
-            "DF <- as.data.frame(T)" + Environment.NewLine +
-            "APSIMMorris$X <- DF" + Environment.NewLine +
-            "tell(APSIMMorris)" + Environment.NewLine,
-            tempFileName);
-
-            string rFileName = Path.GetTempFileName();
-            File.WriteAllText(rFileName, script);
-            R r = new R();
-            Console.WriteLine(r.GetPackage("sensitivity"));
-            return r.RunToTable(rFileName);
-        }
-
-        /// <summary>
         /// Gets the base simulation
         /// </summary>
         public Simulation BaseSimulation
@@ -363,21 +319,11 @@
             DataTable predictedData = dataStore.RunQuery(sql);
             if (predictedData != null)
             {
-                // Setup some file names
-                string morrisParametersFileName = Path.Combine(Path.GetTempPath(), "parameters.csv");
-                string apsimVariableFileName = Path.Combine(Path.GetTempPath(), "apsimvariable.csv");
-                string eeFileName = Path.Combine(Path.GetTempPath(), "ee.csv");
-                string statsFileName = Path.Combine(Path.GetTempPath(), "stats.csv");
-                string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
 
                 // Determine how many years we have per simulation
                 DataView view = new DataView(predictedData);
                 view.RowFilter = "SimulationName='" + Name + "Simulation1'";
                 Years = DataTableUtilities.GetColumnAsIntegers(view, "Clock.Today.Year");
-
-                // Write parameters
-                using (StreamWriter writer = new StreamWriter(morrisParametersFileName))
-                    DataTableUtilities.DataTableToText(ParameterValues, 0, ",", true, writer);
 
                 // Create a table of all predicted values
                 DataTable predictedValues = new DataTable();
@@ -408,62 +354,10 @@
                     }
                 }
 
-                // write predicted values file
-                using (StreamWriter writer = new StreamWriter(apsimVariableFileName))
-                    DataTableUtilities.DataTableToText(predictedValues, 0, ",", true, writer);
-
-                // write script
-                string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
-                string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
-                string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
-                string script = string.Format
-                ("library('sensitivity')" + Environment.NewLine +
-                "params <- c({0})" + Environment.NewLine +
-                "apsimMorris<-morris(model=NULL" + Environment.NewLine +
-                " ,params #string vector of parameter names" + Environment.NewLine +
-                " ,{1} #no of paths within the total parameter space" + Environment.NewLine +
-                " ,design=list(type=\"oat\",levels={2},grid.jump={3})" + Environment.NewLine +
-                " ,binf=c({4}) #min for each parameter" + Environment.NewLine +
-                " ,bsup=c({5}) #max for each parameter" + Environment.NewLine +
-                " ,scale=T" + Environment.NewLine +
-                " )" + Environment.NewLine +
-                "apsimMorris$X <- read.csv(\"{6}\")" + Environment.NewLine +
-                "values = read.csv(\"{7}\")" + Environment.NewLine +
-                "allEE <- data.frame()" + Environment.NewLine +
-                "allStats <- data.frame()" + Environment.NewLine +
-                "for (columnName in colnames(values))" + Environment.NewLine +
-                "{{" + Environment.NewLine +
-                " apsimMorris$y <- values[[columnName]]" + Environment.NewLine +
-                " tell(apsimMorris)" + Environment.NewLine +
-
-                " ee <- data.frame(apsimMorris$ee)" + Environment.NewLine +
-                " ee$variable <- columnName" + Environment.NewLine +
-                " ee$path <- c(1:{1})" + Environment.NewLine +
-                " allEE <- rbind(allEE, ee)" + Environment.NewLine +
-
-                " mu <- apply(apsimMorris$ee, 2, mean)" + Environment.NewLine +
-                " mustar <- apply(apsimMorris$ee, 2, function(x) mean(abs(x)))" + Environment.NewLine +
-                " sigma <- apply(apsimMorris$ee, 2, sd)" + Environment.NewLine +
-                " stats <- data.frame(mu, mustar, sigma)" + Environment.NewLine +
-                " stats$param <- params" + Environment.NewLine +
-                " stats$variable <- columnName" + Environment.NewLine +
-                " allStats <- rbind(allStats, stats)" + Environment.NewLine +
-
-                "}}" + Environment.NewLine +
-                "write.csv(allEE,\"{8}\", row.names=FALSE)" + Environment.NewLine +
-                "write.csv(allStats, \"{9}\", row.names=FALSE)" + Environment.NewLine,
-                paramNames, NumPaths, NumIntervals+1, Jump, lowerBounds, upperBounds,
-                morrisParametersFileName.Replace("\\", "/"),
-                apsimVariableFileName.Replace("\\", "/"),
-                eeFileName.Replace("\\", "/"),
-                statsFileName.Replace("\\", "/"));
-                File.WriteAllText(rFileName, script);
-
                 // Run R
-                R r = new R();
-                Console.WriteLine(r.GetPackage("sensitivity"));
-                r.RunToTable(rFileName);
-
+                DataTable eeDataRaw;
+                DataTable statsDataRaw;
+                RunRPostSimulation(predictedValues, out eeDataRaw, out statsDataRaw);
 
                 // Get ee data from R and store in ee table.
                 // EE data from R looks like:
@@ -472,11 +366,8 @@
                 // - 25.790599484188, 0.0170777988614538, -0.0265991133629069,58.0240658644712,"FallowEvaporation1996",2
                 // - 26.113599477728, 0.0113851992409871, 0.0113996200126667,57.9689677010766,"FallowEvaporation1996",3
                 // - 33.284199334316, 0.0323193916349732, -0.334388853704853,60.5376820772641,"FallowEvaporation1996",4
-                DataTable eeDataRaw = ApsimTextFile.ToTable(eeFileName);
                 DataView eeView = new DataView(eeDataRaw);
-
-                DataTable eeTable = new DataTable(Name + "PathAnalysis");
-                IndexedDataTable eeTableKey = new IndexedDataTable(eeTable, new string[] { "Parameter", "Year" });
+                IndexedDataTable eeTableKey = new IndexedDataTable(new string[] { "Parameter", "Year" });
 
                 // Create a path variable. 
                 var pathValues = Enumerable.Range(1, NumPaths).ToArray();
@@ -502,6 +393,8 @@
                         eeTableKey.SetValues(variableName + ".MuStar", runningMean);
                     }
                 }
+                DataTable eeTable = eeTableKey.ToTable();
+                eeTable.TableName = Name + "PathAnalysis";
 
                 // Get stats data from R and store in MuStar table.
                 // Stats data coming back from R looks like:
@@ -514,10 +407,8 @@
                 // 8.09850688306722, 8.09852589447407, 15.1988107373113, "FASW","FallowRunoff1996"
                 // 18.6196168461051, 18.6196168461051, 15.1496277765849, "CN2","FallowRunoff1996"
                 // -7.12794888887507, 7.12794888887507, 5.54014788597839, "Cona","FallowRunoff1996"
-                DataTable muStarTable = new DataTable(Name + "Statistics");
-                IndexedDataTable tableKey = new IndexedDataTable(muStarTable, new string[2] { "Parameter", "Year" });
+                IndexedDataTable tableKey = new IndexedDataTable(new string[2] { "Parameter", "Year" });
 
-                DataTable statsDataRaw = ApsimTextFile.ToTable(statsFileName);
                 foreach (DataRow row in statsDataRaw.Rows)
                 {
                     string variable = row["variable"].ToString();
@@ -538,12 +429,117 @@
                             tableKey.Set(descriptiveColumnName, view[0][descriptiveColumnName]);
                     }
                 }
+                DataTable muStarTable = tableKey.ToTable();
+                muStarTable.TableName = Name + "Statistics";
 
                 dataStore.DeleteDataInTable(eeTable.TableName);
                 dataStore.WriteTable(eeTable);
                 dataStore.DeleteDataInTable(muStarTable.TableName);
                 dataStore.WriteTable(muStarTable);
             }
+        }
+
+
+        /// <summary>
+        /// Get a list of parameter values that we are to run. Call R to do this.
+        /// </summary>
+        private DataTable RunRToGetParameterValues()
+        {
+            string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+            string script = GetMorrisRScript();
+            script += "write.table(apsimMorris$X, row.names = F, col.names = T, sep = \",\")" + Environment.NewLine;
+            File.WriteAllText(rFileName, script);
+            R r = new R();
+            Console.WriteLine(r.GetPackage("sensitivity"));
+            return r.RunToTable(rFileName);
+        }
+
+        /// <summary>
+        /// Get a list of parameter values that we are to run. Call R to do this.
+        /// </summary>
+        private void RunRPostSimulation(DataTable predictedValues, out DataTable eeDataRaw, out DataTable statsDataRaw)
+        {
+            string morrisParametersFileName = Path.Combine(Path.GetTempPath(), "parameters.csv");
+            string apsimVariableFileName = Path.Combine(Path.GetTempPath(), "apsimvariable.csv");
+            string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+            string eeFileName = Path.Combine(Path.GetTempPath(), "ee.csv");
+            string statsFileName = Path.Combine(Path.GetTempPath(), "stats.csv");
+
+            // write predicted values file
+            using (StreamWriter writer = new StreamWriter(apsimVariableFileName))
+                DataTableUtilities.DataTableToText(predictedValues, 0, ",", true, writer);
+
+            // Write parameters
+            using (StreamWriter writer = new StreamWriter(morrisParametersFileName))
+                DataTableUtilities.DataTableToText(ParameterValues, 0, ",", true, writer);
+
+            string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
+            string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
+            string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
+            string script = GetMorrisRScript();
+            script += string.Format
+            ("apsimMorris$X <- read.csv(\"{0}\")" + Environment.NewLine +
+            "values = read.csv(\"{1}\")" + Environment.NewLine +
+            "allEE <- data.frame()" + Environment.NewLine +
+            "allStats <- data.frame()" + Environment.NewLine +
+            "for (columnName in colnames(values))" + Environment.NewLine +
+            "{{" + Environment.NewLine +
+            " apsimMorris$y <- values[[columnName]]" + Environment.NewLine +
+            " tell(apsimMorris)" + Environment.NewLine +
+
+            " ee <- data.frame(apsimMorris$ee)" + Environment.NewLine +
+            " ee$variable <- columnName" + Environment.NewLine +
+            " ee$path <- c(1:{2})" + Environment.NewLine +
+            " allEE <- rbind(allEE, ee)" + Environment.NewLine +
+
+            " mu <- apply(apsimMorris$ee, 2, mean)" + Environment.NewLine +
+            " mustar <- apply(apsimMorris$ee, 2, function(x) mean(abs(x)))" + Environment.NewLine +
+            " sigma <- apply(apsimMorris$ee, 2, sd)" + Environment.NewLine +
+            " stats <- data.frame(mu, mustar, sigma)" + Environment.NewLine +
+            " stats$param <- params" + Environment.NewLine +
+            " stats$variable <- columnName" + Environment.NewLine +
+            " allStats <- rbind(allStats, stats)" + Environment.NewLine +
+
+            "}}" + Environment.NewLine +
+            "write.csv(allEE,\"{3}\", row.names=FALSE)" + Environment.NewLine +
+            "write.csv(allStats, \"{4}\", row.names=FALSE)" + Environment.NewLine,
+            morrisParametersFileName.Replace("\\", "/"),
+            apsimVariableFileName.Replace("\\", "/"),
+            NumPaths,
+            eeFileName.Replace("\\", "/"),
+            statsFileName.Replace("\\", "/"));
+            File.WriteAllText(rFileName, script);
+
+            // Run R
+            R r = new R();
+            Console.WriteLine(r.GetPackage("sensitivity"));
+            r.RunToTable(rFileName);
+
+            eeDataRaw = ApsimTextFile.ToTable(eeFileName);
+            statsDataRaw = ApsimTextFile.ToTable(statsFileName);
+        }
+
+        /// <summary>
+        /// Return the base R script for running morris.
+        /// </summary>
+        private string GetMorrisRScript()
+        {
+            string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
+            string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
+            string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
+            string script = string.Format
+            ("library('sensitivity')" + Environment.NewLine +
+            "params <- c({0})" + Environment.NewLine +
+            "apsimMorris<-morris(model=NULL" + Environment.NewLine +
+            " ,params #string vector of parameter names" + Environment.NewLine +
+            " ,{1} #no of paths within the total parameter space" + Environment.NewLine +
+            " ,design=list(type=\"oat\",levels={2},grid.jump={3})" + Environment.NewLine +
+            " ,binf=c({4}) #min for each parameter" + Environment.NewLine +
+            " ,bsup=c({5}) #max for each parameter" + Environment.NewLine +
+            " ,scale=T" + Environment.NewLine +
+            " )" + Environment.NewLine,
+            paramNames, NumPaths, NumIntervals + 1, Jump, lowerBounds, upperBounds);
+            return script;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
