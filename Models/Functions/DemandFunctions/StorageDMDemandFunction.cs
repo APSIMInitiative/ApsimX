@@ -37,7 +37,7 @@ namespace Models.Functions.DemandFunctions
                     parentOrgan = ParentClass as IArbitration;
                     ParentOrganIdentified = true;
                     if (ParentClass is IPlant)
-                        throw new Exception(Name + "cannot find parent organ to get Structural and storage DM status");
+                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
                 }
                 ParentClass = ParentClass.Parent;
             }

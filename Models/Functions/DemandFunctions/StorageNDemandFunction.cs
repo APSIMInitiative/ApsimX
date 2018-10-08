@@ -7,7 +7,7 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions.DemandFunctions
 {
     /// <summary>
-    /// The partitioning of daily growth to storage biomass is based on the maximum N concentration.
+    /// The partitioning of daily growth to storage biomass attempts to bring the organ's N content to the maximum concentration.
     /// </summary>
     [Serializable]
     [Description("This function calculates...")]
@@ -42,7 +42,7 @@ namespace Models.Functions.DemandFunctions
                     parentOrgan = ParentClass as IArbitration;
                     ParentOrganIdentified = true;
                     if (ParentClass is IPlant)
-                        throw new Exception(Name + "cannot find parent organ to get Structural and storage DM status");
+                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
                 }
                 ParentClass = ParentClass.Parent;
             }
@@ -66,19 +66,37 @@ namespace Models.Functions.DemandFunctions
         {
             if (IncludeInDocumentation)
             {
-                // add a heading.
+                // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // get description of this class.
+                // get description of this class
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // write memos.
+                // write memos
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                // find parent organ's name
+                string organName = "";
+                bool seekingParentOrgan = true;
+                IModel parentClass = this.Parent;
+                while (seekingParentOrgan)
+                {
+                    if (parentClass is IOrgan)
+                    {
+                        seekingParentOrgan = false;
+                        organName = (parentClass as IOrgan).Name;
+                        if (parentClass is IPlant)
+                            throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
+                    }
+                    parentClass = parentClass.Parent;
+                }
+
+                // add a description of the equation for this function
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
+                    + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
+                    + organName + "].NitrogenDemandSwitch.", indent));
             }
         }
     }

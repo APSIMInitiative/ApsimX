@@ -37,7 +37,7 @@ namespace Models.Functions
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
-                SubtractFunction.DocumentMathFunction(this, 'x', tags, headingLevel, indent);
+                SubtractFunction.DocumentMathFunction(this, '×', tags, headingLevel, indent);
         }
     }
 }

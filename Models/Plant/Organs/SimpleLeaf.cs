@@ -778,12 +778,12 @@ namespace Models.PMF.Organs
                     }
                     else
                     {
-                        tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + nitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandFactor", indent));
+                        tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + nitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandSwitch", indent));
                     }
                 }
                 else
                 {
-                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandFactor.", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.", indent));
                     AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 2, indent);
                 }
 

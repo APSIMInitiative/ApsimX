@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.PMF;
+using System;
+using System.Collections.Generic;
 
 namespace Models.Functions.DemandFunctions
 {
@@ -39,19 +38,20 @@ namespace Models.Functions.DemandFunctions
         {
             if (IncludeInDocumentation)
             {
-                // add a heading.
+                // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // get description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write memos.
+                // write memos
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                // write children.
+                // add a description of the equation for this function
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = PartitionFraction × [Arbitrator].DM.TotalFixationSupply</i>", indent));
+
+                // write children
+                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent+1);
             }
         }
     }
