@@ -250,13 +250,7 @@ namespace UserInterface.Commands
                             AutoDocumentation.DocumentModel(model, tags, 1, 0);
                         else
                         {
-                            System.Drawing.Image image = null;
-
-                            if (model is Manager)
-                                image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
-                            else
-                                image = examplePresenter.GetScreenhotOfRightHandPanel();
-
+                            Image image = examplePresenter.GetScreenhotOfRightHandPanel();
                             if (image != null)
                             {
                                 string name = "Example" + instruction;
@@ -583,6 +577,7 @@ namespace UserInterface.Commands
                     if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
+                        para.Format.KeepWithNext = true;
                         if (heading.headingLevel == 1)
                             para.Format.OutlineLevel = OutlineLevel.Level1;
                         else if (heading.headingLevel == 2)
@@ -714,7 +709,7 @@ namespace UserInterface.Commands
             HtmlToMigraDoc.Convert(html, section, workingDirectory);
 
             Paragraph para = section.LastParagraph;
-            para.Format.LeftIndent = Unit.FromCentimeter(paragraph.indent);
+            para.Format.LeftIndent += Unit.FromCentimeter(paragraph.indent);
             if (paragraph.bookmarkName != null)
                 para.AddBookmark(paragraph.bookmarkName);
             if (paragraph.handingIndent)

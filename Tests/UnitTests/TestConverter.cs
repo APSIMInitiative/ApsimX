@@ -42,7 +42,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LatestVersion + "\">" +
                              "<Graph>" +
                                "<Series>" +
                                  "<TableName>HarvestReport</TableName>" +
@@ -69,7 +69,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LatestVersion + "\">" +
                              "<Cultivar>" +
                                  "<Alias>" +
                                    "<Name>Cultivar1</Name>" +
@@ -126,7 +126,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LatestVersion + "\">" +
                              "<Manager>" +
                              "<Code>"+
                              "<![CDATA[using System;\r\n" +
@@ -265,7 +265,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(Converter.ConvertToLatestVersion(doc.DocumentElement, null));
 
-            string toXML = "<Simulation Version=\"" + Converter.LastestVersion + "\">" +
+            string toXML = "<Simulation Version=\"" + Converter.LatestVersion + "\">" +
                              "<Manager>" +
                                "<Code><![CDATA[using System;\r\n" +
                                "using Models.Core;\r\n" +

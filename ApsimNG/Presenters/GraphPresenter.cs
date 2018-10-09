@@ -174,46 +174,53 @@ namespace UserInterface.Presenters
         {
             if (!graph.DisabledSeries.Contains(definition.title))
             {
-                // Create the series and populate it with data.
-                if (definition.type == SeriesType.Bar)
+                try
                 {
-                    graphView.DrawBar(
-                                      definition.title, 
-                                      definition.x, 
-                                      definition.y,
-                                      definition.xAxis, 
-                                      definition.yAxis, 
-                                      definition.colour, 
-                                      definition.showInLegend);
+                    // Create the series and populate it with data.
+                    if (definition.type == SeriesType.Bar)
+                    {
+                        graphView.DrawBar(
+                                          definition.title,
+                                          definition.x,
+                                          definition.y,
+                                          definition.xAxis,
+                                          definition.yAxis,
+                                          definition.colour,
+                                          definition.showInLegend);
+                    }
+                    else if (definition.type == SeriesType.Scatter)
+                    {
+                        graphView.DrawLineAndMarkers(
+                                                    definition.title,
+                                                    definition.x,
+                                                    definition.y,
+                                                    definition.error,
+                                                    definition.xAxis,
+                                                    definition.yAxis,
+                                                    definition.colour,
+                                                    definition.line,
+                                                    definition.marker,
+                                                    definition.lineThickness,
+                                                    definition.markerSize,
+                                                    definition.showInLegend);
+                    }
+                    else if (definition.type == SeriesType.Area)
+                    {
+                        graphView.DrawArea(
+                                            definition.title,
+                                            definition.x,
+                                            definition.y,
+                                            definition.x2,
+                                            definition.y2,
+                                            definition.xAxis,
+                                            definition.yAxis,
+                                            definition.colour,
+                                            definition.showInLegend);
+                    }
                 }
-                else if (definition.type == SeriesType.Scatter)
+                catch (Exception err)
                 {
-                    graphView.DrawLineAndMarkers(
-                                                definition.title, 
-                                                definition.x, 
-                                                definition.y,
-                                                definition.error,
-                                                definition.xAxis, 
-                                                definition.yAxis, 
-                                                definition.colour,
-                                                definition.line, 
-                                                definition.marker,
-                                                definition.lineThickness, 
-                                                definition.markerSize, 
-                                                definition.showInLegend);
-                }
-                else if (definition.type == SeriesType.Area)
-                {
-                    graphView.DrawArea(
-                                        definition.title, 
-                                        definition.x, 
-                                        definition.y, 
-                                        definition.x2, 
-                                        definition.y2,
-                                        definition.xAxis, 
-                                        definition.yAxis, 
-                                        definition.colour, 
-                                        definition.showInLegend);
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
             }
         }

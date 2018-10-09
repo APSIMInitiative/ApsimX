@@ -1,78 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="34">
   <Name>Simulations</Name>
   <Simulation>
     <Name>OilPalm</Name>
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FileName>%root%\Examples\WeatherFiles\Popondetta.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <StartDate>1996-03-01T00:00:00</StartDate>
       <EndDate>2010-09-29T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </Summary>
     <Zone>
       <Name>Block</Name>
       <Fertiliser>
         <Name>Fertiliser</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOM</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <TillageTypes>
-          <Name>TillageTypesList</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <TillageType />
-        </TillageTypes>
-        <Pools>
-          <Pool>
-            <PoolName>oilpalm</PoolName>
-            <ResidueType>oilpalm</ResidueType>
-            <Mass>24000</Mass>
-            <CNRatio>39</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-          <Pool>
-            <PoolName>oilpalmstem</PoolName>
-            <ResidueType>oilpalmstem</ResidueType>
-            <Mass>63000</Mass>
-            <CNRatio>145</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>oilpalm oilpalmstem</PoolName>
-        <type>oilpalm oilpalmstem</type>
-        <mass>24000 63000</mass>
-        <standing_fraction>0 0</standing_fraction>
-        <cpr />
-        <cnr>39 145</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        <Enabled>true</Enabled>
+        <ResourceName>SurfaceOrganicMatter</ResourceName>
+        <InitialResidueName>oilpalm</InitialResidueName>
+        <InitialResidueType>oilpalm</InitialResidueType>
+        <InitialResidueMass>0</InitialResidueMass>
+        <InitialStandingFraction>0</InitialStandingFraction>
+        <InitialCPR>0</InitialCPR>
+        <InitialCNR>0</InitialCNR>
       </SurfaceOrganicMatter>
       <Soil>
         <Name>Soil</Name>
@@ -81,6 +47,7 @@
           <SoilCropOilPalm>
             <Name>OilPalmSoil</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <KL>
               <double>0.06</double>
               <double>0.04</double>
@@ -111,6 +78,7 @@
             </XF>
           </SoilCropOilPalm>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -199,6 +167,7 @@
         <SoilWater>
           <Name>SoilWater</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -257,11 +226,12 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <residueinterception>0</residueinterception>
+          <ResidueInterception>0</ResidueInterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -298,6 +268,7 @@
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <RootCN>30</RootCN>
           <RootWt>3000</RootWt>
           <SoilCN>12</SoilCN>
@@ -378,6 +349,7 @@
         <Analysis>
           <Name>Analysis</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -412,6 +384,7 @@
         <InitialWater>
           <Name>InitialWater</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
@@ -419,6 +392,7 @@
         <Sample>
           <Name>InitialNitrogen</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -470,8 +444,10 @@
         <CERESSoilTemperature>
           <Name>CERESSoilTemperature</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </CERESSoilTemperature>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <RecordNumber>0</RecordNumber>
         <SoilType>Higaturu Series </SoilType>
         <LocalName />
@@ -486,6 +462,7 @@
       <Report>
         <Name>AnnualOutput</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -528,6 +505,7 @@
       <Report>
         <Name>MonthlyOutput</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -556,6 +534,7 @@
       <OilPalm>
         <Name>OilPalm</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <ResourceName>OilPalm</ResourceName>
         <interception>0</interception>
         <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
@@ -584,29 +563,26 @@
       <Irrigation>
         <Name>Irrigation</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Irrigation>
       <Manager>
         <Name>Palm Management</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Script>
           <sowing_date>1996-03-01</sowing_date>
           <population>135</population>
           <cultivar>Dami</cultivar>
           <sowing_depth>200</sowing_depth>
-          <year1N>0.14</year1N>
-          <year2N>0.3</year2N>
-          <year3N>0.6</year3N>
-          <year4N>0.9</year4N>
-          <MatureN>1.05</MatureN>
-          <Irrigated>True</Irrigated>
-          <WaterRequirementYoung>20</WaterRequirementYoung>
-          <WaterRequirementMature>40</WaterRequirementMature>
           <Plant_population>0</Plant_population>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
+using Models.Surface;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
     [Serializable]
@@ -616,50 +592,32 @@ namespace Models
         [Link] Clock Clock; 
         [Link] OilPalm oilPalm;
         [Link] Summary Summary;
-        [Link] Fertiliser Fertiliser;
-        [Link] Weather Weather;
-        [Link] Irrigation Irrigation;
+        [Link] SurfaceOrganicMatter surface;
         
         [Description("Sowing date")]
         public DateTime sowing_date {get; set;}
         
-        [Description("Plant population (/ha)")]
+        [Description("Plant population /ha")]
         public double population {get; set;}
 
+
         [Description("Cultivar")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string cultivar {get; set;}
 
         [Description("Sowing depth (mm)")]
         public double sowing_depth {get; set;}
         
-        [Description("N applied in year 1 (kg/palm)")]
-        public double year1N {get;set;}
-        [Description("N applied in year 2 (kg/palm)")]
-        public double year2N {get;set;}
-        [Description("N applied in year 3 (kg/palm)")]
-        public double year3N {get;set;}
-        [Description("N applied in year 4 (kg/palm)")]
-        public double year4N {get;set;}
-        [Description("N applied to mature palms (kg/palm)")]
-        public double MatureN {get;set;}
-        [Description ("Are the palms irrigated? (True/False)")]
-        public bool Irrigated {get; set;}
-        [Description ("Weekly water requirement young palms (mm)")]
-        public double WaterRequirementYoung {get; set;}
-        [Description ("Weekly water requirement mature palms (mm)")]
-        public double WaterRequirementMature {get; set;}        
-        
-        private double WeeklyRain = 0;
-        private double DayCounter = 0;
-        
-        
         public double Plant_population {get;set;}
         
+        private byte HarvestCounter = 1;
+
         [EventSubscribe("Commencing")]
-        public void OnSimulationCommencing(object Sender, EventArgs e)
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Plant_population = 0;
+            surface.Add(24000, 270.769, 0, "oilpalm", "oilpalm");
+            surface.Add(63000, 191.172, 0, "oilpalmstem", "oilpalmstem");
         }
         
         [EventSubscribe("DoManagement")]
@@ -669,36 +627,14 @@ namespace Models
             {
                 oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
             }
-            if (Clock.Today.Day == 1 && (Clock.Today.Month == 3 || Clock.Today.Month == 6 || Clock.Today.Month == 9))
+            
+            if (HarvestCounter == 14)
             {
-               double Nrate = 0;
-               if (oilPalm.Age <= 1)
-                  Nrate = year1N * population / 3;
-               else if (oilPalm.Age <= 2)
-                  Nrate = year2N * population / 3;
-               else if (oilPalm.Age <= 3)
-                  Nrate = year3N * population / 3;
-               else if (oilPalm.Age <= 4)
-                  Nrate = year4N * population / 3;
-               else
-                  Nrate = MatureN * population / 3;
-
-               Fertiliser.Apply(Nrate, Fertiliser.Types.NH4NO3N, 10);            
+                oilPalm.Harvest();
+                HarvestCounter = 1;
             }
-           DayCounter +=1;
-           WeeklyRain += Weather.Rain;
-           if (DayCounter == 7)
-           {
-              double Deficit = 0;
-              if (oilPalm.Age<=3)
-                 Deficit = Math.Max(WaterRequirementYoung - WeeklyRain,0);
-              else
-                 Deficit = Math.Max(WaterRequirementMature - WeeklyRain,0);
-              if (Irrigated)
-                 Irrigation.Apply(amount:Deficit);
-              DayCounter = 0;
-              WeeklyRain = 0;
-           }
+            
+            HarvestCounter++;
         }
     }
 }
@@ -707,6 +643,7 @@ namespace Models
       <Manager>
         <Name>Calculations</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Script>
           <Offset>6</Offset>
           <AnnualFronds>0</AnnualFronds>
@@ -723,7 +660,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
-using Models.SurfaceOM;
+using Models.Surface;
 
 namespace Models
 { 
@@ -799,8 +736,10 @@ namespace Models
       <SoluteManager>
         <Name>SoluteManager</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </SoluteManager>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -809,17 +748,16 @@ namespace Models
       <Series>
         <Name>Annual Rainfall</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualRain</YFieldName>
@@ -831,17 +769,16 @@ namespace Models
       <Series>
         <Name>FFB</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>Calculations.Script.AnnualYield</YFieldName>
@@ -851,6 +788,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -883,17 +821,16 @@ namespace Models
       <Series>
         <Name>Annual Rainfall</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualRain</YFieldName>
@@ -905,17 +842,16 @@ namespace Models
       <Series>
         <Name>Annual Bunches per palm</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
@@ -925,6 +861,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -957,17 +894,16 @@ namespace Models
       <Series>
         <Name>Annual Rainfall</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualRain</YFieldName>
@@ -979,17 +915,16 @@ namespace Models
       <Series>
         <Name>Annual Bunch Size</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
@@ -999,6 +934,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1031,17 +967,16 @@ namespace Models
       <Series>
         <Name>Annual Understory NPP</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualUnderstoryNPP</YFieldName>
@@ -1053,17 +988,16 @@ namespace Models
       <Series>
         <Name>Annual Palm Vegetative NPP</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualPalmVegetativeNPP</YFieldName>
@@ -1075,17 +1009,16 @@ namespace Models
       <Series>
         <Name>Annual Total Vegetative NPP</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualTotalVegetativeNPP</YFieldName>
@@ -1095,6 +1028,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1119,17 +1053,16 @@ namespace Models
       <Series>
         <Name>Annual Frond NPP</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-12550016</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualFrondNPP</YFieldName>
@@ -1141,17 +1074,16 @@ namespace Models
       <Series>
         <Name>Annual Stem NPP</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8355840</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualStemNPP</YFieldName>
@@ -1163,17 +1095,16 @@ namespace Models
       <Series>
         <Name>Annual Root NPP</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualRootNPP</YFieldName>
@@ -1185,17 +1116,16 @@ namespace Models
       <Series>
         <Name>Annual Bunch NPP</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualBunchNPP</YFieldName>
@@ -1205,6 +1135,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1229,17 +1160,16 @@ namespace Models
       <Series>
         <Name>LAI</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>OilPalm.LAI</YFieldName>
@@ -1249,6 +1179,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1273,17 +1204,16 @@ namespace Models
       <Series>
         <Name>Annual Rainfall</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualRain</YFieldName>
@@ -1295,17 +1225,16 @@ namespace Models
       <Series>
         <Name>Annual Potential Evaporation</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualPotentialEvaporation</YFieldName>
@@ -1315,6 +1244,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1339,17 +1269,16 @@ namespace Models
       <Series>
         <Name>Annual Irrigation Addition</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualIrrigation</YFieldName>
@@ -1361,17 +1290,16 @@ namespace Models
       <Series>
         <Name>Annual N Addition</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualFertiliserNAdded</YFieldName>
@@ -1381,6 +1309,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1413,17 +1342,16 @@ namespace Models
       <Series>
         <Name>Annual N Fixation</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualUnderstoryNFixation</YFieldName>
@@ -1435,17 +1363,16 @@ namespace Models
       <Series>
         <Name>Annual N Addition</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualFertiliserNAdded</YFieldName>
@@ -1457,17 +1384,16 @@ namespace Models
       <Series>
         <Name>Annual Total N Input</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualTotalNInput</YFieldName>
@@ -1477,6 +1403,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -1501,17 +1428,16 @@ namespace Models
       <Series>
         <Name>Annual N Leaching</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualNLeaching</YFieldName>
@@ -1523,17 +1449,16 @@ namespace Models
       <Series>
         <Name>Annual N Denitrified</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualDenitrification</YFieldName>
@@ -1545,17 +1470,16 @@ namespace Models
       <Series>
         <Name>Annual N Removed</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>Calculations.Script.AnnualNRemoved</YFieldName>
@@ -1565,6 +1489,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1589,17 +1514,16 @@ namespace Models
       <Series>
         <Name>Annual N Addition</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualTotalNInput</YFieldName>
@@ -1611,17 +1535,16 @@ namespace Models
       <Series>
         <Name>Annual N Removed</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>Calculations.Script.AnnualNRemoved</YFieldName>
@@ -1631,6 +1554,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1655,17 +1579,16 @@ namespace Models
       <Series>
         <Name>Total Soil Carbon</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SoilCtpha</YFieldName>
@@ -1677,17 +1600,16 @@ namespace Models
       <Series>
         <Name>Total Soil Nitrogen</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16744320</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SoilNkgpha</YFieldName>
@@ -1697,6 +1619,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1729,17 +1652,16 @@ namespace Models
       <Series>
         <Name>Litter Mass</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32704</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SurfaceOM.Wt</YFieldName>
@@ -1751,17 +1673,16 @@ namespace Models
       <Series>
         <Name>Litter N</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16744320</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SurfaceOM.N</YFieldName>
@@ -1771,6 +1692,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1803,17 +1725,16 @@ namespace Models
       <Series>
         <Name>Profile Nitrate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744320</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>TotalNO3</YFieldName>
@@ -1823,6 +1744,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1855,17 +1777,16 @@ namespace Models
       <Series>
         <Name>Soil Water</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>TotalSW</YFieldName>
@@ -1877,17 +1798,16 @@ namespace Models
       <Series>
         <Name>DUL</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Dash</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>DUL</YFieldName>
@@ -1899,17 +1819,16 @@ namespace Models
       <Series>
         <Name>SAT</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777056</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Dash</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>MonthlyOutput</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SAT</YFieldName>
@@ -1919,6 +1838,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -1951,17 +1871,16 @@ namespace Models
       <Series>
         <Name>Annual Rainfall</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualRain</YFieldName>
@@ -1973,17 +1892,16 @@ namespace Models
       <Series>
         <Name>Annual N2O Emission</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnnualOutput</TableName>
         <XFieldName>Clock.Today.Year</XFieldName>
         <YFieldName>AnnualN2O</YFieldName>
@@ -1993,6 +1911,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Axis>
         <Type>Bottom</Type>
         <Title>Year</Title>
@@ -2021,11 +1940,14 @@ namespace Models
       <DisabledSeries />
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </DataStore>
   <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
   <ExplorerWidth>296</ExplorerWidth>
 </Simulations>

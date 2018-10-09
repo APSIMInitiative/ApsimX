@@ -6,12 +6,52 @@ using System.Xml;
 using System.Linq;
 using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.SurfaceOM;
+using Models.Surface;
 using Models.Interfaces;
 
 namespace Models.Soils
 {
+    //------ NewProfile ------
+    /// <summary>
+    /// strucuture for data associated with the NewProfile event
+    /// </summary>
+    public class NewProfileType
+    {
+        /// <summary>
+        /// Array of layer depths
+        /// </summary>
+        public Single[] dlayer;
+        /// <summary>
+        /// Array of air-dry values
+        /// </summary>
+        public Single[] air_dry_dep;
+        /// <summary>
+        /// Array of -15 bar values
+        /// </summary>
+        public Single[] ll15_dep;
+        /// <summary>
+        /// Array of drained upper limit values
+        /// </summary>
+        public Single[] dul_dep;
+        /// <summary>
+        /// Array of saturated values
+        /// </summary>
+        public Single[] sat_dep;
+        /// <summary>
+        /// Array of soil water values
+        /// </summary>
+        public Single[] sw_dep;
+        /// <summary>
+        /// Array of bulk density values
+        /// </summary>
+        public Single[] bd;
+    }
 
+    /// <summary>
+    /// Delegate for issuing a NewProfile event
+    /// </summary>
+    /// <param name="Data">The data.</param>
+    public delegate void NewProfileDelegate(NewProfileType Data);
     /// <summary>
     /// Computes the soil C and N processes
     /// </summary>

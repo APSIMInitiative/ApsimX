@@ -158,7 +158,7 @@ namespace Models.Core.ApsimFile
         /// <param name="cultivar">Cultivar node</param>
         /// <param name="searchFor">The pattern to search for</param>
         /// <param name="replaceWith">The string to replace</param>
-        private static void SearchReplaceCultivarOverrides(XmlNode cultivar, string searchFor, string replaceWith)
+        public static void SearchReplaceCultivarOverrides(XmlNode cultivar, string searchFor, string replaceWith)
         {
             List<string> commands = XmlUtilities.Values(cultivar, "Command");
             for (int i = 0; i < commands.Count; i++)

@@ -1,42 +1,39 @@
+using StdUnits;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using StdUnits;
 
-namespace  Models.GrazPlan
+namespace Models.GrazPlan
 {
     /// <summary>
     /// The animal parameters object
     /// </summary>
-    static public class TGAnimalParams
+    static public class GlobalAnimalParams
     {
-        static private TParameterSet _GAnimalParams = null;
+        static private ParameterSet _GAnimalParams = null;
         /// <summary>
         /// The object that contains the animal parameters
         /// </summary>
         /// <returns></returns>
-        static public TAnimalParamSet AnimalParamsGlb()
+        static public AnimalParamSet AnimalParamsGlb()
         {
             if (_GAnimalParams == null)
             {
-                _GAnimalParams = new TAnimalParamSet();
-                TGParamFactory.ParamXMLFactory().readDefaults("RUMINANT_PARAM_GLB", ref _GAnimalParams);
+                _GAnimalParams = new AnimalParamSet();
+                GlobalParameterFactory.ParamXMLFactory().readDefaults("RUMINANT_PARAM_GLB", ref _GAnimalParams);
             }
-            return (TAnimalParamSet)_GAnimalParams;
+            return (AnimalParamSet)_GAnimalParams;
         }
     }
 
     /// <summary>
     /// Contains a blended genotype
     /// </summary>
-    public struct TAnimalParamBlend
+    public struct AnimalParamBlend
     {
         /// <summary>
         /// Breed parameters
         /// </summary>
-        public TAnimalParamSet Breed;
+        public AnimalParamSet Breed;
         /// <summary>
         /// Proportion of the breed
         /// </summary>
@@ -47,7 +44,7 @@ namespace  Models.GrazPlan
     /// Animal parameter set
     /// </summary>
     [Serializable]
-    public class TAnimalParamSet : TParameterSet
+    public class AnimalParamSet : ParameterSet
     {
         /*
         public float[] TPregArray       = array[0..299] of Float;
@@ -58,14 +55,14 @@ namespace  Models.GrazPlan
         /// Return a copy of this object
         /// </summary>
         /// <returns></returns>
-        public TAnimalParamSet Copy()
+        public AnimalParamSet Copy()
         {
             return ObjectCopier.Clone(this);
         }
         /// <summary>
         /// Condition score system to use
         /// </summary>
-        public enum TCond_System { 
+        public enum Cond_System { 
             /// <summary>
             /// 
             /// </summary>
@@ -80,7 +77,7 @@ namespace  Models.GrazPlan
             csSYSTEM1_9 };
 
         [Serializable]
-        internal struct TAncestry
+        internal struct Ancestry
         {
             public string sBaseBreed;
             public double fPropn;
@@ -94,7 +91,7 @@ namespace  Models.GrazPlan
         private double FDairyIntakeShape;
         private bool FUseDairyCurve;
 
-        private TAncestry[] FParentage = new TAncestry[0];
+        private Ancestry[] FParentage = new Ancestry[0];
 
         private void setSRW(double fValue)
         {
@@ -290,13 +287,13 @@ namespace  Models.GrazPlan
         /// </summary>
         /// <param name="srcSet"></param>
         /// <param name="bCopyData"></param>
-        override protected void copyParams(TParameterSet srcSet, bool bCopyData)
+        override protected void copyParams(ParameterSet srcSet, bool bCopyData)
         {
             int Idx;
 
             base.copyParams(srcSet, false);
 
-            TAnimalParamSet prmSet = (TAnimalParamSet)srcSet;
+            AnimalParamSet prmSet = (AnimalParamSet)srcSet;
 
             if (bCopyData && (prmSet != null))
             {
@@ -355,17 +352,17 @@ namespace  Models.GrazPlan
                 Array.Copy(prmSet.ExposureConsts,ExposureConsts, prmSet.ExposureConsts.Length);
                 SelfWeanPropn = prmSet.SelfWeanPropn;
 
-                for (Idx = 0; Idx <= iDefinitionCount() - 1; Idx++)
-                    getDefinition(Idx).setDefined(prmSet.getDefinition(Idx));
+                for (Idx = 0; Idx <= DefinitionCount() - 1; Idx++)
+                    GetDefinition(Idx).setDefined(prmSet.GetDefinition(Idx));
             }
         }
         /// <summary>
         /// Make a new animal parameter set that is a child of this one
         /// </summary>
         /// <returns></returns>
-        override protected TParameterSet makeChild()
+        override protected ParameterSet makeChild()
         {
-            return new TAnimalParamSet(this);
+            return new AnimalParamSet(this);
         }
 
         /// <summary>
@@ -948,7 +945,7 @@ namespace  Models.GrazPlan
         /// <summary>
         /// Construct and animal parameter set
         /// </summary>
-        public TAnimalParamSet()
+        public AnimalParamSet()
             : base()
         {
             //create a new array
@@ -960,7 +957,7 @@ namespace  Models.GrazPlan
         /// <summary>
         /// Construct an animal parameter set from a source one
         /// </summary>
-        public TAnimalParamSet(TAnimalParamSet src)
+        public AnimalParamSet(AnimalParamSet src)
             : base(src)
         {
             for (int i = 0; i < ConceiveSigs.Length; i++)
@@ -973,7 +970,7 @@ namespace  Models.GrazPlan
         /// </summary>
         /// <param name="aParent"></param>
         /// <param name="srcSet"></param>
-        public TAnimalParamSet(TParameterSet aParent, TAnimalParamSet srcSet)
+        public AnimalParamSet(ParameterSet aParent, AnimalParamSet srcSet)
             : base(aParent/*, srcSet*/)
         {
             //create a new array
@@ -988,7 +985,7 @@ namespace  Models.GrazPlan
                 if (srcSet.Animal == GrazType.AnimalType.Sheep)
                     setPotGFW(srcSet.PotentialGFW);
 
-                if (srcSet.bUseDairyCurve)
+                if (srcSet.bDairyBreed)
                     setPeakMilk(srcSet.PotMilkYield);
 
                 if (srcSet.FParentage.Length == 0)
@@ -1013,18 +1010,18 @@ namespace  Models.GrazPlan
         /// Copies a parameter set from AnimalParamsGlb
         /// </summary>
         /// <param name="sBreedName"></param>
-        public static TAnimalParamSet CreateFactory(string sBreedName)
+        public static AnimalParamSet CreateFactory(string sBreedName)
         {
-            TAnimalParamSet newObj = null;
+            AnimalParamSet newObj = null;
 
-            TAnimalParamSet baseParams;
+            AnimalParamSet baseParams;
 
-            baseParams = (TAnimalParamSet)TGAnimalParams.AnimalParamsGlb().getNode(sBreedName);
+            baseParams = (AnimalParamSet)GlobalAnimalParams.AnimalParamsGlb().GetNode(sBreedName);
             if (baseParams != null)
-                newObj = new TAnimalParamSet(null, baseParams);
+                newObj = new AnimalParamSet(null, baseParams);
             else
             {
-                newObj = new TAnimalParamSet();
+                newObj = new AnimalParamSet();
                 throw new Exception("Breed name \"" + sBreedName + "\" not recognised");
             }
             
@@ -1037,18 +1034,18 @@ namespace  Models.GrazPlan
         /// <param name="sBreedName"></param>
         /// <param name="Blend"></param>
         /// <returns></returns>
-        public static TAnimalParamSet CreateFactory(string sBreedName, TAnimalParamBlend[] Blend)
+        public static AnimalParamSet CreateFactory(string sBreedName, AnimalParamBlend[] Blend)
         {
-            TAnimalParamSet newObj = null;
+            AnimalParamSet newObj = null;
             if (Blend.Length == 0)                                                   // No mixture of breeds provided, so     
                 newObj = CreateFactory(sBreedName);                                     //   copy a breed from AnimalParamsGlb   
             else if (Blend.Length == 2)                                             // Special case: optimized for speed     
             {
-                newObj = new TAnimalParamSet((TParameterSet)null, (TAnimalParamSet)null);
+                newObj = new AnimalParamSet((ParameterSet)null, (AnimalParamSet)null);
             }
             else
             {
-                newObj = new TAnimalParamSet(null, Blend[0].Breed);                            // Sets the integer, string and Boolean  
+                newObj = new AnimalParamSet(null, Blend[0].Breed);                            // Sets the integer, string and Boolean  
             }
             newObj.InitParameterSet(sBreedName, Blend);
 
@@ -1060,11 +1057,11 @@ namespace  Models.GrazPlan
         /// </summary>
         /// <param name="sBreedName"></param>
         /// <param name="Blend"></param>
-        virtual public void InitParameterSet(string sBreedName, TAnimalParamBlend[] Blend)
+        virtual public void InitParameterSet(string sBreedName, AnimalParamBlend[] Blend)
         {
-            TParameterDefinition prmDefn;
-            TAnimalParamSet Breed0;
-            TAnimalParamSet Breed1;
+            ParameterDefinition prmDefn;
+            AnimalParamSet Breed0;
+            AnimalParamSet Breed1;
             double fPropn0;
             double fPropn1;
             double fParamSum;
@@ -1143,14 +1140,14 @@ namespace  Models.GrazPlan
                     for (Jdx = 0; Jdx < ConceiveSigs[Idx].Length; Jdx++)
                         ConceiveSigs[Idx][Jdx] = fPropn0 * Breed0.ConceiveSigs[Idx][Jdx] + fPropn1 * Breed1.ConceiveSigs[Idx][Jdx];
 
-                for (Idx = 0; Idx <= iDefinitionCount() - 1; Idx++)
-                    getDefinition(Idx).setDefined(Blend[0].Breed.getDefinition(Idx));
+                for (Idx = 0; Idx <= DefinitionCount() - 1; Idx++)
+                    GetDefinition(Idx).setDefined(Blend[0].Breed.GetDefinition(Idx));
             }
             else                                                                         // Mixture of breeds provided            
             {
                 if (Blend.Length > 1)                                                 // Blend the numeric parameter values    
                 {
-                    for (Idx = 0; Idx <= iParamCount() - 1; Idx++)
+                    for (Idx = 0; Idx <= ParamCount() - 1; Idx++)
                     {
                         prmDefn = getParam(Idx);
                         if (prmDefn.paramType == ptyReal)
@@ -1159,14 +1156,14 @@ namespace  Models.GrazPlan
                             fPropnSum = 0.0;
                             for (Jdx = 0; Jdx <= Blend.Length - 1; Jdx++)
                             {
-                                if (Blend[Jdx].Breed.bIsDefined(prmDefn.sFullName))
+                                if (Blend[Jdx].Breed.IsDefined(prmDefn.sFullName))
                                 {
                                     fParamSum = fParamSum + Blend[Jdx].fPropn * Blend[Jdx].Breed.fParam(prmDefn.sFullName);
                                     fPropnSum = fPropnSum + Blend[Jdx].fPropn;
                                 }
                             }
                             if (fPropnSum > 0.0)
-                                setParam(prmDefn.sFullName, fParamSum / fPropnSum);
+                                SetParam(prmDefn.sFullName, fParamSum / fPropnSum);
                         }
                     }
                 }
@@ -1237,9 +1234,9 @@ namespace  Models.GrazPlan
         /// <param name="sireBreed"></param>
         /// <param name="iGeneration"></param>
         /// <returns>The new object</returns>
-        public static TAnimalParamSet CreateFactory(string sBreedName, TAnimalParamSet damBreed, TAnimalParamSet sireBreed, int iGeneration = 1)
+        public static AnimalParamSet CreateFactory(string sBreedName, AnimalParamSet damBreed, AnimalParamSet sireBreed, int iGeneration = 1)
         {
-            TAnimalParamBlend[] aBlend = new TAnimalParamBlend[2];
+            AnimalParamBlend[] aBlend = new AnimalParamBlend[2];
 
             aBlend[0].Breed = damBreed;
             aBlend[0].fPropn = Math.Pow(0.5, iGeneration);
@@ -1271,15 +1268,15 @@ namespace  Models.GrazPlan
         /// </summary>
         /// <param name="otherSet"></param>
         /// <returns></returns>
-        public bool bFunctionallySame(TAnimalParamSet otherSet)
+        public bool bFunctionallySame(AnimalParamSet otherSet)
         {
             int iCount;
-            TParameterDefinition Defn;
+            ParameterDefinition Defn;
             string sTag;
             int iPrm;
 
             bool result = true;
-            iCount = this.iParamCount();
+            iCount = this.ParamCount();
 
             iPrm = 0;
             while ((iPrm < iCount) && result)
@@ -1288,7 +1285,7 @@ namespace  Models.GrazPlan
                 if (Defn != null)
                 {
                     sTag = Defn.sFullName;
-                    if (this.bIsDefined(sTag))
+                    if (this.IsDefined(sTag))
                     {
                         switch (Defn.paramType)
                         {
@@ -1303,7 +1300,7 @@ namespace  Models.GrazPlan
                         }
                     }
                     else
-                        result = (result && !otherSet.bIsDefined(Defn.sFullName));
+                        result = (result && !otherSet.IsDefined(Defn.sFullName));
                 }
                 else
                     result = false;
@@ -1321,12 +1318,12 @@ namespace  Models.GrazPlan
         /// </summary>
         /// <param name="sBreedName"></param>
         /// <returns></returns>
-        public TAnimalParamSet Match(string sBreedName)
+        public AnimalParamSet Match(string sBreedName)
         {
             if (sBreedName.IndexOf(',') >= 0)
                 sBreedName = sBreedName.Remove(sBreedName.IndexOf(','), sBreedName.Length - sBreedName.IndexOf(','));
 
-            return (TAnimalParamSet)getNode(sBreedName);
+            return (AnimalParamSet)GetNode(sBreedName);
         }
 
         /// <summary>
@@ -1336,13 +1333,13 @@ namespace  Models.GrazPlan
         /// <returns></returns>
         public int iBreedCount(GrazType.AnimalType aAnimal)
         {
-            TAnimalParamSet breedSet;
+            AnimalParamSet breedSet;
             int Idx;
 
             int result = 0;
-            for (Idx = 0; Idx <= iLeafCount(true) - 1; Idx++)                                     // Current locale only                      
+            for (Idx = 0; Idx <= LeafCount(true) - 1; Idx++)                                     // Current locale only                      
             {
-                breedSet = (TAnimalParamSet)getLeaf(Idx, true);
+                breedSet = (AnimalParamSet)GetLeaf(Idx, true);
                 if (breedSet.Animal == aAnimal)
                     result++;
             }
@@ -1358,18 +1355,18 @@ namespace  Models.GrazPlan
         /// <returns></returns>
         public string sBreedName(GrazType.AnimalType aAnimal, int iBreed)
         {
-            TAnimalParamSet breedSet;
+            AnimalParamSet breedSet;
             int iCount;
             int iFound;
             int Idx;
 
-            iCount = iLeafCount(true);                                             // Current locale only                      
+            iCount = LeafCount(true);                                             // Current locale only                      
             iFound = -1;
             Idx = 0;
             breedSet = null;
             while ((Idx < iCount) && (iFound < iBreed))
             {
-                breedSet = (TAnimalParamSet)getLeaf(Idx, true);
+                breedSet = (AnimalParamSet)GetLeaf(Idx, true);
                 if (breedSet.Animal == aAnimal)
                     iFound++;
                 Idx++;
@@ -1586,7 +1583,7 @@ namespace  Models.GrazPlan
         /// <param name="CondScore"></param>
         /// <param name="System"></param>
         /// <returns></returns>
-        static public double CondScore2Condition(double CondScore, TCond_System System = TCond_System.csSYSTEM1_5)
+        static public double CondScore2Condition(double CondScore, Cond_System System = Cond_System.csSYSTEM1_5)
         {
             return 1.0 + (CondScore - BASESCORE[(int)System]) * SCOREUNIT[(int)System];
         }
@@ -1596,7 +1593,7 @@ namespace  Models.GrazPlan
         /// <param name="Condition"></param>
         /// <param name="System"></param>
         /// <returns></returns>
-        static public double Condition2CondScore(double Condition, TCond_System System = TCond_System.csSYSTEM1_5)
+        static public double Condition2CondScore(double Condition, Cond_System System = Cond_System.csSYSTEM1_5)
         {
             return BASESCORE[(int)System] + (Condition - 1.0) / SCOREUNIT[(int)System];
         }
@@ -1608,7 +1605,7 @@ namespace  Models.GrazPlan
         /// <param name="Repr"></param>
         /// <param name="iFleeceDays"></param>
         /// <returns></returns>
-        static public double fDefaultFleece(TAnimalParamSet Params,
+        static public double fDefaultFleece(AnimalParamSet Params,
                                      int iAgeDays,
                                      GrazType.ReproType Repr,
                                      int iFleeceDays)
@@ -1639,7 +1636,7 @@ namespace  Models.GrazPlan
         /// <param name="iFleeceDays"></param>
         /// <param name="fGFW"></param>
         /// <returns></returns>
-        static public double fDefaultMicron(TAnimalParamSet Params, int iAgeDays, GrazType.ReproType Repr, int iFleeceDays, double fGFW)
+        static public double fDefaultMicron(AnimalParamSet Params, int iAgeDays, GrazType.ReproType Repr, int iFleeceDays, double fGFW)
         {
             double fPotFleece;
 

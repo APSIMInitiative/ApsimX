@@ -108,7 +108,7 @@ namespace UserInterface.Presenters
 
         private void OnGetGenoParams(object sender, GenotypeInitArgs e)
         {
-            TAnimalParamSet tempParams = stock.ParamsFromGenotypeInits(e.ParamSet, e.Genotypes, e.index);
+            AnimalParamSet tempParams = stock.ParamsFromGenotypeInits(e.ParamSet, e.Genotypes, e.index);
             stockView.SetGenoParams(tempParams);
         }
     }

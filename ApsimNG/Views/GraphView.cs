@@ -70,7 +70,7 @@ namespace UserInterface.Views
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (VBox)builder.GetObject("vbox2");
@@ -940,18 +940,21 @@ namespace UserInterface.Views
             {
                 this.EnsureAxisExists(axisType, typeof(string));
                 CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
-                do
+                if (axis != null)
                 {
-                    int index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                    if (index == -1)
+                    do
                     {
-                        axis.Labels.Add(enumerator.Current.ToString());
-                        index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                    }
+                        int index = axis.Labels.IndexOf(enumerator.Current.ToString());
+                        if (index == -1)
+                        {
+                            axis.Labels.Add(enumerator.Current.ToString());
+                            index = axis.Labels.IndexOf(enumerator.Current.ToString());
+                        }
 
-                    dataPointValues.Add(index);
+                        dataPointValues.Add(index);
+                    }
+                    while (enumerator.MoveNext());
                 }
-                while (enumerator.MoveNext());
             }
 
             return dataPointValues.ToArray();

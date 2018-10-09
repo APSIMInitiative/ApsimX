@@ -1,144 +1,19 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="TabbedExplorerView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using APSIM.Shared.Utilities;
+    using Gtk;
+    using Models.Core;
+    using MonoMac.AppKit;
     using System;
     using System.Drawing;
     using System.IO;
-    using Gtk;
     using System.Reflection;
-    using Models.Core;
-    using System.Collections.Generic;
     using System.Linq;
+    using Interfaces;
+    using EventArguments;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
-
-    public interface IMainView
-    {
-        /// <summary>Get the start page 1 view</summary>
-        IListButtonView StartPage1 { get; }
-
-        /// <summary>Get the start page 2 view</summary>
-        IListButtonView StartPage2 { get; }
-
-        /// <summary>Add a tab form to the tab control. Optionally select the tab if SelectTab is true.</summary>
-        /// <param name="text">Text for tab.</param>
-        /// <param name="image">Image for tab.</param>
-        /// <param name="control">Control for tab.</param>
-        /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
-        void AddTab(string text, Gtk.Image image, Widget control, bool onLeftTabControl);
-
-        /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
-        /// <param name="newTabName">New text of the tab.</param>
-        void ChangeTabText(object ownerView, string newTabName, string tooltip);
-
-        Point WindowLocation { get; set; }
-
-        /// <summary>Gets or set the main window size.</summary>
-        Size WindowSize { get; set; }
-
-        /// <summary>Gets or set the main window size.</summary>
-        bool WindowMaximised { get; set; }
-
-        /// <summary>Gets or set the main window size.</summary>
-        string WindowCaption { get; set; }
-
-        /// <summary>Turn split window on/off</summary>
-        bool SplitWindowOn { get; set; }
-
-        /// <summary>Height of the status panel</summary>
-        int StatusPanelHeight { get; set; }
-
-        /// <summary>
-        /// Returns true if the object is a control on the left side
-        /// </summary>
-        bool IsControlOnLeft(object control);
-
-        string GetMenuItemFileName(object obj);
-
-        /// <summary>Ask user for a filename to open.</summary>
-        /// <param name="fileSpec">The file specification to use to filter the files.</param>
-        /// <param name="initialDirectory">Optional Initial starting directory</param>
-        string AskUserForOpenFileName(string fileSpec, string initialDirectory = "");
-
-        /// <summary>
-        /// A helper function that asks user for a SaveAs name and returns their new choice.
-        /// </summary>
-        /// <param name="fileSpec">The file specification to filter the files.</param>
-        /// <param name="OldFilename">The current file name.</param>
-        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
-        string AskUserForSaveFileName(string fileSpec, string OldFilename);
-
-        /// <summary>Ask the user a question</summary>
-        /// <param name="message">The message to show the user.</param>
-        QuestionResponseEnum AskQuestion(string message);
-
-        /// <summary>
-        /// Add a status message. A message of null will clear the status message.
-        /// </summary>
-        /// <param name="Message">Message to be displayed.</param>
-        /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
-        /// <param name="overwrite">
-        /// If true, all existing messages will be overridden.
-        /// If false, message will be appended to the status window.
-        /// </param>
-        /// <param name="addSeparator">If true, a 'separator' (several dashes) will also be written to the status window.</param>
-        /// <param name="withButton">
-        /// Whether or not a 'more info' button should be drawn under the message. 
-        /// If the message is not an error, this parameter has no effect.
-        /// </param>
-        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
-        
-        /// <summary>Show a message in a dialog box</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="errorLevel">The error level.</param>
-        int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType);
-
-        /// <summary>
-        /// Show progress bar with the specified percent.
-        /// </summary>
-        /// <param name="percent"></param>
-        void ShowProgress(int percent, bool showStopButton = true);
-
-        /// <summary>Set the wait cursor (or not)/</summary>
-        /// <param name="wait">Shows wait cursor if true, normal cursor if false.</param>
-        void ShowWaitCursor(bool wait);
-
-        /// <summary>
-        /// Display the window.
-        /// </summary>
-        void Show();
-
-        /// <summary>Close the application.</summary>
-        /// <param name="askToSave">If true, will ask user whether they want to save.</param>
-        void Close(bool askToSave = true);
-
-        /// <summary>Close a tab.</summary>
-        /// <param name="o">A widget appearing on the tab</param>
-        void CloseTabContaining(object o);
-
-        /// <summary>
-        /// Select a tab.
-        /// </summary>
-        /// <param name="o">A widget appearing on the tab</param>
-        void SelectTabContaining(object o);
-
-        /// <summary>Invoked when application tries to close</summary>
-        event EventHandler<AllowCloseArgs> AllowClose;
-
-        /// <summary>Invoked when a tab is closing.</summary>
-        event EventHandler<TabClosingEventArgs> TabClosing;
-
-        /// <summary>Invoked when application tries to close</summary>
-        event EventHandler<EventArgs> StopSimulation;
-
-        event EventHandler ShowDetailedError;
-    }
 
     /// <summary>
     /// TabbedExplorerView maintains multiple explorer views in a tabbed interface. It also
@@ -146,60 +21,121 @@ namespace UserInterface.Views
     /// </summary>
     public class MainView : ViewBase, IMainView
     {
+        /// <summary>
+        /// List of resources embedded in this assembly.
+        /// </summary>
+        private static string[] resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static string indexTabText = "Home";
 
-        /// <summary>Get the list and button view</summary>
-        public IListButtonView StartPage1 { get { return listButtonView1; } }
+        /// <summary>
+        /// Stores the size, in points, of the "default" base font
+        /// </summary>
+        private double defaultBaseSize;
 
-        /// <summary>Get the list and button view</summary>
-        public IListButtonView StartPage2 { get { return listButtonView2; } }
+        /// <summary>
+        /// Keeps track of whether or not the waiting cursor is being used.
+        /// </summary>
+        private bool waiting = false;
 
-        /// <summary>Invoked when application tries to close</summary>
-        public event EventHandler<AllowCloseArgs> AllowClose;
+        /// <summary>
+        /// The size, in points, of our base font
+        /// </summary>
+        private double baseFontSize = 12.5;
 
-        /// <summary>Invoked when a tab is closing.</summary>
-        public event EventHandler<TabClosingEventArgs> TabClosing;
+        /// <summary>
+        /// Step by which we do font size changes (in points)
+        /// </summary>
+        private double scrollSizeStep = 0.5;
 
-        /// <summary>Invoked when application tries to close</summary>
-        public event EventHandler<EventArgs> StopSimulation;
-                
-        public event EventHandler ShowDetailedError;    
-
-        public int StatusPanelHeight
-        {
-            get
-            {
-                return hbox1.Allocation.Height;
-            }
-            set
-            {
-                hbox1.HeightRequest = value;                
-            }
-        }
+        /// <summary>
+        /// Number of buttons in the status panel.
+        /// </summary>
         private int numberOfButtons;
-        private Views.ListButtonView listButtonView1;
-        private Views.ListButtonView listButtonView2;
 
+        /// <summary>
+        /// Button panel for the left hand view's start page.
+        /// </summary>
+        private ListButtonView listButtonView1;
+
+        /// <summary>
+        /// Button panel for the right hand view's start page.
+        /// </summary>
+        private ListButtonView listButtonView2;
+
+        /// <summary>
+        /// Main Gtk window.
+        /// </summary>
         private Window window1 = null;
+
+        /// <summary>
+        /// Progress bar which displays simulation progress.
+        /// </summary>
         private ProgressBar progressBar = null;
+
+        /// <summary>
+        /// Status window used to display error messages and other information.
+        /// </summary>
         private TextView StatusWindow = null;
+
+        /// <summary>
+        /// Button to stop a simulation.
+        /// </summary>
         private Button stopButton = null;
+
+        /// <summary>
+        /// Primary widget for tabs on the left side of the screen.
+        /// </summary>
         private Notebook notebook1 = null;
+
+        /// <summary>
+        /// Primary widget for tabs on the right side of the screen.
+        /// </summary>
         private Notebook notebook2 = null;
+
+        /// <summary>
+        /// Gtk box which holds <see cref="listButtonView1"/>.
+        /// </summary>
         private VBox vbox1 = null;
+
+        /// <summary>
+        /// Gtk box which holds <see cref="listButtonView2"/>.
+        /// </summary>
         private VBox vbox2 = null;
+
+        /// <summary>
+        /// Gtk widget which holds the two sets of tabs.
+        /// </summary>
         private HPaned hpaned1 = null;
+
+        /// <summary>
+        /// Gtk widget which holds the status panel.
+        /// </summary>
         private HBox hbox1 = null;
 
-        /// <summary>Constructor</summary>
+        /// <summary>
+        /// Keeps track of the font size (and, in theory, other font attributes).
+        /// </summary>
+        private Pango.FontDescription baseFont;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
+            MasterView = this;
             numberOfButtons = 0;
             if ((uint)Environment.OSVersion.Platform <= 3)
             {
-                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                       ".gtkrc"));
             }
+            baseFont = Rc.GetStyle(new Label()).FontDescription.Copy();
+            defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
+            FontSize = Utility.Configuration.Settings.BaseFontSize;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
@@ -242,9 +178,94 @@ namespace UserInterface.Views
             stopButton.Image.Visible = true;
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
+            listButtonView1.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
+            listButtonView2.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
+            listButtonView1.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
+            listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
-            if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
+            if (ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
+        }
+
+        /// <summary>
+        /// Invoked when an error has been thrown in a view.
+        /// </summary>
+        public event EventHandler<ErrorArgs> OnError;
+
+        /// <summary>
+        /// Invoked when application tries to close
+        /// </summary>
+        public event EventHandler<AllowCloseArgs> AllowClose;
+
+        /// <summary>
+        /// Invoked when a tab is closing.
+        /// </summary>
+        public event EventHandler<TabClosingEventArgs> TabClosing;
+
+        /// <summary>
+        /// Invoked when application tries to close
+        /// </summary>
+        public event EventHandler<EventArgs> StopSimulation;
+
+        /// <summary>
+        /// Show a detailed error message.
+        /// </summary>
+        public event EventHandler ShowDetailedError;
+
+        /// <summary>
+        /// Get the list and button view
+        /// </summary>
+        public IListButtonView StartPage1 { get { return listButtonView1; } }
+
+        /// <summary>
+        /// Get the list and button view
+        /// </summary>
+        public IListButtonView StartPage2 { get { return listButtonView2; } }
+
+        /// <summary>
+        /// Controls the height of the status panel.
+        /// </summary>
+        public int StatusPanelHeight
+        {
+            get
+            {
+                return hbox1.Allocation.Height;
+            }
+            set
+            {
+                hbox1.HeightRequest = value;
+            }
+        }
+
+        /// <summary>
+        /// The size, in pointer, of our base font
+        /// </summary>
+        public double FontSize
+        {
+            get
+            {
+                return baseFontSize;
+            }
+            set
+            {
+                double newSize = Math.Min(40.0, Math.Max(4.0, value));
+                if (newSize != baseFontSize)
+                {
+                    baseFontSize = value;
+                    SetFontSize(baseFontSize);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The main Gdk window. This is the window which is exposed to the window manager.
+        /// </summary>
+        public Gdk.Window MainWindow
+        {
+            get
+            {
+                return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow;
+            }
         }
 
         /// <summary>
@@ -303,9 +324,18 @@ namespace UserInterface.Views
         /// </summary>
         private void InitMac()
         {
-            MonoMac.AppKit.NSApplication.Init();
+            NSApplication.Init();
         }
 
+        /// <summary>
+        /// Checks if the current assembly contains a given resource.
+        /// </summary>
+        /// <param name="name">Name of the resource.</param>
+        /// <returns>True if this assembly contains the resource. False otherwise.</returns>
+        public bool HasResource(string name)
+        {
+            return resources.Contains(name);
+        }
         /// <summary>
         /// Handles button press event on the "tab" part of a tabbed page.
         /// Currently responds by closing the tab if the middle button was pressed
@@ -361,6 +391,12 @@ namespace UserInterface.Views
                 if (!args.AllowClose)
                     return;
             }
+            stopButton.Clicked -= OnStopClicked;
+            window1.DeleteEvent -= OnClosing;
+            listButtonView1.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
+            listButtonView2.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
+            listButtonView1.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
+            listButtonView2.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
             _mainWidget.Destroy();
 
             // Let all the destruction stuff be carried out, just in 
@@ -569,39 +605,6 @@ namespace UserInterface.Views
             return null;
         }
 
-        /// <summary>Ask user for a filename to open.</summary>
-        /// <param name="fileSpec">The file specification to use to filter the files.</param>
-        /// <param name="initialDirectory">Optional Initial starting directory</param>
-        public string AskUserForOpenFileName(string fileSpec, string initialDirectory = "")
-        {
-            string fileName = AskUserForFileName("Choose a file to open", fileSpec, FileChooserAction.Open, initialDirectory);
-            if (!String.IsNullOrEmpty(fileName))
-            { 
-                string dir = Path.GetDirectoryName(fileName);
-                if (!dir.Contains(@"ApsimX\Examples"))
-                    Utility.Configuration.Settings.PreviousFolder = dir;
-            }
-            return fileName;
-        }
-
-        /// <summary>
-        /// A helper function that asks user for a SaveAs name and returns their new choice.
-        /// </summary>
-        /// <param name="fileSpec">The file specification to filter the files.</param>
-        /// <param name="OldFilename">The current file name.</param>
-        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
-        public string AskUserForSaveFileName(string fileSpec, string OldFilename)
-        {
-            string result = AskUserForFileName("Choose a file name for saving", fileSpec, FileChooserAction.Save, OldFilename);
-            if (!String.IsNullOrEmpty(result))
-            {
-                string dir = Path.GetDirectoryName(result);
-                if (!dir.Contains(@"ApsimX\Examples"))
-                    Utility.Configuration.Settings.PreviousFolder = dir;
-            }
-            return result;
-        }
-
         /// <summary>Ask the user a question</summary>
         /// <param name="message">The message to show the user.</param>
         public QuestionResponseEnum AskQuestion(string message)
@@ -610,10 +613,10 @@ namespace UserInterface.Views
             md.Title = "Save changes";
             int result = md.Run();
             md.Destroy();
-            switch ((Gtk.ResponseType)result)
+            switch ((ResponseType)result)
             {
-                case Gtk.ResponseType.Yes: return QuestionResponseEnum.Yes;
-                case Gtk.ResponseType.No: return QuestionResponseEnum.No;
+                case ResponseType.Yes: return QuestionResponseEnum.Yes;
+                case ResponseType.No: return QuestionResponseEnum.No;
                 default: return QuestionResponseEnum.Cancel;
             }
         }
@@ -623,7 +626,7 @@ namespace UserInterface.Views
         /// <param name="errorLevel">The error level.</param>
         public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
         {
-            Gtk.Application.Invoke(delegate
+            Application.Invoke(delegate
             {
                 StatusWindow.Visible = message != null;
                 if (overwrite || message == null)
@@ -674,6 +677,15 @@ namespace UserInterface.Views
             while (GLib.MainContext.Iteration()) ;
         }
 
+        /// <summary>
+        /// Displays an error message with a 'more info' button.
+        /// </summary>
+        /// <param name="err">Error for which we want to display information.</param>
+        public new void ShowError(Exception err)
+        {
+            OnError?.Invoke(this, new ErrorArgs { Error = err });
+        }
+
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
         {
             TextIter iter = StatusWindow.Buffer.EndIter;
@@ -695,19 +707,6 @@ namespace UserInterface.Views
             ShowDetailedError?.Invoke(sender, args);
         }
 
-        /// <summary>Show a message in a dialog box</summary>
-        /// <param name="message">The message.</param>
-        /// <param name="errorLevel">The error level.</param>
-        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
-        {
-            Gtk.MessageDialog md = new Gtk.MessageDialog(MainWidget.Toplevel as Window, Gtk.DialogFlags.Modal,
-                msgType, buttonType, message);
-            md.Title = title;
-            int result = md.Run();
-            md.Destroy();
-            return result;
-        }
-
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
@@ -718,7 +717,7 @@ namespace UserInterface.Views
             // different thread. That means we can use either
             // System.Timers.Timer or Windows.Forms.Timer in 
             // RunCommand.cs
-            Gtk.Application.Invoke(delegate
+            Application.Invoke(delegate
             {
                 progressBar.Visible = true;
                 progressBar.Fraction = percent / 100.0;
@@ -745,7 +744,7 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>User is trying to stop all currently executing simulations.
+        /// <summary>User is trying to stop all currently executing simulations.</summary>
         /// <param name="e">Event arguments.</param>
         protected void OnStopClicked(object o, EventArgs e)
         {
@@ -756,6 +755,170 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Handler for mouse wheel events. We intercept it to allow Ctrl+wheel-up/down to adjust font size
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void ListView_ScrollEvent(object o, ScrollEventArgs args)
+        {
+            Gdk.ModifierType ctlModifier = !ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
+            if ((args.Event.State & ctlModifier) != 0)
+            {
+                if (args.Event.Direction == Gdk.ScrollDirection.Up)
+                    FontSize += scrollSizeStep;
+                else if (args.Event.Direction == Gdk.ScrollDirection.Down)
+                    FontSize -= scrollSizeStep;
+                args.RetVal = true;
+            }
+        }
+
+        /// <summary>
+        /// Handle key press events to allow ctrl +/-/0 to adjust font size
+        /// </summary>
+        /// <param name="o">Source of the event</param>
+        /// <param name="args">Event arguments</param>
+        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
+        private void ListView_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            args.RetVal = false;
+            Gdk.ModifierType ctlModifier = !ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
+            if ((args.Event.State & ctlModifier) != 0)
+            {
+                switch (args.Event.Key)
+                {
+                    case Gdk.Key.Key_0: FontSize = defaultBaseSize; args.RetVal = true; break;
+                    case Gdk.Key.KP_Add:
+                    case Gdk.Key.plus: FontSize += scrollSizeStep; args.RetVal = true; break;
+                    case Gdk.Key.KP_Subtract:
+                    case Gdk.Key.minus: FontSize -= scrollSizeStep; args.RetVal = true; break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recursively applies a new FontDescription to all widgets
+        /// </summary>
+        /// <param name="widget"></param>
+        /// <param name="newFont"></param>
+        private void SetWidgetFont(Widget widget, Pango.FontDescription newFont)
+        {
+            widget.ModifyFont(newFont);
+            if (widget is Container)
+            {
+                foreach (Widget child in (widget as Container).Children)
+                {
+                    SetWidgetFont(child, newFont);
+                }
+                if (widget is Notebook)
+                    for (int i = 0; i < (widget as Notebook).NPages; i++)
+                        SetWidgetFont((widget as Notebook).GetTabLabel((widget as Notebook).GetNthPage(i)), newFont);
+            }
+        }
+
+        /// <summary>
+        /// Change the font size
+        /// </summary>
+        /// <param name="newSize">New base font size, in points</param>
+        private void SetFontSize(double newSize)
+        {
+            newSize = Math.Min(40.0, Math.Max(4.0, newSize));
+            // Convert the new size from points to Pango units
+            int newVal = Convert.ToInt32(newSize * Pango.Scale.PangoScale);
+            baseFont.Size = newVal;
+
+            // Iterate through all existing controls, setting the new base font
+            if (_mainWidget != null)
+                SetWidgetFont(_mainWidget, baseFont);
+
+            // Reset the style machinery to apply the new base font to all
+            // newly created Widgets.
+            Rc.ReparseAllForSettings(Settings.Default, true);
+        }
+
+        /// <summary>
+        /// Used to modify the cursor. If set to true, the waiting cursor will be displayed.
+        /// If set to false, the default cursor will be used.
+        /// </summary>
+        public bool WaitCursor
+        {
+            get
+            {
+                return waiting;
+            }
+            set
+            {
+                if (MainWindow != null)
+                {
+                    MainWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    waiting = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns a new Builder object generated by parsing the glade 
+        /// text found in the indicated resource.
+        /// </summary>
+        /// <param name="resourceName">Name of the resouce.</param>
+        /// <returns>A new Builder object, or null on failure.</returns>
+        public Builder BuilderFromResource(string resourceName)
+        {
+            Stream resStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            if (resStream == null)
+                return null;
+            StreamReader reader = new StreamReader(resStream);
+            string gladeString = reader.ReadToEnd();
+            Builder result = new Builder();
+            result.AddFromString(gladeString);
+            return result;
+        }
+
+        /// <summary>Show a message in a dialog box</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="errorLevel">The error level.</param>
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType, Window masterWindow)
+        {
+            MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
+                msgType, buttonType, message);
+            md.Title = title;
+            int result = md.Run();
+            md.Destroy();
+            return result;
+        }
+
+        /// <summary>
+        /// Get whatever text is currently on a specific clipboard.
+        /// </summary>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        /// <returns></returns>
+        public string GetClipboardText(string clipboardName)
+        {
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+
+            return cb.WaitForText();
+        }
+
+        /// <summary>
+        /// Place text on a specific clipboard.
+        /// </summary>
+        /// <param name="text">Text to place on the clipboard.</param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
+        public void SetClipboardText(string text, string clipboardName)
+        {
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            cb.Text = text;
+        }
     }
 
     /// <summary>An event argument structure with a string.</summary>

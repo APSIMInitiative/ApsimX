@@ -22,7 +22,7 @@ namespace UserInterface.Commands
         private XmlNode child;
 
         /// <summary>The node description</summary>
-        NodeDescriptionArgs nodeDescription;
+        TreeViewNode nodeDescription;
 
         /// <summary>The explorer view</summary>
         IExplorerView explorerView;
@@ -36,8 +36,10 @@ namespace UserInterface.Commands
         /// <summary>Initializes a new instance of the <see cref="AddModelCommand"/> class.</summary>
         /// <param name="xmlOfModelToAdd">The XML of the model to add</param>
         /// <param name="toParent">The parent model to add the child to</param>
-        public AddModelCommand(IModel parent, XmlNode child, NodeDescriptionArgs nodeDescription, IExplorerView explorerView)
+        public AddModelCommand(IModel parent, XmlNode child, TreeViewNode nodeDescription, IExplorerView explorerView)
         {
+            if (parent.ReadOnly)
+                throw new ApsimXException(parent, string.Format("Unable to modify {0} - it is read-only.", parent.Name));
             this.parent = parent;
             this.child = child;
             this.nodeDescription = nodeDescription;
@@ -54,7 +56,7 @@ namespace UserInterface.Commands
             // name of an existing model so just in case, reset the name for the tree.
             nodeDescription.Name = this.modelToAdd.Name;
 
-            this.explorerView.AddChild(Apsim.FullPath(parent), nodeDescription);
+            this.explorerView.Tree.AddChild(Apsim.FullPath(parent), nodeDescription);
 
             this.modelAdded = true;
         }
@@ -66,7 +68,7 @@ namespace UserInterface.Commands
             if (this.modelAdded && this.modelToAdd != null)
             {
                 parent.Children.Remove(this.modelToAdd as Model);
-                this.explorerView.Delete(Apsim.FullPath(this.modelToAdd));
+                this.explorerView.Tree.Delete(Apsim.FullPath(this.modelToAdd));
             }
         }
     }

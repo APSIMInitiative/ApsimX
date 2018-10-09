@@ -35,12 +35,15 @@ namespace UserInterface.Presenters
 
             foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
             {
-                GraphView graphView = new GraphView();
-                GraphPresenter presenter = new GraphPresenter();
-                explorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                presenter.Attach(graph, graphView, explorerPresenter);
-                presenters.Add(presenter);
-                views.Add(graphView);
+                if (graph.Enabled)
+                {
+                    GraphView graphView = new GraphView();
+                    GraphPresenter presenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                    presenter.Attach(graph, graphView, explorerPresenter);
+                    presenters.Add(presenter);
+                    views.Add(graphView);
+                }
             }
 
             if (views.Count > 0)

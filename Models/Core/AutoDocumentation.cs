@@ -13,7 +13,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using System.Xml;
     using System.IO;
-    using Models.PMF.Functions;
+    using Models.Functions;
     using System.Data;
 
     /// <summary>
@@ -64,9 +64,13 @@ namespace Models.Core
         /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
         /// <param name="documentAllChildren">Document all children?</param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true)
+        /// <param name="force">
+        /// Whether or not to force the generation of documentation, 
+        /// regardless of the model's IncludeInDocumentation status.
+        /// </param>
+        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true, bool force = false)
         {
-            if (model.IncludeInDocumentation)
+            if (force || (model.IncludeInDocumentation && model.Enabled) )
             {
                 if (model is ICustomDocumentation)
                     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
@@ -106,8 +110,9 @@ namespace Models.Core
         /// <param name="tags">The list of tags to add to</param>
         /// <param name="headingLevel">The current heading level</param>
         /// <param name="indent">The current indent level</param>
+        /// <param name="doNotTrim">If true, don't trim the lines</param>
         /// <param name="documentAllChildren">Ensure all children are documented?</param>
-        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren)
+        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim=false)
         {
             List<IModel> childrenDocumented = new List<Core.IModel>();
             int numSpacesStartOfLine = -1;
@@ -119,7 +124,8 @@ namespace Models.Core
             int targetHeadingLevel = headingLevel;
             while (line != null)
             {
-                line = line.Trim();
+                if (!doNotTrim)
+                    line = line.Trim();
 
                 // Adjust heading levels.
                 if (line.StartsWith("#"))
@@ -130,7 +136,7 @@ namespace Models.Core
                     line = hashString + line.Replace("#", "") + hashString;
                 }
 
-                if (line != string.Empty)
+                if (line != string.Empty && !doNotTrim)
                 {
                     {
                         if (numSpacesStartOfLine == -1)
@@ -185,7 +191,7 @@ namespace Models.Core
                 else if (line == "[DocumentView]")
                     tags.Add(new ModelView(model));
                 else
-                    paragraphSoFar += " " + line + "\r\n";
+                    paragraphSoFar += line + "\r\n";
 
                 line = reader.ReadLine();
             }
@@ -246,7 +252,7 @@ namespace Models.Core
         /// <returns></returns>
         private static bool GetHeadingFromLine(string st, out string heading, out int headingLevel)
         {
-            st = st.Trim();
+            // st = st.Trim();
             heading = st.Replace("#", string.Empty);
             headingLevel = 0;
             if (st.StartsWith("####"))

@@ -361,7 +361,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the animal group
         /// </summary>
-        public TAnimalGroup Animals { get; set; }
+        public AnimalGroup Animals { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock occupied
@@ -381,7 +381,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 0=mothers, 1=suckling young
         /// </summary>
-        public TStateInfo[] InitState = new TStateInfo[2];             
+        public AnimalStateInfo[] InitState = new AnimalStateInfo[2];             
         
         /// <summary>
         /// RDF factor
@@ -391,22 +391,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// Index is to forage-within-paddock
         /// </summary>
-        public GrazType.TGrazingInputs[] InitForageInputs;              
+        public GrazType.GrazingInputs[] InitForageInputs;              
         
         /// <summary>
         /// Forage inputs
         /// </summary>
-        public GrazType.TGrazingInputs[] StepForageInputs;
+        public GrazType.GrazingInputs[] StepForageInputs;
 
         /// <summary>
         /// Paddock grazing inputs
         /// </summary>
-        public GrazType.TGrazingInputs PaddockInputs;
+        public GrazType.GrazingInputs PaddockInputs;
 
         /// <summary>
         /// Pasture intake
         /// </summary>
-        public GrazType.TGrazingOutputs[] PastIntakeRate = new GrazType.TGrazingOutputs[2];
+        public GrazType.GrazingOutputs[] PastIntakeRate = new GrazType.GrazingOutputs[2];
         
         /// <summary>
         /// Supplement intake
@@ -419,12 +419,12 @@ namespace Models.GrazPlan
         public StockContainer()
         {
             for (int i = 0; i < 2; i++)
-                this.PastIntakeRate[i] = new GrazType.TGrazingOutputs();
+                this.PastIntakeRate[i] = new GrazType.GrazingOutputs();
         }
     }
 
     /// <summary>
-    /// TStockList is primarily a list of TAnimalGroups. Each animal group has a     
+    /// StockList is primarily a list of AnimalGroups. Each animal group has a     
     /// "current paddock" (function getInPadd() ) and a "group tag" (function getTag()      
     /// associated with it. The correspondences between these and the animal         
     /// groups must be maintained.                                                   
@@ -490,12 +490,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Base parameters
         /// </summary>
-        private TAnimalParamSet baseParams;
+        private AnimalParamSet baseParams;
 
         /// <summary>
         /// Set of genotype parameters
         /// </summary>
-        private TAnimalParamSet[] genotypeParams = new TAnimalParamSet[0];
+        private AnimalParamSet[] genotypeParams = new AnimalParamSet[0];
 
         /// <summary>
         /// stock[0] is kept for use as temporary storage         
@@ -505,7 +505,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The paddock list
         /// </summary>
-        private TPaddockList paddockList;
+        private PaddockList paddockList;
 
         /// <summary>
         /// The list of enterprises to manage
@@ -525,7 +525,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the ref to the hosts random number generator
         /// </summary>
-        public TMyRandom RandFactory { get; set; }
+        public MyRandom RandFactory { get; set; }
 
         /// <summary>
         /// Gets or sets the start of the simulation
@@ -544,7 +544,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the list of paddocks
         /// </summary>
-        public TPaddockList Paddocks
+        public PaddockList Paddocks
         {
             get { return this.paddockList; }
         }
@@ -576,7 +576,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Sets the animals weather
         /// </summary>
-        public TAnimalWeather Weather
+        public AnimalWeather Weather
         {
             set
             {
@@ -589,12 +589,12 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="constFileName">The name of the parameter file</param>
         /// <returns>The animal parameter set</returns>
-        public static TAnimalParamSet MakeParamSet(string constFileName)
+        public static AnimalParamSet MakeParamSet(string constFileName)
         {
-            TAnimalParamSet result = new TAnimalParamSet((TAnimalParamSet)null);
-            result.CopyAll(TGAnimalParams.AnimalParamsGlb());
+            AnimalParamSet result = new AnimalParamSet((AnimalParamSet)null);
+            result.CopyAll(GlobalAnimalParams.AnimalParamsGlb());
             if (constFileName != string.Empty)
-                TGParamFactory.ParamXMLFactory().readFromFile(constFileName, result, true);
+                GlobalParameterFactory.ParamXMLFactory().readFromFile(constFileName, result, true);
             result.sCurrLocale = GrazLocale.sDefaultLocale();
 
             return result;
@@ -616,7 +616,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="posIdx">The index in the stock list</param>
         /// <returns>Return the animal group</returns>
-        private TAnimalGroup GetAt(int posIdx)
+        private AnimalGroup GetAt(int posIdx)
         {
             return this.stock[posIdx].Animals;
         }
@@ -626,10 +626,10 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="posIdx">Index in the stock list</param>
         /// <param name="animalGroup">The animal group value</param>
-        private void SetAt(int posIdx, TAnimalGroup animalGroup)
+        private void SetAt(int posIdx, AnimalGroup animalGroup)
         {
             if ((posIdx == this.Count() + 1) && (animalGroup != null))
-                this.Add(animalGroup, this.Paddocks.byIndex(0), 0, 0);
+                this.Add(animalGroup, this.Paddocks.ByIndex(0), 0, 0);
             else
                 this.stock[posIdx].Animals = animalGroup;
         }
@@ -652,7 +652,7 @@ namespace Models.GrazPlan
         public string GetInPadd(int posIdx)
         {
             if ((posIdx >= 1) && (posIdx <= this.Count()))
-                return this.stock[posIdx].PaddOccupied.sName;
+                return this.stock[posIdx].PaddOccupied.Name;
             else
                 return string.Empty;
         }
@@ -666,7 +666,7 @@ namespace Models.GrazPlan
         {
             PaddockInfo paddock;
 
-            paddock = this.Paddocks.byName(value);
+            paddock = this.Paddocks.ByName(value);
             if (paddock == null)
                 throw new Exception("Stock: attempt to place animals in non-existent paddock: " + value);
             else
@@ -701,7 +701,7 @@ namespace Models.GrazPlan
         /// Set the weather data for the animal group
         /// </summary>
         /// <param name="theEnv">The weather data</param>
-        private void SetWeather(TAnimalWeather theEnv)
+        private void SetWeather(AnimalWeather theEnv)
         {
             int i;
 
@@ -722,9 +722,9 @@ namespace Models.GrazPlan
         {
             PaddockInfo paddInfo;
 
-            paddInfo = this.paddockList.byID(paddIdx);
+            paddInfo = this.paddockList.ByID(paddIdx);
             if (paddInfo != null)
-                paddInfo.fWaterlog = value;
+                paddInfo.Waterlog = value;
         }
         
         /// <summary>
@@ -733,7 +733,7 @@ namespace Models.GrazPlan
         private void Merge()
         {
             int idx, jdx;
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
 
             // Remove empty groups                   
             for (idx = 1; idx <= this.Count(); idx++)                                                     
@@ -810,7 +810,7 @@ namespace Models.GrazPlan
         /// <param name="posIdx">Index in stock list</param>
         private void SetInitialStockInputs(int posIdx)
         {
-            TAnimalGroup group;
+            AnimalGroup group;
             PaddockInfo paddock;
             int jdx;
 
@@ -818,14 +818,14 @@ namespace Models.GrazPlan
             paddock = this.GetPaddInfo(posIdx);
 
             group.PaddSteep = paddock.Steepness;
-            group.WaterLogging = paddock.fWaterlog;
+            group.WaterLogging = paddock.Waterlog;
             group.RationFed.Assign(paddock.SuppInPadd);                              // fTotalAmount will be overridden       
 
             // ensure young are fed
             if (group.Young != null)
             {
                 group.Young.PaddSteep = paddock.Steepness;
-                group.Young.WaterLogging = paddock.fWaterlog;
+                group.Young.WaterLogging = paddock.Waterlog;
                 group.Young.RationFed.Assign(paddock.SuppInPadd);
             }
 
@@ -834,9 +834,9 @@ namespace Models.GrazPlan
             for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
             {
                 if (this.stock[posIdx].StepForageInputs[jdx] == null)
-                    this.stock[posIdx].StepForageInputs[jdx] = new GrazType.TGrazingInputs();
+                    this.stock[posIdx].StepForageInputs[jdx] = new GrazType.GrazingInputs();
 
-                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.byIndex(jdx).availForage();
+                this.stock[posIdx].InitForageInputs[jdx] = paddock.Forages.ByIndex(jdx).AvailForage();
                 this.stock[posIdx].StepForageInputs[jdx].CopyFrom(this.stock[posIdx].InitForageInputs[jdx]);
             }
         }
@@ -848,22 +848,22 @@ namespace Models.GrazPlan
         public void ComputeStepAvailability(int posIdx)
         {
             PaddockInfo paddock;
-            TAnimalGroup group;
+            AnimalGroup group;
             double propn;
             int jdx;
 
             paddock = this.GetPaddInfo(posIdx);
             group = this.At(posIdx);
 
-            this.stock[posIdx].PaddockInputs = new GrazType.TGrazingInputs();
+            this.stock[posIdx].PaddockInputs = new GrazType.GrazingInputs();
             for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
                 GrazType.addGrazingInputs(jdx + 1, this.stock[posIdx].StepForageInputs[jdx], ref this.stock[posIdx].PaddockInputs);
 
             group.Herbage.CopyFrom(this.stock[posIdx].PaddockInputs);
             group.RationFed.Assign(paddock.SuppInPadd);                               // fTotalAmount will be overridden       
 
-            if (paddock.fSummedPotIntake > 0.0)
-                propn = group.PotIntake / paddock.fSummedPotIntake;                  // This is the proportion of the total   
+            if (paddock.SummedPotIntake > 0.0)
+                propn = group.PotIntake / paddock.SummedPotIntake;                  // This is the proportion of the total   
             else                                                                        // supplement that one animal gets     
                 propn = 0.0;
 
@@ -873,8 +873,8 @@ namespace Models.GrazPlan
                 group.Young.Herbage.CopyFrom(this.stock[posIdx].PaddockInputs);
                 group.Young.RationFed.Assign(paddock.SuppInPadd);
 
-                if (paddock.fSummedPotIntake > 0.0)
-                    propn = group.Young.PotIntake / paddock.fSummedPotIntake;
+                if (paddock.SummedPotIntake > 0.0)
+                    propn = group.Young.PotIntake / paddock.SummedPotIntake;
                 else
                     propn = 0.0;
                 group.Young.RationFed.TotalAmount = propn * StdMath.DIM(paddock.SuppInPadd.TotalAmount, paddock.SuppRemovalKG);
@@ -904,7 +904,7 @@ namespace Models.GrazPlan
             while ((posn <= this.Count()) && (this.GetPaddInfo(posn) != paddock))          // this paddock                         
                 posn++;
 
-            if ((posn > this.Count()) || (paddock.fArea <= 0.0))
+            if ((posn > this.Count()) || (paddock.Area <= 0.0))
                 result = 1.0;
             else
             {
@@ -915,7 +915,7 @@ namespace Models.GrazPlan
                 {
                     if (this.stock[posn].PaddockInputs.Herbage[classIdx].Biomass > 0.0)
                     {
-                        removalRate = paddock.fSummedPotIntake * herbageRI[classIdx] / paddock.fArea;
+                        removalRate = paddock.SummedPotIntake * herbageRI[classIdx] / paddock.Area;
                         if (removalRate > 0.0)
                             removalTime = Math.Min(removalTime, this.stock[posn].PaddockInputs.Herbage[classIdx].Biomass / removalRate);
                     }
@@ -930,7 +930,7 @@ namespace Models.GrazPlan
         /// Calculate the intake limit
         /// </summary>
         /// <param name="group">Animal group</param>
-        public void ComputeIntakeLimit(TAnimalGroup group)
+        public void ComputeIntakeLimit(AnimalGroup group)
         {
             group.Calc_IntakeLimit();
             if (group.Young != null)
@@ -943,9 +943,10 @@ namespace Models.GrazPlan
         /// <param name="posIdx">Position in stock list</param>
         /// <param name="startTime">Start time</param>
         /// <param name="deltaTime">Time adjustment</param>
-        private void ComputeGrazing(int posIdx, double startTime, double deltaTime)
+        /// <param name="feedSuppFirst"></param>
+        private void ComputeGrazing(int posIdx, double startTime, double deltaTime, bool feedSuppFirst)
         {
-            this.At(posIdx).Grazing(deltaTime, (startTime == 0.0), false, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
+            this.At(posIdx).Grazing(deltaTime, (startTime == 0.0), feedSuppFirst, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
             if (this.At(posIdx).Young != null)
                 this.At(posIdx).Young.Grazing(deltaTime, (startTime == 0.0), false, ref this.stock[posIdx].PastIntakeRate[1], ref this.stock[posIdx].SuppIntakeRate[1]);
         }
@@ -957,7 +958,7 @@ namespace Models.GrazPlan
         /// <param name="deltaTime">Time adjustment</param>
         private void ComputeRemoval(PaddockInfo paddock, double deltaTime)
         {
-            TAnimalGroup group;
+            AnimalGroup group;
             ForageInfo forage;
             double propn;
             int posn;
@@ -965,7 +966,7 @@ namespace Models.GrazPlan
             int classIdx;
             int ripeIdx;
 
-            if (paddock.fArea > 0.0)
+            if (paddock.Area > 0.0)
             {
                 for (posn = 1; posn <= this.Count(); posn++)
                 {
@@ -975,7 +976,7 @@ namespace Models.GrazPlan
 
                         for (forageIdx = 0; forageIdx <= paddock.Forages.Count() - 1; forageIdx++)
                         {
-                            forage = paddock.Forages.byIndex(forageIdx);
+                            forage = paddock.Forages.ByIndex(forageIdx);
 
                             for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
                             {
@@ -1007,13 +1008,13 @@ namespace Models.GrazPlan
                     {
                         for (forageIdx = 0; forageIdx <= paddock.Forages.Count() - 1; forageIdx++)
                         {
-                            forage = paddock.Forages.byIndex(forageIdx);
+                            forage = paddock.Forages.ByIndex(forageIdx);
 
                             for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
-                                this.stock[posn].StepForageInputs[forageIdx].Herbage[classIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Herbage[classIdx].Biomass, forage.RemovalKG.Herbage[classIdx] / paddock.fArea);
+                                this.stock[posn].StepForageInputs[forageIdx].Herbage[classIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Herbage[classIdx].Biomass, forage.RemovalKG.Herbage[classIdx] / paddock.Area);
 
                             for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
-                                this.stock[posn].StepForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass, forage.RemovalKG.Seed[1, ripeIdx] / paddock.fArea);
+                                this.stock[posn].StepForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass = StdMath.DIM(this.stock[posn].InitForageInputs[forageIdx].Seeds[forageIdx + 1, ripeIdx].Biomass, forage.RemovalKG.Seed[1, ripeIdx] / paddock.Area);
                         } // _ loop over forages within paddock _
                     }
                 }
@@ -1055,11 +1056,11 @@ namespace Models.GrazPlan
         /// <param name="paddock">The paddock</param>
         /// <param name="animalGroup">The animal group</param>
         /// <returns>The paddock rank</returns>
-        private double GetPaddockRank(PaddockInfo paddock, TAnimalGroup animalGroup)
+        private double GetPaddockRank(PaddockInfo paddock, AnimalGroup animalGroup)
         {
             double result;
-            GrazType.TGrazingInputs forageInputs;
-            GrazType.TGrazingInputs paddockInputs;
+            GrazType.GrazingInputs forageInputs;
+            GrazType.GrazingInputs paddockInputs;
             double[] herbageRI = new double[GrazType.DigClassNo + 1];
             double[,] seedRI = new double[GrazType.MaxPlantSpp + 1, GrazType.RIPE + 1];
             double dummy = 0.0;
@@ -1067,14 +1068,14 @@ namespace Models.GrazPlan
             int classIdx;
 
             animalGroup.PaddSteep = paddock.Steepness;
-            animalGroup.WaterLogging = paddock.fWaterlog;
+            animalGroup.WaterLogging = paddock.Waterlog;
             animalGroup.RationFed.Assign(paddock.SuppInPadd);
             animalGroup.RationFed.TotalAmount = 0.0;                                        // No supplementary feed here            
 
-            paddockInputs = new GrazType.TGrazingInputs();
+            paddockInputs = new GrazType.GrazingInputs();
             for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
             {
-                forageInputs = paddock.Forages.byIndex(jdx).availForage();
+                forageInputs = paddock.Forages.ByIndex(jdx).AvailForage();
                 GrazType.addGrazingInputs(jdx + 1, forageInputs, ref paddockInputs);
             }
             animalGroup.Herbage = paddockInputs;
@@ -1293,7 +1294,7 @@ namespace Models.GrazPlan
                                             paddockIter++;
                                         }
                                         if (!found)
-                                            exclPaddocks.Add(this.Paddocks.byIndex(index).sName);           // add to the exclude list
+                                            exclPaddocks.Add(this.Paddocks.ByIndex(index).Name);           // add to the exclude list
                                     }
                                     tagNo = this.GrazingPeriods.GetTag(p, tagIter);
                                     this.Draft(tagNo, exclPaddocks); // now do the draft only for this tagno
@@ -1359,7 +1360,7 @@ namespace Models.GrazPlan
                     i = 1;
                     while (!found && (i < this.Paddocks.Count()))
                     {
-                        if (this.Paddocks.byIndex(i).sName == this.stock[posIdx].PaddOccupied.sName)
+                        if (this.Paddocks.ByIndex(i).Name == this.stock[posIdx].PaddOccupied.Name)
                         {
                             result = i;
                             found = true;
@@ -1388,7 +1389,7 @@ namespace Models.GrazPlan
                 // if this group belongs to this enterprise
                 if (tagNo == this.GetTag(g))                                     
                 {
-                    this.SetInPadd(g, this.Paddocks.byIndex(paddockIdx).sName);  // move them to this paddock
+                    this.SetInPadd(g, this.Paddocks.ByIndex(paddockIdx).Name);  // move them to this paddock
                 }
                 g++;
             }
@@ -1414,13 +1415,13 @@ namespace Models.GrazPlan
         /// Create a TStockList
         /// </summary>
         /// <param name="randomFactory">The random number container</param>
-        public StockList(TMyRandom randomFactory)
+        public StockList(MyRandom randomFactory)
         {
             this.StartRun = 0;
             this.RandFactory = randomFactory;                                               // store the ptr
             this.SetParamFile(string.Empty);                                                // Creates a default FBaseParams         
             Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
-            this.paddockList = new TPaddockList();
+            this.paddockList = new PaddockList();
             this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
             this.forageProviders = new ForageProviders();
@@ -1456,7 +1457,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="idx">Genotype index</param>
         /// <returns>The genotype</returns>
-        public TAnimalParamSet GetGenotype(int idx)
+        public AnimalParamSet GetGenotype(int idx)
         {
             return this.genotypeParams[idx];
         }
@@ -1467,12 +1468,12 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="genoName">The genotype name</param>
         /// <returns>The genotype</returns>
-        public TAnimalParamSet GetGenotype(string genoName)
+        public AnimalParamSet GetGenotype(string genoName)
         {
             int idx;
-            TAnimalParamSet srcParamSet;
+            AnimalParamSet srcParamSet;
 
-            TAnimalParamSet result = null;
+            AnimalParamSet result = null;
             if ((genoName == string.Empty) && (this.genotypeParams.Length >= 1))                           // Null string is a special case         
                 result = this.genotypeParams[0];
             else
@@ -1488,7 +1489,7 @@ namespace Models.GrazPlan
                     srcParamSet = this.baseParams.Match(genoName);
                     if (srcParamSet != null)
                     {
-                        result = new TAnimalParamSet(null, srcParamSet);
+                        result = new AnimalParamSet(null, srcParamSet);
                         idx = this.genotypeParams.Length;
                         Array.Resize(ref this.genotypeParams, idx + 1);
                         this.genotypeParams[idx] = result;
@@ -1511,7 +1512,7 @@ namespace Models.GrazPlan
         /// <param name="tagNo">Tag value</param>
         /// <param name="priority">Priority number</param>
         /// <returns>The index of the new group in the stock array</returns>
-        public int Add(TAnimalGroup animalGroup, PaddockInfo paddInfo, int tagNo, int priority)
+        public int Add(AnimalGroup animalGroup, PaddockInfo paddInfo, int tagNo, int priority)
         {
             int idx;
 
@@ -1536,10 +1537,10 @@ namespace Models.GrazPlan
         /// <returns>The index of the new animal group</returns>
         public int Add(AnimalInits animalInits)
         {
-            TAnimalGroup newGroup;
+            AnimalGroup newGroup;
             PaddockInfo paddock;
 
-            newGroup = new TAnimalGroup(
+            newGroup = new AnimalGroup(
                                         this.GetGenotype(animalInits.Genotype),
                                         animalInits.Sex,
                                         animalInits.Number,
@@ -1570,7 +1571,7 @@ namespace Models.GrazPlan
                     newGroup.Young = null;
                 }
                 if (this.IsGiven(animalInits.BirthCS))
-                    newGroup.BirthCondition = TAnimalParamSet.CondScore2Condition(animalInits.BirthCS, TAnimalParamSet.TCond_System.csSYSTEM1_5);
+                    newGroup.BirthCondition = AnimalParamSet.CondScore2Condition(animalInits.BirthCS, AnimalParamSet.Cond_System.csSYSTEM1_5);
             }
 
             if (newGroup.Young != null)
@@ -1581,9 +1582,9 @@ namespace Models.GrazPlan
                     newGroup.Young.FleeceCutWeight = animalInits.YoungGFW;
             }
 
-            paddock = this.paddockList.byName(animalInits.Paddock.ToLower());
+            paddock = this.paddockList.ByName(animalInits.Paddock.ToLower());
             if (paddock == null)
-                paddock = this.paddockList.byIndex(0);
+                paddock = this.paddockList.ByIndex(0);
 
             return this.Add(newGroup, paddock, animalInits.Tag, animalInits.Priority);
         }
@@ -1653,7 +1654,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="posn">The position in the list</param>
         /// <returns>The animal group at the index position</returns>
-        public TAnimalGroup At(int posn)
+        public AnimalGroup At(int posn)
         {
             return this.GetAt(posn);
         }
@@ -1702,15 +1703,16 @@ namespace Models.GrazPlan
         /// <param name="paddName">Paddock name</param>
         /// <param name="suppKG">The amount of supplement</param>
         /// <param name="supplement">The supplement to use</param>
-        public void PlaceSuppInPadd(string paddName, double suppKG, TSupplement supplement)
+        /// <param name="feedSuppFirst"></param>
+        public void PlaceSuppInPadd(string paddName, double suppKG, FoodSupplement supplement, bool feedSuppFirst)
         {
             PaddockInfo thePadd;
 
-            thePadd = this.Paddocks.byName(paddName);
+            thePadd = this.Paddocks.ByName(paddName);
             if (thePadd == null)
                 throw new Exception("Stock: attempt to feed supplement into non-existent paddock");
             else
-                thePadd.FeedSupplement(suppKG, supplement);
+                thePadd.FeedSupplement(suppKG, supplement, feedSuppFirst);
         }
 
         // Model execution routines ................................................
@@ -1720,7 +1722,7 @@ namespace Models.GrazPlan
         /// </summary>
         public void BeginTimeStep()
         {
-            this.Paddocks.beginTimeStep();
+            this.Paddocks.BeginTimeStep();
         }
 
         /// <summary>
@@ -1731,7 +1733,7 @@ namespace Models.GrazPlan
             const double EPS = 1.0E-6;
 
             double totPotIntake;
-            TAnimalList newGroups;
+            AnimalList newGroups;
             PaddockInfo thePaddock;
             double timeValue;
             double delta;
@@ -1742,8 +1744,8 @@ namespace Models.GrazPlan
 
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
             {
-                thePaddock = this.Paddocks.byIndex(paddIdx);
-                thePaddock.computeTotals();
+                thePaddock = this.Paddocks.ByIndex(paddIdx);
+                thePaddock.ComputeTotals();
             }
 
             for (idx = 1; idx <= this.Count(); idx++)
@@ -1776,7 +1778,7 @@ namespace Models.GrazPlan
             // Compute the total potential intake (used to distribute supplement between groups of animals)         
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)              
             {                                                                               
-                thePaddock = this.Paddocks.byIndex(paddIdx);                                  
+                thePaddock = this.Paddocks.ByIndex(paddIdx);                                  
                 totPotIntake = 0.0;
 
                 for (idx = 1; idx <= this.Count(); idx++)
@@ -1786,13 +1788,13 @@ namespace Models.GrazPlan
                         if (this.At(idx).Young != null)
                             totPotIntake = totPotIntake + (this.At(idx).Young.NoAnimals * this.At(idx).Young.PotIntake);
                     }
-                thePaddock.fSummedPotIntake = totPotIntake;
+                thePaddock.SummedPotIntake = totPotIntake;
             }
 
             // We loop over paddocks and then over animal groups within a paddock so that we can take account of herbage 
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
             {                                                                               
-                thePaddock = this.Paddocks.byIndex(paddIdx);
+                thePaddock = this.Paddocks.ByIndex(paddIdx);
                                                    
                 // removal & its effect on intake      
                 iterator = 1;                                                                  // This loop handles RDP insufficiency   
@@ -1812,7 +1814,7 @@ namespace Models.GrazPlan
                         // Compute rate of grazing for this substep                             
                         for (idx = 1; idx <= this.Count(); idx++)                           
                             if (this.GetPaddInfo(idx) == thePaddock)                             
-                                this.ComputeGrazing(idx, timeValue, delta);
+                                this.ComputeGrazing(idx, timeValue, delta, thePaddock.FeedSuppFirst);
 
                         this.ComputeRemoval(thePaddock, delta);
 
@@ -1833,7 +1835,7 @@ namespace Models.GrazPlan
                         done = (RDP == 1.0);                                              // Is there an animal group in this paddock with an RDP insufficiency?  
                         if (!done)                                                         
                         {
-                            thePaddock.zeroRemoval();
+                            thePaddock.ZeroRemoval();
 
                             // If so, we have to revert the state of the animal group ready for the second iteration.
                             for (idx = 1; idx <= this.Count(); idx++)                       
@@ -1869,7 +1871,7 @@ namespace Models.GrazPlan
             if (provider != null)
                 thePadd = provider.OwningPaddock;
             else
-                thePadd = this.paddockList.byID(paddID);
+                thePadd = this.paddockList.ByID(paddID);
 
             massKGHA = 0.0;
             if (thePadd != null)
@@ -1881,7 +1883,7 @@ namespace Models.GrazPlan
                         if (this.At(idx).Young != null)
                             massKGHA = massKGHA + (this.At(idx).Young.NoAnimals * this.At(idx).Young.LiveWeight);
                     }
-                massKGHA = massKGHA / thePadd.fArea;
+                massKGHA = massKGHA / thePadd.Area;
             }
 
             if (units == "kg/ha")
@@ -1921,7 +1923,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="destExcretion">Output excretion data</param>
         /// <param name="srcExcretion">The excretion data</param>
-        private void AddExcretions(ref TExcretionInfo destExcretion, TExcretionInfo srcExcretion)
+        private void AddExcretions(ref ExcretionInfo destExcretion, ExcretionInfo srcExcretion)
         {
             if (srcExcretion.dDefaecations > 0.0)
             {
@@ -1990,26 +1992,26 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="paddID">Paddock ID</param>
         /// <param name="excretion">The excretion info</param>
-        public void ReturnExcretion(int paddID, out TExcretionInfo excretion)
+        public void ReturnExcretion(int paddID, out ExcretionInfo excretion)
         {
             PaddockInfo thePadd;
             double area;
             int idx;
 
-            thePadd = this.paddockList.byID(paddID);
+            thePadd = this.paddockList.ByID(paddID);
 
             if (thePadd != null)
-                area = thePadd.fArea;
+                area = thePadd.Area;
             else if (this.paddockList.Count() == 0)
                 area = 1.0;
             else
             {
                 area = 0.0;
                 for (idx = 0; idx <= this.paddockList.Count() - 1; idx++)
-                    area = area + this.paddockList.byIndex(idx).fArea;
+                    area = area + this.paddockList.ByIndex(idx).Area;
             }
 
-            excretion = new TExcretionInfo();
+            excretion = new ExcretionInfo();
             for (idx = 1; idx <= this.Count(); idx++)
             {
                 if ((thePadd == null) || (this.GetPaddInfo(idx) == thePadd))
@@ -2038,7 +2040,7 @@ namespace Models.GrazPlan
             string[,] maleNames = { { "wether", "ram" }, { "steer", "bull" } };   // [AnimalType,Castrated..Male] of String =
 
             string result;
-            TAnimalGroup theGroup;
+            AnimalGroup theGroup;
 
             if (useYoung)
                 theGroup = this.At(idx).Young;
@@ -2069,7 +2071,7 @@ namespace Models.GrazPlan
         /// <param name="ageDays">Age in days</param>
         /// <param name="parameters">Breed parameter set</param>
         /// <returns>The maximum normal weight kg</returns>
-        private double MaxNormWtFunc(double srw, double bw, int ageDays, TAnimalParamSet parameters)
+        private double MaxNormWtFunc(double srw, double bw, int ageDays, AnimalParamSet parameters)
         {
             double growthRate;
 
@@ -2084,7 +2086,7 @@ namespace Models.GrazPlan
         /// <param name="reprodStatus">Reproductive status</param>
         /// <param name="parameters">Animal parameter set</param>
         /// <returns>The normal weight kg</returns>
-        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, TAnimalParamSet parameters)
+        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, AnimalParamSet parameters)
         {
             double stdRefWt;
 
@@ -2105,7 +2107,7 @@ namespace Models.GrazPlan
         /// <param name="condition">Animal condition</param>
         /// <param name="chill">Chill index</param>
         /// <returns>The reproduction rate</returns>
-        private double GetReproRate(CohortsInfo cohortsInfo, TAnimalParamSet mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
+        private double GetReproRate(CohortsInfo cohortsInfo, AnimalParamSet mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
         {
             double result = 0.0;
             double[] pregRate = new double[4];
@@ -2174,7 +2176,7 @@ namespace Models.GrazPlan
         /// <param name="newGroups">List of new animal groups</param>
         public void AddCohorts(CohortsInfo cohortsInfo, int dayOfYear, double latitude, List<int> newGroups)
         {
-            TAnimalParamSet mainGenotype;
+            AnimalParamSet mainGenotype;
             AgeInfo[] ageInfoList;
 
             AnimalInits animalInits;
@@ -2239,7 +2241,7 @@ namespace Models.GrazPlan
                     ageInfoList[cohortIdx].NormalBaseWt = this.GrowthCurve(ageInfoList[cohortIdx].AgeDays, cohortsInfo.ReproClass, mainGenotype);
 
                     // Estimate a default fleece weight based on time since shearing
-                    ageInfoList[cohortIdx].FleeceWt = TAnimalParamSet.fDefaultFleece(
+                    ageInfoList[cohortIdx].FleeceWt = AnimalParamSet.fDefaultFleece(
                                                                                     mainGenotype,
                                                                                     ageInfoList[cohortIdx].AgeDays,
                                                                                     cohortsInfo.ReproClass,
@@ -2265,7 +2267,7 @@ namespace Models.GrazPlan
                 if (this.IsGiven(cohortsInfo.MeanLiveWt))
                     baseWtScalar = (cohortsInfo.MeanLiveWt - cohortsInfo.MeanGFW) / meanNormalWt;
                 else if (this.IsGiven(cohortsInfo.CondScore))
-                    baseWtScalar = TAnimalParamSet.CondScore2Condition(cohortsInfo.CondScore);
+                    baseWtScalar = AnimalParamSet.CondScore2Condition(cohortsInfo.CondScore);
                 else
                     baseWtScalar = 1.0;
 
@@ -2473,7 +2475,7 @@ namespace Models.GrazPlan
                                 animalInits.Weight = ageInfoList[cohortIdx].BaseWeight + ageInfoList[cohortIdx].FleeceWt;
                                 animalInits.MaxPrevWt = StdMath.DMISSING; // compute from cond_score
                                 animalInits.FleeceWt = ageInfoList[cohortIdx].FleeceWt;
-                                animalInits.FibreDiam = TAnimalParamSet.fDefaultMicron(
+                                animalInits.FibreDiam = AnimalParamSet.fDefaultMicron(
                                                                                      mainGenotype,
                                                                                      animalInits.AgeDays,
                                                                                      animalInits.Sex,
@@ -2525,13 +2527,13 @@ namespace Models.GrazPlan
         /// <returns>The index of the new group</returns>
         protected int Buy(PurchaseInfo animalInfo)
         {
-            TAnimalParamSet agenotype;
-            TAnimalGroup newGroup;
+            AnimalParamSet agenotype;
+            AnimalGroup newGroup;
             double bodyCondition;
             double liveWeight;
             double lowBaseWeight = 0.0;
             double highBaseWeight = 0.0;
-            TAnimalList weanList;
+            AnimalList weanList;
             int paddNo;
 
             int result = 0;
@@ -2546,13 +2548,13 @@ namespace Models.GrazPlan
                 {
                     liveWeight = this.GrowthCurve(animalInfo.AgeDays, animalInfo.Repro, agenotype);
                     if (animalInfo.CondScore > 0.0)
-                        liveWeight = liveWeight * TAnimalParamSet.CondScore2Condition(animalInfo.CondScore);
+                        liveWeight = liveWeight * AnimalParamSet.CondScore2Condition(animalInfo.CondScore);
                     if (agenotype.Animal == GrazType.AnimalType.Sheep)
                         liveWeight = liveWeight + animalInfo.GFW;
                 }
 
                 // Construct a new group of animals.     
-                newGroup = new TAnimalGroup(
+                newGroup = new AnimalGroup(
                                             agenotype,
                                             animalInfo.Repro,                         // Repro should be Empty, Castrated or 
                                             animalInfo.Number,                        // Male; pregnancy is handled with the 
@@ -2564,7 +2566,7 @@ namespace Models.GrazPlan
                 // Adjust the condition score if it has been given
                 if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))        
                 {                                                                                                
-                    bodyCondition = TAnimalParamSet.CondScore2Condition(animalInfo.CondScore);
+                    bodyCondition = AnimalParamSet.CondScore2Condition(animalInfo.CondScore);
                     newGroup.WeightRangeForCond(
                                                 animalInfo.Repro, 
                                                 animalInfo.AgeDays,
@@ -2632,11 +2634,11 @@ namespace Models.GrazPlan
                 } // if (ReproState = Empty) 
 
                 paddNo = 0;                                                                          // Newly bought animals have tag # zero and go in the first named paddock.  
-                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks.byIndex(paddNo).sName == string.Empty))   
+                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks.ByIndex(paddNo).Name == string.Empty))   
                     paddNo++;
                 if (paddNo >= this.Paddocks.Count())
                     paddNo = 0;
-                result = this.Add(newGroup, this.Paddocks.byIndex(paddNo), 0, 0);
+                result = this.Add(newGroup, this.Paddocks.ByIndex(paddNo), 0, 0);
             } // if AnimalInfo.Number > 0 
             return result;
         }
@@ -2784,7 +2786,7 @@ namespace Models.GrazPlan
         {
             int numToWean;
             int mothersToWean;
-            TAnimalList newGroups;
+            AnimalList newGroups;
             int idx, n;
 
             number = Math.Max(number, 0);
@@ -2874,7 +2876,7 @@ namespace Models.GrazPlan
         /// <param name="numToKeep">Number to keep</param>
         public void Split(int groupIdx, int numToKeep)
         {
-            TAnimalGroup srcGroup;
+            AnimalGroup srcGroup;
             int numToSplit;
 
             srcGroup = this.GetAt(groupIdx);
@@ -2893,7 +2895,7 @@ namespace Models.GrazPlan
         /// <param name="ageDays">Age in days</param>
         public void SplitAge(int groupIdx, int ageDays)
         {
-            TAnimalGroup srcGroup;
+            AnimalGroup srcGroup;
             int numMales = 0;
             int numFemales = 0;
 
@@ -2916,14 +2918,14 @@ namespace Models.GrazPlan
             double varRatio = 0.10;                                                 // Coefficient of variation of LW (0-1)       
             int NOSTEPS = 20;
 
-            TAnimalGroup srcGroup;
+            AnimalGroup srcGroup;
             double splitSD;                                                         // Position of the threshold on the live wt   
                                                                                     //   distribution of the group, in S.D. units 
             double removePropn;                                                     // Proportion of animals lighter than SplitWt 
             int numToRemove;                                                        // Number to transfer to TempAnimals          
             int numAnimals;
             double liveWt;
-            TDifferenceRecord diffs;
+            DifferenceRecord diffs;
             double rightSD;
             double stepWidth;
             double prevCum;
@@ -2944,7 +2946,7 @@ namespace Models.GrazPlan
 
                 if (numToRemove > 0)
                 {
-                    diffs = new TDifferenceRecord() { StdRefWt = srcGroup.NODIFF.StdRefWt, BaseWeight = srcGroup.NODIFF.BaseWeight, FleeceWt = srcGroup.NODIFF.FleeceWt };            
+                    diffs = new DifferenceRecord() { StdRefWt = srcGroup.NODIFF.StdRefWt, BaseWeight = srcGroup.NODIFF.BaseWeight, FleeceWt = srcGroup.NODIFF.FleeceWt };            
                     if (numToRemove < numAnimals)
                     {
                         // This computation gives us the mean live weight of animals which are    
@@ -2982,8 +2984,8 @@ namespace Models.GrazPlan
         /// <param name="groupIdx">The animal group index</param>
         public void SplitYoung(int groupIdx)
         {
-            TAnimalGroup srcGroup;
-            TAnimalList newGroups;
+            AnimalGroup srcGroup;
+            AnimalList newGroups;
 
             srcGroup = this.GetAt(groupIdx);
             if (srcGroup != null)
@@ -3024,7 +3026,7 @@ namespace Models.GrazPlan
         {
             double[] paddockRank;
             bool[] available;
-            TAnimalGroup tempAnimals;
+            AnimalGroup tempAnimals;
             int prevPadd;
             int bestPadd;
             double bestRank;
@@ -3039,7 +3041,7 @@ namespace Models.GrazPlan
 
                 // Only draft into pasture paddocks     
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
-                    available[paddIdx] = this.Paddocks.byIndex(paddIdx).Forages.Count() > 0;
+                    available[paddIdx] = this.Paddocks.ByIndex(paddIdx).Forages.Count() > 0;
 
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                           
@@ -3065,14 +3067,14 @@ namespace Models.GrazPlan
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                 
                 {
                     if (available[paddIdx])
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.byIndex(paddIdx), tempAnimals);
+                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
                     else
                         paddockRank[paddIdx] = 0.0;
                 }
                 tempAnimals = null;
 
                 prevPadd = 0;                                                                       // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.byIndex(prevPadd).sName == string.Empty))
+                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.ByIndex(prevPadd).Name == string.Empty))
                     prevPadd++;
 
                 prevPriority = 0;
@@ -3104,7 +3106,7 @@ namespace Models.GrazPlan
                     for (idx = 1; idx <= this.Count(); idx++)                                       
                     {
                         if (this.GetPriority(idx) == bestPriority)
-                            this.SetInPadd(idx, this.Paddocks.byIndex(bestPadd).sName);
+                            this.SetInPadd(idx, this.Paddocks.ByIndex(bestPadd).Name);
                     }
                     available[bestPadd] = false;
 
@@ -3124,7 +3126,7 @@ namespace Models.GrazPlan
         {
             double[] paddockRank;
             bool[] available;
-            TAnimalGroup tempAnimals;
+            AnimalGroup tempAnimals;
             int prevPadd;
             int bestPadd;
             double bestRank;
@@ -3139,7 +3141,7 @@ namespace Models.GrazPlan
 
                 // Only draft into pasture paddocks      
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                
-                    available[paddIdx] = (this.Paddocks.byIndex(paddIdx).Forages.Count() > 0);
+                    available[paddIdx] = (this.Paddocks.ByIndex(paddIdx).Forages.Count() > 0);
 
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                   
@@ -3166,14 +3168,14 @@ namespace Models.GrazPlan
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                            
                 {
                     if (available[paddIdx])                                                  // paddocks                            
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.byIndex(paddIdx), tempAnimals);
+                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
                     else
                         paddockRank[paddIdx] = 0.0;
                 }
                 tempAnimals = null;
 
                 prevPadd = 0;                                                              // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.byIndex(prevPadd).sName == string.Empty))
+                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.ByIndex(prevPadd).Name == string.Empty))
                     prevPadd++;
 
                 prevPriority = 0;
@@ -3203,7 +3205,7 @@ namespace Models.GrazPlan
                     for (idx = 1; idx <= this.Count(); idx++)                               
                     {
                         if ((this.GetTag(idx) == tagNo) && (this.GetPriority(idx) == bestPriority))
-                            this.SetInPadd(idx, this.Paddocks.byIndex(bestPadd).sName);
+                            this.SetInPadd(idx, this.Paddocks.ByIndex(bestPadd).Name);
                     }
 
                     available[bestPadd] = false;
@@ -3275,7 +3277,7 @@ namespace Models.GrazPlan
         public void RankPaddocks(List<string> paddockList)
         {
             double[] paddockRank = new double[this.Paddocks.Count()];
-            TAnimalGroup tempAnimals;
+            AnimalGroup tempAnimals;
             int bestPadd;
             double bestRank;
             int paddIdx, idx;
@@ -3283,9 +3285,9 @@ namespace Models.GrazPlan
             if (this.Count() > 0)
                 tempAnimals = this.At(1).Copy();
             else
-                tempAnimals = new TAnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, this.RandFactory);
+                tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, this.RandFactory);
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
-                paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.byIndex(paddIdx), tempAnimals);
+                paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
 
             paddockList.Clear();
             for (idx = 0; idx <= this.Paddocks.Count() - 1; idx++)
@@ -3300,7 +3302,7 @@ namespace Models.GrazPlan
                         bestRank = paddockRank[paddIdx];
                     }
                 }
-                paddockList.Add(this.Paddocks.byIndex(bestPadd).sName);
+                paddockList.Add(this.Paddocks.ByIndex(bestPadd).Name);
                 paddockRank[bestPadd] = -999.9;
             }
         }
@@ -3361,7 +3363,7 @@ namespace Models.GrazPlan
                 genoValues[idx].DeathRate = genoInits[idx].DeathRate[FALSE];
                 genoValues[idx].WnrDeathRate = genoInits[idx].DeathRate[TRUE];
 
-                //genoValues[idx].Conception = new double[4];
+                // genoValues[idx].Conception = new double[4];
                 for (int i = 0; i < genoInits[idx].Conceptions.Length; i++)
                     genoValues[idx].Conception[i] = genoInits[idx].Conceptions[i]; // Conceptions[1..
             }
@@ -3406,14 +3408,14 @@ namespace Models.GrazPlan
         private bool ParseRepro(string keyword, ref GrazType.ReproType repro)
         {
             ReproRecord[] SexKeywords = new ReproRecord[8] {
-                        new ReproRecord( name : "ram",    repro : GrazType.ReproType.Male),
-                        new ReproRecord( name : "crypto",  repro : GrazType.ReproType.Male),
-                        new ReproRecord( name : "wether", repro : GrazType.ReproType.Castrated),
-                        new ReproRecord( name : "ewe",    repro : GrazType.ReproType.Empty),
-                        new ReproRecord( name : "bull",   repro : GrazType.ReproType.Male),
-                        new ReproRecord( name : "steer",  repro : GrazType.ReproType.Castrated),
-                        new ReproRecord( name : "heifer", repro : GrazType.ReproType.Empty),
-                        new ReproRecord( name : "cow",    repro : GrazType.ReproType.Empty)
+                        new ReproRecord(name : "ram",    repro : GrazType.ReproType.Male),
+                        new ReproRecord(name : "crypto",  repro : GrazType.ReproType.Male),
+                        new ReproRecord(name : "wether", repro : GrazType.ReproType.Castrated),
+                        new ReproRecord(name : "ewe",    repro : GrazType.ReproType.Empty),
+                        new ReproRecord(name : "bull",   repro : GrazType.ReproType.Male),
+                        new ReproRecord(name : "steer",  repro : GrazType.ReproType.Castrated),
+                        new ReproRecord(name : "heifer", repro : GrazType.ReproType.Empty),
+                        new ReproRecord(name : "cow",    repro : GrazType.ReproType.Empty)
             };
 
             int idx;
@@ -3668,7 +3670,7 @@ namespace Models.GrazPlan
         /// <param name="condition">Animal condition</param>
         /// <param name="chillIndex">The chill index</param>
         /// <returns>Offspring rates</returns>
-        private double[] GetOffspringRates(TAnimalParamSet parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
+        private double[] GetOffspringRates(AnimalParamSet parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
         {
             const double NO_CYCLES = 2.5;
             const double STD_LATITUDE = -35.0;             // Latitude (in degrees) for which the DayLengthConst[] parameters are set    
@@ -3732,7 +3734,7 @@ namespace Models.GrazPlan
         /// <param name="paddInfo">The paddock info</param>
         /// <param name="tagNo">The tag number</param>
         /// <param name="priority">Priority value</param>
-        public void Add(TAnimalList animalList, PaddockInfo paddInfo, int tagNo, int priority)
+        public void Add(AnimalList animalList, PaddockInfo paddInfo, int tagNo, int priority)
         {
             int idx;
 
@@ -3752,10 +3754,10 @@ namespace Models.GrazPlan
         /// <param name="searchName">The name to search</param>
         /// <param name="searchBefore"></param>
         /// <returns>The animal parametes</returns>
-        private TAnimalParamSet FindGenotype(TAnimalParamSet mainParams, SingleGenotypeInits[] genoInits, string searchName, int searchBefore)
+        private AnimalParamSet FindGenotype(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, string searchName, int searchBefore)
         {
-            TAnimalParamSet result;
-            TAnimalParamSet foundParams;
+            AnimalParamSet result;
+            AnimalParamSet foundParams;
             int idx;
 
             idx = 0;
@@ -3767,7 +3769,7 @@ namespace Models.GrazPlan
             {
                 foundParams = mainParams.Match(searchName);
                 if (foundParams != null)
-                    result = new TAnimalParamSet(null, foundParams);
+                    result = new AnimalParamSet(null, foundParams);
                 else
                     throw new Exception("Breed name \"" + searchName + "\" not recognised");
             }
@@ -3781,16 +3783,16 @@ namespace Models.GrazPlan
         /// <param name="genoInits">Genotype inits</param>
         /// <param name="genoIdx">The genoptype index</param>
         /// <returns>The animal parametes</returns>
-        public TAnimalParamSet ParamsFromGenotypeInits(TAnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
+        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
         {
-            TAnimalParamSet result;
+            AnimalParamSet result;
 
             if (genoInits[genoIdx].DamBreed == string.Empty)
                 result = this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].GenotypeName, 0);
             else if (genoInits[genoIdx].Generation == 0)
                 result = this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].DamBreed, 0);
             else
-                result = TAnimalParamSet.CreateFactory(
+                result = AnimalParamSet.CreateFactory(
                                                     genoInits[genoIdx].GenotypeName,
                                                     this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].DamBreed, genoIdx),
                                                     this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].SireBreed, genoIdx));
@@ -3951,7 +3953,7 @@ namespace Models.GrazPlan
                         model.Wean(param1, param3, false, true);
                     else if (strParam == "females")
                         model.Wean(param1, param3, true, false);
-                    else if ((strParam == "all") || (strParam == string.Empty))
+                    else if ((strParam == "all") || (strParam == "both") || (strParam == string.Empty))
                         model.Wean(param1, param3, true, true);
                     else
                         throw new Exception("Invalid offspring type \"" + strParam + "\" in WEAN event");

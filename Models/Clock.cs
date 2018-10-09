@@ -89,20 +89,18 @@ namespace Models
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
         /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
-        /// <summary>Occurs when [do plant growth].</summary>
-        public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
+        /// <summary> Process stock methods in GrazPlan Stock </summary>
+        public event EventHandler DoStock;
+        /// <summary> Process a Pest and Disease lifecycle object </summary>
+        public event EventHandler DoLifecycle;
         /// <summary>Occurs when [do management calculations].</summary>
         public event EventHandler DoManagementCalculations;
         /// <summary>Occurs when [do report calculations].</summary>
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
-        /// <summary> Process stock methods in GrazPlan Stock </summary>
-        public event EventHandler DoStock;
-        /// <summary> Process a Pest and Disease lifecycle object </summary>
-        public event EventHandler DoLifecycle;
 
         /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
@@ -164,6 +162,28 @@ namespace Models
         /// <value>The today.</value>
         [XmlIgnore]
         public DateTime Today { get; private set; }
+
+        /// <summary>
+        /// Returns the current fraction of the overall simulation which has been completed
+        /// </summary>
+        [XmlIgnore]
+        public double FractionComplete
+        {
+            get
+            {
+                if (Today == DateTime.MinValue)
+                    return 0;
+
+                TimeSpan fullSim = EndDate - StartDate;
+                if (fullSim.Equals(TimeSpan.Zero))
+                    return 1.0;
+                else
+                {
+                    TimeSpan completedSpan = Today - StartDate;
+                    return completedSpan.TotalDays / fullSim.TotalDays;
+                }
+            }
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -232,8 +252,7 @@ namespace Models
 
                     if (DoSurfaceOrganicMatterDecomposition != null)
                         DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-                    if (Today.DayOfYear == 16)
-                    { }
+
                     if (DoWaterArbitration != null)
                         DoWaterArbitration.Invoke(this, args);
 
@@ -254,9 +273,6 @@ namespace Models
 
                     if (DoActualPlantGrowth != null)
                         DoActualPlantGrowth.Invoke(this, args);
-
-                    if (DoPlantGrowth != null)
-                        DoPlantGrowth.Invoke(this, args);
 
                     if (DoUpdate != null)
                         DoUpdate.Invoke(this, args);
@@ -335,6 +351,7 @@ namespace Models
 
                     Today = Today.AddDays(1);
                 }
+                Today = EndDate;
                 Summary.WriteMessage(this, "Simulation terminated normally");
             }
 

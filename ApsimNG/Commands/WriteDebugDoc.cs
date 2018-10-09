@@ -90,7 +90,7 @@ namespace UserInterface.Commands
                 if (clonedSimulation != null)
                 {
                     events.DisconnectEvents();
-                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedSimulation);
+                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedSimulation, allLinks:true);
                 }
             }
         }

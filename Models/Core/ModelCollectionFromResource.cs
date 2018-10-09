@@ -30,8 +30,16 @@ namespace Models.Core
         [EventSubscribe("Serialising")]
         protected void OnSerialising(bool xmlSerialisation)
         {
-            if (xmlSerialisation && ResourceName != null)
+            if (xmlSerialisation && Apsim.Ancestor<Replacements>(this) == null)
             {
+                if (string.IsNullOrEmpty(ResourceName))
+                {
+                    if (!string.IsNullOrEmpty(Properties.Resources.ResourceManager.GetString(Name)))
+                        ResourceName = Name;
+                    else
+                        return;
+                }
+                SetNotVisible(this);
                 allModels = new List<Model>();
                 allModels.AddRange(Children);
 
@@ -94,12 +102,22 @@ namespace Models.Core
         {
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
-                if (property.CanWrite && 
-                    property.Name != "Name" && 
-                    property.Name != "Children" && 
+                if (property.CanWrite &&
+                    property.Name != "Name" &&
+                    property.Name != "Children" &&
                     property.Name != "IncludeInDocumentation" &&
                     property.Name != "ResourceName")
-                    property.SetValue(this, property.GetValue(from));
+                {
+                    object fromValue = property.GetValue(from);
+                    bool doSetPropertyValue;
+                    if (fromValue is double)
+                        doSetPropertyValue = Convert.ToDouble(fromValue) != 0;
+                    else
+                        doSetPropertyValue = fromValue != null;
+
+                    if (doSetPropertyValue)
+                        property.SetValue(this, fromValue);
+                }
             }
         }
 
@@ -110,6 +128,7 @@ namespace Models.Core
             foreach (Model child in ModelFromResource.Children)
             {
                 child.IsHidden = true;
+                child.ReadOnly = true;
                 SetNotVisible(child);
             }
         }

@@ -5,7 +5,7 @@ using Models.Core;
 
 using System.Reflection;
 using System.Collections;
-using Models.PMF.Functions;
+using Models.Functions;
 using Models.Soils;
 using System.Xml.Serialization;
 using System.Threading;
@@ -131,6 +131,8 @@ namespace Models.PMF.OilPalm
         [Link]
         private SoluteManager solutes = null;
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The soil crop</summary>
         private SoilCropOilPalm soilCrop;
@@ -840,8 +842,8 @@ namespace Models.PMF.OilPalm
         /// <summary>Called when [do plant growth].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (!CropInGround)
                 return;
@@ -858,7 +860,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -866,7 +868,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
 
@@ -875,12 +877,12 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         { }
 
         /// <summary>Does the flower abortion.</summary>
@@ -1203,7 +1205,7 @@ namespace Models.PMF.OilPalm
                 Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
 
 
-            PEP = Soil.SoilWater.Eo * cover_green*Math.Min(Fn, Fvpd);
+            PEP = (Soil.SoilWater as SoilWater).Eo * cover_green*Math.Min(Fn, Fvpd);
 
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
@@ -1218,9 +1220,8 @@ namespace Models.PMF.OilPalm
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                Soil.SoilWater.SetSWmm(j, Soil.SoilWater.SWmm[j] - SWUptake[j]);
-
             }
+            Soil.SoilWater.RemoveWater(SWUptake);
 
             if (PEP > 0.0)
             {
@@ -1653,7 +1654,7 @@ namespace Models.PMF.OilPalm
         {
 
             UnderstoryCoverGreen = UnderstoryCoverMax * (1 - cover_green);
-            UnderstoryPEP = Soil.SoilWater.Eo * UnderstoryCoverGreen * (1 - cover_green);
+            UnderstoryPEP = (Soil.SoilWater as SoilWater).Eo * UnderstoryCoverGreen * (1 - cover_green);
 
             for (int j = 0; j < Soil.Thickness.Length; j++)
                 UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.Water[j] - Soil.LL15mm[j]));
@@ -1661,15 +1662,12 @@ namespace Models.PMF.OilPalm
             double TotUnderstoryPotSWUptake = MathUtilities.Sum(UnderstoryPotSWUptake);
 
             UnderstoryEP = 0.0;
-            double[] sw_dep = Soil.Water;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, UnderstoryPEP / TotUnderstoryPotSWUptake);
                 UnderstoryEP += UnderstorySWUptake[j];
-                sw_dep[j] = sw_dep[j] - UnderstorySWUptake[j];
-
             }
-            Soil.Water = sw_dep;
+            Soil.SoilWater.RemoveWater(UnderstorySWUptake);
 
             if (UnderstoryPEP > 0.0)
                 UnderstoryFW = UnderstoryEP / UnderstoryPEP;

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using Models.Core;
-using Models;
-using System.Xml.Serialization;
-using Models.PMF;
-using System.Runtime.Serialization;
-using Models.SurfaceOM;
-using Models.Soils.SoilWaterBackend;
+﻿using Models.Core;
 using Models.Interfaces;
+using Models.PMF;
+using Models.Soils.SoilWaterBackend;
+using Models.Surface;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace Models.Soils
 {
@@ -32,7 +29,7 @@ namespace Models.Soils
         //GUI
         //***
 
-        #region Needed for the GUI's "SoilWater" node (DO NOT USE THESE VARIABLES DIRECTLY)
+        // Needed for the GUI's "SoilWater" node (DO NOT USE THESE VARIABLES DIRECTLY)
 
 
         //SOIL "Properties" (NOT LAYERED)
@@ -338,13 +335,10 @@ namespace Models.Soils
         [Description("Lateral saturated hydraulic conductivity (KLAT)")]
         public double[] KLAT { get; set; }
 
-        #endregion
-
-
         //MODEL
         //*****
 
-        #region Links
+        // Links
 
         /// <summary>
         /// The clock
@@ -396,9 +390,7 @@ namespace Models.Soils
         [Link]
         private SoluteManager solutes = null;
 
-        #endregion
-
-        #region Module Constants (Default Values) (NOT specified in GUI)
+        // Module Constants (Default Values) (NOT specified in GUI)
 
         /// <summary>
         /// Air temperature below which the ratio between eo and eeq decreases (C)
@@ -581,10 +573,7 @@ namespace Models.Soils
         [XmlIgnore]
         public string act_evap_method { get; set; }  
 
-        #endregion
-
-
-        #region Manager Variables (Default Values) (can be altered in Manager Code) 
+        // Manager Variables (Default Values) (can be altered in Manager Code) 
 
 
         //TODO: put obsrunoff_name and eo_source into "Optional Daily Inputs" secion
@@ -598,9 +587,7 @@ namespace Models.Soils
         //TODO: turn these into MANAGER COMMANDS by turning them into Set methods. Just like SetMaxPond
         //maybe get rid of the set; and just leave a get; so they are still available as outputs  
 
-        #endregion
-
-        #region Constructor
+        // Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SoilWater"/> class.
@@ -643,7 +630,7 @@ namespace Models.Soils
             gravity_gradient = 0.00002;
             specific_bd = 2.65;
             hydrol_effective_depth = 450;
-            mobile_solutes = new string[] { "NO3", "urea", "cl", "br", "org_n", "org_c_pool1", "org_c_pool2", "org_c_pool3" };
+            mobile_solutes = new string[] { "NO3", "urea", "Chloride", "br", "org_n", "org_c_pool1", "org_c_pool2", "org_c_pool3" };
             immobile_solutes = new string[] { "NH4" };
             canopy_fact = new double[] { 1, 1, 0, 0 };
             canopy_fact_height = new double[] { 0, 600, 1800, 30000 };
@@ -657,10 +644,7 @@ namespace Models.Soils
 
             }
 
-        #endregion
-
-
-        #region Ouputs (NOT Layered)
+        // Ouputs (NOT Layered)
 
         /// <summary>
         /// Potential evapotranspiration of the whole soil-plant system
@@ -892,27 +876,7 @@ namespace Models.Soils
         public double[] ESW
         { get { return SoilObject != null ? SoilObject.esw : new double[0]; } }
 
-        /// <summary>
-        /// Soil layer to which irrigation was applied (0 is for surface irrigation)
-        /// </summary>
-        /// <remarks>
-        /// Layer that irrigation went into.
-        /// Needed for subsurface irrigations because you specify a depth.
-        /// It is helpful to see exactly which layer that depth put the irrigation into.
-        /// layer = 0 means, top layer but via a surface irrigation (depth = 0) (NOT subsurface)
-        /// layer = 1 means, top layer but via a subsurface irrigation
-        /// layer &gt; 1 means that layer (one based not zero based)
-        /// </remarks>
-        /// <value>
-        /// The irrig layer.
-        /// </value>
-        [XmlIgnore]
-        public int IrrigLayer
-        { get { return irrig != null ? irrig.layer : 0; } }
-
-        #endregion
-
-        #region Outputs (Layered)
+        // Outputs (Layered)
 
         /// <summary>
         /// Current soil water content for each soil layer expressed as a depth of water (mm)
@@ -958,7 +922,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double[] flow
+        public double[] Flow
         { get { return SoilObject != null ? SoilObject.flow : new double[0]; } }
 
         /// <summary>
@@ -969,7 +933,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double[] flux
+        public double[] Flux
         { get { return SoilObject != null ? SoilObject.flux : new double[0]; } }
 
         /// <summary>
@@ -980,7 +944,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double[] outflow_lat
+        public double[] LateralOutflow
         { get { return SoilObject != null ? SoilObject.outflow_lat : new double[0] ; } }
 
         //DELTA ARRAY FOR A SOLUTE
@@ -993,7 +957,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] flow_no3
+        public double[] FlowNO3
         { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("NO3") : new double[0]; } }
 
         /// <summary>
@@ -1004,7 +968,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] flow_nh4
+        public double[] FlowNH4
         { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("NH4") : new double[0]; } }
 
         /// <summary>
@@ -1018,12 +982,9 @@ namespace Models.Soils
         public double[] flow_urea
         { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("urea") : new double[0]; } }
 
-        #endregion
-
-
         //MANAGER COMMANDS
 
-        #region Reset
+        // Reset
 
         /// <summary>
         /// Resets this instance.
@@ -1035,11 +996,31 @@ namespace Models.Soils
             surface = surfaceFactory.GetSurface(SoilObject, Clock); //reset the surface
             }
 
+        // Tillage
 
-        #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        [Serializable]
+        public class TillageTypesList : Model
+        {
+            /// <summary>Gets or sets the type of the tillage.</summary>
+            /// <value>The type of the tillage.</value>
+            public List<TillageType> TillageType { get; set; }
 
-
-        #region Tillage
+            /// <summary>Gets the tillage data.</summary>
+            /// <param name="Name">The name.</param>
+            /// <returns></returns>
+            public TillageType GetTillageData(string Name)
+            {
+                foreach (TillageType tillageType in TillageType)
+                {
+                    if (tillageType.Name == Name)
+                        return tillageType;
+                }
+                return null;
+            }
+        }
 
         /// <summary>
         /// Tillages the specified default tillage name.
@@ -1068,7 +1049,7 @@ namespace Models.Soils
             //-->
 
 
-            SurfaceOrganicMatter.TillageTypesList defaultTypes = new SurfaceOrganicMatter.TillageTypesList();
+            TillageTypesList defaultTypes = new TillageTypesList();
 
             TillageType data = defaultTypes.GetTillageData(DefaultTillageName);
 
@@ -1143,7 +1124,7 @@ namespace Models.Soils
             double reduction;
 
             //! Ensure cn equation won't go silly
-            reduction = constants.bound(Data.cn_red, 0.0, Soil.SoilWater.CN2Bare);
+            reduction = constants.bound(Data.cn_red, 0.0, CN2Bare);
 
             switch (surface.SurfaceType)
                 {
@@ -1182,10 +1163,7 @@ namespace Models.Soils
             Summary.WriteMessage(this, line);
             }
 
-        #endregion
-
-
-        #region Irrigation
+        // Irrigation
 
         /// <summary>
         /// Called when [irrigated].
@@ -1195,14 +1173,15 @@ namespace Models.Soils
         [EventSubscribe("Irrigated")]
         private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType IrrigationData)
             {
-            irrig.amount = IrrigationData.Amount;  
+            IrrigData irrigData = new IrrigData();
+            irrigData.amount = IrrigationData.Amount;  
 
-            irrig.willRunoff = IrrigationData.WillRunoff;
+            irrigData.willRunoff = IrrigationData.WillRunoff;
 
             //check if will_runoff value conflicts with subsurface irrigation.
             if ((IrrigationData.WillRunoff) && (IrrigationData.Depth > 0.0))
                 {
-                irrig.willRunoff = false;
+                irrigData.willRunoff = false;
                 String warningText;
                 warningText = "Irrigation Apply method parameter, willRunoff was reset from true to false." 
                 + "In the Irrigation 'Apply' command, 'willRunoff' was set to true" + "\n"
@@ -1215,24 +1194,23 @@ namespace Models.Soils
 
 
             if (IrrigationData.Depth == 0.0)
-                irrig.isSubSurface = false;
+                irrigData.isSubSurface = false;
             else
-                irrig.isSubSurface = true;
+                irrigData.isSubSurface = true;
     
 
-            irrig.layer = SoilObject.FindLayerNo(IrrigationData.Depth); //subsurface irrigation. (top layer is 1 not zero)
+            irrigData.layer = SoilObject.FindLayerNo(IrrigationData.Depth); //subsurface irrigation. (top layer is 1 not zero)
 
 
             //Solute amount in irrigation water.
-            irrig.NO3 = IrrigationData.NO3;
-            irrig.NH4 = IrrigationData.NH4;
-            irrig.CL = IrrigationData.CL;
+            irrigData.NO3 = IrrigationData.NO3;
+            irrigData.NH4 = IrrigationData.NH4;
+            irrigData.CL = IrrigationData.CL;
 
+            irrig.Add(irrigData);
             }
 
-        #endregion
-
-        #region Set Max Pond (change depth of pond during a simulation)
+        // Set Max Pond (change depth of pond during a simulation)
 
         /// <summary>
         /// Sets the maximum pond.
@@ -1247,11 +1225,7 @@ namespace Models.Soils
             surface = surfaceFactory.GetSurface(SoilObject, Clock);
             }
 
-
-        #endregion
-
-        #region Set WaterTable
-
+        // Set WaterTable
 
         /// <summary>
         /// Sets the water table.
@@ -1262,10 +1236,7 @@ namespace Models.Soils
             SoilObject.SetWaterTable(InitialDepth);
             }
 
-
-        #endregion
-
-        #region Add / Remove Water from the Soil
+        // Add / Remove Water from the Soil
 
         /// <summary>
         /// Sets the water_mm.
@@ -1290,27 +1261,16 @@ namespace Models.Soils
         /// Sets the water_frac.
         /// </summary>
         /// <param name="New_SW">The new_ sw.</param>
-        public void SetWater_frac(double[] New_SW)
+        private void SetWater_frac(double[] New_SW)
             {
             SoilObject.SetWater_frac(New_SW); 
             }
 
-        //TODO: Change these delta properties into methods and change the manager scripts to call the methods instead.
-        /// <summary>
-        /// Change in soil water depth in each soil layer (mm)
-        /// </summary>
-        /// <value>
-        /// The dlt_sw_dep.
-        /// </value>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] dlt_sw_dep
-            {
-            set
-                {
-                SoilObject.DeltaWater_mm(value);
-                }
-            }
+        ///<summary>Remove water from the profile</summary>
+        public void RemoveWater(double[] value)
+        {
+            SoilObject.DeltaWater_mm(value);
+        }
 
         /// <summary>
         /// Change in volumetric soil water content in each soil layer
@@ -1354,12 +1314,7 @@ namespace Models.Soils
 
             }
 
-        #endregion
-
-
         //LOCAL VARIABLES
-
-        #region Local Variables
 
         //Constants
         /// <summary>
@@ -1375,7 +1330,7 @@ namespace Models.Soils
         /// <summary>
         /// The surface
         /// </summary>
-        private Surface surface;
+        private Models.Soils.SoilWaterBackend.Surface surface;
 
         //Soil
         /// <summary>
@@ -1383,14 +1338,7 @@ namespace Models.Soils
         /// </summary>
         private SoilWaterSoil SoilObject;
 
-
-        #endregion
-
-
         //DAILY INPUTS FROM OTHER MODULES
-
-
-        #region Daily Input (Data Variables)
 
         //Met 
         /// <summary>
@@ -1400,9 +1348,9 @@ namespace Models.Soils
 
         //Irrigation
         /// <summary>
-        /// The irrig
+        /// A list of irrigation applications for the day
         /// </summary>
-        private IrrigData irrig;
+        private List<IrrigData> irrig;
 
         //Canopy data from all the Crops in this Paddock.
         /// <summary>
@@ -1416,9 +1364,7 @@ namespace Models.Soils
         /// </summary>
         private SurfaceCoverData surfaceCover;
 
-        #endregion 
-
-        #region Optional Daily Input (Data Variables)
+        // Optional Daily Input (Data Variables)
 
         //Runon can be specified in a met file or sparse data file or manager script (mm/d)
         //[Input(IsOptional = true)]
@@ -1456,12 +1402,9 @@ namespace Models.Soils
         /// residueinterception is only used in ResiduesTrial.apsimx
         /// </remarks>
         [Units("mm")]
-        public double residueinterception { get; set; }     //residue interception loss (mm)
+        public double ResidueInterception { get; set; }     //residue interception loss (mm)
 
-        #endregion
-
-
-        #region Get Variables from other Modules
+        // Get Variables from other Modules
 
         /// <summary>
         /// Gets the todays optional variables.
@@ -1534,7 +1477,7 @@ namespace Models.Soils
             surfaceCover.ZeroSurfaceCover();
 
             surfaceCover.surfaceom_cover = SurfaceOM.Cover;
-            surfaceCover.residueinterception = residueinterception;
+            surfaceCover.residueinterception = ResidueInterception;
             }
 
         /// <summary>
@@ -1554,11 +1497,9 @@ namespace Models.Soils
             }
         }
 
-        #endregion
-
         //EVENT HANDLERS
 
-        #region NewSolute Event Handler
+        // NewSolute Event Handler
 
         /// <summary>
         /// Called to find all solutes.
@@ -1601,11 +1542,7 @@ namespace Models.Soils
             return -1;  // Not found
         }
 
-
-        #endregion
-
-
-        #region Clock Event Handlers
+        // Clock Event Handlers
 
         /// <summary>
         /// Saves the module constants.
@@ -1664,14 +1601,14 @@ namespace Models.Soils
 
             //daily inputs
             met = new MetData();
-            irrig = new IrrigData();
+            irrig = new List<IrrigData>();
             canopy = new CanopyData();
             surfaceCover = new SurfaceCoverData();
 
             //optional daily inputs
             runon = 0.0;      
             interception = 0.0;      
-            residueinterception = 0.0; 
+            ResidueInterception = 0.0; 
 
             if (Soil.Thickness != null)
                 {
@@ -1766,12 +1703,14 @@ namespace Models.Soils
 
             // IRRIGATION
 
-            //subsurface irrigation
-            SoilObject.AddSubSurfaceIrrigToSoil(irrig);
+            foreach (IrrigData irrData in irrig)
+            {
+                //subsurface irrigation
+                SoilObject.AddSubSurfaceIrrigToSoil(irrData);
 
-
-            //add solutes from irrigation
-            SoilObject.AddSolutesDueToIrrigation(irrig);
+                //add solutes from irrigation
+                SoilObject.AddSolutesDueToIrrigation(irrData);
+            }
             
             /*
             //! receive any solutes from rainfall
@@ -1780,7 +1719,7 @@ namespace Models.Soils
            
             //now that we have applied the irrigation 
             //(either through surface irrigation or straight into the soil via subsurface), zero it.
-            irrig.ZeroIrrigation(); 
+            irrig.Clear(); 
 
             // SATURATED FLOW & ADD BACKED UP TO SURFACE
 
@@ -1823,15 +1762,13 @@ namespace Models.Soils
             SendNitrogenChangedEvent();
 
             //zero this here so it is not used tomorrow. 
-            residueinterception = 0.0;
+            ResidueInterception = 0.0;
 
         }
 
-        #endregion
-
         //EVENTS - SENDING
 
-        #region Send Nitrogen Changed Event
+        // Send Nitrogen Changed Event
 
         /// <summary>
         /// Sends the nitrogen changed event.
@@ -1841,9 +1778,9 @@ namespace Models.Soils
             solutes.Add("Urea",SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("urea"));
             solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NH4"));
             solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NO3"));
-            }
-
-        #endregion
+            if(solutes.SoluteNames.Contains("Chloride"))
+                solutes.Add("Chloride", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("Chloride"));
+        }
 
     }
 

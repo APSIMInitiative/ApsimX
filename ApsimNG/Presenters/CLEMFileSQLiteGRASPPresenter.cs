@@ -42,7 +42,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Number or years to display in the grid.
-        /// </summary
+        /// </summary>
         private int NumberOfYearsToDisplayInGrid = 4;
 
 
@@ -133,14 +133,14 @@ namespace UserInterface.Presenters
         {
             try
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.model, "FullFileName", e.FileName));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(model, "FullFileName", e.FileName));
 
                 //reset the start year using new SQLite file's data.
                 InitialiseStartYear();
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowError(err);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

@@ -152,11 +152,11 @@ namespace UserInterface.Views
                     {
                         // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
                         string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
-                        if (!hasResource(resourceNameForImage))
+                        if (!MasterView.HasResource(resourceNameForImage))
                         {
                             resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + text + ".png";
                         }
-                        if (hasResource(resourceNameForImage))
+                        if (MasterView.HasResource(resourceNameForImage))
                             image = new Gdk.Pixbuf(null, resourceNameForImage);
                         else
                             image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
@@ -361,7 +361,7 @@ namespace UserInterface.Views
                     checkItem.Active = Description.Checked;
                     item = checkItem;
                 }
-                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
+                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && MasterView.HasResource(Description.ResourceNameForImage))
                 {
                     ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
                     imageItem.Image = new Image(null, Description.ResourceNameForImage);

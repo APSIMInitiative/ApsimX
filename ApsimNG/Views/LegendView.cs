@@ -33,7 +33,7 @@ namespace UserInterface.Views
 
         private ComboBox combobox1 = null;
         private HBox hbox1 = null;
-        private TreeView listview = null;
+        private Gtk.TreeView listview = null;
 
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
@@ -47,10 +47,10 @@ namespace UserInterface.Views
         /// </summary>
         public LegendView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
-            listview = (TreeView)builder.GetObject("listview");
+            listview = (Gtk.TreeView)builder.GetObject("listview");
             _mainWidget = hbox1;
             combobox1.Model = comboModel;
             combobox1.PackStart(comboRender, false);

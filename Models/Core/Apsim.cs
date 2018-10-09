@@ -14,8 +14,7 @@ namespace Models.Core
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Xml;
     using APSIM.Shared.Utilities;
-    using PMF.Functions;
-    using PMF;
+    using Functions;
     using Factorial;
 
     /// <summary>
@@ -96,6 +95,23 @@ namespace Models.Core
             }
 
             return obj;
+        }
+
+        /// <summary>
+        /// Returns the closest ancestor to a node of the specified type.
+        /// Returns null if not found.
+        /// </summary>
+        /// <typeparam name="T">Type of model to search for.</typeparam>
+        /// <param name="model">The reference model.</param>
+        /// <returns></returns>
+        public static T Ancestor<T>(IModel model)
+        {
+            IModel obj = model == null ? null : model.Parent;
+            while (obj != null && !(obj is T))
+                obj = obj.Parent;
+            if (obj == null)
+                return default(T);
+            return (T)obj;
         }
 
         /// <summary>
@@ -457,6 +473,19 @@ namespace Models.Core
             {
                 child.Parent = model;
                 ParentAllChildren(child);
+            }
+        }
+
+        /// <summary>
+        /// Parent all children of 'model'.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void UnparentAllChildren(IModel model)
+        {
+            foreach (IModel child in model.Children)
+            {
+                child.Parent = null;
+                UnparentAllChildren(child);
             }
         }
 

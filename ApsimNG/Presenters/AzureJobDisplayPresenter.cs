@@ -141,6 +141,7 @@ namespace UserInterface.Presenters
             return withOwner ? job.DisplayName + " (" + job.Owner + ")" : job.DisplayName;
         }
 
+        /// <summary>
         /// Initialises the Azure credentials, batch client and blob client. Asks user for an Azure 
         /// licence file and saves the credentials if the credentials have not previously been set.
         /// Once credentials are saved, it starts the job load worker.

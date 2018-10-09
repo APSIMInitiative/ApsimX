@@ -69,9 +69,9 @@ namespace Models.Properties {
         ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
         ///    &lt;MemoText&gt;
         ///      &lt;![CDATA[
-        ///## Presentation
+        ///# Presentation
         ///
-        ///This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit [rest of string was truncated]&quot;;.
+        ///This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Chicory {
             get {
@@ -80,8 +80,7 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant&gt;
+        ///   Looks up a localized string similar to &lt;Plant&gt;
         ///  &lt;Name&gt;Maize&lt;/Name&gt;
         ///  &lt;OrganArbitrator&gt;
         ///    &lt;Name&gt;Arbitrator&lt;/Name&gt;
@@ -96,7 +95,8 @@ namespace Models.Properties {
         ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
         ///  &lt;/OrganArbitrator&gt;
         ///  &lt;Phenology&gt;
-        ///   [rest of string was truncated]&quot;;.
+        ///    &lt;Name&gt;Phenology&lt;/Name&gt;
+        ///    &lt;MultiplyF [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Maize {
             get {
@@ -122,6 +122,24 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Plant&gt;
+        ///  &lt;Name&gt;Plantain&lt;/Name&gt;
+        ///  &lt;Memo&gt;
+        ///    &lt;Name&gt;GeneralDescription&lt;/Name&gt;
+        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
+        ///    &lt;MemoText&gt;&lt;![CDATA[
+        ///## Presentation
+        ///
+        ///This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Plantain {
+            get {
+                return ResourceManager.GetString("Plantain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;Plant&gt;
         ///	&lt;Name&gt;Potato&lt;/Name&gt;
         ///	&lt;Memo&gt;
@@ -132,30 +150,12 @@ namespace Models.Properties {
         ///
         ///_Brown, H.E., Huth, N.I. and Holzworth, D.P._
         ///
-        ///##Building the model.
-        ///The APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to cons [rest of string was truncated]&quot;;.
+        ///#Building the model.
+        ///The APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to const [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Potato {
             get {
                 return ResourceManager.GetString("Potato", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;ResidueTypesList&gt;
-        ///  &lt;Name&gt;ResidueTypes&lt;/Name&gt;
-        ///  &lt;ResidueType&gt;
-        ///    &lt;fom_type&gt;base_type&lt;/fom_type&gt;
-        ///    &lt;fraction_C description=&quot;fraction of Carbon in FOM (0-1)&quot;&gt;0.4&lt;/fraction_C&gt;
-        ///    &lt;po4ppm description=&quot;labile P concentration(ppm)&quot;&gt;0.0&lt;/po4ppm&gt;
-        ///    &lt;nh4ppm description=&quot;ammonium N concentration (ppm)&quot;&gt;0.0&lt;/nh4ppm&gt;
-        ///    &lt;no3ppm description=&quot;nitrate N concentration (ppm)&quot;&gt;0.0&lt;/no3ppm&gt;
-        ///    &lt;specific_area description=&quot;specific area of residue (ha/kg&quot;&gt;0.0005&lt;/specifi [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string ResidueTypes {
-            get {
-                return ResourceManager.GetString("ResidueTypes", resourceCulture);
             }
         }
         
@@ -225,6 +225,25 @@ namespace Models.Properties {
         internal static string Supplement {
             get {
                 return ResourceManager.GetString("Supplement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;SurfaceOrganicMatter&gt;
+        ///  &lt;ResidueTypes&gt;
+        ///    &lt;Name&gt;ResidueTypes&lt;/Name&gt;
+        ///    &lt;ResidueType&gt;
+        ///      &lt;fom_type&gt;base_type&lt;/fom_type&gt;
+        ///      &lt;fraction_C description=&quot;fraction of Carbon in FOM (0-1)&quot;&gt;0.4&lt;/fraction_C&gt;
+        ///      &lt;po4ppm description=&quot;labile P concentration(ppm)&quot;&gt;0.0&lt;/po4ppm&gt;
+        ///      &lt;nh4ppm description=&quot;ammonium N concentration (ppm)&quot;&gt;0.0&lt;/nh4ppm&gt;
+        ///      &lt;no3ppm description=&quot;nitrate N concentration (ppm)&quot;&gt;0.0&lt;/no3ppm&gt;
+        ///      &lt;specific_area description=&quot;specific a [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SurfaceOrganicMatter {
+            get {
+                return ResourceManager.GetString("SurfaceOrganicMatter", resourceCulture);
             }
         }
         
