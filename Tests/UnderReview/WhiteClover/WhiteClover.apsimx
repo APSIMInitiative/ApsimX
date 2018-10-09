@@ -427,7 +427,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[This organ represents all the leaves in the plant with minimum considerations for the structure of the canopy.  All leaves are considered to be distributed in one layer and total leaf biomass is used to determine the height of the canopy.  This uses a function that can vary for different cultivars, but currently it is not affected by competition with other plants.  
+          <MemoText><![CDATA[This organ represents all the leaves in the plant and has only a basic representation of the canopy structure, with all leaves considered to be distributed in one layer.  The total leaf biomass is used to determine the height of the canopy, using a function that can vary for different cultivars but that currently it is not affected by competition with other plants.  
 ]]></MemoText>
         </Memo>
         <MultiplyFunction>
@@ -4576,7 +4576,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[Note that this represents the taproots of all the plant in the population.  
+          <MemoText><![CDATA[Note that this represents the taproots of all the plant in the population.  These are primarily considered as storage organs, its researves can be made available to boost plant growth in spring and/or following a defoliation.  
 Taproots in white clover are generally efemerous.  They develop from seeds and are ubiquitous in young plants, but these generally die out about a year after germination and adult plants are often described as having no taproots ([HartChapter1987]; [BrockEtAl2000]).  However, some secondary roots can be taproot-like, especially in especific cultivars, e.g. ladino ([ThomasChapter1987]; [CaradusAndWoodfield1998]). Given that, and because the model simulates the a whole population, it is assumed that taproots are always present, but typically constitute a minor fraction of the root systems in most cultivars.  
 ]]></MemoText>
         </Memo>
@@ -5420,7 +5420,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[__Note:__ this represents all the fine roots of the plant.  The root organ demands and can supply both N and DM, although the later is typically small and due to remobilisation of non-structural biomass upon senescence. The root depth increases through time, but currently it does not retreat.  Roots provide N and water uptake supply.  
+          <MemoText><![CDATA[Note that this organs is parameterised to represents all the fine roots of the plant.  The root organ is reponsible for uptake but can also supply both N and DM from its non-structural biomass, although this typically represents only a small contribution to plant growth and only happen upon senescence.  The taproot organ is used for simulating biomass storage and remobilisation.  The root depth increases through time, as described below, but currently it does not retreat in case of root depth, something that will have to be revisited in the future.  
 ]]></MemoText>
         </Memo>
         <Constant>
@@ -8296,15 +8296,15 @@ Where:
       <Experiment>
         <Name>FRNLLincoln</Name>
         <Memo>
-          <Name>Memo</Name>
+          <Name>Presentation</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[###FRNL Lincoln###
+          <MemoText><![CDATA[###Presentation###
 
-Simulation setup based on field trial performed at Lincoln University Research Dairy Farm, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program (for more details see [MartinEtAl2017]).  Here only plots with pure white clover are used.  
-The experiment consisted of six fertiliser treatments (N rates of 0, 50, 100, 200, 350 and 500 kg/ha/yr) in four replicates, and measurements comprised yield and quality indicators (here N content is used).  
-Data supplied by Grant Edwards, Lincoln University.
+Simulation setup was based on a field trial performed at Lincoln University Research Dairy Farm, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program (for more details see [MartinEtAl2017]).  Here only plots with pure white clover are used.  
+The experiment consisted of six fertiliser treatments with four replicates.  The nominal N rates were 0, 50, 100, 200, 350 and 500 kg/ha/yr, but the actual amounts applied varied as each application was linked to a defoliation event, the plan was to have 10 defoliation per year, but this was not possible, with seven events actually happening for white clover.  The plots were mown at a height of about 4 cm and the harvested herbage was removed from the plots.  The measurements comprised of dry matter yield and quality indicators (here herbage N content is used).  
+Data and general management of the experiment was supplied by Grant Edwards, Lincoln University.
 
 The soil at the experimental site was a Templeton fine sandy loam (an Immature Pallic soil, USDA: Udic Haplustept), the required parameters were inferred based on data from the New Zealand National Soils Database (Landcare Research).  
 Weather data was obtained from nearby Broadfields weather station (NIWA).
@@ -21372,6 +21372,17 @@ namespace Models
           <ReadOnly>false</ReadOnly>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
+        <Memo>
+          <Name>Discussion</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <MemoText><![CDATA[###Discussion###
+
+The results show that the model was able to capture the general growth pattern and the cumulative amounts of herbage harveested.  The values for N content still need improvement.  
+
+]]></MemoText>
+        </Memo>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
@@ -21384,10 +21395,10 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[###FRNL Ruakura###
+          <MemoText><![CDATA[###Presentation###
 
 This simulation setup was based on field trials performed at DairyNZ's Scott Farm, in Ruakura, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program and the data is basically unpublished (references will be added when this come about).  Here only plots with pure white clover are used.  
-The experiment consisted of six fertiliser treatments (N rates of 0, 50, 100, 200, 350 and 500 kg/ha/yr) in three replicates, and measurements comprised yield and quality indicators (here N content is used).  
+The experiment was set up with six fertiliser treatments and three replicates, with nominal N rates of 0, 50, 100, 200, 350 and 500 kg/ha/yr (actual rate varied).  The swards were mown at a a height of approximately 4 cm and the herbage was removed from the plots.  The measurements comprised of herbage yield and quality indicators (here N content is used).  
 Observed data supplied by Grant Edwards, Lincoln University.
 
 The soil at the experimental site was a Horotiu silt loam (an Orthic Allophanic soil; USDA: Typic Udivitrand), the parameters required were inferred using data from the New Zealand National Soils Database (Landcare Research).  
@@ -32487,6 +32498,17 @@ namespace Models
           <ReadOnly>false</ReadOnly>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
+        <Memo>
+          <Name>Discussion</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <MemoText><![CDATA[###Discussion###
+
+The results show that the model was able to capture the general growth pattern and the cumulative amounts of herbage harveested.  The values for N content still need improvement.  
+
+]]></MemoText>
+        </Memo>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
@@ -32864,7 +32886,7 @@ namespace Models
     <Enabled>true</Enabled>
     <ReadOnly>false</ReadOnly>
     <MemoText><![CDATA[
-## Acknowledgements
+# Acknowledgements
 This model was developed with support and datasets provided by the Forages for Reduced Nitrogen Leaching (FRNL) programme, funded by the New Zealand Ministry of Business, Innovation and Employment.  The programme is a partnership between DairyNZ, AgResearch, Plant & Food Research, Lincoln University, the Foundation for Arable Research, and Landcare Research.  
 It should be recognised that the model was also build upon the work of several people, especially at AgResearch, that have been developing the understanding and modelling of pastural systems over many years.  The author is also thankfull to Ellen Hume for her help on gathering plant parameters and organising the dataset.  
 ]]></MemoText>
