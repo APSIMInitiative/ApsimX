@@ -760,6 +760,7 @@ namespace Models.PMF.Organs
                 if (Area > MaxArea)
                 {
                     Age = GrowthDuration;
+                    Area = MaxArea;
                 } else
                 {
                     Age = Area / MaxArea * GrowthDuration;
