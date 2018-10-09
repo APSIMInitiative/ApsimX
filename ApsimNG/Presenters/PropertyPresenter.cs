@@ -466,10 +466,10 @@ namespace UserInterface.Presenters
         /// <returns>A list of fieldnames.</returns>
         private string[] GetFieldNames()
         {
-            string[] fieldNames = null;
+            List<string> fieldNames = null;
             for (int i = 0; i < properties.Count; i++)
             {
-                if (properties[i].Display.Type == DisplayType.TableName)
+                if (properties[i].Display != null && properties[i].Display.Type == DisplayType.TableName)
                 {
                     IGridCell cell = grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
@@ -479,12 +479,19 @@ namespace UserInterface.Presenters
                         if (storage.TableNames.Contains(tableName))
                             data = storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
-                            fieldNames = DataTableUtilities.GetColumnNames(data);
+                        {
+                            fieldNames = DataTableUtilities.GetColumnNames(data).ToList();
+                            if (fieldNames.Contains("SimulationID"))
+                                fieldNames.Add("SimulationName");
+                        }
                     }
                 }
             }
 
-            return fieldNames;
+            if (fieldNames == null)
+                return null;
+            else
+                return fieldNames.ToArray();
         }
 
         /// <summary>
