@@ -84,7 +84,8 @@
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            CreateInitialConditionsTable();
+            if (CaptureSummaryText)
+                CreateInitialConditionsTable();
         }
 
         /// <summary>Write a message to the summary</summary>
