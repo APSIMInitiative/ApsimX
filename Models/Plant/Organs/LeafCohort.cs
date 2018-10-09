@@ -758,8 +758,12 @@ namespace Models.PMF.Organs
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
             {
                 if (Area > MaxArea)
-                    throw new Exception("Initial area is more than max area for cohort " + Rank.ToString() + ".");
-                Age = Area / MaxArea * GrowthDuration;
+                {
+                    Age = GrowthDuration;
+                } else
+                {
+                    Age = Area / MaxArea * GrowthDuration;
+                }
             }
             //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
