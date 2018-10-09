@@ -117,6 +117,7 @@
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StockView.glade" />
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
+    <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -211,6 +212,7 @@
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
+    <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
