@@ -12,7 +12,7 @@ namespace Models.PMF.Organs
     using PMF;
 
     /// <summary>
-    /// This organ is simulated using a generic organ type.
+    /// This organ is simulated using a GenericOrgan type.  It is parameterised to calculate the growth, senescence, and detachment of any organ that does not have specific functions.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
@@ -395,6 +395,136 @@ namespace Models.PMF.Organs
             Live.StorageWt = Live.StorageWt - MathUtilities.Divide(respiration * Live.StorageWt , total, 0);
         }
 
+        /// <summary>Clears this instance.</summary>
+        protected virtual void Clear()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+            DMSupply.Clear();
+            NSupply.Clear();
+            DMDemand.Clear();
+            NDemand.Clear();
+            potentialDMAllocation.Clear();
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
+        }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            NDemand = new BiomassPoolType();
+            DMDemand = new BiomassPoolType();
+            NSupply = new BiomassSupplyType();
+            DMSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
+            startLive = new Biomass();
+            Allocated = new Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
+            Live = new Biomass();
+            Dead = new Biomass();
+            Clear();
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (parentPlant.IsAlive)
+            {
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
+            }
+                    }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        protected void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == parentPlant)
+            {
+                Clear();
+                Live.StructuralWt = initialWtFunction.Value();
+                Live.StorageWt = 0.0;
+                Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
+                Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+            }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            // save current state
+            if (parentPlant.IsEmerged)
+                startLive = Live;
+        }
+
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            if (parentPlant.IsAlive)
+            {
+                // Do senescence
+                double senescedFrac = senescenceRate.Value();
+                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+                    senescedFrac = 1.0;  // remaining amount too small, senesce all
+                Biomass Loss = Live * senescedFrac;
+                Live.Subtract(Loss);
+                Dead.Add(Loss);
+                Senesced.Add(Loss);
+
+                // Do detachment
+                double detachedFrac = detachmentRateFunction.Value();
+                if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)
+                    detachedFrac = 1.0;  // remaining amount too small, detach all
+                Biomass detaching = Dead * detachedFrac;
+                Dead.Multiply(1.0 - detachedFrac);
+                if (detaching.Wt > 0.0)
+                {
+                    Detached.Add(detaching);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, parentPlant.CropType, Name);
+                }
+
+                // Do maintenance respiration
+                MaintenanceRespiration = 0;
+                MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+                MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+            }
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        protected void DoPlantEnding(object sender, EventArgs e)
+        {
+            if (Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
+            }
+
+            Clear();
+        }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -410,6 +540,10 @@ namespace Models.PMF.Organs
                 // write the basic description of this class, given in the <summary>
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
+                // write the memos
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
                 //// List the parameters, properties, and processes from this organ that need to be documented:
 
                 // document DM demands
@@ -420,7 +554,7 @@ namespace Models.PMF.Organs
 
                 // document N demands
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool:", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
                 IModel NDemand = Apsim.Child(this, "nDemands");
                 AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
 
@@ -540,138 +674,6 @@ namespace Models.PMF.Organs
                 if (biomassRemovalModel != null)
                     biomassRemovalModel.Document(tags, headingLevel + 1, indent);
             }
-        }
-
-        /// <summary>Clears this instance.</summary>
-        protected virtual void Clear()
-        {
-            Live = new Biomass();
-            Dead = new Biomass();
-            DMSupply.Clear();
-            NSupply.Clear();
-            DMDemand.Clear();
-            NDemand.Clear();
-            potentialDMAllocation.Clear();
-            Allocated.Clear();
-            Senesced.Clear();
-            Detached.Clear();
-            Removed.Clear();
-        }
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// 
-        [EventSubscribe("Commencing")]
-        protected void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            NDemand = new BiomassPoolType();
-            DMDemand = new BiomassPoolType();
-            NSupply = new BiomassSupplyType();
-            DMSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
-            startLive = new Biomass();
-            Allocated = new Biomass();
-            Senesced = new Biomass();
-            Detached = new Biomass();
-            Removed = new Biomass();
-            Live = new Biomass();
-            Dead = new Biomass();
-            Clear();
-        }
-
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (parentPlant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-            }
-                    }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        protected void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            if (data.Plant == parentPlant)
-            {
-                Clear();
-                Live.StructuralWt = initialWtFunction.Value();
-                Live.StorageWt = 0.0;
-                Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-                Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
-            }
-        }
-
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            // save current state
-            if (parentPlant.IsEmerged)
-                startLive = Live;
-        }
-
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
-        {
-            if (parentPlant.IsAlive)
-            {
-                // Do senescence
-                double senescedFrac = senescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
-
-                // Do detachment
-                double detachedFrac = detachmentRateFunction.Value();
-                if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)
-                    detachedFrac = 1.0;  // remaining amount too small, detach all
-                Biomass detaching = Dead * detachedFrac;
-                Dead.Multiply(1.0 - detachedFrac);
-                if (detaching.Wt > 0.0)
-                {
-                    Detached.Add(detaching);
-                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, parentPlant.CropType, Name);
-                }
-
-                // Do maintenance respiration
-                MaintenanceRespiration = 0;
-                MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
-            }
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        protected void DoPlantEnding(object sender, EventArgs e)
-        {
-            if (Wt > 0.0)
-            {
-                Detached.Add(Live);
-                Detached.Add(Dead);
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
-            }
-
-            Clear();
         }
     }
 }

@@ -38,7 +38,7 @@ The simulation of variations in N concentration over the growing season can also
         <MemoText><![CDATA[
 ## Presentation
 
-This model has been built using APSIM's Plant Modelling Framework (PMF), as introduced in [brown_plant_2014] and described in more detail in www.apsim.info.  It aims to simulate the development and growth of white clover (*Trifolium repens*) as a forage crop.  The model focus primarily on describing the vegetative growth with only a simplified account of the reproductive phase.  Only an inflorescence organ is defined, so flowers and seeds and their development are not considered separately.  This was done because the reproductive phase of white clover stands is quite long and undefined: different plants may start flowering at different times and single plants may have flower buds as well as ripen seed at the same time (more details in the phenology section below).  With more comprehensive data, the implementation of this phase and the reproductive organs may be revisited in the future.  The white clover model simulates the aboveground plant structure, including the photosynthesis process, using the SimpleLeaf procedure of PMF, which does not consider explicitly leaf age or their placement in the canopy.  The model describes a perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.  
+This model has been built using APSIM's Plant Modelling Framework (PMF), as introduced in [brown_plant_2014] and described in more detail in www.apsim.info.  It aims to simulate the development and growth of white clover (*Trifolium repens*) as a forage crop.  The model focus primarily on describing the vegetative growth with only a simplified account of the reproductive phase.  Only an inflorescence organ is defined, so flowers and seeds and their development are not considered separately.  This was done because the reproductive phase of white clover stands is quite long and undefined: different plants may start flowering at different times and single plants may have flower buds as well as ripen seed at the same time (e.g. [HydeEtAl1959]; [Thomas1987Chapter]; [MedeirosAndSteiner2000]); more details in the phenology section below.  With more comprehensive data, the implementation of this phase and the reproductive organs may be revisited in the future.  The white clover model simulates the aboveground plant structure, including the photosynthesis process, using the SimpleLeaf procedure of PMF, which does not consider explicitly leaf age or their placement in the canopy.  The model describes a perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.  
 
 
 ##Inclusion in APSIM simulations
@@ -427,7 +427,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[__Note:__ this organ represents all the leaves in the plant, without distinction between ages or placement in the canopy.  
+          <MemoText><![CDATA[This organ represents all the leaves in the plant with minimum considerations for the structure of the canopy.  All leaves are considered to be distributed in one layer and total leaf biomass is used to determine the height of the canopy.  This uses a function that can vary for different cultivars, but currently it is not affected by competition with other plants.  
 ]]></MemoText>
         </Memo>
         <MultiplyFunction>
@@ -831,7 +831,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The DM demand as calculated here is a potential value, or a weighting factor, which is used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a base and a deficit demands.  The base demand is simply defined by the target proportion of leaf biomass, whereas the deficit demand is defined by the difference between the actual and targeted proportions.  This approach ensures promptly regrowth of aboveground organs after defoliation, but relies in the assumption that a target biomass proportion for each organ exist.  The target proportion is calculated based on a target shoot-to-root ratio and then a biomass proportion for each organ, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+            <MemoText><![CDATA[The DM demands calculated here represent potential values, or a weighting factors, which are used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a *Base* and a *Deficit* demand.  The *Base* demand is simply defined by the target proportion of leaf biomass, whereas the *Deficit* demand is defined by the difference between the actual and the targeted proportions.  This approach is used to ensure promptly regrowth of aboveground organs after a defoliation; it relies in the assumption that a target biomass proportion for each organ exists.  The *TargetBiomassProportion* is calculated based on a target shoot-to-root ratio and a biomass proportion for each organ above or below ground, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
 ]]></MemoText>
           </Memo>
           <MultiplyFunction>
@@ -987,6 +987,14 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </BiomassDemand>
         <BiomassDemand>
           <Name>NDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[These N demands also represent potential values that are used by the OrganArbitrator to get the total plant N demand.  This and any source of N in the plant are used to determine soil N demand, and eventually the actual amounts allocated to each pool in each organ.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <VariableReference>
@@ -1180,7 +1188,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The average height of white clover is assumed here as a simple function of leaf biomass; generically the petiole determines the height, but the development of this organ is linked to leaf growth, so a general function as used here should be sufficient.  Inflorescence are ignored as the plant height is mostly used for computing light interception and transpiration.  The petiole length, and thus plant height, varies with cultivar, being tipically between 5 and 20 cm ([Brougham1958_LeafDev]; [McCreeTroughton1966]; [BissuelBelaygueEtAl2002_flower]; [denHollanderEtAl2007]).  The inflorescence is typically one third higher than the leaves.  Sward population and competition with other plant may have an influence on the relationship between biomass and height, but this is not currently accounted for by the model.  
+            <MemoText><![CDATA[The average height of white clover is assumed here as a simple function of leaf biomass.  Generically, the petiole length determines the height, but the development of this organ is linked to leaf growth, so a general function as used here should be sufficient to simulate the average height.  Inflorescence are ignored as the plant height is mostly used for computing light interception and transpiration.  The petiole length varies with cultivar, being tipically between 5 and 15 cm ([Brougham1958_LeafDev]; [McCreeTroughton1966]; [BissuelBelaygueEtAl2002_flower]; [denHollanderEtAl2007]), and this has been found to be correlated to leaf size.  The inflorescence is typically one third higher than the leaves.  Sward population and competition with other plant may have an influence on the relationship between biomass and height, but this is not currently accounted for by the model.  
 ]]></MemoText>
           </Memo>
           <XYPairs>
@@ -1583,7 +1591,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[__Note:__ this represents all the petioles as well as the flower peduncles in the plant, without distinction between ages or placement in the canopy.  
+          <MemoText><![CDATA[Note that this represents all the petioles as well as the flower peduncles in the plant, an approach taken due to the apparent similarities between them and lack of specific data to parameterise them separately.  There are no distinctions between ages or placement in the canopy either.  
 ]]></MemoText>
         </Memo>
         <MultiplyFunction>
@@ -1745,18 +1753,18 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </PhaseLookup>
         <BiomassDemand>
           <Name>DMDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The DM demands calculated here represent potential values, or a weighting factors, which are used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a *Base* and a *Deficit* demand.  The *Base* demand is simply defined by the target proportion of leaf biomass, whereas the *Deficit* demand is defined by the difference between the actual and the targeted proportions.  This approach is used to ensure promptly regrowth of aboveground organs after a defoliation; it relies in the assumption that a target biomass proportion for each organ exists.  The *TargetBiomassProportion* is calculated based on a target shoot-to-root ratio and a biomass proportion for each organ above or below ground, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <AddFunction>
               <Name>DMDemandFunction</Name>
-              <Memo>
-                <Name>Description</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <MemoText><![CDATA[The DM demand as defined here is a weighting factor, actual values are computed by the OrganArbitrator. The value is computed as the sum of a base demand, simply based on the potential partition according to the target proportions, and a deficit demand, which diverts more biomass to organs that deviate from their targeted proportions. This ensures faster regrowth of above ground organs after defoliation. The target proportion may vary with growth stage and environmental conditions.  
-]]></MemoText>
-              </Memo>
               <PartitionFractionDemandFunction>
                 <Name>BaseBiomassDemand</Name>
                 <MultiplyFunction>
@@ -1891,6 +1899,14 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </BiomassDemand>
         <BiomassDemand>
           <Name>NDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[These N demands also represent potential values that are used by the OrganArbitrator to get the total plant N demand.  This and any source of N in the plant are used to determine soil N demand, and eventually the actual amounts allocated to each pool in each organ.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <VariableReference>
@@ -2253,7 +2269,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[__Note:__ this represents all the stolons in the plant, without distinction between ages or placement in the canopy.  
+          <MemoText><![CDATA[This organt is parameterised to represent all the stolons in the plant, without distinction between ages or placement in the canopy.  
 ]]></MemoText>
         </Memo>
         <MultiplyFunction>
@@ -2374,18 +2390,18 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </PhaseLookup>
         <BiomassDemand>
           <Name>DMDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The DM demands calculated here represent potential values, or a weighting factors, which are used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a *Base* and a *Deficit* demand.  The *Base* demand is simply defined by the target proportion of leaf biomass, whereas the *Deficit* demand is defined by the difference between the actual and the targeted proportions.  This approach is used to ensure promptly regrowth of aboveground organs after a defoliation; it relies in the assumption that a target biomass proportion for each organ exists.  The *TargetBiomassProportion* is calculated based on a target shoot-to-root ratio and a biomass proportion for each organ above or below ground, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <AddFunction>
               <Name>DMDemandFunction</Name>
-              <Memo>
-                <Name>Description</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <MemoText><![CDATA[The DM demand as defined here is a weighting factor, actual values are computed by the OrganArbitrator. The value is computed as the sum of a base demand, simply based on the potential partition according to the target proportions, and a deficit demand, which diverts more biomass to organs that deviate from their targeted proportions. This ensures faster regrowth of above ground organs after defoliation. The target proportion may vary with growth stage and environmental conditions.  
-]]></MemoText>
-              </Memo>
               <PartitionFractionDemandFunction>
                 <Name>BaseBiomassDemand</Name>
                 <MultiplyFunction>
@@ -2520,6 +2536,14 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </BiomassDemand>
         <BiomassDemand>
           <Name>NDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[These N demands also represent potential values that are used by the OrganArbitrator to get the total plant N demand.  This and any source of N in the plant are used to determine soil N demand, and eventually the actual amounts allocated to each pool in each organ.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <VariableReference>
@@ -3081,7 +3105,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[__Note:__ this represents all the reproductive parts of the plant, flowers, pods, seed, etc. No distinction is made between ages or placement in the canopy.  
+          <MemoText><![CDATA[Note that this organ represents all the reproductive parts of the plant: flowers, pods, seeds, etc.  No distinction is made between ages or placement in the canopy.  
+The main reason for grouping all flowers and seeds together is the complexity of the reproductive phase of white clover.  There are variations in phenology between plants in the same sward, and even in the same plant there can be new flowers being initiated while others contain mature seeds (e.g. [HydeEtAl1959]; [Thomas1987Chapter]; [MedeirosAndSteiner2000]).  A comprehensive and specific dataset is necessary to support the implementation of distinct organs within the inflorescence, this may be revisited in the future.  
 ]]></MemoText>
         </Memo>
         <Constant>
@@ -3282,18 +3307,18 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </PhaseLookup>
         <BiomassDemand>
           <Name>DMDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The DM demands calculated here represent potential values, or a weighting factors, which are used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a *Base* and a *Deficit* demand.  The *Base* demand is simply defined by the target proportion of leaf biomass, whereas the *Deficit* demand is defined by the difference between the actual and the targeted proportions.  This approach is used to ensure promptly regrowth of aboveground organs after a defoliation; it relies in the assumption that a target biomass proportion for each organ exists.  The *TargetBiomassProportion* is calculated based on a target shoot-to-root ratio and a biomass proportion for each organ above or below ground, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <AddFunction>
               <Name>DMDemandFunction</Name>
-              <Memo>
-                <Name>Description</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <MemoText><![CDATA[The DM demand as defined here is a weighting factor, actual values are computed by the OrganArbitrator. The value is computed as the sum of a base demand, simply based on the potential partition according to the target proportions, and a deficit demand, which diverts more biomass to organs that deviate from their targeted proportions. This ensures faster regrowth of above ground organs after defoliation. The target proportion may vary with growth stage and environmental conditions.  
-]]></MemoText>
-              </Memo>
               <PartitionFractionDemandFunction>
                 <Name>BaseBiomassDemand</Name>
                 <MultiplyFunction>
@@ -3428,6 +3453,14 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         </BiomassDemand>
         <BiomassDemand>
           <Name>NDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[These N demands also represent potential values that are used by the OrganArbitrator to get the total plant N demand.  This and any source of N in the plant are used to determine soil N demand, and eventually the actual amounts allocated to each pool in each organ.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <VariableReference>
@@ -3762,9 +3795,9 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[__Note:__ this represents all the nodules containing the symbiotic N-fixing bacteria (*Rhizobium*) of the plant, without distinction between ages or placement in the root system.  
-Nodules are considered plant organs that result from the infection of fine roots by *Rhizobium* bacteria ([CrushChapter1987]; [HirschEtAl1997]; [PuppoEtAl2005]; [RusselleEtAl2008]). This organs are composed by a mixture of infected and non infected plant cells that behave as an isolated organ, but under control of the host plant.  This is a symbiotic relationship whereby the plant supplies carbon and energy to the the bacteria which provide the plant with N fixed from the air.  Nodules of white clover are of indeterminate type, these are more complex than determinate types (including a meristematic zone) and have a much longer life span ([PuppoEtAl2005]; [RusselleEtAl2008]). Different strains of the *Rhizobium* bacteria can vary on their capacity to infect white clover (with some plant cultivars also showing selection to different strains) as well as on their effectiveness to fix N2 from the air. However, the model currently does not simulate variations in nodule development nor on N fixation rate due to varying bacteria strains.  
-The host plant controls the supply of sugars and oxygen to the nodules, thus regulating the N fixation rate and by extention on the nodule growth and senescence ([PuppoEtAl2005]; [RusselleEtAl2008]; [HaagEtAl2013]). The model simulates this by linking the respective processes to the plants N status.  
+          <MemoText><![CDATA[Note that this represents all the nodules containing the symbiotic N-fixing bacteria (*Rhizobium*) of the plant, without distinction between ages or placement in the root system.  
+Nodules are considered plant organs that result from the infection of fine roots by *Rhizobium* bacteria ([CrushChapter1987]; [HirschEtAl1997]; [PuppoEtAl2005]; [RusselleEtAl2008]). These structures are composed by a mixture of infected and non infected plant cells that behave as isolated organs, but under control of the host plant.  This is a symbiotic relationship whereby the plant supplies carbon and energy to the the bacteria which in turn provide the plant with N fixed from the air.  Nodules of white clover are of indeterminate type, these are more complex than determinate types, including a meristematic zone and have a much longer life span ([PuppoEtAl2005]; [RusselleEtAl2008]).  Different strains of the *Rhizobium* bacteria can vary on their capacity to infect white clover (with some plant cultivars also showing selection to different strains) as well as on their effectiveness to fix N<sub>2</sub> from the air.  However, the model currently does not simulate variations in nodule development nor on N fixation rate due to varying bacteria strains.  
+The host plant controls the supply of sugars and oxygen to the nodules, thus regulating the N fixation rate and by extention on the nodule's growth and senescence ([PuppoEtAl2005]; [RusselleEtAl2008]; [HaagEtAl2013]). The model simulates this interaction by linking the respective processes in the nodules to the plants N status.  
 ]]></MemoText>
         </Memo>
         <Constant>
@@ -3845,20 +3878,22 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
         <PhaseLookup>
           <Name>TargetBiomassProportion</Name>
           <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The growth and senescence of nodules in white clover roots is regulated by the host plant, this is done in tandem with its need for N fixation by controlling the supply of sugars and oxygen to the nodules ([CrushChapter1987]; [VlassakEtAl1997]; [PuppoEtAl2005]; [RusselleEtAl2008]; [HaagEtAl2013]).  The aproach used in the white clover model to simulate this regulation is to define a base, or mean, proportion of nodules in the below ground biomass and modify it according to the plants N status. Thus nodule growth demand is inversely proportional to the plant's N deficiency factor.  
-As *Rhizobium* bacteria are ubiquitous in soils (e.g. [CrushChapter1987]; [VlassakEtAl1997]; [RusselleEtAl2008]), although strains vary widelly in infection capacities and fixation efficiencies.  Thus, in typical growing conditions nearly all white clover plants will have some nodulation, add to this the fact that the model simulates a population instead of a single plant, the model assumes that nodule biomass never goes below a minimum threshold, as propotion of below ground biomass. This also ensures a prompt minimum capacity for N fixation.  
-]]></MemoText>
-          </Memo>
-          <Memo>
             <Name>note</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[This is the 'ideal' proportion of biomass for this organ within the above ground biomass (not total).  
+            <MemoText><![CDATA[This is the 'ideal' proportion of biomass for this organ within the below ground biomass (not total).  
+]]></MemoText>
+          </Memo>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The growth and senescence of nodules in white clover roots is regulated by the host plant, this is done in tandem with the plants need for N fixation by controlling the supply of sugars and oxygen to the nodules ([CrushChapter1987]; [VlassakEtAl1997]; [PuppoEtAl2005]; [RusselleEtAl2008]; [HaagEtAl2013]).  The aproach used in the white clover model to simulate this regulation is to define a base, or mean, target proportion of nodules in the below ground biomass and modify it according to the plants N status.  Thus nodule growth demand is inversely proportional to the plant's N deficiency factor.  
+*Rhizobium* bacteria are ubiquitous in soils (e.g. [CrushChapter1987]; [VlassakEtAl1997]; [RusselleEtAl2008]), although strains vary widelly in infection capacities and fixation efficiencies.  Thus, in typical growing conditions nearly all white clover plants will have some nodulation, add to this the fact that the model simulates a population instead of a single plant, the model assumes that nodule biomass never goes below a minimum threshold, as propotion of below ground biomass. This also ensures a prompt minimum capacity for N fixation.  
+
+*Rhizobium* bacteria are ubiquitous in soils (e.g. [CrushChapter1987]; [VlassakEtAl1997]; [RusselleEtAl2008]), thus, in typical growing conditions, nearly all white clover plants will have some nodulation.  This ensures that some N fixation always will happen, even though bacteria strains can vary widelly in infection capacities and fixation efficiencies.  Considering this and the fact that the model simulates a population instead of a single plant, it is assumed in the WhiteClover model that the nodule's biomass never goes below a minimum threshold, a propotion of belowground biomass. This also ensures a prompt minimum capacity for N fixation.  
 ]]></MemoText>
           </Memo>
           <PhaseLookupValue>
@@ -3916,18 +3951,18 @@ As *Rhizobium* bacteria are ubiquitous in soils (e.g. [CrushChapter1987]; [Vlass
         </PhaseLookup>
         <BiomassDemand>
           <Name>DMDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The DM demands calculated here represent potential values, or a weighting factors, which are used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a *Base* and a *Deficit* demand.  The *Base* demand is simply defined by the target proportion of leaf biomass, whereas the *Deficit* demand is defined by the difference between the actual and the targeted proportions.  This approach is used to ensure promptly regrowth of aboveground organs after a defoliation; it relies in the assumption that a target biomass proportion for each organ exists.  The *TargetBiomassProportion* is calculated based on a target shoot-to-root ratio and a biomass proportion for each organ above or below ground, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <AddFunction>
               <Name>DMDemandFunction</Name>
-              <Memo>
-                <Name>Description</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <MemoText><![CDATA[The DM demand as defined here is a weighting factor, actual values are computed by the OrganArbitrator. The value is computed as the sum of a base demand, simply based on the potential partition according to the target proportions, and a deficit demand, which diverts more biomass to organs that deviate from their targeted proportions. This ensures faster regrowth of above ground organs after defoliation. The target proportion may vary with growth stage and environmental conditions.  
-]]></MemoText>
-              </Memo>
               <PartitionFractionDemandFunction>
                 <Name>BaseBiomassDemand</Name>
                 <MultiplyFunction>
@@ -4095,6 +4130,14 @@ As *Rhizobium* bacteria are ubiquitous in soils (e.g. [CrushChapter1987]; [Vlass
         </BiomassDemand>
         <BiomassDemand>
           <Name>NDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[These N demands also represent potential values that are used by the OrganArbitrator to get the total plant N demand.  This and any source of N in the plant are used to determine soil N demand, and eventually the actual amounts allocated to each pool in each organ.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <VariableReference>
@@ -4187,7 +4230,7 @@ As *Rhizobium* bacteria are ubiquitous in soils (e.g. [CrushChapter1987]; [Vlass
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The rate of N fixation is highly regulated by the host plant, but in its basis it is defined by the presence and quantity of symbiont bacteria. The whiteclover model uses an approach whereby the basic fixation rate is directly proportional to the biomass of nodules ([RysAndPhung1985]; [LedgardEtAl1990]; [HoghJensenEtAl2002]; [RusselleEtAl2008]; [FloraThesis2013]). This is then regulated by environmental factors and the plant ([CrushChapter1987]; [RusselleEtAl2008]). The plants control N fixation by limiting the supply of sugars and oxygen to the nodules ([PuppoEtAl2005]; [RusselleEtAl2008]; [HaagEtAl2013]). In the model, this is simulated as a function of N deficiency, with fixation rate being inversely proportional to the plant's N deficiency factor. The mechanism regulating N fixation is quite fast, with fixation nearly ceasing soon after fertilisation or defoliation (e.g. [CarrollGresshoff1983]; [RusselleEtAl2008]). By linking potential fixation to nodule biomass, the model is capable of describing both a upper limit for fixation and the temporal lag between the inception of N stress and an elevated N fixation rate.  
+            <MemoText><![CDATA[The rate of N fixation in nodules is highly regulated by the host plant, but in its basis it is defined by the presence and quantity of symbiont bacteria.  The whiteclover model uses an approach whereby the basic fixation rate is directly proportional to the biomass of nodules ([RysAndPhung1985]; [LedgardEtAl1990]; [HoghJensenEtAl2002]; [RusselleEtAl2008]; [FloraThesis2013]).  This is then regulated by environmental factors and the plant itself ([CrushChapter1987]; [RusselleEtAl2008]). The plants control N fixation by limiting the supply of sugars and oxygen to the nodules ([PuppoEtAl2005]; [RusselleEtAl2008]; [HaagEtAl2013]). In the model, this is simulated as a function of N deficiency over the whole plant, with fixation rate being inversely proportional to the plant's N deficiency factor.  The mechanism regulating N fixation is quite responsive, with fixation nearly ceasing soon after fertilisation or defoliation (e.g. [CarrollGresshoff1983]; [RusselleEtAl2008]) and this is captured in the model by a prompt reduction of the N deficiency factor.  By linking potential fixation to nodule's biomass, the model is also capable of describing both an upper limit for fixation (due to nodule growth being limited due to the competition for biomass among organs) and the temporal lag between the inception of N stress and an elevated N fixation rate (nodules need to grow before they can start fixing N).  
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -4533,8 +4576,8 @@ As *Rhizobium* bacteria are ubiquitous in soils (e.g. [CrushChapter1987]; [Vlass
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <MemoText><![CDATA[__Note:__ this represents all the taproots of the plant.  
-Taproots in white clover are generally efemerous.  They develop from seeds and are ubiquitous in young plants, but these die out about a year after germination and adult plant are generally described as having no taproots ([HartChapter1987]; [BrockEtAl2000]). However, some secondary roots can be taproot-like, especially in especific cultivars, e.g. ladino ([ThomasChapter1987]; [CaradusAndWoodfield1998]). Given that, and because the model simulates the a whole population, it is assumed that taproots are always present, but typically constitute a minor fraction of the root systems in most cultivars.  
+          <MemoText><![CDATA[Note that this represents the taproots of all the plant in the population.  
+Taproots in white clover are generally efemerous.  They develop from seeds and are ubiquitous in young plants, but these generally die out about a year after germination and adult plants are often described as having no taproots ([HartChapter1987]; [BrockEtAl2000]).  However, some secondary roots can be taproot-like, especially in especific cultivars, e.g. ladino ([ThomasChapter1987]; [CaradusAndWoodfield1998]). Given that, and because the model simulates the a whole population, it is assumed that taproots are always present, but typically constitute a minor fraction of the root systems in most cultivars.  
 ]]></MemoText>
         </Memo>
         <MultiplyFunction>
@@ -4702,6 +4745,14 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
         </PhaseLookup>
         <BiomassDemand>
           <Name>DMDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The DM demand as calculated here is a potential value, or a weighting factor, which is used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a base and a deficit demands.  The base demand is simply defined by the target proportion of leaf biomass, whereas the deficit demand is defined by the difference between the actual and targeted proportions.  This approach ensures promptly regrowth of aboveground organs after defoliation, but relies in the assumption that a target biomass proportion for each organ exist.  The target proportion is calculated based on a target shoot-to-root ratio and then a biomass proportion for each organ, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <AddFunction>
@@ -4874,6 +4925,14 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
         </BiomassDemand>
         <BiomassDemand>
           <Name>NDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[These N demands also represent potential values that are used by the OrganArbitrator to get the total plant N demand.  This and any source of N in the plant are used to determine soil N demand, and eventually the actual amounts allocated to each pool in each organ.  
+]]></MemoText>
+          </Memo>
           <MultiplyFunction>
             <Name>Structural</Name>
             <VariableReference>
@@ -5522,6 +5581,265 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
         </PhaseLookup>
+        <BiomassDemand>
+          <Name>DMDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[The DM demand as calculated here is a potential value, or a weighting factor, which is used by the OrganArbitrator to compute the allocated DM for all organs.  The potential demand is computed as the sum of a base and a deficit demands.  The base demand is simply defined by the target proportion of leaf biomass, whereas the deficit demand is defined by the difference between the actual and targeted proportions.  This approach ensures promptly regrowth of aboveground organs after defoliation, but relies in the assumption that a target biomass proportion for each organ exist.  The target proportion is calculated based on a target shoot-to-root ratio and then a biomass proportion for each organ, these are defined elsewhere in this documentation and may vary with growth stage and environmental conditions.  
+]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Structural</Name>
+            <AddFunction>
+              <Name>DMDemandFunction</Name>
+              <PartitionFractionDemandFunction>
+                <Name>BaseBiomassDemand</Name>
+                <MultiplyFunction>
+                  <Name>PartitionFraction</Name>
+                  <SubtractFunction>
+                    <Name>TargetBelowGroundProp</Name>
+                    <Constant>
+                      <Name>One</Name>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                      <FixedValue>1</FixedValue>
+                    </Constant>
+                    <VariableReference>
+                      <Name>TargetAboveGroundProp</Name>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                      <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                  </SubtractFunction>
+                  <VariableReference>
+                    <Name>TargetOrganProp</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                    <VariableName>[Root].TargetBiomassProportion.Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                </MultiplyFunction>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+              </PartitionFractionDemandFunction>
+              <MaximumFunction>
+                <Name>DeficitBiomassDemand</Name>
+                <Constant>
+                  <Name>Zero</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <SubtractFunction>
+                  <Name>Deficit</Name>
+                  <MultiplyFunction>
+                    <Name>TargetBiomass</Name>
+                    <SubtractFunction>
+                      <Name>TargetBelowGroundProp</Name>
+                      <Constant>
+                        <Name>One</Name>
+                        <IncludeInDocumentation>false</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <ReadOnly>false</ReadOnly>
+                        <FixedValue>1</FixedValue>
+                      </Constant>
+                      <VariableReference>
+                        <Name>TargetAboveGroundProp</Name>
+                        <IncludeInDocumentation>false</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <ReadOnly>false</ReadOnly>
+                        <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                    </SubtractFunction>
+                    <VariableReference>
+                      <Name>TargetOrganProp</Name>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                      <VariableName>[Root].TargetBiomassProportion.Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>TotalBiomass</Name>
+                      <IncludeInDocumentation>false</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <ReadOnly>false</ReadOnly>
+                      <VariableName>[TotalLive].Wt</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                  </MultiplyFunction>
+                  <VariableReference>
+                    <Name>CurrentBiomass</Name>
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <ReadOnly>false</ReadOnly>
+                    <VariableName>[Root].Live.Wt</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                </SubtractFunction>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+              </MaximumFunction>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </AddFunction>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <FixedValue>1</FixedValue>
+              <Units>g/g</Units>
+            </Constant>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </MultiplyFunction>
+          <Constant>
+            <Name>Metabolic</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <StorageDMDemandFunction>
+            <Name>Storage</Name>
+            <SubtractFunction>
+              <Name>StorageFraction</Name>
+              <Constant>
+                <Name>One</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <VariableReference>
+                <Name>StructuralFraction</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </SubtractFunction>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </StorageDMDemandFunction>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </BiomassDemand>
+        <BiomassDemand>
+          <Name>NDemands</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[These N demands also represent potential values that are used by the OrganArbitrator to get the total plant N demand.  This and any source of N in the plant are used to determine soil N demand, and eventually the actual amounts allocated to each pool in each organ.  
+]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Structural</Name>
+            <VariableReference>
+              <Name>MinNconc</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Root].minimumNconc.Value()</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>PotentialDMAllocation</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </MultiplyFunction>
+          <MultiplyFunction>
+            <Name>Metabolic</Name>
+            <SubtractFunction>
+              <Name>MetabolicNconc</Name>
+              <VariableReference>
+                <Name>CritNconc</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Root].criticalNConc.Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>MinNconc</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Root].minimumNconc.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </SubtractFunction>
+            <VariableReference>
+              <Name>PotentialDMAllocation</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </MultiplyFunction>
+          <StorageNDemandFunction>
+            <Name>Storage</Name>
+            <VariableReference>
+              <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>MaxNconc</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Root].maximumNconc.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </StorageNDemandFunction>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </BiomassDemand>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -6197,257 +6515,6 @@ The KLModifier allows for a dynamic adjustment of the KL factor (defined in the 
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
         </BiomassRemoval>
-        <BiomassDemand>
-          <Name>DMDemands</Name>
-          <MultiplyFunction>
-            <Name>Structural</Name>
-            <AddFunction>
-              <Name>DMDemandFunction</Name>
-              <Memo>
-                <Name>Description</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <MemoText><![CDATA[The DM demand as defined here is a weighting factor, actual values are computed by the OrganArbitrator. The value is computed as the sum of a base demand, simply based on the potential partition according to the target proportions, and a deficit demand, which diverts more biomass to organs that deviate from their targeted proportions. This ensures faster regrowth of above ground organs after defoliation. The target proportion may vary with growth stage and environmental conditions.  
-]]></MemoText>
-              </Memo>
-              <PartitionFractionDemandFunction>
-                <Name>BaseBiomassDemand</Name>
-                <MultiplyFunction>
-                  <Name>PartitionFraction</Name>
-                  <SubtractFunction>
-                    <Name>TargetBelowGroundProp</Name>
-                    <Constant>
-                      <Name>One</Name>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                      <FixedValue>1</FixedValue>
-                    </Constant>
-                    <VariableReference>
-                      <Name>TargetAboveGroundProp</Name>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                      <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                  </SubtractFunction>
-                  <VariableReference>
-                    <Name>TargetOrganProp</Name>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                    <VariableName>[Root].TargetBiomassProportion.Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <ReadOnly>false</ReadOnly>
-                </MultiplyFunction>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-              </PartitionFractionDemandFunction>
-              <MaximumFunction>
-                <Name>DeficitBiomassDemand</Name>
-                <Constant>
-                  <Name>Zero</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <ReadOnly>false</ReadOnly>
-                  <FixedValue>0</FixedValue>
-                </Constant>
-                <SubtractFunction>
-                  <Name>Deficit</Name>
-                  <MultiplyFunction>
-                    <Name>TargetBiomass</Name>
-                    <SubtractFunction>
-                      <Name>TargetBelowGroundProp</Name>
-                      <Constant>
-                        <Name>One</Name>
-                        <IncludeInDocumentation>false</IncludeInDocumentation>
-                        <Enabled>true</Enabled>
-                        <ReadOnly>false</ReadOnly>
-                        <FixedValue>1</FixedValue>
-                      </Constant>
-                      <VariableReference>
-                        <Name>TargetAboveGroundProp</Name>
-                        <IncludeInDocumentation>false</IncludeInDocumentation>
-                        <Enabled>true</Enabled>
-                        <ReadOnly>false</ReadOnly>
-                        <VariableName>[TargetAboveGroundFraction].Value()</VariableName>
-                      </VariableReference>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                    </SubtractFunction>
-                    <VariableReference>
-                      <Name>TargetOrganProp</Name>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                      <VariableName>[Root].TargetBiomassProportion.Value()</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>TotalBiomass</Name>
-                      <IncludeInDocumentation>false</IncludeInDocumentation>
-                      <Enabled>true</Enabled>
-                      <ReadOnly>false</ReadOnly>
-                      <VariableName>[TotalLive].Wt</VariableName>
-                    </VariableReference>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                  </MultiplyFunction>
-                  <VariableReference>
-                    <Name>CurrentBiomass</Name>
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                    <VariableName>[Root].Live.Wt</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <ReadOnly>false</ReadOnly>
-                </SubtractFunction>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-              </MaximumFunction>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </AddFunction>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <FixedValue>1</FixedValue>
-              <Units>g/g</Units>
-            </Constant>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
-          <Constant>
-            <Name>Metabolic</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <StorageDMDemandFunction>
-            <Name>Storage</Name>
-            <SubtractFunction>
-              <Name>StorageFraction</Name>
-              <Constant>
-                <Name>One</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <FixedValue>1</FixedValue>
-              </Constant>
-              <VariableReference>
-                <Name>StructuralFraction</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </SubtractFunction>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </StorageDMDemandFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </BiomassDemand>
-        <BiomassDemand>
-          <Name>NDemands</Name>
-          <MultiplyFunction>
-            <Name>Structural</Name>
-            <VariableReference>
-              <Name>MinNconc</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Root].minimumNconc.Value()</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>PotentialDMAllocation</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>Metabolic</Name>
-            <SubtractFunction>
-              <Name>MetabolicNconc</Name>
-              <VariableReference>
-                <Name>CritNconc</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Root].criticalNConc.Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>MinNconc</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Root].minimumNconc.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </SubtractFunction>
-            <VariableReference>
-              <Name>PotentialDMAllocation</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
-          <StorageNDemandFunction>
-            <Name>Storage</Name>
-            <VariableReference>
-              <Name>NitrogenDemandSwitch</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>MaxNconc</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Root].maximumNconc.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </StorageNDemandFunction>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </BiomassDemand>
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
