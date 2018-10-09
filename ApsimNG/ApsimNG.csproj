@@ -83,7 +83,6 @@
     <EmbeddedResource Include="Resources\Glade\GridView.glade" />
     <EmbeddedResource Include="Resources\Glade\TabbedMetDataView.glade" />
     <EmbeddedResource Include="Resources\Glade\GraphView.glade" />
-    <EmbeddedResource Include="Resources\Glade\SummaryView.glade" />
     <EmbeddedResource Include="Resources\Glade\HTMLView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
