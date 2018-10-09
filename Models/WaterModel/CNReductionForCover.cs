@@ -4,8 +4,8 @@ namespace Models.WaterModel
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
-    using Models.PMF.Functions;
-    using SurfaceOM;
+    using Models.Functions;
+    using Models.Surface;
     using System;
     using System.Collections.Generic;
     using System.Linq;

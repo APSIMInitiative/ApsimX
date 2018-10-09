@@ -33,5 +33,10 @@ namespace Models.Core
         /// Indicates whether this item can toggle between "on" and "off" states
         /// </summary>
         public bool IsToggle { get; set;  }
+
+        /// <summary>
+        /// A separator is placed before this item.
+        /// </summary>
+        public bool FollowsSeparator { get; set; }
     } 
 }

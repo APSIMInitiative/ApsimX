@@ -141,7 +141,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
             labelFileName = (Label)builder.GetObject("labelFileName");
             vbox1 = (VBox)builder.GetObject("vbox1");
             notebook1 = (Notebook)builder.GetObject("notebook1");
@@ -351,7 +351,7 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            string fileName = AskUserForFileName("Choose a weather file to open", "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", FileChooserAction.Open, labelFileName.Text);
+            string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", labelFileName.Text);
             if (!String.IsNullOrEmpty(fileName))
             {
                 Filename = fileName;

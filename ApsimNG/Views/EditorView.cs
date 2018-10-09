@@ -85,6 +85,12 @@ namespace UserInterface.Views
         int Offset { get; }
 
         /// <summary>
+        /// Returns true iff this text editor has the focus
+        /// (ie it can receive keyboard input).
+        /// </summary>
+        bool HasFocus { get; }
+
+        /// <summary>
         /// Inserts text at a given offset in the editor.
         /// </summary>
         /// <param name="text">Text to be inserted.</param>
@@ -99,6 +105,12 @@ namespace UserInterface.Views
         /// </param>
         /// <param name="completionOption">Completion option to be inserted.</param>
         void InsertCompletionOption(string completionOption, string triggerWord);
+
+        /// <summary>
+        /// Gets the location (in screen coordinates) of the cursor.
+        /// </summary>
+        /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
+        System.Drawing.Point GetPositionOfCursor();
     }
 
     /// <summary>
@@ -263,11 +275,26 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Offset of the caret from the beginning of the text editor.
+        /// </summary>
         public int Offset
         {
             get
             {
                 return textEditor.Caret.Offset;
+            }
+        }
+
+        /// <summary>
+        /// Returns true iff this text editor has the focus
+        /// (ie it can receive keyboard input).
+        /// </summary>
+        public bool HasFocus
+        {
+            get
+            {
+                return textEditor.HasFocus;
             }
         }
 
@@ -415,8 +442,17 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
+            e.RetVal = false;
             char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                //Mac window manager already uses control-scroll, so use command
+                //Command might be either meta or mod1, depending on GTK version
+                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+
             bool controlSpace = IsControlSpace(e.Event);
+            bool controlShiftSpace = IsControlShiftSpace(e.Event);
+            string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
+            double x; // unused, but needed as an out parameter.
             if (e.Event.Key == Gdk.Key.F3)
             {
                 if (string.IsNullOrEmpty(_findForm.LookFor))
@@ -425,11 +461,9 @@ namespace UserInterface.Views
                     _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
                 e.RetVal = true;
             }
-            else if (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace)
+            // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
+            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace || controlShiftSpace) )
             {
-                // If user one of the IntelliSenseChars, then display contextlist.
-                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
-
                 // If the user entered a period, we need to take that into account when generating intellisense options.
                 // To do this, we insert a period manually and stop the Gtk signal from propagating further.
                 e.RetVal = true;
@@ -446,20 +480,23 @@ namespace UserInterface.Views
                     Code = textEditor.Text,
                     Offset = this.Offset,
                     ControlSpace = controlSpace,
+                    ControlShiftSpace = controlShiftSpace,
                     LineNo = textEditor.Caret.Line,
                     ColNo = textEditor.Caret.Column - 1
                 };
 
                 ContextItemsNeeded?.Invoke(this, args);
             }
-            else if (e.Event.Key == Gdk.Key.Key_0 && (e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
+            else if ((e.Event.State & ctlModifier) != 0)
             {
-                textEditor.Options.ZoomReset();
-                e.RetVal = true;
-            }
-            else
-            {
-                e.RetVal = false;
+                switch (e.Event.Key)
+                {
+                    case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
+                    case Gdk.Key.KP_Add:
+                    case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
+                    case Gdk.Key.KP_Subtract:
+                    case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
+                }
             }
         }
 
@@ -474,6 +511,16 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Checks whether a keypress is a control-shift-space event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        /// <returns>True iff the event represents a control + shift + space click.</returns>
+        private bool IsControlShiftSpace(Gdk.EventKey e)
+        {
+            return IsControlSpace(e) && (e.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
+        }
+
+        /// <summary>
         /// Retrieve the word before the specified character position. 
         /// </summary>
         /// <param name="pos">Position in the editor</param>
@@ -482,27 +529,25 @@ namespace UserInterface.Views
         {
             if (pos == 0)
                 return string.Empty;
-            else
-            {
-                int PosDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
-                return textEditor.Text.Substring(PosDelimiter + 1, pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
-            }
+
+            int posDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
+            return textEditor.Text.Substring(posDelimiter + 1, pos - posDelimiter - 1).TrimEnd(".".ToCharArray());
         }
 
         /// <summary>
         /// Gets the location (in screen coordinates) of the cursor.
         /// </summary>
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
-        private Tuple<int, int> GetPositionOfCursor()
+        public System.Drawing.Point GetPositionOfCursor()
         {
             Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
             p.Y += (int)textEditor.LineHeight;
             // Need to convert to screen coordinates....
             int x, y, frameX, frameY;
-            mainWindow.GetOrigin(out frameX, out frameY);
+            MasterView.MainWindow.GetOrigin(out frameX, out frameY);
             textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
-            return new Tuple<int, int>(x + frameX, y + frameY);
+            return new System.Drawing.Point(x + frameX, y + frameY);
         }
 
         /// <summary>
@@ -528,10 +573,7 @@ namespace UserInterface.Views
         {
             if (string.IsNullOrEmpty(completionOption))
                 return;
-            if (string.IsNullOrEmpty(triggerWord))
-                textEditor.InsertAtCaret(completionOption);
-            else
-                textEditor.Replace(Text.Substring(0, Offset).LastIndexOf(triggerWord), triggerWord.Length, completionOption);
+            textEditor.InsertAtCaret(completionOption);
         }
         
         /// <summary>

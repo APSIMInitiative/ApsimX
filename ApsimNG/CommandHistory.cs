@@ -88,8 +88,7 @@ namespace UserInterface
                 return;
             if (lastExecuted + 1 < commands.Count)
             {
-                int numCommandsToRemove = commands.Count
-                          - (lastExecuted + 1);
+                int numCommandsToRemove = commands.Count - (lastExecuted + 1);
                 for (int i = 0; i < numCommandsToRemove; i++)
                 {
                     commands.RemoveAt(lastExecuted + 1);

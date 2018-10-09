@@ -55,7 +55,7 @@ namespace UnitTests
             rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(valuesToWrite) as IEnumerable<object> });
         }
 
-        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0)
+        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string groupBy = null)
         {
             return null;
         }
@@ -127,6 +127,16 @@ namespace UnitTests
         }
 
         public void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get a list of the table columns
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <returns></returns>
+        public List<string> GetTableColumns(string tableName)
         {
             throw new NotImplementedException();
         }

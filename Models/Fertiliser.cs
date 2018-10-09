@@ -133,8 +133,9 @@ namespace Models
         /// <param name="Amount">The amount.</param>
         /// <param name="Type">The type.</param>
         /// <param name="Depth">The depth.</param>
+        /// <param name="doOutput">If true, output will be written to the summary.</param>
         /// <exception cref="ApsimXException">Cannot find fertiliser type ' + Type + '</exception>
-        public void Apply(double Amount, Types Type, double Depth = 0.0)
+        public void Apply(double Amount, Types Type, double Depth = 0.0, bool doOutput = true)
         {
             if (Amount > 0)
             {
@@ -160,7 +161,8 @@ namespace Models
                     solutes.AddToLayer(layer, "Urea", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionUrea);
                     NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }
-                Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
+                if (doOutput)
+                    Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
             }
         }
 

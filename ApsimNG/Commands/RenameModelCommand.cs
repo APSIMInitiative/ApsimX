@@ -26,6 +26,8 @@ namespace UserInterface.Commands
         /// <param name="explorerView">The explorer view.</param>
         public RenameModelCommand(Model modelToRename, string newName, Interfaces.IExplorerView explorerView)
         {
+            if (modelToRename.ReadOnly)
+                throw new ApsimXException(modelToRename, string.Format("Unable to rename {0} - it is read-only.", modelToRename.Name));
             this.modelToRename = modelToRename;
             this.newName = newName;
             this.explorerView = explorerView;
@@ -35,22 +37,22 @@ namespace UserInterface.Commands
         /// <param name="CommandHistory">The command history.</param>
         public void Do(CommandHistory CommandHistory)
         {
-            string originalPath = Apsim.FullPath(modelToRename);
+            string originalPath = Apsim.FullPath(this.modelToRename);
 
             // Get original value of property so that we can restore it in Undo if needed.
-            originalName = modelToRename.Name;
+            originalName = this.modelToRename.Name;
 
             // Set the new name.
             this.modelToRename.Name = newName;
             Apsim.EnsureNameIsUnique(this.modelToRename);
-            explorerView.Rename(originalPath, this.modelToRename.Name);
+            explorerView.Tree.Rename(originalPath, this.modelToRename.Name);
         }
 
         /// <summary>Undoes the command.</summary>
         /// <param name="CommandHistory">The command history.</param>
         public void Undo(CommandHistory CommandHistory)
         {
-            explorerView.Rename(Apsim.FullPath(modelToRename), originalName);
+            explorerView.Tree.Rename(Apsim.FullPath(modelToRename), originalName);
             modelToRename.Name = originalName;
         }
     }

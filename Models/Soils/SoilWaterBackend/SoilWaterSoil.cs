@@ -8,19 +8,15 @@ using APSIM.Shared.Utilities; //needed for IEnumerable interface.
 
 namespace Models.Soils.SoilWaterBackend
     {
-
-
-
-
     //SOLUTE IN A LAYER
     //*****************
 
-    #region Solute in a layer
+    // Solute in a layer
 
 
-        /// <summary>
-        /// This is an individual solute in an individual layer of the Soil
-        /// </summary>
+    /// <summary>
+    /// This is an individual solute in an individual layer of the Soil
+    /// </summary>
     [Serializable]
     public class SoluteInLayer
         {
@@ -79,19 +75,10 @@ namespace Models.Soils.SoilWaterBackend
             }
         }
 
-
-
-    #endregion
-
-
-
-
-
-
     //LAYER OF THE SOIL
     //*****************
 
-    #region Layer of the Soil
+    // Layer of the Soil
 
     /// <summary>
     /// This is an individual Layer of the Soil
@@ -582,19 +569,10 @@ namespace Models.Soils.SoilWaterBackend
 
         }
 
-
-
-    #endregion
-
-
-
-
-
-
     //THE SOIL
     //********
 
-    #region The Soil
+    // The Soil
 
     /// <summary>
     /// The Soil.
@@ -708,15 +686,9 @@ namespace Models.Soils.SoilWaterBackend
         /// </summary>
         public double max_pond;
 
-
-
-
-
-
         //OUTPUTS
 
-
-        #region Single Values
+        // Single Values
 
         /// <summary>
         /// The depth to water table
@@ -775,12 +747,7 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
-
-
-        #endregion
-
-
-        #region Output as an Array
+        // Output as an Array
 
         /// <summary>
         /// Gets the esw.
@@ -964,25 +931,14 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
-        #endregion
-
-
-
-
-
-
-
-
         //SOIL LAYERS
-
 
         /// <summary>
         /// The layers
         /// </summary>
         private List<Layer> layers;
 
-
-        #region Enumerators
+        // Enumerators
 
         //http://msdn.microsoft.com/en-us/library/vstudio/65zzykke(v=vs.100).aspx
 
@@ -1095,15 +1051,7 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
-
-
-        #endregion
-
-
-
-
-        #region Get Layer Functions
-
+        // Get Layer Functions
 
         /// <summary>
         /// Gets the top layer.
@@ -1153,20 +1101,9 @@ namespace Models.Soils.SoilWaterBackend
                 return null;
             }
 
-
-
-        #endregion
-
-
-
-
-
         //SOIL HELPER METHODS
 
-
-
-        #region Layer Helper Functions
-
+        //Layer Helper Functions
 
         /// <summary>
         /// Gets the num_layers.
@@ -1241,14 +1178,7 @@ namespace Models.Soils.SoilWaterBackend
             return num_layers;
             }
 
-
-        #endregion
-
-
-
-        #region Solute Helper Functions
-
-
+        // Solute Helper Functions
 
         /// <summary>
         /// Gets the mobile solute names.
@@ -1294,16 +1224,7 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
-
-
-
-        #endregion
-
-
-
-        #region Add/Remove Water
-
-
+        // Add/Remove Water
 
         /// <summary>
         /// Adds the sub surface irrig to soil.
@@ -1315,7 +1236,7 @@ namespace Models.Soils.SoilWaterBackend
             if (Irrig.isSubSurface)
                 {
                 Layer lyr = GetLayer(Irrig.layer);
-                lyr.sw_dep = lyr.sw_dep + Irrig.amount;
+                lyr.sw_dep += Irrig.amount;
                 }
 
             }
@@ -1369,7 +1290,7 @@ namespace Models.Soils.SoilWaterBackend
             foreach (Layer lyr in this)
                 {
                 if (Delta_mm.Length >= lyr.number)
-                    lyr.sw_dep = lyr.sw_dep + Delta_mm[lyr.number - 1];
+                    lyr.sw_dep = lyr.sw_dep - Delta_mm[lyr.number - 1];
                 }
             }
 
@@ -1387,14 +1308,7 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
-
-        #endregion
-
-
-
-        #region Check for Errors in the Soil
-
-
+        // Check for Errors in the Soil
 
         /// <summary>
         /// Checks the soil for errors.
@@ -1568,20 +1482,9 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
-
-        #endregion
-
-
-
-
-
         //CONSTRUCTOR / RESET THE SOIL
 
-
-
-        #region Constructor/Reset the Soil
-
-
+        // Constructor/Reset the Soil
 
         //Constructor
         /// <summary>
@@ -1651,31 +1554,31 @@ namespace Models.Soils.SoilWaterBackend
 
             //summer
 
-            SummerCona = Soil.SoilWater.SummerCona;
-            SummerU = Soil.SoilWater.SummerU;
-            SummerDate = Soil.SoilWater.SummerDate;
+            SummerCona = (Soil.SoilWater as SoilWater).SummerCona;
+            SummerU = (Soil.SoilWater as SoilWater).SummerU;
+            SummerDate = (Soil.SoilWater as SoilWater).SummerDate;
 
             //winter
-            WinterCona = Soil.SoilWater.WinterCona;
-            WinterU = Soil.SoilWater.WinterU;
-            WinterDate = Soil.SoilWater.WinterDate;
+            WinterCona = (Soil.SoilWater as SoilWater).WinterCona;
+            WinterU = (Soil.SoilWater as SoilWater).WinterU;
+            WinterDate = (Soil.SoilWater as SoilWater).WinterDate;
 
 
-            DiffusConst = Soil.SoilWater.DiffusConst;
-            DiffusSlope = Soil.SoilWater.DiffusSlope;
+            DiffusConst = (Soil.SoilWater as SoilWater).DiffusConst;
+            DiffusSlope = (Soil.SoilWater as SoilWater).DiffusSlope;
 
 
-            Salb = Soil.SoilWater.Salb;
+            Salb = (Soil.SoilWater as SoilWater).Salb;
 
 
-            cn2_bare = Soil.SoilWater.CN2Bare;
-            cn_red = Soil.SoilWater.CNRed;
-            cn_cov = Soil.SoilWater.CNCov;
+            cn2_bare = (Soil.SoilWater as SoilWater).CN2Bare;
+            cn_red = (Soil.SoilWater as SoilWater).CNRed;
+            cn_cov = (Soil.SoilWater as SoilWater).CNCov;
 
 
-            slope = Soil.SoilWater.slope;
-            discharge_width = Soil.SoilWater.discharge_width;
-            catchment_area = Soil.SoilWater.catchment_area;
+            slope = (Soil.SoilWater as SoilWater).slope;
+            discharge_width = (Soil.SoilWater as SoilWater).discharge_width;
+            catchment_area = (Soil.SoilWater as SoilWater).catchment_area;
 
             if (Double.IsNaN(slope))
                 slope = 0.0;
@@ -1688,7 +1591,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-            max_pond = Soil.SoilWater.max_pond;
+            max_pond = (Soil.SoilWater as SoilWater).max_pond;
 
 
 
@@ -1753,17 +1656,7 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
-
-
-
-
-        #endregion
-
-
-
-        #region Zeroing Functions
-
-
+        // Zeroing Functions
 
         /// <summary>
         /// Zeroes the outputs.
@@ -1827,24 +1720,11 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
-
-
-        #endregion
-
-
-
-
-
-
         //SOIL PROCESSES
 
-
-
-
-        #region Saturated Flow (Flux is both (dul to sat) flow and (above sat) flow combined)
+        // Saturated Flow (Flux is both (dul to sat) flow and (above sat) flow combined)
 
         //TODO: Replace w_in, w_out with Layer above.flux and Layer below.flux variables.
-
 
         /// <summary>
         /// Calc_s the saturated_ flow.
@@ -2026,16 +1906,9 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
-
-
-        #endregion
-
-
-
-        #region Unsaturated Flow (flow is (below dul) flow)
+        // Unsaturated Flow (flow is (below dul) flow)
 
         //TODO: Replace w_in, w_out with Layer above.flow and Layer below.flow variables.
-
 
         /// <summary>
         /// Calc_s the unsaturated_ flow.
@@ -2214,17 +2087,7 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
-
-
-
-        #endregion
-
-
-
-
-        #region Solute
-
-
+        // Solute
 
         /// <summary>
         /// Adds the solutes due to irrigation.
@@ -2669,14 +2532,7 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
-
-        #endregion
-
-
-
-
-        #region Water Table
-
+        // Water Table
 
         /// <summary>
         /// Calc_s the depth to water table.
@@ -2900,14 +2756,7 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
-
-
-        #endregion
-
-
-
-
-        #region Lateral Flow
+        // Lateral Flow
 
         /// <summary>
         /// Do_s the lateral_ flow.
@@ -2949,25 +2798,5 @@ namespace Models.Soils.SoilWaterBackend
 
 
             }
-
-
-        #endregion
-
-
-
-
         }
-
-
-
-
-
-    #endregion
-
-
-
-
-
     }
-
-

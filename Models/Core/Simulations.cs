@@ -27,7 +27,10 @@ namespace Models.Core
         /// <summary>The _ file name</summary>
         private string _FileName;
 
+        [NonSerialized]
         private Links links;
+
+        private Checkpoints checkpoints;
 
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
@@ -49,6 +52,9 @@ namespace Models.Core
             set
             {
                 _FileName = value;
+                DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+                storage.Close();
+                storage.FileName = null;
             }
         }
 
@@ -88,8 +94,9 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         private Simulations()
         {
-            Version = ApsimFile.Converter.LastestVersion;
+            Version = ApsimFile.Converter.LatestVersion;
             LoadErrors = new List<Exception>();
+            checkpoints = new Checkpoints(this);
         }
 
         /// <summary>
@@ -154,11 +161,17 @@ namespace Models.Core
         /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(string FileName)
         {
+            if (!File.Exists(FileName))
+                throw new Exception("Cannot read file: " + FileName + ". File does not exist.");
+
             // Run the converter.
-            ApsimFile.Converter.ConvertToLatestVersion(FileName);
+            Stream inStream = ApsimFile.Converter.ConvertToLatestVersion(FileName);
 
             // Deserialise
-            Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
+            Simulations simulations = XmlUtilities.Deserialise(inStream, Assembly.GetExecutingAssembly()) as Simulations;
+            if (simulations.Version > ApsimFile.Converter.LatestVersion)
+                throw new Exception("This file has previously been opened with a more recent version of Apsim. Please upgrade to a newer version to open this file.");
+            inStream.Close();
 
             if (simulations != null)
             {
@@ -238,6 +251,19 @@ namespace Models.Core
             simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
 
+        /// <summary>
+        /// Perform model substitutions, if necessary, then issue a "Loaded" event
+        /// </summary>
+        public void MakeSubsAndLoad(Simulation simulation)
+        {
+            MakeSubstitutions(simulation);
+
+            // Call OnLoaded in all models.
+            Events events = new Events(simulation);
+            LoadedEventArgs loadedArgs = new LoadedEventArgs();
+            events.Publish("Loaded", new object[] { simulation, loadedArgs });
+        }
+
         /// <summary>Make model substitutions if necessary.</summary>
         /// <param name="model">The model to make substitutions in.</param>
         public void MakeSubstitutions(IModel model)
@@ -257,9 +283,14 @@ namespace Models.Core
                             match.Parent.Children.Insert(index, newModel as Model);
                             newModel.Parent = match.Parent;
                             match.Parent.Children.Remove(match as Model);
-                            Events events = new Events(newModel);
-                            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                            events.Publish("Loaded", new object[] { newModel, loadedArgs });
+                            // If we're doing substitutions for an entire Simulation,
+                            // the Loaded event will be issued later. Otherwise, issue one now
+                            if (!(model is Simulation))
+                            {
+                                Events events = new Events(newModel);
+                                LoadedEventArgs loadedArgs = new LoadedEventArgs();
+                                events.Publish("Loaded", new object[] { newModel, loadedArgs });
+                            }
                         }
                     }
                 }
@@ -368,6 +399,7 @@ namespace Models.Core
             if (storage != null)
                 services.Add(storage);
             services.Add(this);
+            services.Add(checkpoints);
             links = new Links(services);
         }
 
@@ -440,7 +472,7 @@ namespace Models.Core
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
                     // resolve all links in cloned simulation.
-                    Links.Resolve(clonedSimulation);
+                    Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
@@ -450,7 +482,7 @@ namespace Models.Core
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
-                    Links.Unresolve(clonedSimulation);
+                    Links.Unresolve(clonedSimulation, allLinks: true);
                 }
             }
         }

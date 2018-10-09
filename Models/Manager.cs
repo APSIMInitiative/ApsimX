@@ -32,15 +32,16 @@ namespace Models
         /// <summary>The elements as XML</summary>
         private string elementsAsXml = null;
         /// <summary>Name of compiled assembly</summary>
+        [NonSerialized]
         private string assemblyName = null;
 
         /// <summary>The _ script</summary>
-        private Model _Script;
+        [NonSerialized] private Model _Script;
         /// <summary>The _elements</summary>
         [NonSerialized] private XmlElement[] _elements;
 
         /// <summary>The compiled code</summary>
-        private string CompiledCode = "";
+        [NonSerialized] private string CompiledCode = "";
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>

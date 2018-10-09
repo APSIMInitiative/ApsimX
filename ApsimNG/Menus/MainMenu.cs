@@ -7,10 +7,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Diagnostics;
-    using System.Reflection;
-    using Models;
     using Models.Core;
-    using global::UserInterface.Forms;
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
@@ -84,6 +81,17 @@ namespace UserInterface.Presenters
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
             this.explorerPresenter.MainPresenter.ToggleSecondExplorerViewVisible();
+        }
+
+        /// <summary>
+        /// User has clicked on clear status panel.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [MainMenu(MenuName = "Clear Status")]
+        public void ClearStatusPanel(object sender, EventArgs args)
+        {
+            explorerPresenter.MainPresenter.ClearStatusPanel();
         }
 
         /// <summary>

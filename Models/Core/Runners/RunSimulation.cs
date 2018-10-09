@@ -90,13 +90,17 @@
                 if (cloneSimulationBeforeRun)
                 {
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
-                    events = new Events(simulationToRun);
-                    simulationEngine.MakeSubstitutions(simulationToRun);
-                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                    events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
+                    simulationEngine.MakeSubsAndLoad(simulationToRun);
                 }
                 else
                     events = new Events(simulationToRun);
+
+                // Remove disabled models from simulation
+                foreach (IModel model in Apsim.ChildrenRecursively(simulationToRun))
+                {
+                    if (!model.Enabled)
+                        model.Parent.Children.Remove(model as Model);
+                }
 
                 // Get an event and links service
                 if (simulationEngine != null)
@@ -105,7 +109,7 @@
                     links = new Core.Links(Services);
 
                 // Resolve links and events.
-                links.Resolve(simulationToRun);
+                links.Resolve(simulationToRun, allLinks:true);
                 events.ConnectEvents();
 
                 simulationToRun.ClearCaches();
@@ -138,7 +142,7 @@
                 // Cleanup the simulation
                 if (events != null)
                     events.DisconnectEvents();
-                links.Unresolve(simulationToRun);
+                links.Unresolve(simulationToRun, allLinks:true);
 
                 timer.Stop();
                 Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(fileName) +

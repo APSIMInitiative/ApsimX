@@ -1,7 +1,7 @@
 ﻿using Models;
 using Models.Core;
 using Models.Core.Interfaces;
-using Models.PMF.Functions;
+using Models.Functions;
 using Models.Storage;
 using NUnit.Framework;
 using System;
@@ -310,7 +310,7 @@ namespace UnitTests
             simulation.Children[3].Children.Add(irrig2); // added to zone2
 
             Simulations engine = Simulations.Create(new Model[] { simulation, new DataStore() });
-            engine.Links.Resolve(simulation);
+            engine.Links.Resolve(simulation, allLinks:true);
 
             Assert.AreEqual(modelWithLinkByPath.irrigation1, irrig1);
             Assert.AreEqual(modelWithLinkByPath.irrigation2, irrig2);
@@ -328,7 +328,7 @@ namespace UnitTests
 
             Simulations engine = Simulations.Create(new Model[] { simulation, new DataStore() });
 
-            engine.Links.Resolve(simulation);
+            engine.Links.Resolve(simulation, allLinks:true);
 
             Assert.IsNotNull(modelWithServices.storage);
             Assert.IsNotNull(modelWithServices.locator);

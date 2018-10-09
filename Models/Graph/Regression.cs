@@ -36,6 +36,20 @@ namespace Models.Graph
         [Description("Display regression line and equation for each series?")]
         public bool ForEachSeries { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether a regression should be shown for each series.
+        /// </summary>
+        /// <value><c>true</c> if [for each series]; otherwise, <c>false</c>.</value>
+        [Description("Display 1:1 line?")]
+        public bool showOneToOne { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a regression should be shown for each series.
+        /// </summary>
+        /// <value><c>true</c> if [for each series]; otherwise, <c>false</c>.</value>
+        [Description("Display equation?")]
+        public bool showEquation { get; set; } = true;
+
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
@@ -76,7 +90,8 @@ namespace Models.Graph
                 equationColours.Add(Color.Black);
             }
 
-            Put1To1LineOnGraph(definitions, x, y);
+            if (showOneToOne)
+                Put1To1LineOnGraph(definitions, x, y);
         }
 
         /// <summary>Puts the regression line and 1:1 line on graph.</summary>
@@ -145,22 +160,25 @@ namespace Models.Graph
         /// <param name="annotations">A list of annotations to add to.</param>
         public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
         {
-            for (int i = 0; i < stats.Count; i++)
+            if (showEquation)
             {
-                // Add an equation annotation.
-                TextAnnotation equation = new TextAnnotation();
-                equation.text = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
-                                                    "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
-                                                    "RSR = {7:F2}, RMSD = {8:F2}",
-                                                    new object[] {stats[i].Slope,   stats[i].Intercept,   stats[i].R2,
+                for (int i = 0; i < stats.Count; i++)
+                {
+                    // Add an equation annotation.
+                    TextAnnotation equation = new TextAnnotation();
+                    equation.text = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
+                                                        "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
+                                                        "RSR = {7:F2}, RMSD = {8:F2}",
+                                                        new object[] {stats[i].Slope,   stats[i].Intercept,   stats[i].R2,
                                                                   stats[i].n,   stats[i].NSE, stats[i].ME,
                                                                   stats[i].MAE, stats[i].RSR, stats[i].RMSE});
-                equation.colour = equationColours[i];
-                equation.leftAlign = true;
-                equation.textRotation = 0;
-                equation.x = double.MinValue;
-                equation.y = double.MinValue;
-                annotations.Add(equation);
+                    equation.colour = equationColours[i];
+                    equation.leftAlign = true;
+                    equation.textRotation = 0;
+                    equation.x = double.MinValue;
+                    equation.y = double.MinValue;
+                    annotations.Add(equation);
+                }
             }
         }
 

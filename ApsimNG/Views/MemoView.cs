@@ -40,6 +40,7 @@ namespace UserInterface.Views
         private VBox vbox1 = null;
         public TextView textView = null;
         private Label label1 = null;
+        private Button helpBtn = null;
 
         private class MenuInfo
         {
@@ -51,10 +52,15 @@ namespace UserInterface.Views
         
         public MemoView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             textView = (TextView)builder.GetObject("textView");
             label1 = (Label)builder.GetObject("label1");
+            helpBtn = (Button)builder.GetObject("buttonHelp");
+            helpBtn.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.help.png", 20, 20));
+            helpBtn.ImagePosition = PositionType.Right;
+            helpBtn.Image.Visible = true;
+            helpBtn.Clicked += HelpBtn_Clicked;
             _mainWidget = vbox1;
             textView.ModifyFont(Pango.FontDescription.FromString("monospace"));
             textView.FocusOutEvent += richTextBox1_Leave;
@@ -238,6 +244,15 @@ namespace UserInterface.Views
                 }
             }
             */
+
+        }
+        private void HelpBtn_Clicked(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/usage/memo/";
+            process.Start();
+            // Forms.HelpForm form = Forms.HelpForm.GetHelpForm();
+            // form.Show("https://apsimnextgeneration.netlify.com/usage/memo/");
         }
 
     }

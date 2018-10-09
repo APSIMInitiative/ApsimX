@@ -50,7 +50,7 @@ namespace UserInterface.Views
         /// </summary>
         public InputView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");
@@ -110,15 +110,22 @@ namespace UserInterface.Views
         /// </summary>
         private void OnBrowseButtonClick(object sender, EventArgs e)
         {
-            if (BrowseButtonClicked != null)
+            try
             {
-                string fileName = AskUserForFileName("Select a file to open", "", FileChooserAction.Open, FileName);
-                if (!String.IsNullOrEmpty(fileName))
+                if (BrowseButtonClicked != null)
                 {
-                    OpenDialogArgs args = new OpenDialogArgs();
-                    args.FileName = fileName;
-                    BrowseButtonClicked.Invoke(this, args);
+                    string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "All Files (*.*) | *.*", FileName);
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        OpenDialogArgs args = new OpenDialogArgs();
+                        args.FileName = fileName;
+                        BrowseButtonClicked.Invoke(this, args);
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
     }

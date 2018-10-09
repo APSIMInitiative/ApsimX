@@ -7,7 +7,7 @@ namespace Models.Report
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using PMF.Functions;
+    using Functions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -168,7 +168,7 @@ namespace Models.Report
                              IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             Values = new List<object>();
-            this.variableName = variableName;
+            this.variableName = variableName.Trim();
             this.Name = columnName;
             this.storage = storage;
             this.locator = locator;

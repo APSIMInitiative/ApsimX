@@ -11,7 +11,7 @@ namespace Models.Core
     using System.Reflection;
     using APSIM.Shared.Utilities;
     using System.Collections;
-    using PMF.Functions;
+    using Functions;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 
@@ -21,6 +21,7 @@ namespace Models.Core
     ///    [PotatoSowingRule].Script.SowDate    RELATIVE TO A MODEL IN SCOPE
     ///    Leaf.LAI                             RELATIVE CHILD MODEL.
     /// </summary>
+    [Serializable]
     public class Locator : ILocator
     {
         /// <summary>The model this locator is relative to</summary>

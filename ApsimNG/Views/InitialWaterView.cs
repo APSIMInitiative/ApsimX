@@ -19,6 +19,10 @@ namespace UserInterface.Views
         private SpinButton spinbutton1 = null;
         private Entry entry1 = null;
         private Entry entry2 = null;
+        private Frame frame1 = null;
+        private Frame frame2 = null;
+        private RadioButton frameRadio1 = null;
+        private RadioButton frameRadio2 = null;
         private RadioButton radiobutton1 = null;
         private RadioButton radiobutton2 = null;
         private ComboBox combobox1 = null;
@@ -31,11 +35,13 @@ namespace UserInterface.Views
         /// </summary>
         public InitialWaterView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InitialWaterView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.InitialWaterView.glade");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             spinbutton1 = (SpinButton)builder.GetObject("spinbutton1");
             entry1 = (Entry)builder.GetObject("entry1");
             entry2 = (Entry)builder.GetObject("entry2");
+            frame1 = (Frame)builder.GetObject("frame1");
+            frame2 = (Frame)builder.GetObject("frame2");
             radiobutton1 = (RadioButton)builder.GetObject("radiobutton1");
             radiobutton2 = (RadioButton)builder.GetObject("radiobutton2");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
@@ -43,6 +49,12 @@ namespace UserInterface.Views
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
+            frameRadio1 = new RadioButton(frame1.Label);
+            frameRadio1.Active = true;
+            frame1.LabelWidget = frameRadio1;
+            frameRadio2 = new RadioButton(frameRadio1, frame2.Label);
+            frameRadio2.Active = false;
+            frame2.LabelWidget = frameRadio2;
             graphView1 = new GraphView(this);
             hpaned1.Pack2(graphView1.MainWidget, true, true);
             entry1.Changed += OnTextBox1TextChanged;
@@ -50,6 +62,7 @@ namespace UserInterface.Views
             radiobutton1.Toggled += OnRadioButton1CheckedChanged;
             spinbutton1.Changed += OnNumericUpDown1ValueChanged;
             combobox1.Changed += OnComboBox1SelectedValueChanged;
+            frameRadio1.Toggled += FrameRadio_Toggled;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -60,6 +73,7 @@ namespace UserInterface.Views
             radiobutton1.Toggled -= OnRadioButton1CheckedChanged;
             spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
             combobox1.Changed -= OnComboBox1SelectedValueChanged;
+            frameRadio1.Toggled -= FrameRadio_Toggled;
             comboModel.Dispose();
             comboRender.Destroy();
             graphView1.MainWidget.Destroy();
@@ -92,7 +106,12 @@ namespace UserInterface.Views
         /// Invoked when the user changes the relative to field.
         /// </summary>
         public event EventHandler OnRelativeToChanged;
-        
+
+        /// <summary>
+        /// Invoked when the user changes the way starting water is specified
+        /// </summary>
+        public event EventHandler OnSpecifierChanged;
+       
         /// <summary>
         /// Gets or sets the percent full amount.
         /// </summary>
@@ -100,14 +119,36 @@ namespace UserInterface.Views
         {
             get
             {
-                return spinbutton1.ValueAsInt;
+                return this.spinbutton1.ValueAsInt;
             }
 
             set
             {
+                this.spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
                 this.spinbutton1.Value = value;
+                this.spinbutton1.Changed += OnNumericUpDown1ValueChanged;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether starting water is specified by the depth of
+        /// wet soil. If not, then fraction full will be used
+        /// </summary>
+        public bool FilledByDepth
+        {
+            get
+            {
+                return frameRadio2.Active;
+            }
+            set
+            {
+                frameRadio2.Active = value;
+                frameRadio1.Active = !value;
+                frame1.Child.Sensitive = frameRadio1.Active;
+                frame2.Child.Sensitive = frameRadio2.Active;
+            }
+        }
+
 
         /// <summary>
         /// Gets or sets a value indicating whether initial water should be filled from the top.
@@ -133,22 +174,27 @@ namespace UserInterface.Views
         {
             get
             {
-                int result = 0;
-                try
+                if (!frameRadio2.Active)
+                    return int.MinValue;
+                else
                 {
-                    result = Convert.ToInt32(this.entry1.Text);
+                    int result = 0;
+                    try
+                    {
+                        result = Convert.ToInt32(this.entry1.Text);
+                    }
+                    catch (Exception)
+                    {  // If there are any errors, return 0
+                    }
+                    return result;
                 }
-                catch (Exception)
-                {  // If there are any errors, return 0
-                }
-                return result;
             }
 
             set
             {
                 if (value == int.MinValue)
                     this.entry1.Text = "";
-                else
+                else if (!(value == 0 && String.IsNullOrEmpty(this.entry1.Text)))
                     this.entry1.Text = value.ToString();
             }
         }
@@ -173,7 +219,12 @@ namespace UserInterface.Views
 
             set
             {
-                this.entry2.Text = value.ToString();
+                if (!(value == 0 && String.IsNullOrEmpty(this.entry2.Text)))
+                {
+                    entry2.Changed -= OnTextBox2TextChanged;
+                    this.entry2.Text = value.ToString();
+                    entry2.Changed += OnTextBox2TextChanged;
+                }
             }
         }
 
@@ -247,6 +298,21 @@ namespace UserInterface.Views
             }
         }
 
+        private bool inToggle = false;
+
+        private void FrameRadio_Toggled(object sender, EventArgs e)
+        {
+            if (!inToggle)
+            {
+                inToggle = true;
+                frame1.Child.Sensitive = frameRadio1.Active;
+                frame2.Child.Sensitive = frameRadio2.Active;
+                if (OnSpecifierChanged != null)
+                    OnSpecifierChanged.Invoke(sender, e);
+                inToggle = false;
+            }
+        }
+
         /// <summary>
         /// The numeric up/down value has changed.
         /// </summary>
@@ -254,6 +320,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnNumericUpDown1ValueChanged(object sender, EventArgs e)
         {
+            spinbutton1.Update();
             if (this.OnPercentFullChanged != null)
                 this.OnPercentFullChanged.Invoke(sender, e);
         }

@@ -77,7 +77,7 @@ namespace UserInterface.Intellisense
                     {
                         description += " (+" + OverloadedData.Count() + " overloads)";
                     }
-                    description += Environment.NewLine + XmlDocumentationToText(Entity.Documentation);
+                    description = /*.NewLine + */XmlDocumentationToText(Entity.Documentation);
                 }
                 return description;
             }

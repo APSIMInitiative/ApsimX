@@ -38,9 +38,20 @@ namespace UserInterface.Interfaces
         event EventHandler OnRelativeToChanged;
 
         /// <summary>
+        /// Invoked when the user changes the way starting water is specified
+        /// </summary>
+        event EventHandler OnSpecifierChanged;
+
+        /// <summary>
         /// Gets or sets the percent full amount.
         /// </summary>
         int PercentFull { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether starting water is specified by the depth of
+        /// wet soil. If not, then fraction full will be used
+        /// </summary>
+        bool FilledByDepth { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether initial water should be filled from the top.

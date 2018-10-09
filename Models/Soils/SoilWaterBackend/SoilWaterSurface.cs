@@ -120,7 +120,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// The irrig
         /// </summary>
-        public IrrigData Irrig;
+        public List<IrrigData> Irrig;
         /// <summary>
         /// The canopy
         /// </summary>
@@ -150,10 +150,12 @@ namespace Models.Soils.SoilWaterBackend
                 //! NIH Need to consider if interception losses were already considered in runoff model calibration
 
                 double waterForRunoff = Met.rain + Runon - (Canopy.interception + SurfaceCover.residueinterception);
-   
-                if (Irrig.willRunoff)
-                    waterForRunoff = waterForRunoff + Irrig.amount;
 
+                foreach (IrrigData irrData in Irrig)
+                {
+                    if (irrData.willRunoff)
+                        waterForRunoff += irrData.amount;
+                }
                 return waterForRunoff;
                 }
             }
@@ -173,9 +175,11 @@ namespace Models.Soils.SoilWaterBackend
 
                 //if irrigation was not included in TodaysWaterForRunoff (because will_runoff was false)
                 //and this is surface irrigation (not subsurface) then it needs to be included in the TodaysWaterForInfiltration.
-                if ((!Irrig.willRunoff) && (Irrig.isSubSurface == false))
-                    waterForInfiltration = TodaysWaterForRunoff + Irrig.amount;
-
+                foreach (IrrigData irrData in Irrig)
+                {
+                    if ((!irrData.willRunoff) && (irrData.isSubSurface == false))
+                        waterForInfiltration += irrData.amount;
+                }
                 return waterForInfiltration;
                 }
 

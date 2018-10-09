@@ -1,7 +1,7 @@
 ﻿using Models.Soils;
 using Models.Core;
 using System;
-using Models.PMF.Functions;
+using Models.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -45,6 +45,10 @@ namespace Models.PMF.Organs
         /// <summary>Holds actual DM allocations to use in allocating N to structural and Non-Structural pools</summary>
         [Units("g/2")]
         public double[] DMAllocated { get; set; }
+
+        /// <summary>Holds potential DM allocations to use in allocating N to structural and Non-Structural pools</summary>
+        [Units("g/2")]
+        public double[] PotentialDMAllocated { get; set; }
 
         /// <summary>Demand for structural N, set when Ndemand is called and used again in N allocation</summary>
         [Units("g/2")]
