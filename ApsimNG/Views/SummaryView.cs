@@ -16,7 +16,7 @@
         /// <summary>Warning messages checkbox</summary>
         public CheckBoxView WarningCheckBox { get; private set; }
 
-        /// <summary>Warning messages checkboxsummary>
+        /// <summary>Warning messages checkbox</summary>
         public CheckBoxView ErrorCheckBox { get; private set; }
 
         /// <summary>Drop down box which displays the simulation names.</summary>
