@@ -14,7 +14,7 @@ namespace Models.PMF
 
     /// <summary>
     /// # [Name]
-    /// Cultivar class for holding cultivar overrides.
+    /// Class for holding parameter overrides that are used to define a cultivar.
     /// </summary>
     /// <remarks>
     /// A cultivar includes \p Aliases to indicate other common names
@@ -160,7 +160,7 @@ namespace Models.PMF
             if (IncludeInDocumentation)
             {
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("Cultivar class for holding cultivar overrides.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("This cultivar is defined by overriding some of the base parameters of the plant model.", indent));
                 tags.Add(new AutoDocumentation.Paragraph(Name + " makes the following changes:", indent));
                 if (Commands != null)
                     tags.Add(new AutoDocumentation.Paragraph(Commands.Aggregate((a, b) => a + "<br>" + b), indent));

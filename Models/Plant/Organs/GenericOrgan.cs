@@ -12,7 +12,7 @@ namespace Models.PMF.Organs
     using PMF;
 
     /// <summary>
-    /// This organ is simulated using a generic organ type.
+    /// This organ is simulated using a GenericOrgan type.  It is parameterised to calculate the growth, senescence, and detachment of any organ that does not have specific functions.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
@@ -395,141 +395,6 @@ namespace Models.PMF.Organs
             Live.StorageWt = Live.StorageWt - MathUtilities.Divide(respiration * Live.StorageWt , total, 0);
         }
 
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                
-                // Document Nitrogen Demand
-                tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand is the product of Total DM demand and a Minimum N concentration", indent));
-                IModel MinN = Apsim.Child(this, "MinimumNConc");
-                AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 1, indent);
-                tags.Add(new AutoDocumentation.Paragraph("The daily Storage N demand is the product of Total DM demand and a Maximum N concentration.", indent));
-                IModel MaxN = Apsim.Child(this, "MaximumNConc");
-                AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 1, indent);
-                IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
-                if (NDemSwitch.GetType() == typeof(Constant))
-                {
-                    if (nitrogenDemandSwitch.Value() == 1.0)
-                    {
-                        //Dont bother docummenting as is does nothing
-                    }
-                    else
-                    {
-                        tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + nitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandFactor", indent));
-                    }
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandFactor.", indent));
-                    AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 1, indent);
-                }
-
-                //Document DM supplies
-                tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
-                IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
-                if (DMReallocFac.GetType() == typeof(Constant))
-                {
-                    if (dmReallocationFactor.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + dmReallocationFactor.Value() * 100 + "% of DM that senesces each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM tha is allocated each day is quantified by the DMReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 1, indent);
-                }
-                IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
-                if (DMRetransFac.GetType() == typeof(Constant))
-                {
-                    if (dmRetranslocationFactor.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + dmRetranslocationFactor.Value() * 100 + "% of non-structural DM each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM tha is allocated each day is quantified by the DMReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 1, indent);
-                }
-
-                //Document N supplies
-                tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
-                IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
-                if (NReallocFac.GetType() == typeof(Constant))
-                {
-                    if (nReallocationFactor.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + nReallocationFactor.Value() * 100 + "% of N that senesces each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N tha is allocated each day is quantified by the NReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 1, indent);
-                }
-                IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
-                if (NRetransFac.GetType() == typeof(Constant))
-                {
-                    if (nRetranslocationFactor.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + nRetranslocationFactor.Value() * 100 + "% of non-structural N each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(NRetransFac, tags, headingLevel + 1, indent);
-                }
-
-                //Document Biomass Senescence and Detachment
-                tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
-                IModel Sen = Apsim.Child(this, "SenescenceRate");
-                if (Sen.GetType() == typeof(Constant))
-                {
-                    if (senescenceRate.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomss in this organ will remain live.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + senescenceRate.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceFraction.", indent));
-                    AutoDocumentation.DocumentModel(Sen, tags, headingLevel + 1, indent);
-                }
-
-                IModel Det = Apsim.Child(this, "DetachmentRateFunction");
-                if (Sen.GetType() == typeof(Constant))
-                {
-                    if (detachmentRateFunction.Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomss in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + detachmentRateFunction.Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.", indent));
-                    AutoDocumentation.DocumentModel(Det, tags, headingLevel + 1, indent);
-                }
-
-                if (biomassRemovalModel != null)
-                    biomassRemovalModel.Document(tags, headingLevel + 1, indent);
-            }
-        }
-
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
@@ -549,7 +414,6 @@ namespace Models.PMF.Organs
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// 
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -660,6 +524,156 @@ namespace Models.PMF.Organs
             }
 
             Clear();
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading, the name of this organ
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // write the basic description of this class, given in the <summary>
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+
+                // write the memos
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                //// List the parameters, properties, and processes from this organ that need to be documented:
+
+                // document DM demands
+                tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
+                tags.Add(new AutoDocumentation.Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
+                IModel DMDemand = Apsim.Child(this, "dmDemands");
+                AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 2, indent);
+
+                // document N demands
+                tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
+                tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
+                IModel NDemand = Apsim.Child(this, "nDemands");
+                AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
+
+                // document N concentration thresholds
+                IModel MinN = Apsim.Child(this, "MinimumNConc");
+                AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 2, indent);
+                IModel CritN = Apsim.Child(this, "CriticalNConc");
+                AutoDocumentation.DocumentModel(CritN, tags, headingLevel + 2, indent);
+                IModel MaxN = Apsim.Child(this, "MaximumNConc");
+                AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
+                IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
+                if (NDemSwitch.GetType() == typeof(Constant))
+                {
+                    if (nitrogenDemandSwitch.Value() == 1.0)
+                    {
+                        //Don't bother documenting as is does nothing
+                    }
+                    else
+                    {
+                        tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + nitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandSwitch", indent));
+                    }
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.", indent));
+                    AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 2, indent);
+                }
+
+                // document DM supplies
+                tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
+                IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
+                if (DMReallocFac.GetType() == typeof(Constant))
+                {
+                    if (dmReallocationFactor.Value() == 0)
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs.", indent));
+                    else
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + dmReallocationFactor.Value() * 100 + "% of DM that senesces each day.", indent));
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
+                    AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
+                }
+                IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
+                if (DMRetransFac.GetType() == typeof(Constant))
+                {
+                    if (dmRetranslocationFactor.Value() == 0)
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM.", indent));
+                    else
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + dmRetranslocationFactor.Value() * 100 + "% of non-structural DM each day.", indent));
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
+                    AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 2, indent);
+                }
+
+                // document N supplies
+                tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
+                IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
+                if (NReallocFac.GetType() == typeof(Constant))
+                {
+                    if (nReallocationFactor.Value() == 0)
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
+                    else
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + nReallocationFactor.Value() * 100 + "% of N that senesces each day.", indent));
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
+                    AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
+                }
+                IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
+                if (NRetransFac.GetType() == typeof(Constant))
+                {
+                    if (nRetranslocationFactor.Value() == 0)
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
+                    else
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + nRetranslocationFactor.Value() * 100 + "% of non-structural N each day.", indent));
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.", indent));
+                    AutoDocumentation.DocumentModel(NRetransFac, tags, headingLevel + 2, indent);
+                }
+
+                // document senescence and detachment
+                tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
+                IModel SenRate = Apsim.Child(this, "SenescenceRate");
+                if (SenRate.GetType() == typeof(Constant))
+                {
+                    if (senescenceRate.Value() == 0)
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive.", indent));
+                    else
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + senescenceRate.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate.", indent));
+                    AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
+                }
+
+                IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
+                if (DetRate.GetType() == typeof(Constant))
+                {
+                    if (detachmentRateFunction.Value() == 0)
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
+                    else
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + detachmentRateFunction.Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition.", indent));
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.", indent));
+                    AutoDocumentation.DocumentModel(DetRate, tags, headingLevel + 2, indent);
+                }
+
+                if (biomassRemovalModel != null)
+                    biomassRemovalModel.Document(tags, headingLevel + 1, indent);
+            }
         }
     }
 }
