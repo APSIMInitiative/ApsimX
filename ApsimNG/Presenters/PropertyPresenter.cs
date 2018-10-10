@@ -257,10 +257,11 @@ namespace UserInterface.Presenters
                     else if (properties[i].Display != null &&
                              properties[i].Display.Type == DisplayType.FieldName)
                     {
-                        string[] fieldNames = GetFieldNames();
+                        List<string> fieldNames = GetFieldNames();
                         if (fieldNames != null)
                         {
-                            cell.DropDownStrings = fieldNames;
+                            fieldNames.Insert(0, string.Empty);
+                            cell.DropDownStrings = fieldNames.ToArray();
                         }
                     }
                 }
@@ -352,10 +353,11 @@ namespace UserInterface.Presenters
                          properties[i].Display.Type == DisplayType.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    string[] fieldNames = GetFieldNames();
+                    List<string> fieldNames = GetFieldNames();
                     if (fieldNames != null)
                     {
-                        cell.DropDownStrings = fieldNames;
+                        fieldNames.Insert(0, string.Empty);
+                        cell.DropDownStrings = fieldNames.ToArray();
                     }
                 }
                 else if (properties[i].Display != null && 
@@ -464,7 +466,7 @@ namespace UserInterface.Presenters
         /// Returns the names associated with the first table name in the property list
         /// </summary>
         /// <returns>A list of fieldnames.</returns>
-        private string[] GetFieldNames()
+        private List<string> GetFieldNames()
         {
             List<string> fieldNames = null;
             for (int i = 0; i < properties.Count; i++)
@@ -487,11 +489,7 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-
-            if (fieldNames == null)
-                return null;
-            else
-                return fieldNames.ToArray();
+            return fieldNames;
         }
 
         /// <summary>
