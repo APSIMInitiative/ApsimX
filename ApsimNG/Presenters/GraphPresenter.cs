@@ -229,7 +229,7 @@ namespace UserInterface.Presenters
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(List<Annotation> annotations)
         {
-            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
+            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
             double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
