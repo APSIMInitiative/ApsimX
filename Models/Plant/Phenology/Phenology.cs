@@ -430,30 +430,24 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
 
                 DataTable tableData = new DataTable();
-                tableData.Columns.Add("Stage Number", typeof(int));
-                tableData.Columns.Add("Stage Name", typeof(string));
+                tableData.Columns.Add("Phase Number", typeof(int));
                 tableData.Columns.Add("Phase Name", typeof(string));
+                tableData.Columns.Add("Initial Stage", typeof(string));
+                tableData.Columns.Add("Final Stage", typeof(string));
 
-                int N = 0;
+                int N = 1;
                 foreach (IModel child in Apsim.Children(this, typeof(IPhase)))
                 {
                     DataRow row;
-                    if (N == 0)
-                    {
-                        N++;
-                        row = tableData.NewRow();
-                        row[0] = N;
-                        row[1] = (child as IPhase).Start;
-                        tableData.Rows.Add(row);
-                    }
-                    row = tableData.NewRow();
-                    row[2] = child.Name;
-                    tableData.Rows.Add(row);
-                    N++;
                     row = tableData.NewRow();
                     row[0] = N;
-                    row[1] = (child as IPhase).End;
+                    row[1] = child.Name;
+                    row[2] = (child as IPhase).Start;
+                    row[3] = (child as IPhase).End;
+                    if (child is GotoPhase)
+                        row[3] = (child as GotoPhase).PhaseNameToGoto;
                     tableData.Rows.Add(row);
+                    N++;
                 }
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
                 tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
