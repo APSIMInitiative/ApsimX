@@ -927,13 +927,40 @@ But their data suggests a value of 0.3]]></MemoText>
             <ReadOnly>false</ReadOnly>
             <FixedValue>0</FixedValue>
           </Constant>
-          <Constant>
+          <MultiplyFunction>
             <Name>Storage</Name>
+            <VariableReference>
+              <Name>DMDemand</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Leaf].DMDemands.Structural.DMDemandFunction.Value()</VariableName>
+            </VariableReference>
+            <SubtractFunction>
+              <Name>StorageFraction</Name>
+              <Constant>
+                <Name>One</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <FixedValue>0.9</FixedValue>
+                <Units>0-1</Units>
+              </Constant>
+              <VariableReference>
+                <Name>StructuralFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </SubtractFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FixedValue>0</FixedValue>
-          </Constant>
+          </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
@@ -2669,6 +2696,9 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
+            <CaptureErrors>true</CaptureErrors>
+            <CaptureWarnings>true</CaptureWarnings>
+            <CaptureSummaryText>true</CaptureSummaryText>
           </Summary>
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
@@ -3526,7 +3556,9 @@ namespace Models
 
         public void DoCut(double LeafResidue, double StemResidue)
         {
-            double L = (double)Apsim.Get(TropicalPasture, "Leaf.Live.Wt");
+        	if (TropicalPasture == null)
+        		throw new Exception("Tropical pasture is null");
+        	double L = (double)Apsim.Get(TropicalPasture, "Leaf.Live.Wt");
             double LeafRemovalFraction = 0;
             if (L > 0)
                 LeafRemovalFraction = (L - LeafResidue) / L;
@@ -3540,11 +3572,14 @@ namespace Models
             if (StemRemovalFraction < 0)
                 StemRemovalFraction = 0;
                
-               
+            if (Remove == null)
+            throw new Exception("Remove is null");
             Remove.SetFractionToRemove("Leaf", LeafRemovalFraction);
             Remove.SetFractionToRemove("Stem", StemRemovalFraction);
             Remove.SetFractionToResidue("Leaf", 0.0);
             Remove.SetFractionToResidue("Stem", 0.0);
+            if (TropicalPasture == null)
+            	throw new Exception("Cannot find tropical pasture model");
             TropicalPasture.RemoveBiomass("Cut", Remove);
         }
         
@@ -4365,6 +4400,8 @@ namespace Models
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>false</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -4571,6 +4608,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
@@ -6402,6 +6442,8 @@ namespace Models
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -7020,6 +7062,9 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
+            <CaptureErrors>true</CaptureErrors>
+            <CaptureWarnings>true</CaptureWarnings>
+            <CaptureSummaryText>true</CaptureSummaryText>
           </Summary>
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
@@ -8671,6 +8716,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
@@ -11761,6 +11809,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -11813,6 +11863,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -11865,6 +11917,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -11917,6 +11971,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -11969,6 +12025,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -12021,6 +12079,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -12141,6 +12201,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <ForEachSeries>true</ForEachSeries>
+              <showOneToOne>true</showOneToOne>
+              <showEquation>true</showEquation>
             </Regression>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -13486,6 +13548,8 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
             <ForEachSeries>true</ForEachSeries>
+            <showOneToOne>true</showOneToOne>
+            <showEquation>true</showEquation>
           </Regression>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -13564,6 +13628,9 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
+          <CaptureErrors>true</CaptureErrors>
+          <CaptureWarnings>true</CaptureWarnings>
+          <CaptureSummaryText>true</CaptureSummaryText>
         </Summary>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
@@ -14194,7 +14261,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             </Operation>
             <Operation>
               <Date>1995-01-01</Date>
-              <Action>[TropicalPasture].Sow(population: 100, cultivar: TropicalPasture, depth: 100, rowSpacing: 100);</Action>
+              <Action>[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);</Action>
               <Enabled>true</Enabled>
             </Operation>
             <Operation>
