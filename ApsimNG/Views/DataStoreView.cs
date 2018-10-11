@@ -87,6 +87,8 @@ namespace UserInterface.Views
             editView1 = null;
             editView2.MainWidget.Destroy();
             editView2 = null;
+            rowFilter.MainWidget.Destroy();
+            rowFilter = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }
