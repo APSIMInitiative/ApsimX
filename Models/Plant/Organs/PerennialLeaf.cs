@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
 {
     /// <summary>
     /// # [Name]
-    /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
+    /// This organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

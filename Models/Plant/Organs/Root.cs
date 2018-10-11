@@ -26,7 +26,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Dry Matter Demands**
     /// 
-    /// A daily DM demand is provided to the organ abitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural.  
+    /// A daily DM demand is provided to the organ arbitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural.  
     /// The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.  
     /// 
     /// **Nitrogen Demands**

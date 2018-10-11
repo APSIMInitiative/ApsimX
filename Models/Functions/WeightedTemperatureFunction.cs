@@ -52,7 +52,7 @@ namespace Models.Functions
                 // add graph and table.
                 if (XYPairs != null)
                 {
-                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of average daily temperature weighted toward max temperature according to the specified MaximumTemperatureWeighting factor.</i>", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor.  A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.</i>", indent));
                     tags.Add(new AutoDocumentation.Paragraph("<i>MaximumTemperatureWeighting = " + MaximumTemperatureWeighting + "</i>", indent));
 
                     // write memos.
