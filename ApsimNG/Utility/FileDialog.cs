@@ -82,7 +82,11 @@
         /// <returns>The chosen file.</returns>
         public string GetFile()
         {
-            return GetFiles(false).FirstOrDefault();
+            string[] files = GetFiles(false);
+            if (files == null || !files.Any())
+                return null;
+            else
+                return files.FirstOrDefault();
         }
 
         /// <summary>
@@ -134,8 +138,13 @@
                 return WindowsDirectoryDialog(selectMultiple);
 
             dialog.Title = Prompt;
-            if (!String.IsNullOrEmpty(FileType))
-                dialog.Filter = FileType + "|All files (*.*)|*.*";
+
+            if (string.IsNullOrEmpty(FileType))
+                dialog.Filter = "All files (*.*)|*.*";
+            else if (FileType.Contains("|"))
+                dialog.Filter = FileType;
+            else
+                dialog.Filter = FileType + "|" + FileType;
 
             // This almost works, but Windows is buggy.
             // If the file name is long, it doesn't display in a sensible way. ¯\_(ツ)_/¯
@@ -206,7 +215,7 @@
             panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(InitialDirectory);
             
             result = panel.RunModal();
-            string[] fileNames = null;
+            string[] fileNames = new string[0];
             if (result == 1 /*NSFileHandlingPanelOKButton*/)
                 fileNames = panel is NSOpenPanel ? (panel as NSOpenPanel).Urls.Select(u => u.Path).ToArray() : new string[] { panel.Url.Path };
             panel.Dispose();
@@ -264,7 +273,7 @@
             
             fileChooser.SetCurrentFolder(InitialDirectory);
 
-            string[] fileNames = null;
+            string[] fileNames = new string[0];
             if (fileChooser.Run() == (int)ResponseType.Accept)
                 fileNames = fileChooser.Filenames;
             fileChooser.Destroy();
@@ -298,7 +307,7 @@
                 SelectedPath = InitialDirectory
             };
             
-            string fileName = null;
+            string fileName = string.Empty;
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 fileName = dialog.SelectedPath;
             dialog.Dispose();

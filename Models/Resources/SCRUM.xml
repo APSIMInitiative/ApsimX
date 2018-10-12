@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
   <Name>SCRUM</Name>
   <Memo>
     <Name>TitlePage</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText>
-      <![CDATA[
+    <MemoText><![CDATA[
 # SCRUM: the Simple Crop Resource Uptake Model
 
 _Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
@@ -53,8 +52,7 @@ private void OnDoManagement(object sender, EventArgs e)
 ~~~
 * A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.
  * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCRUM crop.  
-]]>
-    </MemoText>
+]]></MemoText>
   </Memo>
   <Phenology>
     <Name>Phenology</Name>
@@ -115,11 +113,9 @@ private void OnDoManagement(object sender, EventArgs e)
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 During this phase the plant only partitions biomass to Root and Stover (leaf and stem) Organs
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
@@ -128,7 +124,7 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -141,11 +137,9 @@ During this phase the plant only partitions biomass to Root and Stover (leaf and
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 During this phase the plant is partitioning biomass to Root, Stover and Product organs.
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
@@ -154,7 +148,7 @@ During this phase the plant is partitioning biomass to Root, Stover and Product 
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -167,11 +161,9 @@ During this phase the plant is partitioning biomass to Root, Stover and Product 
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 During this phase the plant is partitioning biomass to Root and Product organs and the canopy cover decreases from its maximum to zero
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
@@ -180,7 +172,7 @@ During this phase the plant is partitioning biomass to Root and Product organs a
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -197,18 +189,16 @@ During this phase the plant is partitioning biomass to Root and Product organs a
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 During this phase the plant has completed its growth and is drying ready for harvest.
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>EndReproductive</Start>
@@ -268,70 +258,15 @@ During this phase the plant has completed its growth and is drying ready for har
       <FixedValue>0</FixedValue>
       <Units />
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>YieldIncreasing</Name>
-          <SubtractFunction>
-            <Name>ProductProportion</Name>
-            <Constant>
-              <Name>One</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>RootFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Root].RootProportion.Value()</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>StoverFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Stover].DMDemandFunction.PartitionFraction.YieldIncreasing.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SubtractFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>StartReproductive</Start>
-          <End>StartSenescence</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>Senescing</Name>
-          <SubtractFunction>
-            <Name>StoverFraction</Name>
-            <Constant>
-              <Name>One</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>RootFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Root].RootProportion.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SubtractFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>StartSenescence</Start>
-          <End>EndReproductive</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>ExpectedYield</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 
 This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>800</FixedValue>
@@ -341,10 +276,8 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
-This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]>
-        </MemoText>
+        <MemoText><![CDATA[
+This is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.87</FixedValue>
@@ -354,11 +287,9 @@ This is the dry matter content of the harvested yield and is used to convert fre
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 This variable is the product yield of the crop in g/m2 dry weight
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <VariableReference>
         <Name>FreshYld</Name>
@@ -396,12 +327,10 @@ This variable is the product yield of the crop in g/m2 dry weight
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 
 This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.46</FixedValue>
@@ -455,12 +384,6 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>0-1</Units>
-    </Constant>
-    <Constant>
       <Name>DetachmentRateFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -509,16 +432,140 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>YieldIncreasing</Name>
+              <SubtractFunction>
+                <Name>ProductProportion</Name>
+                <Constant>
+                  <Name>One</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <VariableReference>
+                  <Name>RootFraction</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[Root].RootProportion.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>StoverFraction</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[Stover].DMDemands.Structural.DMDemandFunction.PartitionFraction.YieldIncreasing.Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SubtractFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartReproductive</Start>
+              <End>StartSenescence</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Senescing</Name>
+              <SubtractFunction>
+                <Name>StoverFraction</Name>
+                <Constant>
+                  <Name>One</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <VariableReference>
+                  <Name>RootFraction</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[Root].RootProportion.Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SubtractFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartSenescence</Start>
+              <End>EndReproductive</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Product].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Product].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Product].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Product].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Product].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Product].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Product].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Product].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[
-Stover represents any part of the crop that is not removed at harvest (i.e not part of the product).]]>
-      </MemoText>
+      <MemoText><![CDATA[
+Stover represents any part of the crop that is not removed at harvest (i.e not part of the product).]]></MemoText>
     </Memo>
     <Constant>
       <Name>NReallocationFactor</Name>
@@ -541,12 +588,6 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>0-1</Units>
     </Constant>
     <MultiplyFunction>
       <Name>InitialWtFunction</Name>
@@ -647,131 +688,6 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
       </AirTemperatureFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MinimumFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
-DM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop
-]]>
-        </MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>Expanding</Name>
-          <SubtractFunction>
-            <Name>DMPartitionCoefficient</Name>
-            <Constant>
-              <Name>One</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>RootFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Root].RootProportion.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SubtractFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>StartReproductive</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>YieldIncreasing</Name>
-          <DivideFunction>
-            <Name>DMPartitionCoefficient</Name>
-            <SubtractFunction>
-              <Name>StoverBiomass</Name>
-              <MultiplyFunction>
-                <Name>StoverAtMaturity</Name>
-                <SubtractFunction>
-                  <Name>AboveGroundProportion</Name>
-                  <Constant>
-                    <Name>One</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <FixedValue>1</FixedValue>
-                  </Constant>
-                  <VariableReference>
-                    <Name>RootFraction</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[Root].RootProportion.Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </SubtractFunction>
-                <SubtractFunction>
-                  <Name>StoverProportion</Name>
-                  <Constant>
-                    <Name>One</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <FixedValue>1</FixedValue>
-                  </Constant>
-                  <VariableReference>
-                    <Name>HI</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[Product].HarvestIndex.Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </SubtractFunction>
-                <VariableReference>
-                  <Name>BiomassAtMaturity</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[Stover].TotalBiomassAtMaturity.Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </MultiplyFunction>
-              <MultiplyFunction>
-                <Name>StoverAtStartReproductive</Name>
-                <VariableReference>
-                  <Name>BiomassAtStartReproductive</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[Stover].TotalBiomassAtStartReproductive.Value()</VariableName>
-                </VariableReference>
-                <SubtractFunction>
-                  <Name>AboveGroundProportion</Name>
-                  <Constant>
-                    <Name>One</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <FixedValue>1</FixedValue>
-                  </Constant>
-                  <VariableReference>
-                    <Name>RootFraction</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[Root].RootProportion.Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </SubtractFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </MultiplyFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SubtractFunction>
-            <SubtractFunction>
-              <Name>TotalBiomass</Name>
-              <VariableReference>
-                <Name>BiomassAtStartSenescence</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Stover].TotalBiomassAtStartSenescence.Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>BiomassAtStartReproductive</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Stover].TotalBiomassAtStartReproductive.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SubtractFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>StartReproductive</Start>
-          <End>StartSenescence</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <PhaseLookup>
       <Name>CoverFunction</Name>
       <PhaseLookupValue>
@@ -872,11 +788,9 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.5</FixedValue>
@@ -926,11 +840,9 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 Is a coefficient for the potential biomass accumulation function
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>800</FixedValue>
@@ -940,11 +852,9 @@ Is a coefficient for the potential biomass accumulation function
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 Is another coefficient for the potential biomass accumulation function
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>800</FixedValue>
@@ -954,11 +864,9 @@ Is another coefficient for the potential biomass accumulation function
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 This variable is the total biomass (g/m2dry weight) that the crop will produce at maturity in the absence of stress
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <VariableReference>
         <Name>DryYield</Name>
@@ -1171,17 +1079,211 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
     <MicroClimatePresent>true</MicroClimatePresent>
     <KDead>0</KDead>
     <LAIDead>0</LAIDead>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[
+DM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop
+]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Expanding</Name>
+              <SubtractFunction>
+                <Name>DMPartitionCoefficient</Name>
+                <Constant>
+                  <Name>One</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <VariableReference>
+                  <Name>RootFraction</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[Root].RootProportion.Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SubtractFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>StartReproductive</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>YieldIncreasing</Name>
+              <DivideFunction>
+                <Name>DMPartitionCoefficient</Name>
+                <SubtractFunction>
+                  <Name>StoverBiomass</Name>
+                  <MultiplyFunction>
+                    <Name>StoverAtMaturity</Name>
+                    <SubtractFunction>
+                      <Name>AboveGroundProportion</Name>
+                      <Constant>
+                        <Name>One</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <FixedValue>1</FixedValue>
+                      </Constant>
+                      <VariableReference>
+                        <Name>RootFraction</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[Root].RootProportion.Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </SubtractFunction>
+                    <SubtractFunction>
+                      <Name>StoverProportion</Name>
+                      <Constant>
+                        <Name>One</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <FixedValue>1</FixedValue>
+                      </Constant>
+                      <VariableReference>
+                        <Name>HI</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[Product].HarvestIndex.Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </SubtractFunction>
+                    <VariableReference>
+                      <Name>BiomassAtMaturity</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[Stover].TotalBiomassAtMaturity.Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </MultiplyFunction>
+                  <MultiplyFunction>
+                    <Name>StoverAtStartReproductive</Name>
+                    <VariableReference>
+                      <Name>BiomassAtStartReproductive</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[Stover].TotalBiomassAtStartReproductive.Value()</VariableName>
+                    </VariableReference>
+                    <SubtractFunction>
+                      <Name>AboveGroundProportion</Name>
+                      <Constant>
+                        <Name>One</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <FixedValue>1</FixedValue>
+                      </Constant>
+                      <VariableReference>
+                        <Name>RootFraction</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[Root].RootProportion.Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </SubtractFunction>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </MultiplyFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </SubtractFunction>
+                <SubtractFunction>
+                  <Name>TotalBiomass</Name>
+                  <VariableReference>
+                    <Name>BiomassAtStartSenescence</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[Stover].TotalBiomassAtStartSenescence.Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>BiomassAtStartReproductive</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[Stover].TotalBiomassAtStartReproductive.Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </SubtractFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartReproductive</Start>
+              <End>StartSenescence</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Stover].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Stover].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stover].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Stover].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Stover].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stover].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Stover].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Stover].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </SimpleLeaf>
   <Root>
     <Name>Root</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[
+      <MemoText><![CDATA[
 The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
-]]>
-      </MemoText>
+]]></MemoText>
     </Memo>
     <Constant>
       <Name>DMConversionEfficiency</Name>
@@ -1268,8 +1370,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 This is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  
 
 ~~~
@@ -1286,8 +1387,7 @@ else:
 
 This gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  
 
-It is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ]]>
-        </MemoText>
+It is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].LayerMidPointDepth</XProperty>
@@ -1379,31 +1479,14 @@ It is important to note that these modifiers are applied to the kl value specifi
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookupValue>
-        <Name>PartitionFraction</Name>
-        <VariableReference>
-          <Name>RootProportion</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Root].RootProportion.Value()</VariableName>
-        </VariableReference>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Start>Emergence</Start>
-        <End>EndReproductive</End>
-      </PhaseLookupValue>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>RootProportion</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 This is the proportion of total biomass that is paritioned into the roots and is used to set the partitioning fraction for the roots
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.1</FixedValue>
@@ -1507,33 +1590,116 @@ This is the proportion of total biomass that is paritioned into the roots and is
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].RWC</XProperty>
     </LinearInterpolationFunction>
-    
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <Constant>
-        <Name>MaintenanceRespirationFunction</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>0</FixedValue>
+      <Name>MaintenanceRespirationFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
-          <Name>CarbonConcentration</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookupValue>
+            <Name>PartitionFraction</Name>
+            <VariableReference>
+              <Name>RootProportion</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Root].RootProportion.Value()</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant name="StructuralFraction">
+          <Name>StructuralFraction</Name>
+          <FixedValue>1.0</FixedValue>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </Root>
   <Nodule>
     <Name>Nodule</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[
+      <MemoText><![CDATA[
 The nodule organ is unparameterised and simply has a switch that is turned on for legume crops (so they can fix what ever N the crop demands) and switched off for non legume crops (which fix no N)
-]]>
-      </MemoText>
+]]></MemoText>
     </Memo>
     <Constant>
       <Name>MaximumNConc</Name>
@@ -1603,18 +1769,6 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>0-1</Units>
-    </Constant>
-    <Constant>
-      <Name>DMDemandFunction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0</FixedValue>
-      <Units>g/m^2</Units>
-    </Constant>
-    <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -1669,11 +1823,90 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
     </VariableReference>
     <Constant>
-          <Name>CarbonConcentration</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
+      <Name>CarbonConcentration</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0.4</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <Constant>
+          <Name>DMDemandFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Nodule].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Nodule].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Nodule].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Nodule].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Nodule].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Nodule].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Nodule].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Nodule].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </Nodule>
   <CompositeBiomass>
     <Name>Total</Name>
@@ -1692,11 +1925,9 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
     <Memo>
       <Name>memo</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[
+      <MemoText><![CDATA[
 The AboveGround composite biomass object includes Stover and Product organs.
-]]>
-      </MemoText>
+]]></MemoText>
     </Memo>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>

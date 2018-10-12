@@ -62,22 +62,12 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Gets the tt for today.</summary>
-        [XmlIgnore]
-        public double TTForTimeStep { get; set; }
-
-        /// <summary>Gets the t tin phase.</summary>
-        [XmlIgnore]
-        public double TTinPhase { get; set; }
-
-
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = structure.thermalTime.Value() * propOfDayToUse;
             
             if (First)
             {
@@ -91,10 +81,7 @@ namespace Models.PMF.Phen
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001; //assumes we use most of the Tt today to get to specified node number.  Should be calculated as a function of the phyllochron
-                TTForTimeStep *= (1 - propOfDayToUse);
             }
-
-            TTinPhase += TTForTimeStep;
 
             return proceedToNextPhase;
         }
@@ -102,7 +89,6 @@ namespace Models.PMF.Phen
         /// <summary>Reset phase</summary>
         public void ResetPhase()
         {
-            TTinPhase = 0;
             NodeNoAtStart = 0;
             FractionCompleteYesterday = 0;
             First = true;

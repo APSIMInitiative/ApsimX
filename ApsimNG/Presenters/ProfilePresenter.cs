@@ -595,11 +595,18 @@
         /// <param name="e">Event arguments</param>
         private void OnUnitClick(object sender, EventArgs e)
         {
-            VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-            if (sender is Gtk.MenuItem)
+            try
             {
-                string unitsString = (sender as Gtk.MenuItem).Name;
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));               
+                VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
+                if (sender is Gtk.MenuItem)
+                {
+                    string unitsString = (sender as Gtk.MenuItem).Name;
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
     }

@@ -131,7 +131,7 @@
                 
                 ISummary summary = Apsim.Find(simulationToRun, typeof(Summary)) as ISummary;
                 if (summary != null)
-                    summary.WriteMessage(simulationToRun, errorMessage);
+                    summary.WriteError(simulationToRun, errorMessage);
                 
                 throw new Exception(errorMessage, err);
             }

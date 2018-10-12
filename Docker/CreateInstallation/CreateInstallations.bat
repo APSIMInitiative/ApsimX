@@ -81,15 +81,19 @@ echo                                     __/ ^|                                 
 echo                                    ^|___/                                                               ^|___/      
 echo.
 echo.
-%setup%\Linux\builddeb.bat
+call %setup%\Linux\builddeb.bat
 if errorlevel 1 (
 	echo Errors encountered!
 	exit %errorlevel%
 )
 if exist %setup%\Output\APSIMSetup.deb (
-	rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUENUMBER%.deb
-	echo Uploading APSIMSetup%ISSUENUMBER%.deb
+	rename %setup%\Output\APSIMSetup.deb APSIMSetup%ISSUE_NUMBER%.deb
+	echo Uploading APSIMSetup%ISSUE_NUMBER%.deb
 	@curl -u %APSIM_SITE_CREDS% -T %setup%\Output\APSIMSetup%ISSUE_NUMBER%.deb ftp://www.apsim.info/APSIM/ApsimXFiles/
+) else (
+	echo Error - %setup%\Output\APSIMSetup.deb does not exist!
+	dir %setup%\Output
+	exit 1
 )
 exit %errorlevel%
 

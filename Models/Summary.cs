@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Summary.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models
+﻿namespace Models
 {
     using System;
     using System.Collections.Generic;
@@ -74,13 +69,23 @@ namespace Models
             rtf
         }
 
+        /// <summary>Capture and store error messages?</summary>
+        public bool CaptureErrors { get; set; } = true;
+
+        /// <summary>Capture and store warning messages?</summary>
+        public bool CaptureWarnings { get; set; } = true;
+
+        /// <summary>Capture and store summary text?</summary>
+        public bool CaptureSummaryText { get; set; } = true;
+
         /// <summary>Event handler to create initialise</summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            CreateInitialConditionsTable();
+            if (CaptureSummaryText)
+                CreateInitialConditionsTable();
         }
 
         /// <summary>Write a message to the summary</summary>
@@ -88,13 +93,16 @@ namespace Models
         /// <param name="message">The message to write</param>
         public void WriteMessage(IModel model, string message)
         {
-            if (storage == null)
-                throw new ApsimXException(model, "No datastore is available!");
-            string modelPath = Apsim.FullPath(model);
-            string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+            if (CaptureSummaryText)
+            {
+                if (storage == null)
+                    throw new ApsimXException(model, "No datastore is available!");
+                string modelPath = Apsim.FullPath(model);
+                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
-            object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Information) };
-            storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+                object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Information) };
+                storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+            }
         }
 
         /// <summary>Write a warning message to the summary</summary>
@@ -102,15 +110,35 @@ namespace Models
         /// <param name="message">The warning message to write</param>
         public void WriteWarning(IModel model, string message)
         {
-            if (storage == null)
-                throw new ApsimXException(model, "No datastore is available!");
-            string modelPath = Apsim.FullPath(model);
-            string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+            if (CaptureWarnings)
+            {
+                if (storage == null)
+                    throw new ApsimXException(model, "No datastore is available!");
+                string modelPath = Apsim.FullPath(model);
+                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
-            object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Warning) };
-            storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+                object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Warning) };
+                storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+            }
         }
-        
+
+        /// <summary>Write an error message to the summary</summary>
+        /// <param name="model">The model writing the message</param>
+        /// <param name="message">The warning message to write</param>
+        public void WriteError(IModel model, string message)
+        {
+            if (CaptureErrors)
+            {
+                if (storage == null)
+                    throw new ApsimXException(model, "No datastore is available!");
+                string modelPath = Apsim.FullPath(model);
+                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+
+                object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Error) };
+                storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+            }
+        }
+
         /// <summary>
         /// Create an initial conditions table in the DataStore.
         /// </summary>

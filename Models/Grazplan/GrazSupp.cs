@@ -1023,7 +1023,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the amount.
+        /// Gets or sets the amount in kg.
         /// </summary>
         /// <value>
         /// The amount.

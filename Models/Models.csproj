@@ -194,6 +194,8 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
+    <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
@@ -203,12 +205,14 @@
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Biomass\BiomassDemand.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
     <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
     <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
+    <Compile Include="Plant\Structure\BudNumberFunction.cs" />
     <Compile Include="Soils\Nutrient\Chloride.cs" />
     <Compile Include="Plant\Structure\ApexBase.cs" />
     <Compile Include="Storage\DataStore.cs" />
@@ -273,7 +277,6 @@
     <Compile Include="Plant\Structure\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
-    <Compile Include="Plant\Phenology\Phases\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\NodeNumberPhase.cs" />
     <Compile Include="Functions\QualitativePPEffect.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMF.cs" />
@@ -312,7 +315,6 @@
     <Compile Include="Factorial\Factors.cs" />
     <Compile Include="Factorial\FactorValue.cs" />
     <Compile Include="Memo.cs" />
-    <Compile Include="NullSummary.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -410,7 +412,6 @@
     <Compile Include="Functions\Exponential.cs" />
     <Compile Include="Functions\ExpressionFunction.cs" />
     <Compile Include="Functions\ExternalVariable.cs" />
-    <Compile Include="Functions\InPhaseTtFunction.cs" />
     <Compile Include="Functions\LessThanFunction.cs" />
     <Compile Include="Functions\LinearInterpolationFunction.cs" />
     <Compile Include="Functions\MaximumFunction.cs" />
@@ -662,7 +663,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resources\Morris.R" />
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">

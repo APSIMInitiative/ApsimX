@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
   <Name>Chicory</Name>
   <Memo>
     <Name>GeneralDescription</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText>
-      <![CDATA[
+    <MemoText><![CDATA[
 # Presentation
 
 This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  The model was built using the Plant Modelling Framework (PMF) described by [brown_plant_2014].  To simulate the aboveground plant structure, including the photosynthesis process, the Chicory model uses the SimpleLeaf organ type of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.
@@ -55,8 +54,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
 
 # Acknowledgements
 This model was developed with help from Russel McAuliffe and Brittany Paton organising data and simulations. Datasets were kindly shared by Julia M. Lee, Hamish E. Brown, and the Forages for Reduced Nitrogen Leaching (FRNL) programme.
-]]>
-    </MemoText>
+]]></MemoText>
   </Memo>
   <Phenology>
     <Name>Phenology</Name>
@@ -99,11 +97,9 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[Vernalisation is the process whereby the plant acquires the ability to go into reproductive phase after been exposed to a period of time at low temperatures ([Wiebe_1990]; [DemeulemeesterEtAl_1998]). For chicory the temperature range for vernalisation is between 0 and 12oC, with optimum about 4-6oC ([Wiebe_1989]; [Wiebe_1990]; [Gianquinto_1997]; [DielenEtAl_2005]).  
+        <MemoText><![CDATA[Vernalisation is the process whereby the plant acquires the ability to go into reproductive phase after been exposed to a period of time at low temperatures ([Wiebe_1990]; [DemeulemeesterEtAl_1998]). For chicory the temperature range for vernalisation is between 0 and 12oC, with optimum about 4-6oC ([Wiebe_1989]; [Wiebe_1990]; [Gianquinto_1997]; [DielenEtAl_2005]).  
         The reversal of vernalisation, or de-vernalisation, can happen on chicory ([Wiebe_1990]; [Gianquinto_1997]), if plants are exposed to sufficiently high temperatures soon after the period under vernalisation the effects of vernalisation are cancelled out. Most plants show small reversal at relatively lower temperatures (above something in between 15 and 20oC), and larger at temperatures above 30oC. For chicory, the more effective temperature to reverse vernalisation seem to be around 30-35oC ([Gianquinto_1997]; [GoodgerThesis_2013]). Intermediate temperatures stabilise the vernalisation, and after 5-10 days reversal is no longer possible.  
-        The number of days required for full vernalisation is quite variable in chicory and specific to each cultivar, with 30-50 days often given for full vernalisation ([Wiebe_1990]; [Gianquinto_1997]; [DielenEtAl_2005]). However, some plants of leafy cultivars can go into reproductive phase if exposed to cold conditions for about a week or less ([Gianquinto_1997]). For forage chicory (cv. Puna) at field conditions in the USA, about 50-60% of the plants reached reproductive stage after winter ([ClaphamEtAl_2001]; [SandersonEtAl_2003]), and plants that bolted on one year tended to remain vegetative the following year and vice-versa. In New Zealand conditions, reproductive phase seems to occur every year after winter ([HareEtAl_1990]), although the extent of it has not been reported. The data published suggest a minimum number of days for vernalisation (approximately 10 days) and a progressive increase in the number of plants vernalised as the number of days the plants are kept under cold conditions increases. This is simulated by the model by assuming that the change in biomass fixation during stem elongation and reproductive phases (prioritising stems and flowers) is a function of vernalisation.  ]]>
-        </MemoText>
+        The number of days required for full vernalisation is quite variable in chicory and specific to each cultivar, with 30-50 days often given for full vernalisation ([Wiebe_1990]; [Gianquinto_1997]; [DielenEtAl_2005]). However, some plants of leafy cultivars can go into reproductive phase if exposed to cold conditions for about a week or less ([Gianquinto_1997]). For forage chicory (cv. Puna) at field conditions in the USA, about 50-60% of the plants reached reproductive stage after winter ([ClaphamEtAl_2001]; [SandersonEtAl_2003]), and plants that bolted on one year tended to remain vegetative the following year and vice-versa. In New Zealand conditions, reproductive phase seems to occur every year after winter ([HareEtAl_1990]), although the extent of it has not been reported. The data published suggest a minimum number of days for vernalisation (approximately 10 days) and a progressive increase in the number of plants vernalised as the number of days the plants are kept under cold conditions increases. This is simulated by the model by assuming that the change in biomass fixation during stem elongation and reproductive phases (prioritising stems and flowers) is a function of vernalisation.  ]]></MemoText>
       </Memo>
       <AirTemperatureFunction>
         <Name>VernalisingDays</Name>
@@ -190,11 +186,9 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase start initially after emergence, but it is also re-called after the end of the reproductive phase (phenology reset).  It ends when a minimum level of vernalisation has been reached.  
+        <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase start initially after emergence, but it is also re-called after the end of the reproductive phase (phenology reset).  It ends when a minimum level of vernalisation has been reached.  
         Most leaf chicory cultivars (e.g. Radicchio) seem to have a facultative or quantitative response to vernalisation, that is, flowering can occurs without it if other conditions are right, but flowering will be hastened and enhanced by vernalisation ([Gianquinto_1997]; [DielenEtAl_2005]).  Root cultivars have an absolute need for vernalisation and also seem to require a certain age to be able to be vernalised, whereas leaf cultivars can be vernalised at any age ([Gianquinto_1997]; [Schittenhelm_2001]).  Forage chicory seem to be in between these two extremes, with reports that at least some vernalisation is required ([HareEtAl_1990]; [MoloneyMilne_1993]). 
-        The chicory model considers that a minimum vernalisation is needed, but this is quite small (mostly based on data from [Gianquinto_1997]). Vernalisation will have a greater effect on the extent of stem and flowers growth ([Wiebe_1989]; [Gianquinto_1997]; [DielenEtAl_2005]), and thus vernalisation accumulation is considered throughout the inductive phase.]]>
-        </MemoText>
+        The chicory model considers that a minimum vernalisation is needed, but this is quite small (mostly based on data from [Gianquinto_1997]). Vernalisation will have a greater effect on the extent of stem and flowers growth ([Wiebe_1989]; [Gianquinto_1997]; [DielenEtAl_2005]), and thus vernalisation accumulation is considered throughout the inductive phase.]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
@@ -203,7 +197,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].Vernalisation.TodaysVernalisation</VariableName>
       </VariableReference>
@@ -225,7 +219,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <LinearInterpolationFunction>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -254,10 +248,8 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[During this phase the chicory plant switches biomass partitioning, strongly prioritising stem organs, although leaf and root+taproot can still grow.  Stem growth intensity decreases when flower buds start to appear ([HareEtAl_1990]; [ClaphamEtAl_2001]).  In the USA, stem growth of forage chicory has been observed to occur for a period of time equivalent to the accumulation of thermal time of about 800-1000 oCd after bolting ([ClaphamEtAl_2001]).  These values agreed well with the qualitative description of chicory development in New Zealand  ([HareEtAl_1990]). 
-        ]]>
-        </MemoText>
+        <MemoText><![CDATA[During this phase the chicory plant switches biomass partitioning, strongly prioritising stem organs, although leaf and root+taproot can still grow.  Stem growth intensity decreases when flower buds start to appear ([HareEtAl_1990]; [ClaphamEtAl_2001]).  In the USA, stem growth of forage chicory has been observed to occur for a period of time equivalent to the accumulation of thermal time of about 800-1000 oCd after bolting ([ClaphamEtAl_2001]).  These values agreed well with the qualitative description of chicory development in New Zealand  ([HareEtAl_1990]). 
+        ]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
@@ -266,7 +258,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -279,10 +271,8 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[During this phase the plant is partitioning biomass to all organs, but prioritising reproductive organs (flowers and seed). In the current model, seeds are not explicitly described and only a generic organ refered to as inflorescence is defined.  This was done partly due to lack of data and partly because of the complex physiology of chicory. There is a great level of variability among chicory plants on when and for how long flowering occurs, plus even the same plant can have flowers, young seeds, as well as ripen seeds at the same time ([HareEtAl_1990]; [MoloneyMilne_1993]; [ClaphamEtAl_2001]).  
-        Data from the USA and New Zealand suggest that the reproductive phase lasts for the equivalent of the accumualtion of thermal time of about 800-1000oCd ([HareEtAl_1990]; [ClaphamEtAl_2001]). ]]>
-        </MemoText>
+        <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, but prioritising reproductive organs (flowers and seed). In the current model, seeds are not explicitly described and only a generic organ refered to as inflorescence is defined.  This was done partly due to lack of data and partly because of the complex physiology of chicory. There is a great level of variability among chicory plants on when and for how long flowering occurs, plus even the same plant can have flowers, young seeds, as well as ripen seeds at the same time ([HareEtAl_1990]; [MoloneyMilne_1993]; [ClaphamEtAl_2001]).  
+        Data from the USA and New Zealand suggest that the reproductive phase lasts for the equivalent of the accumualtion of thermal time of about 800-1000oCd ([HareEtAl_1990]; [ClaphamEtAl_2001]). ]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
@@ -291,7 +281,7 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -365,22 +355,11 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
-      </Memo>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
-    <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units />
-    </Constant>    
+    </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
       <Memo>
@@ -548,145 +527,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </DivideFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[DM demand function attempts to keep the shoot to root ratio (defined by the [TargetShootRootRatio].Value) and then the leaf to stem ratio (set by [TargetStemsLeafRatio].Value) close to a target value, which varies according to the development phase.  This is necessary to ensure that the chicory plants will recover after grazing, that is partitoning a considerable amount of biomass to growing leaves even during reproductive phase. ]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>VegetativeAndInductive</Name>
-          <DivideFunction>
-            <Name>LeafFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <AddFunction>
-              <Name>Denominator</Name>
-              <MultiplyFunction>
-                <Name>TargetSRs</Name>
-                <VariableReference>
-                  <Name>TargetSR1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSR2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </MultiplyFunction>
-              <VariableReference>
-                <Name>CurrentSR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[ShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </AddFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Bolting</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>StemElongationAndReproductive</Name>
-          <DivideFunction>
-            <Name>LeafFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>CurrentSL</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[StemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>SLs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSLs</Name>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSL</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[StemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Bolting</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <Memo>
@@ -1029,6 +869,223 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
     <MicroClimatePresent>true</MicroClimatePresent>
     <KDead>0</KDead>
     <LAIDead>0</LAIDead>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[DM demand function attempts to keep the shoot to root ratio (defined by the [TargetShootRootRatio].Value) and then the leaf to stem ratio (set by [TargetStemsLeafRatio].Value) close to a target value, which varies according to the development phase.  This is necessary to ensure that the chicory plants will recover after grazing, that is partitoning a considerable amount of biomass to growing leaves even during reproductive phase. ]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>VegetativeAndInductive</Name>
+              <DivideFunction>
+                <Name>LeafFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <AddFunction>
+                  <Name>Denominator</Name>
+                  <MultiplyFunction>
+                    <Name>TargetSRs</Name>
+                    <VariableReference>
+                      <Name>TargetSR1</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>TargetSR2</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </MultiplyFunction>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </AddFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Bolting</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongationAndReproductive</Name>
+              <DivideFunction>
+                <Name>LeafFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentSL</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[StemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Bolting</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Leaf].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Leaf].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Leaf].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </SimpleLeaf>
   <GenericOrgan>
     <Name>Stem</Name>
@@ -1042,23 +1099,12 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units />
-    </Constant>    
+    </Constant>
     <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
-      </Memo>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.9</FixedValue>
-      <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
@@ -1099,215 +1145,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Phenology].Stage</XProperty>
     </LinearInterpolationFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The allocation of growth biomass to the various organs in the chicory model is done using simple approach.  It is assumed that the proportion of the above ground biomass is allocated to stems based on two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems attempts to keep the current ratios close to the targets. Note that stem can only grow during the stem elongation and reproductive phases. ]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>StemElongation</Name>
-          <DivideFunction>
-            <Name>StemFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>SLs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSLs</Name>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSL</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[StemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Bolting</Start>
-          <End>Flowering</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>Reproductive</Name>
-          <DivideFunction>
-            <Name>StemFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>CurrentFS</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[FlowerStemRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>SLs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSLs</Name>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSL</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[StemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>FSs</Name>
-                <MultiplyFunction>
-                  <Name>TargetFSs</Name>
-                  <VariableReference>
-                    <Name>TargetFS1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetFS2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentFS</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[FlowerStemRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Flowering</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <Memo>
@@ -1580,6 +1417,293 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The allocation of growth biomass to the various organs in the chicory model is done using simple approach.  It is assumed that the proportion of the above ground biomass is allocated to stems based on two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems attempts to keep the current ratios close to the targets. Note that stem can only grow during the stem elongation and reproductive phases. ]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <DivideFunction>
+                <Name>StemFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Bolting</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <DivideFunction>
+                <Name>StemFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentFS</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[FlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>FSs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetFSs</Name>
+                      <VariableReference>
+                        <Name>TargetFS1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetFS2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentFS</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[FlowerStemRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Flowering</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.9</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Stem].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Stem].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Stem].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Stem].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Stem].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Inflorescence</Name>
@@ -1599,17 +1723,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
-      </Memo>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
     </Constant>
     <LinearInterpolationFunction>
       <Name>MinimumNConc</Name>
@@ -1667,136 +1780,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Phenology].Stage</XProperty>
     </LinearInterpolationFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The chicory model defines the allocation of biomass to various organs based on simple approach.  The fraction of the above ground biomass allocated to inflorescence is computed by weighting up the current proportion in relation to stems and that of  the target ratio ([FlowerStemRatio].Value).  Note that partiton to inflorescence only occurs during the reproductive phase. ]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>Reproductive</Name>
-          <DivideFunction>
-            <Name>FlowerFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetFS1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetFS2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>SLs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSLs</Name>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSL</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[StemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>FSs</Name>
-                <MultiplyFunction>
-                  <Name>TargetFSs</Name>
-                  <VariableReference>
-                    <Name>TargetFS1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetFS2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentFS</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[FlowerStemRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Flowering</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <Memo>
@@ -2046,17 +2029,223 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The chicory model defines the allocation of biomass to various organs based on simple approach.  The fraction of the above ground biomass allocated to inflorescence is computed by weighting up the current proportion in relation to stems and that of  the target ratio ([FlowerStemRatio].Value).  Note that partiton to inflorescence only occurs during the reproductive phase. ]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <DivideFunction>
+                <Name>FlowerFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>FSs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetFSs</Name>
+                      <VariableReference>
+                        <Name>TargetFS1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetFS2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentFS</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[FlowerStemRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Flowering</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Inflorescence].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Inflorescence].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Inflorescence].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Inflorescence].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Inflorescence].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Inflorescence].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Inflorescence].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Inflorescence].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Taproot</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[__Note:__ This represents all the taproots of the plant.  
+      <MemoText><![CDATA[__Note:__ This represents all the taproots of the plant.  
       Taproots are quite important for chicory growth, they are the a major reserve organ and can supply N and sugars whenever the plant needs are not fully satified by uptake or photosynthesis.  This can prompt growth especially at the end of winter and following defoliation.  To mimic this process, the chicory model can use the non-structural fraction of taproots' biomass to complement demand for new growth; this is done via biomass retranslocation.  There is a considerable amount of information about the build up of reserves in roots of chicory, although most of it is for root cultivars, some developed specifically for high sugar content in roots ().  Mono- and di-saccharides (fructose and sucrose) and especilly fructans (inulin) reserves build up over the growing season in the taproot and their content can reach 60-80% of dry mater before winter ([AmezianeEtAl_1995]; [ErnstEtAl_1995]; [DemeulemeesterEtAl_1998]; [MontiEtAl_2005]).  This content is much lower for leaf varieties, reaching 20-30% ([LiEtAl_1997a]; [ErnstEtAl_1995];  [QuijadaThesis_2015]), and this can be further reduced if defoliation is severe or the plants have bolted ([Arias-carbajalThesis_1994]; [LiEtAl_1997a]; [Schittenhelm_2001]; [CranstonEtAl_2016]).  Build up of N reserves (as proteins and amino-acids) in taproots has also been show to occur at the end of growing season, and then being used for shoot development after winter ([LimamiEtAl_1996]; [BewleyDerek_2002]).  The controls for the build up of reserves of the rate that they can be used for new growth are still mostly unknown.  Defoliation and environmental stress (drought) have been shown to reduce the reserves ([LiEtAl_1997a], [MontiEtAl_2005]), but it is not clear whether this is a direct affect or due to the greater usage of reserves to cope with the stresses.  
-      For the chicory model the set of parameters related to the storage of reserves and their utilisation (StructuralFraction, DMRetranslocationFactor, and NRetranslocationFactor) were manipulated in order to reflect the trends shown in the literature review and attempting to reproduce the results of the available experimental datasets (used in the validation tests).  These should be upgraded when data more specific to the retranslocation process is made available. ]]>
-      </MemoText>
+      For the chicory model the set of parameters related to the storage of reserves and their utilisation (StructuralFraction, DMRetranslocationFactor, and NRetranslocationFactor) were manipulated in order to reflect the trends shown in the literature review and attempting to reproduce the results of the available experimental datasets (used in the validation tests).  These should be upgraded when data more specific to the retranslocation process is made available. ]]></MemoText>
     </Memo>
     <Constant>
       <Name>RemobilisationCost</Name>
@@ -2069,17 +2258,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The fraction of non-structural biomass in chicory taproots can be quite high, reaching 60-80% of dry mater weight ([AmezianeEtAl_1995]; [ErnstEtAl_1995]; [DemeulemeesterEtAl_1998]; [MontiEtAl_2005]).  However, for forage cultivars, especially under defoliation, the actual content is much smaller, with values around 20-30% being reported ([ErnstEtAl_1995]; [LiEtAl_1997a]; [QuijadaThesis_2015]).  As the chicory model aim to describe forage cultivars primarily, the *potential* fraction of non-structural biomass should be between these two levels. ]]></MemoText>
-      </Memo>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.5</FixedValue>
-      <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
@@ -2103,98 +2281,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>0.015</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[Allocation of biomass to taproots in the chicory model is computed assuming that there is a target ratio for the biomass of root and taproot (defined by [TaprootRootRatio].Value).  There is little data in literature that could be used to estimate values for this parameter ([LiEtAl_1997a]; [LabreveuxThesis_2002]; [AlloushEtAl_2003]), and there seem to be large differences between cultivars (those selected for root harvesting have a large proportion of overall biomass allocated to taproots, e.g. [LiEtAl_1997a] or [DevachtEtAl_2009], but no information was found for fine roots). This parameter should be updated when more data becomes available. ]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>AllPhases</Name>
-          <DivideFunction>
-            <Name>TaprootFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>CurrentSR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[ShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetTR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetTR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>TRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetTRs</Name>
-                  <VariableReference>
-                    <Name>TargetTR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetTR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentTR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <Memo>
@@ -2487,16 +2573,184 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Allocation of biomass to taproots in the chicory model is computed assuming that there is a target ratio for the biomass of root and taproot (defined by [TaprootRootRatio].Value).  There is little data in literature that could be used to estimate values for this parameter ([LiEtAl_1997a]; [LabreveuxThesis_2002]; [AlloushEtAl_2003]), and there seem to be large differences between cultivars (those selected for root harvesting have a large proportion of overall biomass allocated to taproots, e.g. [LiEtAl_1997a] or [DevachtEtAl_2009], but no information was found for fine roots). This parameter should be updated when more data becomes available. ]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>AllPhases</Name>
+              <DivideFunction>
+                <Name>TaprootFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetTR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetTR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>TRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetTRs</Name>
+                      <VariableReference>
+                        <Name>TargetTR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetTR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentTR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[TaprootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[The fraction of non-structural biomass in chicory taproots can be quite high, reaching 60-80% of dry mater weight ([AmezianeEtAl_1995]; [ErnstEtAl_1995]; [DemeulemeesterEtAl_1998]; [MontiEtAl_2005]).  However, for forage cultivars, especially under defoliation, the actual content is much smaller, with values around 20-30% being reported ([ErnstEtAl_1995]; [LiEtAl_1997a]; [QuijadaThesis_2015]).  As the chicory model aim to describe forage cultivars primarily, the *potential* fraction of non-structural biomass should be between these two levels. ]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.5</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Taproot].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Taproot].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Taproot].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Taproot].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Taproot].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Taproot].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Taproot].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Taproot].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <Root>
     <Name>Root</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[__Note:__  this represents all the fine roots of the plant.  
-      There is no distinction of age, but root biomass is allocated separately for each soil layer within the root zone.   The depth of the root zone can change over time as root grows.  ]]>
-      </MemoText>
+      <MemoText><![CDATA[__Note:__  this represents all the fine roots of the plant.  
+      There is no distinction of age, but root biomass is allocated separately for each soil layer within the root zone.   The depth of the root zone can change over time as root grows.  ]]></MemoText>
     </Memo>
     <Constant>
       <Name>RemobilisationCost</Name>
@@ -2514,17 +2768,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.001</FixedValue>
       <Units>g/plant</Units>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
-      </Memo>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
@@ -2554,93 +2797,6 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Start>Germination</Start>
       <End>Ripening</End>
     </PhaseBasedSwitch>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <Memo>
-          <Name>Description</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[The chicory model allocates biomass below ground following a simple approach.  The amount allocated to below ground is computed based on the [TargetShootRootRatio].Value, and then the partiton between roots and taproot is controlled by the [TaprootRootRatio].Value).  There is only a few data in literature about the relative amounts of fine roots and taproots ([LiEtAl_1997a]; [LabreveuxThesis_2002]; [AlloushEtAl_2003]), so the parameterisation of DM partition should be revised when more data is available. ]]></MemoText>
-        </Memo>
-        <PhaseLookupValue>
-          <Name>AllPhases</Name>
-          <DivideFunction>
-            <Name>RootFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>CurrentSR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[ShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>CurrentTR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TaprootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>TRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetTRs</Name>
-                  <VariableReference>
-                    <Name>TargetTR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetTR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentTR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <Memo>
@@ -2892,10 +3048,8 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[This represent the upper limit for N uptake, its value should be affected by soil type (capacity for supply, or transport) as well as plant type (capacity to explore the soil volume).  The value used is based on general knowledge from other models.  
-        Note that atual uptake is regulated by soil water content and may be due to root density, so the value here is just the uppr limit. ]]>
-        </MemoText>
+        <MemoText><![CDATA[This represent the upper limit for N uptake, its value should be affected by soil type (capacity for supply, or transport) as well as plant type (capacity to explore the soil volume).  The value used is based on general knowledge from other models.  
+        Note that atual uptake is regulated by soil water content and may be due to root density, so the value here is just the uppr limit. ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>10</FixedValue>
@@ -2971,6 +3125,171 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[The chicory model allocates biomass below ground following a simple approach.  The amount allocated to below ground is computed based on the [TargetShootRootRatio].Value, and then the partiton between roots and taproot is controlled by the [TaprootRootRatio].Value).  There is only a few data in literature about the relative amounts of fine roots and taproots ([LiEtAl_1997a]; [LabreveuxThesis_2002]; [AlloushEtAl_2003]), so the parameterisation of DM partition should be revised when more data is available. ]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>AllPhases</Name>
+              <DivideFunction>
+                <Name>RootFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentTR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[TaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>TRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetTRs</Name>
+                      <VariableReference>
+                        <Name>TargetTR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetTR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentTR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[TaprootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </Root>
   <CompositeBiomass>
     <Name>AboveGround</Name>
@@ -3100,11 +3419,9 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[The target shoot:root ratio is used by the chicory model to ensure prompt regrowth after a defoliation event.   The model will change the allocation of new growth attempting to keep a balance in organ biomass distribution. This is a simplified approach to biomass allocation plasticity (e.g. [Wilson_1988]; [LevangBrilz_2002]), it assumes that the plant adjusts the allocation biomass whenever the current shoot:root ratio differs from the target value.  
+      <MemoText><![CDATA[The target shoot:root ratio is used by the chicory model to ensure prompt regrowth after a defoliation event.   The model will change the allocation of new growth attempting to keep a balance in organ biomass distribution. This is a simplified approach to biomass allocation plasticity (e.g. [Wilson_1988]; [LevangBrilz_2002]), it assumes that the plant adjusts the allocation biomass whenever the current shoot:root ratio differs from the target value.  
       Estimated values for the shoot:root ratio of chicory based on published data vary considerably and are linked to cultivar (e.g. [LiEtAl_1997a]; [ZagalEtAl_2001]; [BeleskyEtAl_2004]).  Varieties bred for root harvesting can have shoot:root ratios al low as 1.0 whereas for leaf cultivars the values may be up to around 5.0.  Data for forage chicory suggest values around 2.0 for adult plants ([LiEtAl_1997a]; [LabreveuxThesis_2002]; [AlloushEtAl_2003]; [CranstonEtAl_2015]).  This value is likely to be affected by environmental conditions, with water or nutrient deficit causing a shift towards root growth, while leaf growth is favoured during low light conditions.  However, these relationships can vary considerably in different plants or cultivars and little data is available for forage chicory.  The model currently does not account fort the influence of environmental factors on the shoot:root partition, but it does account for vernalisation.  
-      Stem elongation, or bolting, only occurs when chicory is vernalised and it has been shown happen in only a fraction of the plants in a sward each year ([ClaphamEtAl_2001]; [SandersonEtAl_2003]; [DielenEtAl_2005]).  This variation seems to be linked to the extent of vernalisation ([Gianquinto_1997]; [DielenEtAl_2005]).  Thus, to account for the growth of both bolting and non-bolting plants, the chicory model assumes that the changes in biomass allocation are a function of vernalisation as well as phenological phase.  ]]>
-      </MemoText>
+      Stem elongation, or bolting, only occurs when chicory is vernalised and it has been shown happen in only a fraction of the plants in a sward each year ([ClaphamEtAl_2001]; [SandersonEtAl_2003]; [DielenEtAl_2005]).  This variation seems to be linked to the extent of vernalisation ([Gianquinto_1997]; [DielenEtAl_2005]).  Thus, to account for the growth of both bolting and non-bolting plants, the chicory model assumes that the changes in biomass allocation are a function of vernalisation as well as phenological phase.  ]]></MemoText>
     </Memo>
     <PhaseLookupValue>
       <Name>Vegetative</Name>
@@ -3314,11 +3631,9 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[The chicory model will change the allocation of biomass above ground attempting to keep a given proportion among the various organs.  The allocation of biomass to leaves is defined primarily by the target shoo:root ratio, but during the stem elongation and reproductive phases, the partition is modified favouring stems and inflorescence.  This is controlled by the target ratio of stems+inflorescence to leaves. This ratio may be affected by defoliation ([ClarkEtAl_1990a]; [LiEtAl_1994]; [QuijadaThesis_2015]) and is probably affected by enviromental factors too. There is not enough data to describe these interactions.  
+      <MemoText><![CDATA[The chicory model will change the allocation of biomass above ground attempting to keep a given proportion among the various organs.  The allocation of biomass to leaves is defined primarily by the target shoo:root ratio, but during the stem elongation and reproductive phases, the partition is modified favouring stems and inflorescence.  This is controlled by the target ratio of stems+inflorescence to leaves. This ratio may be affected by defoliation ([ClarkEtAl_1990a]; [LiEtAl_1994]; [QuijadaThesis_2015]) and is probably affected by enviromental factors too. There is not enough data to describe these interactions.  
       The allocation of biomass to stems is difficult to inferr because there are many confounding issues, such as growth stage, vernalisation level, graze intensity, etc.  Under lax grazing conditions and after some vernalisation, stem fraction is about 25-50%, but can be as high as 70%, values around 15-25% are reported for intensive grazing ([ClarkEtAl_1990b]; [LiEtAl_1994]; [JungEtAl_1996]; [LiEtAl_1997a]; [LiEtAl_1997c]).  The Stem:leaf ratio is thus between 0.25 and 1.0 for grazed plants.
-      Bolting only occur in a fraction of plant each year, around 50% ([ClaphamEtAl_2001]; [SandersonEtAl_2003]; [DielenEtAl_2005]). So, as a compromise, it assumed in the chicory model that the stem:leaf ratio increases sharply at the beginning of the stem elongation phase, reaching a maximum value and then is constant until near the end of flowering when if decreases again.  This maximum should be not too high to account for non bolting plants.  ]]>
-      </MemoText>
+      Bolting only occur in a fraction of plant each year, around 50% ([ClaphamEtAl_2001]; [SandersonEtAl_2003]; [DielenEtAl_2005]). So, as a compromise, it assumed in the chicory model that the stem:leaf ratio increases sharply at the beginning of the stem elongation phase, reaching a maximum value and then is constant until near the end of flowering when if decreases again.  This maximum should be not too high to account for non bolting plants.  ]]></MemoText>
     </Memo>
     <PhaseLookupValue>
       <Name>AllPhasesWithStems</Name>
@@ -3532,7 +3847,8 @@ This model was developed with help from Russel McAuliffe and Brittany Paton orga
         <MemoText><![CDATA[*Puna* is the basic forage chicory cultivar. It represents one of the first chicory cultivars selected for seed production and it has been used for forage grazing, in monoculture or in mixed swards, in several countries worldwide.]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Command />
+      <Command>
+      </Command>
     </Cultivar>
     <Cultivar>
       <Name>Choice</Name>

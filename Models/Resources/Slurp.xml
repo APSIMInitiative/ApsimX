@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="36">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
   <Name>Slurp</Name>
   <Memo>
     <Name>TitlePage</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText>
-      <![CDATA[
+    <MemoText><![CDATA[
 # SLURP: the Sound of a crop using water
 
 This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  
@@ -35,8 +34,7 @@ zone.Set("Slurp.Leaf.LAIFunction.Value()", LAIResetValue);
 object HeightResetValue = CoverToday * MaximumHeight;  
 zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);  
 ~~~
-]]>
-    </MemoText>
+]]></MemoText>
   </Memo>
   <Phenology>
     <Name>Phenology</Name>
@@ -50,7 +48,7 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
     <GenericPhase>
       <Name>Initial</Name>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -70,7 +68,7 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
     <GenericPhase>
       <Name>Ongoing</Name>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -130,11 +128,11 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
         <FixedValue>0</FixedValue>
         <Units>mm/d</Units>
       </Constant>
-    <Constant>
-      <Name>DMConversionEfficiency</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-    </Constant>      
+      <Constant>
+        <Name>DMConversionEfficiency</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FixedValue>1</FixedValue>
+      </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
     <Constant>
@@ -148,13 +146,13 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>g/m2</Units>
-    </Constant>   
+    </Constant>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units />
-    </Constant>    
+    </Constant>
     <Constant>
       <Name>MaximumRootDepth</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -196,11 +194,9 @@ zone.Set("Slurp.Leaf.HeightFunction.Value()", HeightResetValue);
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 This is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].LayerMidPointDepth</XProperty>
@@ -217,16 +213,6 @@ This is important in SLURP as it is set for each species to represent their diff
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Constant>
-        <Name>PartitionFraction</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>0</FixedValue>
-        <Units>0-1</Units>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>SpecificRootLength</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -328,13 +314,94 @@ This is important in SLURP as it is set for each species to represent their diff
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <Constant>
-        <Name>MaintenanceRespirationFunction</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>0</FixedValue>
+      <Name>MaintenanceRespirationFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
     </Constant>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant name="StructuralFraction">
+          <Name>StructuralFraction</Name>
+          <FixedValue>1.0</FixedValue>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </Root>
   <SimpleLeaf>
     <Name>Leaf</Name>
@@ -398,16 +465,6 @@ This is important in SLURP as it is set for each species to represent their diff
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </AirTemperatureFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Constant>
-        <Name>PartitionFraction</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FixedValue>1</FixedValue>
-        <Units>0-1</Units>
-      </Constant>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -430,12 +487,6 @@ This is important in SLURP as it is set for each species to represent their diff
       <Name>ExtinctionCoefficientFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.7</FixedValue>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.5</FixedValue>
-      <Units>0-1</Units>
     </Constant>
     <Constant>
       <Name>HeightFunction</Name>
@@ -548,16 +599,97 @@ This is important in SLURP as it is set for each species to represent their diff
     <MicroClimatePresent>true</MicroClimatePresent>
     <KDead>0</KDead>
     <LAIDead>0</LAIDead>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.5</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Leaf].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Leaf].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Leaf].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </SimpleLeaf>
   <Cultivar>
     <Name>StaticCrop</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[The static crop is the base crop and uses all the paramaters values specified above.
-]]>
-      </MemoText>
+      <MemoText><![CDATA[The static crop is the base crop and uses all the paramaters values specified above.
+]]></MemoText>
     </Memo>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Cultivar>
@@ -566,10 +698,8 @@ This is important in SLURP as it is set for each species to represent their diff
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient
-]]>
-      </MemoText>
+      <MemoText><![CDATA[The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient
+]]></MemoText>
     </Memo>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Root].MaximumRootDepth.FixedValue = 2600</Command>
@@ -583,10 +713,8 @@ This is important in SLURP as it is set for each species to represent their diff
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.
-]]>
-      </MemoText>
+      <MemoText><![CDATA[The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.
+]]></MemoText>
     </Memo>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Root].MaximumRootDepth.FixedValue = 800</Command>
@@ -600,10 +728,8 @@ This is important in SLURP as it is set for each species to represent their diff
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient
-]]>
-      </MemoText>
+      <MemoText><![CDATA[Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient
+]]></MemoText>
     </Memo>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Root].MaximumRootDepth.FixedValue = 2500</Command>

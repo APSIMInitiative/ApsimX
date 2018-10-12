@@ -663,15 +663,15 @@ namespace Models.GrazPlan
 
             for (idx = 0; idx < initValue.Length; idx++)
             {
-                paddock = model.Paddocks.byIndex(idx);
+                paddock = model.Paddocks.ByIndex(idx);
                 initValue[idx] = new PaddockInit();
-                initValue[idx].Name = paddock.sName;                                       // "name"                                
-                initValue[idx].Area = paddock.fArea;                                       // "area"                                
+                initValue[idx].Name = paddock.Name;                                       // "name"                                
+                initValue[idx].Area = paddock.Area;                                       // "area"                                
                 initValue[idx].Slope = paddock.Slope;                                       // "slope"                               
                 Array.Resize(ref initValue[idx].Forages, paddock.Forages.Count());
                 for (jdx = 0; jdx < paddock.Forages.Count(); jdx++)
-                    initValue[idx].Forages[jdx] = paddock.Forages.byIndex(jdx).sName;
-                initValue[idx].Excretion = paddock.sExcretionDest;                              // "excretion"                           
+                    initValue[idx].Forages[jdx] = paddock.Forages.ByIndex(jdx).Name;
+                initValue[idx].Excretion = paddock.ExcretionDest;                              // "excretion"                           
             }
         }
 
@@ -1090,18 +1090,18 @@ namespace Models.GrazPlan
             count = 0;
             for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
             {
-                if (model.Paddocks.byIndex(paddIdx).SuppRemovalKG > 0.0)
+                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
                     count++;
             }
             
             suppValues = new SupplementEaten[count];
             idx = 0;
             for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
-                if (model.Paddocks.byIndex(paddIdx).SuppRemovalKG > 0.0)
+                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
                 {
                     suppValues[idx] = new SupplementEaten();
-                    suppValues[idx].Paddock = model.Paddocks.byIndex(paddIdx).sName;
-                    suppValues[idx].Eaten = model.Paddocks.byIndex(paddIdx).SuppRemovalKG;
+                    suppValues[idx].Paddock = model.Paddocks.ByIndex(paddIdx).Name;
+                    suppValues[idx].Eaten = model.Paddocks.ByIndex(paddIdx).SuppRemovalKG;
                     idx++;
                 }
         }

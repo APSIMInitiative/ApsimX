@@ -147,6 +147,7 @@ namespace Models.Graph
 
                 // Get a list of factors that the presenter uses to show the user.
                 FactorNamesForVarying = GetFactorList(factors);
+                FactorNamesForVarying.Add("Graph series");
 
                 // If a factor isn't being used to vary a colour/marker/line, then remove the factor. i.e. we
                 // don't care about it.
@@ -161,8 +162,14 @@ namespace Models.Graph
                 DataTable baseData = GetBaseData(storage, factors);
 
                 // Get data for each simulation / zone object
-                if (baseData != null && baseData.Rows.Count > 0)
-                    ourDefinitions = ConvertToSeriesDefinitions(factors, storage, baseData);
+                if (baseData != null)
+                {
+                    if (baseData.Rows.Count > 0)
+                        ourDefinitions = ConvertToSeriesDefinitions(factors, storage, baseData);
+                    else if (Apsim.Parent(this, typeof(Simulation)).Parent is Experiment)
+                        throw new Exception("Unable to find any data points - should this graph be directly under an experiment?");
+                }
+                    
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
@@ -221,17 +228,22 @@ namespace Models.Graph
             if (FactorToVaryMarkers != null)
                 factorsToKeep.Add(FactorToVaryMarkers);
             factorsToKeep = factorsToKeep.Distinct().ToList();
+            if (factorsToKeep.Count != 0)
+            {
+                var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
 
-            var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
+                foreach (var factor in factors)
+                    foreach (var factorToRemove in factorsToRemove)
+                        factor.RemoveFactor(factorToRemove);
 
-            foreach (var factor in factors)
-                foreach (var factorToRemove in factorsToRemove)
-                    factor.RemoveFactor(factorToRemove);
+                // Remove empty factors
+                factors.RemoveAll(f => f.Factors.Count == 0);
 
-            // Make sure each factor has the factors we want to keep.
-            foreach (var factor in factors)
-                foreach (var factorToKeep in factorsToKeep)
-                    factor.AddFactorIfNotExist(factorToKeep, "?");
+                //// Make sure each factor has the factors we want to keep.
+                //foreach (var factor in factors)
+                //    foreach (var factorToKeep in factorsToKeep)
+                //        factor.AddFactorIfNotExist(factorToKeep, "?");
+            }
         }
 
         /// <summary>
@@ -398,7 +410,7 @@ namespace Models.Graph
                 visualElement.LineThickness = LineThickness;
                 visualElement.Marker = Marker;
                 visualElement.MarkerSize = MarkerSize;
-                painter.PaintSimulationZone(factor, visualElement);
+                painter.PaintSimulationZone(factor, visualElement, this);
 
                 SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
                 seriesDefinition.type = Type;
@@ -414,11 +426,17 @@ namespace Models.Graph
                 seriesDefinition.xFieldUnits = storage.GetUnits(TableName, XFieldName);
                 seriesDefinition.yFieldUnits = storage.GetUnits(TableName, YFieldName);
                 seriesDefinition.showInLegend = ShowInLegend;
-                factor.Factors.ForEach(f => seriesDefinition.title += f.Value);
-                if (IncludeSeriesNameInLegend)
+                if (factor.Factors.Count == 1 && factor.Factors[0].Key == "Graph series")
+                    seriesDefinition.title = Name;
+                else
                 {
-                    seriesDefinition.title += ": " + Name;
+                    factor.Factors.ForEach(f => seriesDefinition.title += f.Value);
+                    if (IncludeSeriesNameInLegend || seriesDefinition.title == "?")
+                    {
+                        seriesDefinition.title += ": " + Name;
+                    }
                 }
+
                 if (Checkpoint != "Current")
                     seriesDefinition.title += " (" + Checkpoint + ")";
                 DataView data = new DataView(baseData);
@@ -736,7 +754,7 @@ namespace Models.Graph
             /// <summary>A painter interface for setting visual elements of a simulation/zone pair</summary>
             public interface IPainter
             {
-                void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement);
+                void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series);
             }
 
             /// <summary>A default painter for setting a simulation / zone pair to default values.</summary>
@@ -745,7 +763,7 @@ namespace Models.Graph
                 public Color Colour { get; set; }
                 public LineType LineType { get; set; }
                 public MarkerType MarkerType { get; set; }
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     visualElement.colour = Colour;
                     visualElement.Line = LineType;
@@ -761,15 +779,25 @@ namespace Models.Graph
                 public int MaximumIndex { get; set; }
                 public SetFunction Setter { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
-                    string factorValue = factor.GetFactorValue(FactorName);
-                    int index = values.IndexOf(factorValue);
-                    if (index == -1)
+                    int index;
+                    if (FactorName == "Graph series")
                     {
-                        values.Add(factorValue);
-                        index = values.Count - 1;
+                        index = (series.Parent as Graph).Series.IndexOf(series);
                     }
+                    else
+                    {
+                        string factorValue = factor.GetFactorValue(FactorName);
+
+                        index = values.IndexOf(factorValue);
+                        if (index == -1)
+                        {
+                            values.Add(factorValue);
+                            index = values.Count - 1;
+                        }
+                    }
+
                     index = index % MaximumIndex;
                     Setter(visualElement, index);
                 }
@@ -786,7 +814,7 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     string factorValue = factor.GetFactorValue(FactorName);
 
@@ -817,7 +845,7 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     string factorValue1 = factor.GetFactorValue(FactorName1);
                     string factorValue2 = factor.GetFactorValue(FactorName2);

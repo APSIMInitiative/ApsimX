@@ -30,8 +30,16 @@ namespace Models.Core
         [EventSubscribe("Serialising")]
         protected void OnSerialising(bool xmlSerialisation)
         {
-            if (xmlSerialisation && ResourceName != null)
+            if (xmlSerialisation && Apsim.Ancestor<Replacements>(this) == null)
             {
+                if (string.IsNullOrEmpty(ResourceName))
+                {
+                    if (!string.IsNullOrEmpty(Properties.Resources.ResourceManager.GetString(Name)))
+                        ResourceName = Name;
+                    else
+                        return;
+                }
+                SetNotVisible(this);
                 allModels = new List<Model>();
                 allModels.AddRange(Children);
 
@@ -120,6 +128,7 @@ namespace Models.Core
             foreach (Model child in ModelFromResource.Children)
             {
                 child.IsHidden = true;
+                child.ReadOnly = true;
                 SetNotVisible(child);
             }
         }

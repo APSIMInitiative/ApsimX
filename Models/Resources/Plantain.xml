@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Plant Version="36">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Plant Version="46">
   <Name>Plantain</Name>
   <Memo>
     <Name>GeneralDescription</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <MemoText><![CDATA[
 ## Presentation
 
@@ -61,6 +62,7 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[The duration of each phenologic phase in plantain is controlled either by the accumulation of thermal time or photoperiod.]]></MemoText>
     </Memo>
     <AirTemperatureFunction>
@@ -68,12 +70,14 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[The thermal time is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Crop development acelerates as temperature increases from minimum to optimum and slows down after that, stopping completely when maximum temperature is reached.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. For "chinese plantain" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC ([IshikawaEtAl_2007]), which gives an idea of potential variations for this parameter in plantain. Plantain is tolerant to high temperatures ([StewartPlantain_1996]; [NieEtAl_2008]) and outgrows ryegrass over summer in subtropical climate ([MoorheadPigot_2009]). The data for chinese plantain suggest similar growth, and thus the optimum and maximum temperature for it, 30 and 38oC respectively ([IshikawaEtAl_2007]), should give a good indication of the values for forage plantain.
 ]]></MemoText>
       </Memo>
       <XYPairs>
         <Name>XYPairs</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <X>
           <double>9</double>
           <double>30</double>
@@ -86,10 +90,12 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </AirTemperatureFunction>
     <PhotoperiodFunction>
       <Name>Photoperiod</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Twilight>-6</Twilight>
       <DayLength>0</DayLength>
     </PhotoperiodFunction>
@@ -98,9 +104,11 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[Germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.  Germination rates in plantain typically vary between 75 and 95% when sown close to the surface (<10mm), in moist warm soil ([ReedEtAl_2008]; [DouglasEtAl_2013]; [LeeEtAlYields_2015]).  The plantain model, following convention of PMF, assumes 100% germination, and therefore the user must correct sowing rate when variations between sown and germinated plant density is considered important. ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Sowing</Start>
       <End>Germination</End>
     </GerminatingPhase>
@@ -109,39 +117,46 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm (Peri et al., 2000; Sanderson et al., 2000), deeper seed may stay dormant for years in the soil ([Blom_1978]; [RobertsBoddrell_1984]).  Variations in germination rate due to depth are not explicitly simulated by the plantain model in the current version, however the sowing depth does affect timing of emergence.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).
 ]]></MemoText>
       </Memo>
       <VariableReference>
         <Name>ThermalTime</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Start>Germination</Start>
-      <End>Emergence</End>
+      <Enabled>true</Enabled>
       <ShootLag>15</ShootLag>
       <ShootRate>10</ShootRate>
+      <Start>Germination</Start>
+      <End>Emergence</End>
+      <TTForTimeStep>0</TTForTimeStep>
     </EmergingPhase>
     <GenericPhase>
       <Name>Vegetative</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase starts when plants emerge from the ground, but it is also triggered after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of days with long sunlight ([SussexPlantain_1956]; [Rowarth_Plantain_1990]; [CaseLaceyHopkins_1996]; [LaceyRoach_2003]; [GonzalezParrado_2015]).  Stalk development have been recorded to start in October in NZ and in May in the USA ([Rowarth_Plantain_1990]; [LaceyRoach_2003]; [SandersonEtAl_2003]), with data suggesting a minimum of 25-30 days (non consecutive) with long daylight periods ([SussexPlantain_1956]; [FajerEtAl_1991]; [CaseLaceyHopkins_1996]).  The literature does not provide an indication of how long the sunlight period should be to trigger the reproductive phase, but it is clear that daylight should be grater that the period in darkness (14-16 hours been used to induce flowering in growth chambers).  The base plantain model uses the accumulation of days greater than 12hrs to trigger the end of the vegetative phase.
 ]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>30</FixedValue>
         <Units>days</Units>
       </Constant>
       <LinearInterpolationFunction>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>10</double>
             <double>11.5</double>
@@ -156,9 +171,11 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Phenology].Photoperiod.Value()</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Emergence</Start>
       <End>Flowering</End>
     </GenericPhase>
@@ -167,20 +184,23 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (stems, flowers, and seeds). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as _inflorescence_ is defined.  This was done partly due to lack of data and partly because of the variability and complex phenology of plantain.  There is a lot of variation among plantain plants regarding when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds, as well as stalks with ripen seed at the same time ([Rowarth_Plantain_1990]; [RumballKeog_1997]; [LaceyRoach_2003]; [GonzalezParrado_2015]).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range.  The available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC ([Rowarth_Plantain_1990]; [RumballKeog_1997]; [GonzalezParrado_2015]).  Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts ([Rowarth_Plantain_1990]) and/or short days ([SandersonEtAl_2003]).  In the plantain model the photoperiod is used to define the end of reproductive phase, following the same approach used to start it.  And correspondelly, the accumulation of days shorter than 12 hours is used as the trigger the end of the phase (this approach also ensures phenology reset even in warmer climates).  Note that the DM partition functions also use photoperiod to change priority allocation into reproductive organs, with maximum allocation only when daylight length is greater than 14hours.  This was done to limit the allocation to reproductive organs on the sason shoulders when only few plants are actively in the reproductive phase (e.g. [SandersonEtAl_2003]).
 ]]></MemoText>
       </Memo>
       <Constant>
         <Name>Target</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>30</FixedValue>
         <Units>days</Units>
       </Constant>
       <LinearInterpolationFunction>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>10</double>
             <double>11</double>
@@ -195,9 +215,11 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Phenology].Photoperiod.Value()</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Flowering</Start>
       <End>Ripening</End>
     </GenericPhase>
@@ -206,18 +228,18 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[At the end of reproductive phase, plantain phenology is reset to 'Vegetative'.
 ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Ripening</Start>
       <End>Ripening</End>
-      <FractionComplete>0</FractionComplete>
       <PhaseNameToGoto>Vegetative</PhaseNameToGoto>
     </GotoPhase>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <FractionBiomassRemoved>0</FractionBiomassRemoved>
-    <DaysAfterSowing>0</DaysAfterSowing>
+    <Enabled>true</Enabled>
   </Phenology>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
@@ -226,28 +248,34 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[Controls the allocation of N to each of the plant's organs. Partition is based on:  
 ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </RelativeAllocation>
     <RelativeAllocation>
       <Name>DMArbitrator</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[Controls the allocation of biomass to each of the plant's organs. Partition is based on:  
 ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </RelativeAllocation>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </OrganArbitrator>
   <SimpleLeaf>
     <Name>Leaf</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[__Note:__ this organ represents all the leaves in the plant, without distinction between ages or placement in the canopy.  
 ]]></MemoText>
     </Memo>
@@ -256,31 +284,30 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Constant>
         <Name>InitialPlantWt</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.001</FixedValue>
         <Units>g/plant</Units>
       </Constant>
       <VariableReference>
         <Name>Population</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Plant].Population</VariableName>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.015</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.055</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
@@ -289,6 +316,7 @@ This model was developed with help from Brittany Paton and Russel McAuliffe orga
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[Data for photosynthesys in plantain is very sparse and so some of the data used here are from studies that employed wild varieties.  Values for CO2 assimilation rates are generally consistent ([PootDenBroek_1997]; [LabreveuxThesis_2002]; [vanDenBergeEtAl_2014]; [CranstonEtAl_2015]) and follow a classic relationhip with light intensity (directly proportional) as well with N concentration in the leaves (inversely proportional).  Reported values of photosynthetic rate indicate that these are similar or slightly higher in plantain when compared to Chicory ([LabreveuxThesis_2002]; [CranstonEtAl_2015]).  No reported values for RUE were found in the literature, but they can be infered as to be just under 2.0 g DM/MJ for wild vareties ([PootDenBroek_1997]).  
 The current model assumes generic responses to enviromental factors, such as temperature and water availability.  Wild plantain is ubiquitous in meadows in subtropical climates around the world, and it is generally assumed to be tollerant to high temperatures but not to cold ([SagarHarper_1964]; [StewartPlantain_1996]).  Forage plantain shows large differences between cultivars, but generally can grow more over winter compared to wild varieties and still outperform temperate grasses in summer ([StewartPlantain_1996]; [MoorheadPigot_2009], [DouglasEtAl_2013]), although survivability in harsh winters in the USA was found to be low ([SandersonEtAl_2003], [SkinnerPlantain_2005]).  Forage plantain is also often mentioned as a drought tollerant species ([StewartPlantain_1996]; [DouglasEtAl_2013]; [QuijadaThesis_2015]), although less so than deep rooted species such as chicory or lucerne.  The use of reserves from the taproots seem to be mechanism used to confer drought resistance in plantain as is the case for many herbs ([CranstonEtAl_2015]; [QuijadaThesis_2015]).
 ]]></MemoText>
@@ -296,12 +324,14 @@ The current model assumes generic responses to enviromental factors, such as tem
       <Constant>
         <Name>RUE</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>2</FixedValue>
         <Units>g/MJ</Units>
       </Constant>
       <RUECO2Function>
         <Name>FCO2</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <PhotosyntheticPathway>C3</PhotosyntheticPathway>
       </RUECO2Function>
       <LinearInterpolationFunction>
@@ -309,6 +339,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.4</double>
@@ -323,6 +354,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fn</XProperty>
       </LinearInterpolationFunction>
       <WeightedTemperatureFunction>
@@ -330,6 +362,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>4</double>
             <double>10</double>
@@ -348,6 +381,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
       </WeightedTemperatureFunction>
       <LinearInterpolationFunction>
@@ -355,6 +389,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.8</double>
@@ -369,6 +404,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
@@ -376,6 +412,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>10</double>
@@ -388,25 +425,30 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
       </LinearInterpolationFunction>
       <VariableReference>
         <Name>RadnInt</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Leaf].RadIntTot</VariableName>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </RUEModel>
     <DivideFunction>
       <Name>FRGRFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[This parameter represents the Fractional Growth Rate.  It is needed by the MicroClimate model, where it is used to compute the effect of growth rate on transpiration.  ]]></MemoText>
       </Memo>
       <VariableReference>
         <Name>Photosynthesis</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Leaf].Photosynthesis.Value()</VariableName>
       </VariableReference>
       <MultiplyFunction>
@@ -414,6 +456,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <VariableReference>
           <Name>RUE</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[Leaf].Photosynthesis.RUE.Value()</VariableName>
         </VariableReference>
         <MaximumFunction>
@@ -421,168 +464,35 @@ The current model assumes generic responses to enviromental factors, such as tem
           <VariableReference>
             <Name>RadnInt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
           <Constant>
             <Name>MinRadn</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <FixedValue>1E-05</FixedValue>
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </MaximumFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </DivideFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[In the plantain model, the DM demand function attempts to keep the shoot to root ratio and then the stem to leaf ratio close to a target value (defined by the [TargetShootRootRatio].Value and [TargetStemsLeafRatio].Value), which may vary according to the phenolgical stage.  This approach ensures that the plantain plants will recovery after being cut or grazed.  In this case, biomass will be allocated to leaves preferably, even during reproductive phase.  
-]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>Vegetative</Name>
-          <DivideFunction>
-            <Name>LeafFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <AddFunction>
-              <Name>Denominator</Name>
-              <MultiplyFunction>
-                <Name>TargetSRs</Name>
-                <VariableReference>
-                  <Name>TargetSR1</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>TargetSR2</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </MultiplyFunction>
-              <VariableReference>
-                <Name>CurrentSR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[ShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </AddFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Flowering</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>Reproductive</Name>
-          <DivideFunction>
-            <Name>LeafFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>CurrentSL</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[StemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>SLs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSLs</Name>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSL</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[StemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Flowering</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>0-1</Units>
     </Constant>
@@ -591,33 +501,40 @@ The current model assumes generic responses to enviromental factors, such as tem
       <Constant>
         <Name>SpecificLeafArea</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.022</FixedValue>
         <Units>m^2/g</Units>
       </Constant>
       <VariableReference>
         <Name>LiveLeafWeight</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Leaf].Live.Wt</VariableName>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <MultiplyFunction>
       <Name>LaiDeadFunction</Name>
       <VariableReference>
         <Name>SpecificLeafArea</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Leaf].LAIFunction.SpecificLeafArea.Value()</VariableName>
       </VariableReference>
       <VariableReference>
         <Name>DeadLeafWeight</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Leaf].Dead.Wt</VariableName>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <Constant>
       <Name>ExtinctionCoefficientFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.6</FixedValue>
       <Units>0-1</Units>
     </Constant>
@@ -626,12 +543,14 @@ The current model assumes generic responses to enviromental factors, such as tem
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[The average height of plantain is assumed here as a simple function of above ground biomass. Sward population and competition with other plant can have an influence on this relationship, but this is not currently accounted for by PMF.  
 ]]></MemoText>
       </Memo>
       <XYPairs>
         <Name>XYPairs</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <X>
           <double>10</double>
           <double>100</double>
@@ -644,6 +563,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <XProperty>[Plantain].AboveGround.Wt</XProperty>
     </LinearInterpolationFunction>
     <MultiplyFunction>
@@ -651,11 +571,13 @@ The current model assumes generic responses to enviromental factors, such as tem
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.005</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -664,6 +586,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>3</double>
             <double>4</double>
@@ -676,6 +599,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Phenology].Stage</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
@@ -683,6 +607,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -701,6 +626,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].CoverTotal</XProperty>
       </LinearInterpolationFunction>
       <WeightedTemperatureFunction>
@@ -708,6 +634,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>-15</double>
             <double>-2</double>
@@ -726,6 +653,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
       </WeightedTemperatureFunction>
       <LinearInterpolationFunction>
@@ -733,6 +661,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -745,20 +674,24 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <MultiplyFunction>
       <Name>DetachmentRateFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.1</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -767,6 +700,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -779,25 +713,30 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <Constant>
       <Name>DMRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
@@ -806,6 +745,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0.7</FractionLiveToRemove>
         <FractionDeadToRemove>0.5</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -814,6 +754,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0.7</FractionLiveToRemove>
         <FractionDeadToRemove>0.1</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -822,6 +763,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -830,39 +772,47 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
         <FractionDeadToResidue>0.1</FractionDeadToResidue>
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </BiomassRemoval>
     <Constant>
       <Name>NitrogenDemandSwitch</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>DMReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <VariableReference>
       <Name>CriticalNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
     </VariableReference>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <ApicalCohortNo>0</ApicalCohortNo>
     <InitialisedCohortNo>0</InitialisedCohortNo>
     <CohortsInitialised>false</CohortsInitialised>
@@ -878,176 +828,295 @@ The current model assumes generic responses to enviromental factors, such as tem
     <FRGR>0</FRGR>
     <PotentialEP>0</PotentialEP>
     <MicroClimatePresent>true</MicroClimatePresent>
+    <LeafInitialisationStage>Emergence</LeafInitialisationStage>
     <KDead>0</KDead>
     <LAIDead>0</LAIDead>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <MemoText><![CDATA[In the plantain model, the DM demand function attempts to keep the shoot to root ratio and then the stem to leaf ratio close to a target value (defined by the [TargetShootRootRatio].Value and [TargetStemsLeafRatio].Value), which may vary according to the phenolgical stage.  This approach ensures that the plantain plants will recovery after being cut or grazed.  In this case, biomass will be allocated to leaves preferably, even during reproductive phase.  
+]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <DivideFunction>
+                <Name>LeafFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <AddFunction>
+                  <Name>Denominator</Name>
+                  <MultiplyFunction>
+                    <Name>TargetSRs</Name>
+                    <VariableReference>
+                      <Name>TargetSR1</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>TargetSR2</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </MultiplyFunction>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </AddFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>Emergence</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <DivideFunction>
+                <Name>LeafFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentSL</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[StemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>Flowering</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Leaf].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Leaf].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Leaf].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Leaf].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </SimpleLeaf>
   <GenericOrgan>
     <Name>Stem</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[__Note:__ this represents all the stems/stalks in the plant, without distinction between ages or placement in the canopy.  
 ]]></MemoText>
     </Memo>
     <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1E-06</FixedValue>
       <Units>g/plant</Units>
     </Constant>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
-    <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.005</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.02</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[A simple approach is used in the plantain model to define the allocation of biomass to various organs.  The proportion of the above ground biomass allocated to stems is determined based on the current state and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems can only occur during the reproductive phase.  
-]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>Reproductive</Name>
-          <DivideFunction>
-            <Name>StemFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>CurrentFS</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[FlowerStemRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>SLs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSLs</Name>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSL</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[StemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>FSs</Name>
-                <MultiplyFunction>
-                  <Name>TargetFSs</Name>
-                  <VariableReference>
-                    <Name>TargetFS1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetFS2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentFS</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[FlowerStemRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Flowering</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>0-1</Units>
     </Constant>
@@ -1056,11 +1125,13 @@ The current model assumes generic responses to enviromental factors, such as tem
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[The reference senescence rate is adjusted using generic relationships to enviromental factors, such as temperature and soil moisture.  These are based on general knowledge from other plant models.]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.2</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -1069,6 +1140,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>3</double>
             <double>3.999</double>
@@ -1087,6 +1159,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Phenology].Stage</XProperty>
       </LinearInterpolationFunction>
       <WeightedTemperatureFunction>
@@ -1094,6 +1167,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>-15</double>
             <double>0</double>
@@ -1112,6 +1186,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
       </WeightedTemperatureFunction>
       <LinearInterpolationFunction>
@@ -1119,6 +1194,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -1131,20 +1207,24 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <MultiplyFunction>
       <Name>DetachmentRateFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.1</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -1153,6 +1233,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -1167,25 +1248,30 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <Constant>
       <Name>DMRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
@@ -1194,6 +1280,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0.65</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1202,6 +1289,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0.25</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1210,6 +1298,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1218,212 +1307,316 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.5</FractionLiveToResidue>
         <FractionDeadToResidue>0.2</FractionDeadToResidue>
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </BiomassRemoval>
     <Constant>
       <Name>NitrogenDemandSwitch</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>DMReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <VariableReference>
       <Name>CriticalNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <VariableName>[Stem].MinimumNConc.Value()</VariableName>
     </VariableReference>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <MemoText><![CDATA[A simple approach is used in the plantain model to define the allocation of biomass to various organs.  The proportion of the above ground biomass allocated to stems is determined based on the current state and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems can only occur during the reproductive phase.  
+]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <DivideFunction>
+                <Name>StemFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentFS</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[FlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>FSs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetFSs</Name>
+                      <VariableReference>
+                        <Name>TargetFS1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetFS2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentFS</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[FlowerStemRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>Flowering</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Stem].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Stem].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Stem].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Stem].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Stem].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Inflorescence</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[__Note:__ this represents all the reproductive parts of the plant, flowers, pods, seed, etc. No distinction is made between ages or placement in the canopy.  
 ]]></MemoText>
     </Memo>
     <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
-    <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.02</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.06</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The plantain model uses a  simple approach to define the allocation of biomass to various organs.  The fraction of the above ground biomass allocated to inflorescence is determined based on the current proprotion and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation to inflorescence can only occur during the reproductive phase.  
-]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>Reproductive</Name>
-          <DivideFunction>
-            <Name>FlowerFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>TargetSR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetSL2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetFS1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetFS2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>SLs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSLs</Name>
-                  <VariableReference>
-                    <Name>TargetSL1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSL2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSL</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[StemsLeafRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>FSs</Name>
-                <MultiplyFunction>
-                  <Name>TargetFSs</Name>
-                  <VariableReference>
-                    <Name>TargetFS1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetFS2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentFS</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[FlowerStemRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Flowering</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>0-1</Units>
     </Constant>
@@ -1432,11 +1625,13 @@ The current model assumes generic responses to enviromental factors, such as tem
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.25</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -1445,6 +1640,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>3</double>
             <double>3.99</double>
@@ -1461,6 +1657,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Phenology].Stage</XProperty>
       </LinearInterpolationFunction>
       <WeightedTemperatureFunction>
@@ -1468,6 +1665,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>5</double>
@@ -1482,6 +1680,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
       </WeightedTemperatureFunction>
       <LinearInterpolationFunction>
@@ -1489,6 +1688,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -1501,20 +1701,24 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <MultiplyFunction>
       <Name>DetachmentRateFunction</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.25</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -1523,6 +1727,7 @@ The current model assumes generic responses to enviromental factors, such as tem
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -1535,25 +1740,30 @@ The current model assumes generic responses to enviromental factors, such as tem
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <Constant>
       <Name>DMRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
@@ -1562,6 +1772,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0.25</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1570,6 +1781,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0.25</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1578,6 +1790,7 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0.8</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1586,45 +1799,287 @@ The current model assumes generic responses to enviromental factors, such as tem
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.5</FractionLiveToResidue>
         <FractionDeadToResidue>0.25</FractionDeadToResidue>
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </BiomassRemoval>
     <Constant>
       <Name>NitrogenDemandSwitch</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>DMReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <VariableReference>
       <Name>CriticalNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <VariableName>[Inflorescence].MinimumNConc.Value()</VariableName>
     </VariableReference>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <MemoText><![CDATA[The plantain model uses a  simple approach to define the allocation of biomass to various organs.  The fraction of the above ground biomass allocated to inflorescence is determined based on the current proprotion and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation to inflorescence can only occur during the reproductive phase.  
+]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <DivideFunction>
+                <Name>FlowerFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>FSs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetFSs</Name>
+                      <VariableReference>
+                        <Name>TargetFS1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetFS2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentFS</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[FlowerStemRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>Flowering</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Inflorescence].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Inflorescence].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Inflorescence].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Inflorescence].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Inflorescence].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Inflorescence].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Inflorescence].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Inflorescence].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Taproot</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[__Note:__ this represents all the taproots of the plant.  
 Taproots are the primary reserve organs and will supply sugars and N to burst growth especially early in spring and following defoliation.  To accomplish this, the taproots' biomass is partioned into structural and non-structural fractions, the later is available to be used in new growth (via biomass retranslocation).  There is very few data on how much reserves are kept in plantain taproots, results from [QuijadaThesis_2015] suggest that sugars plus fructan made up 4-11% of taproots biomass compared to 15-35% in chicory, which is consistent with plantain having much smaller taproots.  Based on these values, and some trial and error, the parameters related to retranslocation (StructuralFraction, DMRetranslocationFactor, and NRetranslocationFactor) were estimated.  These should be upgraded when more data is made available.  
 ]]></MemoText>
@@ -1632,129 +2087,35 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
     <Constant>
       <Name>InitialWtFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>0.1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
-    <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.007</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.02</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <Memo>
-        <Name>Description</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The plantain model computes the allocation of biomass to taproots assuming that there is a target ratio the biomass of root and taproot (defined by [TaprootRootRatio].Value).  The existing literature does not provide values for this parameter, and based on other herbs, such as chicory, a simple value which is further modified by plant specific biomass is assumed in the model. This should be update when more data becomes available.
-]]></MemoText>
-      </Memo>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>AllPhases</Name>
-          <DivideFunction>
-            <Name>TaprootFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>CurrentSR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[ShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetTR1</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>TargetTR2</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>TRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetTRs</Name>
-                  <VariableReference>
-                    <Name>TargetTR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetTR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentTR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>0-1</Units>
     </Constant>
@@ -1763,12 +2124,14 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  Currently only sensitivity to temperature is considered, based on general knowledge from other plant models. The sensitivity of plantain roots to low moisture or water logging is not clear , so this will have to be upgrade in the future when more data is available.  According to [SagarHarper_1964], *P. major*, a similar species, is more tolerant to water logging than *P. lanceolata*, which rarely occurs in water logged sites ([vanTiederen_1992]).  
 ]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.001</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -1777,6 +2140,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>5</double>
@@ -1791,6 +2155,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
       </WeightedTemperatureFunction>
       <LinearInterpolationFunction>
@@ -1798,6 +2163,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -1810,37 +2176,44 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>SoilAerationFactor</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>1</FixedValue>
         <Units>0-1</Units>
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <Constant>
       <Name>DetachmentRateFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>DMRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.15</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.2</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
       <Units>/day</Units>
     </Constant>
@@ -1849,6 +2222,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1857,6 +2231,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1865,6 +2240,7 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1873,39 +2249,234 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </BiomassRemoval>
     <Constant>
       <Name>NitrogenDemandSwitch</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>DMReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <VariableReference>
       <Name>CriticalNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <VariableName>[Taproot].MinimumNConc.Value()</VariableName>
     </VariableReference>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <MemoText><![CDATA[The plantain model computes the allocation of biomass to taproots assuming that there is a target ratio the biomass of root and taproot (defined by [TaprootRootRatio].Value).  The existing literature does not provide values for this parameter, and based on other herbs, such as chicory, a simple value which is further modified by plant specific biomass is assumed in the model. This should be update when more data becomes available.
+]]></MemoText>
+          </Memo>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>AllPhases</Name>
+              <DivideFunction>
+                <Name>TaprootFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetTR1</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetTR2</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>TRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetTRs</Name>
+                      <VariableReference>
+                        <Name>TargetTR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetTR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentTR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[TaprootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>Emergence</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <FixedValue>0.1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Taproot].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Taproot].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Taproot].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Taproot].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Taproot].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Taproot].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Taproot].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Taproot].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <Root>
     <Name>Root</Name>
@@ -1914,10 +2485,12 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[This represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
 ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[__Note:__ this represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
 ]]></MemoText>
     </Memo>
@@ -1926,43 +2499,44 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
       <Constant>
         <Name>InitialRootWt</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.001</FixedValue>
         <Units>g/plant</Units>
       </Constant>
       <VariableReference>
         <Name>Population</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <VariableName>[Plant].Population</VariableName>
       </VariableReference>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
-      <Units>g/g</Units>
-    </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.005</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.015</FixedValue>
       <Units>gN/gDM</Units>
     </Constant>
     <PhaseBasedSwitch>
       <Name>NitrogenDemandSwitch</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Germination</Start>
       <End>Ripening</End>
     </PhaseBasedSwitch>
     <Constant>
       <Name>MaximumRootDepth</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1000</FixedValue>
       <Units>mm</Units>
     </Constant>
@@ -1973,10 +2547,12 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <Constant>
           <Name>ReferenceVelocity</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FixedValue>5</FixedValue>
           <Units>mm/day</Units>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Start>Germination</Start>
         <End>Emergence</End>
       </PhaseLookupValue>
@@ -1985,10 +2561,12 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <Constant>
           <Name>ReferenceVelocity</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FixedValue>10</FixedValue>
           <Units>mm/day</Units>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Start>Emergence</Start>
         <End>Flowering</End>
       </PhaseLookupValue>
@@ -1997,25 +2575,30 @@ Taproots are the primary reserve organs and will supply sugars and N to burst gr
         <Constant>
           <Name>ReferenceVelocity</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FixedValue>7.5</FixedValue>
           <Units>mm/day</Units>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <Start>Flowering</Start>
         <End>Ripening</End>
       </PhaseLookupValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </PhaseLookup>
     <Constant>
       <Name>TemperatureEffect</Name>
       <Memo>
         <Name>memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[
 No effect of temperature on root growth is currently captured in the model.
 ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
@@ -2023,16 +2606,19 @@ No effect of temperature on root growth is currently captured in the model.
       <Memo>
         <Name>memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[
 No effect of soil water content on root growth is currently captured in the model.
 ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>SpecificRootLength</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>100</FixedValue>
       <Units>m/g</Units>
     </Constant>
@@ -2041,12 +2627,14 @@ No effect of soil water content on root growth is currently captured in the mode
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  Currently only sensitivity to temperature is considered, based on general knowledge from other plant models. The sensitivity of plantain roots to low moisture or water logging is not clear (according to [SagarHarper_1964], *P. major* is more tolerant to water logging than *P. lanceolata*) , so this will have to be upgrade in the future when more data is available.  
 ]]></MemoText>
       </Memo>
       <Constant>
         <Name>ReferenceRate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>0.005</FixedValue>
         <Units>/day</Units>
       </Constant>
@@ -2055,6 +2643,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>5</double>
@@ -2069,6 +2658,7 @@ No effect of soil water content on root growth is currently captured in the mode
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
       </WeightedTemperatureFunction>
       <LinearInterpolationFunction>
@@ -2076,6 +2666,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <XYPairs>
           <Name>XYPairs</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <X>
             <double>0</double>
             <double>0.5</double>
@@ -2088,30 +2679,36 @@ No effect of soil water content on root growth is currently captured in the mode
           </Y>
         </XYPairs>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <XProperty>[Leaf].FW</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>SoilAerationFactor</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>1</FixedValue>
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </MultiplyFunction>
     <Constant>
       <Name>DMRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
       <Units>/day</Units>
     </Constant>
@@ -2122,16 +2719,19 @@ No effect of soil water content on root growth is currently captured in the mode
         <Memo>
           <Name>Description</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <MemoText><![CDATA[This represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
 ]]></MemoText>
         </Memo>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[No adjustment of KL are considered for plantain at this stage.  More analyses, preferebly with support from data specific to this issue, are needed to improve the description of this relationship.  
 ]]></MemoText>
       </Memo>
       <XYPairs>
         <Name>XYPairs</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <X>
           <double>0</double>
           <double>1</double>
@@ -2142,6 +2742,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <XProperty>[Root].LengthDensity</XProperty>
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
@@ -2149,6 +2750,7 @@ No effect of soil water content on root growth is currently captured in the mode
       <XYPairs>
         <Name>XYPairs</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <X>
           <double>0</double>
           <double>0.003</double>
@@ -2159,6 +2761,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <XProperty>[Root].LengthDensity</XProperty>
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
@@ -2166,6 +2769,7 @@ No effect of soil water content on root growth is currently captured in the mode
       <XYPairs>
         <Name>XYPairs</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <X>
           <double>0</double>
           <double>0.003</double>
@@ -2176,11 +2780,13 @@ No effect of soil water content on root growth is currently captured in the mode
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <XProperty>[Root].LengthDensity</XProperty>
     </LinearInterpolationFunction>
     <Constant>
       <Name>MaxDailyNUptake</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>10</FixedValue>
       <Units>kgN/ha</Units>
     </Constant>
@@ -2189,6 +2795,7 @@ No effect of soil water content on root growth is currently captured in the mode
       <XYPairs>
         <Name>XYPairs</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <X>
           <double>0</double>
           <double>0.5</double>
@@ -2201,6 +2808,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Y>
       </XYPairs>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <XProperty>[Root].RWC</XProperty>
     </LinearInterpolationFunction>
     <BiomassRemoval>
@@ -2208,6 +2816,7 @@ No effect of soil water content on root growth is currently captured in the mode
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.05</FractionLiveToResidue>
@@ -2216,6 +2825,7 @@ No effect of soil water content on root growth is currently captured in the mode
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.05</FractionLiveToResidue>
@@ -2224,6 +2834,7 @@ No effect of soil water content on root growth is currently captured in the mode
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.05</FractionLiveToResidue>
@@ -2232,128 +2843,229 @@ No effect of soil water content on root growth is currently captured in the mode
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.05</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
     </BiomassRemoval>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <Memo>
-          <Name>Description</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
-]]></MemoText>
-        </Memo>
-        <PhaseLookupValue>
-          <Name>AllPhases</Name>
-          <DivideFunction>
-            <Name>RootFraction</Name>
-            <MultiplyFunction>
-              <Name>Numerator</Name>
-              <VariableReference>
-                <Name>CurrentSR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[ShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>CurrentTR</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[TaprootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>Denominator</Name>
-              <AddFunction>
-                <Name>SRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetSRs</Name>
-                  <VariableReference>
-                    <Name>TargetSR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetSR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <AddFunction>
-                <Name>TRs</Name>
-                <MultiplyFunction>
-                  <Name>TargetTRs</Name>
-                  <VariableReference>
-                    <Name>TargetTR1</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>TargetTR2</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
-                  </VariableReference>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                </MultiplyFunction>
-                <VariableReference>
-                  <Name>CurrentTR</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[TaprootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AddFunction>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </MultiplyFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </DivideFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>DMConversionEfficiency</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>RemobilisationCost</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <FixedValue>0.4</FixedValue>
     </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>Description</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
+]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>AllPhases</Name>
+              <DivideFunction>
+                <Name>RootFraction</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentTR</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                    <VariableName>[TaprootRootRatio].Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>TRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetTRs</Name>
+                      <VariableReference>
+                        <Name>TargetTR1</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetTR2</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Enabled>true</Enabled>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
+                      </VariableReference>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentTR</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Enabled>true</Enabled>
+                      <VariableName>[TaprootRootRatio].Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Enabled>true</Enabled>
+                  </AddFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                </MultiplyFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+              </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <Start>Emergence</Start>
+              <End>Ripening</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <FixedValue>1</FixedValue>
+          <Units>g/g</Units>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </Root>
   <CompositeBiomass>
     <Name>AboveGround</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <DMDOfStructural>0.6</DMDOfStructural>
     <Propertys>
       <string>[Leaf].Live</string>
@@ -2367,6 +3079,7 @@ No effect of soil water content on root growth is currently captured in the mode
   <CompositeBiomass>
     <Name>AboveGroundLive</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <DMDOfStructural>0.6</DMDOfStructural>
     <Propertys>
       <string>[Leaf].Live</string>
@@ -2377,6 +3090,7 @@ No effect of soil water content on root growth is currently captured in the mode
   <CompositeBiomass>
     <Name>BelowGround</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <DMDOfStructural>0.6</DMDOfStructural>
     <Propertys>
       <string>[Root].Live</string>
@@ -2388,6 +3102,7 @@ No effect of soil water content on root growth is currently captured in the mode
   <CompositeBiomass>
     <Name>BelowGroundLive</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <DMDOfStructural>0.6</DMDOfStructural>
     <Propertys>
       <string>[Root].Live</string>
@@ -2397,6 +3112,7 @@ No effect of soil water content on root growth is currently captured in the mode
   <CompositeBiomass>
     <Name>Total</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <DMDOfStructural>0.6</DMDOfStructural>
     <Propertys>
       <string>[Leaf].Live</string>
@@ -2416,19 +3132,23 @@ No effect of soil water content on root growth is currently captured in the mode
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[This represents the live biomass dry weight below ground for a specific plant (in g/plant)]]></MemoText>
     </Memo>
     <VariableReference>
       <Name>BelowGroundWt</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <VariableName>[BelowGroundLive].Wt</VariableName>
     </VariableReference>
     <VariableReference>
       <Name>Population</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <VariableName>[Plantain].Population</VariableName>
     </VariableReference>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </DivideFunction>
   <PhaseLookup>
     <Name>ShootRootRatio</Name>
@@ -2439,26 +3159,32 @@ No effect of soil water content on root growth is currently captured in the mode
         <VariableReference>
           <Name>AbogeGroundDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[AboveGroundLive].Wt</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>BelowGroundDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[BelowGroundLive].Wt</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </DivideFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Emergence</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <PhaseLookup>
     <Name>TargetShootRootRatio</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[To ensure prompt regrowth of forage plantain after a defoliation, the model will adjust the allocation of new growth following any defoliation event. This is a simplified approach to biomass allocation plasticity (e.g. [Wilson_1988]; [LevangBrilz_2002]), it assumes that the plant switches allocation of towards leaves whenever the current shoot:root ratio differs from the target value.  
 Published data for the shoot:root ratio in plantain is highly variable, with values as low as 1.0 for wild varieties and as high as 6.0 for seedlings of commercial cultivars with no water of nutrient limitations ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [CranstonEtAl_2015]; [PankokeEtAl_2015]).  The data suggests mean values to be around 1.75-2.0 for adult plants.  This value is likely to be affected by environmental conditions, with water or nutrient deficit favouring root growth, while low light conditions leading to higher allocation above ground. However, these relationships can vary considerably in different plants and there is little data for plantain, so the model current ignores the influence of environmental factors on the shoot:root partition, this should be upgraded when data becomes available.
 
@@ -2470,10 +3196,12 @@ Published data for the shoot:root ratio in plantain is highly variable, with val
       <Constant>
         <Name>TargetSR</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <FixedValue>1.75</FixedValue>
         <Units>g/g</Units>
       </Constant>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Emergence</Start>
       <End>Flowering</End>
     </PhaseLookupValue>
@@ -2484,6 +3212,7 @@ Published data for the shoot:root ratio in plantain is highly variable, with val
         <VariableReference>
           <Name>MinTargetSR</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
@@ -2493,21 +3222,25 @@ Published data for the shoot:root ratio in plantain is highly variable, with val
             <Constant>
               <Name>MaxTargetSR</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <FixedValue>2</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <VariableReference>
               <Name>MinTargetSR</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </SubtractFunction>
           <LinearInterpolationFunction>
             <Name>PhotoperiodEffect</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <X>
                 <double>11</double>
                 <double>12</double>
@@ -2526,17 +3259,22 @@ Published data for the shoot:root ratio in plantain is highly variable, with val
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <XProperty>[Phenology].Photoperiod.Value()</XProperty>
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </MultiplyFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </AddFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Flowering</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <PhaseLookup>
     <Name>StemsLeafRatio</Name>
@@ -2549,33 +3287,41 @@ Published data for the shoot:root ratio in plantain is highly variable, with val
           <VariableReference>
             <Name>StemDM</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>InflorescenceDM</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <VariableName>[Inflorescence].Live.Wt</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </AddFunction>
         <VariableReference>
           <Name>LeafDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[Leaf].Live.Wt</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </DivideFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Flowering</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <PhaseLookup>
     <Name>TargetStemsLeafRatio</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[The  plantain model defines allocation of biomass above ground following a simple approach, it attempts to keep a given proportion among the various organs.  The allocation of biomass to leaves is defined primarily by the target shoo:root ratio, but during the reproductive phase, the partition is further modified based on the ratio of stems+inflorescence to leaves. This ratio may be affected by defoliation ([AyalaEtAl_2011]; [QuijadaThesis_2015]) and is probably affected by enviromental factors too. There is not enough data to describe these interactions.  
 Published results suggest that reproductive parts represent a relatively small proportion of the biomass, about 10-25% in grazed swards, and about 40% if not grazed ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [MoorheadPigot_2009]; [AyalaEtAl_2011]).
 ]]></MemoText>
@@ -2587,6 +3333,7 @@ Published results suggest that reproductive parts represent a relatively small p
         <Constant>
           <Name>MaximumSL</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FixedValue>0.25</FixedValue>
           <Units>g/g</Units>
         </Constant>
@@ -2595,6 +3342,7 @@ Published results suggest that reproductive parts represent a relatively small p
           <XYPairs>
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <X>
               <double>11</double>
               <double>12.5</double>
@@ -2613,15 +3361,19 @@ Published results suggest that reproductive parts represent a relatively small p
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <XProperty>[Phenology].Photoperiod.Value()</XProperty>
         </LinearInterpolationFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Flowering</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <PhaseLookup>
     <Name>FlowerStemRatio</Name>
@@ -2632,26 +3384,32 @@ Published results suggest that reproductive parts represent a relatively small p
         <VariableReference>
           <Name>InflorescenceDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[Inflorescence].Live.Wt</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>StemDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[Stem].Live.Wt</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </DivideFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Flowering</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <PhaseLookup>
     <Name>TargetFlowerStemRatio</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[The allocation of biomass follows a simple approach in the plantain model.  Allocation during the reproductive phase will attempt to keep a ratio between stem and inflorescence biomass.  This ratio is probably affected by enviromental factors, but there is not data to determine how these would interact.  Because of the short period between stem elongation, flowering and seed maturity, and a relatively long reproductive phase, plantain plants will have ripe seeds as well as young stalks at the same time.  This makes quite difficult to define variation in biomass allocation to inflorescence.  Inference from published values suggest that the ratio of flower biomass to stems varies from around 0.1 to nearly 0.4 ([SchippersOlff_2000]).  
 
 ]]></MemoText>
@@ -2663,6 +3421,7 @@ Published results suggest that reproductive parts represent a relatively small p
         <Constant>
           <Name>MaximumFS</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FixedValue>0.25</FixedValue>
           <Units>g/g</Units>
         </Constant>
@@ -2671,6 +3430,7 @@ Published results suggest that reproductive parts represent a relatively small p
           <XYPairs>
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <X>
               <double>11</double>
               <double>12.75</double>
@@ -2689,15 +3449,19 @@ Published results suggest that reproductive parts represent a relatively small p
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <XProperty>[Phenology].Photoperiod.Value()</XProperty>
         </LinearInterpolationFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Flowering</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <PhaseLookup>
     <Name>TaprootRootRatio</Name>
@@ -2708,26 +3472,32 @@ Published results suggest that reproductive parts represent a relatively small p
         <VariableReference>
           <Name>TaprootDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[Taproot].Live.Wt</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>RootsDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <VariableName>[Root].Live.Wt</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </DivideFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Emergence</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <PhaseLookup>
     <Name>TargetTaprootRootRatio</Name>
     <Memo>
       <Name>Description</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <MemoText><![CDATA[The plantain model assumes that biomass is allocated so to mantain a given proportion of among the various organs (varying with phenological phase and other factors).  The ratio between taproot and root biomass is assumed to vary, increasing with the biomass below ground per plant, approaching a maximum target.  This is a simple approach and can describe the general behaviour of plantain plants, it may be upgraded if deemed necessary when more data becomes available.  
 ]]></MemoText>
     </Memo>
@@ -2738,6 +3508,7 @@ Published results suggest that reproductive parts represent a relatively small p
         <Constant>
           <Name>MaximumTR</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
@@ -2746,6 +3517,7 @@ Published results suggest that reproductive parts represent a relatively small p
           <XYPairs>
             <Name>XYPairs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <X>
               <double>0</double>
               <double>0.025</double>
@@ -2766,15 +3538,19 @@ Published results suggest that reproductive parts represent a relatively small p
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <XProperty>[PerPlantBelowGroundWt].Value()</XProperty>
         </LinearInterpolationFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </MultiplyFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Start>Emergence</Start>
       <End>Ripening</End>
     </PhaseLookupValue>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </PhaseLookup>
   <CultivarFolder>
     <Name>Cultivars</Name>
@@ -2783,27 +3559,33 @@ Published results suggest that reproductive parts represent a relatively small p
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[*Tonic* is the basic forage plantain cultivar. It was develop later than *Lancelot* and was developed from a northern Portugal germplasm. It has very erect and large leaves, produce less tillers than *Lancelot* and perhaps less seed heads.  *Tonic* cultivar is heat tolerante and also witnter active, typically with higher yields when compared to *Lancelot*.]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Command />
+      <Enabled>true</Enabled>
+      <Command>
+      </Command>
     </Cultivar>
     <Cultivar>
       <Name>Lancelot</Name>
       <Memo>
         <Name>Description</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
         <MemoText><![CDATA[*Lancelot* is the first forage plantain cultivar released, it was selected from New Zealand pastures. It has a semi-erect growth habit, medium to large leaves, and produce many tillers.  This cultivar has good heat tolerance but growth is low over winter.  *Lancelot*  has been used for many years as grazing forage, in monoculture or in mixed swards, in several countries worldwide.  However, currently the most common cultivar is *Tonic*.  ]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <Command>[Leaf].Photosynthesis.FT.XYPairs.X = 5, 10, 15, 21, 27, 35</Command>
       <Command>[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.04, 0.3, 1.0, 1.0, 0.0</Command>
       <Command>[Leaf].HeightFunction.XYPairs.X = 10, 100, 500</Command>
       <Command>[Leaf].HeightFunction.XYPairs.Y = 100, 300, 400</Command>
     </Cultivar>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </CultivarFolder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
   <CropType>Plantain</CropType>
-  <SowingDate>0001-01-01T00:00:00</SowingDate>
 </Plant>

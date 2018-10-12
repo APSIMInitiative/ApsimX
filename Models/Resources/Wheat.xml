@@ -1,10 +1,9 @@
-<Plant Version="36">
+<Plant Version="45">
   <Name>Wheat</Name>
   <Memo>
     <Name>TitlePage</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText>
-      <![CDATA[
+    <MemoText><![CDATA[
 # The APSIM Wheat Model
 
 _Brown, H.E., Huth, N.I. and Holzworth, D.P._
@@ -17,8 +16,7 @@ The model consists of:
 * a structure model to simulate plant morphology  
 * a collection of organs to simulate the various plant parts  
 * an arbitrator to allocate resources (N, biomass) to the various plant organs  
-]]>
-    </MemoText>
+]]></MemoText>
   </Memo>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
@@ -37,8 +35,7 @@ The model consists of:
     <Memo>
       <Name>Memo</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[Wheat exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.
+      <MemoText><![CDATA[Wheat exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.
 Temperature effects development increasing development rates and decreasing phase durations as temperatures increase.  Theset affects are captured by thermal time, .  However, wheat also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  
 
 We draw on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress toward this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    
@@ -47,8 +44,7 @@ Final Leaf Number (FLN) is modeled as the sum of three numbers:
 
 FLN = MinLeafNumber + VernalLeaves + PhotoLeaves
 
-Where MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.]]>
-      </MemoText>
+Where MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.]]></MemoText>
     </Memo>
     <AirTemperatureFunction>
       <Name>ThermalTime</Name>
@@ -256,10 +252,8 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
-]]>
-        </MemoText>
+        <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
+]]></MemoText>
       </Memo>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>7</FixedValue>
@@ -372,7 +366,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
     <GenericPhase>
       <Name>EarlyReproductive</Name>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -432,7 +426,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>120</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -448,7 +442,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>545</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -464,7 +458,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>35</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -480,7 +474,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <FixedValue>300</FixedValue>
       </Constant>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>Progression</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
@@ -508,11 +502,9 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
       <Memo>
         <Name>memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 A function is used to provide flowering date as days after sowing(DAS).
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <Constant>
         <Name>PreEventValue</Name>
@@ -533,11 +525,9 @@ A function is used to provide flowering date as days after sowing(DAS).
       <Memo>
         <Name>memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
+        <MemoText><![CDATA[
 A function is used to provide flowering date as days after sowing(DAS).
-]]>
-        </MemoText>
+]]></MemoText>
       </Memo>
       <Constant>
         <Name>PreEventValue</Name>
@@ -558,10 +548,8 @@ A function is used to provide flowering date as days after sowing(DAS).
       <Memo>
         <Name>memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText>
-          <![CDATA[
-A function is used to provide maturity date as days after sowing(DAS).]]>
-        </MemoText>
+        <MemoText><![CDATA[
+A function is used to provide maturity date as days after sowing(DAS).]]></MemoText>
       </Memo>
       <Constant>
         <Name>PreEventValue</Name>
@@ -1295,7 +1283,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-	<IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <GrowthRespiration>0</GrowthRespiration>
     <MaintenanceRespiration>0</MaintenanceRespiration>
     <RipeStage>Ripe</RipeStage>
@@ -1340,11 +1328,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Name>SenescenceRate</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.005</FixedValue>
-    </Constant>
-    <Constant>
-      <Name>StructuralFraction</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>MaximumRootDepth</Name>
@@ -1535,65 +1518,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[SoilWaterScale]</XProperty>
     </LinearInterpolationFunction>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <PhaseLookupValue>
-          <Name>PreEmergence</Name>
-          <Constant>
-            <Name>Value</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Germination</Start>
-          <End>Emergence</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>PreFlowering</Name>
-          <LinearInterpolationFunction>
-            <Name>AgeFactor</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>3</double>
-                <double>4</double>
-              </X>
-              <Y>
-                <double>0.5</double>
-                <double>0.2</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>Flowering</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>PostFlowering</Name>
-          <Constant>
-            <Name>Value</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.2</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Flowering</Start>
-          <End>EndGrainFill</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>CarbonConcentration</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-	<Constant>
+    <Constant>
       <Name>MaintenanceRespirationFunction</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
@@ -1604,6 +1534,131 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     <ZoneNamesToGrowRootsIn />
     <ZoneRootDepths />
     <ZoneInitialDM />
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>PreEmergence</Name>
+              <Constant>
+                <Name>Value</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Germination</Start>
+              <End>Emergence</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>PreFlowering</Name>
+              <LinearInterpolationFunction>
+                <Name>AgeFactor</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>3</double>
+                    <double>4</double>
+                  </X>
+                  <Y>
+                    <double>0.5</double>
+                    <double>0.2</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <XProperty>[Phenology].Stage</XProperty>
+              </LinearInterpolationFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>PostFlowering</Name>
+              <Constant>
+                <Name>Value</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.2</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Flowering</Start>
+              <End>EndGrainFill</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Root].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Root].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Root].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Root].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Root].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Root].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Root].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </Root>
   <Leaf>
     <Name>Leaf</Name>
@@ -1663,22 +1718,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <Area>0</Area>
       <MaintenanceRespiration>0</MaintenanceRespiration>
     </LeafCohort>
-    <ArrayBiomass>
-      <Name>CohortArrayLive</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].Live</string>
-      </Propertys>
-      <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-    </ArrayBiomass>
-    <ArrayBiomass>
-      <Name>CohortArrayDead</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Propertys>
-        <string>[Leaf].Dead</string>
-      </Propertys>
-      <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-    </ArrayBiomass>
     <LeafCohortParameters>
       <Name>CohortParameters</Name>
       <Constant>
@@ -2161,10 +2200,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText>
-              <![CDATA[1% per degree day means it takes one phyllochron for a shaded leaf to fully sceness
-]]>
-            </MemoText>
+            <MemoText><![CDATA[1% per degree day means it takes one phyllochron for a shaded leaf to fully sceness
+]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
@@ -2445,35 +2482,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
   </Leaf>
   <GenericOrgan>
     <Name>Spike</Name>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <LinearInterpolationFunction>
-        <Name>PartitionFraction</Name>
-        <XYPairs>
-          <Name>XYPairs</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <X>
-            <double>3</double>
-            <double>4</double>
-            <double>4.7</double>
-            <double>5</double>
-            <double>7</double>
-            <double>7.000001</double>
-          </X>
-          <Y>
-            <double>0</double>
-            <double>0</double>
-            <double>0.01</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0</double>
-          </Y>
-        </XYPairs>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Phenology].Stage</XProperty>
-      </LinearInterpolationFunction>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <Constant>
       <Name>NReallocationFactor</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2532,32 +2540,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Phenology].Stage</XProperty>
     </LinearInterpolationFunction>
-    <PhaseLookup>
-      <Name>StructuralFraction</Name>
-      <PhaseLookupValue>
-        <Name>VegetativeGrowth</Name>
-        <Constant>
-          <Name>StructuralFractionEG</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.3</FixedValue>
-        </Constant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Start>Emergence</Start>
-        <End>StartGrainFill</End>
-      </PhaseLookupValue>
-      <PhaseLookupValue>
-        <Name>ReproductiveGrowth</Name>
-        <Constant>
-          <Name>StructuralFractionGF</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Start>StartGrainFill</Start>
-        <End>EndGrainFill</End>
-      </PhaseLookupValue>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PhaseLookup>
     <Constant>
       <Name>MinimumNConc</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2731,36 +2713,132 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-	<IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <LinearInterpolationFunction>
+            <Name>PartitionFraction</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>3</double>
+                <double>4</double>
+                <double>4.7</double>
+                <double>5</double>
+                <double>7</double>
+                <double>7.000001</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>0.01</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Phenology].Stage</XProperty>
+          </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <PhaseLookup>
+          <Name>StructuralFraction</Name>
+          <PhaseLookupValue>
+            <Name>VegetativeGrowth</Name>
+            <Constant>
+              <Name>StructuralFractionEG</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.3</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>Emergence</Start>
+            <End>StartGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>ReproductiveGrowth</Name>
+            <Constant>
+              <Name>StructuralFractionGF</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>StartGrainFill</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PhaseLookup>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Spike].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Spike].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Spike].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Spike].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Spike].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Spike].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Spike].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Spike].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
-    <PhaseLookup>
-      <Name>StructuralFraction</Name>
-      <PhaseLookupValue>
-        <Name>VegetativeGrowth</Name>
-        <Constant>
-          <Name>Fraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.3</FixedValue>
-        </Constant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Start>Sowing</Start>
-        <End>StartGrainFill</End>
-      </PhaseLookupValue>
-      <PhaseLookupValue>
-        <Name>ReproductiveGrowth</Name>
-        <Constant>
-          <Name>Fraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.01</FixedValue>
-        </Constant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Start>StartGrainFill</Start>
-        <End>HarvestRipe</End>
-      </PhaseLookupValue>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PhaseLookup>
     <LinearInterpolationFunction>
       <Name>SenescenceRate</Name>
       <XYPairs>
@@ -2877,53 +2955,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </PhaseLookupValue>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
-    <PartitionFractionDemandFunction>
-      <Name>DMDemandFunction</Name>
-      <PhaseLookup>
-        <Name>PartitionFraction</Name>
-        <Memo>
-          <Name>memo</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[]]></MemoText>
-        </Memo>
-        <PhaseLookupValue>
-          <Name>PreStemElongation</Name>
-          <Constant>
-            <Name>StemFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.2</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>Emergence</Start>
-          <End>TerminalSpikelet</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>StemElongation</Name>
-          <Constant>
-            <Name>StemFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.7</FixedValue>
-            <Units>0</Units>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>TerminalSpikelet</Start>
-          <End>StartGrainFill</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
-          <Name>EarEmergence</Name>
-          <Constant>
-            <Name>StemFraction</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>StartGrainFill</Start>
-          <End>HarvestRipe</End>
-        </PhaseLookupValue>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </PhaseLookup>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </PartitionFractionDemandFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -3048,7 +3079,147 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.4</FixedValue>
     </Constant>
-	<IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <BiomassDemand name="DMDemands">
+      <Name>DMDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <PhaseLookupValue>
+              <Name>PreStemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.2</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.7</FixedValue>
+                <Units>0</Units>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>TerminalSpikelet</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>EarEmergence</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartGrainFill</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
+        <PhaseLookup>
+          <Name>StructuralFraction</Name>
+          <PhaseLookupValue>
+            <Name>VegetativeGrowth</Name>
+            <Constant>
+              <Name>Fraction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.3</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>Sowing</Start>
+            <End>StartGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>ReproductiveGrowth</Name>
+            <Constant>
+              <Name>Fraction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.01</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>StartGrainFill</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PhaseLookup>
+      </MultiplyFunction>
+      <Constant>
+        <Name>Metabolic</Name>
+        <FixedValue>0.0</FixedValue>
+      </Constant>
+      <StorageDMDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <SubtractFunction name="StorageFraction">
+          <Name>StorageFraction</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1.0</FixedValue>
+          </Constant>
+          <VariableReference>
+            <Name>StructuralFraction</Name>
+            <VariableName>[Stem].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+      </StorageDMDemandFunction>
+    </BiomassDemand>
+    <BiomassDemand name="NDemands">
+      <Name>NDemands</Name>
+      <MultiplyFunction name="Structural">
+        <Name>Structural</Name>
+        <VariableReference>
+          <Name>MinNconc</Name>
+          <VariableName>[Stem].minimumNconc.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <MultiplyFunction name="Metabolic">
+        <Name>Metabolic</Name>
+        <SubtractFunction name="MetabolicNconc">
+          <Name>MetabolicNconc</Name>
+          <VariableReference>
+            <Name>CritNconc</Name>
+            <VariableName>[Stem].criticalNConc.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>MinNconc</Name>
+            <VariableName>[Stem].minimumNconc.Value()</VariableName>
+          </VariableReference>
+        </SubtractFunction>
+        <VariableReference>
+          <Name>PotentialDMAllocation</Name>
+          <VariableName>[Stem].potentialDMAllocation.Structural</VariableName>
+        </VariableReference>
+      </MultiplyFunction>
+      <StorageNDemandFunction name="Storage">
+        <Name>Storage</Name>
+        <VariableReference>
+          <Name>NitrogenDemandSwitch</Name>
+          <VariableName>[Stem].nitrogenDemandSwitch.Value()</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>MaxNconc</Name>
+          <VariableName>[Stem].maximumNconc.Value()</VariableName>
+        </VariableReference>
+      </StorageNDemandFunction>
+    </BiomassDemand>
   </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
@@ -3135,11 +3306,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
     <Memo>
       <Name>memo</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText>
-        <![CDATA[
+      <MemoText><![CDATA[
 The Ear composite biomass object includes the Live and dead pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]>
-      </MemoText>
+]]></MemoText>
     </Memo>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
@@ -3237,10 +3406,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Memo>
           <Name>Memo</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText>
-            <![CDATA[This is a spring wheat with a high grain number and later tillering
-]]>
-          </MemoText>
+          <MemoText><![CDATA[This is a spring wheat with a high grain number and later tillering
+]]></MemoText>
         </Memo>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command>[Phenology].MinimumLeafNumber.FixedValue = 8.5</Command>
@@ -4219,7 +4386,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Grain].MaximumNConc.FixedValue = 0.026</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
         <Command>[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2</Command>
-        <Command>[Stem].StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6</Command>
+        <Command>[Stem].DMDemands.Structural.StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6</Command>
         <Command>[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4323,7 +4490,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
         <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
         <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-        <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>        
+        <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
       </Cultivar>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>

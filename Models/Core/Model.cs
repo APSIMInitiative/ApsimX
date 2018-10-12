@@ -78,7 +78,6 @@ namespace Models.Core
         [XmlElement(typeof(Operations))]
         [XmlElement(typeof(Models.Report.Report))]
         [XmlElement(typeof(Summary))]
-        [XmlElement(typeof(NullSummary))]
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(Weather))]
         [XmlElement(typeof(ControlledEnvironment))]
@@ -135,6 +134,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.PrioritythenRelativeAllocation))]
         [XmlElement(typeof(Models.PMF.PriorityAllocation))]
         [XmlElement(typeof(Models.PMF.Biomass))]
+        [XmlElement(typeof(Models.PMF.BiomassDemand))]
         [XmlElement(typeof(Models.PMF.CompositeBiomass))]
         [XmlElement(typeof(Models.PMF.ArrayBiomass))]
         [XmlElement(typeof(Models.PMF.Organs.GenericOrgan))]
@@ -159,7 +159,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.NodeNumberPhase))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
-        [XmlElement(typeof(Models.PMF.Phen.BuddingPhase))]
         [XmlElement(typeof(Models.Functions.ArrayFunction))]
         [XmlElement(typeof(Models.Functions.AccumulateFunction))]
         [XmlElement(typeof(Models.Functions.AccumulateByDate))]
@@ -177,7 +176,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.Functions.ExpressionFunction))]
         [XmlElement(typeof(Models.Functions.ExternalVariable))]
         [XmlElement(typeof(Models.Functions.HoldFunction))]
-        [XmlElement(typeof(Models.Functions.InPhaseTtFunction))]
         [XmlElement(typeof(Models.Functions.LessThanFunction))]
         [XmlElement(typeof(Models.Functions.LinearInterpolationFunction))]
         [XmlElement(typeof(Models.Functions.BoundFunction))]
@@ -218,12 +216,15 @@ namespace Models.Core
         [XmlElement(typeof(Models.Functions.DemandFunctions.BerryFillingRateFunction))]
         [XmlElement(typeof(Models.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.Functions.SupplyFunctions.RUEModel))]
+        [XmlElement(typeof(Models.Functions.DemandFunctions.StorageDMDemandFunction))]
+        [XmlElement(typeof(Models.Functions.DemandFunctions.StorageNDemandFunction))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
         [XmlElement(typeof(Models.PMF.CultivarFolder))]
         [XmlElement(typeof(Models.PMF.OrganBiomassRemovalType))]
         [XmlElement(typeof(Models.PMF.Library.BiomassRemoval))]
         [XmlElement(typeof(Models.PMF.Struct.Structure))]
+        [XmlElement(typeof(Models.PMF.Struct.BudNumberFunction))]
         [XmlElement(typeof(Models.PMF.Struct.HeightFunction))]
         [XmlElement(typeof(Models.PMF.Struct.ApexStandard))]
         [XmlElement(typeof(Models.PMF.Struct.ApexTiller))]
@@ -385,5 +386,10 @@ namespace Models.Core
                 return "Version " + version + ", built " + buildDate;
             }
         }
+
+        /// <summary>
+        /// Controls whether the model can be modified.
+        /// </summary>
+        public bool ReadOnly { get; set; }
     }
 }

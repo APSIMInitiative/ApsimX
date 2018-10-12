@@ -115,7 +115,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnEnable(object sender, EventArgs args)
         {
-            ToggleSims(view.SelectedItems, true);
+            try
+            {
+                ToggleSims(view.SelectedItems, true);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -125,7 +132,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnDisable(object sender, EventArgs args)
         {
-            ToggleSims(view.SelectedItems, false);
+            try
+            {
+                ToggleSims(view.SelectedItems, false);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -277,7 +291,7 @@
             {
                 List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
                 int i = 0;
-                foreach (List<FactorValue> factors in model.AllCombinations())
+                foreach (List<FactorValue> factors in allSims)
                 {
                     if (!getAllData && i > maxSimsToDisplay)
                         break;
