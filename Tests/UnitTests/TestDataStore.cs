@@ -84,11 +84,14 @@
         {
             using (DataStore storage = new DataStore(fileName))
             {
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
+                simsAndFolders.Add("Sim2", "Folder");
                 object[] arguments = new object[]
                 {
-                    new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    simsAndFolders,
                     new string[] { "Sim1", "Sim2" }
-            };
+                };
 
                 Utilities.CallEvent(storage, "RunCommencing", arguments);
 
@@ -114,9 +117,13 @@
         {
             using (DataStore storage = new DataStore(fileName))
             {
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
+                simsAndFolders.Add("Sim2", "Folder");
+
                 object[] arguments = new object[]
                 {
-                    new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    simsAndFolders,
                     new string[] { "Sim1" }
                 };
             
@@ -145,9 +152,11 @@
         {
             using (DataStore storage = new DataStore(fileName))
             {
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
                 object[] arguments = new object[]
                 {
-                    new string[] { "Sim1" }, // knownSimulationNames
+                    simsAndFolders,
                     new string[] { "Sim1" }
                 };
 
@@ -189,9 +198,11 @@
 
             using (DataStore storage = new DataStore(fileName))
             {
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
                 object[] arguments = new object[]
                 {
-                    new string[] { "Sim1" }, // knownSimulationNames
+                    simsAndFolders,
                     new string[] { "Sim1" }
                 };
 
@@ -220,7 +231,12 @@
                 string[] knownSimulationNames = new string[] { "Sim1", "Sim2", "Sim3" };
                 string[] simulationNamesBeingRun = new string[] { "Sim1", "Sim2", "Sim3" };
 
-                Utilities.CallEvent(storage, "RunCommencing", new object[] { knownSimulationNames, simulationNamesBeingRun });
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
+                simsAndFolders.Add("Sim2", "Folder");
+                simsAndFolders.Add("Sim3", "Folder");
+
+                Utilities.CallEvent(storage, "RunCommencing", new object[] { simsAndFolders, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null }, new object[] { 2 });
                 storage.WriteRow("Sim3", "Report1", columnNames1, new string[] { null }, new object[] { 3 });
@@ -231,8 +247,10 @@
                 // Now do it again this time deleting sim2 and sim3 and adding sim4
                 string[] knownSimulationNames = new string[] { "Sim1", "Sim4" };
                 string[] simulationNamesBeingRun = new string[] { "Sim1", "Sim2", "Sim3" };
-
-                Utilities.CallEvent(storage, "RunCommencing", new object[] { knownSimulationNames, simulationNamesBeingRun });
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
+                simsAndFolders.Add("Sim4", "Folder");
+                Utilities.CallEvent(storage, "RunCommencing", new object[] { simsAndFolders, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 5 });
                 storage.WriteRow("Sim4", "Report1", columnNames1, new string[] { null }, new object[] { 4 });
                 Utilities.CallEvent(storage, "EndRun");
@@ -250,12 +268,15 @@
         {
             string[] knownSimulationNames = new string[] { "Sim1" };
             string[] simulationNamesBeingRun = new string[] { "Sim1" };
+            Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+            simsAndFolders.Add("Sim1", "Folder");
+
             using (DataStore storage = new DataStore(fileName))
             {
                 string[] oldColumnNames = new string[] { "OldCol" };
             
                 // Create a table with a column 'OldCol'
-                Utilities.CallEvent(storage, "RunCommencing", new object[] { knownSimulationNames, simulationNamesBeingRun });
+                Utilities.CallEvent(storage, "RunCommencing", new object[] { simsAndFolders, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", oldColumnNames, new string[] { null }, new object[] { 1 });
                 storage.WriteRow("Sim1", "Report1", oldColumnNames, new string[] { null }, new object[] { 2 });
                 Utilities.CallEvent(storage, "EndRun");
@@ -265,7 +286,7 @@
                 string[] newColumnNames = new string[] { "NewCol" };
                 // Now do it again this time only to column 'NewCol'
 
-                Utilities.CallEvent(storage, "RunCommencing", new object[] { knownSimulationNames, simulationNamesBeingRun });
+                Utilities.CallEvent(storage, "RunCommencing", new object[] { simsAndFolders, simulationNamesBeingRun });
                 storage.WriteRow("Sim1", "Report1", newColumnNames, new string[] { null }, new object[] { 3 });
                 storage.WriteRow("Sim1", "Report1", newColumnNames, new string[] { null }, new object[] { 4 });
                 Utilities.CallEvent(storage, "EndRun");
@@ -540,7 +561,10 @@
                 // Write some new current data.
                 // Create a database with 3 sims.
                 string[] simulationNamesBeingRun = new string[] { "Sim1" };
-                object[] arguments = new object[] { new string[] { "Sim1", "Sim2" }, simulationNamesBeingRun };
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
+                simsAndFolders.Add("Sim2", "Folder");
+                object[] arguments = new object[] { simsAndFolders, simulationNamesBeingRun };
                 Utilities.CallEvent(storage, "RunCommencing", arguments);
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 3), 100.0 });
@@ -585,7 +609,10 @@
                 // with these 2 new rows.
                 string[] simulationNames = new string[] { "Sim1", "Sim2" };
                 string[] simulationNamesBeingRun = new string[] { "Sim2" };
-                Utilities.CallEvent(storage, "RunCommencing", new object[] { simulationNames, simulationNamesBeingRun });
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
+                simsAndFolders.Add("Sim2", "Folder");
+                Utilities.CallEvent(storage, "RunCommencing", new object[] { simsAndFolders, simulationNamesBeingRun });
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 3.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 4.0 });
@@ -619,9 +646,11 @@
 
                 // Write new rows for sim2. Should get rid of old sim2 data and replace 
                 // with these 2 new rows.
-                string[] simulationNames = new string[] { "Sim1", "Sim2" };
+                Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+                simsAndFolders.Add("Sim1", "Folder");
+                simsAndFolders.Add("Sim2", "Folder");
                 string[] simulationNamesBeingRun = new string[] { "Sim2" };
-                Utilities.CallEvent(storage, "RunCommencing", new object[] { simulationNames, simulationNamesBeingRun });
+                Utilities.CallEvent(storage, "RunCommencing", new object[] { simsAndFolders, simulationNamesBeingRun });
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 3.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 4.0 });
@@ -668,9 +697,12 @@
         private static void CreateTable(DataStore storage)
         {
             // Create a database with 3 sims.
+            Dictionary<string, string> simsAndFolders = new Dictionary<string, string>();
+            simsAndFolders.Add("Sim1", "Folder");
+            simsAndFolders.Add("Sim2", "Folder");
             object[] arguments = new object[]
             {
-                    new string[] { "Sim1", "Sim2" }, // knownSimulationNames
+                    simsAndFolders,
                     new string[] { "Sim1", "Sim2" }, // simulation names being run
             };
 
