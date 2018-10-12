@@ -187,8 +187,8 @@ namespace UserInterface.Views
             while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
-            wb.Document.BackColor = System.Drawing.Color.FromArgb(34, 34, 34);
-            wb.Document.ForeColor = System.Drawing.Color.FromArgb(255, 255, 255);
+            BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
+            ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
         }
 
         public System.Drawing.Color BackgroundColour
@@ -846,7 +846,8 @@ namespace UserInterface.Views
 
             if (browser is TWWebBrowserIE)
             {
-                keyPressObject = (browser as TWWebBrowserIE).wb.Document.ActiveElement;
+                TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
+                keyPressObject = ieBrowser.wb.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
             }

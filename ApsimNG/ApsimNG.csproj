@@ -116,7 +116,6 @@
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StockView.glade" />
-    <EmbeddedResource Include="Resources\DarkTheme\gtkrc" />
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <EmbeddedResource Include="Resources\dark.gtkrc" />
