@@ -1016,7 +1016,8 @@
         /// <param name="e"></param>
         private void OnToggleTheme(object sender, EventArgs e)
         {
-            view.SetTheme(toggle: true);
+            Utility.Configuration.Settings.DarkTheme = !Utility.Configuration.Settings.DarkTheme;
+            view.RefreshTheme();
         }
 
         /// <summary>

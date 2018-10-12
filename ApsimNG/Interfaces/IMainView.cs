@@ -171,7 +171,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Toggles between the default and dark GTK themes.
         /// </summary>
-        void SetTheme(bool toggle);
+        void RefreshTheme();
 
         /// <summary>
         /// Gets the text from a clipboard.

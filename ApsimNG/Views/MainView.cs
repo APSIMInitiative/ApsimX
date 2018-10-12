@@ -125,8 +125,6 @@
         {
             MasterView = this;
             numberOfButtons = 0;
-            if ((uint)Environment.OSVersion.Platform <= 3)
-                SetTheme(toggle: false);
             baseFont = Rc.GetStyle(new Label()).FontDescription.Copy();
             defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
             FontSize = Utility.Configuration.Settings.BaseFontSize;
@@ -155,7 +153,7 @@
             notebook1.SetMenuLabel(vbox1, new Label(indexTabText));
             notebook2.SetMenuLabel(vbox2, new Label(indexTabText));
             hbox1.HeightRequest = 20;
-            
+
 
             TextTag tag = new TextTag("error");
             tag.Foreground = "red";
@@ -178,6 +176,8 @@
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
+            if ((uint)Environment.OSVersion.Platform <= 3)
+                RefreshTheme();
         }
 
         /// <summary>
@@ -486,29 +486,7 @@
             if (tabPage >= 0 && notebook != null)
                 notebook.CurrentPage = tabPage;
         }
-
-        /// <summary>
-        /// Toggles between the default and dark GTK themes.
-        /// </summary>
-        public void SetTheme(bool toggle)
-        {
-            if (toggle)
-                Utility.Configuration.Settings.DarkTheme = !Utility.Configuration.Settings.DarkTheme;
-            if (Utility.Configuration.Settings.DarkTheme)
-            {
-                Stream gtkrcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.DarkTheme.gtkrc");
-                if (gtkrcStream != null)
-                {
-                    StreamReader reader = new StreamReader(gtkrcStream);
-                    Gtk.Rc.ParseString(reader.ReadToEnd());
-                }
-            }
-            else
-            {
-                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
-            }
-        }
-
+        
         /// <summary>Gets or set the main window position.</summary>
         public Point WindowLocation
         {
@@ -699,6 +677,23 @@
         public new void ShowError(Exception err)
         {
             OnError?.Invoke(this, new ErrorArgs { Error = err });
+        }
+
+        /// <summary>
+        /// Sets the Gtk theme based on the user's previous choice.
+        /// </summary>
+        public void RefreshTheme()
+        {
+            if (Utility.Configuration.Settings.DarkTheme)
+            {
+                using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
+                {
+                    using (StreamReader darkTheme = new StreamReader(rcStream))
+                        Rc.ParseString(darkTheme.ReadToEnd());
+                }
+            }
+            else
+                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
         }
 
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
