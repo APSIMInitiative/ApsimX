@@ -32,7 +32,7 @@ The model consists of:
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
-        <StartStageName>Emergence</StartStageName>
+        <StartStageName>Germination</StartStageName>
         <EndStageName>Old</EndStageName>
         <FractionRemovedOnCut>0</FractionRemovedOnCut>
         <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
@@ -49,25 +49,6 @@ The model consists of:
       </PhotoperiodFunction>
       <Phenology>
         <Name>Phenology</Name>
-        <StageBasedInterpolation>
-          <Name>StageCode</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <Stages>
-            <string>Emergence</string>
-            <string>EndJuvenile</string>
-            <string>Maturity</string>
-            <string>Old</string>
-          </Stages>
-          <Codes>
-            <double>1</double>
-            <double>2</double>
-            <double>3</double>
-            <double>4</double>
-          </Codes>
-          <Proportional>true</Proportional>
-        </StageBasedInterpolation>
         <Constant>
           <Name>ThermalTime</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -98,90 +79,51 @@ The model consists of:
           <ShootLag>7</ShootLag>
           <ShootRate>0</ShootRate>
           <Start>Germination</Start>
-          <End>Emergence</End>
+          <End>StartVegetative</End>
           <TTForTimeStep>0</TTForTimeStep>
         </EmergingPhase>
+        <PhotoperiodPhase>
+          <Name>VegetativePhase</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <CricialPhotoperiod>13</CricialPhotoperiod>
+          <PPDirection>Increasing</PPDirection>
+          <Start>StartVegetative</Start>
+          <End>StartReproductive</End>
+        </PhotoperiodPhase>
         <GenericPhase>
-          <Name>Juvenile</Name>
+          <Name>ReproductivePhase</Name>
+          <Constant>
+            <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <FixedValue>120</FixedValue>
+          </Constant>
           <Constant>
             <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
             <FixedValue>1</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>365</FixedValue>
+            <Units>^od</Units>
           </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <Start>Emergence</Start>
-          <End>EndJuvenile</End>
+          <Start>StartReproductive</Start>
+          <End>EndReproductive</End>
         </GenericPhase>
-        <GenericPhase>
-          <Name>Mature</Name>
-          <Constant>
-            <Name>Progression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>1</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>1825</FixedValue>
-          </Constant>
+        <GotoPhase>
+          <Name>GotoPhase</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <Start>EndJuvenile</Start>
-          <End>Maturity</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>Declining</Name>
-          <Constant>
-            <Name>Progression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>1</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>27010</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <Start>Maturity</Start>
+          <Start>EndReproductive</Start>
           <End>Old</End>
-        </GenericPhase>
-        <EndPhase>
-          <Name>Old</Name>
-          <Constant>
-            <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>1</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <Start>Old</Start>
-          <End>Unused</End>
-        </EndPhase>
+          <PhaseNameToGoto>VegetativePhase</PhaseNameToGoto>
+        </GotoPhase>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
@@ -2614,7 +2556,9 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
-        <Command />
+        <Command>[Phenology].VegetativePhase.CricialPhotoperiod = 11.8</Command>
+        <Command>[Phenology].VegetativePhase.PPDirection=Decreasing</Command>
+        <Command>[Phenology].ReproductivePhase.Target.FixedValue = 60</Command>
       </Cultivar>
       <Cultivar>
         <Name>Brachiaria</Name>
@@ -3334,7 +3278,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1995-10-09</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3344,22 +3288,22 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1995-12-01</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1996-01-30</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1996-02-28</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1996-11-26</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3369,12 +3313,12 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1997-01-14</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1997-03-04</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3384,12 +3328,12 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1997-11-17</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1998-04-07</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3399,17 +3343,17 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1998-12-17</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1999-02-16</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>1999-06-02</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
@@ -3419,12 +3363,12 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               </Operation>
               <Operation>
                 <Date>1999-09-29</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
               <Operation>
                 <Date>2000-02-02</Date>
-                <Action>[CuttingManagement].Script.DoCut(50.0, 75.0);</Action>
+                <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                 <Enabled>true</Enabled>
               </Operation>
             </Operations>
@@ -3438,7 +3382,8 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
-                <string>[TropicalPasture].Phenology.StageCode.Value()</string>
+                <string>[TropicalPasture].Phenology.CurrentStageName</string>
+                <string>[TropicalPasture].Photoperiod</string>
                 <string>[TropicalPasture].Root.NSupplyUptake</string>
                 <string>[Soil].SoilWater.Eo</string>
                 <string>[Soil].SoilWater.Es</string>
@@ -3452,6 +3397,8 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
                 <string>sum([Soil].SoilWater.SWmm[10:11]) as SW170_210cm</string>
                 <string>sum([Soil].SoilWater.SWmm[12:13]) as SW210_250cm</string>
                 <string>sum([Soil].SoilWater.SWmm[2:13]) as SW10_250cm</string>
+                <string>([TropicalPasture].Leaf.Live.Wt + [TropicalPasture].Stem.Live.Wt) as LiveCuttingWt</string>
+                <string>([TropicalPasture].Leaf.Dead.Wt + [TropicalPasture].Stem.Dead.Wt) as DeadCuttingWt</string>
                 <string>[TropicalPasture].AboveGround.Wt</string>
                 <string>[TropicalPasture].AboveGroundLive.Wt</string>
                 <string>[TropicalPasture].AboveGroundDead.Wt</string>
@@ -3670,6 +3617,13 @@ namespace Models
           <Name>LAI</Name>
           <Series>
             <Name>Leaf</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <ColumnName>TropicalPasture.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -3707,6 +3661,28 @@ namespace Models
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>PP</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TropicalPasture.Photoperiod</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3752,9 +3728,9 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>TropicalPasture.AboveGroundLive.Wt</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <YFieldName>LiveCuttingWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -3796,9 +3772,9 @@ namespace Models
             <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>TropicalPasture.AboveGroundDead.Wt</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <YFieldName>DeadCuttingWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -5139,7 +5115,6 @@ namespace Models
                 <VariableNames>
                   <string>[Clock].Today</string>
                   <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
-                  <string>[TropicalPasture].Phenology.StageCode.Value()</string>
                   <string>[TropicalPasture].Photoperiod.Value()</string>
                   <string>[TropicalPasture].Root.NSupplyUptake</string>
                   <string>[Soil].SoilWater.Eo</string>
@@ -7789,7 +7764,6 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
-                <string>[TropicalPasture].Phenology.StageCode.Value()</string>
                 <string>[TropicalPasture].Root.NSupplyUptake</string>
                 <string>[Soil].SoilWater.Eo</string>
                 <string>[Soil].SoilWater.Es</string>
@@ -9344,8 +9318,8 @@ namespace Models
                   <string>[Clock].Today</string>
                   <string>[Clock].Today.Year</string>
                   <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
-                  <string>[TropicalPasture].Phenology.StageCode.Value</string>
-                  <string>[TropicalPasture].Photoperiod.Value</string>
+                  <string>[TropicalPasture].Phenology.CurrentStageName</string>
+                  <string>[TropicalPasture].Photoperiod.Value()</string>
                   <string>[TropicalPasture].Root.NUptake</string>
                   <string>[TropicalPasture].Root.NSupply.Uptake</string>
                   <string>[Soil].SoilWater.Eo</string>
@@ -11199,6 +11173,13 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
           <Name>LAI</Name>
           <Series>
             <Name>Predicted</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <ColumnName>TropicalPasture.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -11238,6 +11219,29 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted1</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorToVaryColours>Irr</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TropicalPasture.Photoperiod.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11447,29 +11451,6 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <Series>
-            <Name>Predicted1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Irr</FactorToVaryColours>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Dash</Line>
-            <LineThickness>Normal</LineThickness>
-            <Checkpoint>Current</Checkpoint>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>TropicalPasture.Age</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
@@ -11482,13 +11463,6 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
           </Axis>
           <Axis>
             <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -11545,29 +11519,6 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorToVaryColours>Irr</FactorToVaryColours>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <Checkpoint>Current</Checkpoint>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>TropicalPasture.Age</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
@@ -11580,13 +11531,6 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
           </Axis>
           <Axis>
             <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -14370,7 +14314,6 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
-              <string>[TropicalPasture].Phenology.StageCode.Value()</string>
               <string>[TropicalPasture].Root.NSupplyUptake</string>
               <string>[Soil].SoilWater.Eo</string>
               <string>[Soil].SoilWater.Es</string>
