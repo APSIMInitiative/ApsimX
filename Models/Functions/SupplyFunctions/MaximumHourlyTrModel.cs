@@ -27,10 +27,10 @@ namespace Models.Functions.SupplyFunctions
     public class MaximumHourlyTrModel : Model, IFunction
     {
         //[Input]
-        //public NewMetType MetData;
+        //public NewMetType myWeather;
         /// <summary>The weather data</summary>
         [Link]
-        IWeather MetData = null;
+        private IWeather myWeather = null;
 
         /// <summary>The Clock</summary>
         [Link]
@@ -47,29 +47,29 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>The radiation use efficiency</summary>
         [Link]
         [Description("hourlyRad use efficiency")]
-        IFunction RUE = null;
+        private IFunction RUE = null;
 
         /// <summary>The transpiration efficiency coefficient</summary>
         [Link]
         [Description("Transpiration efficiency coefficient")]
         [Units("kPa/gC/m^2/mm water")]
-        IFunction TEC = null;
+        private IFunction TEC = null;
 
         /// <summary>The CO2 impact on RUE</summary>
         [Link]
-        IFunction FCO2 = null;
+        private IFunction FCO2 = null;
 
         /// <summary>The N deficiency impact on RUE</summary>
         [Link]
-        IFunction FN = null;
+        private IFunction FN = null;
 
         /// <summary>The mean temperature impact on RUE</summary>
         [Link]
-        IFunction FT = null;
+        private IFunction FT = null;
 
         /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
-        IFunction RadnInt = null;
+        private IFunction RadnInt = null;
         //------------------------------------------------------------------------------------------------
 
         private double maxLag = 1.86;       // a, Greg=1.5
@@ -155,7 +155,7 @@ namespace Models.Functions.SupplyFunctions
             // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216
             // with corrections
 
-            latR = Math.PI / 180.0 * MetData.Latitude;      // convert latitude (degrees) to radians
+            latR = Math.PI / 180.0 * myWeather.Latitude;      // convert latitude (degrees) to radians
 
             double SolarDec = CalcSolarDeclination(myClock.Today.DayOfYear);
             double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
@@ -172,7 +172,7 @@ namespace Models.Functions.SupplyFunctions
                 {
                     double m = 0; // the number of hours after the minimum temperature occurs
                     m = hr - sunrise;
-                    tempr = (MetData.MaxT - MetData.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + MetData.MinT;
+                    tempr = (myWeather.MaxT - myWeather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + myWeather.MinT;
                 }
                 else  // night
                 {
@@ -180,8 +180,8 @@ namespace Models.Functions.SupplyFunctions
                     if (hr > sunset) n = hr - sunset;
                     if (hr < sunrise) n = (24.0 - sunset) + hr;
                     double ddy = DayL - minLag;         // time of sunset after minimum temperature occurs
-                    double tsn = (MetData.MaxT - MetData.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + MetData.MinT;
-                    tempr = MetData.MinT + (tsn - MetData.MinT) * Math.Exp(-nightCoef * n / nightL);
+                    double tsn = (myWeather.MaxT - myWeather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + myWeather.MinT;
+                    tempr = myWeather.MinT + (tsn - myWeather.MinT) * Math.Exp(-nightCoef * n / nightL);
                 }
                 hourlyTemp.Add(tempr);
             }
@@ -237,7 +237,7 @@ namespace Models.Functions.SupplyFunctions
         private void CalcVPD()
         {
             hourlyVPD = new List<double>(); // in kPa
-            for (int i = 0; i < 24; i++) hourlyVPD.Add(0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(MetData.MinT)));
+            for (int i = 0; i < 24; i++) hourlyVPD.Add(0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(myWeather.MinT)));
         }
         //------------------------------------------------------------------------------------------------
 
