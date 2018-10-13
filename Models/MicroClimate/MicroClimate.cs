@@ -316,6 +316,7 @@ namespace Models
                         totalInterception += MCZone.Canopies[j].interception[i];
                     }
                     MCZone.Canopies[j].Canopy.PotentialEP = totalPotentialEp;
+                    MCZone.Canopies[j].Canopy.ActualEP = totalPotentialEp;
                     MCZone.Canopies[j].Canopy.LightProfile = lightProfile;
                 }
         }

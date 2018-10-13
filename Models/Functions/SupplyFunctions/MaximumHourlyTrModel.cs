@@ -99,13 +99,24 @@ namespace Models.Functions.SupplyFunctions
         [Bounds(Lower = 0.01, Upper = 1000.0)]
         [Units("mm/hr")]
         public double MaxTr { get; set; } = 999;
+
+        /// <summary>Total daily assimilation in g/m2</summary>
+        public double DailyDM { get; set; }
         //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
         {
-            double radiationInterception = RadnInt.Value(arrayIndex);
+            return DailyDM;
+        }
+
+        /// <summary>Daily growth increment of total plant biomass</summary>
+        /// <returns>g dry matter/m2 soil/day</returns>
+        [EventSubscribe("DoUpdateTranspiration")]
+        private void Calculate(object sender, EventArgs e)
+        {
+            double radiationInterception = RadnInt.Value();
             if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN hourlyRad interception value supplied to RUE model");
             if (radiationInterception < 0)
@@ -123,15 +134,17 @@ namespace Models.Functions.SupplyFunctions
                 CalcTrCappedTr();
                 CalcSoilLimitedTr();
                 CalcBiomass();
-                myLeaf.PotentialEP = hourlyTr.Sum();
+                myLeaf.PotentialEP = hourlyTrCappedTr.Sum();
+                myLeaf.ActualEP = hourlyTr.Sum();
             }
             else
             {
                 hourlyDM = new List<double>();
                 for (int i = 0; i < 24; i++) hourlyDM.Add(0.0);
                 myLeaf.PotentialEP = 0;
+                myLeaf.ActualEP = 0;
+                DailyDM = 0;
             }
-            return hourlyDM.Sum();
         }
         //------------------------------------------------------------------------------------------------
 
@@ -261,14 +274,15 @@ namespace Models.Functions.SupplyFunctions
             // set hourlyTr = hourlyVPDCappedTr (hourlyTr becomes uptake)
             // change to scaling each hour until sum of hourlyTr = dailySupply
             hourlyTr = new List<double>(hourlyTrCappedTr);
-            
-            while (hourlyTr.Sum() > myRoot.TotalExtractableWater)
+            double rootWaterSupp = myRoot.CalcTotalExtractableWater();
+
+            while (hourlyTr.Sum() > rootWaterSupp)
             {
                 for (int i = 23; i >= 0; i--)
                 {
                     double sumTR = 0;
                     for (int j = 0; j < i; j++) sumTR += hourlyTr[j];
-                    double remTR = Math.Max(0.0, Math.Min(myRoot.TotalExtractableWater - sumTR, hourlyTr[i]));
+                    double remTR = Math.Max(0.0, Math.Min(rootWaterSupp - sumTR, hourlyTr[i]));
                     hourlyTr[i] = remTR;
                     if (remTR > 0) break;
                 }
@@ -296,6 +310,7 @@ namespace Models.Functions.SupplyFunctions
         {
             hourlyDM = new List<double>();
             for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
+            DailyDM = hourlyDM.Sum();
         }
         //------------------------------------------------------------------------------------------------
 

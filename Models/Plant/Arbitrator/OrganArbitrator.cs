@@ -178,7 +178,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> zones, bool doUptake = true)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             // Calculate the total water supply across all zones.
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
@@ -212,15 +212,12 @@ namespace Models.PMF
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will do pass the uptake to the soil water balance.
-            if (doUptake)
+            fraction = 1;
+            if (waterSupply > 0) fraction = Math.Max(0.0, Math.Min(1.0, WDemand / waterSupply));
+            foreach (ZoneWaterAndN Z in zones)
             {
-                fraction = 1;
-                if (waterSupply > 0) fraction = Math.Max(0.0, Math.Min(1.0, WDemand / waterSupply));
-                foreach (ZoneWaterAndN Z in zones)
-                {
-                    double[] uptake = MathUtilities.Multiply_Value(Z.Water, fraction);
-                    Plant.Root.DoWaterUptake(uptake, Z.Zone.Name);
-                }
+                double[] uptake = MathUtilities.Multiply_Value(Z.Water, fraction);
+                Plant.Root.DoWaterUptake(uptake, Z.Zone.Name);
             }
         }
 
@@ -280,7 +277,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones, bool doUptake = true)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
             if (Plant.IsEmerged)
             {
@@ -294,11 +291,8 @@ namespace Models.PMF
                     N.UptakeSupply[i] = NSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
-                if (doUptake)
-                {
-                    AllocateUptake(Organs.ToArray(), N, NArbitrator);
-                    Plant.Root.DoNitrogenUptake(zones);
-                }
+                AllocateUptake(Organs.ToArray(), N, NArbitrator);
+                Plant.Root.DoNitrogenUptake(zones);
             }
         }
         #endregion

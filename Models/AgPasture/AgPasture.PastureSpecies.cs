@@ -175,6 +175,11 @@ namespace Models.AgPasture
             set { myWaterDemand = value; }
         }
 
+        /// <summary>Actual evapotranspiration, as calculated by MicroClimate (mm).</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double ActualEP { get; set; }
+
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
@@ -419,8 +424,7 @@ namespace Models.AgPasture
         /// <summary>Sets the amount of water taken up by this plant (mm).</summary>
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The water uptake from each layer (mm), by zone</param>
-        /// <param name="doUptake">Remove water or N from soil?</param>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> zones, bool doUptake = true)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
 
@@ -432,7 +436,7 @@ namespace Models.AgPasture
                 {
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
-                    if (mySoilWaterUptake.Sum() > Epsilon && doUptake)
+                    if (mySoilWaterUptake.Sum() > Epsilon)
                         root.mySoil.SoilWater.RemoveWater(zone.Water);
                 }
             }
@@ -441,8 +445,7 @@ namespace Models.AgPasture
         /// <summary>Sets the amount of N taken up by this plant (kg/ha).</summary>
         /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The N uptake from each layer (kg/ha), by zone</param>
-        /// <param name="doUptake">Remove water or N from soil?</param>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones, bool doUptake = true)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
@@ -455,11 +458,8 @@ namespace Models.AgPasture
                     root.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, Z.NO3N);
                     root.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, Z.NH4N);
 
-                    if (doUptake)
-                    {
-                        mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, Z.NH4N);
-                        mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, Z.NO3N);
-                    }
+                    mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, Z.NH4N);
+                    mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, Z.NO3N);
                 }
             }
         }

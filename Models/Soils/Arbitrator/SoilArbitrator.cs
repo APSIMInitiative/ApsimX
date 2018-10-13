@@ -94,30 +94,11 @@ namespace Models.Soils.Arbitrator
             DoArbitration(Estimate.CalcType.Nitrogen);
         }
 
-        /// <summary>Called by clock to do water arbitration</summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">Dummy event data.</param>
-        [EventSubscribe("DoWaterArbitrationWithoutUptake")]
-        private void OnDoWaterArbitrationWithoutUptake(object sender, EventArgs e)
-        {
-            DoArbitration(Estimate.CalcType.Water, false);
-        }
-
-        /// <summary>Called by clock to do nutrient arbitration</summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">Dummy event data.</param>
-        [EventSubscribe("DoNutrientArbitrationWithoutUptake")]
-        private void DoNutrientArbitrationWithoutUptake(object sender, EventArgs e)
-        {
-            DoArbitration(Estimate.CalcType.Nitrogen, false);
-        }
-
         /// <summary>
         /// General soil arbitration method (water or nutrients) based upon Runge-Kutta method
         /// </summary>
         /// <param name="arbitrationType">Water or Nitrogen</param>
-        /// <param name="doUptake">Remove water or N from soil?</param>
-        private void DoArbitration(Estimate.CalcType arbitrationType, bool doUptake = true)
+        private void DoArbitration(Estimate.CalcType arbitrationType)
         {
             SoilState InitialSoilState = new SoilState(this.Parent);
             InitialSoilState.Initialise(zones);
@@ -151,9 +132,9 @@ namespace Models.Soils.Arbitrator
             foreach (CropUptakes Uptake in ActualUptakes)
             {
                 if (arbitrationType == Estimate.CalcType.Water)
-                    Uptake.Crop.SetActualWaterUptake(Uptake.Zones, doUptake);
+                    Uptake.Crop.SetActualWaterUptake(Uptake.Zones);
                 else
-                    Uptake.Crop.SetActualNitrogenUptakes(Uptake.Zones, doUptake);
+                    Uptake.Crop.SetActualNitrogenUptakes(Uptake.Zones);
             }
         }
 

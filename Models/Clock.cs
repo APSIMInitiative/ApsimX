@@ -75,10 +75,10 @@ namespace Models
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
         /// <summary>Occurs when [do surface organic matter decomposition].</summary>
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
+        /// <summary>Occurs when [do update transpiration].</summary>
+        public event EventHandler DoUpdateTranspiration;                                  //Arbitrator
         /// <summary>Occurs when [do water arbitration].</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
-        /// <summary>Occurs when [do water arbitration without uptake].</summary>
-        public event EventHandler DoWaterArbitrationWithoutUptake;                     //Arbitrator
         /// <summary>Occurs when [do phenology].</summary>                             
         public event EventHandler DoPhenology;                                         // Plant 
         /// <summary>Occurs when [do potential plant growth].</summary>
@@ -87,8 +87,6 @@ namespace Models
         public event EventHandler DoPotentialPlantPartioning;                          // PMF OrganArbitrator.
         /// <summary>Occurs when [do nutrient arbitration].</summary>
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
-        /// <summary>Occurs when [do nutrient arbitration without uptake].</summary>
-        public event EventHandler DoNutrientArbitrationWithoutUptake;                  //Arbitrator
         /// <summary>Occurs when [do potential plant partioning].</summary>
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
         /// <summary>Occurs when [do actual plant growth].</summary>
@@ -254,11 +252,11 @@ namespace Models
                 if (DoSurfaceOrganicMatterDecomposition != null)
                     DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
 
-                if (DoWaterArbitrationWithoutUptake != null)
-                    DoWaterArbitrationWithoutUptake.Invoke(this, args);
+                if (DoUpdateTranspiration != null)
+                    DoUpdateTranspiration.Invoke(this, args);
 
-                if (DoNutrientArbitrationWithoutUptake == null) // Should not run as it changes N status in crop organs
-                    DoNutrientArbitrationWithoutUptake.Invoke(this, args);
+                if (DoWaterArbitration != null)
+                    DoWaterArbitration.Invoke(this, args);
 
                 if (DoPhenology != null)
                     DoPhenology.Invoke(this, args);
@@ -268,9 +266,6 @@ namespace Models
 
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
-
-                if (DoWaterArbitration != null)
-                    DoWaterArbitration.Invoke(this, args);
 
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);

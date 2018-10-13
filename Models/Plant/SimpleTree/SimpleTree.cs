@@ -58,6 +58,11 @@ namespace Models.PMF
         [XmlIgnore]
         public double PotentialEP { get; set; }
 
+        /// <summary>Actual evapotranspiration</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double ActualEP { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
@@ -252,31 +257,28 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         {
             SWUptake = info[0].Water;
             EP = MathUtilities.Sum(SWUptake);
 
-            if (doUptake) Soil.SoilWater.RemoveWater(SWUptake);
+            Soil.SoilWater.RemoveWater(SWUptake);
         }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         {
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            if (doUptake)
-            {
-                solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
-                solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
-            }
+            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
+            solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
         }
 
 
 
-       /// <summary>Sows the plant</summary>
+        /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
         /// <param name="depth">The depth.</param>

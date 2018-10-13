@@ -243,9 +243,6 @@ namespace Models.PMF.Organs
             ZoneInitialDM = new List<double>();
         }
 
-        /// <summary>Total extractable water as a function of root depth and crop LL</summary>
-        public double TotalExtractableWater { get; set; }
-
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return false; } }
 
@@ -842,7 +839,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
         private void DoSupplyCalculations()
         {
-            CalcExtractableWater();
+            CalcTotalExtractableWater();
             dmMReallocationSupply = AvailableDMReallocation();
             dmRetranslocationSupply = AvailableDMRetranslocation();
             nReallocationSupply = AvailableNReallocation();
@@ -850,7 +847,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes root total water supply.</summary>
-        private void CalcExtractableWater()
+        public double CalcTotalExtractableWater()
         {
             double[] LL = PlantZone.soil.LL(Plant.Name);
             double[] KL = PlantZone.soil.KL(Plant.Name);
@@ -864,7 +861,7 @@ namespace Models.PMF.Organs
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
                         Soil.ProportionThroughLayer(layer, Depth, DZ));
             }
-            TotalExtractableWater = supply;
+            return supply;
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>

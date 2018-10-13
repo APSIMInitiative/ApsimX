@@ -598,8 +598,7 @@ namespace Models.Agroforestry
         ///  Accepts the actual soil water uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="doUptake"></param>
-        public void SetActualWaterUptake(List<Soils.Arbitrator.ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualWaterUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
             int i = 0;
             foreach (Zone SearchZ in forestryZones)
@@ -625,8 +624,7 @@ namespace Models.Agroforestry
         /// Accepts the actual soil Nitrogen uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="doUptake"></param>
-        public void SetActualNitrogenUptakes(List<Soils.Arbitrator.ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualNitrogenUptakes(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
             foreach (ZoneWaterAndN ZI in info)
             {

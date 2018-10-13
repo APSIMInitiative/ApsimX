@@ -85,6 +85,11 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         public double PotentialEP { get; set; }
 
+        /// <summary>Actual evapotranspiration</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double ActualEP { get; set; }
+
         /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -877,12 +882,12 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         { }
 
         /// <summary>Does the flower abortion.</summary>

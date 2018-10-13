@@ -413,6 +413,11 @@ namespace Models
         [XmlIgnore]
         public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
 
+        /// <summary>Actual evapotranspiration</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double ActualEP { get; set; }
+
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets
         /// this property in the crop.
@@ -12096,15 +12101,13 @@ namespace Models
         /// Set the sw uptake for today
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="doUptake"></param>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="doUptake"></param>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info, bool doUptake = true)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         { }
 
 
