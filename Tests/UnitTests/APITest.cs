@@ -21,6 +21,8 @@ namespace UnitTests
     using UserInterface;
     using UserInterface.Presenters;
     using System.Reflection;
+    using Models.Core.ApsimFile;
+
     /// <summary> 
     /// This is a test class for SystemComponentTest and is intended
     /// to contain all SystemComponentTest Unit Tests
@@ -57,8 +59,9 @@ namespace UnitTests
             FileStream w = new FileStream("Goondiwindi.met", FileMode.Create);
             w.Write(UnitTests.Properties.Resources.Goondiwindi, 0, UnitTests.Properties.Resources.Goondiwindi.Length);
             w.Close();
-            this.simulations = Simulations.Read("Test.apsimx");
-            
+            List<Exception> creationExceptions;
+            simulations = FileFormat.ReadFromFile<Simulations>("Test.apsimx", out creationExceptions);
+
             string sqliteSourceFileName = TestDataStore.FindSqlite3DLL();
 
             string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
@@ -230,8 +233,9 @@ namespace UnitTests
             APSIMImporter importer = new APSIMImporter();
             importer.ProcessFile("Continuous_Wheat.apsim");
 
-            Simulations testrunSimulations = Simulations.Read("Continuous_Wheat.apsimx");
-           
+            List<Exception> creationExceptions;
+            var testrunSimulations = FileFormat.ReadFromFile<Simulations>("Continuous_Wheat.apsimx", out creationExceptions);
+
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "wheat"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "clock"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilNitrogen"));

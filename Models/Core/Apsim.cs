@@ -255,11 +255,6 @@ namespace Models.Core
         {
             IModel modelToAdd = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Model;
 
-            // Call deserialised
-            Events events = new Events(modelToAdd);
-            object[] args = new object[] { true };
-            events.Publish("Deserialised", args);
-
             // Correctly parent all models.
             Add(parent, modelToAdd);
 
@@ -267,8 +262,7 @@ namespace Models.Core
             Apsim.EnsureNameIsUnique(modelToAdd);
 
             // Call OnLoaded
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { modelToAdd, loadedArgs });
+            Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
 
             Locator(parent).Clear();
 

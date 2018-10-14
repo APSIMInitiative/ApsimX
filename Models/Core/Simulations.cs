@@ -13,6 +13,7 @@ using Models.Core.Runners;
 using Models.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Models.Core.ApsimFile;
 
 namespace Models.Core
 {
@@ -57,13 +58,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// A list of all exceptions thrown during the creation and loading of the simulation.
-        /// </summary>
-        /// <value>The load errors.</value>
-        [XmlIgnore]
-        public List<Exception> LoadErrors { get; private set; }
-
         /// <summary>Returns an instance of a links service</summary>
         [XmlIgnore]
         public Links Links
@@ -91,10 +85,9 @@ namespace Models.Core
         }
 
         /// <summary>Constructor</summary>
-        private Simulations()
+        public Simulations()
         {
             Version = ApsimFile.Converter.LatestVersion;
-            LoadErrors = new List<Exception>();
             checkpoints = new Checkpoints(this);
         }
 
@@ -107,23 +100,13 @@ namespace Models.Core
             Simulations newSimulations = new Core.Simulations();
             newSimulations.Children.AddRange(children.Cast<Model>());
 
-            // Call the OnDeserialised method in each model.
-            Events events = new Core.Events(newSimulations);
-            object[] args = new object[] { true };
-            events.Publish("Deserialised", args);
-
             // Parent all models.
             newSimulations.Parent = null;
             Apsim.ParentAllChildren(newSimulations);
 
-            // Call OnLoaded in all models.
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newSimulations, loadedArgs });
-            if (loadedArgs.errors.Count > 0)
-            {
-                newSimulations.LoadErrors = new List<Exception>();
-                newSimulations.LoadErrors.AddRange(loadedArgs.errors);
-            }
+            // Call OnCreated in all models.
+            Apsim.ChildrenRecursively(newSimulations).ForEach(m => m.OnCreated());
+
             return newSimulations;
         }
 
@@ -151,88 +134,10 @@ namespace Models.Core
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
                 storage.RevertCheckpoint(checkpointName);
-            return Read(FileName);
+            List<Exception> creationExceptions = new List<Exception>();
+            return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
 
-        /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
-        public static Simulations Read(string fileName)
-        {
-            if (!File.Exists(fileName))
-                throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
-
-            // Run the converter.
-            string contents = File.ReadAllText(fileName);
-            Simulations simulations = ApsimFile.Format.StringToModel<Simulations>(contents);
-
-            if (simulations != null)
-            {
-                // Set the filename
-                simulations.FileName = fileName;
-                simulations.SetFileNameInAllSimulations();
-
-                // Call the OnDeserialised method in each model.
-                Events events = new Core.Events(simulations);
-                object[] args = new object[] { true };
-                events.Publish("Deserialised", args);
-
-                // Parent all models.
-                simulations.Parent = null;
-                Apsim.ParentAllChildren(simulations);
-
-                // Call OnLoaded in all models.
-                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                events.Publish("Loaded", new object[] { simulations, loadedArgs });
-                if (loadedArgs.errors.Count > 0)
-                {
-                    simulations.LoadErrors = new List<Exception>();
-                    simulations.LoadErrors.AddRange(loadedArgs.errors);
-                }
-            }
-
-            return simulations;
-        }
-
-        /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="node">The node.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
-        public static Simulations Read(XmlNode node)
-        {
-            // Run the converter.
-            ApsimFile.Converter.ConvertToLatestVersion(node, null);
-
-            // Deserialise
-            Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
-
-            if (simulations != null)
-            {
-                // Set the filename
-                simulations.SetFileNameInAllSimulations();
-
-                // Call the OnSerialised method in each model.
-                object[] args = new object[] { true };
-                Events events = new Events(simulations);
-                events.Publish("Deserialised", args);
-
-                // Parent all models.
-                simulations.Parent = null;
-                Apsim.ParentAllChildren(simulations);
-
-                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                events.Publish("Loaded", new object[] { simulations, loadedArgs });
-                if (loadedArgs.errors.Count > 0)
-                {
-                    simulations.LoadErrors = new List<Exception>();
-                    simulations.LoadErrors.AddRange(loadedArgs.errors);
-                }
-            }
-            else
-                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
-            return simulations;
-        }
 
         /// <summary>Run a simulation</summary>
         /// <param name="simulation">The simulation to run</param>
@@ -296,9 +201,7 @@ namespace Models.Core
         public void Write(string FileName)
         {
             string tempFileName = Path.GetTempFileName();
-            StreamWriter Out = new StreamWriter(tempFileName);
-            Write(Out);
-            Out.Close();
+            File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
@@ -309,68 +212,6 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
-        }
-
-        /// <summary>Write the specified simulation set to the specified 'stream'</summary>
-        /// <param name="stream">The stream.</param>
-        public void Write(TextWriter stream)
-        {
-            object[] args = new object[] { true };
-
-            Events events = new Events(this);
-            events.Publish("Serialising", args);
-
-            try
-            {
-                JsonSerializer serializer = new JsonSerializer()
-                {
-                    TypeNameHandling = TypeNameHandling.Auto,
-                    ContractResolver = new WritablePropertiesOnlyResolver()
-
-                };
-                using (var writer = new JsonTextWriter(stream))
-                {
-                    serializer.Serialize(writer, this);
-                }
-                //stream.Write(XmlUtilities.Serialise(this, true));
-            }
-            finally
-            {
-                events.Publish("Serialised", args);
-            }
-        }
-
-
-        class WritablePropertiesOnlyResolver : DefaultContractResolver
-        {
-            protected override List<MemberInfo> GetSerializableMembers(Type objectType)
-            {
-                var result = base.GetSerializableMembers(objectType);
-                result.RemoveAll(m => m is PropertyInfo &&
-                                      !(m as PropertyInfo).CanWrite);
-                result.RemoveAll(m => m.GetCustomAttribute(typeof(XmlIgnoreAttribute)) != null);
-                return result;
-            }
-        }
-
-        ///<summary> Custom Contract resolver to stop deseralization of Parent properties </summary>
-        private class DynamicContractResolver : DefaultContractResolver
-        {
-            public DynamicContractResolver()
-            {
-            }
-
-            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-            {
-                IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
-
-                // only serializer properties that start with the specified character
-                properties =
-                    properties.Where(p => p.PropertyName != "Parent").ToList();
-
-                return properties;
-            }
-
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>

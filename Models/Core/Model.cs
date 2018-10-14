@@ -392,5 +392,11 @@ namespace Models.Core
         /// Controls whether the model can be modified.
         /// </summary>
         public bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// Called when the model has been newly created in memory whether from 
+        /// cloning or deserialisation.
+        /// </summary>
+        public virtual void OnCreated() { }
     }
 }

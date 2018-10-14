@@ -145,6 +145,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\FileFormat_ReadFromString.json" />
+    <EmbeddedResource Include="Resources\FileFormat_CheckThatModelsCanThrowExceptionsDuringCreation.json" />
     <None Include="Resources\Continuous Wheat.apsim">
       <SubType>Designer</SubType>
     </None>

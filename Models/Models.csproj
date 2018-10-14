@@ -174,8 +174,9 @@
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
-    <Compile Include="Core\ApsimFile\Format.cs" />
+    <Compile Include="Core\ApsimFile\FileFormat.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
+    <Compile Include="Core\Interfaces\IDontSerialiseChildren.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />

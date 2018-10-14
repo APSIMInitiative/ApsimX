@@ -17,6 +17,7 @@
     using System.Text.RegularExpressions;
     using EventArguments;
     using Utility;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -422,11 +423,12 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = Simulations.Read(fileName);
+                    List<Exception> creationExceptions;
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
-                    if (simulations.LoadErrors.Count > 0)
+                    if (creationExceptions.Count > 0)
                     {
-                        ShowError(simulations.LoadErrors);
+                        ShowError(creationExceptions);
                     }
 
                     // Add to MRU list and update display
@@ -786,9 +788,8 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(contents);
-            Simulations simulations = Simulations.Read(doc.DocumentElement);
+            List<Exception> creationExceptions;
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, out creationExceptions);
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 

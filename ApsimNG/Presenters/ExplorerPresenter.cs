@@ -21,6 +21,7 @@ namespace UserInterface.Presenters
     using System.Linq;
     using Utility;
     using Views;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -148,7 +149,6 @@ namespace UserInterface.Presenters
         public void Refresh()
         {
             view.Tree.Populate(GetNodeDescription(this.ApsimXFile));
-            this.WriteLoadErrors();
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -198,9 +198,7 @@ namespace UserInterface.Presenters
 
                         // need to test is ApsimXFile has changed and only prompt when changes have occured.
                         // serialise ApsimXFile to buffer
-                        StringWriter o = new StringWriter();
-                        this.ApsimXFile.Write(o);
-                        string newSim = o.ToString();
+                        string newSim = FileFormat.WriteToString(ApsimXFile);
 
                         StreamReader simStream = new StreamReader(this.ApsimXFile.FileName);
                         string origSim = simStream.ReadToEnd(); // read original file to buffer2
@@ -1003,17 +1001,6 @@ namespace UserInterface.Presenters
         #endregion
 
         #region Privates        
-
-        /// <summary>
-        /// Write all errors thrown during the loading of the <code>.apsimx</code> file.
-        /// </summary>
-        private void WriteLoadErrors()
-        {
-            if (this.ApsimXFile.LoadErrors != null)
-            {
-                MainPresenter.ShowError(ApsimXFile.LoadErrors);
-            }
-        }
 
         /// <summary>
         /// A helper function for creating a node description object for the specified model.

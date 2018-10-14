@@ -1,16 +1,16 @@
-﻿using System;
-using System.Xml;
-using System.Reflection;
-using System.Xml.Serialization;
-using Models.Core;
-using System.Xml.Schema;
-using System.Runtime.Serialization;
-using System.IO;
-using APSIM.Shared.Utilities;
-using System.Collections.Generic;
-
+﻿
 namespace Models
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using System.Xml;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// The manager model
     /// </summary>
@@ -22,7 +22,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
-    public class Manager : Model
+    public class Manager : Model, IDontSerialiseChildren
     {
         // ----------------- Privates
         /// <summary>The _ code</summary>
@@ -123,41 +123,19 @@ namespace Models
             set
             {
                 _Code = value;
-                List<Exception> errors = new List<Exception>();
-                RebuildScriptModel(errors);
-                if (errors.Count > 0)
-                    throw errors[0];  // throw first error
+                RebuildScriptModel();
             }
         }
 
-        /// <summary>The model has been loaded.</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>
+        /// Called when the model has been newly created in memory whether from 
+        /// cloning or deserialisation.
+        /// </summary>
+        public override void OnCreated()
         {
             HasLoaded = true;
             if (Script == null && Code != string.Empty)
-                RebuildScriptModel(args.errors);
-        }
-
-        /// <summary>
-        /// We're about to be serialised. Remove our 'Script' model from the list
-        /// of all models so that is isn't serialised. Seems .NET has a problem
-        /// with serialising objects that have been compiled dynamically.
-        /// </summary>
-        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
-        [EventSubscribe("Serialising")]
-        private void OnSerialising(bool xmlSerialisation)
-        {
-            Children.RemoveAll(x => x.GetType().Name == "Script");
-        }
-
-        /// <summary>Serialisation has completed. Read our 'Script' model if necessary.</summary>
-        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
-        [EventSubscribe("Serialised")]
-        private void OnSerialised(bool xmlSerialisation)
-        {
-            if (Script != null)
-                Children.Add(Script);
+                RebuildScriptModel();
         }
 
         /// <summary>At simulation commencing time, rebuild the script assembly if required.</summary>
@@ -166,10 +144,7 @@ namespace Models
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            List<Exception> errors = new List<Exception>();
-            RebuildScriptModel(errors);
-            if (errors.Count > 0)
-                throw errors[0];  // throw first error
+            RebuildScriptModel();
         }
 
         private bool lastCompileFailed = false;
@@ -178,7 +153,7 @@ namespace Models
         /// <exception cref="ApsimXException">
         /// Cannot find a public class called 'Script'
         /// </exception>
-        public void RebuildScriptModel(List<Exception> errors)
+        public void RebuildScriptModel()
         {
             if (HasLoaded)
             {
@@ -241,7 +216,7 @@ namespace Models
                         catch (Exception err)
                         {
                             lastCompileFailed = true;
-                            errors.Add(new Exception("Unable to compile \"" + Name + "\"", err));
+                            throw new Exception("Unable to compile \"" + Name + "\"", err);
                         }
                     }
                 }

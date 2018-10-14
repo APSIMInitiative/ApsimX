@@ -19,6 +19,7 @@ namespace Importer
     using APSIM.Shared.Utilities;
     using APSIM.Shared.OldAPSIM;
     using Models.Interfaces;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// Manager script parameter
@@ -207,7 +208,8 @@ namespace Importer
 
                 try
                 {
-                    newSimulations = Simulations.Read(xfile);
+                    List<Exception> creationExceptions;
+                    newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, out creationExceptions);
                 }
                 catch (Exception exp)
                 {
