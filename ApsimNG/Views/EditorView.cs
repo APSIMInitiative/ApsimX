@@ -85,6 +85,12 @@ namespace UserInterface.Views
         int Offset { get; }
 
         /// <summary>
+        /// Returns true iff this text editor has the focus
+        /// (ie it can receive keyboard input).
+        /// </summary>
+        bool HasFocus { get; }
+
+        /// <summary>
         /// Inserts text at a given offset in the editor.
         /// </summary>
         /// <param name="text">Text to be inserted.</param>
@@ -99,6 +105,12 @@ namespace UserInterface.Views
         /// </param>
         /// <param name="completionOption">Completion option to be inserted.</param>
         void InsertCompletionOption(string completionOption, string triggerWord);
+
+        /// <summary>
+        /// Gets the location (in screen coordinates) of the cursor.
+        /// </summary>
+        /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
+        System.Drawing.Point GetPositionOfCursor();
     }
 
     /// <summary>
@@ -263,11 +275,26 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Offset of the caret from the beginning of the text editor.
+        /// </summary>
         public int Offset
         {
             get
             {
                 return textEditor.Caret.Offset;
+            }
+        }
+
+        /// <summary>
+        /// Returns true iff this text editor has the focus
+        /// (ie it can receive keyboard input).
+        /// </summary>
+        public bool HasFocus
+        {
+            get
+            {
+                return textEditor.HasFocus;
             }
         }
 
@@ -423,6 +450,7 @@ namespace UserInterface.Views
                 : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
 
             bool controlSpace = IsControlSpace(e.Event);
+            bool controlShiftSpace = IsControlShiftSpace(e.Event);
             string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
             double x; // unused, but needed as an out parameter.
             if (e.Event.Key == Gdk.Key.F3)
@@ -434,7 +462,7 @@ namespace UserInterface.Views
                 e.RetVal = true;
             }
             // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
-            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace) )
+            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace || controlShiftSpace) )
             {
                 // If the user entered a period, we need to take that into account when generating intellisense options.
                 // To do this, we insert a period manually and stop the Gtk signal from propagating further.
@@ -452,6 +480,7 @@ namespace UserInterface.Views
                     Code = textEditor.Text,
                     Offset = this.Offset,
                     ControlSpace = controlSpace,
+                    ControlShiftSpace = controlShiftSpace,
                     LineNo = textEditor.Caret.Line,
                     ColNo = textEditor.Caret.Column - 1
                 };
@@ -482,6 +511,16 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Checks whether a keypress is a control-shift-space event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        /// <returns>True iff the event represents a control + shift + space click.</returns>
+        private bool IsControlShiftSpace(Gdk.EventKey e)
+        {
+            return IsControlSpace(e) && (e.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
+        }
+
+        /// <summary>
         /// Retrieve the word before the specified character position. 
         /// </summary>
         /// <param name="pos">Position in the editor</param>
@@ -499,7 +538,7 @@ namespace UserInterface.Views
         /// Gets the location (in screen coordinates) of the cursor.
         /// </summary>
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
-        private Tuple<int, int> GetPositionOfCursor()
+        public System.Drawing.Point GetPositionOfCursor()
         {
             Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
             p.Y += (int)textEditor.LineHeight;
@@ -508,7 +547,7 @@ namespace UserInterface.Views
             MasterView.MainWindow.GetOrigin(out frameX, out frameY);
             textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
-            return new Tuple<int, int>(x + frameX, y + frameY);
+            return new System.Drawing.Point(x + frameX, y + frameY);
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
 {
     /// <summary>
     /// # [Name]
-    /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
+    /// This organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -405,10 +405,8 @@ namespace Models.PMF.Organs
         private void SetNDemand(object sender, EventArgs e)
         {
             NDemand.Structural = nDemands.Structural.Value();
-            //NDemand.Metabolic = nDemands.Metabolic.Value();
-            //FixMe.  I have commented this out because perennial leaf has no critical N concentration.
-            //However the converter has put a metabolic N demand into perennial leaf organs
-            NDemand.Storage = nDemands.Storage.Value();
+            NDemand.Metabolic = 0.0; // nDemands.Metabolic.Value();
+            NDemand.Storage =  nDemands.Storage.Value();
         }
 
 

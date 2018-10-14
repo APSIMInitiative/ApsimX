@@ -78,7 +78,6 @@ namespace Models.Core
         [XmlElement(typeof(Operations))]
         [XmlElement(typeof(Models.Report.Report))]
         [XmlElement(typeof(Summary))]
-        [XmlElement(typeof(NullSummary))]
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(Weather))]
         [XmlElement(typeof(ControlledEnvironment))]

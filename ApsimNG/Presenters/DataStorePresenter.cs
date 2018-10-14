@@ -46,8 +46,8 @@ namespace UserInterface.Presenters
             dataStore = model as IStorageReader;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
-            this.intellisense = new IntellisensePresenter(this.view as ViewBase);
-            intellisense.ItemSelected += OnInsertIntellisenseItem;
+            intellisense = new IntellisensePresenter(this.view as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
@@ -64,6 +64,7 @@ namespace UserInterface.Presenters
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
             this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
+            this.view.RowFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
             PopulateGrid();
         }
@@ -74,7 +75,10 @@ namespace UserInterface.Presenters
             (view.MaximumNumberRecords as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
+            view.RowFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            intellisense.Cleanup();
         }
 
         /// <summary>Populate the grid control with data.</summary>
@@ -171,6 +175,8 @@ namespace UserInterface.Presenters
                     if (ExperimentFilter != null)
                     {
                         string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        if (!string.IsNullOrEmpty(view.RowFilter.Value))
+                            filter += " AND " + view.RowFilter.Value;
                         data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                     }
                     else if (SimulationFilter != null)
@@ -227,7 +233,7 @@ namespace UserInterface.Presenters
             try
             {
                 if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore))
-                    intellisense.Show(args.Coordinates.Item1, args.Coordinates.Item2);
+                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -235,7 +241,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        private void OnInsertIntellisenseItem(object sender, IntellisenseItemSelectedArgs args)
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             try
             {

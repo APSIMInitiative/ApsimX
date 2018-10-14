@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
@@ -6,17 +7,16 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions.DemandFunctions
 {
     /// <summary>
-    /// # [Name]
-    /// Calculate partitioning of daily growth based upon allometric relationship
+    /// The partitioning of daily growth to storage biomass attempts to bring the organ's N content to the maximum concentration.
     /// </summary>
     [Serializable]
-    [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
+    [Description("This function calculates...")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StorageNDemandFunction : Model, IFunction
+    public class StorageNDemandFunction : Model, IFunction, ICustomDocumentation
     {
-        /// <summary>The maximimum N concentration of the organ</summary>
-        [Description("The maximum N concenctration of the organ")]
+        /// <summary>The maximum N concentration of the organ</summary>
+        [Description("The maximum N concentration of the organ")]
         [Link]
         private IFunction maxNConc = null;
 
@@ -42,7 +42,7 @@ namespace Models.Functions.DemandFunctions
                     parentOrgan = ParentClass as IArbitration;
                     ParentOrganIdentified = true;
                     if (ParentClass is IPlant)
-                        throw new Exception(Name + "cannot find parent organ to get Structural and storage DM status");
+                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
                 }
                 ParentClass = ParentClass.Parent;
             }
@@ -58,5 +58,46 @@ namespace Models.Functions.DemandFunctions
             return Math.Max(0, NDeficit - parentOrgan.NDemand.Structural - parentOrgan.NDemand.Metabolic);
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // get description of this class
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+
+                // write memos
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // find parent organ's name
+                string organName = "";
+                bool seekingParentOrgan = true;
+                IModel parentClass = this.Parent;
+                while (seekingParentOrgan)
+                {
+                    if (parentClass is IOrgan)
+                    {
+                        seekingParentOrgan = false;
+                        organName = (parentClass as IOrgan).Name;
+                        if (parentClass is IPlant)
+                            throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
+                    }
+                    parentClass = parentClass.Parent;
+                }
+
+                // add a description of the equation for this function
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
+                    + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
+                    + organName + "].NitrogenDemandSwitch.", indent));
+            }
+        }
     }
 }

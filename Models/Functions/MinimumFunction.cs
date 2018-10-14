@@ -39,29 +39,25 @@ namespace Models.Functions
         {
             if (IncludeInDocumentation)
             {
-                // add a heading.
+                // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write memos.
+                // write memos
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // create a string to display 'child1 - child2 - child3...'
                 string msg = "";
-
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
                 {
                     if (msg != string.Empty)
                         msg += ", ";
                     msg += child.Name;
                 }
-
                 tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = minimum (" + msg + ")</i>", indent));
 
-
+                // write children
                 tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-
-                // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }

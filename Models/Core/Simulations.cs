@@ -55,6 +55,9 @@ namespace Models.Core
             set
             {
                 _FileName = value;
+                DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+                storage.Close();
+                storage.FileName = null;
             }
         }
 
