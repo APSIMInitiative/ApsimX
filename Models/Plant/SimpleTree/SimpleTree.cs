@@ -61,7 +61,7 @@ namespace Models.PMF
         /// <summary>Actual evapotranspiration</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double ActualEP { get; set; }
+        public double WaterDemand { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }

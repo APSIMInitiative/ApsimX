@@ -88,7 +88,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Actual evapotranspiration</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double ActualEP { get; set; }
+        public double WaterDemand { get; set; }
 
         /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]

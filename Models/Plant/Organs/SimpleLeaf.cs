@@ -184,7 +184,7 @@ namespace Models.PMF.Organs
         /// <summary>Actual evapotranspiration</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double ActualEP { get; set; }
+        public double WaterDemand { get; set; }
 
         /// <summary>
         /// Flag to test if Microclimate is present

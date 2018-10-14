@@ -178,7 +178,7 @@ namespace Models.AgPasture
         /// <summary>Actual evapotranspiration, as calculated by MicroClimate (mm).</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double ActualEP { get; set; }
+        public double WaterDemand { get; set; }
 
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;

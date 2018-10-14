@@ -177,7 +177,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Sets the actual evapotranspiration.</summary>
         [Units("mm")]
-        public double ActualEP { get; set; }
+        public double WaterDemand { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -192,7 +192,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            return ActualEP;
+            return WaterDemand;
         }
 
         /// <summary>Gets or sets the water allocation.</summary>

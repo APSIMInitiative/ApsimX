@@ -416,7 +416,7 @@ namespace Models
         /// <summary>Actual evapotranspiration</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double ActualEP { get; set; }
+        public double WaterDemand { get; set; }
 
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets

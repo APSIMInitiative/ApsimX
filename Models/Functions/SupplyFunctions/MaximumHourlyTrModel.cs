@@ -113,7 +113,7 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
-        [EventSubscribe("DoUpdateTranspiration")]
+        [EventSubscribe("DoUpdateWaterDemand")]
         private void Calculate(object sender, EventArgs e)
         {
             double radiationInterception = RadnInt.Value();
@@ -135,14 +135,14 @@ namespace Models.Functions.SupplyFunctions
                 CalcSoilLimitedTr();
                 CalcBiomass();
                 myLeaf.PotentialEP = hourlyTrCappedTr.Sum();
-                myLeaf.ActualEP = hourlyTr.Sum();
+                myLeaf.WaterDemand = hourlyTr.Sum();
             }
             else
             {
                 hourlyDM = new List<double>();
                 for (int i = 0; i < 24; i++) hourlyDM.Add(0.0);
                 myLeaf.PotentialEP = 0;
-                myLeaf.ActualEP = 0;
+                myLeaf.WaterDemand = 0;
                 DailyDM = 0;
             }
         }

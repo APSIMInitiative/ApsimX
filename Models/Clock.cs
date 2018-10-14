@@ -76,7 +76,7 @@ namespace Models
         /// <summary>Occurs when [do surface organic matter decomposition].</summary>
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
         /// <summary>Occurs when [do update transpiration].</summary>
-        public event EventHandler DoUpdateTranspiration;                                  //Arbitrator
+        public event EventHandler DoUpdateWaterDemand;                                  //Arbitrator
         /// <summary>Occurs when [do water arbitration].</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
         /// <summary>Occurs when [do phenology].</summary>                             
@@ -252,8 +252,8 @@ namespace Models
                 if (DoSurfaceOrganicMatterDecomposition != null)
                     DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
 
-                if (DoUpdateTranspiration != null)
-                    DoUpdateTranspiration.Invoke(this, args);
+                if (DoUpdateWaterDemand != null)
+                    DoUpdateWaterDemand.Invoke(this, args);
 
                 if (DoWaterArbitration != null)
                     DoWaterArbitration.Invoke(this, args);
