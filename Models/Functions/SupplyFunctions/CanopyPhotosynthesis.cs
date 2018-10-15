@@ -202,7 +202,7 @@ namespace Models.Functions.SupplyFunctions
             }
 
             // DailyGrossPs = AveGrossPs * Dayl;
-            DailyGrossPs = Plant.Leaf.Fw * (AveGrossPs * Dayl); // Added: Water-stress must be accounted for in this part (Eq. 3.2.52)!
+            DailyGrossPs = Plant.Leaf.Fw * (AveGrossPs * Dayl); // Added: Water-stress must be accounted for in this part (Eq. 3.2.53)!
 
             return DailyGrossPs;
         }
