@@ -792,47 +792,6 @@ But their data suggests a value of 0.3]]></MemoText>
             <Name>Structural</Name>
             <PartitionFractionDemandFunction>
               <Name>DMDemandFunction</Name>
-              <MultiplyFunction>
-                <Name>PartitionFraction</Name>
-                <LinearInterpolationFunction>
-                  <Name>PotentialFraction</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <ReadOnly>false</ReadOnly>
-                    <X>
-                      <double>0</double>
-                      <double>0.2</double>
-                      <double>0.3</double>
-                      <double>0.4</double>
-                      <double>0.71</double>
-                      <double>0.72</double>
-                      <double>1.21</double>
-                      <double>1.22</double>
-                      <double>5</double>
-                    </X>
-                    <Y>
-                      <double>0.5</double>
-                      <double>0.5</double>
-                      <double>0.55</double>
-                      <double>0.55</double>
-                      <double>0.55</double>
-                      <double>0.55</double>
-                      <double>0.55</double>
-                      <double>0.55</double>
-                      <double>0.55</double>
-                    </Y>
-                  </XYPairs>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <ReadOnly>false</ReadOnly>
-                  <XProperty>[TropicalPasture].Age</XProperty>
-                </LinearInterpolationFunction>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-              </MultiplyFunction>
               <Memo>
                 <Name>Memo</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -840,18 +799,45 @@ But their data suggests a value of 0.3]]></MemoText>
                 <ReadOnly>false</ReadOnly>
                 <MemoText><![CDATA[The flowering factor is determined by daylength, but there is not a tool for this control in Apsim, so were used the plant ages correspondent to each daylength value.]]></MemoText>
               </Memo>
+              <LinearInterpolationFunction>
+                <Name>PartitionFraction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                  <X>
+                    <double>0</double>
+                    <double>0.2</double>
+                    <double>0.3</double>
+                    <double>0.4</double>
+                    <double>0.71</double>
+                    <double>0.72</double>
+                    <double>1.21</double>
+                    <double>1.22</double>
+                    <double>5</double>
+                  </X>
+                  <Y>
+                    <double>0.5</double>
+                    <double>0.5</double>
+                    <double>0.55</double>
+                    <double>0.55</double>
+                    <double>0.55</double>
+                    <double>0.55</double>
+                    <double>0.55</double>
+                    <double>0.55</double>
+                    <double>0.55</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <XProperty>[TropicalPasture].Age</XProperty>
+              </LinearInterpolationFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
             </PartitionFractionDemandFunction>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <FixedValue>0.9</FixedValue>
-              <Units>0-1</Units>
-            </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -863,40 +849,13 @@ But their data suggests a value of 0.3]]></MemoText>
             <ReadOnly>false</ReadOnly>
             <FixedValue>0</FixedValue>
           </Constant>
-          <MultiplyFunction>
+          <Constant>
             <Name>Storage</Name>
-            <VariableReference>
-              <Name>DMDemand</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Leaf].DMDemands.Structural.DMDemandFunction.Value()</VariableName>
-            </VariableReference>
-            <SubtractFunction>
-              <Name>StorageFraction</Name>
-              <Constant>
-                <Name>One</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <FixedValue>0.9</FixedValue>
-                <Units>0-1</Units>
-              </Constant>
-              <VariableReference>
-                <Name>StructuralFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Leaf].DMDemands.Structural.StructuralFraction.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </SubtractFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
+            <FixedValue>0</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
@@ -923,39 +882,6 @@ But their data suggests a value of 0.3]]></MemoText>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
           </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>Storage</Name>
-            <SubtractFunction>
-              <Name>StorageNconc</Name>
-              <VariableReference>
-                <Name>MaximumNconc</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Leaf].MaximumNConc.Value()</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>MinNconc</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Leaf].minimumNconc.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </SubtractFunction>
-            <VariableReference>
-              <Name>PotentialDMAllocation</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <VariableName>[Leaf].potentialDMAllocation.Structural</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </MultiplyFunction>
           <Constant>
             <Name>Metabolic</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -963,6 +889,26 @@ But their data suggests a value of 0.3]]></MemoText>
             <ReadOnly>false</ReadOnly>
             <FixedValue>0</FixedValue>
           </Constant>
+          <StorageNDemandFunction>
+            <Name>Storage</Name>
+            <VariableReference>
+              <Name>MaxNconc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Leaf].MaximumNconc.Value()</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </StorageNDemandFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
