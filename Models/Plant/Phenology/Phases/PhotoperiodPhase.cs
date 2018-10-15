@@ -17,11 +17,12 @@ namespace Models.PMF.Phen
         [ScopedLinkByName]
         IFunction Photoperiod = null;
 
+        [ScopedLinkByName]
+        IFunction PhotoperiodDelta = null;
+
         /// <summary>Critical photoperiod to move into next phase</summary>
         [Description("Critical photoperiod to move into next phase")]
         public double CricialPhotoperiod { get; set; }
-
-        private double PPyesterday = 0;
 
             /// <summary>
             ///  Photoperiod Type
@@ -69,16 +70,14 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase;
-            double deltaPP = Photoperiod.Value() - PPyesterday;
 
-            if (Photoperiod.Value() > CricialPhotoperiod && deltaPP > 0 && PPDirection == PPType.Increasing)
+            if (Photoperiod.Value() > CricialPhotoperiod && PhotoperiodDelta.Value() > 0 && PPDirection == PPType.Increasing)
                 proceedToNextPhase = true;
-            else if (Photoperiod.Value() < CricialPhotoperiod && deltaPP < 0 && PPDirection == PPType.Decreasing)
+            else if (Photoperiod.Value() < CricialPhotoperiod && PhotoperiodDelta.Value() < 0 && PPDirection == PPType.Decreasing)
                 proceedToNextPhase = true;
             else
                 proceedToNextPhase = false;
 
-            PPyesterday = Photoperiod.Value();
             return proceedToNextPhase;
         }
 
@@ -90,17 +89,6 @@ namespace Models.PMF.Phen
         public void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("      " + Name);
-        }
-
-        // 4. Private method
-        //-----------------------------------------------------------------------------------------------------------------
-
-        /// <summary>Called when [simulation commencing].</summary>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            PPyesterday = Photoperiod.Value();
-            ResetPhase();
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

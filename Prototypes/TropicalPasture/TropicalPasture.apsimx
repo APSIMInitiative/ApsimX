@@ -47,6 +47,13 @@ The model consists of:
         <Twilight>0</Twilight>
         <DayLength>0</DayLength>
       </PhotoperiodFunction>
+      <PhotoperiodDeltaFunction>
+        <Name>PhotoperiodDelta</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Twilight>0</Twilight>
+      </PhotoperiodDeltaFunction>
       <Phenology>
         <Name>Phenology</Name>
         <Constant>
@@ -92,29 +99,16 @@ The model consists of:
           <Start>StartVegetative</Start>
           <End>StartReproductive</End>
         </PhotoperiodPhase>
-        <GenericPhase>
+        <PhotoperiodPhase>
           <Name>ReproductivePhase</Name>
-          <Constant>
-            <Name>Target</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>120</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>Progression</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <FixedValue>1</FixedValue>
-            <Units>^od</Units>
-          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
+          <CricialPhotoperiod>11</CricialPhotoperiod>
+          <PPDirection>Decreasing</PPDirection>
           <Start>StartReproductive</Start>
           <End>EndReproductive</End>
-        </GenericPhase>
+        </PhotoperiodPhase>
         <GotoPhase>
           <Name>GotoPhase</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -985,7 +979,7 @@ But their data suggests a value of 0.3]]></MemoText>
         <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <InitialisedCohortNo>0</InitialisedCohortNo>
-        <Albedo>0.2</Albedo>
+        <Albedo>0.26</Albedo>
         <Gsmax>0.0075</Gsmax>
         <R50>200</R50>
         <Height>0</Height>
@@ -2556,9 +2550,7 @@ DM retranslocation is not working currently, so it is necessary build that in Ap
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
-        <Command>[Phenology].VegetativePhase.CricialPhotoperiod = 11.8</Command>
-        <Command>[Phenology].VegetativePhase.PPDirection=Decreasing</Command>
-        <Command>[Phenology].ReproductivePhase.Target.FixedValue = 60</Command>
+        <Command />
       </Cultivar>
       <Cultivar>
         <Name>Brachiaria</Name>
@@ -3549,6 +3541,13 @@ namespace Models
           <Name>AboveGroundWt</Name>
           <Series>
             <Name>Predicted</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <ColumnName>TropicalPasture.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -3714,6 +3713,13 @@ namespace Models
           <Name>Biomass</Name>
           <Series>
             <Name>Predicted LiveBiomass</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <ColumnName>TropicalPasture.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -4534,7 +4540,7 @@ namespace Models
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
-                  <Date>1983-02-17</Date>
+                  <Date>1983-02-18</Date>
                   <Action>[Irrigation].Apply(75);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
@@ -4823,13 +4829,13 @@ namespace Models
                   </Depth>
                   <OC>
                     <double>1</double>
-                    <double>0.45</double>
-                    <double>0.27</double>
-                    <double>0.27</double>
-                    <double>0.27</double>
-                    <double>0.27</double>
-                    <double>0.27</double>
-                    <double>0.27</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0.5</double>
+                    <double>0.4</double>
+                    <double>0.4</double>
+                    <double>0.4</double>
+                    <double>0.4</double>
                   </OC>
                   <FBiom>
                     <double>0.03</double>
@@ -4843,9 +4849,9 @@ namespace Models
                   </FBiom>
                   <FInert>
                     <double>0.3</double>
-                    <double>0.5</double>
-                    <double>0.85</double>
-                    <double>0.95</double>
+                    <double>0.4</double>
+                    <double>0.6</double>
+                    <double>0.8</double>
                     <double>0.95</double>
                     <double>0.95</double>
                     <double>0.95</double>
@@ -4913,14 +4919,14 @@ namespace Models
                     <double>300</double>
                   </Thickness>
                   <NO3>
+                    <double>20</double>
+                    <double>15</double>
+                    <double>7</double>
+                    <double>3</double>
                     <double>1</double>
-                    <double>0.5</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </NO3>
                   <NH4>
                     <double>0.1</double>
@@ -5081,7 +5087,7 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>1982-08-01</Date>
-                  <Action>[TropicalPasture].Harvest();</Action>
+                  <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
@@ -5091,7 +5097,7 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>1983-08-01</Date>
-                  <Action>[TropicalPasture].Harvest();</Action>
+                  <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
                 <Operation>
@@ -5101,7 +5107,7 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>1984-08-01</Date>
-                  <Action>[TropicalPasture].Harvest();</Action>
+                  <Action>[CuttingManagement].Script.DoCut(10.0, 5.0);</Action>
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
@@ -5115,7 +5121,8 @@ namespace Models
                 <VariableNames>
                   <string>[Clock].Today</string>
                   <string>[TropicalPasture].Phenology.CurrentPhaseName</string>
-                  <string>[TropicalPasture].Photoperiod.Value()</string>
+                  <string>[TropicalPasture].Phenology.CurrentStageName</string>
+                  <string>[TropicalPasture].Photoperiod</string>
                   <string>[TropicalPasture].Root.NSupplyUptake</string>
                   <string>[Soil].SoilWater.Eo</string>
                   <string>[Soil].SoilWater.Es</string>
@@ -5212,6 +5219,72 @@ namespace Models
                   <Enabled>true</Enabled>
                 </Operation>
               </Operations>
+              <Manager>
+                <Name>CuttingManagement</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <Script />
+                <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+    [Serializable] 
+    [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {
+        [ScopedLinkByName] Plant TropicalPasture;
+        [Link] Clock Clock;
+
+    
+        [XmlIgnore] private RemovalFractions Remove { get; set; }
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Remove = new RemovalFractions();
+        }
+
+        public void DoCut(double LeafResidue, double StemResidue)
+        {
+        	if (TropicalPasture == null)
+        		throw new Exception("Tropical pasture is null");
+        	double L = (double)Apsim.Get(TropicalPasture, "Leaf.Live.Wt");
+            double LeafRemovalFraction = 0;
+            if (L > 0)
+                LeafRemovalFraction = (L - LeafResidue) / L;
+            if (LeafRemovalFraction < 0)
+                LeafRemovalFraction = 0;
+               
+            double S = (double)Apsim.Get(TropicalPasture, "Stem.Live.Wt");
+            double StemRemovalFraction = 0;
+            if (S > 0)
+                StemRemovalFraction = (S - StemResidue) / S;               
+            if (StemRemovalFraction < 0)
+                StemRemovalFraction = 0;
+               
+            if (Remove == null)
+            throw new Exception("Remove is null");
+            Remove.SetFractionToRemove("Leaf", LeafRemovalFraction);
+            Remove.SetFractionToRemove("Stem", StemRemovalFraction);
+            Remove.SetFractionToResidue("Leaf", 0.0);
+            Remove.SetFractionToResidue("Stem", 0.0);
+            if (TropicalPasture == null)
+            	throw new Exception("Cannot find tropical pasture model");
+            TropicalPasture.RemoveBiomass("Cut", Remove);
+        }
+        
+    }
+}
+                
+]]></Code>
+              </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
@@ -5367,7 +5440,7 @@ namespace Models
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TropicalPasture.Leaf.Transpiration</YFieldName>
               <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -5383,14 +5456,14 @@ namespace Models
               <FactorToVaryColours>Irr</FactorToVaryColours>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
-              <Line>Dot</Line>
+              <Line>DashDot</Line>
               <LineThickness>Normal</LineThickness>
               <Checkpoint>Current</Checkpoint>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Soil.SoilWater.Es</YFieldName>
               <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -5413,7 +5486,7 @@ namespace Models
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>TropicalPasture.Leaf.PotentialEP</YFieldName>
               <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
@@ -5708,178 +5781,6 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
           </Graph>
-          <Graph>
-            <Name>LAI</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Irr</FactorToVaryColours>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Observed</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Irr</FactorToVaryColours>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>TropicalPasture.Leaf.LAI</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Predicted1</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Right</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Irr</FactorToVaryColours>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>TropicalPasture.Photoperiod.Value()</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Right</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>RUE</Name>
-            <Series>
-              <Name>Series</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorToVaryColours>Irr</FactorToVaryColours>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>TropicalPasture.Leaf.Photosynthesis.RueAct</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Series1</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Right</YAxis>
-              <ColourArgb>-16747854</ColourArgb>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <Checkpoint>Current</Checkpoint>
-              <TableName>Report</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>TropicalPasture.Leaf.Fw</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Right</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
@@ -5889,6 +5790,13 @@ namespace Models
           <Name>LAI</Name>
           <Series>
             <Name>Predicted</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <ColumnName>TropicalPasture.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -13491,7 +13399,7 @@ Cutting management is a script to set residual leaf and stem mass after cut or g
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <ForEachSeries>true</ForEachSeries>
+            <ForEachSeries>false</ForEachSeries>
             <showOneToOne>true</showOneToOne>
             <showEquation>true</showEquation>
           </Regression>
