@@ -175,10 +175,6 @@ namespace Models.AgPasture
             set { myWaterDemand = value; }
         }
 
-        /// <summary>Actual evapotranspiration, as calculated by MicroClimate (mm).</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public double WaterDemand { get; set; }
 
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
@@ -2919,10 +2915,7 @@ namespace Models.AgPasture
         /// <summary>Gets the amount of water demanded by the plant (mm).</summary>
         [Description("Amount of water demanded by the plant")]
         [Units("mm")]
-        public double WaterDemand
-        {
-            get { return myWaterDemand; }
-        }
+        public double WaterDemand { get; set; }
 
         /// <summary>Gets the amount of plant available water in each soil layer (mm).</summary>
         [Description("Amount of plant available water in each soil layer")]

@@ -274,34 +274,34 @@ namespace Models.Functions.SupplyFunctions
             // set hourlyTr = hourlyVPDCappedTr (hourlyTr becomes uptake)
             // change to scaling each hour until sum of hourlyTr = dailySupply
             hourlyTr = new List<double>(hourlyTrCappedTr);
-            double rootWaterSupp = myRoot.CalcTotalExtractableWater();
 
-            while (hourlyTr.Sum() > rootWaterSupp)
+            double rootWaterSupp = myRoot.CalcTotalExtractableWater();
+            double reduction = 0.99;
+            double maxHourlyT = hourlyTr.Max();
+
+            while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
             {
-                for (int i = 23; i >= 0; i--)
-                {
-                    double sumTR = 0;
-                    for (int j = 0; j < i; j++) sumTR += hourlyTr[j];
-                    double remTR = Math.Max(0.0, Math.Min(rootWaterSupp - sumTR, hourlyTr[i]));
-                    hourlyTr[i] = remTR;
-                    if (remTR > 0) break;
-                }
+                maxHourlyT *= reduction;
+                for (int i = 0; i < 24; i++)
+                    if (hourlyTr[i] >= maxHourlyT)
+                    {
+                        if (rootWaterSupp == 0)
+                            hourlyTr[i] = 0;
+                        else
+                            hourlyTr[i] = maxHourlyT;
+                    }
             }
 
-            //double reduction = 0.99;
-            //double maxHourlyT = hourlyTr.Max();
-
-            //while (hourlyTr.Sum() > myRoot.TotalExtractableWater)
+            //while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
             //{
-            //    maxHourlyT *= reduction;
-            //    for (int i = 0; i < 24; i++)
-            //        if (hourlyTr[i] >= maxHourlyT)
-            //        {
-            //            if (myRoot.TotalExtractableWater == 0)
-            //                hourlyTr[i] = 0;
-            //            else
-            //                hourlyTr[i] = maxHourlyT;
-            //        }
+            //    for (int i = 23; i >= 0; i--)
+            //    {
+            //        double sumTR = 0;
+            //        for (int j = 0; j < i; j++) sumTR += hourlyTr[j];
+            //        double remTR = Math.Max(0.0, Math.Min(rootWaterSupp - sumTR, hourlyTr[i]));
+            //        hourlyTr[i] = remTR;
+            //        if (remTR > 0) break;
+            //    }
             //}
         }
         //------------------------------------------------------------------------------------------------
