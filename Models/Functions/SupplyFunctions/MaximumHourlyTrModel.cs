@@ -272,25 +272,22 @@ namespace Models.Functions.SupplyFunctions
         private void CalcSoilLimitedTr()
         {
             // set hourlyTr = hourlyVPDCappedTr (hourlyTr becomes uptake)
-            // change to scaling each hour until sum of hourlyTr = dailySupply
+            // change to scaling each hour until sum of hourlyTr = rootWaterSupp
             hourlyTr = new List<double>(hourlyTrCappedTr);
 
             double rootWaterSupp = myRoot.CalcTotalExtractableWater();
             double reduction = 0.99;
             double maxHourlyT = hourlyTr.Max();
 
-            while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
-            {
-                maxHourlyT *= reduction;
-                for (int i = 0; i < 24; i++)
-                    if (hourlyTr[i] >= maxHourlyT)
-                    {
-                        if (rootWaterSupp == 0)
-                            hourlyTr[i] = 0;
-                        else
-                            hourlyTr[i] = maxHourlyT;
-                    }
-            }
+            if (rootWaterSupp == 0)
+                for (int i = 0; i < 24; i++) hourlyTr[i] = 0;
+            else
+                while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
+                {
+                    maxHourlyT *= reduction;
+                    for (int i = 0; i < 24; i++)
+                        if (hourlyTr[i] >= maxHourlyT) hourlyTr[i] = maxHourlyT;
+                }
 
             //while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
             //{
