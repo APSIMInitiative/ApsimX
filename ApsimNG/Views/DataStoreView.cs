@@ -24,6 +24,8 @@ namespace UserInterface.Views
         /// <summary>Maximum number of records.</summary>
         IEditView MaximumNumberRecords { get; }
 
+        /// <summary>Editable row filter.</summary>
+        IEditView RowFilter { get; }
     }
 
     /// <summary>
@@ -38,7 +40,7 @@ namespace UserInterface.Views
         private EditView editView1;
         private DropDownView dropDownView1;
         private EditView editView2;
-
+        private EditView rowFilter;
         private VBox vbox1 = null;
         private Table table1 = null;
         private HBox hbox1 = null;
@@ -60,8 +62,10 @@ namespace UserInterface.Views
             vbox1.ReorderChild(hbox1, 2);
             dropDownView1 = new DropDownView(this);
             editView1 = new EditView(this);
+            rowFilter = new EditView(this);
             table1.Attach(dropDownView1.MainWidget, 1, 2, 0, 1);
             table1.Attach(editView1.MainWidget, 1, 2, 1, 2);
+            table1.Attach(rowFilter.MainWidget, 1, 2, 2, 3);
             editView2 = new EditView(this);
             hbox1.PackStart(editView2.MainWidget, false, false, 0);
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -83,6 +87,8 @@ namespace UserInterface.Views
             editView1 = null;
             editView2.MainWidget.Destroy();
             editView2 = null;
+            rowFilter.MainWidget.Destroy();
+            rowFilter = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }
@@ -98,5 +104,8 @@ namespace UserInterface.Views
 
         /// <summary>Maximum number of records.</summary>
         public IEditView MaximumNumberRecords { get { return editView2; } }
+
+        /// <summary>Editable row filter.</summary>
+        public IEditView RowFilter { get { return rowFilter; } }
     }
 }
