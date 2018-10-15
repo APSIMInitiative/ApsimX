@@ -142,6 +142,7 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="Core\ApsimFile\XmlConverters.cs" />
     <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
     <Compile Include="CLEM\FileSQLiteGRASP.cs" />

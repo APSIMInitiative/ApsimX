@@ -119,7 +119,7 @@
     <Compile Include="MockClock.cs" />
     <Compile Include="MockWeather.cs" />
     <Compile Include="SWIMTests.cs" />
-    <Compile Include="TestConverter.cs" />
+    <Compile Include="ConverterTests.cs" />
     <Compile Include="APITest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

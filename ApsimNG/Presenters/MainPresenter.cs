@@ -1097,13 +1097,9 @@
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
 
                     // Run the converter.
-                    using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(file, version))
-                    {
-                        using (FileStream fileWriter = File.Open(file, FileMode.Create))
-                        {
-                            inStream.CopyTo(fileWriter);
-                        }
-                    }
+                    string contents = File.ReadAllText(file);
+                    if (Converter.DoConvert(ref contents, version, file))
+                        File.WriteAllText(file, contents);
                     view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), Simulation.ErrorLevel.Information, false);
                 }
                 view.ShowMessage("Successfully upgraded all files.", Simulation.ErrorLevel.Information);

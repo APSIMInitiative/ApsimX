@@ -72,9 +72,11 @@
         /// <summary>Convert a string (json or xml) to a model.</summary>
         /// <param name="st">The string to convert.</param>
         /// <param name="creationExceptions">A list of exceptions created during creation of the models.</param>
-        public static T ReadFromString<T>(string st, out List<Exception> creationExceptions) where T : IModel
+        /// <param name="fileName">The optional filename where the string came from.</param>
+        public static T ReadFromString<T>(string st, out List<Exception> creationExceptions, string fileName = null) where T : IModel
         {
             // Run the converter.
+            bool changed = Converter.DoConvert(ref st, -1, fileName);
 
             int offset = st.TakeWhile(c => char.IsWhiteSpace(c)).Count();
             char firstNonBlankChar = st[offset];
@@ -94,7 +96,6 @@
             }
             else
             {
-                //using (Stream inStream = Converter.ConvertToLatestVersion(FileName))
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(st);
                 newModel = (T)XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly());
