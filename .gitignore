@@ -1,1 +1,11 @@
 Temporary
+Updater/obj/
+Tests/UnitTests/obj/
+SWIMFrame/obj/
+packages/
+Models/Importer/obj/
+Models/obj/
+Models/Bin/
+Bin/
+APSIMRunner/obj/
+ApsimNG/obj/

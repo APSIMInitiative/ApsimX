@@ -89,13 +89,13 @@ namespace Models.Functions.SupplyFunctions
         //------------------------------------------------------------------------------------------------
 
         /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
-        [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase")]
+        [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
         [Bounds(Lower = 0.1, Upper = 1000)]
         [Units("kPa")]
         public double MaxVPD { get; set; } = 999;
 
         /// <summary>The maximum hourly transpiration rate</summary>
-        [Description("Maximum hourly transpiration rate")]
+        [Description("Maximum hourly transpiration rate (mm/hr)")]
         [Bounds(Lower = 0.01, Upper = 1000.0)]
         [Units("mm/hr")]
         public double MaxTr { get; set; } = 999;
