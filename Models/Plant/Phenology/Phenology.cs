@@ -165,7 +165,7 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase))
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase))
                         { throw new Exception("Can not rewind over phase of type " + phases[currentPhaseIndex].GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
@@ -176,6 +176,7 @@ namespace Models.PMF.Phen
                     }
                 }
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
+
             }
             else
             {
@@ -207,8 +208,10 @@ namespace Models.PMF.Phen
                 if (currentPhase.ProgressThroughPhase == 0)
                     stagesPassedToday.Add(currentPhase.Start);
             }
+            if (phases[currentPhaseIndex] is PhotoperiodPhase)
+                stagesPassedToday.Add(phases[currentPhaseIndex].Start);
 
-           StageWasReset?.Invoke(this, new EventArgs());
+            StageWasReset?.Invoke(this, new EventArgs());
         }
 
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>
