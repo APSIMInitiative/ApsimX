@@ -209,6 +209,7 @@
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
     <Compile Include="Plant\Biomass\BiomassDemand.cs" />
+    <Compile Include="Plant\Phenology\Phases\PhotoperiodPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
@@ -684,6 +685,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Oats.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />
