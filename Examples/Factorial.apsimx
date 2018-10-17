@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
   <Name>Simulations</Name>
   <Experiment>
     <Name>Experiment</Name>
@@ -7,71 +7,41 @@
       <Name>Factors</Name>
       <Factor>
         <Name>SowDate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Specifications>
           <string>[SowingRule].Script.SowingDate = 2003-11-01, 2003-12-20 </string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Fertiliser</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Specifications>
           <string>[FertiliserRule].Script.ApplicationAmount = 0, 20, 60, 80, 100</string>
         </Specifications>
       </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
     </Factors>
     <Simulation>
       <Name>Base</Name>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <FileName>WeatherFiles\Lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <StartDate>2003-10-20T00:00:00</StartDate>
         <EndDate>2004-05-23T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
-        <CaptureErrors>true</CaptureErrors>
-        <CaptureWarnings>true</CaptureWarnings>
-        <CaptureSummaryText>true</CaptureSummaryText>
       </Summary>
       <Zone>
         <Name>Field</Name>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -90,9 +60,6 @@
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -135,9 +102,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>BarleySoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -180,9 +144,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>PotatoSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -223,9 +184,6 @@
                 <double>0</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -307,9 +265,7 @@
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -365,13 +321,9 @@
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <ResidueInterception>0</ResidueInterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -404,12 +356,17 @@
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>200</RootWt>
             <SoilCN>12.5</SoilCN>
@@ -484,9 +441,6 @@
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -531,18 +485,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -588,15 +536,6 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
-          <CERESSoilTemperature>
-            <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <SoilType>Black Vertosol</SoilType>
           <LocalName>Waco</LocalName>
@@ -609,37 +548,60 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <ResourceName>SurfaceOrganicMatter</ResourceName>
-          <InitialResidueName>Potato</InitialResidueName>
-          <InitialResidueType>Potato</InitialResidueType>
-          <InitialResidueMass>1000</InitialResidueMass>
-          <InitialStandingFraction>0</InitialStandingFraction>
-          <InitialCPR>0</InitialCPR>
-          <InitialCNR>80</InitialCNR>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Potato</PoolName>
+          <type>Potato</type>
+          <mass>1000</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
-          <NightInterceptionFraction>0.5</NightInterceptionFraction>
-          <ReferenceHeight>2</ReferenceHeight>
+          <air_pressure>1010</air_pressure>
+          <soil_emissivity>0.96</soil_emissivity>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <windspeed_default>3</windspeed_default>
+          <refheight>2</refheight>
+          <albedo>0.29366217672824863</albedo>
+          <emissivity>0.96</emissivity>
+          <gsmax>0.01</gsmax>
+          <r50>200</r50>
         </MicroClimate>
         <Manager>
           <Name>SowingRule</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Script>
             <SowingDate>2003-11-10</SowingDate>
           </Script>
@@ -659,14 +621,10 @@
 
             }
         }
-                
-]]></Code>
+				]]></Code>
         </Manager>
         <Manager>
           <Name>FertiliserRule</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Script>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
@@ -696,37 +654,23 @@
                {
                if (Clock.Today.Date.Equals(ApplicationDate))
                     Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);
-                  //Fertiliser.Apply(Amount:a, Type:"b", Depth:c)
-                  //a is a double and can be represented by a variable name or a number representing the amount (kg/ha) of fertiliser to apply
-                  //b is a string and can be represented by a variable name or text string (in quotes eg "UreaN") representing the type of fertiliser to apply
-                  //c is an optional double and can be represented by a variable name or a number representing the depth (mm) to which fertiliser is applied
-                  //if c is omitted a default depth of 0 is used (fertiliser is applied to the surface by defalt)
-               }
+			      //Fertiliser.Apply(Amount:a, Type:"b", Depth:c)
+			      //a is a double and can be represented by a variable name or a number representing the amount (kg/ha) of fertiliser to apply
+			      //b is a string and can be represented by a variable name or text string (in quotes eg "UreaN") representing the type of fertiliser to apply
+			      //c is an optional double and can be represented by a variable name or a number representing the depth (mm) to which fertiliser is applied
+			      //if c is omitted a default depth of 0 is used (fertiliser is applied to the surface by defalt)
+			   }
             }
         }
-                
-]]></Code>
+				]]></Code>
         </Manager>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </SoluteManager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Enabled>true</Enabled>
-    <ReadOnly>false</ReadOnly>
-    <DisabledSimNames />
   </Experiment>
   <Experiment>
     <Name>RangeExperiment</Name>
@@ -734,62 +678,35 @@
       <Name>Factors</Name>
       <Factor>
         <Name>Fertiliser</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Specifications>
           <string>[FertiliserRule].Script.ApplicationAmount=0 to 100 step 20</string>
         </Specifications>
       </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
     </Factors>
     <Simulation>
       <Name>Base2</Name>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <FileName>WeatherFiles\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <StartDate>2003-10-20T00:00:00</StartDate>
         <EndDate>2004-05-23T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
-        <CaptureErrors>true</CaptureErrors>
-        <CaptureWarnings>true</CaptureWarnings>
-        <CaptureSummaryText>true</CaptureSummaryText>
       </Summary>
       <Zone>
         <Name>Field</Name>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -806,9 +723,6 @@
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -851,9 +765,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>BarleySoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -896,9 +807,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>PotatoSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -939,9 +847,6 @@
                 <double>0</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1023,9 +928,7 @@
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -1081,13 +984,9 @@
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <ResidueInterception>0</ResidueInterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -1120,12 +1019,17 @@
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>200</RootWt>
             <SoilCN>12.5</SoilCN>
@@ -1200,9 +1104,6 @@
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1247,18 +1148,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1304,15 +1199,6 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
-          <CERESSoilTemperature>
-            <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <SoilType>Black Vertosol</SoilType>
           <LocalName>Waco</LocalName>
@@ -1325,23 +1211,41 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <ResourceName>SurfaceOrganicMatter</ResourceName>
-          <InitialResidueName>Potato</InitialResidueName>
-          <InitialResidueType>Potato</InitialResidueType>
-          <InitialResidueMass>1000</InitialResidueMass>
-          <InitialStandingFraction>0</InitialStandingFraction>
-          <InitialCPR>0</InitialCPR>
-          <InitialCNR>80</InitialCNR>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Potato</PoolName>
+          <type>Potato</type>
+          <mass>1000</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <Manager>
           <Name>FertiliserRule</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Script>
             <ApplicationAmount>500</ApplicationAmount>
             <FertType>NO3N</FertType>
@@ -1371,37 +1275,23 @@
                {
                if (Clock.Today.Date.Equals(ApplicationDate))
                     Fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);
-                  //Fertiliser.Apply(Amount:a, Type:"b", Depth:c)
-                  //a is a double and can be represented by a variable name or a number representing the amount (kg/ha) of fertiliser to apply
-                  //b is a string and can be represented by a variable name or text string (in quotes eg "UreaN") representing the type of fertiliser to apply
-                  //c is an optional double and can be represented by a variable name or a number representing the depth (mm) to which fertiliser is applied
-                  //if c is omitted a default depth of 0 is used (fertiliser is applied to the surface by defalt)
-               }
+			      //Fertiliser.Apply(Amount:a, Type:"b", Depth:c)
+			      //a is a double and can be represented by a variable name or a number representing the amount (kg/ha) of fertiliser to apply
+			      //b is a string and can be represented by a variable name or text string (in quotes eg "UreaN") representing the type of fertiliser to apply
+			      //c is an optional double and can be represented by a variable name or a number representing the depth (mm) to which fertiliser is applied
+			      //if c is omitted a default depth of 0 is used (fertiliser is applied to the surface by defalt)
+			   }
             }
         }
-                
-]]></Code>
+				]]></Code>
         </Manager>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </SoluteManager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Enabled>true</Enabled>
-    <ReadOnly>false</ReadOnly>
-    <DisabledSimNames />
   </Experiment>
   <Experiment>
     <Name>OperationsExpt</Name>
@@ -1411,87 +1301,51 @@
         <Name>Operations</Name>
         <Operations>
           <Name>0N</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2003-11-15T00:00:00</Date>
             <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 0);</Action>
-            <Enabled>true</Enabled>
           </Operation>
         </Operations>
         <Operations>
           <Name>50N</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2003-11-15T00:00:00</Date>
             <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N, 0);</Action>
-            <Enabled>true</Enabled>
           </Operation>
           <Operation>
             <Date>2003-11-16T00:00:00</Date>
             <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N, 0);</Action>
-            <Enabled>true</Enabled>
           </Operation>
         </Operations>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Specifications>
           <string>[FertiliserRule]</string>
         </Specifications>
       </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
     </Factors>
     <Simulation>
       <Name>Base3</Name>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <FileName>WeatherFiles\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <StartDate>2003-11-15T00:00:00</StartDate>
         <EndDate>2003-11-16T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
-        <CaptureErrors>true</CaptureErrors>
-        <CaptureWarnings>true</CaptureWarnings>
-        <CaptureSummaryText>true</CaptureSummaryText>
       </Summary>
       <Zone>
         <Name>Field</Name>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1508,9 +1362,6 @@
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -1553,9 +1404,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>BarleySoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -1598,9 +1446,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>PotatoSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -1641,9 +1486,6 @@
                 <double>0</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1725,9 +1567,7 @@
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -1783,13 +1623,9 @@
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <ResidueInterception>0</ResidueInterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -1822,12 +1658,17 @@
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>200</RootWt>
             <SoilCN>12.5</SoilCN>
@@ -1902,9 +1743,6 @@
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1949,18 +1787,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2006,15 +1838,6 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
-          <CERESSoilTemperature>
-            <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <SoilType>Black Vertosol</SoilType>
           <LocalName>Waco</LocalName>
@@ -2027,63 +1850,72 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <ResourceName>SurfaceOrganicMatter</ResourceName>
-          <InitialResidueName>Potato</InitialResidueName>
-          <InitialResidueType>Potato</InitialResidueType>
-          <InitialResidueMass>1000</InitialResidueMass>
-          <InitialStandingFraction>0</InitialStandingFraction>
-          <InitialCPR>0</InitialCPR>
-          <InitialCNR>80</InitialCNR>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Potato</PoolName>
+          <type>Potato</type>
+          <mass>1000</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
-          <NightInterceptionFraction>0.5</NightInterceptionFraction>
-          <ReferenceHeight>2</ReferenceHeight>
+          <air_pressure>1010</air_pressure>
+          <soil_emissivity>0.96</soil_emissivity>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <windspeed_default>3</windspeed_default>
+          <refheight>2</refheight>
+          <albedo>0.29366217672824863</albedo>
+          <emissivity>0.96</emissivity>
+          <gsmax>0.01</gsmax>
+          <r50>200</r50>
         </MicroClimate>
         <Operations>
           <Name>FertiliserRule</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2003-11-15T00:00:00</Date>
             <Action>[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 0);</Action>
-            <Enabled>true</Enabled>
           </Operation>
         </Operations>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </SoluteManager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Enabled>true</Enabled>
-    <ReadOnly>false</ReadOnly>
-    <DisabledSimNames />
   </Experiment>
   <Experiment>
     <Name>Compound</Name>
@@ -2093,14 +1925,8 @@
         <Name>Dalby</Name>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <FileName>WeatherFiles\Dalby.met</FileName>
         </Weather>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Specifications>
           <string>[Clock].StartDate=1988-01-01</string>
           <string>[Clock].EndDate=1988-12-31</string>
@@ -2111,69 +1937,39 @@
         <Name>Goondiwindi</Name>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <FileName>WeatherFiles\Goond.met</FileName>
         </Weather>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Specifications>
           <string>[Clock].StartDate=1940-01-01</string>
           <string>[Clock].EndDate=1940-12-31</string>
           <string>[Weather]</string>
         </Specifications>
       </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
     </Factors>
     <Simulation>
       <Name>Base4</Name>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <FileName>WeatherFiles\Dalby.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <StartDate>2003-10-20T00:00:00</StartDate>
         <EndDate>2004-05-23T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
-        <CaptureErrors>true</CaptureErrors>
-        <CaptureWarnings>true</CaptureWarnings>
-        <CaptureSummaryText>true</CaptureSummaryText>
       </Summary>
       <Zone>
         <Name>Field</Name>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -2189,9 +1985,6 @@
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -2234,9 +2027,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>BarleySoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -2279,9 +2069,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>PotatoSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -2322,9 +2109,6 @@
                 <double>0</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2406,9 +2190,7 @@
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -2464,13 +2246,9 @@
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <ResidueInterception>0</ResidueInterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -2503,12 +2281,30 @@
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
+            <oc>
+              <double>1.0394689866136577</double>
+              <double>0.88634994467382933</double>
+              <double>0.88849784160151635</double>
+              <double>0.88944020107263133</double>
+              <double>0.76980497654563118</double>
+              <double>0.449904950148074</double>
+              <double>0.26995458683192625</double>
+              <double>0.21996374392550275</double>
+              <double>0.15997583826755923</double>
+              <double>0.12998054052803287</double>
+              <double>0.11998069317336697</double>
+            </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>200</RootWt>
             <SoilCN>12.5</SoilCN>
@@ -2583,9 +2379,6 @@
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2630,18 +2423,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2687,15 +2474,6 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
-          <CERESSoilTemperature>
-            <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <SoilType>Black Vertosol</SoilType>
           <LocalName>Waco</LocalName>
@@ -2708,48 +2486,79 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <ResourceName>SurfaceOrganicMatter</ResourceName>
-          <InitialResidueName>Potato</InitialResidueName>
-          <InitialResidueType>Potato</InitialResidueType>
-          <InitialResidueMass>1000</InitialResidueMass>
-          <InitialStandingFraction>0</InitialStandingFraction>
-          <InitialCPR>0</InitialCPR>
-          <InitialCNR>80</InitialCNR>
+          <ReportAdditions>no</ReportAdditions>
+          <ReportRemovals>no</ReportRemovals>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <TillageTypes>
+            <Name>TillageTypesList</Name>
+            <TillageType />
+          </TillageTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Potato</PoolName>
+          <type>Potato</type>
+          <mass>1000</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
-          <NightInterceptionFraction>0.5</NightInterceptionFraction>
-          <ReferenceHeight>2</ReferenceHeight>
+          <air_pressure>1010</air_pressure>
+          <soil_emissivity>0.96</soil_emissivity>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <windspeed_default>3</windspeed_default>
+          <refheight>2</refheight>
+          <albedo>0.29366217672824863</albedo>
+          <emissivity>0.96</emissivity>
+          <gsmax>0.01</gsmax>
+          <r50>200</r50>
         </MicroClimate>
         <Graph>
           <Name>SoilWater</Name>
           <Series>
             <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <Checkpoint>Current</Checkpoint>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>SoilWater.sw_dep(1)</YFieldName>
@@ -2758,9 +2567,6 @@
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Axis>
             <Type>Left</Type>
             <Title>Soil water (mm)</Title>
@@ -2778,38 +2584,22 @@
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Operations>
           <Name>FertiliserRule</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Operation>
             <Date>2003-11-15T00:00:00</Date>
             <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 0);</Action>
-            <Enabled>true</Enabled>
           </Operation>
         </Operations>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </SoluteManager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Enabled>true</Enabled>
-    <ReadOnly>false</ReadOnly>
-    <DisabledSimNames />
   </Experiment>
   <Experiment>
     <Name>ManagerExpt</Name>
@@ -2819,9 +2609,6 @@
         <Name>NRate</Name>
         <Manager>
           <Name>33</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Script>
             <FertDate>2003-11-15</FertDate>
             <ApplicationAmount>33</ApplicationAmount>
@@ -2850,20 +2637,16 @@
                [EventSubscribe("DoManagement")]
                private void OnDoManagement(object sender, EventArgs e)
                {
-                
-                if (Clock.Today.Date == FertDate.Date)
+				
+				if (Clock.Today.Date == FertDate.Date)
                     Fertiliser.Apply(ApplicationAmount, Fertiliser.Types.NO3N, 0);
-               }
+			   }
             }
         }
-                
-]]></Code>
+				]]></Code>
         </Manager>
         <Manager>
           <Name>66</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Script>
             <FertDate>2003-11-15</FertDate>
             <ApplicationAmount>66</ApplicationAmount>
@@ -2892,71 +2675,43 @@
                [EventSubscribe("DoManagement")]
                private void OnDoManagement(object sender, EventArgs e)
                {
-                
-                if (Clock.Today.Date == FertDate.Date)
+				
+				if (Clock.Today.Date == FertDate.Date)
                     Fertiliser.Apply(ApplicationAmount, Fertiliser.Types.NO3N, 0);
-               }
+			   }
             }
         }
-                
-]]></Code>
+				]]></Code>
         </Manager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Specifications>
           <string>[FertiliserRule]</string>
         </Specifications>
       </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
     </Factors>
     <Simulation>
       <Name>Base5</Name>
       <Weather>
         <Name>Weather</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <FileName>WeatherFiles\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <StartDate>2003-11-15T00:00:00</StartDate>
         <EndDate>2003-11-15T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
-        <CaptureErrors>true</CaptureErrors>
-        <CaptureWarnings>true</CaptureWarnings>
-        <CaptureSummaryText>true</CaptureSummaryText>
       </Summary>
       <Zone>
         <Name>Field</Name>
         <Irrigation>
           <Name>Irrigation</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
         </Fertiliser>
         <Report>
           <Name>Report</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -2973,9 +2728,6 @@
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -3018,9 +2770,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>BarleySoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -3063,9 +2812,6 @@
             </SoilCrop>
             <SoilCrop>
               <Name>PotatoSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
               <LL>
                 <double>0.29</double>
                 <double>0.29</double>
@@ -3106,9 +2852,6 @@
                 <double>0</double>
               </XF>
             </SoilCrop>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3190,9 +2933,7 @@
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -3248,13 +2989,9 @@
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <ResidueInterception>0</ResidueInterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -3287,12 +3024,17 @@
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <RootCN>40</RootCN>
             <RootWt>200</RootWt>
             <SoilCN>12.5</SoilCN>
@@ -3367,9 +3109,6 @@
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3414,18 +3153,12 @@
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3471,15 +3204,6 @@
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
-          <CERESSoilTemperature>
-            <Name>CERESSoilTemperature</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </CERESSoilTemperature>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <RecordNumber>0</RecordNumber>
           <SoilType>Black Vertosol</SoilType>
           <LocalName>Waco</LocalName>
@@ -3492,37 +3216,60 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <ResourceName>SurfaceOrganicMatter</ResourceName>
-          <InitialResidueName>Potato</InitialResidueName>
-          <InitialResidueType>Potato</InitialResidueType>
-          <InitialResidueMass>1000</InitialResidueMass>
-          <InitialStandingFraction>0</InitialStandingFraction>
-          <InitialCPR>0</InitialCPR>
-          <InitialCNR>80</InitialCNR>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Potato</PoolName>
+          <type>Potato</type>
+          <mass>1000</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
-          <NightInterceptionFraction>0.5</NightInterceptionFraction>
-          <ReferenceHeight>2</ReferenceHeight>
+          <air_pressure>1010</air_pressure>
+          <soil_emissivity>0.96</soil_emissivity>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <windspeed_default>3</windspeed_default>
+          <refheight>2</refheight>
+          <albedo>0.29366217672824863</albedo>
+          <emissivity>0.96</emissivity>
+          <gsmax>0.01</gsmax>
+          <r50>200</r50>
         </MicroClimate>
         <Manager>
           <Name>FertiliserRule</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
           <Script>
             <FertDate>2003-11-15</FertDate>
             <ApplicationAmount>77</ApplicationAmount>
@@ -3551,44 +3298,26 @@
                [EventSubscribe("DoManagement")]
                private void OnDoManagement(object sender, EventArgs e)
                {
-                
-                if (Clock.Today.Date == FertDate.Date)
+				
+				if (Clock.Today.Date == FertDate.Date)
                     Fertiliser.Apply(ApplicationAmount, Fertiliser.Types.NO3N, 0);
-               }
+			   }
             }
         }
-                
-]]></Code>
+				]]></Code>
         </Manager>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-        </SoluteManager>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Enabled>true</Enabled>
-        <ReadOnly>false</ReadOnly>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Enabled>true</Enabled>
-      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Enabled>true</Enabled>
-    <ReadOnly>false</ReadOnly>
-    <DisabledSimNames />
   </Experiment>
   <DataStore>
     <Name>DataStore</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <Enabled>true</Enabled>
-    <ReadOnly>false</ReadOnly>
+    <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  <IncludeInDocumentation>true</IncludeInDocumentation>
-  <Enabled>true</Enabled>
-  <ReadOnly>false</ReadOnly>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
