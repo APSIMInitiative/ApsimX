@@ -301,7 +301,7 @@ namespace Models.Core
         /// <param name="FileName">Name of the file.</param>
         public void Write(string FileName)
         {
-            string tempFileName = Path.GetTempFileName();
+            string tempFileName = PathUtilities.GetTempFileName();
             StreamWriter Out = new StreamWriter(tempFileName);
             Write(Out);
             Out.Close();

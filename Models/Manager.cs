@@ -252,7 +252,7 @@ namespace Models
         /// <summary>Work out the assembly file name (with path).</summary>
         public string GetAssemblyFileName()
         {
-            return Path.ChangeExtension(Path.GetTempFileName(), ".dll");
+            return Path.ChangeExtension(PathUtilities.GetTempFileName(), ".dll");
         }
 
         /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>
