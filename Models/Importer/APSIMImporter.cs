@@ -177,7 +177,7 @@ namespace Importer
         /// <returns>An APSIMX Simulations object</returns>
         public Simulations CreateSimulations(string filename)
         {
-            string xfile = PathUtilities.GetTempFileName();
+            string xfile = Path.GetTempFileName();
             Simulations newSimulations = null;
 
             try

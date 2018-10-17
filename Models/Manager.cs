@@ -31,9 +31,13 @@ namespace Models
         private bool HasLoaded = false;
         /// <summary>The elements as XML</summary>
         private string elementsAsXml = null;
-        /// <summary>Name of compiled assembly</summary>
+        /// <summary>Name of compiled assembly.</summary>
         [NonSerialized]
         private string assemblyName = null;
+
+        /// <summary>Path of compiled assembly.</summary>
+        [NonSerialized]
+        private string assemblyPath = null;
 
         /// <summary>The _ script</summary>
         [NonSerialized] private Model _Script;
@@ -213,6 +217,16 @@ namespace Models
                         try
                         {
                             compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
+                            if (compiledAssembly.Location != assemblyPath)
+                            {
+                                if (!string.IsNullOrEmpty(assemblyPath))
+                                {
+                                    File.Delete(assemblyPath);
+                                    File.Delete(Path.ChangeExtension(assemblyPath, ".cs"));
+                                    File.Delete(Path.ChangeExtension(assemblyPath, ".pdb"));
+                                }
+                                assemblyPath = compiledAssembly.Location;
+                            }
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
@@ -252,7 +266,9 @@ namespace Models
         /// <summary>Work out the assembly file name (with path).</summary>
         public string GetAssemblyFileName()
         {
-            return Path.ChangeExtension(PathUtilities.GetTempFileName(), ".dll");
+            string path = Path.GetTempFileName();
+            File.Delete(path);
+            return Path.ChangeExtension(path, ".dll");
         }
 
         /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>
