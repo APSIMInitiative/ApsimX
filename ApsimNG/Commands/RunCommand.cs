@@ -170,26 +170,18 @@
             {
                 int numClocks = jobManager.SimClocks.Count;
                 for (int i = 0; i < numClocks; i++)
-                {
                     if (jobManager.SimClocks[i] != null)
-                    {
-                        if (jobManager.SimClocks[i].FractionComplete < 0)
-                        {
-
-                        }
-                        numberComplete += jobManager.SimClocks[i].FractionComplete;
-                    }
-                }
+                        if (jobManager.SimClocks[i].FractionComplete > 0)
+                            numberComplete += jobManager.SimClocks[i].FractionComplete;
             }
-            else
+            if (numberComplete < 0.1)
             {
                 numberComplete = numSimulationsRun;
             }
 
-            double percentComplete = (numberComplete / numSimulations) * 100.0;
-
             if (numSimulations > 0)
             {
+                double percentComplete = (numberComplete / numSimulations) * 100.0;
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
                          numSimulationsRun + " of " +
                          (numSimulations) + " completed)", Simulation.MessageType.Information);
