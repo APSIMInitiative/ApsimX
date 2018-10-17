@@ -30,15 +30,20 @@
         /// <summary>The arguments.</summary>
         private string arguments;
 
+        /// <summary>Should the child process' output be redirected?</summary>
+        private bool verbose;
+
         /// <summary>Initializes a new instance of the <see cref="RunExternal"/> class.</summary>
         /// <param name="executable">Name of the executable file.</param>
         /// <param name="arguments">The arguments.</param>
         /// <param name="workingDirectory">The working directory.</param>
-        public RunExternal(string executable, string arguments, string workingDirectory)
+        /// <param name="verbose">Should the child process' output be redirected?</param>
+        public RunExternal(string executable, string arguments, string workingDirectory, bool verbose)
         {
             this.executable = executable;
             this.workingDirectory = workingDirectory;
             this.arguments = arguments;
+            this.verbose = verbose;
         }
 
         /// <summary>Called to start the job.</summary>
@@ -55,15 +60,49 @@
             p.StartInfo.WorkingDirectory = workingDirectory;
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            if (verbose)
+            {
+                p.OutputDataReceived += OnOutputDataReceived;
+                p.ErrorDataReceived += OnErrorDataReceived;
+            }
+
             p.Start();
-            string stdout = p.StandardOutput.ReadToEnd();
+            if (verbose)
+            {
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            }
             p.WaitForExit();
+            string stdout = p.StandardOutput.ReadToEnd();
             if (p.ExitCode > 0)
             {
                 string errorMessage = "Error in file: " + arguments + Environment.NewLine;
                 errorMessage += stdout;
                 throw new RunExternalException(errorMessage);
             }
+        }
+
+        /// <summary>
+        /// Invoked whenever the child process writes to standard output or standard error.
+        /// Writes the data to standard output.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnOutputDataReceived(object sender, DataReceivedEventArgs args)
+        {
+            Console.WriteLine(args.Data);
+        }
+
+        /// <summary>
+        /// Invoked whenever the child process writes to standard output or standard error.
+        /// Writes the data to standard error.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnErrorDataReceived(object sender, DataReceivedEventArgs args)
+        {
+            Console.Error.WriteLine(args.Data);
         }
     }
 }
