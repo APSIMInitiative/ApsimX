@@ -83,7 +83,6 @@ namespace Models.Functions.SupplyFunctions
         [Bounds(Lower = 0.01, Upper = 1000.0)]
         [Units("mm/hr")]
         public double MaxTr { get; set; } = 999;
-
         //------------------------------------------------------------------------------------------------
 
         private double maxLag = 1.86;       // a, Greg=1.5
