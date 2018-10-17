@@ -971,18 +971,11 @@ namespace Importer
         /// </summary>
         /// <param name="scriptParams"></param>
         /// <returns></returns>
-        private XmlElement[] AddManagerParams(List<ScriptParameter> scriptParams)
+        private List<KeyValuePair<string, string>> AddManagerParams(List<ScriptParameter> scriptParams)
         {
-            XmlDocument doc = new XmlDocument();
-            XmlElement[] parameters = new XmlElement[1];
-            parameters[0] = doc.CreateElement("Script");
+            List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
             foreach (ScriptParameter param in scriptParams)
-            {
-                XmlNode newChild = doc.CreateElement(param.Name);
-                XmlText text = doc.CreateTextNode(param.Value);
-                newChild.AppendChild(text);
-                parameters[0].AppendChild(newChild);
-            }
+                parameters.Add(new KeyValuePair<string, string>(param.Name, param.Value));
 
             return parameters;
         }
@@ -1058,7 +1051,7 @@ namespace Importer
             // Convert the <ui> section
             List<ScriptParameter> scriptParams = new List<ScriptParameter>();
             this.GetManagerParams(compNode, scriptParams);
-            mymanager.elements = this.AddManagerParams(scriptParams);
+            mymanager.Parameters = this.AddManagerParams(scriptParams);
             code.Append(this.WriteManagerParams(scriptParams));
 
             // Convert the <script> section 
@@ -1197,7 +1190,7 @@ namespace Importer
             // Convert the <ui> section
             List<ScriptParameter> scriptParams = new List<ScriptParameter>();
             this.GetManagerParams(compNode, scriptParams);
-            mymanager.elements = this.AddManagerParams(scriptParams);
+            mymanager.Parameters = this.AddManagerParams(scriptParams);
             
             // find the <text> node
             XmlNode textNode = XmlUtilities.Find(compNode, "text");

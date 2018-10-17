@@ -1,6 +1,4 @@
-﻿
-
-namespace Models.Core
+﻿namespace Models.Core
 {
     using Models.Core.Interfaces;
     using System;
@@ -9,10 +7,14 @@ namespace Models.Core
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
-    public class ModelCollectionFromResource : Model, IDontSerialiseChildren
+    public class ModelCollectionFromResource : Model, IOptionallySerialiseChildren
     {
         /// <summary>Gets or sets the name of the resource.</summary>
         public string ResourceName { get; set; }
+
+        /// <summary>Allow children to be serialised?</summary>
+        [System.Xml.Serialization.XmlIgnore]
+        public bool DoSerialiseChildren { get; private set; } = true;
 
         /// <summary>
         /// We have just been deserialised. If from XML then load our model
@@ -28,9 +30,12 @@ namespace Models.Core
                 {
                     List<Exception> creationExceptions;
                     Model ModelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out creationExceptions);
+                    Children.Clear();
                     Children.AddRange(ModelFromResource.Children);
                     CopyPropertiesFrom(ModelFromResource);
                     SetNotVisible(ModelFromResource);
+                    Apsim.ParentAllChildren(this);
+                    DoSerialiseChildren = false;
                 }
             }
         }
@@ -45,6 +50,7 @@ namespace Models.Core
             {
                 if (property.CanWrite &&
                     property.Name != "Name" &&
+                    property.Name != "Parent" &&
                     property.Name != "Children" &&
                     property.Name != "IncludeInDocumentation" &&
                     property.Name != "ResourceName")

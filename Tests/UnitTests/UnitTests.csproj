@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APSIMFileReaderTests.cs" />
+    <Compile Include="XMLToJSONTests.cs" />
     <Compile Include="ManagerConverterTests.cs" />
     <Compile Include="TestIndexedDataTable.cs" />
     <Compile Include="TrackerFunctionTests.cs" />
@@ -158,7 +159,12 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Resources\Goondiwindi.met" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureParentChildRelationshipConverts.json" />
     <None Include="Resources\Test3.apsimxForUnitTest" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureParentChildRelationshipConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureArraysConvert.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
@@ -187,6 +193,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\APSIMFileReaderTests2.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureArraysConvert.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

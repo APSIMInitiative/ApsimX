@@ -101,7 +101,7 @@
 
         /// <summary>Test that models that implement IDontSerialiseChildren don't have the children serialised.</summary>
         [Test]
-        public void FileFormat_CheckIDontSerialiseChildrenWorks()
+        public void FileFormat_CheckIOptionallySerialiseChildrenWorks()
         {
             // Create some models.
             Simulation sim = new Simulation();
@@ -119,7 +119,11 @@
         }
 
         /// <summary>A class that implements IDontSerialiseChildren.</summary>
-        private class ModelWithIDontSerialiseChildren : Model, IDontSerialiseChildren { }
+        private class ModelWithIDontSerialiseChildren : Model, IOptionallySerialiseChildren
+        {
+            /// <summary>Allow children to be serialised?</summary>
+            public bool DoSerialiseChildren { get { return false; } }
+        }
 
     }
 }

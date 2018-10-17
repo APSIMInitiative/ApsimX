@@ -10,6 +10,7 @@
     using Newtonsoft.Json.Serialization;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using Models.Core.Interfaces;
 
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
@@ -78,27 +79,15 @@
             // Run the converter.
             bool changed = Converter.DoConvert(ref st, -1, fileName);
 
-            int offset = st.TakeWhile(c => char.IsWhiteSpace(c)).Count();
-            char firstNonBlankChar = st[offset];
-
             T newModel;
-            if (firstNonBlankChar == '{')
+            JsonSerializer serializer = new JsonSerializer()
             {
-                JsonSerializer serializer = new JsonSerializer()
-                {
-                    TypeNameHandling = TypeNameHandling.Auto
-                };
-                using (var sw = new StringReader(st))
-                using (var reader = new JsonTextReader(sw))
-                {
-                    newModel = serializer.Deserialize<T>(reader);
-                }
-            }
-            else
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+            using (var sw = new StringReader(st))
+            using (var reader = new JsonTextReader(sw))
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(st);
-                newModel = (T)XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly());
+                newModel = serializer.Deserialize<T>(reader);
             }
 
             // Parent all models.
@@ -130,26 +119,24 @@
                 result.RemoveAll(m => m is PropertyInfo &&
                                       !(m as PropertyInfo).CanWrite);
                 result.RemoveAll(m => m.GetCustomAttribute(typeof(XmlIgnoreAttribute)) != null);
-                if (objectType.GetInterface("IDontSerialiseChildren") != null)
-                    result.RemoveAll(m => m.Name == "Children");
                 return result;
             }
-        }
 
-        ///<summary>Custom Contract resolver to stop deseralization of Parent properties.</summary>
-        private class DynamicContractResolver : DefaultContractResolver
-        {
-            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {
-                IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
+                JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-                // only serializer properties that start with the specified character
-                properties =
-                    properties.Where(p => p.PropertyName != "Parent").ToList();
+                if (property.PropertyName == "Children")
+                    property.ShouldSerialize = instance =>
+                    {
+                        if (instance is IOptionallySerialiseChildren)
+                            return (instance as IOptionallySerialiseChildren).DoSerialiseChildren;
+                        return true;
+                    };
 
-                return properties;
+                return property;
             }
-        }
 
+        }
     }
 }

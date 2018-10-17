@@ -1,11 +1,12 @@
-﻿
-namespace Models
+﻿namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.Interfaces;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.IO;
     using System.Reflection;
     using System.Xml;
@@ -22,110 +23,53 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
-    public class Manager : Model, IDontSerialiseChildren
+    public class Manager : Model, IOptionallySerialiseChildren
     {
-        // ----------------- Privates
-        /// <summary>The _ code</summary>
-        private string _Code;
-        /// <summary>The has deserialised</summary>
-        private bool HasLoaded = false;
-        /// <summary>The elements as XML</summary>
-        private string elementsAsXml = null;
-        /// <summary>Name of compiled assembly</summary>
-        [NonSerialized]
-        private string assemblyName = null;
-
-        /// <summary>The _ script</summary>
-        [NonSerialized] private Model _Script;
-        /// <summary>The _elements</summary>
-        [NonSerialized] private XmlElement[] _elements;
-
         /// <summary>The compiled code</summary>
-        [NonSerialized] private string CompiledCode = "";
+        [NonSerialized]
+        private string CompiledCode;
 
-        // ----------------- Parameters (XML serialisation)
-        /// <summary>Gets or sets the elements.</summary>
-        [XmlAnyElement(Name = "Script")]
-        public XmlElement[] elements 
-        { 
-            get
-            {
-                // Capture the current values of all parameters.
-                EnsureParametersAreCurrent();
+        /// <summary>Has the manager model been fully created yet?</summary>
+        [NonSerialized]
+        private bool isCreated = false;
+        
+        /// <summary>The code to compile.</summary>
+        private string cSharpCode;
 
-                return _elements;
-            } 
-            
-            set 
-            {
-                if (value != null && value.Length > 1)
-                {
-                    _elements = new XmlElement[1];
-                    _elements[0] = value[value.Length - 1];
-                }
-                else
-                    _elements = value;
-            }
-        }
-
-        /// <summary>Gets or sets the code c data.</summary>
-        [XmlElement("Code")]
-        public string CodeCData
+        /// <summary>Gets or sets the code to compile.</summary>
+        public string Code
         {
             get
             {
-                return Code;
+                return cSharpCode;
             }
             set
             {
-                if (value == null)
-                {
-                    Code = null;
-                    return;
-                }
-
-                Code = value;
+                cSharpCode = value;
+                RebuildScriptModel();
             }
         }
 
         /// <summary>The script Model that has been compiled</summary>
-        [XmlIgnore]
-        public Model Script 
-        { 
-            get { return _Script; } 
-            set { _Script = value; } 
-        }
+        public List<KeyValuePair<string, string>> Parameters { get; set; }
+
+        /// <summary>Allow children to be serialised?</summary>
+        public bool DoSerialiseChildren { get { return false; } }
 
         /// <summary>
         /// Stores column and line of caret, and scrolling position when editing in GUI
         /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
         /// way to store both the caret position and scrolling information.
         /// </summary>
-        [XmlIgnore] public System.Drawing.Rectangle Location = new System.Drawing.Rectangle(1, 1, 0, 0);
+        [XmlIgnore]
+        public Rectangle Location { get; set; }  = new Rectangle(1, 1, 0, 0);
 
         /// <summary>
         /// Stores whether we are currently on the tab displaying the script.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore] public int ActiveTabIndex = 0;
-
-
-        /// <summary>The code for the Manager script</summary>
-        [Summary]
-        [Description("Script code")]
         [XmlIgnore]
-        public string Code
-        {
-            get
-            {
-                return _Code;
-            }
-            set
-            {
-                _Code = value;
-                RebuildScriptModel();
-            }
-        }
+        public int ActiveTabIndex { get; set; }
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 
@@ -133,9 +77,8 @@ namespace Models
         /// </summary>
         public override void OnCreated()
         {
-            HasLoaded = true;
-            if (Script == null && Code != string.Empty)
-                RebuildScriptModel();
+            isCreated = true;
+            RebuildScriptModel();
         }
 
         /// <summary>At simulation commencing time, rebuild the script assembly if required.</summary>
@@ -147,78 +90,37 @@ namespace Models
             RebuildScriptModel();
         }
 
-        private bool lastCompileFailed = false;
-
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
-        /// <exception cref="ApsimXException">
-        /// Cannot find a public class called 'Script'
-        /// </exception>
         public void RebuildScriptModel()
         {
-            if (HasLoaded)
+            if (isCreated && (Code != CompiledCode || Children.Count == 0))
             {
-                // Capture the current values of all parameters.
-                EnsureParametersAreCurrent();
-
-                if (_Code != CompiledCode)
+                try
                 {
-                    // Compile the code.
-                    Assembly compiledAssembly = null;
-                    
-                    if (assemblyName != null)
-                    {
-                        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            if (assembly.FullName == assemblyName)
-                            {
-                                compiledAssembly = assembly;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    // When running a simulation, we don't want to waste time by re-compiling
-                    // the script unnecessarily. But we need to be careful to avoid two sorts
-                    // of problems: (1) failing to recompile when the script has been changed
-                    // and (2) attempting to use a previously compiled assembly when the script 
-                    // has been modified and will now not compile correctly.
-                    if (compiledAssembly == null || CompiledCode != null || lastCompileFailed)
-                    {
-                        try
-                        {
-                            compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
-                            // Get the script 'Type' from the compiled assembly.
-                            if (compiledAssembly.GetType("Models.Script") == null)
-                                throw new ApsimXException(this, "Cannot find a public class called 'Script'");
+                    Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
+                    if (compiledAssembly.GetType("Models.Script") == null)
+                        throw new ApsimXException(this, "Cannot find a public class called 'Script'");
 
-                            assemblyName = compiledAssembly.FullName;
-                            CompiledCode = _Code;
-                            lastCompileFailed = false;
+                    CompiledCode = Code;
 
-                            // Create a new script model.
-                            Script = compiledAssembly.CreateInstance("Models.Script") as Model;
-                            Script.Children = new System.Collections.Generic.List<Model>();
-                            Script.Name = "Script";
-                            Script.IsHidden = true;
-                            XmlElement parameters;
+                    // Create a new script model.
+                    Model script = compiledAssembly.CreateInstance("Models.Script") as Model;
+                    script.Children = new List<Model>();
+                    script.Name = "Script";
+                    script.IsHidden = true;
 
-                            XmlDocument doc = new XmlDocument();
-                            doc.LoadXml(elementsAsXml);
-                            parameters = doc.DocumentElement;
+                    SetParametersInObject(script);
 
-                            SetParametersInObject(Script, parameters);
-
-                            // Add the new script model to our models collection.
-                            Children.Clear();
-                            Children.Add(Script);
-                            Script.Parent = this;
-                        }
-                        catch (Exception err)
-                        {
-                            lastCompileFailed = true;
-                            throw new Exception("Unable to compile \"" + Name + "\"", err);
-                        }
-                    }
+                    // Add the new script model to our models collection.
+                    Children.Clear();
+                    Children.Add(script);
+                    script.Parent = this;
+                }
+                catch (Exception err)
+                {
+                    Children.Clear();
+                    CompiledCode = null;
+                    throw new Exception("Unable to compile \"" + Name + "\"", err);
                 }
             }
         }
@@ -253,39 +155,22 @@ namespace Models
             return null;
         }
 
-        /// <summary>Ensures the parameters are up to date and reflect the current 'Script' model.</summary>
-        private void EnsureParametersAreCurrent()
-        {
-            if (Script != null)
-            {
-                if (_elements == null)
-                    _elements = new XmlElement[1];
-                _elements[0] = GetParametersInObject(Script);
-            }
-            
-            if (_elements != null && _elements.Length >= 1)
-                elementsAsXml = _elements[0].OuterXml;
-            else if (elementsAsXml == null)
-                elementsAsXml = "<Script />";
-        }
-
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         /// <param name="script">The script.</param>
-        /// <param name="xmlElement">The XML element.</param>
-        private void SetParametersInObject(Model script, XmlElement xmlElement)
+        private void SetParametersInObject(Model script)
         {
-            foreach (XmlElement element in xmlElement.ChildNodes)
+            foreach (var parameter in Parameters)
             {
-                PropertyInfo property = Script.GetType().GetProperty(element.Name);
+                PropertyInfo property = script.GetType().GetProperty(parameter.Key);
                 if (property != null)
                 {
                     object value;
-                    if (element.InnerText.StartsWith(".Simulations."))
-                        value = Apsim.Get(this, element.InnerText);
+                    if (parameter.Value.StartsWith(".Simulations."))
+                        value = Apsim.Get(this, parameter.Value);
                     else if (property.PropertyType == typeof(IPlant))
-                        value = Apsim.Find(this, element.InnerText);
+                        value = Apsim.Find(this, parameter.Value);
                     else
-                        value = ReflectionUtilities.StringToObject(property.PropertyType, element.InnerText);
+                        value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                     property.SetValue(script, value, null);
                 }
             }
@@ -294,10 +179,9 @@ namespace Models
         /// <summary>Get the scripts parameters as a returned xmlElement.</summary>
         /// <param name="script">The script.</param>
         /// <returns></returns>
-        private XmlElement GetParametersInObject(Model script)
+        private void GetParametersInObject(Model script)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.AppendChild(doc.CreateElement("Script"));
+            Parameters.Clear();
             foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
             {
                 if (property.CanRead && property.CanWrite && 
@@ -308,11 +192,11 @@ namespace Models
                         value = "";
                     else if (value is IModel)
                         value = Apsim.FullPath(value as IModel);
-                    XmlUtilities.SetValue(doc.DocumentElement, property.Name, 
-                                         ReflectionUtilities.ObjectToString(value));
+                    Parameters.Add(new KeyValuePair<string, string>
+                                        (property.Name, 
+                                         ReflectionUtilities.ObjectToString(value)));
                 }
             }
-            return doc.DocumentElement;
         }
 
     }
