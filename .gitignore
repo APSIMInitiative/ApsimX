@@ -1,37 +1,9 @@
-
-#ignore thumbnails created by windows
-Thumbs.db
-#Ignore files build by Visual Studio
-*.obj
-*.exe
-*.pdb
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.tlb
-*.tlh
-*.bak
-*.cache
-*.ilk
-*.log
-[Bb]in
-[Dd]ebug*/
-*.lib
-*.sbr
-obj/
-[Rr]elease*/
-_ReSharper*/
-[Tt]est[Rr]esult*
-/Docs/html
-/Models/AssemblyVersion.cs
-*MaizeTestModel*
-Documentation/html
+Temporary
+Updater/obj/
+Tests/UnitTests/obj/
+SWIMFrame/obj/
 packages/
+<<<<<<< HEAD
 Tests/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.db.sum
 *.sum
 Documents/
@@ -51,3 +23,11 @@ Documentation/errors.txt
 .vscode/
 *.db
 .vs/ApsimX/v15/sqlite3/storage.ide
+=======
+Models/Importer/obj/
+Models/obj/
+Models/Bin/
+Bin/
+APSIMRunner/obj/
+ApsimNG/obj/
+>>>>>>> MaxHrTrModel

@@ -2917,6 +2917,7 @@ namespace Models.AgPasture
         public double WaterDemand
         {
             get { return myWaterDemand; }
+            set { myWaterDemand = value; }
         }
 
         /// <summary>Gets the amount of plant available water in each soil layer (mm).</summary>
