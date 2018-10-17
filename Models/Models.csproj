@@ -682,6 +682,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Oats.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />
