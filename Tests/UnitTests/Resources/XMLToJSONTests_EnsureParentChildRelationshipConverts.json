@@ -1,0 +1,20 @@
+﻿{
+  "Children": [
+    {
+      "Children": [],
+      "Name": "Clock",
+      "IncludeInDocumentation": true,
+      "StartDate": "1900-01-01T00:00:00",
+      "EndDate": "2000-12-31T00:00:00"
+    },
+    {
+      "Children": [],
+      "Name": "DataStore",
+      "IncludeInDocumentation": true
+    }
+  ],
+  "Version": 32,
+  "Name": "Simulations",
+  "IncludeInDocumentation": true,
+  "ExplorerWidth": 296
+}
