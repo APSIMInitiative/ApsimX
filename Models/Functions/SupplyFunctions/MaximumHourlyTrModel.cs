@@ -72,6 +72,20 @@ namespace Models.Functions.SupplyFunctions
         private IFunction RadnInt = null;
         //------------------------------------------------------------------------------------------------
 
+        /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
+        [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
+        [Bounds(Lower = 0.1, Upper = 1000)]
+        [Units("kPa")]
+        public double MaxVPD { get; set; } = 999;
+
+        /// <summary>The maximum hourly transpiration rate</summary>
+        [Description("Maximum hourly transpiration rate (mm/hr)")]
+        [Bounds(Lower = 0.01, Upper = 1000.0)]
+        [Units("mm/hr")]
+        public double MaxTr { get; set; } = 999;
+
+        //------------------------------------------------------------------------------------------------
+
         private double maxLag = 1.86;       // a, Greg=1.5
         private double nightCoef = 2.2;     // b, Greg=4.0
         private double minLag = -0.17;      // c, Greg=1.0
@@ -86,19 +100,6 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyTrCappedTr;
         private List<double> hourlyTr;
         private List<double> hourlyDM;
-        //------------------------------------------------------------------------------------------------
-
-        /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
-        [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
-        [Bounds(Lower = 0.1, Upper = 1000)]
-        [Units("kPa")]
-        public double MaxVPD { get; set; } = 999;
-
-        /// <summary>The maximum hourly transpiration rate</summary>
-        [Description("Maximum hourly transpiration rate (mm/hr)")]
-        [Bounds(Lower = 0.01, Upper = 1000.0)]
-        [Units("mm/hr")]
-        public double MaxTr { get; set; } = 999;
 
         /// <summary>Total daily assimilation in g/m2</summary>
         public double DailyDM { get; set; }
