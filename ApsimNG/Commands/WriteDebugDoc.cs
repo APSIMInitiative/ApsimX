@@ -77,7 +77,7 @@ namespace UserInterface.Commands
                 }
 
                 // Apply the transform to the reader and write it to a temporary file.
-                string htmlFileName = PathUtilities.GetTempFileName() + ".html";
+                string htmlFileName = Path.GetTempFileName() + ".html";
                 using (XmlReader reader = XmlReader.Create(new StringReader(rawXML.ToString())))
                 using (XmlWriter htmlWriter = XmlWriter.Create(htmlFileName))
                 {

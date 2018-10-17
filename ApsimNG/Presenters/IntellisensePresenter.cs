@@ -211,7 +211,7 @@
         {
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
-            string fileName = PathUtilities.GetTempFileName();
+            string fileName = Path.GetTempFileName();
             if (!File.Exists(fileName))
                 File.Create(fileName).Close();
             File.WriteAllText(fileName, code);
@@ -284,7 +284,7 @@
         {
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
-            string fileName = PathUtilities.GetTempFileName();
+            string fileName = Path.GetTempFileName();
             if (!File.Exists(fileName))
                 File.Create(fileName).Close();
             File.WriteAllText(fileName, code);
