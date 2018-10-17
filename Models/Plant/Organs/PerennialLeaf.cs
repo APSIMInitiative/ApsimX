@@ -216,6 +216,10 @@ namespace Models.PMF.Organs
                 MicroClimatePresent = true;
             }
         }
+
+        /// <summary>Actual water demand (mm).</summary>
+        public double WaterDemand { get; set; }
+
         /// <summary>
         /// Flag to test if Microclimate is present
         /// </summary>
