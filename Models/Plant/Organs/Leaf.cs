@@ -1084,7 +1084,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]

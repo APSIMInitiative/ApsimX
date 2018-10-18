@@ -233,7 +233,7 @@ namespace Models.PMF.Organs
         public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn
