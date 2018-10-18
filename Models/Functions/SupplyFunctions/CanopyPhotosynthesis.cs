@@ -201,7 +201,8 @@ namespace Models.Functions.SupplyFunctions
                 AveGrossPs += Plant.Leaf.Fw * GrossPs * wGauss[i]; // The impact of water stress was added based on Eq. 3.2.53 in Enli Wang's PhD thesis
             }
 
-            DailyGrossPs = AveGrossPs * Dayl;
+            // DailyGrossPs = AveGrossPs * Dayl;
+            DailyGrossPs = Plant.Leaf.Fw * (AveGrossPs * Dayl); // Added: Water-stress must be accounted for in this part (Eq. 3.2.53)!
 
             return DailyGrossPs;
         }
