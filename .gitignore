@@ -3,7 +3,6 @@ Updater/obj/
 Tests/UnitTests/obj/
 SWIMFrame/obj/
 packages/
-<<<<<<< HEAD
 Tests/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.db.sum
 *.sum
 Documents/
@@ -23,11 +22,9 @@ Documentation/errors.txt
 .vscode/
 *.db
 .vs/ApsimX/v15/sqlite3/storage.ide
-=======
 Models/Importer/obj/
 Models/obj/
 Models/Bin/
 Bin/
 APSIMRunner/obj/
 ApsimNG/obj/
->>>>>>> MaxHrTrModel
