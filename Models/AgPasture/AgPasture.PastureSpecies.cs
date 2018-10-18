@@ -175,6 +175,9 @@ namespace Models.AgPasture
             set { myWaterDemand = value; }
         }
 
+        /// <summary>Sets the actual water demand.</summary>
+        public double WaterDemand { get; set; }
+
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
@@ -2909,14 +2912,6 @@ namespace Models.AgPasture
                 SoilCrop soilInfo = (SoilCrop)mySoil.Crop(Name);
                 return soilInfo.LL;
             }
-        }
-
-        /// <summary>Gets the amount of water demanded by the plant (mm).</summary>
-        [Description("Amount of water demanded by the plant")]
-        [Units("mm")]
-        public double WaterDemand
-        {
-            get { return myWaterDemand; }
         }
 
         /// <summary>Gets the amount of plant available water in each soil layer (mm).</summary>

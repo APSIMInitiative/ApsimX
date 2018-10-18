@@ -77,7 +77,7 @@ namespace Models.Functions.SupplyFunctions
         ///                                        PZN pLfN,PZRESPONSE pTmpRsp)
         ///Author:   Enli Wang
         ///Date:      10.11.1996
-        ///Purpose:   This function calculates the daily canopy photosynthesis rate under optimal water condition
+        ///Purpose:   This function calculates the daily canopy photosynthesis rate (NOTE: impact of water stress is now accounted for)
         ///Inputs:   1. pCROP      - Pointer to a string containing the crop name,use the following names:
         ///                       WHEAT,BARLEY,MAIZE,MILLET,SOGHUM,POTATO,SUGARBEET,SOYBEAN,COTTON,C3,C4,CAM
         ///         2. fLAI         - Effective leaf area index (-)
@@ -198,7 +198,7 @@ namespace Models.Functions.SupplyFunctions
                                      Day, Hour, PARDIR, PARDIF);
 
                 //Integration of assimilation rate to a daily total (vAveGrossPs)
-                AveGrossPs += GrossPs * wGauss[i];
+                AveGrossPs += Plant.Leaf.Fw * GrossPs * wGauss[i]; // The impact of water stress was added based on Eq. 3.2.53 in Enli Wang's PhD thesis
             }
 
             DailyGrossPs = AveGrossPs * Dayl;

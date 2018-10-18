@@ -43,6 +43,9 @@ namespace Models.Interfaces
         /// <summary>Sets the potential evapotranspiration.</summary>
         double PotentialEP { get;  set; }
 
+        /// <summary>Sets the actual water demand.</summary>
+        double WaterDemand { get; set; }
+
         /// <summary>Sets the light profile.</summary>
         CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; } 
     }
