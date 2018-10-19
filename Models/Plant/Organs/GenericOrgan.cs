@@ -350,7 +350,7 @@ namespace Models.PMF.Organs
             // allocate metabolic DM
             Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
             GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
-
+            Live.MetabolicWt += Allocated.MetabolicWt;
         }
 
         /// <summary>Sets the n allocation.</summary>
