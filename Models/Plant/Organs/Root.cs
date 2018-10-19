@@ -845,7 +845,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes root total water supply.</summary>
-        public double CalcTotalExtractableWater()
+        public double TotalExtractableWater()
         {
             double[] LL = PlantZone.soil.LL(Plant.Name);
             double[] KL = PlantZone.soil.KL(Plant.Name);
