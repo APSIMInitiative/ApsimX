@@ -285,7 +285,7 @@ namespace Models.PMF.Organs
             {
                 DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
-                DMDemand.Metabolic = 0;
+                DMDemand.Metabolic = dmDemands.Metabolic.Value();
             }
             else
             { // Conversion efficiency is zero!!!!
@@ -350,6 +350,7 @@ namespace Models.PMF.Organs
             // allocate metabolic DM
             Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
             GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
+            Live.MetabolicWt += Allocated.MetabolicWt;
 
         }
 
