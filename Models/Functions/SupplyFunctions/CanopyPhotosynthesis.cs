@@ -65,7 +65,7 @@ namespace Models.Functions.SupplyFunctions
                                                       Weather.MaxT,
                                                       Weather.MinT,
                                                       Weather.CO2,
-                                                      1.0) * 30/ 44 * 0.1;     
+                                                      1.0) * 30 / 44 * 0.1;
                 //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
 
             }
@@ -77,7 +77,7 @@ namespace Models.Functions.SupplyFunctions
         ///                                        PZN pLfN,PZRESPONSE pTmpRsp)
         ///Author:   Enli Wang
         ///Date:      10.11.1996
-        ///Purpose:   This function calculates the daily canopy photosynthesis rate (NOTE: impact of water stress is now accounted for)
+        ///Purpose:   This function calculates the daily canopy photosynthesis rate under optimal water condition
         ///Inputs:   1. pCROP      - Pointer to a string containing the crop name,use the following names:
         ///                       WHEAT,BARLEY,MAIZE,MILLET,SOGHUM,POTATO,SUGARBEET,SOYBEAN,COTTON,C3,C4,CAM
         ///         2. fLAI         - Effective leaf area index (-)
@@ -108,7 +108,7 @@ namespace Models.Functions.SupplyFunctions
             int i;
             double AveGrossPs;
             double GrossPs;
-            double DailyGrossPs; 
+            double DailyGrossPs;
             double PAR;
             double PARDIF;
             double PARDIR;
@@ -117,7 +117,7 @@ namespace Models.Functions.SupplyFunctions
             double GlobalRadiation, SinHeight, Dayl, AtmTrans, DifFr;
             double Dec, Sin, Cos, Rsc, SolarConst, DailySin, DailySinE, Hour, RadExt;
             double LUE, PgMax, Temp;
-            
+
             int nGauss = 5;
             double[] xGauss = { 0.0469101, 0.2307534, 0.5000000, 0.7692465, 0.9530899 };
             double[] wGauss = { 0.1184635, 0.2393144, 0.2844444, 0.2393144, 0.1184635 };
@@ -125,7 +125,7 @@ namespace Models.Functions.SupplyFunctions
             double RAD = PI / 180.0;
 
             GlobalRadiation = (double)Radn * 1E6;    //J/m2.d
-            
+
 
             //===========================================================================================
             //Dailenght, Solar constant and daily extraterrestrial radiation
@@ -198,11 +198,10 @@ namespace Models.Functions.SupplyFunctions
                                      Day, Hour, PARDIR, PARDIF);
 
                 //Integration of assimilation rate to a daily total (vAveGrossPs)
-                AveGrossPs += Plant.Leaf.Fw * GrossPs * wGauss[i]; // The impact of water stress was added based on Eq. 3.2.53 in Enli Wang's PhD thesis
+                AveGrossPs += GrossPs * wGauss[i];
             }
 
-            // DailyGrossPs = AveGrossPs * Dayl;
-            DailyGrossPs = Plant.Leaf.Fw * (AveGrossPs * Dayl); // Added: Water-stress must be accounted for in this part (Eq. 3.2.53)!
+            DailyGrossPs = AveGrossPs * Dayl;
 
             return DailyGrossPs;
         }
