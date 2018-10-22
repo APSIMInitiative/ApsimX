@@ -210,7 +210,6 @@ namespace Models.PMF.Organs
         IFunction WaterDemandFunction = null;
 
         /// <summary>DM Fixation Demand Function</summary>
-        [Link]
         IFunction DMSupplyFixation = null;
 
         /// <summary>The Stage that leaves are initialised on</summary>
