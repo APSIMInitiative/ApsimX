@@ -335,6 +335,10 @@ namespace Models.PMF.Phen
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+                    //if (!(CurrentPhase is EmergingPhase))
+                    {
+                        CurrentPhase.ResetPhase();//old sorghum model adjustment
+                    }
                 }
 
                 AccumulatedTT += thermalTime.Value();
@@ -346,6 +350,8 @@ namespace Models.PMF.Phen
                if (plant != null)
                     if (plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
+
+                
             }
         }
 

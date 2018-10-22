@@ -94,7 +94,7 @@ namespace Models.PMF.Phen
         public virtual void ResetPhase()
         {
             ProgressThroughPhase = 0;
-            Target = 0;
+            //Target = 0;
         }
         
         /// <summary>Writes the summary.</summary>
