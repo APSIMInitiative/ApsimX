@@ -209,6 +209,9 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction WaterDemandFunction = null;
 
+        /// <summary>DM Fixation Demand Function</summary>
+        IFunction DMSupplyFixation = null;
+
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
@@ -299,7 +302,10 @@ namespace Models.PMF.Organs
             DMSupply.Reallocation = AvailableDMReallocation();
             DMSupply.Retranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
-            DMSupply.Fixation = Photosynthesis.Value();
+            if(DMSupplyFixation != null)
+                DMSupply.Fixation = DMSupplyFixation.Value();
+            else
+                DMSupply.Fixation = Photosynthesis.Value();
         }
 
         #endregion
