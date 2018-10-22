@@ -911,8 +911,15 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <VariableName>[StorageRoot].DMDemands.Structural.DMDemand.Value()</VariableName>
+              <VariableName>[StorageRoot].DMDemands.Structural.DMDemandFunction.Value()</VariableName>
             </VariableReference>
+            <Constant>
+              <Name>MetabolicFraction</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <FixedValue>0.45</FixedValue>
+            </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -931,7 +938,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <VariableName>[StorageRoot].DMDemands.Structural.DMDemand.Value()</VariableName>
+              <VariableName>[StorageRoot].DMDemands.Structural.DMDemandFunction.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -2194,7 +2201,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <FixedValue>0</FixedValue>
           </Constant>
           <StorageDMDemandFunction>
-            <Name>Storage</Name>
+            <Name>StorageM</Name>
             <SubtractFunction>
               <Name>StorageFraction</Name>
               <Constant>
@@ -2219,6 +2226,39 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
           </StorageDMDemandFunction>
+          <MultiplyFunction>
+            <Name>Storage</Name>
+            <VariableReference>
+              <Name>DMDemandFunction1</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <VariableName>[Petiole].DMDemands.Structural.DMDemandFunction.Value()</VariableName>
+            </VariableReference>
+            <SubtractFunction>
+              <Name>StorageFraction</Name>
+              <Constant>
+                <Name>One</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <VariableReference>
+                <Name>StructuralFraction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <VariableName>[Petiole].DMDemands.Structural.StructuralFraction.Value()</VariableName>
+              </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
