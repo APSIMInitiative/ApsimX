@@ -2215,6 +2215,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the index for the plant development stage.</summary>
+        /// <remarks>0 = germinating, 1 = vegetative, 2 = reproductive, negative for dormant/not sown.</remarks>
         [Description("Plant development stage number")]
         [Units("-")]
         public int Stage
@@ -2222,14 +2223,9 @@ namespace Models.AgPasture
             get
             {
                 if (isAlive)
-                {
-                    if (phenologicStage < Epsilon)
-                        return 1; //"germination";
-                    else
-                        return 3; //"vegetative" & "reproductive";
-                }
+                    return phenologicStage;
                 else
-                    return 0; //"out"
+                    return -1; //"out"
             }
         }
 
@@ -4517,7 +4513,7 @@ namespace Models.AgPasture
                 dGrowthRootN = roots.Sum(root => root.Tissue[0].NTransferedIn);
 
                 if (Math.Abs(dNewGrowthN- dGrowthShootN- dGrowthRootN) >Epsilon)
-                    throw new ApsimXException(this, "Allocation of new growth could not be completed");
+                    throw new ApsimXException(this, "Allocation of new growth resulted in loss of mass balance");
 
                 // Evaluate root elongation and allocate new growth in each layer
                 EvaluateRootElongation();
