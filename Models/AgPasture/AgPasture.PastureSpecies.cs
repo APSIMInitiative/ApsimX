@@ -4455,10 +4455,16 @@ namespace Models.AgPasture
                 leaves.Tissue[0].DMTransferedIn += toLeaf * dGrowthAfterNutrient;
                 stems.Tissue[0].DMTransferedIn += toStem * dGrowthAfterNutrient;
                 stolons.Tissue[0].DMTransferedIn += toStolon * dGrowthAfterNutrient;
-                foreach(PastureBelowGroundOrgan root in roots)
+                double allocFraction;
+                foreach (PastureBelowGroundOrgan root in roots)
                 {
                     // allocate dm to all root zones, proportional to existing DM (TODO: this should not be simply proportional)
-                    root.Tissue[0].DMTransferedIn += toRoot * dGrowthAfterNutrient * root.DMTotal / RootWt;
+                    if (RootWt > 0.0)
+                        allocFraction = root.DMTotal / RootWt;
+                    else
+                        allocFraction = 1.0 / roots.Count;
+
+                    root.Tissue[0].DMTransferedIn += toRoot * dGrowthAfterNutrient * allocFraction;
                 }
 
                 // Evaluate allocation of N
@@ -4470,13 +4476,18 @@ namespace Models.AgPasture
                                 + (toStolon * stolons.NConcMaximum) + (toRoot * roots[0].NConcMaximum);
                     if (Nsum > Epsilon)
                     {
-                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * (leaves.NConcMaximum / Nsum);
-                        stems.Tissue[0].NTransferedIn += dNewGrowthN * toStem * (stems.NConcMaximum / Nsum);
-                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * (stolons.NConcMaximum / Nsum);
+                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * (toLeaf * leaves.NConcMaximum / Nsum);
+                        stems.Tissue[0].NTransferedIn += dNewGrowthN * (toStem * stems.NConcMaximum / Nsum);
+                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * (toStolon * stolons.NConcMaximum / Nsum);
                         foreach (PastureBelowGroundOrgan root in roots)
                         {
                             // allocate N to all root zones, proportional to existing DM (TODO: this should not be simply proportional)
-                            root.Tissue[0].NTransferedIn += dNewGrowthN * toRoot * (roots[0].NConcMaximum / Nsum) * (root.DMTotal / RootWt);
+                            if (RootWt > 0.0)
+                                allocFraction = root.DMTotal / RootWt;
+                            else
+                                allocFraction = 1.0 / roots.Count;
+
+                            root.Tissue[0].NTransferedIn += dNewGrowthN * (toRoot * roots[0].NConcMaximum / Nsum) * allocFraction;
                         }
                     }
                     else
@@ -4492,13 +4503,18 @@ namespace Models.AgPasture
                                 + (toStolon * stolons.NConcOptimum) + (toRoot * roots[0].NConcOptimum);
                     if (Nsum > Epsilon)
                     {
-                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * (leaves.NConcOptimum / Nsum);
-                        stems.Tissue[0].NTransferedIn += dNewGrowthN * toStem * (stems.NConcOptimum / Nsum);
-                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * (stolons.NConcOptimum / Nsum);
+                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * (toLeaf * leaves.NConcOptimum / Nsum);
+                        stems.Tissue[0].NTransferedIn += dNewGrowthN * (toStem * stems.NConcOptimum / Nsum);
+                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * (toStolon * stolons.NConcOptimum / Nsum);
                         foreach (PastureBelowGroundOrgan root in roots)
                         {
                             // allocate N to all root zones, proportional to existing DM (TODO: this should not be simply proportional)
-                            root.Tissue[0].NTransferedIn += dNewGrowthN * toRoot * (roots[0].NConcOptimum / Nsum) * (root.DMTotal / RootWt);
+                            if (RootWt > 0.0)
+                                allocFraction = root.DMTotal / RootWt;
+                            else
+                                allocFraction = 1.0 / roots.Count;
+
+                            root.Tissue[0].NTransferedIn += dNewGrowthN * (toRoot * roots[0].NConcOptimum / Nsum) * allocFraction;
                         }
                     }
                     else
@@ -4512,7 +4528,7 @@ namespace Models.AgPasture
                 dGrowthShootN = leaves.Tissue[0].NTransferedIn + stems.Tissue[0].NTransferedIn + stolons.Tissue[0].NTransferedIn;
                 dGrowthRootN = roots.Sum(root => root.Tissue[0].NTransferedIn);
 
-                if (Math.Abs(dNewGrowthN- dGrowthShootN- dGrowthRootN) >Epsilon)
+                if (Math.Abs(dNewGrowthN - dGrowthShootN - dGrowthRootN) > Epsilon)
                     throw new ApsimXException(this, "Allocation of new growth resulted in loss of mass balance");
 
                 // Evaluate root elongation and allocate new growth in each layer
