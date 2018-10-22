@@ -217,16 +217,7 @@ namespace Models
                         try
                         {
                             compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
-                            if (compiledAssembly.Location != assemblyPath)
-                            {
-                                if (!string.IsNullOrEmpty(assemblyPath))
-                                {
-                                    File.Delete(assemblyPath);
-                                    File.Delete(Path.ChangeExtension(assemblyPath, ".cs"));
-                                    File.Delete(Path.ChangeExtension(assemblyPath, ".pdb"));
-                                }
-                                assemblyPath = compiledAssembly.Location;
-                            }
+                            assemblyPath = compiledAssembly.Location;
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
