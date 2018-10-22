@@ -882,7 +882,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FixedValue>0.05</FixedValue>
+            <FixedValue>0</FixedValue>
           </Constant>
           <StorageDMDemandFunction>
             <Name>Storage</Name>
