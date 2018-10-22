@@ -90,7 +90,7 @@ pipeline {
 					git -C APSIM.Shared pull origin master
 					set /P DATETIMESTAMP=<ApsimX\\datetimestamp.txt
 					docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%PULL_ID%" -e "COMMIT_AUTHOR=%COMMIT_AUTHOR%" -e "RUN_PERFORMANCE_TESTS=no_thanks" -e "ARCHIVE_RESULTS=TRUE" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%PULL_ID%" -e "COMMIT_AUTHOR=%COMMIT_AUTHOR%" -e "RUN_PERFORMANCE_TESTS=no_thanks" -e "ARCHIVE_RESULTS=TRUE" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared -p 4020:4020 -p 4021:4021 runtests Validation
 					cd ApsimX
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\results.7z', onlyIfSuccessful: true
