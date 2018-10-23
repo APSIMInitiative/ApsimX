@@ -74,9 +74,14 @@
                 p.BeginErrorReadLine();
             }
             p.WaitForExit();
-            if (!verbose && p.ExitCode > 0)
+            if (verbose)
             {
-                string stdout = p.StandardOutput.ReadToEnd();
+                p.CancelOutputRead();
+                p.CancelErrorRead();
+            }
+            string stdout = p.StandardOutput.ReadToEnd();
+            if (p.ExitCode > 0)
+            {
                 string errorMessage = "Error in file: " + arguments + Environment.NewLine;
                 errorMessage += stdout;
                 throw new RunExternalException(errorMessage);
