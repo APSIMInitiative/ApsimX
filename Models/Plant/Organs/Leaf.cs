@@ -178,6 +178,10 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Sets the actual water demand.</summary>
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
@@ -191,7 +195,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            return PotentialEP;
+            return WaterDemand;
         }
 
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1080,7 +1084,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]

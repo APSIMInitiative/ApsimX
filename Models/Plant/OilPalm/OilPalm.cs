@@ -85,6 +85,11 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         public double PotentialEP { get; set; }
 
+        /// <summary>Sets the actual water demand.</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
