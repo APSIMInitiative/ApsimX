@@ -162,6 +162,11 @@ namespace Models.PMF.Organs
                 MicroClimatePresent = true;
             }
         }
+
+        /// <summary>Sets the actual water demand.</summary>
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>
         /// Flag to test if Microclimate is present
         /// </summary>
@@ -221,14 +226,14 @@ namespace Models.PMF.Organs
                 return WaterDemandFunction.Value();
             else
             {
-                return PotentialEP;
+                return WaterDemand;
             }
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn
