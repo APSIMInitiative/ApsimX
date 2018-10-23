@@ -1087,6 +1087,7 @@ namespace Models.PMF.Organs
             {
                 double _lagDuration;
                 double _senescenceDuration;
+                double _GrowthDuration;
                 double lsn = 0;
                 for (int i = 0; i < ApexCohort.GroupAge.Length; i++)
                 {
@@ -1095,9 +1096,11 @@ namespace Models.PMF.Organs
                     {
                         _lagDuration = LagDuration;
                         _senescenceDuration = SenescenceDuration;
+                        _GrowthDuration = GrowthDuration;
                     }
                     else
                     {
+                        _lagDuration = GrowthDuration * leafCohortParameters.LeafSizeAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                         _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                         _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                     }

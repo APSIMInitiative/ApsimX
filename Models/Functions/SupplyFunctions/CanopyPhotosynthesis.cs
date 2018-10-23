@@ -110,7 +110,7 @@ namespace Models.Functions.SupplyFunctions
             int i;
             double AveGrossPs;
             double GrossPs;
-            double DailyGrossPs; 
+            double DailyGrossPs;
             double PAR;
             double PARDIF;
             double PARDIR;
@@ -120,7 +120,7 @@ namespace Models.Functions.SupplyFunctions
             double GlobalRadiation, SinHeight, Dayl, AtmTrans;
             double Dec, Sin, Cos, Rsc, SolarConst, DailySin, DailySinE, Hour, RadExt;
             double LUE, PgMax, Temp;
-            
+
             int nGauss = 5;
             double[] xGauss = { 0.0469101, 0.2307534, 0.5000000, 0.7692465, 0.9530899 };
             double[] wGauss = { 0.1184635, 0.2393144, 0.2844444, 0.2393144, 0.1184635 };
@@ -128,7 +128,7 @@ namespace Models.Functions.SupplyFunctions
             double RAD = PI / 180.0;
 
             GlobalRadiation = (double)Radn * 1E6;    //J/m2.d
-            
+
 
             //===========================================================================================
             //Dailenght, Solar constant and daily extraterrestrial radiation
