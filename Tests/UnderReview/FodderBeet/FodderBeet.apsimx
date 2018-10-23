@@ -871,7 +871,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <FixedValue>0.5</FixedValue>
+              <FixedValue>0.4</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
@@ -931,7 +931,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <FixedValue>0.45</FixedValue>
+              <FixedValue>0.55</FixedValue>
             </Constant>
             <VariableReference>
               <Name>DMDemandFraction</Name>
@@ -2187,7 +2187,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <FixedValue>0.5</FixedValue>
+              <FixedValue>0.95</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
