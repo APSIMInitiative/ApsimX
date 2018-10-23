@@ -235,9 +235,16 @@ namespace UserInterface.Presenters
         /// <param name="args">Event arguments.</param>
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
-            managerView.Editor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
-            if (args.IsMethod)
-                intellisense.ShowScriptMethodCompletion(manager, managerView.Editor.Text, managerView.Editor.Offset, managerView.Editor.GetPositionOfCursor());
+            try
+            {
+                managerView.Editor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                if (args.IsMethod)
+                    intellisense.ShowScriptMethodCompletion(manager, managerView.Editor.Text, managerView.Editor.Offset, managerView.Editor.GetPositionOfCursor());
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
     }
 }

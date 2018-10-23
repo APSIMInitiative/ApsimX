@@ -212,8 +212,6 @@
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
             string fileName = Path.GetTempFileName();
-            if (!File.Exists(fileName))
-                File.Create(fileName).Close();
             File.WriteAllText(fileName, code);
             syntaxTree.FileName = fileName;
             syntaxTree.Freeze();
@@ -240,6 +238,8 @@
             view.Populate(completionList);
             if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
                 view.SelectItem(completionList.IndexOf(completionList.OrderByDescending(x => GetMatchQuality(x.CompletionText, completionResult.TriggerWord)).FirstOrDefault()));
+
+            File.Delete(fileName);
             return completionList.Any();
         }
 
@@ -285,21 +285,19 @@
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
             string fileName = Path.GetTempFileName();
-            if (!File.Exists(fileName))
-                File.Create(fileName).Close();
             File.WriteAllText(fileName, code);
             syntaxTree.FileName = fileName;
             syntaxTree.Freeze();
 
             IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
-            var test = completion.GetMethodCompletion(document, offset, false);
-
-            if (test.OverloadProvider != null)
+            CodeCompletionResult result = completion.GetMethodCompletion(document, offset, false);
+            File.Delete(fileName);
+            if (result.OverloadProvider != null)
             {
-                if (test.OverloadProvider.Count < 1)
+                if (result.OverloadProvider.Count < 1)
                     return;
                 List<MethodCompletion> completions = new List<MethodCompletion>();
-                foreach (IParameterizedMember method in test.OverloadProvider.Items.Select(x => x.Method))
+                foreach (IParameterizedMember method in result.OverloadProvider.Items.Select(x => x.Method))
                 {
                     // Generate argument signatures - e.g. string foo, int bar
                     List<string> arguments = new List<string>();
@@ -313,7 +311,7 @@
 
                     MethodCompletion completion = new MethodCompletion()
                     {
-                        Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y)))
+                        Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Any() ? arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y)) : string.Empty)
                     };
 
                     if (method.Documentation == null)
