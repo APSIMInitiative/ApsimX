@@ -1098,8 +1098,9 @@
 
                     // Run the converter.
                     string contents = File.ReadAllText(file);
-                    if (Converter.DoConvert(ref contents, version, file))
-                        File.WriteAllText(file, contents);
+                    var converter = Converter.DoConvert(contents, version, file);
+                    if (converter.DidConvert)
+                        File.WriteAllText(file, converter.Root.ToString());
                     view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), Simulation.ErrorLevel.Information, false);
                 }
                 view.ShowMessage("Successfully upgraded all files.", Simulation.ErrorLevel.Information);

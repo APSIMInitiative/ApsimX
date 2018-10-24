@@ -20,7 +20,7 @@
         {
           "$type": "Models.Manager, Models",
           "elements": null,
-          "CodeCData": "Deliberate compile error",
+          "Code": "Deliberate compile error",
           "Name": "Manager",
           "Children": [],
           "IncludeInDocumentation": true,

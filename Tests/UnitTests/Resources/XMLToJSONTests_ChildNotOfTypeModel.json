@@ -1,0 +1,37 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Wheat",
+      "Children": [
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Name": "G",
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": "Bottom",
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN"
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": "Left",
+              "Title": "Yield",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

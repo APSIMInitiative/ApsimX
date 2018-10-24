@@ -93,7 +93,8 @@ namespace UserInterface.Presenters
 
             List<string> seriesNames = this.GetSeriesNames();
             this.view.SetSeriesNames(seriesNames.ToArray());
-            this.view.SetDisabledSeriesNames(this.graph.DisabledSeries.ToArray());
+            if (graph.DisabledSeries != null)
+                this.view.SetDisabledSeriesNames(this.graph.DisabledSeries.ToArray());
 
             this.view.DisabledSeriesChanged += this.OnDisabledSeriesChanged;
         }

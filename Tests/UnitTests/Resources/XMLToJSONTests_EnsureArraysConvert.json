@@ -1,7 +1,10 @@
 ﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
   "Children": [
     {
-      "Children": [],
+      "$type": "Models.Report.Report, Models",
       "Name": "Report",
       "IncludeInDocumentation": true,
       "ExperimentFactorNames": null,
@@ -42,7 +45,5 @@
         "NaN"
       ]
     }
-  ],
-  "Version": 32,
-  "Name": "Simulations"
+  ]
 }

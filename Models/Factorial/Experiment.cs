@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Runners;
     using System;
     using System.Collections.Generic;
@@ -84,8 +85,8 @@
             {
                 Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
 
-                string xml = Apsim.Serialise(sims);
-                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), xml);
+                string st = FileFormat.WriteToString(sims);
+                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), st);
                 sim = NextSimulationToRun();
             }
         }
@@ -261,7 +262,7 @@
                     newSimulation.FileName = parentSimulations.FileName;
                     Apsim.ParentAllChildren(newSimulation);
 
-                    // Make substitutions and issue "Loaded" event
+                    // Make substitutions
                     parentSimulations.MakeSubsAndLoad(newSimulation);
 
                     foreach (FactorValue value in combination)

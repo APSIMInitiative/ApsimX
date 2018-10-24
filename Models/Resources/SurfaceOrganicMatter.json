@@ -447,6 +447,34 @@
           "fr_p": null
         },
         {
+          "fom_type": "TropicalPasture",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0005,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "fom_type": "bambatsi",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0005,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
           "fom_type": "cowpea",
           "derived_from": "base_type",
           "fraction_C": 0.0,

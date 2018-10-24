@@ -22,7 +22,14 @@ namespace Models.Core.ApsimFile
         public static bool DoConvert(ref string st, int toVersion = -1, string fileName = null)
         {
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(st);
+            try
+            {
+                doc.LoadXml(st);
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Invalid XML format found. " + err.Message);
+            }
             XmlNode rootNode = doc.DocumentElement;
 
             string fileVersionString = XmlUtilities.Attribute(rootNode, "Version");

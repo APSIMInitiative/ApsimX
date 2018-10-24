@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Core.Interfaces;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
@@ -38,16 +39,17 @@
         {
             JsonSerializer serializer = new JsonSerializer()
             {
-                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameHandling = TypeNameHandling.Objects,
                 ContractResolver = new WritablePropertiesOnlyResolver(),
                 Formatting = Newtonsoft.Json.Formatting.Indented
             };
+
             string json;
             using (StringWriter s = new StringWriter())
                 using (var writer = new JsonTextWriter(s))
                 {
-                    serializer.Serialize(writer, model);
-                json = s.ToString();
+                    serializer.Serialize(writer, model, model.GetType());
+                    json = s.ToString();
                 }
             return json;
         }
@@ -77,18 +79,14 @@
         public static T ReadFromString<T>(string st, out List<Exception> creationExceptions, string fileName = null) where T : IModel
         {
             // Run the converter.
-            bool changed = Converter.DoConvert(ref st, -1, fileName);
+            var converter = Converter.DoConvert(st, -1, fileName);
 
             T newModel;
             JsonSerializer serializer = new JsonSerializer()
             {
                 TypeNameHandling = TypeNameHandling.Auto
             };
-            using (var sw = new StringReader(st))
-            using (var reader = new JsonTextReader(sw))
-            {
-                newModel = serializer.Deserialize<T>(reader);
-            }
+            newModel = serializer.Deserialize<T>(converter.Root.CreateReader());
 
             // Parent all models.
             newModel.Parent = null;

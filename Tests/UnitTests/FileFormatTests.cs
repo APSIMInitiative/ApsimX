@@ -52,6 +52,24 @@
             Assert.IsTrue(json.Contains("\"$type\": \"Models.Manager, Models\""));
         }
 
+        /// <summary>Test that a single model can be written to a string. e.g. copy to clipboard.</summary>
+        [Test]
+        public void FileFormat_WriteSingleModel()
+        {
+            // Create some models.
+            Clock c = new Clock()
+            {
+                Name = "Clock",
+                StartDate = new DateTime(2015, 1, 1),
+                EndDate = new DateTime(2015, 12, 31)
+            };
+
+            string json = FileFormat.WriteToString(c);
+
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.FileFormat_WriteSingleModel.json");
+            Assert.AreEqual(json, expectedJson);
+        }
+
         /// <summary>Test that a simulation can be created from a json string.</summary>
         [Test]
         public void FileFormat_ReadFromString()

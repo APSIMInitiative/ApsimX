@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Factorial;
     using Models.Interfaces;
     using System;
@@ -223,8 +224,8 @@
             {
                 Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
 
-                string xml = Apsim.Serialise(sims);
-                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), xml);
+                string st = FileFormat.WriteToString(sims);
+                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), st);
                 sim = NextSimulationToRun();
             }
         }

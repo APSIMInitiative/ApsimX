@@ -93,7 +93,11 @@
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         public void RebuildScriptModel()
         {
-            if (isCreated && (Code != CompiledCode || Children.Count == 0))
+            // This is called from manager presenter on detach so go refresh our parameter values.
+            if (Children.Count == 1)
+                GetParametersFromScriptModel(Children[0]);
+
+            if (isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
             {
                 try
                 {
@@ -159,28 +163,33 @@
         /// <param name="script">The script.</param>
         private void SetParametersInObject(Model script)
         {
-            foreach (var parameter in Parameters)
+            if (Parameters != null)
             {
-                PropertyInfo property = script.GetType().GetProperty(parameter.Key);
-                if (property != null)
+                foreach (var parameter in Parameters)
                 {
-                    object value;
-                    if (parameter.Value.StartsWith(".Simulations."))
-                        value = Apsim.Get(this, parameter.Value);
-                    else if (property.PropertyType == typeof(IPlant))
-                        value = Apsim.Find(this, parameter.Value);
-                    else
-                        value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
-                    property.SetValue(script, value, null);
+                    PropertyInfo property = script.GetType().GetProperty(parameter.Key);
+                    if (property != null)
+                    {
+                        object value;
+                        if (parameter.Value.StartsWith(".Simulations."))
+                            value = Apsim.Get(this, parameter.Value);
+                        else if (property.PropertyType == typeof(IPlant))
+                            value = Apsim.Find(this, parameter.Value);
+                        else
+                            value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
+                        property.SetValue(script, value, null);
+                    }
                 }
             }
         }
 
-        /// <summary>Get the scripts parameters as a returned xmlElement.</summary>
+        /// <summary>Get all parameters from the script model and store in our parameters list.</summary>
         /// <param name="script">The script.</param>
         /// <returns></returns>
-        private void GetParametersInObject(Model script)
+        private void GetParametersFromScriptModel(Model script)
         {
+            if (Parameters == null)
+                Parameters = new List<KeyValuePair<string, string>>();
             Parameters.Clear();
             foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
             {

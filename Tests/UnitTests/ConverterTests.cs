@@ -29,7 +29,8 @@
                              "  </Graph>" +
                              "</Simulation>";
 
-            Assert.IsTrue(Converter.DoConvert(ref fromXML, 1));
+            var converter = Converter.DoConvert(fromXML, 1);
+            Assert.IsTrue(converter.DidConvert);
 
             string toXML = "<Simulation Version=\"1\">" +
                              "<Graph>" +
@@ -54,7 +55,8 @@
                              "  </Cultivar>" +
                              "</Simulation>";
 
-            Assert.IsTrue(Converter.DoConvert(ref fromXML, 2));
+            var converter = Converter.DoConvert(fromXML, 2);
+            Assert.IsTrue(converter.DidConvert);
 
             string toXML = "<Simulation Version=\"2\">" +
                              "<Cultivar>" +
@@ -109,7 +111,8 @@
                              "   </Report>\r\n" +
                 " </Simulation>\r\n";
 
-            Assert.IsTrue(Converter.DoConvert(ref fromXML, 7));
+            var converter = Converter.DoConvert(fromXML, 7);
+            Assert.IsTrue(converter.DidConvert);
 
             string toXML = "<Simulation Version=\"7\">" +
                              "<Manager>" +
@@ -161,7 +164,9 @@
                              "   </GenericOrgan>\r\n" +
                              " </Simulation>\r\n";
 
-            Assert.IsTrue(Converter.DoConvert(ref fromXML, 10));
+            var converter = Converter.DoConvert(fromXML, 10);
+            Assert.IsTrue(converter.DidConvert);
+
             string toXML = "<Simulation Version=\"10\">" +
                              "<GenericOrgan>" +
                                "<Name>Stem</Name>" +
@@ -243,7 +248,9 @@
                              "  </NonStructuralNReallocated>" +
                              "</Simulation>\r\n";
 
-            Assert.IsTrue(Converter.DoConvert(ref fromXML, 11));
+            var converter = Converter.DoConvert(fromXML, 11);
+            Assert.IsTrue(converter.DidConvert);
+
             string toXML = "<Simulation Version=\"11\">" +
                              "<Manager>" +
                                "<Code><![CDATA[using System;\r\n" +
@@ -312,7 +319,9 @@
 
                 string fromXML = "<Simulation Version=\"8\"/>";
 
-                Assert.IsTrue(Converter.DoConvert(ref fromXML, 9));
+                var converter = Converter.DoConvert(fromXML, 9);
+                Assert.IsTrue(converter.DidConvert);
+
                 DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
                 string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
                 Assert.AreEqual(tableNames, new string[] { "_Simulations", "_Messages", "_Units", "Report" } );

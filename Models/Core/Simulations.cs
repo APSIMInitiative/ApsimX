@@ -154,21 +154,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Perform model substitutions, if necessary, then issue a "Loaded" event
+        /// Perform model substitutions
         /// </summary>
-        public void MakeSubsAndLoad(Simulation simulation)
-        {
-            MakeSubstitutions(simulation);
-
-            // Call OnLoaded in all models.
-            Events events = new Events(simulation);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { simulation, loadedArgs });
-        }
-
-        /// <summary>Make model substitutions if necessary.</summary>
-        /// <param name="model">The model to make substitutions in.</param>
-        public void MakeSubstitutions(IModel model)
+        public void MakeSubsAndLoad(Simulation model)
         {
             IModel replacements = Apsim.Child(this, "Replacements");
             if (replacements != null)
@@ -185,14 +173,8 @@ namespace Models.Core
                             match.Parent.Children.Insert(index, newModel as Model);
                             newModel.Parent = match.Parent;
                             match.Parent.Children.Remove(match as Model);
-                            // If we're doing substitutions for an entire Simulation,
-                            // the Loaded event will be issued later. Otherwise, issue one now
-                            if (!(model is Simulation))
-                            {
-                                Events events = new Events(newModel);
-                                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                                events.Publish("Loaded", new object[] { newModel, loadedArgs });
-                            }
+
+                            newModel.OnCreated();
                         }
                     }
                 }
@@ -344,7 +326,7 @@ namespace Models.Core
                     Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
 
                     // Make any substitutions.
-                    MakeSubstitutions(clonedSimulation);
+                    MakeSubsAndLoad(clonedSimulation);
 
                     // Now use the path to get the model we want to document.
                     modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;

@@ -145,9 +145,8 @@ namespace Models.Soils
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
 
-        /// <summary>Called when [loaded].</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             FindChildren();
         }

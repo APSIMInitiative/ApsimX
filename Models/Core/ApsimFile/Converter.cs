@@ -21,8 +21,10 @@
         /// <param name="toVersion">The optional version to convert to.</param>
         /// <param name="fileName">The optional filename where the string came from.</param>
         /// <returns>Returns true if something was changed.</returns>
-        public static bool DoConvert(ref string st, int toVersion = -1, string fileName = null)
+        public static ConverterReturnType DoConvert(string st, int toVersion = -1, string fileName = null)
         {
+            ConverterReturnType returnData = new ConverterReturnType();
+
             if (toVersion == -1)
                 toVersion = LatestVersion;
 
@@ -32,16 +34,16 @@
             if (firstNonBlankChar == '{')
             {
                 // json
-                JObject root = JObject.Parse(st);
-                if (root.ContainsKey("Version"))
+                returnData.Root = JObject.Parse(st);
+                if (returnData.Root.ContainsKey("Version"))
                 {
-                    int fileVersion = (int)root["Version"];
+                    int fileVersion = (int)returnData.Root["Version"];
 
                     // Update the xml if not at the latest version.
-                    bool changed = false;
+                    
                     while (fileVersion < toVersion)
                     {
-                        changed = true;
+                        returnData.DidConvert = true;
 
                         // Find the method to call to upgrade the file by one version.
                         int versionFunction = fileVersion + 1;
@@ -50,38 +52,92 @@
                             throw new Exception("Cannot find converter to go to version " + versionFunction);
 
                         // Found converter method so call it.
-                        method.Invoke(null, new object[] { root, fileName });
+                        method.Invoke(null, new object[] { returnData.Root, fileName });
 
                         fileVersion++;
                     }
 
-                    if (changed)
+                    if (returnData.DidConvert)
                     {
-                        root["Version"] = fileVersion;
-                        st = root.ToString();
+                        returnData.Root["Version"] = fileVersion;
+                        st = returnData.Root.ToString();
                     }
-                    return true;
                 }
-                else
-                    return false;
             }
-            else
+            else if (firstNonBlankChar == '<')
             {
                 XmlConverters.DoConvert(ref st, Math.Min(toVersion, 46), fileName);
                 st = ConvertToJSON(st, fileName);
-                return true;
+                returnData.Root = JObject.Parse(st);
+                returnData.DidConvert = true;
             }
+            else
+            {
+                throw new Exception("Unknown string encountered. Not JSON or XML. String: " + st);
+            }
+            returnData.DidConvert = EnsureSoilHasInitWaterAndSample(returnData.Root) || returnData.DidConvert;
+
+            return returnData;
+        }
+
+        /// <summary>
+        /// If root is a soil then make sure it has a sample or init water.
+        /// </summary>
+        /// <param name="root">The root node of the JSON to look at.</param>
+        /// <returns>True if model was changed.</returns>
+        private static bool EnsureSoilHasInitWaterAndSample(JObject root)
+        {
+            JToken rootType = root["$type"];
+
+            if (rootType != null && rootType.ToString().Contains(".Soil"))
+            {
+                JArray soilChildren = root["Children"] as JArray;
+                if (soilChildren != null && soilChildren.Count > 0)
+                {
+                    var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
+                    var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
+
+                    if (sample == null && initWater == null)
+                    {
+                        // Add in an initial water and initial conditions models.
+                        initWater = new JObject();
+                        initWater["$type"] = "Models.Soils.InitialWater, Models";
+                        initWater["Name"] = "Initial water";
+                        initWater["PercentMethod"] = "FilledFromTop";
+                        initWater["FractionFull"] = 1;
+                        initWater["DepthWetSoil"] = "NaN";
+                        soilChildren.Add(initWater);
+
+                        sample = new JObject();
+                        sample["$type"] = "Models.Soils.Sample, Models";
+                        sample["Name"] = "Initial conditions";
+                        sample["Thickness"] = new JArray(new double[] { 1800 });
+                        sample["NO3"] = new JArray(new double[] { 10 });
+                        sample["NH4"] = new JArray(new double[] { 1 });
+                        sample["NO3Units"] = "kgha";
+                        sample["NH4Units"] = "kgha";
+                        sample["SWUnits"] = "Volumetric";
+                        soilChildren.Add(sample);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>Upgrades to version 47 - the first JSON version.</summary>
         private static string ConvertToJSON(string st, string fileName)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(st);
-            var model = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as IModel;
-            if (model is Simulations)
-                (model as Simulations).Version = LatestVersion;
-            return FileFormat.WriteToString(model);
+            string json = XmlToJson.Convert(st);
+            JObject j = JObject.Parse(json);
+            j["Version"] = LatestVersion;
+            return j.ToString();
+        }
+
+        private static void UpgradeToVersion47(JObject root, string fileName)
+        {
+            // Nothing to do as conversion to JSON has already happened.
         }
 
 
