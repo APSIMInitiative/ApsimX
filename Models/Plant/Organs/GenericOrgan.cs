@@ -53,9 +53,9 @@ namespace Models.PMF.Organs
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
 
-        /// <summary>The nitrogen demand switch</summary>
-        [ChildLinkByName]
-        private IFunction nitrogenDemandSwitch = null;
+        // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
+        //[ChildLinkByName]
+        //private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
         [ChildLinkByName]
@@ -574,7 +574,7 @@ namespace Models.PMF.Organs
                     }
                     else
                     {
-                        tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + nitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandSwitch", indent));
+                        tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + (NDemSwitch as Constant).Value() + " as specified by the NitrogenDemandSwitch", indent));
                     }
                 }
                 else
