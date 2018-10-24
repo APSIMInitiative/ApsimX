@@ -568,7 +568,7 @@ namespace Models.PMF.Organs
                 IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
                 if (NDemSwitch.GetType() == typeof(Constant))
                 {
-                    if (nitrogenDemandSwitch.Value() == 1.0)
+                    if ((NDemSwitch as Constant).Value() == 1.0)
                     {
                         //Don't bother documenting as is does nothing
                     }
