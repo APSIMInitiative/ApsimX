@@ -1100,12 +1100,12 @@ namespace Models.PMF.Organs
                     }
                     else
                     {
-                        _lagDuration = GrowthDuration * leafCohortParameters.LeafSizeAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
+                        _GrowthDuration = GrowthDuration * leafCohortParameters.LeafSizeAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                         _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                         _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                     }
 
-                    if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2)
+                    if (Age >= 0 & Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
                     {
                         lsn += ApexCohort.GroupSize[i];
                     }
