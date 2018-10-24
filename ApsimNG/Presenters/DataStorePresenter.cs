@@ -64,6 +64,7 @@ namespace UserInterface.Presenters
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
             this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
+            this.view.RowFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
             PopulateGrid();
         }
@@ -74,6 +75,7 @@ namespace UserInterface.Presenters
             (view.MaximumNumberRecords as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
+            view.RowFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
@@ -173,6 +175,8 @@ namespace UserInterface.Presenters
                     if (ExperimentFilter != null)
                     {
                         string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        if (!string.IsNullOrEmpty(view.RowFilter.Value))
+                            filter += " AND " + view.RowFilter.Value;
                         data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                     }
                     else if (SimulationFilter != null)

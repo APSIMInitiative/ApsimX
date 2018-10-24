@@ -22,6 +22,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(IOrgan))]
+    [ValidParent(ParentType = typeof(Morris))]
     public class Folder : Model, ICustomDocumentation
     {
         /// <summary>Show page of graphs?</summary>
