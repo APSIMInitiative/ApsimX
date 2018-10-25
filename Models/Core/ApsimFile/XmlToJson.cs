@@ -79,11 +79,16 @@ namespace Models.Core.ApsimFile
                             // with one element.
                             return CreateArray(property.Name, property.Value, newRoot);
                         }
+                        else if (GetModelTypeName(property.Name) != null)
+                        {
+                            // a model without any child nodes.
+                            AddNewChild(property, newRoot);
+                        }
                         else
                             WriteProperty(property, newRoot);
                     }
                     else if (property.Value is JObject)
-                        ProcessObject(property.Name, property.Value as JObject, newRoot);
+                        ProcessObject(property.Name, property.Value, newRoot);
                 }
 
                 child = child.Next;
@@ -99,7 +104,7 @@ namespace Models.Core.ApsimFile
                 newRoot["$type"] = t.FullName + ", Models";
         }
 
-        private static void ProcessObject(string name, JObject obj, JObject newRoot)
+        private static void ProcessObject(string name, JToken obj, JObject newRoot)
         {
             // Look for an array of something e.g. variable names in report.
             if (name == "Code")
@@ -189,7 +194,16 @@ namespace Models.Core.ApsimFile
 
         private static void AddNewChild(JToken element, JObject newRoot)
         {
-            var newChild = CreateObject(element as JObject);
+            JToken newChild;
+            if (element is JProperty)
+            {
+                newChild = new JObject();
+                Type t = GetModelTypeName((element as JProperty).Name);
+                if (t != null)
+                    newChild["$type"] = t.FullName + ", Models";
+            }
+            else
+                newChild = CreateObject(element as JObject);
 
             if (newRoot["Children"] == null)
                 newRoot["Children"] = new JArray();

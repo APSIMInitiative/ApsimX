@@ -82,6 +82,7 @@
             string json = XmlToJson.Convert(xml);
             Assert.AreEqual(json, expectedJson);
         }
+
         /// <summary>
         /// Ensure a memo model can be converted.
         /// </summary>
@@ -94,6 +95,21 @@
             string json = XmlToJson.Convert(xml);
             Assert.AreEqual(json, expectedJson);
         }
+
+        /// <summary>
+        /// Ensure a one line model in XML can be converted.
+        /// 
+        /// </summary>
+        [Test]
+        public void XMLToJSONTests_EnsureOneLineModelConverts()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureOneLineModelConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureOneLineModelConverts.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
+
 
     }
 }
