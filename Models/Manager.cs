@@ -132,7 +132,9 @@
         /// <summary>Work out the assembly file name (with path).</summary>
         public string GetAssemblyFileName()
         {
-            return Path.ChangeExtension(Path.GetTempFileName(), ".dll");
+            string path = Path.GetTempFileName();
+            File.Delete(path);
+            return Path.ChangeExtension(path, ".dll");
         }
 
         /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>
