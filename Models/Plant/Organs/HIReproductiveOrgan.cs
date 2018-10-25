@@ -12,6 +12,7 @@ namespace Models.PMF.Organs
     /// A harvest index reproductive organ
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(Plant))]
     public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
     {
         /// <summary>The surface organic matter model</summary>
