@@ -11,6 +11,8 @@ namespace Models.PostSimulationTools
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Storage;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// # [Name]
@@ -37,6 +39,13 @@ namespace Models.PostSimulationTools
         public bool Exceedence { get; set; }
 
         /// <summary>
+        /// The field name the probability function should split series on.
+        /// </summary>
+        [Description("Field name to split series on")]
+        [Display(Type = DisplayType.FieldName)]
+        public string FieldToSplitOn { get; set; } = "SimulationName";
+
+        /// <summary>
         /// The main run method called to fill tables in the specified DataStore.
         /// </summary>
         /// <param name="dataStore">The DataStore to work with</param>
@@ -47,47 +56,44 @@ namespace Models.PostSimulationTools
             DataTable simulationData = dataStore.GetData(TableName, fieldNames: dataStore.GetTableColumns(TableName));
             if (simulationData != null)
             {
-                // Add all the necessary columns to our data table.
-                DataTable probabilityData = new DataTable();
-                probabilityData.Columns.Add("Probability", typeof(double));
-                foreach (DataColumn column in simulationData.Columns)
+                IndexedDataTable simData = new IndexedDataTable(simulationData, new string[] { FieldToSplitOn });
+                IndexedDataTable probabilityData = new IndexedDataTable(new string[] { FieldToSplitOn });
+
+                foreach (var group in simData.Groups())
                 {
-                    if (column.DataType == typeof(double))
-                        probabilityData.Columns.Add(column.ColumnName, typeof(double));
-                }
+                    object keyValue = group.IndexValues[0];
 
-                string[] simulationNames = dataStore.SimulationNames;
-
-                DataView view = new DataView(simulationData);
-                foreach (string simulationName in simulationNames)
-                {
-                    view.RowFilter = "SimulationName = '" + simulationName + "'";
-
-                    int startRow = probabilityData.Rows.Count;
-
-                    // Add in a simulation column.
-                    string[] simulationNameColumnValues = StringUtilities.CreateStringArray(simulationName, view.Count);
-                    DataTableUtilities.AddColumn(probabilityData, "SimulationName", simulationNameColumnValues, startRow, simulationNameColumnValues.Length);
-
-                    // Add in the probability column
-                    double[] probabilityValues = MathUtilities.ProbabilityDistribution(view.Count, this.Exceedence);
-                    DataTableUtilities.AddColumn(probabilityData, "Probability", probabilityValues, startRow, view.Count);
+                    // Add in our key column
+                    probabilityData.SetIndex(new object[] { keyValue });
+                    probabilityData.Set<object>(FieldToSplitOn, keyValue);
 
                     // Add in all other numeric columns.
+                    bool haveWrittenProbabilityColumn = false;
+
                     foreach (DataColumn column in simulationData.Columns)
                     {
                         if (column.DataType == typeof(double))
                         {
-                            double[] values = DataTableUtilities.GetColumnAsDoubles(view, column.ColumnName);
-                            Array.Sort<double>(values);
-                            DataTableUtilities.AddColumn(probabilityData, column.ColumnName, values, startRow, values.Length);
+                            var values = group.Get<double>(column.ColumnName).ToList();
+                            values.Sort();
+
+                            if (!haveWrittenProbabilityColumn)
+                            {
+                                // Add in the probability column
+                                double[] probabilityValues = MathUtilities.ProbabilityDistribution(values.Count, this.Exceedence);
+                                probabilityData.SetValues("Probability", probabilityValues);
+                                haveWrittenProbabilityColumn = true;
+                            }
+
+                            probabilityData.SetValues(column.ColumnName, values);
                         }
                     }
                 }
 
                 // Write the stats data to the DataStore
-                probabilityData.TableName = this.Name;
-                dataStore.WriteTable(probabilityData);
+                DataTable t = probabilityData.ToTable();
+                t.TableName = this.Name;
+                dataStore.WriteTable(t);
             }
         }
     }

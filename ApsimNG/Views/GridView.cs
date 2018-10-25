@@ -392,7 +392,7 @@
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
-                if (categoryRows.Contains(rowNo))
+                if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
                     Color separatorColour = Color.LightSteelBlue;
@@ -455,6 +455,7 @@
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
+                                comboRend.CellBackgroundGdk = Grid.Style.Base(cellState);
                                 return;
                             }
                         }
@@ -508,11 +509,21 @@
         /// <param name="isSep">Added as a separator if true; removed as a separator if false.</param>
         public void SetRowAsSeparator(int row, bool isSep = true)
         {
-            bool present = categoryRows.Contains(row);
+            bool present = IsSeparator(row);
             if (isSep && !present)
                 categoryRows.Add(row);
             else if (!isSep && present)
                 categoryRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Checks if a row is a separator row.
+        /// </summary>
+        /// <param name="row">Index of the row.</param>
+        /// <returns>True iff the row is a separator row.</returns>
+        public bool IsSeparator(int row)
+        {
+            return categoryRows.Contains(row);
         }
 
         /// <summary>
@@ -1096,7 +1107,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
                     }
                     else
                     {
@@ -1123,7 +1134,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
                     }
 
                     EndEdit();
@@ -1176,10 +1187,13 @@
 
                         // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
                         // before the period is inserted by the Gtk event handler. Therefore, we insert it manually now, and stop
-                        // this signal from propagating further.
-                        // editable.Text += ".";
-                        editable.InsertText(".", ref caretLocation);
-                        editable.Position = caretLocation;
+                        // this signal from propagating further. 
+                        int position = editable.Position;
+                        editable.Text = editable.Text.Substring(0, position) + "." + editable.Text.Substring(position);
+                        editable.Position = position + 1;
+                        args.RetVal = true;
+                        while (GLib.MainContext.Iteration()) ;
+                        caretLocation = position + 1;
                     }
                     else
                     {
@@ -1259,12 +1273,13 @@
 
         /// <summary>
         /// Calculates the size of a given cell.
-        /// Results are returned in a tuple, where Item1 is the width and Item2 is the height of the cell.
+        /// Results are returned as a Point, where the X-coordinate is the width of the cell,
+        /// and the y-coordinate is the height of the cell.
         /// </summary>
         /// <param name="col">Column number of the cell.</param>
         /// <param name="row">Row number of the cell.</param>
         /// <returns>The cell size.</returns>
-        private Tuple<int, int> GetCellSize(int col, int row)
+        private Point GetCellSize(int col, int row)
         {
             int cellHeight, offsetX, offsetY, cellWidth;
             Gdk.Rectangle rectangle = new Gdk.Rectangle();
@@ -1276,47 +1291,45 @@
             // And now get padding from CellRenderer
             CellRenderer renderer = column.CellRenderers[row];
             cellHeight += (int)renderer.Ypad;
-            return new Tuple<int, int>(column.Width, cellHeight);
+            return new Point(column.Width, cellHeight);
         }
 
         /// <summary>
         /// Calculates the XY coordinates of a given cell relative to the origin of the TreeView.
-        /// Results are returned in a tuple, where Item1 is the x-coord and Item2 is the y-coord.
         /// </summary>
         /// <param name="col">Column number of the cell.</param>
         /// <param name="row">Row number of the cell.</param>
         /// <returns>The cell position.</returns>
-        private Tuple<int, int> GetCellPosition(int col, int row)
+        private Point GetCellPosition(int col, int row)
         {
             int x = 0;
 
             for (int i = 0; i < col; i++)
             {
-                Tuple<int, int> cellSize = GetCellSize(i, 0);
-                x += cellSize.Item1;
+                Point cellSize = GetCellSize(i, 0);
+                x += cellSize.X;
             }
 
             // Rows are uniform in height, so we just get the height of the first cell in the table, 
             // then multiply by the number of rows.
-            int y = GetCellSize(0, 0).Item2 * row;
+            int y = GetCellSize(0, 0).Y * row;
 
-            return new Tuple<int, int>(x, y);
+            return new Point(x, y);
         }
 
         /// <summary>
         /// Calculates the absolute coordinates of the top-left corner of a given cell on the screen. 
-        /// Results are returned in a tuple, where Item1 is the x-coordinate and Item2 is the y-coordinate.
         /// </summary>
         /// <param name="col">Column of the cell.</param>
         /// <param name="row">Row of the cell.</param>
         /// <returns>The absolute cell position.</returns>
-        private Tuple<int, int> GetAbsoluteCellPosition(int col, int row)
+        private Point GetAbsoluteCellPosition(int col, int row)
         {
             int frameX, frameY, containerX, containerY;
             MasterView.MainWindow.GetOrigin(out frameX, out frameY);
             Grid.GdkWindow.GetOrigin(out containerX, out containerY);
-            Tuple<int, int> relCoordinates = GetCellPosition(col, row + 1);
-            return new Tuple<int, int>(relCoordinates.Item1 + containerX, relCoordinates.Item2 + containerY);
+            Point relCoordinates = GetCellPosition(col, row + 1);
+            return new Point(relCoordinates.X + containerX, relCoordinates.Y + containerY);
         }
 
         /// <summary>
@@ -1697,7 +1710,12 @@
             try
             {
                 if (GetCurrentCell == null)
-                    return;
+                {
+                    if (selectedCellColumnIndex >= 0 && selectedCellRowIndex >= 0)
+                        GetCurrentCell = new GridCell(this, selectedCellColumnIndex, selectedCellRowIndex);
+                    else
+                        return;
+                }
 
                 string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
                 string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
@@ -2360,7 +2378,7 @@
         /// </summary>
         private void EditSelectedCell()
         {
-            if ( !(ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || categoryRows.Contains(selectedCellRowIndex)) )
+            if ( !(ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || IsSeparator(selectedCellRowIndex)) )
             {
                 userEditingCell = true;
                 Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);

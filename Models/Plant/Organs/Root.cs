@@ -26,7 +26,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Dry Matter Demands**
     /// 
-    /// A daily DM demand is provided to the organ abitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural.  
+    /// A daily DM demand is provided to the organ arbitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural.  
     /// The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.  
     /// 
     /// **Nitrogen Demands**
@@ -842,6 +842,24 @@ namespace Models.PMF.Organs
             dmRetranslocationSupply = AvailableDMRetranslocation();
             nReallocationSupply = AvailableNReallocation();
             nRetranslocationSupply = AvailableNRetranslocation();
+        }
+
+        /// <summary>Computes root total water supply.</summary>
+        public double TotalExtractableWater()
+        {
+            double[] LL = PlantZone.soil.LL(Plant.Name);
+            double[] KL = PlantZone.soil.KL(Plant.Name);
+            double[] SWmm = PlantZone.soil.Water;
+            double[] DZ = PlantZone.soil.Thickness;
+
+            double supply = 0;
+            for (int layer = 0; layer < LL.Length; layer++)
+            {
+                if (layer <= Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness))
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
+                        Soil.ProportionThroughLayer(layer, Depth, DZ));
+            }
+            return supply;
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>

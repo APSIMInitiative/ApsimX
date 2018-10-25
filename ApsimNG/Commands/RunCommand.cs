@@ -168,10 +168,17 @@
             double numberComplete = 0.0;
             if (jobManager.SimClocks != null)
             {
-                foreach(Models.IClock clock in jobManager.SimClocks)
+                int numClocks = jobManager.SimClocks.Count;
+                for (int i = 0; i < numClocks; i++)
                 {
-                    if (clock != null)
-                        numberComplete += clock.FractionComplete;
+                    if (jobManager.SimClocks[i] != null)
+                    {
+                        if (jobManager.SimClocks[i].FractionComplete < 0)
+                        {
+
+                        }
+                        numberComplete += jobManager.SimClocks[i].FractionComplete;
+                    }
                 }
             }
             else

@@ -58,6 +58,11 @@ namespace Models.PMF
         [XmlIgnore]
         public double PotentialEP { get; set; }
 
+        /// <summary>Sets the actual water demand.</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion

@@ -38,7 +38,7 @@ pipeline {
 					git -C APSIM.Shared pull origin master
 					
 					docker build -m 16g -t buildapsimx ApsimX\\Docker\\build
-					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "PULL_ID=%ghprbPullId%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
+					docker run -m 16g --cpu-count 16 --cpu-percent 100 -e "PULL_ID=%ghprbPullId%" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared buildapsimx
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\bin.zip', onlyIfSuccessful: true
 				archiveArtifacts artifacts: 'ApsimX\\datetimestamp.txt', onlyIfSuccessful: true
@@ -91,7 +91,7 @@ pipeline {
 							git -C APSIM.Shared pull origin master
 							
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Prototypes
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared -p 4020:4020 -p 4021:4021 runtests Prototypes
 						'''
 					}
 				}
@@ -137,7 +137,7 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests UI
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared -p 4020:4020 -p 4021:4021 runtests UI
 						'''
 					}
 				}
@@ -185,7 +185,7 @@ pipeline {
 							git -C APSIM.Shared pull origin master
 							set /P DATETIMESTAMP=<ApsimX\\datetimestamp.txt
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%ghprbPullId%" -e "COMMIT_AUTHOR=%ghprbActualCommitAuthor%" -e "RUN_PERFORMANCE_TESTS=TRUE" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%ghprbPullId%" -e "COMMIT_AUTHOR=%ghprbActualCommitAuthor%" -e "RUN_PERFORMANCE_TESTS=TRUE" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared -p 4020:4020 -p 4021:4021 runtests Validation
 						'''
 					}
 				}
@@ -231,7 +231,7 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Unit
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared -p 4020:4020 -p 4021:4021 runtests Unit
 						'''
 					}
 				}
@@ -279,7 +279,7 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Examples
+							docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared -p 4020:4020 -p 4021:4021 runtests Examples
 						'''
 					}
 				}

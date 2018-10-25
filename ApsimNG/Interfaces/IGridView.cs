@@ -145,6 +145,13 @@ namespace UserInterface.Interfaces
         void SetRowAsSeparator(int row, bool isSep = true);
 
         /// <summary>
+        /// Checks if a row is a separator row.
+        /// </summary>
+        /// <param name="row">Index of the row.</param>
+        /// <returns>True iff the row is a separator row.</returns>
+        bool IsSeparator(int row);
+
+        /// <summary>
         /// Inserts text into the current cell at the cursor position.
         /// </summary>
         /// <param name="text">Text to be inserted.</param>

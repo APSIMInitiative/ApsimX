@@ -253,6 +253,7 @@ namespace UserInterface.Presenters
                 if (this.ApsimXFile.FileName != null)
                 {
                     this.ApsimXFile.Write(this.ApsimXFile.FileName);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", ApsimXFile.FileName), Simulation.MessageType.Information);
                     return true;
                 }
             }
@@ -284,6 +285,7 @@ namespace UserInterface.Presenters
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     Utility.Configuration.Settings.AddMruFile(newFileName);
                     MainPresenter.UpdateMRUDisplay();
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", newFileName), Simulation.MessageType.Information);
                     return true;
                 }
                 catch (Exception err)
