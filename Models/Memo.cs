@@ -21,7 +21,7 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
+            if (IncludeInDocumentation && Text != null)
                 AutoDocumentation.ParseTextForTags(Text, this, tags, headingLevel, indent, true, true);
         }
     }

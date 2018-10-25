@@ -251,7 +251,7 @@ namespace Models.Core.ApsimFile
                     else if (bool.TryParse(value, out boolValue))
                         toObject[propertyName] = boolValue;
                     else if (DateTime.TryParseExact(value, "MM/dd/yyyy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dateValue))
-                        toObject[propertyName] = dateValue;
+                        toObject[propertyName] = dateValue.ToString("yyyy-MM-dd");
                     else
                         toObject[propertyName] = value;
                 }
