@@ -10,13 +10,12 @@
     using System.Data;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Xml.Serialization;
     using Utilities;
 
     /// <summary>
     /// # [Name]
-    /// Encapsulates a Morris analysis.
+    /// Encapsulates a SOBOL parameter sensitivity analysis.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.DualGridView")]
@@ -335,8 +334,18 @@
                 string sobolx1FileName = Path.Combine(Path.GetTempPath(), "sobolx1.csv");
                 string sobolx2FileName = Path.Combine(Path.GetTempPath(), "sobolx2.csv");
                 string sobolVariableValuesFileName = Path.Combine(Path.GetTempPath(), "sobolvariableValues.csv");
+
+                // Write variables file
                 using (var writer = new StreamWriter(sobolVariableValuesFileName))
                     DataTableUtilities.DataTableToText(variableValues.ToTable(), 0, ",",true, writer, excelFriendly:true);
+
+                // Write X1
+                using (var writer = new StreamWriter(sobolx1FileName))
+                    DataTableUtilities.DataTableToText(X1, 0, ",", true, writer, excelFriendly: true);
+
+                // Write X2
+                using (var writer = new StreamWriter(sobolx2FileName))
+                    DataTableUtilities.DataTableToText(X2, 0, ",", true, writer, excelFriendly: true);
 
                 string script = string.Format(
                      "library('boot')" + Environment.NewLine +
@@ -368,14 +377,10 @@
 
                 DataTable results = RunR(script);
                 results.TableName = Name + "Statistics";
-
-                
-
                 dataStore.DeleteDataInTable(results.TableName);
                 dataStore.WriteTable(results);
             }
         }
-
 
         /// <summary>
         /// Get a list of parameter values that we are to run. Call R to do this.
@@ -389,71 +394,6 @@
             Console.WriteLine(r.GetPackage("sensitivity"));
             return r.RunToTable(rFileName);
         }
-
-        ///// <summary>
-        ///// Get a list of parameter values that we are to run. Call R to do this.
-        ///// </summary>
-        //private void RunRPostSimulation(DataTable predictedValues, out DataTable eeDataRaw, out DataTable statsDataRaw)
-        //{
-        //    string morrisParametersFileName = Path.Combine(Path.GetTempPath(), "parameters.csv");
-        //    string apsimVariableFileName = Path.Combine(Path.GetTempPath(), "apsimvariable.csv");
-        //    string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
-        //    string eeFileName = Path.Combine(Path.GetTempPath(), "ee.csv");
-        //    string statsFileName = Path.Combine(Path.GetTempPath(), "stats.csv");
-
-        //    // write predicted values file
-        //    using (StreamWriter writer = new StreamWriter(apsimVariableFileName))
-        //        DataTableUtilities.DataTableToText(predictedValues, 0, ",", true, writer);
-
-        //    // Write parameters
-        //    using (StreamWriter writer = new StreamWriter(morrisParametersFileName))
-        //        DataTableUtilities.DataTableToText(ParameterValues, 0, ",", true, writer);
-
-        //    string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
-        //    string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
-        //    string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
-        //    string script = GetSobolRScript();
-        //    script += string.Format
-        //    ("apsimMorris$X <- read.csv(\"{0}\")" + Environment.NewLine +
-        //    "values = read.csv(\"{1}\")" + Environment.NewLine +
-        //    "allEE <- data.frame()" + Environment.NewLine +
-        //    "allStats <- data.frame()" + Environment.NewLine +
-        //    "for (columnName in colnames(values))" + Environment.NewLine +
-        //    "{{" + Environment.NewLine +
-        //    " apsimMorris$y <- values[[columnName]]" + Environment.NewLine +
-        //    " tell(apsimMorris)" + Environment.NewLine +
-
-        //    " ee <- data.frame(apsimMorris$ee)" + Environment.NewLine +
-        //    " ee$variable <- columnName" + Environment.NewLine +
-        //    " ee$path <- c(1:{2})" + Environment.NewLine +
-        //    " allEE <- rbind(allEE, ee)" + Environment.NewLine +
-
-        //    " mu <- apply(apsimMorris$ee, 2, mean)" + Environment.NewLine +
-        //    " mustar <- apply(apsimMorris$ee, 2, function(x) mean(abs(x)))" + Environment.NewLine +
-        //    " sigma <- apply(apsimMorris$ee, 2, sd)" + Environment.NewLine +
-        //    " stats <- data.frame(mu, mustar, sigma)" + Environment.NewLine +
-        //    " stats$param <- params" + Environment.NewLine +
-        //    " stats$variable <- columnName" + Environment.NewLine +
-        //    " allStats <- rbind(allStats, stats)" + Environment.NewLine +
-
-        //    "}}" + Environment.NewLine +
-        //    "write.csv(allEE,\"{3}\", row.names=FALSE)" + Environment.NewLine +
-        //    "write.csv(allStats, \"{4}\", row.names=FALSE)" + Environment.NewLine,
-        //    morrisParametersFileName.Replace("\\", "/"),
-        //    apsimVariableFileName.Replace("\\", "/"),
-        //    NumPaths,
-        //    eeFileName.Replace("\\", "/"),
-        //    statsFileName.Replace("\\", "/"));
-        //    File.WriteAllText(rFileName, script);
-
-        //    // Run R
-        //    R r = new R();
-        //    Console.WriteLine(r.GetPackage("sensitivity"));
-        //    r.RunToTable(rFileName);
-
-        //    eeDataRaw = ApsimTextFile.ToTable(eeFileName);
-        //    statsDataRaw = ApsimTextFile.ToTable(statsFileName);
-        //}
 
         /// <summary>
         /// Return the base R script for running morris.
