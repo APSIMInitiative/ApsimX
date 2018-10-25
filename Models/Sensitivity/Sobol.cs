@@ -275,6 +275,16 @@
                 ParameterValues = RunR(script);
 
                 // Read in the 2 data frames (X1, X2) that R wrote.
+                if (!File.Exists(sobolx1FileName))
+                {
+                    string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+                    if (!File.Exists(rFileName))
+                        throw new Exception("Cannot find file: " + rFileName);
+                    string message = "Cannot find : " + sobolx1FileName + Environment.NewLine +
+                                 "Script:" + Environment.NewLine +
+                                 File.ReadAllText(rFileName);
+                    throw new Exception(message);
+                }
                 X1 = ApsimTextFile.ToTable(sobolx1FileName);
                 X2 = ApsimTextFile.ToTable(sobolx2FileName);
 
