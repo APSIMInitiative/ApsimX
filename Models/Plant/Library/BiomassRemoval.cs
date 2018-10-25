@@ -223,7 +223,7 @@ namespace Models.PMF.Library
             {
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                tags.Add(new AutoDocumentation.Paragraph("This organ will respond to certain management actions by either removing some of its biomass from the system or transferring some of its biomass to the soil.  The following table describes the proportions of live and dead biomass that are transferred for a range of management actions.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("This organ will respond to certain management actions by either removing some of its biomass from the system or transferring some of its biomass to the soil.  The following table describes the default proportions of live and dead biomass that are transferred for a range of management actions.  These can be changed during a simulation using a manager script.", indent));
 
                 DataTable data = new DataTable();
                 data.Columns.Add("Method", typeof(string));

@@ -9,8 +9,8 @@ using Models.Interfaces;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
-    /// Returns the value of today's photoperiod calculated using the specified latitude and twilight sun angle threshold.  If a variable called ClimateControl.PhotoPeriod is found in the simulation, it will be used instead.
+    /// Returns the duration of the day, or photoperiod, in hours.  This is calculated using the specified latitude (given in the weather file)
+    /// and twilight sun angle threshold.  If a variable called ClimateControl.PhotoPeriod is found in the simulation, it will be used instead.
     /// </summary>
     /// <remarks>The day length is calculated with \ref MathUtilities.DayLength.</remarks>
     /// \pre A \ref Models.WeatherFile function has to exist.
@@ -23,26 +23,26 @@ namespace Models.Functions
     public class PhotoperiodFunction : Model, IFunction, ICustomDocumentation
     {
 
-        /// <summary>The met data</summary>
+        /// <summary>The met data.</summary>
         [Link]
         protected IWeather MetData = null;
 
-        /// <summary>The clock</summary>
+        /// <summary>The clock.</summary>
         [Link]
         protected Clock Clock = null;
 
-        /// <summary>The twilight</summary>
+        /// <summary>The twilight angle.</summary>
         [Description("Twilight angle")]
         [Units("degrees")]
         public double Twilight { get; set; }
 
-        /// <summary>
-        /// The value to return
-        /// </summary>
+        /// <summary>The daylight length.</summary>
+        [Units("hours")]
         public double DayLength { get; set; }
 
-        /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
+        /// <summary>Gets the main output of this function.</summary>
+        /// <param name="arrayIndex">Not expected for this function.</param>
+        /// <returns>The daylight duration (hours).</returns>
         public double Value(int arrayIndex = -1)
         {
             return DayLength;
@@ -57,7 +57,6 @@ namespace Models.Functions
                 DayLength = 0;
         }
 
-
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -66,14 +65,14 @@ namespace Models.Functions
         {
             if (IncludeInDocumentation)
             {
-                // add a heading.
+                // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write memos.
+                // write memos
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                // get description of this class.
+                // get description of this class
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 tags.Add(new AutoDocumentation.Paragraph("<i>Twilight = " + Twilight.ToString() + " (degrees)</i>", indent));

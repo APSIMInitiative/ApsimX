@@ -413,6 +413,10 @@ namespace Models
         [XmlIgnore]
         public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
 
+        /// <summary>Sets the actual water demand.</summary>
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets
         /// this property in the crop.

@@ -443,6 +443,9 @@ namespace Models.AgPasture
 
         #endregion ---------------------------------------------------------------------------------------------------------
 
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
+        const double CarbonFractionInDM = 0.4;
+
         /// <summary>Minimum significant difference between two values.</summary>
         const double Epsilon = 0.000000001;
     }
@@ -451,11 +454,8 @@ namespace Models.AgPasture
     [Serializable]
     public class PastureBelowGroundOrgan
     {
-        /// <summary>Flag which method for computing soil available water will be used.</summary>
-        private PastureSpecies.PlantAvailableWaterMethod myWaterAvailableMethod;
-
-        /// <summary>Flag which method for computing available soil nitrogen will be used.</summary>
-        private PastureSpecies.PlantAvailableNitrogenMethod myNitrogenAvailableMethod = PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture;
+        /// <summary>Soil object where these roots are growing.</summary>
+        public Soil mySoil = null;
 
         /// <summary>Soil nitrogen model.</summary>
         private SoilNitrogen SoilNitrogen;
@@ -463,113 +463,97 @@ namespace Models.AgPasture
         /// <summary>The solute manager in this zone</summary>
         public SoluteManager solutes = null;
 
-        /// <summary>Ammonium uptake coefficient.</summary>
-        private double KNH4 = 1.0;
-
-        /// <summary>Nitrate uptake coefficient.</summary>
-        private double KNO3 = 1.0;
-
-        /// <summary>Availability factor for NH4.</summary>
-        private double kuNH4 = 0.50;
-
-        /// <summary>Availability factor for NO3.</summary>
-        private double kuNO3 = 0.95;
-
-        /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
-        private double MaximumNUptake = 10.0;
-
-        /// <summary>Number of layers in the soil.</summary>
-        private int nLayers;
-
-        /// <summary>Soil object where these roots are growing.</summary>
-        public Soil mySoil = null;
-
-        /// <summary>Name of pasture species</summary>
-        private string pastureName;
-
-        /// <summary>Specific root length (m/gDM).</summary>
-        private double mySpecificRootLength = 100.0;
-
-        /// <summary>Reference value for root length density for the Water and N availability.</summary>
-        private double ReferenceRLD = 5.0;
-
-        /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
-        private double ExponentSoilMoisture = 1.50;
-
-        /// <summary>Reference value of Ksat for water availability function.</summary>
-        private double ReferenceKSuptake = 15.0;
-
-        /// <summary>Constructor, initialise tissues.</summary>
-        /// <param name="numTissues">The number of tissues in the organ</param>
-        /// <param name="numLayers">The number of layers in the soil</param>
-        /// <param name="myWaterAvailableMethod">Water uptake method</param>
-        /// <param name="myNitrogenAvailableMethod">NItrogen uptake method</param>
-        /// <param name="KNH4">Ammonium uptake coefficient</param>
-        /// <param name="KNO3">Nitrate uptake coefficient</param>
-        /// <param name="kuNH4">Availability factor for NH4</param>
-        /// <param name="kuNO3">Availability factor for NO3</param>
-        /// <param name="MaximumNUptake">Maximum daily amount of N that can be taken up by the plant (kg/ha)</param>
-        /// <param name="soil">Soil where roots are growing</param>
-        /// <param name="nameOfPasture">Name of pasture</param>
-        /// <param name="initialRootDepth">Initial root depth</param>
-        /// <param name="initialDMWeight">Initial dry matter</param>
-        /// <param name="specificRootLength">Specific root length (m/gDM)</param>
-        /// <param name="referenceRLD">Reference value for root length density for the Water and N availability.</param>
-        /// <param name="exponentSoilMoisture">Exponent controlling the effect of soil moisture variations on water extractability</param>
-        /// <param name="referenceKSuptake">Reference value of Ksat for water availability function</param>
-        /// <param name="myRootDepthMaximum"></param>
-        /// <param name="myRootDistributionDepthParam"></param>
-        /// <param name="myRootDistributionExponent"></param>
-        /// <param name="rootBottomDistributionFactor"></param>
-        public PastureBelowGroundOrgan(int numTissues, int numLayers, 
-                                       PastureSpecies.PlantAvailableWaterMethod myWaterAvailableMethod,
-                                       PastureSpecies.PlantAvailableNitrogenMethod myNitrogenAvailableMethod,
-                                       double KNH4, double KNO3, double MaximumNUptake,
-                                       double kuNH4, double kuNO3,
-                                       Soil soil,
-                                       string nameOfPasture, double initialRootDepth, double initialDMWeight, double specificRootLength, 
+        /// <summary>Initialise the tissues for the roots.</summary>
+        /// <param name="nameOfSpecies">Name of the pasture species</param>
+        /// <param name="numTissues">Number of tissues in this organ</param>
+        /// <param name="initialDM">Initial dry matter weight</param>
+        /// <param name="initialDepth">Initial root depth</param>
+        /// <param name="optNconc">The optimum N concentration</param>
+        /// <param name="minNconc">The minimum N concentration</param>
+        /// <param name="maxNconc">The maximum N concentration</param>
+        /// <param name="minLiveDM">The minimum biomass for this organ</param>
+        /// <param name="fractionNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
+        /// <param name="specificRootLength">The specific root length (m/g)</param>
+        /// <param name="rootDepthMaximum">The maximum root depth</param>
+        /// <param name="rootDistributionDepthParam">Parameter to compute root distribution, depth with constant root</param>
+        /// <param name="rootBottomDistributionFactor">Parameter to compute root distribution, </param>
+        /// <param name="rootDistributionExponent">Parameter to compute root distribution, exponent for root decrease</param>
+        /// <param name="waterAvailableMethod">Method to compute water available</param>
+        /// <param name="nitrogenAvailableMethod">Method to compute N available</param>
+        /// <param name="kNH4">Parameter to compute NN4 available, default method</param>
+        /// <param name="kNO3">Parameter to compute NO3 available, default method</param>
+        /// <param name="maxNUptake">Parameter to compute N uptake, default method</param>
+        /// <param name="kuNH4">Parameter to compute NH4 available, alternative method</param>
+        /// <param name="kuNO3">Parameter to compute NO3 available, alternative method</param>
+        /// <param name="referenceKSuptake">Parameter to compute available water, conductivity</param>
+        /// <param name="referenceRLD">Parameter to compute available water, roots</param>
+        /// <param name="exponentSoilMoisture">Parameter to compute available water</param>
+        /// <param name="theSoil">Reference to the soil in the zone these roots are in</param>
+        public PastureBelowGroundOrgan(string nameOfSpecies, int numTissues,
+                                       double initialDM, double initialDepth,
+                                       double optNconc, double minNconc, double maxNconc,
+                                       double minLiveDM, double fractionNremobilisable,
+                                       double specificRootLength, double rootDepthMaximum,
+                                       double rootDistributionDepthParam, double rootDistributionExponent,
+                                       double rootBottomDistributionFactor,
+                                       PastureSpecies.PlantAvailableWaterMethod waterAvailableMethod,
+                                       PastureSpecies.PlantAvailableNitrogenMethod nitrogenAvailableMethod,
+                                       double kNH4, double kNO3, double maxNUptake,
+                                       double kuNH4, double kuNO3, double referenceKSuptake,
                                        double referenceRLD, double exponentSoilMoisture,
-                                       double referenceKSuptake, 
-                                       double myRootDepthMaximum, double myRootDistributionDepthParam, double rootBottomDistributionFactor,
-                                       double myRootDistributionExponent)
+                                       Soil theSoil)
         {
-            // Typically two tissues below ground, one live and one dead
-            TissueCount = numTissues;
-            Tissue = new RootTissue[TissueCount];
-            for (int t = 0; t < TissueCount; t++)
-                Tissue[t] = new RootTissue(numLayers);
-            this.myWaterAvailableMethod = myWaterAvailableMethod;
-            this.myNitrogenAvailableMethod = myNitrogenAvailableMethod;
-            this.KNO3 = KNO3;
-            this.KNH4 = KNH4;
-            this.kuNH4 = kuNH4;
-            this.kuNO3 = kuNO3;
-            this.MaximumNUptake = MaximumNUptake;         
+            //Initialise the tissues (typically, there are two tissues below ground, one live and one dead)
+            Tissue = new RootTissue[numTissues];
+            nLayers = theSoil.Thickness.Length;
+            for (int t = 0; t < Tissue.Length; t++)
+                Tissue[t] = new RootTissue(nLayers);
 
-            nLayers = numLayers;
-            mySoil = soil;
-            pastureName = nameOfPasture;
+            // save the parameters for this organ
+            NConcOptimum = optNconc;
+            NConcMinimum = minNconc;
+            NConcMaximum = maxNconc;
+            MinimumLiveDM = minLiveDM;
+            Tissue[0].FractionNLuxuryRemobilisable = fractionNremobilisable;
             mySpecificRootLength = specificRootLength;
-            ReferenceRLD = referenceRLD;
-            ExponentSoilMoisture = exponentSoilMoisture;
-            ReferenceKSuptake = referenceKSuptake;
-            Name = soil.Parent.Name;
+            myRootDepthMaximum = rootDepthMaximum;
+            myRootDistributionDepthParam = rootDistributionDepthParam;
+            myRootDistributionExponent = rootDistributionExponent;
+            myRootBottomDistributionFactor = rootBottomDistributionFactor;
+            myWaterAvailableMethod = waterAvailableMethod;
+            myNitrogenAvailableMethod = nitrogenAvailableMethod;
+            myKNO3 = kNO3;
+            myKNH4 = kNH4;
+            myMaximumNUptake = maxNUptake;
+            myKuNH4 = kuNH4;
+            myKuNO3 = kuNO3;
+            myReferenceKSuptake = referenceKSuptake;
+            myReferenceRLD = referenceRLD;
+            myExponentSoilMoisture = exponentSoilMoisture;
+
+            // Initialise variables and links to soil
+            mySoil = theSoil;
+            ZoneName = mySoil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
-            solutes = Apsim.Find(soil, typeof(SoluteManager)) as SoluteManager;
+            solutes = Apsim.Find(mySoil, typeof(SoluteManager)) as SoluteManager;
             if (solutes == null)
                 throw new Exception("Cannot find solute manager in zone");
 
-            SoilNitrogen = Apsim.Find(soil, typeof(SoilNitrogen)) as SoilNitrogen;
+            SoilNitrogen = Apsim.Find(mySoil, typeof(SoilNitrogen)) as SoilNitrogen;
             if (SoilNitrogen == null)
                 throw new Exception("Cannot find SoilNitrogen in zone");
 
             // Initialise root DM, N, depth, and distribution
-            this.Depth = initialRootDepth;
-            RootDistributionTarget(myRootDepthMaximum, myRootDistributionDepthParam, rootBottomDistributionFactor, myRootDistributionExponent);
+            mySpeciesName = nameOfSpecies;
+            myInitialDMWeight = initialDM;
+            myInitialRootDepth = initialDepth;
+            Depth = myInitialRootDepth;
+            RootDistributionTarget(myRootDepthMaximum, myRootDistributionDepthParam, myRootBottomDistributionFactor, myRootDistributionExponent);
             double[] iniRootFraction = CurrentRootDistributionTarget(myRootDepthMaximum);
             for (int layer = 0; layer < nLayers; layer++)
-                Tissue[0].DMLayer[layer] = initialDMWeight * iniRootFraction[layer];
+                Tissue[0].DMLayer[layer] = myInitialDMWeight * iniRootFraction[layer];
+            Tissue[0].Namount = myInitialDMWeight * optNconc;
         }
 
         /// <summary>The collection of tissues for this organ.</summary>
@@ -585,9 +569,66 @@ namespace Models.AgPasture
         internal double[] mySoilNO3Available { get; private set; }
 
         /// <summary>Name of root zone.</summary>
-        internal string Name { get; private set; }
+        internal string ZoneName { get; private set; }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
+
+        /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
+        private double myInitialDMWeight = 500.0;
+
+        /// <summary>Initial rooting depth (mm).</summary>
+        private double myInitialRootDepth = 750.0;
+
+        /// <summary>Name of pasture species</summary>
+        private string mySpeciesName;
+
+        /// <summary>Specific root length (m/gDM).</summary>
+        private double mySpecificRootLength = 100.0;
+
+        /// <summary>Maximum rooting depth (mm).</summary>
+        private double myRootDepthMaximum = 750.0;
+
+        /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
+        private double myRootDistributionDepthParam = 90.0;
+
+        /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
+        private double myRootDistributionExponent = 3.2;
+
+        /// <summary>Factor to compute root distribution (controls where, below maxRootDepth, the function is zero).</summary>
+        private double myRootBottomDistributionFactor = 1.05;
+
+        /// <summary>Flag which method for computing soil available water will be used.</summary>
+        private PastureSpecies.PlantAvailableWaterMethod myWaterAvailableMethod;
+
+        /// <summary>Flag which method for computing available soil nitrogen will be used.</summary>
+        private PastureSpecies.PlantAvailableNitrogenMethod myNitrogenAvailableMethod = PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture;
+
+        /// <summary>Ammonium uptake coefficient.</summary>
+        private double myKNH4 = 1.0;
+
+        /// <summary>Nitrate uptake coefficient.</summary>
+        private double myKNO3 = 1.0;
+
+        /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
+        private double myMaximumNUptake = 10.0;
+
+        /// <summary>Availability factor for NH4.</summary>
+        private double myKuNH4 = 0.50;
+
+        /// <summary>Availability factor for NO3.</summary>
+        private double myKuNO3 = 0.95;
+
+        /// <summary>Reference value for root length density for the Water and N availability.</summary>
+        private double myReferenceRLD = 5.0;
+
+        /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
+        private double myExponentSoilMoisture = 1.50;
+
+        /// <summary>Reference value of Ksat for water availability function.</summary>
+        private double myReferenceKSuptake = 15.0;
+
+        /// <summary>Number of layers in the soil.</summary>
+        private int nLayers;
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
         internal double NConcOptimum = 2.0;
@@ -620,16 +661,13 @@ namespace Models.AgPasture
 
         #region Organ Properties (summary of tissues)  ---------------------------------------------------------------------
 
-        /// <summary>The number of tissue pools in this organ.</summary>
-        internal int TissueCount;
-
         /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
         internal double DMTotal
         {
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount; t++)
+                for (int t = 0; t < Tissue.Length; t++)
                     result += Tissue[t].DM;
 
                 return result;
@@ -642,7 +680,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].DM;
 
                 return result;
@@ -653,7 +691,7 @@ namespace Models.AgPasture
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double DMDead
         {
-            get { return Tissue[TissueCount - 1].DM; }
+            get { return Tissue[Tissue.Length - 1].DM; }
         }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
@@ -662,7 +700,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount; t++)
+                for (int t = 0; t < Tissue.Length; t++)
                     result += Tissue[t].Namount;
 
                 return result;
@@ -675,7 +713,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].Namount;
 
                 return result;
@@ -686,7 +724,7 @@ namespace Models.AgPasture
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double NDead
         {
-            get { return Tissue[TissueCount - 1].Namount; }
+            get { return Tissue[Tissue.Length - 1].Namount; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
@@ -710,13 +748,13 @@ namespace Models.AgPasture
         /// <summary>Gets the amount of senesced N available for remobilisation (kg/ha).</summary>
         internal double NSenescedRemobilisable
         {
-            get { return Tissue[TissueCount - 1].NRemobilisable; }
+            get { return Tissue[Tissue.Length - 1].NRemobilisable; }
         }
 
         /// <summary>Gets the amount of senesced N remobilised into new growth (kg/ha).</summary>
         internal double NSenescedRemobilised
         {
-            get { return Tissue[TissueCount - 1].NRemobilised; }
+            get { return Tissue[Tissue.Length - 1].NRemobilised; }
         }
 
         /// <summary>Gets the amount of luxury N available for remobilisation (kg/ha).</summary>
@@ -725,7 +763,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].NRemobilisable;
 
                 return result;
@@ -738,7 +776,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                     result += Tissue[t].NRemobilised;
 
                 return result;
@@ -760,25 +798,25 @@ namespace Models.AgPasture
         /// <summary>Gets the DM amount senescing from this organ (kg/ha).</summary>
         internal double DMSenesced
         {
-            get { return Tissue[TissueCount - 2].DMTransferedOut; }
+            get { return Tissue[Tissue.Length - 2].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N senescing from this organ (kg/ha).</summary>
         internal double NSenesced
         {
-            get { return Tissue[TissueCount - 2].NTransferedOut; }
+            get { return Tissue[Tissue.Length - 2].NTransferedOut; }
         }
 
         /// <summary>Gets the DM amount detached from this organ (kg/ha).</summary>
         internal double DMDetached
         {
-            get { return Tissue[TissueCount - 1].DMTransferedOut; }
+            get { return Tissue[Tissue.Length - 1].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N detached from this organ (kg/ha).</summary>
         internal double NDetached
         {
-            get { return Tissue[TissueCount - 1].NTransferedOut; }
+            get { return Tissue[Tissue.Length - 1].NTransferedOut; }
         }
 
         /// <summary>Finds out the amount of plant available water in the soil.</summary>
@@ -802,7 +840,7 @@ namespace Models.AgPasture
         internal double[] PlantAvailableSoilWaterDefault(ZoneWaterAndN myZone)
         {
             double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(mySpeciesName);
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
@@ -823,10 +861,10 @@ namespace Models.AgPasture
         internal double[] PlantAvailableSoilWaterAlternativeKL(ZoneWaterAndN myZone)
         {
             double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(mySpeciesName);
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                double rldFac = Math.Min(1.0, RootLengthDensity[layer] / ReferenceRLD);
+                double rldFac = Math.Min(1.0, RootLengthDensity[layer] / myReferenceRLD);
                 double swFac;
                 if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
                     swFac = 1.0;
@@ -836,7 +874,7 @@ namespace Models.AgPasture
                 {
                     double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
                                         (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
                 // Total available water
@@ -861,11 +899,11 @@ namespace Models.AgPasture
         internal double[] PlantAvailableSoilWaterAlternativeKS(ZoneWaterAndN myZone)
         {
             double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(mySpeciesName);
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / ReferenceKSuptake);
-                double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / ReferenceRLD);
+                double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / myReferenceKSuptake);
+                double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / myReferenceRLD);
                 double swFac;
                 if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
                     swFac = 1.0;
@@ -875,7 +913,7 @@ namespace Models.AgPasture
                 {
                     double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
                                         (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
                 // Total available water
@@ -981,23 +1019,23 @@ namespace Models.AgPasture
                     double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
                                         (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
                     waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
                 // get NH4 available
-                potAvailableN = Math.Pow(myZone.NH4N[layer] * layerFrac, 2.0) * swFac * bdFac * KNH4;
+                potAvailableN = Math.Pow(myZone.NH4N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNH4;
                 mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer] * layerFrac, potAvailableN);
 
                 // get NO3 available
-                potAvailableN = Math.Pow(myZone.NO3N[layer] * layerFrac, 2.0) * swFac * bdFac * KNO3;
+                potAvailableN = Math.Pow(myZone.NO3N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNO3;
                 mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer] * layerFrac, potAvailableN);
             }
 
             // check for maximum uptake
             potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
+            if (potAvailableN > myMaximumNUptake)
             {
-                double upFraction = MaximumNUptake / potAvailableN;
+                double upFraction = myMaximumNUptake / potAvailableN;
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;
@@ -1026,7 +1064,7 @@ namespace Models.AgPasture
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
-                rldFac = Math.Min(1.0, MathUtilities.Divide(RootLengthDensity[layer], ReferenceRLD, 1.0));
+                rldFac = Math.Min(1.0, MathUtilities.Divide(RootLengthDensity[layer], myReferenceRLD, 1.0));
                 if (myZone.Water[layer] >= mySoil.DULmm[layer])
                     swFac = 1.0;
                 else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
@@ -1035,23 +1073,23 @@ namespace Models.AgPasture
                 {
                     double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
                                         (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
                 // get NH4 available
                 potAvailableN = myZone.NH4N[layer] * layerFrac;
-                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * kuNH4);
+                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNH4);
 
                 // get NO3 available
                 potAvailableN = myZone.NO3N[layer] * layerFrac;
-                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * kuNO3);
+                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNO3);
             }
 
             // check for maximum uptake
             potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
+            if (potAvailableN > myMaximumNUptake)
             {
-                double upFraction = MaximumNUptake / potAvailableN;
+                double upFraction = myMaximumNUptake / potAvailableN;
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;
@@ -1079,18 +1117,18 @@ namespace Models.AgPasture
 
                 // get NH4 available
                 potAvailableN = myZone.NH4N[layer] * layerFrac;
-                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swuFac * kuNH4);
+                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNH4);
 
                 // get NO3 available
                 potAvailableN = myZone.NO3N[layer] * layerFrac;
-                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swuFac * kuNO3);
+                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNO3);
             }
 
             // check for maximum uptake
             potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
+            if (potAvailableN > myMaximumNUptake)
             {
-                double upFraction = MaximumNUptake / potAvailableN;
+                double upFraction = myMaximumNUptake / potAvailableN;
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;
@@ -1106,7 +1144,7 @@ namespace Models.AgPasture
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
         internal void DoResetOrgan()
         {
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].DM = 0.0;
                 Tissue[t].Namount = 0.0;
@@ -1118,7 +1156,7 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         internal void DoCleanTransferAmounts()
         {
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].DMTransferedIn = 0.0;
                 Tissue[t].DMTransferedOut = 0.0;
@@ -1138,12 +1176,12 @@ namespace Models.AgPasture
             if (1.0 - fraction > Epsilon)
             {
                 double fractionRemaining = 1.0 - fraction;
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                 {
                     for (int layer = 0; layer <= BottomLayer; layer++)
                     {
-                        Tissue[TissueCount - 1].DMLayer[layer] += Tissue[t].DMLayer[layer] * fraction;
-                        Tissue[TissueCount - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer] * fraction;
+                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer] * fraction;
+                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer] * fraction;
                         Tissue[t].DMLayer[layer] *= fractionRemaining;
                         Tissue[t].NamountLayer[layer] *= fractionRemaining;
                     }
@@ -1151,12 +1189,12 @@ namespace Models.AgPasture
             }
             else
             {
-                for (int t = 0; t < TissueCount - 1; t++)
+                for (int t = 0; t < Tissue.Length - 1; t++)
                 {
                     for (int layer = 0; layer <= BottomLayer; layer++)
                     {
-                        Tissue[TissueCount - 1].DMLayer[layer] += Tissue[t].DMLayer[layer];
-                        Tissue[TissueCount - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer];
+                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer];
+                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer];
                     }
                     Tissue[t].DM = 0.0;
                     Tissue[t].Namount = 0.0;
@@ -1164,13 +1202,12 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Adds root material (DM and N) to the soil's FOM pool.</summary>
-        public void DoEndOrgan(double CarbonFractionInDM)
+        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        public void DoDetachBiomassToSoilFOM(double amountDM, double amountN)
         {
             FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-
-            double amountDM = DMTotal;
-            double amountN = NTotal;
             for (int layer = 0; layer < nLayers; layer++)
             {
                 FOMType fomData = new FOMType();
@@ -1183,13 +1220,13 @@ namespace Models.AgPasture
                 FOMLayerLayerType layerData = new FOMLayerLayerType();
                 layerData.FOM = fomData;
                 layerData.CNR = 0.0; // not used here
-                layerData.LabileP = 0; // not used here
+                layerData.LabileP = 0.0; // not used here
 
                 FOMdataLayer[layer] = layerData;
             }
 
             FOMLayerType FOMData = new FOMLayerType();
-            FOMData.Type = pastureName;
+            FOMData.Type = mySpeciesName;
             FOMData.Layer = FOMdataLayer;
             SoilNitrogen.DoIncorpFOM(FOMData);
         }
@@ -1203,7 +1240,7 @@ namespace Models.AgPasture
             double turnoverN;
 
             // get amounts turned over
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
             {
                 if (turnoverRate[t] > 0.0)
                 {
@@ -1212,7 +1249,7 @@ namespace Models.AgPasture
                     Tissue[t].DMTransferedOut += turnoverDM;
                     Tissue[t].NTransferedOut += turnoverN;
 
-                    if (t < TissueCount - 1)
+                    if (t < Tissue.Length - 1)
                     {
                         // pass amounts turned over from this tissue to the next
                         Tissue[t + 1].DMTransferedIn += turnoverDM;
@@ -1247,7 +1284,7 @@ namespace Models.AgPasture
             double previousN = NTotal;
 
             // update all tissues
-            for (int t = 0; t < TissueCount; t++)
+            for (int t = 0; t < Tissue.Length; t++)
                 Tissue[t].DoUpdateTissue();
 
             // check mass balance
@@ -1298,7 +1335,7 @@ namespace Models.AgPasture
             //  The values are further adjusted using the values of XF (so there will be less roots in those layers)
 
             double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(mySpeciesName);
             double depthTop = 0.0;
             double depthBottom = 0.0;
             double depthFirstStage = Math.Min(myRootDepthMaximum, myRootDistributionDepthParam);
@@ -1374,6 +1411,9 @@ namespace Models.AgPasture
         }
 
         #endregion ---------------------------------------------------------------------------------------------------------
+
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
+        const double CarbonFractionInDM = 0.4;
 
         /// <summary>Minimum significant difference between two values.</summary>
         const double Epsilon = 0.000000001;
