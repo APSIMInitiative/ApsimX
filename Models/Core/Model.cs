@@ -231,6 +231,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Struct.ApexTiller))]
         [XmlElement(typeof(Alias))]
         [XmlElement(typeof(Morris))]
+        [XmlElement(typeof(Sobol))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
         [XmlElement(typeof(Models.Zones.StripCropZone))]

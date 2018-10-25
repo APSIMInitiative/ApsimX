@@ -1,0 +1,3080 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
+  <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+  </DataStore>
+  <Sobol>
+    <Name>Sobol</Name>
+    <Simulation>
+      <Name>FallowSensitivityBase</Name>
+      <Clock>
+        <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <StartDate>1990-01-01T00:00:00</StartDate>
+        <EndDate>1990-12-31T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>SummaryFile</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <CaptureErrors>true</CaptureErrors>
+        <CaptureWarnings>true</CaptureWarnings>
+        <CaptureSummaryText>true</CaptureSummaryText>
+      </Summary>
+      <Weather>
+        <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+      </Weather>
+      <SoilArbitrator>
+        <Name>SoilArbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </SoilArbitrator>
+      <Zone>
+        <Name>Field</Name>
+        <Report>
+          <Name>Report</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Clock].Today.Year</string>
+            <string>Sum of [Weather].Rain from [ResetAndOutput].Script.Reseting to [ResetAndOutput].Script.Reporting as FallowRainfall</string>
+            <string>Sum of [Soil].SoilWater.Es from [ResetAndOutput].Script.Reseting to [ResetAndOutput].Script.Reporting as FallowEvaporation</string>
+            <string>Sum of [Soil].SoilWater.Runoff from [ResetAndOutput].Script.Reseting to [ResetAndOutput].Script.Reporting as FallowRunoff</string>
+            <string />
+            <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
+            <string>sum([Soil].SoilWater.ESW) as TotalESW</string>
+            <string>(sum([Soil].SoilNitrogen.NH4) + sum([Soil].SoilNitrogen.NO3)) as TotalMinN</string>
+            <string>[SurfaceOrganicMatter].Wt as FinalResidueWt</string>
+            <string>[SurfaceOrganicMatter].Cover as FinalResidueCover</string>
+          </VariableNames>
+          <EventNames>
+            <string>[ResetAndOutput].Script.Reporting</string>
+          </EventNames>
+        </Report>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </Fertiliser>
+        <Soil>
+          <Name>Soil</Name>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>WheatSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <LL>
+                <double>0.261</double>
+                <double>0.248</double>
+                <double>0.28</double>
+                <double>0.306</double>
+                <double>0.36</double>
+                <double>0.392</double>
+                <double>0.446</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.01056473311131</double>
+              <double>1.07145631083388</double>
+              <double>1.09393858528057</double>
+              <double>1.15861335018721</double>
+              <double>1.17301160318016</double>
+              <double>1.16287303586874</double>
+              <double>1.18749547755906</double>
+            </BD>
+            <AirDry>
+              <double>0.130250054518252</double>
+              <double>0.198689390775399</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </AirDry>
+            <LL15>
+              <double>0.260500109036505</double>
+              <double>0.248361738469248</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </LL15>
+            <DUL>
+              <double>0.52100021807301</double>
+              <double>0.496723476938497</double>
+              <double>0.488437607673005</double>
+              <double>0.480296969355493</double>
+              <double>0.471583596524955</double>
+              <double>0.457070570557793</double>
+              <double>0.452331759845006</double>
+            </DUL>
+            <SAT>
+              <double>0.588654817693846</double>
+              <double>0.565676863836273</double>
+              <double>0.557192986686577</double>
+              <double>0.532787415023694</double>
+              <double>0.527354112007486</double>
+              <double>0.531179986464627</double>
+              <double>0.521888499034317</double>
+            </SAT>
+            <KS>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+            </KS>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
+            <DiffusConst>40</DiffusConst>
+            <DiffusSlope>16</DiffusSlope>
+            <Salb>0.12</Salb>
+            <CN2Bare>73</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>1800</double>
+            </Thickness>
+            <SWCON>
+              <double>0.3</double>
+            </SWCON>
+            <ResidueInterception>0</ResidueInterception>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <RootCN>40</RootCN>
+            <RootWt>1000</RootWt>
+            <SoilCN>12</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
+            <OC>
+              <double>1.2</double>
+              <double>0.96</double>
+              <double>0.6</double>
+              <double>0.3</double>
+              <double>0.18</double>
+              <double>0.12</double>
+              <double>0.12</double>
+            </OC>
+            <FBiom>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.4</double>
+              <double>0.6</double>
+              <double>0.8</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Analysis>
+            <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <PH>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <InitialWater>
+            <Name>InitialWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <PercentMethod>FilledFromTop</PercentMethod>
+            <FractionFull>0</FractionFull>
+            <DepthWetSoil>NaN</DepthWetSoil>
+            <RelativeTo>WheatSoil</RelativeTo>
+          </InitialWater>
+          <Sample>
+            <Name>InitialN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <NO3>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </NO3>
+            <NH4>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </NH4>
+            <SW>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </SW>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
+            <NO3Units>ppm</NO3Units>
+            <NH4Units>ppm</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <RecordNumber>0</RecordNumber>
+          <ASCOrder>Vertosol</ASCOrder>
+          <ASCSubOrder>Black</ASCSubOrder>
+          <SoilType>Clay</SoilType>
+          <LocalName />
+          <Site>Norwin</Site>
+          <NearestTown>Norwin</NearestTown>
+          <Region>Darling Downs and Granite Belt</Region>
+          <State>Queensland</State>
+          <Country>Australia</Country>
+          <NaturalVegetation>Qld. Bluegrass, possible Qld. Blue gum</NaturalVegetation>
+          <ApsoilNumber>900</ApsoilNumber>
+          <Latitude>-27.581836</Latitude>
+          <Longitude>151.320206</Longitude>
+          <LocationAccuracy> +/- 20m</LocationAccuracy>
+          <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
+          <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+        </Soil>
+        <SurfaceOrganicMatter>
+          <Name>SurfaceOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ResourceName>SurfaceOrganicMatter</ResourceName>
+          <InitialResidueName>wheat_stubble</InitialResidueName>
+          <InitialResidueType>wheat</InitialResidueType>
+          <InitialResidueMass>500</InitialResidueMass>
+          <InitialStandingFraction>0</InitialStandingFraction>
+          <InitialCPR>0</InitialCPR>
+          <InitialCNR>100</InitialCNR>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
+          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+          <NightInterceptionFraction>0.5</NightInterceptionFraction>
+          <ReferenceHeight>2</ReferenceHeight>
+        </MicroClimate>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </SoluteManager>
+        <Manager>
+          <Name>ResetAndOutput</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script>
+            <OutputDate>30-Apr</OutputDate>
+            <ResetDate>1-Nov</ResetDate>
+            <ResetWater>Yes</ResetWater>
+            <ResetN>Yes</ResetN>
+            <ResetSOM>Yes</ResetSOM>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using Models.Surface;
+using APSIM.Shared.Utilities;
+using Models.Report;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] SoilWater SoilWater = null;
+        [Link] SoilNitrogen SoilN = null;
+        [Link] SurfaceOrganicMatter SOM = null;
+        [Link] Summary Summary;
+        [Link] Report.Report Report;
+
+        [Description("Date for output:")]
+        public string OutputDate {get;set;}
+
+        [Description("Date for reset:")]
+        public string ResetDate {get;set;}
+
+        [Description("Reset Water?")]
+        public string ResetWater {get;set;}
+
+        [Description("Reset Nitrogen?")]
+        public string ResetN {get;set;}
+
+        [Description("Reset Surface Organic Matter?")]
+        public string ResetSOM {get;set;}
+
+                /// <summary>Occurs when a plant is about to be harvested.</summary>
+        public event EventHandler Reseting;
+                /// <summary>Occurs when a plant is about to be harvested.</summary>
+        public event EventHandler Reporting;
+
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (DateUtilities.WithinDates(OutputDate, Clock.Today, OutputDate))
+            {
+               Reporting.Invoke(this, new EventArgs());
+               //Report.DoOutput();
+            }
+
+            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))
+            {
+                if (ResetWater == "Yes")
+                {
+                    Summary.WriteMessage(this, "Reset Water");
+                    SoilWater.Reset();
+                }
+                if (ResetN == "Yes")
+                {
+                    Summary.WriteMessage(this, "Reset Nitrogen");
+                    SoilN.Reset();
+                }
+                if (ResetSOM == "Yes")
+                {
+                    Summary.WriteMessage(this, "Reset Surface OM");
+                    SOM.Reset();
+                }
+
+                Reseting.Invoke(this, new EventArgs());
+            }
+        }
+    }
+}
+]]></Code>
+        </Manager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+    </Simulation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+    <ParameterValues>
+      <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:MainDataTable="_x0033_71dc997-7ef2-446a-b65b-6976253229f9" msdata:UseCurrentLocale="true">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="_x0033_71dc997-7ef2-446a-b65b-6976253229f9">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="V1" type="xs:float" minOccurs="0" />
+                    <xs:element name="V2" type="xs:float" minOccurs="0" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+      </xs:schema>
+      <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+        <DocumentElement>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f91" msdata:rowOrder="0" diffgr:hasChanges="inserted">
+            <V1>74.1088</V1>
+            <V2>6.125639</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f92" msdata:rowOrder="1" diffgr:hasChanges="inserted">
+            <V1>83.2622452</V1>
+            <V2>4.982626</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f93" msdata:rowOrder="2" diffgr:hasChanges="inserted">
+            <V1>80.10459</V1>
+            <V2>8.186057</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f94" msdata:rowOrder="3" diffgr:hasChanges="inserted">
+            <V1>74.92071</V1>
+            <V2>7.449026</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f95" msdata:rowOrder="4" diffgr:hasChanges="inserted">
+            <V1>84.4165</V1>
+            <V2>8.527358</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f96" msdata:rowOrder="5" diffgr:hasChanges="inserted">
+            <V1>73.81643</V1>
+            <V2>8.6481905</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f97" msdata:rowOrder="6" diffgr:hasChanges="inserted">
+            <V1>79.43269</V1>
+            <V2>6.00452662</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f98" msdata:rowOrder="7" diffgr:hasChanges="inserted">
+            <V1>71.0514145</V1>
+            <V2>3.54383016</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f99" msdata:rowOrder="8" diffgr:hasChanges="inserted">
+            <V1>78.52769</V1>
+            <V2>5.30548334</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f910" msdata:rowOrder="9" diffgr:hasChanges="inserted">
+            <V1>70.381</V1>
+            <V2>8.217195</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f911" msdata:rowOrder="10" diffgr:hasChanges="inserted">
+            <V1>82.6379547</V1>
+            <V2>5.31806946</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f912" msdata:rowOrder="11" diffgr:hasChanges="inserted">
+            <V1>83.36138</V1>
+            <V2>3.81387544</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f913" msdata:rowOrder="12" diffgr:hasChanges="inserted">
+            <V1>75.60736</V1>
+            <V2>7.314113</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f914" msdata:rowOrder="13" diffgr:hasChanges="inserted">
+            <V1>75.2185059</V1>
+            <V2>7.902385</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f915" msdata:rowOrder="14" diffgr:hasChanges="inserted">
+            <V1>72.4868</V1>
+            <V2>6.9505024</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f916" msdata:rowOrder="15" diffgr:hasChanges="inserted">
+            <V1>73.28889</V1>
+            <V2>4.44361925</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f917" msdata:rowOrder="16" diffgr:hasChanges="inserted">
+            <V1>72.39625</V1>
+            <V2>6.768589</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f918" msdata:rowOrder="17" diffgr:hasChanges="inserted">
+            <V1>79.56851</V1>
+            <V2>6.897443</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f919" msdata:rowOrder="18" diffgr:hasChanges="inserted">
+            <V1>70.32061</V1>
+            <V2>6.8879323</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f920" msdata:rowOrder="19" diffgr:hasChanges="inserted">
+            <V1>83.51811</V1>
+            <V2>8.942047</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f921" msdata:rowOrder="20" diffgr:hasChanges="inserted">
+            <V1>76.19597</V1>
+            <V2>5.4276495</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f922" msdata:rowOrder="21" diffgr:hasChanges="inserted">
+            <V1>70.66367</V1>
+            <V2>3.22065115</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f923" msdata:rowOrder="22" diffgr:hasChanges="inserted">
+            <V1>83.603775</V1>
+            <V2>4.37118</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f924" msdata:rowOrder="23" diffgr:hasChanges="inserted">
+            <V1>82.3442459</V1>
+            <V2>7.22946548</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f925" msdata:rowOrder="24" diffgr:hasChanges="inserted">
+            <V1>80.6539459</V1>
+            <V2>7.265629</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f926" msdata:rowOrder="25" diffgr:hasChanges="inserted">
+            <V1>82.21802</V1>
+            <V2>3.329867</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f927" msdata:rowOrder="26" diffgr:hasChanges="inserted">
+            <V1>81.82054</V1>
+            <V2>7.79576159</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f928" msdata:rowOrder="27" diffgr:hasChanges="inserted">
+            <V1>80.98688</V1>
+            <V2>4.22773647</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f929" msdata:rowOrder="28" diffgr:hasChanges="inserted">
+            <V1>79.97158</V1>
+            <V2>4.421839</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f930" msdata:rowOrder="29" diffgr:hasChanges="inserted">
+            <V1>74.78271</V1>
+            <V2>8.883013</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f931" msdata:rowOrder="30" diffgr:hasChanges="inserted">
+            <V1>72.44516</V1>
+            <V2>4.818119</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f932" msdata:rowOrder="31" diffgr:hasChanges="inserted">
+            <V1>75.07072</V1>
+            <V2>5.85321856</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f933" msdata:rowOrder="32" diffgr:hasChanges="inserted">
+            <V1>84.2812</V1>
+            <V2>8.444417</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f934" msdata:rowOrder="33" diffgr:hasChanges="inserted">
+            <V1>71.7624359</V1>
+            <V2>7.386663</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f935" msdata:rowOrder="34" diffgr:hasChanges="inserted">
+            <V1>76.4815</V1>
+            <V2>3.94440627</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f936" msdata:rowOrder="35" diffgr:hasChanges="inserted">
+            <V1>71.1237</V1>
+            <V2>4.55291128</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f937" msdata:rowOrder="36" diffgr:hasChanges="inserted">
+            <V1>75.54388</V1>
+            <V2>8.459425</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f938" msdata:rowOrder="37" diffgr:hasChanges="inserted">
+            <V1>70.8936539</V1>
+            <V2>7.21345139</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f939" msdata:rowOrder="38" diffgr:hasChanges="inserted">
+            <V1>73.40616</V1>
+            <V2>6.87304735</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f940" msdata:rowOrder="39" diffgr:hasChanges="inserted">
+            <V1>74.87849</V1>
+            <V2>8.945215</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f941" msdata:rowOrder="40" diffgr:hasChanges="inserted">
+            <V1>71.71768</V1>
+            <V2>5.40142727</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f942" msdata:rowOrder="41" diffgr:hasChanges="inserted">
+            <V1>75.91581</V1>
+            <V2>5.92918158</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f943" msdata:rowOrder="42" diffgr:hasChanges="inserted">
+            <V1>82.9666443</V1>
+            <V2>7.81883574</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f944" msdata:rowOrder="43" diffgr:hasChanges="inserted">
+            <V1>75.47331</V1>
+            <V2>5.981756</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f945" msdata:rowOrder="44" diffgr:hasChanges="inserted">
+            <V1>84.03263</V1>
+            <V2>4.908426</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f946" msdata:rowOrder="45" diffgr:hasChanges="inserted">
+            <V1>75.48485</V1>
+            <V2>3.06540132</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f947" msdata:rowOrder="46" diffgr:hasChanges="inserted">
+            <V1>76.74483</V1>
+            <V2>6.586791</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f948" msdata:rowOrder="47" diffgr:hasChanges="inserted">
+            <V1>81.18774</V1>
+            <V2>8.81384</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f949" msdata:rowOrder="48" diffgr:hasChanges="inserted">
+            <V1>80.9148941</V1>
+            <V2>8.756871</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f950" msdata:rowOrder="49" diffgr:hasChanges="inserted">
+            <V1>82.10759</V1>
+            <V2>3.78831244</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f951" msdata:rowOrder="50" diffgr:hasChanges="inserted">
+            <V1>80.77194</V1>
+            <V2>6.234981</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f952" msdata:rowOrder="51" diffgr:hasChanges="inserted">
+            <V1>84.70801</V1>
+            <V2>5.35654831</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f953" msdata:rowOrder="52" diffgr:hasChanges="inserted">
+            <V1>84.32309</V1>
+            <V2>6.12633657</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f954" msdata:rowOrder="53" diffgr:hasChanges="inserted">
+            <V1>76.125824</V1>
+            <V2>5.080584</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f955" msdata:rowOrder="54" diffgr:hasChanges="inserted">
+            <V1>74.49367</V1>
+            <V2>3.287153</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f956" msdata:rowOrder="55" diffgr:hasChanges="inserted">
+            <V1>76.84094</V1>
+            <V2>8.019079</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f957" msdata:rowOrder="56" diffgr:hasChanges="inserted">
+            <V1>80.8697357</V1>
+            <V2>8.884568</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f958" msdata:rowOrder="57" diffgr:hasChanges="inserted">
+            <V1>77.58542</V1>
+            <V2>5.62801</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f959" msdata:rowOrder="58" diffgr:hasChanges="inserted">
+            <V1>79.2168</V1>
+            <V2>3.80891</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f960" msdata:rowOrder="59" diffgr:hasChanges="inserted">
+            <V1>78.36114</V1>
+            <V2>5.79763126</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f961" msdata:rowOrder="60" diffgr:hasChanges="inserted">
+            <V1>84.86683</V1>
+            <V2>5.08930874</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f962" msdata:rowOrder="61" diffgr:hasChanges="inserted">
+            <V1>70.4538345</V1>
+            <V2>3.60938454</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f963" msdata:rowOrder="62" diffgr:hasChanges="inserted">
+            <V1>75.0346146</V1>
+            <V2>6.53735733</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f964" msdata:rowOrder="63" diffgr:hasChanges="inserted">
+            <V1>74.12564</V1>
+            <V2>3.75819087</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f965" msdata:rowOrder="64" diffgr:hasChanges="inserted">
+            <V1>84.6705246</V1>
+            <V2>3.95196652</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f966" msdata:rowOrder="65" diffgr:hasChanges="inserted">
+            <V1>74.8657</V1>
+            <V2>6.79515743</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f967" msdata:rowOrder="66" diffgr:hasChanges="inserted">
+            <V1>83.95075</V1>
+            <V2>7.08094835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f968" msdata:rowOrder="67" diffgr:hasChanges="inserted">
+            <V1>84.01481</V1>
+            <V2>7.798356</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f969" msdata:rowOrder="68" diffgr:hasChanges="inserted">
+            <V1>71.99724</V1>
+            <V2>3.39310741</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f970" msdata:rowOrder="69" diffgr:hasChanges="inserted">
+            <V1>70.87223</V1>
+            <V2>4.216028</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f971" msdata:rowOrder="70" diffgr:hasChanges="inserted">
+            <V1>83.964325</V1>
+            <V2>5.390599</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f972" msdata:rowOrder="71" diffgr:hasChanges="inserted">
+            <V1>79.07029</V1>
+            <V2>4.7270875</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f973" msdata:rowOrder="72" diffgr:hasChanges="inserted">
+            <V1>81.74192</V1>
+            <V2>8.706896</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f974" msdata:rowOrder="73" diffgr:hasChanges="inserted">
+            <V1>75.4919357</V1>
+            <V2>5.271334</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f975" msdata:rowOrder="74" diffgr:hasChanges="inserted">
+            <V1>71.43796</V1>
+            <V2>6.714142</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f976" msdata:rowOrder="75" diffgr:hasChanges="inserted">
+            <V1>80.73253</V1>
+            <V2>3.82993245</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f977" msdata:rowOrder="76" diffgr:hasChanges="inserted">
+            <V1>79.47607</V1>
+            <V2>3.14024162</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f978" msdata:rowOrder="77" diffgr:hasChanges="inserted">
+            <V1>71.72215</V1>
+            <V2>7.06822824</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f979" msdata:rowOrder="78" diffgr:hasChanges="inserted">
+            <V1>84.4154358</V1>
+            <V2>5.26263142</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f980" msdata:rowOrder="79" diffgr:hasChanges="inserted">
+            <V1>80.26428</V1>
+            <V2>3.08714914</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f981" msdata:rowOrder="80" diffgr:hasChanges="inserted">
+            <V1>71.60899</V1>
+            <V2>5.25327635</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f982" msdata:rowOrder="81" diffgr:hasChanges="inserted">
+            <V1>79.0896</V1>
+            <V2>6.96405458</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f983" msdata:rowOrder="82" diffgr:hasChanges="inserted">
+            <V1>78.79257</V1>
+            <V2>8.358741</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f984" msdata:rowOrder="83" diffgr:hasChanges="inserted">
+            <V1>83.35502</V1>
+            <V2>5.3625536</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f985" msdata:rowOrder="84" diffgr:hasChanges="inserted">
+            <V1>84.1942139</V1>
+            <V2>8.594943</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f986" msdata:rowOrder="85" diffgr:hasChanges="inserted">
+            <V1>74.52153</V1>
+            <V2>6.795071</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f987" msdata:rowOrder="86" diffgr:hasChanges="inserted">
+            <V1>81.63639</V1>
+            <V2>3.079266</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f988" msdata:rowOrder="87" diffgr:hasChanges="inserted">
+            <V1>75.3167648</V1>
+            <V2>5.518676</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f989" msdata:rowOrder="88" diffgr:hasChanges="inserted">
+            <V1>71.0961</V1>
+            <V2>7.182674</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f990" msdata:rowOrder="89" diffgr:hasChanges="inserted">
+            <V1>82.17099</V1>
+            <V2>4.04013252</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f991" msdata:rowOrder="90" diffgr:hasChanges="inserted">
+            <V1>70.54885</V1>
+            <V2>7.58005142</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f992" msdata:rowOrder="91" diffgr:hasChanges="inserted">
+            <V1>79.70287</V1>
+            <V2>5.192835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f993" msdata:rowOrder="92" diffgr:hasChanges="inserted">
+            <V1>76.25395</V1>
+            <V2>4.62373734</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f994" msdata:rowOrder="93" diffgr:hasChanges="inserted">
+            <V1>71.55785</V1>
+            <V2>6.477313</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f995" msdata:rowOrder="94" diffgr:hasChanges="inserted">
+            <V1>80.70273</V1>
+            <V2>3.60593</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f996" msdata:rowOrder="95" diffgr:hasChanges="inserted">
+            <V1>81.31061</V1>
+            <V2>5.74418259</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f997" msdata:rowOrder="96" diffgr:hasChanges="inserted">
+            <V1>76.8044052</V1>
+            <V2>7.27607346</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f998" msdata:rowOrder="97" diffgr:hasChanges="inserted">
+            <V1>81.1764755</V1>
+            <V2>8.338649</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f999" msdata:rowOrder="98" diffgr:hasChanges="inserted">
+            <V1>78.28377</V1>
+            <V2>4.10009575</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9100" msdata:rowOrder="99" diffgr:hasChanges="inserted">
+            <V1>75.99556</V1>
+            <V2>7.840478</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9101" msdata:rowOrder="100" diffgr:hasChanges="inserted">
+            <V1>74.1088</V1>
+            <V2>6.234835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9102" msdata:rowOrder="101" diffgr:hasChanges="inserted">
+            <V1>83.2622452</V1>
+            <V2>4.72005</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9103" msdata:rowOrder="102" diffgr:hasChanges="inserted">
+            <V1>80.10459</V1>
+            <V2>8.437033</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9104" msdata:rowOrder="103" diffgr:hasChanges="inserted">
+            <V1>74.92071</V1>
+            <V2>4.66744328</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9105" msdata:rowOrder="104" diffgr:hasChanges="inserted">
+            <V1>84.4165</V1>
+            <V2>5.660013</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9106" msdata:rowOrder="105" diffgr:hasChanges="inserted">
+            <V1>73.81643</V1>
+            <V2>4.259873</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9107" msdata:rowOrder="106" diffgr:hasChanges="inserted">
+            <V1>79.43269</V1>
+            <V2>5.486861</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9108" msdata:rowOrder="107" diffgr:hasChanges="inserted">
+            <V1>71.0514145</V1>
+            <V2>8.9984</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9109" msdata:rowOrder="108" diffgr:hasChanges="inserted">
+            <V1>78.52769</V1>
+            <V2>5.547084</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9110" msdata:rowOrder="109" diffgr:hasChanges="inserted">
+            <V1>70.381</V1>
+            <V2>3.295283</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9111" msdata:rowOrder="110" diffgr:hasChanges="inserted">
+            <V1>82.6379547</V1>
+            <V2>6.45873642</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9112" msdata:rowOrder="111" diffgr:hasChanges="inserted">
+            <V1>83.36138</V1>
+            <V2>5.19545269</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9113" msdata:rowOrder="112" diffgr:hasChanges="inserted">
+            <V1>75.60736</V1>
+            <V2>6.960184</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9114" msdata:rowOrder="113" diffgr:hasChanges="inserted">
+            <V1>75.2185059</V1>
+            <V2>3.47034955</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9115" msdata:rowOrder="114" diffgr:hasChanges="inserted">
+            <V1>72.4868</V1>
+            <V2>3.34725165</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9116" msdata:rowOrder="115" diffgr:hasChanges="inserted">
+            <V1>73.28889</V1>
+            <V2>7.49519</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9117" msdata:rowOrder="116" diffgr:hasChanges="inserted">
+            <V1>72.39625</V1>
+            <V2>5.33473158</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9118" msdata:rowOrder="117" diffgr:hasChanges="inserted">
+            <V1>79.56851</V1>
+            <V2>7.68353558</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9119" msdata:rowOrder="118" diffgr:hasChanges="inserted">
+            <V1>70.32061</V1>
+            <V2>5.34761572</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9120" msdata:rowOrder="119" diffgr:hasChanges="inserted">
+            <V1>83.51811</V1>
+            <V2>3.93279481</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9121" msdata:rowOrder="120" diffgr:hasChanges="inserted">
+            <V1>76.19597</V1>
+            <V2>4.881523</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9122" msdata:rowOrder="121" diffgr:hasChanges="inserted">
+            <V1>70.66367</V1>
+            <V2>6.205015</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9123" msdata:rowOrder="122" diffgr:hasChanges="inserted">
+            <V1>83.603775</V1>
+            <V2>3.61120844</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9124" msdata:rowOrder="123" diffgr:hasChanges="inserted">
+            <V1>82.3442459</V1>
+            <V2>3.844856</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9125" msdata:rowOrder="124" diffgr:hasChanges="inserted">
+            <V1>80.6539459</V1>
+            <V2>3.43991923</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9126" msdata:rowOrder="125" diffgr:hasChanges="inserted">
+            <V1>82.21802</V1>
+            <V2>3.75200176</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9127" msdata:rowOrder="126" diffgr:hasChanges="inserted">
+            <V1>81.82054</V1>
+            <V2>7.34041548</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9128" msdata:rowOrder="127" diffgr:hasChanges="inserted">
+            <V1>80.98688</V1>
+            <V2>4.787091</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9129" msdata:rowOrder="128" diffgr:hasChanges="inserted">
+            <V1>79.97158</V1>
+            <V2>8.290575</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9130" msdata:rowOrder="129" diffgr:hasChanges="inserted">
+            <V1>74.78271</V1>
+            <V2>8.665657</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9131" msdata:rowOrder="130" diffgr:hasChanges="inserted">
+            <V1>72.44516</V1>
+            <V2>3.614248</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9132" msdata:rowOrder="131" diffgr:hasChanges="inserted">
+            <V1>75.07072</V1>
+            <V2>7.60433674</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9133" msdata:rowOrder="132" diffgr:hasChanges="inserted">
+            <V1>84.2812</V1>
+            <V2>3.14461827</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9134" msdata:rowOrder="133" diffgr:hasChanges="inserted">
+            <V1>71.7624359</V1>
+            <V2>4.09188128</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9135" msdata:rowOrder="134" diffgr:hasChanges="inserted">
+            <V1>76.4815</V1>
+            <V2>6.65537</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9136" msdata:rowOrder="135" diffgr:hasChanges="inserted">
+            <V1>71.1237</V1>
+            <V2>8.01104</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9137" msdata:rowOrder="136" diffgr:hasChanges="inserted">
+            <V1>75.54388</V1>
+            <V2>4.01230955</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9138" msdata:rowOrder="137" diffgr:hasChanges="inserted">
+            <V1>70.8936539</V1>
+            <V2>8.123917</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9139" msdata:rowOrder="138" diffgr:hasChanges="inserted">
+            <V1>73.40616</V1>
+            <V2>6.362105</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9140" msdata:rowOrder="139" diffgr:hasChanges="inserted">
+            <V1>74.87849</V1>
+            <V2>4.568906</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9141" msdata:rowOrder="140" diffgr:hasChanges="inserted">
+            <V1>71.71768</V1>
+            <V2>7.419216</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9142" msdata:rowOrder="141" diffgr:hasChanges="inserted">
+            <V1>75.91581</V1>
+            <V2>6.80386257</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9143" msdata:rowOrder="142" diffgr:hasChanges="inserted">
+            <V1>82.9666443</V1>
+            <V2>4.37503</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9144" msdata:rowOrder="143" diffgr:hasChanges="inserted">
+            <V1>75.47331</V1>
+            <V2>8.400892</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9145" msdata:rowOrder="144" diffgr:hasChanges="inserted">
+            <V1>84.03263</V1>
+            <V2>7.796614</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9146" msdata:rowOrder="145" diffgr:hasChanges="inserted">
+            <V1>75.48485</V1>
+            <V2>5.133133</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9147" msdata:rowOrder="146" diffgr:hasChanges="inserted">
+            <V1>76.74483</V1>
+            <V2>6.43922567</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9148" msdata:rowOrder="147" diffgr:hasChanges="inserted">
+            <V1>81.18774</V1>
+            <V2>7.367223</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9149" msdata:rowOrder="148" diffgr:hasChanges="inserted">
+            <V1>80.9148941</V1>
+            <V2>3.77514887</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9150" msdata:rowOrder="149" diffgr:hasChanges="inserted">
+            <V1>82.10759</V1>
+            <V2>7.2436676</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9151" msdata:rowOrder="150" diffgr:hasChanges="inserted">
+            <V1>80.77194</V1>
+            <V2>4.13009071</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9152" msdata:rowOrder="151" diffgr:hasChanges="inserted">
+            <V1>84.70801</V1>
+            <V2>6.2743783</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9153" msdata:rowOrder="152" diffgr:hasChanges="inserted">
+            <V1>84.32309</V1>
+            <V2>8.770674</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9154" msdata:rowOrder="153" diffgr:hasChanges="inserted">
+            <V1>76.125824</V1>
+            <V2>4.337242</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9155" msdata:rowOrder="154" diffgr:hasChanges="inserted">
+            <V1>74.49367</V1>
+            <V2>6.20537329</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9156" msdata:rowOrder="155" diffgr:hasChanges="inserted">
+            <V1>76.84094</V1>
+            <V2>7.66398</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9157" msdata:rowOrder="156" diffgr:hasChanges="inserted">
+            <V1>80.8697357</V1>
+            <V2>5.09989834</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9158" msdata:rowOrder="157" diffgr:hasChanges="inserted">
+            <V1>77.58542</V1>
+            <V2>5.39297247</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9159" msdata:rowOrder="158" diffgr:hasChanges="inserted">
+            <V1>79.2168</V1>
+            <V2>6.14958</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9160" msdata:rowOrder="159" diffgr:hasChanges="inserted">
+            <V1>78.36114</V1>
+            <V2>4.65607357</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9161" msdata:rowOrder="160" diffgr:hasChanges="inserted">
+            <V1>84.86683</V1>
+            <V2>5.76214838</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9162" msdata:rowOrder="161" diffgr:hasChanges="inserted">
+            <V1>70.4538345</V1>
+            <V2>5.1826067</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9163" msdata:rowOrder="162" diffgr:hasChanges="inserted">
+            <V1>75.0346146</V1>
+            <V2>8.153835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9164" msdata:rowOrder="163" diffgr:hasChanges="inserted">
+            <V1>74.12564</V1>
+            <V2>4.214811</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9165" msdata:rowOrder="164" diffgr:hasChanges="inserted">
+            <V1>84.6705246</V1>
+            <V2>4.768069</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9166" msdata:rowOrder="165" diffgr:hasChanges="inserted">
+            <V1>74.8657</V1>
+            <V2>3.36199212</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9167" msdata:rowOrder="166" diffgr:hasChanges="inserted">
+            <V1>83.95075</V1>
+            <V2>5.10341072</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9168" msdata:rowOrder="167" diffgr:hasChanges="inserted">
+            <V1>84.01481</V1>
+            <V2>5.34499025</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9169" msdata:rowOrder="168" diffgr:hasChanges="inserted">
+            <V1>71.99724</V1>
+            <V2>3.17133713</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9170" msdata:rowOrder="169" diffgr:hasChanges="inserted">
+            <V1>70.87223</V1>
+            <V2>3.20327926</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9171" msdata:rowOrder="170" diffgr:hasChanges="inserted">
+            <V1>83.964325</V1>
+            <V2>6.840009</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9172" msdata:rowOrder="171" diffgr:hasChanges="inserted">
+            <V1>79.07029</V1>
+            <V2>5.151357</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9173" msdata:rowOrder="172" diffgr:hasChanges="inserted">
+            <V1>81.74192</V1>
+            <V2>6.766063</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9174" msdata:rowOrder="173" diffgr:hasChanges="inserted">
+            <V1>75.4919357</V1>
+            <V2>6.401407</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9175" msdata:rowOrder="174" diffgr:hasChanges="inserted">
+            <V1>71.43796</V1>
+            <V2>6.025819</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9176" msdata:rowOrder="175" diffgr:hasChanges="inserted">
+            <V1>80.73253</V1>
+            <V2>4.41697645</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9177" msdata:rowOrder="176" diffgr:hasChanges="inserted">
+            <V1>79.47607</V1>
+            <V2>5.87264967</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9178" msdata:rowOrder="177" diffgr:hasChanges="inserted">
+            <V1>71.72215</V1>
+            <V2>4.74238825</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9179" msdata:rowOrder="178" diffgr:hasChanges="inserted">
+            <V1>84.4154358</V1>
+            <V2>8.780919</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9180" msdata:rowOrder="179" diffgr:hasChanges="inserted">
+            <V1>80.26428</V1>
+            <V2>4.658759</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9181" msdata:rowOrder="180" diffgr:hasChanges="inserted">
+            <V1>71.60899</V1>
+            <V2>3.06183338</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9182" msdata:rowOrder="181" diffgr:hasChanges="inserted">
+            <V1>79.0896</V1>
+            <V2>4.159438</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9183" msdata:rowOrder="182" diffgr:hasChanges="inserted">
+            <V1>78.79257</V1>
+            <V2>4.288385</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9184" msdata:rowOrder="183" diffgr:hasChanges="inserted">
+            <V1>83.35502</V1>
+            <V2>8.3388195</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9185" msdata:rowOrder="184" diffgr:hasChanges="inserted">
+            <V1>84.1942139</V1>
+            <V2>4.680565</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9186" msdata:rowOrder="185" diffgr:hasChanges="inserted">
+            <V1>74.52153</V1>
+            <V2>4.99516726</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9187" msdata:rowOrder="186" diffgr:hasChanges="inserted">
+            <V1>81.63639</V1>
+            <V2>6.32239151</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9188" msdata:rowOrder="187" diffgr:hasChanges="inserted">
+            <V1>75.3167648</V1>
+            <V2>8.143834</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9189" msdata:rowOrder="188" diffgr:hasChanges="inserted">
+            <V1>71.0961</V1>
+            <V2>7.508422</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9190" msdata:rowOrder="189" diffgr:hasChanges="inserted">
+            <V1>82.17099</V1>
+            <V2>4.70525265</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9191" msdata:rowOrder="190" diffgr:hasChanges="inserted">
+            <V1>70.54885</V1>
+            <V2>6.63274765</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9192" msdata:rowOrder="191" diffgr:hasChanges="inserted">
+            <V1>79.70287</V1>
+            <V2>7.87301445</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9193" msdata:rowOrder="192" diffgr:hasChanges="inserted">
+            <V1>76.25395</V1>
+            <V2>3.696815</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9194" msdata:rowOrder="193" diffgr:hasChanges="inserted">
+            <V1>71.55785</V1>
+            <V2>5.227735</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9195" msdata:rowOrder="194" diffgr:hasChanges="inserted">
+            <V1>80.70273</V1>
+            <V2>3.61151648</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9196" msdata:rowOrder="195" diffgr:hasChanges="inserted">
+            <V1>81.31061</V1>
+            <V2>3.63951588</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9197" msdata:rowOrder="196" diffgr:hasChanges="inserted">
+            <V1>76.8044052</V1>
+            <V2>6.80525875</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9198" msdata:rowOrder="197" diffgr:hasChanges="inserted">
+            <V1>81.1764755</V1>
+            <V2>7.312648</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9199" msdata:rowOrder="198" diffgr:hasChanges="inserted">
+            <V1>78.28377</V1>
+            <V2>7.4378314</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9200" msdata:rowOrder="199" diffgr:hasChanges="inserted">
+            <V1>75.99556</V1>
+            <V2>4.271093</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9201" msdata:rowOrder="200" diffgr:hasChanges="inserted">
+            <V1>84.79227</V1>
+            <V2>6.125639</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9202" msdata:rowOrder="201" diffgr:hasChanges="inserted">
+            <V1>71.9616241</V1>
+            <V2>4.982626</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9203" msdata:rowOrder="202" diffgr:hasChanges="inserted">
+            <V1>78.5002747</V1>
+            <V2>8.186057</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9204" msdata:rowOrder="203" diffgr:hasChanges="inserted">
+            <V1>78.92181</V1>
+            <V2>7.449026</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9205" msdata:rowOrder="204" diffgr:hasChanges="inserted">
+            <V1>72.7891159</V1>
+            <V2>8.527358</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9206" msdata:rowOrder="205" diffgr:hasChanges="inserted">
+            <V1>72.28686</V1>
+            <V2>8.6481905</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9207" msdata:rowOrder="206" diffgr:hasChanges="inserted">
+            <V1>82.27222</V1>
+            <V2>6.00452662</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9208" msdata:rowOrder="207" diffgr:hasChanges="inserted">
+            <V1>84.08641</V1>
+            <V2>3.54383016</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9209" msdata:rowOrder="208" diffgr:hasChanges="inserted">
+            <V1>79.82221</V1>
+            <V2>5.30548334</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9210" msdata:rowOrder="209" diffgr:hasChanges="inserted">
+            <V1>74.59112</V1>
+            <V2>8.217195</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9211" msdata:rowOrder="210" diffgr:hasChanges="inserted">
+            <V1>76.57216</V1>
+            <V2>5.31806946</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9212" msdata:rowOrder="211" diffgr:hasChanges="inserted">
+            <V1>81.4156</V1>
+            <V2>3.81387544</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9213" msdata:rowOrder="212" diffgr:hasChanges="inserted">
+            <V1>75.04981</V1>
+            <V2>7.314113</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9214" msdata:rowOrder="213" diffgr:hasChanges="inserted">
+            <V1>81.96034</V1>
+            <V2>7.902385</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9215" msdata:rowOrder="214" diffgr:hasChanges="inserted">
+            <V1>83.8829956</V1>
+            <V2>6.9505024</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9216" msdata:rowOrder="215" diffgr:hasChanges="inserted">
+            <V1>81.14087</V1>
+            <V2>4.44361925</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9217" msdata:rowOrder="216" diffgr:hasChanges="inserted">
+            <V1>79.77507</V1>
+            <V2>6.768589</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9218" msdata:rowOrder="217" diffgr:hasChanges="inserted">
+            <V1>77.27168</V1>
+            <V2>6.897443</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9219" msdata:rowOrder="218" diffgr:hasChanges="inserted">
+            <V1>82.21697</V1>
+            <V2>6.8879323</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9220" msdata:rowOrder="219" diffgr:hasChanges="inserted">
+            <V1>84.3978958</V1>
+            <V2>8.942047</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9221" msdata:rowOrder="220" diffgr:hasChanges="inserted">
+            <V1>74.76168</V1>
+            <V2>5.4276495</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9222" msdata:rowOrder="221" diffgr:hasChanges="inserted">
+            <V1>80.38159</V1>
+            <V2>3.22065115</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9223" msdata:rowOrder="222" diffgr:hasChanges="inserted">
+            <V1>71.30607</V1>
+            <V2>4.37118</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9224" msdata:rowOrder="223" diffgr:hasChanges="inserted">
+            <V1>81.55185</V1>
+            <V2>7.22946548</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9225" msdata:rowOrder="224" diffgr:hasChanges="inserted">
+            <V1>78.8460159</V1>
+            <V2>7.265629</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9226" msdata:rowOrder="225" diffgr:hasChanges="inserted">
+            <V1>78.25936</V1>
+            <V2>3.329867</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9227" msdata:rowOrder="226" diffgr:hasChanges="inserted">
+            <V1>70.77266</V1>
+            <V2>7.79576159</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9228" msdata:rowOrder="227" diffgr:hasChanges="inserted">
+            <V1>76.60361</V1>
+            <V2>4.22773647</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9229" msdata:rowOrder="228" diffgr:hasChanges="inserted">
+            <V1>70.74867</V1>
+            <V2>4.421839</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9230" msdata:rowOrder="229" diffgr:hasChanges="inserted">
+            <V1>72.5142746</V1>
+            <V2>8.883013</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9231" msdata:rowOrder="230" diffgr:hasChanges="inserted">
+            <V1>76.4429</V1>
+            <V2>4.818119</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9232" msdata:rowOrder="231" diffgr:hasChanges="inserted">
+            <V1>82.47773</V1>
+            <V2>5.85321856</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9233" msdata:rowOrder="232" diffgr:hasChanges="inserted">
+            <V1>73.60199</V1>
+            <V2>8.444417</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9234" msdata:rowOrder="233" diffgr:hasChanges="inserted">
+            <V1>73.35965</V1>
+            <V2>7.386663</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9235" msdata:rowOrder="234" diffgr:hasChanges="inserted">
+            <V1>78.73365</V1>
+            <V2>3.94440627</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9236" msdata:rowOrder="235" diffgr:hasChanges="inserted">
+            <V1>76.42795</V1>
+            <V2>4.55291128</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9237" msdata:rowOrder="236" diffgr:hasChanges="inserted">
+            <V1>74.6089554</V1>
+            <V2>8.459425</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9238" msdata:rowOrder="237" diffgr:hasChanges="inserted">
+            <V1>77.50571</V1>
+            <V2>7.21345139</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9239" msdata:rowOrder="238" diffgr:hasChanges="inserted">
+            <V1>74.0709457</V1>
+            <V2>6.87304735</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9240" msdata:rowOrder="239" diffgr:hasChanges="inserted">
+            <V1>84.09321</V1>
+            <V2>8.945215</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9241" msdata:rowOrder="240" diffgr:hasChanges="inserted">
+            <V1>81.71421</V1>
+            <V2>5.40142727</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9242" msdata:rowOrder="241" diffgr:hasChanges="inserted">
+            <V1>73.89373</V1>
+            <V2>5.92918158</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9243" msdata:rowOrder="242" diffgr:hasChanges="inserted">
+            <V1>78.06872</V1>
+            <V2>7.81883574</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9244" msdata:rowOrder="243" diffgr:hasChanges="inserted">
+            <V1>71.91469</V1>
+            <V2>5.981756</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9245" msdata:rowOrder="244" diffgr:hasChanges="inserted">
+            <V1>73.5425339</V1>
+            <V2>4.908426</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9246" msdata:rowOrder="245" diffgr:hasChanges="inserted">
+            <V1>79.7484055</V1>
+            <V2>3.06540132</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9247" msdata:rowOrder="246" diffgr:hasChanges="inserted">
+            <V1>82.55891</V1>
+            <V2>6.586791</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9248" msdata:rowOrder="247" diffgr:hasChanges="inserted">
+            <V1>79.27838</V1>
+            <V2>8.81384</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9249" msdata:rowOrder="248" diffgr:hasChanges="inserted">
+            <V1>74.93935</V1>
+            <V2>8.756871</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9250" msdata:rowOrder="249" diffgr:hasChanges="inserted">
+            <V1>84.77598</V1>
+            <V2>3.78831244</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9251" msdata:rowOrder="250" diffgr:hasChanges="inserted">
+            <V1>79.54997</V1>
+            <V2>6.234981</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9252" msdata:rowOrder="251" diffgr:hasChanges="inserted">
+            <V1>70.61794</V1>
+            <V2>5.35654831</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9253" msdata:rowOrder="252" diffgr:hasChanges="inserted">
+            <V1>73.57996</V1>
+            <V2>6.12633657</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9254" msdata:rowOrder="253" diffgr:hasChanges="inserted">
+            <V1>76.74373</V1>
+            <V2>5.080584</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9255" msdata:rowOrder="254" diffgr:hasChanges="inserted">
+            <V1>72.9971848</V1>
+            <V2>3.287153</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9256" msdata:rowOrder="255" diffgr:hasChanges="inserted">
+            <V1>79.65806</V1>
+            <V2>8.019079</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9257" msdata:rowOrder="256" diffgr:hasChanges="inserted">
+            <V1>73.92352</V1>
+            <V2>8.884568</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9258" msdata:rowOrder="257" diffgr:hasChanges="inserted">
+            <V1>77.64236</V1>
+            <V2>5.62801</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9259" msdata:rowOrder="258" diffgr:hasChanges="inserted">
+            <V1>78.6267853</V1>
+            <V2>3.80891</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9260" msdata:rowOrder="259" diffgr:hasChanges="inserted">
+            <V1>77.66988</V1>
+            <V2>5.79763126</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9261" msdata:rowOrder="260" diffgr:hasChanges="inserted">
+            <V1>83.6162338</V1>
+            <V2>5.08930874</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9262" msdata:rowOrder="261" diffgr:hasChanges="inserted">
+            <V1>83.46876</V1>
+            <V2>3.60938454</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9263" msdata:rowOrder="262" diffgr:hasChanges="inserted">
+            <V1>79.9194946</V1>
+            <V2>6.53735733</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9264" msdata:rowOrder="263" diffgr:hasChanges="inserted">
+            <V1>70.44371</V1>
+            <V2>3.75819087</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9265" msdata:rowOrder="264" diffgr:hasChanges="inserted">
+            <V1>76.4332047</V1>
+            <V2>3.95196652</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9266" msdata:rowOrder="265" diffgr:hasChanges="inserted">
+            <V1>76.91729</V1>
+            <V2>6.79515743</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9267" msdata:rowOrder="266" diffgr:hasChanges="inserted">
+            <V1>73.2676849</V1>
+            <V2>7.08094835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9268" msdata:rowOrder="267" diffgr:hasChanges="inserted">
+            <V1>84.0305252</V1>
+            <V2>7.798356</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9269" msdata:rowOrder="268" diffgr:hasChanges="inserted">
+            <V1>78.60167</V1>
+            <V2>3.39310741</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9270" msdata:rowOrder="269" diffgr:hasChanges="inserted">
+            <V1>83.44826</V1>
+            <V2>4.216028</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9271" msdata:rowOrder="270" diffgr:hasChanges="inserted">
+            <V1>79.35657</V1>
+            <V2>5.390599</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9272" msdata:rowOrder="271" diffgr:hasChanges="inserted">
+            <V1>80.50879</V1>
+            <V2>4.7270875</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9273" msdata:rowOrder="272" diffgr:hasChanges="inserted">
+            <V1>77.0330048</V1>
+            <V2>8.706896</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9274" msdata:rowOrder="273" diffgr:hasChanges="inserted">
+            <V1>72.9836655</V1>
+            <V2>5.271334</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9275" msdata:rowOrder="274" diffgr:hasChanges="inserted">
+            <V1>73.74895</V1>
+            <V2>6.714142</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9276" msdata:rowOrder="275" diffgr:hasChanges="inserted">
+            <V1>77.30585</V1>
+            <V2>3.82993245</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9277" msdata:rowOrder="276" diffgr:hasChanges="inserted">
+            <V1>78.41009</V1>
+            <V2>3.14024162</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9278" msdata:rowOrder="277" diffgr:hasChanges="inserted">
+            <V1>75.75522</V1>
+            <V2>7.06822824</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9279" msdata:rowOrder="278" diffgr:hasChanges="inserted">
+            <V1>80.57275</V1>
+            <V2>5.26263142</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9280" msdata:rowOrder="279" diffgr:hasChanges="inserted">
+            <V1>74.25437</V1>
+            <V2>3.08714914</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9281" msdata:rowOrder="280" diffgr:hasChanges="inserted">
+            <V1>75.356575</V1>
+            <V2>5.25327635</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9282" msdata:rowOrder="281" diffgr:hasChanges="inserted">
+            <V1>79.40997</V1>
+            <V2>6.96405458</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9283" msdata:rowOrder="282" diffgr:hasChanges="inserted">
+            <V1>72.91829</V1>
+            <V2>8.358741</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9284" msdata:rowOrder="283" diffgr:hasChanges="inserted">
+            <V1>73.01915</V1>
+            <V2>5.3625536</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9285" msdata:rowOrder="284" diffgr:hasChanges="inserted">
+            <V1>77.26503</V1>
+            <V2>8.594943</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9286" msdata:rowOrder="285" diffgr:hasChanges="inserted">
+            <V1>72.07405</V1>
+            <V2>6.795071</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9287" msdata:rowOrder="286" diffgr:hasChanges="inserted">
+            <V1>76.2666</V1>
+            <V2>3.079266</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9288" msdata:rowOrder="287" diffgr:hasChanges="inserted">
+            <V1>75.8637</V1>
+            <V2>5.518676</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9289" msdata:rowOrder="288" diffgr:hasChanges="inserted">
+            <V1>79.47568</V1>
+            <V2>7.182674</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9290" msdata:rowOrder="289" diffgr:hasChanges="inserted">
+            <V1>83.65273</V1>
+            <V2>4.04013252</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9291" msdata:rowOrder="290" diffgr:hasChanges="inserted">
+            <V1>78.10469</V1>
+            <V2>7.58005142</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9292" msdata:rowOrder="291" diffgr:hasChanges="inserted">
+            <V1>79.9339752</V1>
+            <V2>5.192835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9293" msdata:rowOrder="292" diffgr:hasChanges="inserted">
+            <V1>75.18806</V1>
+            <V2>4.62373734</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9294" msdata:rowOrder="293" diffgr:hasChanges="inserted">
+            <V1>75.94351</V1>
+            <V2>6.477313</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9295" msdata:rowOrder="294" diffgr:hasChanges="inserted">
+            <V1>70.06597</V1>
+            <V2>3.60593</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9296" msdata:rowOrder="295" diffgr:hasChanges="inserted">
+            <V1>72.77251</V1>
+            <V2>5.74418259</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9297" msdata:rowOrder="296" diffgr:hasChanges="inserted">
+            <V1>84.58664</V1>
+            <V2>7.27607346</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9298" msdata:rowOrder="297" diffgr:hasChanges="inserted">
+            <V1>74.15409</V1>
+            <V2>8.338649</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9299" msdata:rowOrder="298" diffgr:hasChanges="inserted">
+            <V1>71.68203</V1>
+            <V2>4.10009575</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9300" msdata:rowOrder="299" diffgr:hasChanges="inserted">
+            <V1>72.4380951</V1>
+            <V2>7.840478</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9301" msdata:rowOrder="300" diffgr:hasChanges="inserted">
+            <V1>84.79227</V1>
+            <V2>6.234835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9302" msdata:rowOrder="301" diffgr:hasChanges="inserted">
+            <V1>71.9616241</V1>
+            <V2>4.72005</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9303" msdata:rowOrder="302" diffgr:hasChanges="inserted">
+            <V1>78.5002747</V1>
+            <V2>8.437033</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9304" msdata:rowOrder="303" diffgr:hasChanges="inserted">
+            <V1>78.92181</V1>
+            <V2>4.66744328</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9305" msdata:rowOrder="304" diffgr:hasChanges="inserted">
+            <V1>72.7891159</V1>
+            <V2>5.660013</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9306" msdata:rowOrder="305" diffgr:hasChanges="inserted">
+            <V1>72.28686</V1>
+            <V2>4.259873</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9307" msdata:rowOrder="306" diffgr:hasChanges="inserted">
+            <V1>82.27222</V1>
+            <V2>5.486861</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9308" msdata:rowOrder="307" diffgr:hasChanges="inserted">
+            <V1>84.08641</V1>
+            <V2>8.9984</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9309" msdata:rowOrder="308" diffgr:hasChanges="inserted">
+            <V1>79.82221</V1>
+            <V2>5.547084</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9310" msdata:rowOrder="309" diffgr:hasChanges="inserted">
+            <V1>74.59112</V1>
+            <V2>3.295283</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9311" msdata:rowOrder="310" diffgr:hasChanges="inserted">
+            <V1>76.57216</V1>
+            <V2>6.45873642</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9312" msdata:rowOrder="311" diffgr:hasChanges="inserted">
+            <V1>81.4156</V1>
+            <V2>5.19545269</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9313" msdata:rowOrder="312" diffgr:hasChanges="inserted">
+            <V1>75.04981</V1>
+            <V2>6.960184</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9314" msdata:rowOrder="313" diffgr:hasChanges="inserted">
+            <V1>81.96034</V1>
+            <V2>3.47034955</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9315" msdata:rowOrder="314" diffgr:hasChanges="inserted">
+            <V1>83.8829956</V1>
+            <V2>3.34725165</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9316" msdata:rowOrder="315" diffgr:hasChanges="inserted">
+            <V1>81.14087</V1>
+            <V2>7.49519</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9317" msdata:rowOrder="316" diffgr:hasChanges="inserted">
+            <V1>79.77507</V1>
+            <V2>5.33473158</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9318" msdata:rowOrder="317" diffgr:hasChanges="inserted">
+            <V1>77.27168</V1>
+            <V2>7.68353558</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9319" msdata:rowOrder="318" diffgr:hasChanges="inserted">
+            <V1>82.21697</V1>
+            <V2>5.34761572</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9320" msdata:rowOrder="319" diffgr:hasChanges="inserted">
+            <V1>84.3978958</V1>
+            <V2>3.93279481</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9321" msdata:rowOrder="320" diffgr:hasChanges="inserted">
+            <V1>74.76168</V1>
+            <V2>4.881523</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9322" msdata:rowOrder="321" diffgr:hasChanges="inserted">
+            <V1>80.38159</V1>
+            <V2>6.205015</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9323" msdata:rowOrder="322" diffgr:hasChanges="inserted">
+            <V1>71.30607</V1>
+            <V2>3.61120844</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9324" msdata:rowOrder="323" diffgr:hasChanges="inserted">
+            <V1>81.55185</V1>
+            <V2>3.844856</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9325" msdata:rowOrder="324" diffgr:hasChanges="inserted">
+            <V1>78.8460159</V1>
+            <V2>3.43991923</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9326" msdata:rowOrder="325" diffgr:hasChanges="inserted">
+            <V1>78.25936</V1>
+            <V2>3.75200176</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9327" msdata:rowOrder="326" diffgr:hasChanges="inserted">
+            <V1>70.77266</V1>
+            <V2>7.34041548</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9328" msdata:rowOrder="327" diffgr:hasChanges="inserted">
+            <V1>76.60361</V1>
+            <V2>4.787091</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9329" msdata:rowOrder="328" diffgr:hasChanges="inserted">
+            <V1>70.74867</V1>
+            <V2>8.290575</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9330" msdata:rowOrder="329" diffgr:hasChanges="inserted">
+            <V1>72.5142746</V1>
+            <V2>8.665657</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9331" msdata:rowOrder="330" diffgr:hasChanges="inserted">
+            <V1>76.4429</V1>
+            <V2>3.614248</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9332" msdata:rowOrder="331" diffgr:hasChanges="inserted">
+            <V1>82.47773</V1>
+            <V2>7.60433674</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9333" msdata:rowOrder="332" diffgr:hasChanges="inserted">
+            <V1>73.60199</V1>
+            <V2>3.14461827</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9334" msdata:rowOrder="333" diffgr:hasChanges="inserted">
+            <V1>73.35965</V1>
+            <V2>4.09188128</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9335" msdata:rowOrder="334" diffgr:hasChanges="inserted">
+            <V1>78.73365</V1>
+            <V2>6.65537</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9336" msdata:rowOrder="335" diffgr:hasChanges="inserted">
+            <V1>76.42795</V1>
+            <V2>8.01104</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9337" msdata:rowOrder="336" diffgr:hasChanges="inserted">
+            <V1>74.6089554</V1>
+            <V2>4.01230955</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9338" msdata:rowOrder="337" diffgr:hasChanges="inserted">
+            <V1>77.50571</V1>
+            <V2>8.123917</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9339" msdata:rowOrder="338" diffgr:hasChanges="inserted">
+            <V1>74.0709457</V1>
+            <V2>6.362105</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9340" msdata:rowOrder="339" diffgr:hasChanges="inserted">
+            <V1>84.09321</V1>
+            <V2>4.568906</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9341" msdata:rowOrder="340" diffgr:hasChanges="inserted">
+            <V1>81.71421</V1>
+            <V2>7.419216</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9342" msdata:rowOrder="341" diffgr:hasChanges="inserted">
+            <V1>73.89373</V1>
+            <V2>6.80386257</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9343" msdata:rowOrder="342" diffgr:hasChanges="inserted">
+            <V1>78.06872</V1>
+            <V2>4.37503</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9344" msdata:rowOrder="343" diffgr:hasChanges="inserted">
+            <V1>71.91469</V1>
+            <V2>8.400892</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9345" msdata:rowOrder="344" diffgr:hasChanges="inserted">
+            <V1>73.5425339</V1>
+            <V2>7.796614</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9346" msdata:rowOrder="345" diffgr:hasChanges="inserted">
+            <V1>79.7484055</V1>
+            <V2>5.133133</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9347" msdata:rowOrder="346" diffgr:hasChanges="inserted">
+            <V1>82.55891</V1>
+            <V2>6.43922567</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9348" msdata:rowOrder="347" diffgr:hasChanges="inserted">
+            <V1>79.27838</V1>
+            <V2>7.367223</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9349" msdata:rowOrder="348" diffgr:hasChanges="inserted">
+            <V1>74.93935</V1>
+            <V2>3.77514887</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9350" msdata:rowOrder="349" diffgr:hasChanges="inserted">
+            <V1>84.77598</V1>
+            <V2>7.2436676</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9351" msdata:rowOrder="350" diffgr:hasChanges="inserted">
+            <V1>79.54997</V1>
+            <V2>4.13009071</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9352" msdata:rowOrder="351" diffgr:hasChanges="inserted">
+            <V1>70.61794</V1>
+            <V2>6.2743783</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9353" msdata:rowOrder="352" diffgr:hasChanges="inserted">
+            <V1>73.57996</V1>
+            <V2>8.770674</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9354" msdata:rowOrder="353" diffgr:hasChanges="inserted">
+            <V1>76.74373</V1>
+            <V2>4.337242</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9355" msdata:rowOrder="354" diffgr:hasChanges="inserted">
+            <V1>72.9971848</V1>
+            <V2>6.20537329</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9356" msdata:rowOrder="355" diffgr:hasChanges="inserted">
+            <V1>79.65806</V1>
+            <V2>7.66398</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9357" msdata:rowOrder="356" diffgr:hasChanges="inserted">
+            <V1>73.92352</V1>
+            <V2>5.09989834</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9358" msdata:rowOrder="357" diffgr:hasChanges="inserted">
+            <V1>77.64236</V1>
+            <V2>5.39297247</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9359" msdata:rowOrder="358" diffgr:hasChanges="inserted">
+            <V1>78.6267853</V1>
+            <V2>6.14958</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9360" msdata:rowOrder="359" diffgr:hasChanges="inserted">
+            <V1>77.66988</V1>
+            <V2>4.65607357</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9361" msdata:rowOrder="360" diffgr:hasChanges="inserted">
+            <V1>83.6162338</V1>
+            <V2>5.76214838</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9362" msdata:rowOrder="361" diffgr:hasChanges="inserted">
+            <V1>83.46876</V1>
+            <V2>5.1826067</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9363" msdata:rowOrder="362" diffgr:hasChanges="inserted">
+            <V1>79.9194946</V1>
+            <V2>8.153835</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9364" msdata:rowOrder="363" diffgr:hasChanges="inserted">
+            <V1>70.44371</V1>
+            <V2>4.214811</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9365" msdata:rowOrder="364" diffgr:hasChanges="inserted">
+            <V1>76.4332047</V1>
+            <V2>4.768069</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9366" msdata:rowOrder="365" diffgr:hasChanges="inserted">
+            <V1>76.91729</V1>
+            <V2>3.36199212</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9367" msdata:rowOrder="366" diffgr:hasChanges="inserted">
+            <V1>73.2676849</V1>
+            <V2>5.10341072</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9368" msdata:rowOrder="367" diffgr:hasChanges="inserted">
+            <V1>84.0305252</V1>
+            <V2>5.34499025</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9369" msdata:rowOrder="368" diffgr:hasChanges="inserted">
+            <V1>78.60167</V1>
+            <V2>3.17133713</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9370" msdata:rowOrder="369" diffgr:hasChanges="inserted">
+            <V1>83.44826</V1>
+            <V2>3.20327926</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9371" msdata:rowOrder="370" diffgr:hasChanges="inserted">
+            <V1>79.35657</V1>
+            <V2>6.840009</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9372" msdata:rowOrder="371" diffgr:hasChanges="inserted">
+            <V1>80.50879</V1>
+            <V2>5.151357</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9373" msdata:rowOrder="372" diffgr:hasChanges="inserted">
+            <V1>77.0330048</V1>
+            <V2>6.766063</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9374" msdata:rowOrder="373" diffgr:hasChanges="inserted">
+            <V1>72.9836655</V1>
+            <V2>6.401407</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9375" msdata:rowOrder="374" diffgr:hasChanges="inserted">
+            <V1>73.74895</V1>
+            <V2>6.025819</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9376" msdata:rowOrder="375" diffgr:hasChanges="inserted">
+            <V1>77.30585</V1>
+            <V2>4.41697645</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9377" msdata:rowOrder="376" diffgr:hasChanges="inserted">
+            <V1>78.41009</V1>
+            <V2>5.87264967</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9378" msdata:rowOrder="377" diffgr:hasChanges="inserted">
+            <V1>75.75522</V1>
+            <V2>4.74238825</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9379" msdata:rowOrder="378" diffgr:hasChanges="inserted">
+            <V1>80.57275</V1>
+            <V2>8.780919</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9380" msdata:rowOrder="379" diffgr:hasChanges="inserted">
+            <V1>74.25437</V1>
+            <V2>4.658759</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9381" msdata:rowOrder="380" diffgr:hasChanges="inserted">
+            <V1>75.356575</V1>
+            <V2>3.06183338</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9382" msdata:rowOrder="381" diffgr:hasChanges="inserted">
+            <V1>79.40997</V1>
+            <V2>4.159438</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9383" msdata:rowOrder="382" diffgr:hasChanges="inserted">
+            <V1>72.91829</V1>
+            <V2>4.288385</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9384" msdata:rowOrder="383" diffgr:hasChanges="inserted">
+            <V1>73.01915</V1>
+            <V2>8.3388195</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9385" msdata:rowOrder="384" diffgr:hasChanges="inserted">
+            <V1>77.26503</V1>
+            <V2>4.680565</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9386" msdata:rowOrder="385" diffgr:hasChanges="inserted">
+            <V1>72.07405</V1>
+            <V2>4.99516726</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9387" msdata:rowOrder="386" diffgr:hasChanges="inserted">
+            <V1>76.2666</V1>
+            <V2>6.32239151</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9388" msdata:rowOrder="387" diffgr:hasChanges="inserted">
+            <V1>75.8637</V1>
+            <V2>8.143834</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9389" msdata:rowOrder="388" diffgr:hasChanges="inserted">
+            <V1>79.47568</V1>
+            <V2>7.508422</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9390" msdata:rowOrder="389" diffgr:hasChanges="inserted">
+            <V1>83.65273</V1>
+            <V2>4.70525265</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9391" msdata:rowOrder="390" diffgr:hasChanges="inserted">
+            <V1>78.10469</V1>
+            <V2>6.63274765</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9392" msdata:rowOrder="391" diffgr:hasChanges="inserted">
+            <V1>79.9339752</V1>
+            <V2>7.87301445</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9393" msdata:rowOrder="392" diffgr:hasChanges="inserted">
+            <V1>75.18806</V1>
+            <V2>3.696815</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9394" msdata:rowOrder="393" diffgr:hasChanges="inserted">
+            <V1>75.94351</V1>
+            <V2>5.227735</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9395" msdata:rowOrder="394" diffgr:hasChanges="inserted">
+            <V1>70.06597</V1>
+            <V2>3.61151648</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9396" msdata:rowOrder="395" diffgr:hasChanges="inserted">
+            <V1>72.77251</V1>
+            <V2>3.63951588</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9397" msdata:rowOrder="396" diffgr:hasChanges="inserted">
+            <V1>84.58664</V1>
+            <V2>6.80525875</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9398" msdata:rowOrder="397" diffgr:hasChanges="inserted">
+            <V1>74.15409</V1>
+            <V2>7.312648</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9399" msdata:rowOrder="398" diffgr:hasChanges="inserted">
+            <V1>71.68203</V1>
+            <V2>7.4378314</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+          <_x0033_71dc997-7ef2-446a-b65b-6976253229f9 diffgr:id="371dc997-7ef2-446a-b65b-6976253229f9400" msdata:rowOrder="399" diffgr:hasChanges="inserted">
+            <V1>72.4380951</V1>
+            <V2>4.271093</V2>
+          </_x0033_71dc997-7ef2-446a-b65b-6976253229f9>
+        </DocumentElement>
+      </diffgr:diffgram>
+    </ParameterValues>
+    <X1>
+      <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:MainDataTable="sobolx1" msdata:UseCurrentLocale="true">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="sobolx1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="X1" type="xs:float" minOccurs="0" />
+                    <xs:element name="X2" type="xs:float" minOccurs="0" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+      </xs:schema>
+      <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+        <DocumentElement>
+          <sobolx1 diffgr:id="sobolx11" msdata:rowOrder="0" diffgr:hasChanges="inserted">
+            <X1>74.1088</X1>
+            <X2>6.125639</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx12" msdata:rowOrder="1" diffgr:hasChanges="inserted">
+            <X1>83.2622452</X1>
+            <X2>4.982626</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx13" msdata:rowOrder="2" diffgr:hasChanges="inserted">
+            <X1>80.10459</X1>
+            <X2>8.186057</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx14" msdata:rowOrder="3" diffgr:hasChanges="inserted">
+            <X1>74.92071</X1>
+            <X2>7.449026</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx15" msdata:rowOrder="4" diffgr:hasChanges="inserted">
+            <X1>84.4165</X1>
+            <X2>8.527358</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx16" msdata:rowOrder="5" diffgr:hasChanges="inserted">
+            <X1>73.81643</X1>
+            <X2>8.6481905</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx17" msdata:rowOrder="6" diffgr:hasChanges="inserted">
+            <X1>79.43269</X1>
+            <X2>6.00452662</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx18" msdata:rowOrder="7" diffgr:hasChanges="inserted">
+            <X1>71.0514145</X1>
+            <X2>3.54383016</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx19" msdata:rowOrder="8" diffgr:hasChanges="inserted">
+            <X1>78.52769</X1>
+            <X2>5.30548334</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx110" msdata:rowOrder="9" diffgr:hasChanges="inserted">
+            <X1>70.381</X1>
+            <X2>8.217195</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx111" msdata:rowOrder="10" diffgr:hasChanges="inserted">
+            <X1>82.6379547</X1>
+            <X2>5.31806946</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx112" msdata:rowOrder="11" diffgr:hasChanges="inserted">
+            <X1>83.36138</X1>
+            <X2>3.81387544</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx113" msdata:rowOrder="12" diffgr:hasChanges="inserted">
+            <X1>75.60736</X1>
+            <X2>7.314113</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx114" msdata:rowOrder="13" diffgr:hasChanges="inserted">
+            <X1>75.2185059</X1>
+            <X2>7.902385</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx115" msdata:rowOrder="14" diffgr:hasChanges="inserted">
+            <X1>72.4868</X1>
+            <X2>6.9505024</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx116" msdata:rowOrder="15" diffgr:hasChanges="inserted">
+            <X1>73.28889</X1>
+            <X2>4.44361925</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx117" msdata:rowOrder="16" diffgr:hasChanges="inserted">
+            <X1>72.39625</X1>
+            <X2>6.768589</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx118" msdata:rowOrder="17" diffgr:hasChanges="inserted">
+            <X1>79.56851</X1>
+            <X2>6.897443</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx119" msdata:rowOrder="18" diffgr:hasChanges="inserted">
+            <X1>70.32061</X1>
+            <X2>6.8879323</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx120" msdata:rowOrder="19" diffgr:hasChanges="inserted">
+            <X1>83.51811</X1>
+            <X2>8.942047</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx121" msdata:rowOrder="20" diffgr:hasChanges="inserted">
+            <X1>76.19597</X1>
+            <X2>5.4276495</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx122" msdata:rowOrder="21" diffgr:hasChanges="inserted">
+            <X1>70.66367</X1>
+            <X2>3.22065115</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx123" msdata:rowOrder="22" diffgr:hasChanges="inserted">
+            <X1>83.603775</X1>
+            <X2>4.37118</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx124" msdata:rowOrder="23" diffgr:hasChanges="inserted">
+            <X1>82.3442459</X1>
+            <X2>7.22946548</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx125" msdata:rowOrder="24" diffgr:hasChanges="inserted">
+            <X1>80.6539459</X1>
+            <X2>7.265629</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx126" msdata:rowOrder="25" diffgr:hasChanges="inserted">
+            <X1>82.21802</X1>
+            <X2>3.329867</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx127" msdata:rowOrder="26" diffgr:hasChanges="inserted">
+            <X1>81.82054</X1>
+            <X2>7.79576159</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx128" msdata:rowOrder="27" diffgr:hasChanges="inserted">
+            <X1>80.98688</X1>
+            <X2>4.22773647</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx129" msdata:rowOrder="28" diffgr:hasChanges="inserted">
+            <X1>79.97158</X1>
+            <X2>4.421839</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx130" msdata:rowOrder="29" diffgr:hasChanges="inserted">
+            <X1>74.78271</X1>
+            <X2>8.883013</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx131" msdata:rowOrder="30" diffgr:hasChanges="inserted">
+            <X1>72.44516</X1>
+            <X2>4.818119</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx132" msdata:rowOrder="31" diffgr:hasChanges="inserted">
+            <X1>75.07072</X1>
+            <X2>5.85321856</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx133" msdata:rowOrder="32" diffgr:hasChanges="inserted">
+            <X1>84.2812</X1>
+            <X2>8.444417</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx134" msdata:rowOrder="33" diffgr:hasChanges="inserted">
+            <X1>71.7624359</X1>
+            <X2>7.386663</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx135" msdata:rowOrder="34" diffgr:hasChanges="inserted">
+            <X1>76.4815</X1>
+            <X2>3.94440627</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx136" msdata:rowOrder="35" diffgr:hasChanges="inserted">
+            <X1>71.1237</X1>
+            <X2>4.55291128</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx137" msdata:rowOrder="36" diffgr:hasChanges="inserted">
+            <X1>75.54388</X1>
+            <X2>8.459425</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx138" msdata:rowOrder="37" diffgr:hasChanges="inserted">
+            <X1>70.8936539</X1>
+            <X2>7.21345139</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx139" msdata:rowOrder="38" diffgr:hasChanges="inserted">
+            <X1>73.40616</X1>
+            <X2>6.87304735</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx140" msdata:rowOrder="39" diffgr:hasChanges="inserted">
+            <X1>74.87849</X1>
+            <X2>8.945215</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx141" msdata:rowOrder="40" diffgr:hasChanges="inserted">
+            <X1>71.71768</X1>
+            <X2>5.40142727</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx142" msdata:rowOrder="41" diffgr:hasChanges="inserted">
+            <X1>75.91581</X1>
+            <X2>5.92918158</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx143" msdata:rowOrder="42" diffgr:hasChanges="inserted">
+            <X1>82.9666443</X1>
+            <X2>7.81883574</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx144" msdata:rowOrder="43" diffgr:hasChanges="inserted">
+            <X1>75.47331</X1>
+            <X2>5.981756</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx145" msdata:rowOrder="44" diffgr:hasChanges="inserted">
+            <X1>84.03263</X1>
+            <X2>4.908426</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx146" msdata:rowOrder="45" diffgr:hasChanges="inserted">
+            <X1>75.48485</X1>
+            <X2>3.06540132</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx147" msdata:rowOrder="46" diffgr:hasChanges="inserted">
+            <X1>76.74483</X1>
+            <X2>6.586791</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx148" msdata:rowOrder="47" diffgr:hasChanges="inserted">
+            <X1>81.18774</X1>
+            <X2>8.81384</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx149" msdata:rowOrder="48" diffgr:hasChanges="inserted">
+            <X1>80.9148941</X1>
+            <X2>8.756871</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx150" msdata:rowOrder="49" diffgr:hasChanges="inserted">
+            <X1>82.10759</X1>
+            <X2>3.78831244</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx151" msdata:rowOrder="50" diffgr:hasChanges="inserted">
+            <X1>80.77194</X1>
+            <X2>6.234981</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx152" msdata:rowOrder="51" diffgr:hasChanges="inserted">
+            <X1>84.70801</X1>
+            <X2>5.35654831</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx153" msdata:rowOrder="52" diffgr:hasChanges="inserted">
+            <X1>84.32309</X1>
+            <X2>6.12633657</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx154" msdata:rowOrder="53" diffgr:hasChanges="inserted">
+            <X1>76.125824</X1>
+            <X2>5.080584</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx155" msdata:rowOrder="54" diffgr:hasChanges="inserted">
+            <X1>74.49367</X1>
+            <X2>3.287153</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx156" msdata:rowOrder="55" diffgr:hasChanges="inserted">
+            <X1>76.84094</X1>
+            <X2>8.019079</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx157" msdata:rowOrder="56" diffgr:hasChanges="inserted">
+            <X1>80.8697357</X1>
+            <X2>8.884568</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx158" msdata:rowOrder="57" diffgr:hasChanges="inserted">
+            <X1>77.58542</X1>
+            <X2>5.62801</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx159" msdata:rowOrder="58" diffgr:hasChanges="inserted">
+            <X1>79.2168</X1>
+            <X2>3.80891</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx160" msdata:rowOrder="59" diffgr:hasChanges="inserted">
+            <X1>78.36114</X1>
+            <X2>5.79763126</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx161" msdata:rowOrder="60" diffgr:hasChanges="inserted">
+            <X1>84.86683</X1>
+            <X2>5.08930874</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx162" msdata:rowOrder="61" diffgr:hasChanges="inserted">
+            <X1>70.4538345</X1>
+            <X2>3.60938454</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx163" msdata:rowOrder="62" diffgr:hasChanges="inserted">
+            <X1>75.0346146</X1>
+            <X2>6.53735733</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx164" msdata:rowOrder="63" diffgr:hasChanges="inserted">
+            <X1>74.12564</X1>
+            <X2>3.75819087</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx165" msdata:rowOrder="64" diffgr:hasChanges="inserted">
+            <X1>84.6705246</X1>
+            <X2>3.95196652</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx166" msdata:rowOrder="65" diffgr:hasChanges="inserted">
+            <X1>74.8657</X1>
+            <X2>6.79515743</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx167" msdata:rowOrder="66" diffgr:hasChanges="inserted">
+            <X1>83.95075</X1>
+            <X2>7.08094835</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx168" msdata:rowOrder="67" diffgr:hasChanges="inserted">
+            <X1>84.01481</X1>
+            <X2>7.798356</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx169" msdata:rowOrder="68" diffgr:hasChanges="inserted">
+            <X1>71.99724</X1>
+            <X2>3.39310741</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx170" msdata:rowOrder="69" diffgr:hasChanges="inserted">
+            <X1>70.87223</X1>
+            <X2>4.216028</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx171" msdata:rowOrder="70" diffgr:hasChanges="inserted">
+            <X1>83.964325</X1>
+            <X2>5.390599</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx172" msdata:rowOrder="71" diffgr:hasChanges="inserted">
+            <X1>79.07029</X1>
+            <X2>4.7270875</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx173" msdata:rowOrder="72" diffgr:hasChanges="inserted">
+            <X1>81.74192</X1>
+            <X2>8.706896</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx174" msdata:rowOrder="73" diffgr:hasChanges="inserted">
+            <X1>75.4919357</X1>
+            <X2>5.271334</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx175" msdata:rowOrder="74" diffgr:hasChanges="inserted">
+            <X1>71.43796</X1>
+            <X2>6.714142</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx176" msdata:rowOrder="75" diffgr:hasChanges="inserted">
+            <X1>80.73253</X1>
+            <X2>3.82993245</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx177" msdata:rowOrder="76" diffgr:hasChanges="inserted">
+            <X1>79.47607</X1>
+            <X2>3.14024162</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx178" msdata:rowOrder="77" diffgr:hasChanges="inserted">
+            <X1>71.72215</X1>
+            <X2>7.06822824</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx179" msdata:rowOrder="78" diffgr:hasChanges="inserted">
+            <X1>84.4154358</X1>
+            <X2>5.26263142</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx180" msdata:rowOrder="79" diffgr:hasChanges="inserted">
+            <X1>80.26428</X1>
+            <X2>3.08714914</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx181" msdata:rowOrder="80" diffgr:hasChanges="inserted">
+            <X1>71.60899</X1>
+            <X2>5.25327635</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx182" msdata:rowOrder="81" diffgr:hasChanges="inserted">
+            <X1>79.0896</X1>
+            <X2>6.96405458</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx183" msdata:rowOrder="82" diffgr:hasChanges="inserted">
+            <X1>78.79257</X1>
+            <X2>8.358741</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx184" msdata:rowOrder="83" diffgr:hasChanges="inserted">
+            <X1>83.35502</X1>
+            <X2>5.3625536</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx185" msdata:rowOrder="84" diffgr:hasChanges="inserted">
+            <X1>84.1942139</X1>
+            <X2>8.594943</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx186" msdata:rowOrder="85" diffgr:hasChanges="inserted">
+            <X1>74.52153</X1>
+            <X2>6.795071</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx187" msdata:rowOrder="86" diffgr:hasChanges="inserted">
+            <X1>81.63639</X1>
+            <X2>3.079266</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx188" msdata:rowOrder="87" diffgr:hasChanges="inserted">
+            <X1>75.3167648</X1>
+            <X2>5.518676</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx189" msdata:rowOrder="88" diffgr:hasChanges="inserted">
+            <X1>71.0961</X1>
+            <X2>7.182674</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx190" msdata:rowOrder="89" diffgr:hasChanges="inserted">
+            <X1>82.17099</X1>
+            <X2>4.04013252</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx191" msdata:rowOrder="90" diffgr:hasChanges="inserted">
+            <X1>70.54885</X1>
+            <X2>7.58005142</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx192" msdata:rowOrder="91" diffgr:hasChanges="inserted">
+            <X1>79.70287</X1>
+            <X2>5.192835</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx193" msdata:rowOrder="92" diffgr:hasChanges="inserted">
+            <X1>76.25395</X1>
+            <X2>4.62373734</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx194" msdata:rowOrder="93" diffgr:hasChanges="inserted">
+            <X1>71.55785</X1>
+            <X2>6.477313</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx195" msdata:rowOrder="94" diffgr:hasChanges="inserted">
+            <X1>80.70273</X1>
+            <X2>3.60593</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx196" msdata:rowOrder="95" diffgr:hasChanges="inserted">
+            <X1>81.31061</X1>
+            <X2>5.74418259</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx197" msdata:rowOrder="96" diffgr:hasChanges="inserted">
+            <X1>76.8044052</X1>
+            <X2>7.27607346</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx198" msdata:rowOrder="97" diffgr:hasChanges="inserted">
+            <X1>81.1764755</X1>
+            <X2>8.338649</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx199" msdata:rowOrder="98" diffgr:hasChanges="inserted">
+            <X1>78.28377</X1>
+            <X2>4.10009575</X2>
+          </sobolx1>
+          <sobolx1 diffgr:id="sobolx1100" msdata:rowOrder="99" diffgr:hasChanges="inserted">
+            <X1>75.99556</X1>
+            <X2>7.840478</X2>
+          </sobolx1>
+        </DocumentElement>
+      </diffgr:diffgram>
+    </X1>
+    <X2>
+      <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:MainDataTable="sobolx2" msdata:UseCurrentLocale="true">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="sobolx2">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="X1" type="xs:float" minOccurs="0" />
+                    <xs:element name="X2" type="xs:float" minOccurs="0" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+      </xs:schema>
+      <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+        <DocumentElement>
+          <sobolx2 diffgr:id="sobolx21" msdata:rowOrder="0" diffgr:hasChanges="inserted">
+            <X1>84.79227</X1>
+            <X2>6.234835</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx22" msdata:rowOrder="1" diffgr:hasChanges="inserted">
+            <X1>71.9616241</X1>
+            <X2>4.72005</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx23" msdata:rowOrder="2" diffgr:hasChanges="inserted">
+            <X1>78.5002747</X1>
+            <X2>8.437033</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx24" msdata:rowOrder="3" diffgr:hasChanges="inserted">
+            <X1>78.92181</X1>
+            <X2>4.66744328</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx25" msdata:rowOrder="4" diffgr:hasChanges="inserted">
+            <X1>72.7891159</X1>
+            <X2>5.660013</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx26" msdata:rowOrder="5" diffgr:hasChanges="inserted">
+            <X1>72.28686</X1>
+            <X2>4.259873</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx27" msdata:rowOrder="6" diffgr:hasChanges="inserted">
+            <X1>82.27222</X1>
+            <X2>5.486861</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx28" msdata:rowOrder="7" diffgr:hasChanges="inserted">
+            <X1>84.08641</X1>
+            <X2>8.9984</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx29" msdata:rowOrder="8" diffgr:hasChanges="inserted">
+            <X1>79.82221</X1>
+            <X2>5.547084</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx210" msdata:rowOrder="9" diffgr:hasChanges="inserted">
+            <X1>74.59112</X1>
+            <X2>3.295283</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx211" msdata:rowOrder="10" diffgr:hasChanges="inserted">
+            <X1>76.57216</X1>
+            <X2>6.45873642</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx212" msdata:rowOrder="11" diffgr:hasChanges="inserted">
+            <X1>81.4156</X1>
+            <X2>5.19545269</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx213" msdata:rowOrder="12" diffgr:hasChanges="inserted">
+            <X1>75.04981</X1>
+            <X2>6.960184</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx214" msdata:rowOrder="13" diffgr:hasChanges="inserted">
+            <X1>81.96034</X1>
+            <X2>3.47034955</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx215" msdata:rowOrder="14" diffgr:hasChanges="inserted">
+            <X1>83.8829956</X1>
+            <X2>3.34725165</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx216" msdata:rowOrder="15" diffgr:hasChanges="inserted">
+            <X1>81.14087</X1>
+            <X2>7.49519</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx217" msdata:rowOrder="16" diffgr:hasChanges="inserted">
+            <X1>79.77507</X1>
+            <X2>5.33473158</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx218" msdata:rowOrder="17" diffgr:hasChanges="inserted">
+            <X1>77.27168</X1>
+            <X2>7.68353558</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx219" msdata:rowOrder="18" diffgr:hasChanges="inserted">
+            <X1>82.21697</X1>
+            <X2>5.34761572</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx220" msdata:rowOrder="19" diffgr:hasChanges="inserted">
+            <X1>84.3978958</X1>
+            <X2>3.93279481</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx221" msdata:rowOrder="20" diffgr:hasChanges="inserted">
+            <X1>74.76168</X1>
+            <X2>4.881523</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx222" msdata:rowOrder="21" diffgr:hasChanges="inserted">
+            <X1>80.38159</X1>
+            <X2>6.205015</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx223" msdata:rowOrder="22" diffgr:hasChanges="inserted">
+            <X1>71.30607</X1>
+            <X2>3.61120844</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx224" msdata:rowOrder="23" diffgr:hasChanges="inserted">
+            <X1>81.55185</X1>
+            <X2>3.844856</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx225" msdata:rowOrder="24" diffgr:hasChanges="inserted">
+            <X1>78.8460159</X1>
+            <X2>3.43991923</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx226" msdata:rowOrder="25" diffgr:hasChanges="inserted">
+            <X1>78.25936</X1>
+            <X2>3.75200176</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx227" msdata:rowOrder="26" diffgr:hasChanges="inserted">
+            <X1>70.77266</X1>
+            <X2>7.34041548</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx228" msdata:rowOrder="27" diffgr:hasChanges="inserted">
+            <X1>76.60361</X1>
+            <X2>4.787091</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx229" msdata:rowOrder="28" diffgr:hasChanges="inserted">
+            <X1>70.74867</X1>
+            <X2>8.290575</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx230" msdata:rowOrder="29" diffgr:hasChanges="inserted">
+            <X1>72.5142746</X1>
+            <X2>8.665657</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx231" msdata:rowOrder="30" diffgr:hasChanges="inserted">
+            <X1>76.4429</X1>
+            <X2>3.614248</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx232" msdata:rowOrder="31" diffgr:hasChanges="inserted">
+            <X1>82.47773</X1>
+            <X2>7.60433674</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx233" msdata:rowOrder="32" diffgr:hasChanges="inserted">
+            <X1>73.60199</X1>
+            <X2>3.14461827</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx234" msdata:rowOrder="33" diffgr:hasChanges="inserted">
+            <X1>73.35965</X1>
+            <X2>4.09188128</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx235" msdata:rowOrder="34" diffgr:hasChanges="inserted">
+            <X1>78.73365</X1>
+            <X2>6.65537</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx236" msdata:rowOrder="35" diffgr:hasChanges="inserted">
+            <X1>76.42795</X1>
+            <X2>8.01104</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx237" msdata:rowOrder="36" diffgr:hasChanges="inserted">
+            <X1>74.6089554</X1>
+            <X2>4.01230955</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx238" msdata:rowOrder="37" diffgr:hasChanges="inserted">
+            <X1>77.50571</X1>
+            <X2>8.123917</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx239" msdata:rowOrder="38" diffgr:hasChanges="inserted">
+            <X1>74.0709457</X1>
+            <X2>6.362105</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx240" msdata:rowOrder="39" diffgr:hasChanges="inserted">
+            <X1>84.09321</X1>
+            <X2>4.568906</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx241" msdata:rowOrder="40" diffgr:hasChanges="inserted">
+            <X1>81.71421</X1>
+            <X2>7.419216</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx242" msdata:rowOrder="41" diffgr:hasChanges="inserted">
+            <X1>73.89373</X1>
+            <X2>6.80386257</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx243" msdata:rowOrder="42" diffgr:hasChanges="inserted">
+            <X1>78.06872</X1>
+            <X2>4.37503</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx244" msdata:rowOrder="43" diffgr:hasChanges="inserted">
+            <X1>71.91469</X1>
+            <X2>8.400892</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx245" msdata:rowOrder="44" diffgr:hasChanges="inserted">
+            <X1>73.5425339</X1>
+            <X2>7.796614</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx246" msdata:rowOrder="45" diffgr:hasChanges="inserted">
+            <X1>79.7484055</X1>
+            <X2>5.133133</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx247" msdata:rowOrder="46" diffgr:hasChanges="inserted">
+            <X1>82.55891</X1>
+            <X2>6.43922567</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx248" msdata:rowOrder="47" diffgr:hasChanges="inserted">
+            <X1>79.27838</X1>
+            <X2>7.367223</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx249" msdata:rowOrder="48" diffgr:hasChanges="inserted">
+            <X1>74.93935</X1>
+            <X2>3.77514887</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx250" msdata:rowOrder="49" diffgr:hasChanges="inserted">
+            <X1>84.77598</X1>
+            <X2>7.2436676</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx251" msdata:rowOrder="50" diffgr:hasChanges="inserted">
+            <X1>79.54997</X1>
+            <X2>4.13009071</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx252" msdata:rowOrder="51" diffgr:hasChanges="inserted">
+            <X1>70.61794</X1>
+            <X2>6.2743783</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx253" msdata:rowOrder="52" diffgr:hasChanges="inserted">
+            <X1>73.57996</X1>
+            <X2>8.770674</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx254" msdata:rowOrder="53" diffgr:hasChanges="inserted">
+            <X1>76.74373</X1>
+            <X2>4.337242</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx255" msdata:rowOrder="54" diffgr:hasChanges="inserted">
+            <X1>72.9971848</X1>
+            <X2>6.20537329</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx256" msdata:rowOrder="55" diffgr:hasChanges="inserted">
+            <X1>79.65806</X1>
+            <X2>7.66398</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx257" msdata:rowOrder="56" diffgr:hasChanges="inserted">
+            <X1>73.92352</X1>
+            <X2>5.09989834</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx258" msdata:rowOrder="57" diffgr:hasChanges="inserted">
+            <X1>77.64236</X1>
+            <X2>5.39297247</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx259" msdata:rowOrder="58" diffgr:hasChanges="inserted">
+            <X1>78.6267853</X1>
+            <X2>6.14958</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx260" msdata:rowOrder="59" diffgr:hasChanges="inserted">
+            <X1>77.66988</X1>
+            <X2>4.65607357</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx261" msdata:rowOrder="60" diffgr:hasChanges="inserted">
+            <X1>83.6162338</X1>
+            <X2>5.76214838</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx262" msdata:rowOrder="61" diffgr:hasChanges="inserted">
+            <X1>83.46876</X1>
+            <X2>5.1826067</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx263" msdata:rowOrder="62" diffgr:hasChanges="inserted">
+            <X1>79.9194946</X1>
+            <X2>8.153835</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx264" msdata:rowOrder="63" diffgr:hasChanges="inserted">
+            <X1>70.44371</X1>
+            <X2>4.214811</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx265" msdata:rowOrder="64" diffgr:hasChanges="inserted">
+            <X1>76.4332047</X1>
+            <X2>4.768069</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx266" msdata:rowOrder="65" diffgr:hasChanges="inserted">
+            <X1>76.91729</X1>
+            <X2>3.36199212</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx267" msdata:rowOrder="66" diffgr:hasChanges="inserted">
+            <X1>73.2676849</X1>
+            <X2>5.10341072</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx268" msdata:rowOrder="67" diffgr:hasChanges="inserted">
+            <X1>84.0305252</X1>
+            <X2>5.34499025</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx269" msdata:rowOrder="68" diffgr:hasChanges="inserted">
+            <X1>78.60167</X1>
+            <X2>3.17133713</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx270" msdata:rowOrder="69" diffgr:hasChanges="inserted">
+            <X1>83.44826</X1>
+            <X2>3.20327926</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx271" msdata:rowOrder="70" diffgr:hasChanges="inserted">
+            <X1>79.35657</X1>
+            <X2>6.840009</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx272" msdata:rowOrder="71" diffgr:hasChanges="inserted">
+            <X1>80.50879</X1>
+            <X2>5.151357</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx273" msdata:rowOrder="72" diffgr:hasChanges="inserted">
+            <X1>77.0330048</X1>
+            <X2>6.766063</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx274" msdata:rowOrder="73" diffgr:hasChanges="inserted">
+            <X1>72.9836655</X1>
+            <X2>6.401407</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx275" msdata:rowOrder="74" diffgr:hasChanges="inserted">
+            <X1>73.74895</X1>
+            <X2>6.025819</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx276" msdata:rowOrder="75" diffgr:hasChanges="inserted">
+            <X1>77.30585</X1>
+            <X2>4.41697645</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx277" msdata:rowOrder="76" diffgr:hasChanges="inserted">
+            <X1>78.41009</X1>
+            <X2>5.87264967</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx278" msdata:rowOrder="77" diffgr:hasChanges="inserted">
+            <X1>75.75522</X1>
+            <X2>4.74238825</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx279" msdata:rowOrder="78" diffgr:hasChanges="inserted">
+            <X1>80.57275</X1>
+            <X2>8.780919</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx280" msdata:rowOrder="79" diffgr:hasChanges="inserted">
+            <X1>74.25437</X1>
+            <X2>4.658759</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx281" msdata:rowOrder="80" diffgr:hasChanges="inserted">
+            <X1>75.356575</X1>
+            <X2>3.06183338</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx282" msdata:rowOrder="81" diffgr:hasChanges="inserted">
+            <X1>79.40997</X1>
+            <X2>4.159438</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx283" msdata:rowOrder="82" diffgr:hasChanges="inserted">
+            <X1>72.91829</X1>
+            <X2>4.288385</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx284" msdata:rowOrder="83" diffgr:hasChanges="inserted">
+            <X1>73.01915</X1>
+            <X2>8.3388195</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx285" msdata:rowOrder="84" diffgr:hasChanges="inserted">
+            <X1>77.26503</X1>
+            <X2>4.680565</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx286" msdata:rowOrder="85" diffgr:hasChanges="inserted">
+            <X1>72.07405</X1>
+            <X2>4.99516726</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx287" msdata:rowOrder="86" diffgr:hasChanges="inserted">
+            <X1>76.2666</X1>
+            <X2>6.32239151</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx288" msdata:rowOrder="87" diffgr:hasChanges="inserted">
+            <X1>75.8637</X1>
+            <X2>8.143834</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx289" msdata:rowOrder="88" diffgr:hasChanges="inserted">
+            <X1>79.47568</X1>
+            <X2>7.508422</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx290" msdata:rowOrder="89" diffgr:hasChanges="inserted">
+            <X1>83.65273</X1>
+            <X2>4.70525265</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx291" msdata:rowOrder="90" diffgr:hasChanges="inserted">
+            <X1>78.10469</X1>
+            <X2>6.63274765</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx292" msdata:rowOrder="91" diffgr:hasChanges="inserted">
+            <X1>79.9339752</X1>
+            <X2>7.87301445</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx293" msdata:rowOrder="92" diffgr:hasChanges="inserted">
+            <X1>75.18806</X1>
+            <X2>3.696815</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx294" msdata:rowOrder="93" diffgr:hasChanges="inserted">
+            <X1>75.94351</X1>
+            <X2>5.227735</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx295" msdata:rowOrder="94" diffgr:hasChanges="inserted">
+            <X1>70.06597</X1>
+            <X2>3.61151648</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx296" msdata:rowOrder="95" diffgr:hasChanges="inserted">
+            <X1>72.77251</X1>
+            <X2>3.63951588</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx297" msdata:rowOrder="96" diffgr:hasChanges="inserted">
+            <X1>84.58664</X1>
+            <X2>6.80525875</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx298" msdata:rowOrder="97" diffgr:hasChanges="inserted">
+            <X1>74.15409</X1>
+            <X2>7.312648</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx299" msdata:rowOrder="98" diffgr:hasChanges="inserted">
+            <X1>71.68203</X1>
+            <X2>7.4378314</X2>
+          </sobolx2>
+          <sobolx2 diffgr:id="sobolx2100" msdata:rowOrder="99" diffgr:hasChanges="inserted">
+            <X1>72.4380951</X1>
+            <X2>4.271093</X2>
+          </sobolx2>
+        </DocumentElement>
+      </diffgr:diffgram>
+    </X2>
+    <NumPaths>100</NumPaths>
+    <Parameters>
+      <Parameter>
+        <Name>CN2</Name>
+        <Path>Field.Soil.SoilWater.CN2Bare</Path>
+        <LowerBound>70</LowerBound>
+        <UpperBound>85</UpperBound>
+      </Parameter>
+      <Parameter>
+        <Name>Cona</Name>
+        <Path>Field.Soil.SoilWater.SummerCona</Path>
+        <LowerBound>3</LowerBound>
+        <UpperBound>9</UpperBound>
+      </Parameter>
+    </Parameters>
+  </Sobol>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
+  <ReadOnly>false</ReadOnly>
+  <ExplorerWidth>300</ExplorerWidth>
+</Simulations>

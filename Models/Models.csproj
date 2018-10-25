@@ -199,7 +199,9 @@
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
-    <Compile Include="Morris\Morris.cs" />
+    <Compile Include="Sensitivity\SensitivityParameter.cs" />
+    <Compile Include="Sensitivity\Sobol.cs" />
+    <Compile Include="Sensitivity\Morris.cs" />
     <Compile Include="Lifecycle\LifestageImmigrationProcess.cs" />
     <Compile Include="Functions\AccumulateByDate.cs" />
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />

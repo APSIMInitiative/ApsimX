@@ -94,7 +94,8 @@ namespace UserInterface.Presenters
                                               typeof(Simulations),
                                               typeof(Experiment),
                                               typeof(Folder),
-                                              typeof(Morris)},
+                                              typeof(Morris),
+                                              typeof(Sobol)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {

@@ -24,6 +24,7 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Factorial.Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
+    [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
     public class Graph : Model, AutoDocumentation.ITag, ICustomDocumentation
     {
