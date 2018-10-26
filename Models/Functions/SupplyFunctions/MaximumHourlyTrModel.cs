@@ -10,6 +10,7 @@ using Models.PMF.Organs;
 using Models.Soils;
 using System.Linq;
 using System.Threading.Tasks;
+using Models.PMF;
 
 namespace Models.Functions.SupplyFunctions
 {
@@ -27,7 +28,6 @@ namespace Models.Functions.SupplyFunctions
     public class MaximumHourlyTrModel : Model, IFunction
     {
         //[Input]
-        //public NewMetType myWeather;
         /// <summary>The weather data</summary>
         [Link]
         private IWeather myWeather = null;
@@ -35,6 +35,10 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>The Clock</summary>
         [Link]
         private Clock myClock = null;
+
+        /// <summary>The Leaf organ</summary>
+        [Link]
+        private Plant myPlant = null;
 
         /// <summary>The Leaf organ</summary>
         [Link]
@@ -63,13 +67,19 @@ namespace Models.Functions.SupplyFunctions
         [Link]
         private IFunction FN = null;
 
-        /// <summary>The mean temperature impact on RUE</summary>
-        [Link]
-        private IFunction FT = null;
-
         /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
         private IFunction RadnInt = null;
+
+        /// <summary>The mean temperature impact on RUE</summary>
+        [Link]
+        [ChildLinkByName(IsOptional = true)]
+        private IFunction FT = null;
+
+        /// <summary>The daily gross assimilate calculated by a another photosynthesis model</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Link]
+        private IFunction GrossDailyAssimilate = null; 
         //------------------------------------------------------------------------------------------------
 
         /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
@@ -95,10 +105,15 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyRad;
         private List<double> hourlySVP;
         private List<double> hourlyVPD;
+        private List<double> hourlyRUE;
+        private List<double> hourlyPotTr;
         private List<double> hourlyVPDCappedTr;
         private List<double> hourlyTrCappedTr;
         private List<double> hourlyTr;
+        private List<double> hourlyPotDM;
         private List<double> hourlyDM;
+
+        private XYPairs TempResponseFunc = new XYPairs();
 
         /// <summary>Total daily assimilation in g/m2</summary>
         public double DailyDM { get; set; }
@@ -110,6 +125,7 @@ namespace Models.Functions.SupplyFunctions
         {
             return DailyDM;
         }
+        //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
@@ -118,11 +134,11 @@ namespace Models.Functions.SupplyFunctions
         {
             double radiationInterception = RadnInt.Value();
             if (Double.IsNaN(radiationInterception))
-                throw new Exception("NaN hourlyRad interception value supplied to RUE model");
+                throw new Exception("NaN daily interception value supplied to RUE model");
             if (radiationInterception < 0)
-                throw new Exception("Negative hourlyRad interception value supplied to RUE model");
+                throw new Exception("Negative daily interception value supplied to RUE model");
 
-            if (radiationInterception > 0)
+            if (myPlant.IsEmerged && radiationInterception > 0)
             {
                 transpEffCoef = TEC.Value() * 1e3;
 
@@ -130,6 +146,8 @@ namespace Models.Functions.SupplyFunctions
                 CalcRadiation();
                 CalcSVP();
                 CalcVPD();
+                CalcRUE();
+                CalcPotTr();
                 CalcVPDCappedTr();
                 CalcTrCappedTr();
                 CalcSoilLimitedTr();
@@ -148,25 +166,12 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        /// <summary>Total plant "actual" radiation use efficiency (for the day) corrected by reducing factors (g biomass/MJ global solar radiation) CHCK-EIT</summary>
-        /// <value>The rue act.</value>
-        [Units("gDM/MJ")]
-        public double RueAct
-        {
-            get
-            {
-                double RueReductionFactor = Math.Min(FT.Value(), FN.Value()) * FCO2.Value();
-                return RUE.Value() * RueReductionFactor;
-            }
-        }
-        //------------------------------------------------------------------------------------------------
-
         private void CalcTemperature()
         {
             hourlyTemp = new List<double>();
             // A Model for Diurnal Variation in mySoil and Air hourlyTemp
-            // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216
-            // with corrections
+            // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216.
+            // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
 
             latR = Math.PI / 180.0 * myWeather.Latitude;      // convert latitude (degrees) to radians
 
@@ -203,7 +208,9 @@ namespace Models.Functions.SupplyFunctions
 
         private void CalcRadiation()
         {
-            // calculates the ground solar incident radiation per hour and scales it to the actual radiation
+            // Calculates the ground solar incident radiation per hour and scales it to the actual radiation
+            // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
+
             hourlyRad = new List<double>();
             for (int i = 0; i < 24; i++) hourlyRad.Add(0.0);
 
@@ -240,8 +247,8 @@ namespace Models.Functions.SupplyFunctions
 
         private void CalcSVP()
         {
+            // Calculates hourlySVP at the air temperature in hPa
             hourlySVP = new List<double>();
-            // calculates hourlySVP at the air temperature in hPa
             for (int i = 0; i < 24; i++)
                 hourlySVP.Add(MetUtilities.svp(hourlyTemp[i]));
         }
@@ -249,45 +256,100 @@ namespace Models.Functions.SupplyFunctions
 
         private void CalcVPD()
         {
-            hourlyVPD = new List<double>(); // in kPa
+            // Calculates hourlyVPD at the air temperature in kPa
+            hourlyVPD = new List<double>();
             for (int i = 0; i < 24; i++) hourlyVPD.Add(0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(myWeather.MinT)));
+        }
+        //------------------------------------------------------------------------------------------------
+
+        /// <summary>Gets the VPD in hPa</summary>
+        public double VPD
+        {
+            get
+            {
+                if (hourlyVPD != null)
+                    return hourlyVPD.Average() * 10;
+                else
+                    return 0;
+            }
+        }
+        //------------------------------------------------------------------------------------------------
+
+        /// <summary>Hourly total plant "actual" radiation use efficiency corrected by reducing factors (g biomass/MJ global solar radiation)</summary>
+        private void CalcRUE()
+        {
+            // Calculates hourlyRUE as the product of reference RUE, temperature, N and CO2.
+            double rueReductionFactor = 1;
+            double tempResponse = 1;
+            hourlyRUE = new List<double>();
+
+            TempResponseFunc.X = new double[4] { 0, 15, 25, 35 };
+            TempResponseFunc.Y= new double[4] { 0, 1, 1, 0 };
+
+            for (int i = 0; i < 24; i++)
+            {
+                if (FT != null)
+                    tempResponse = FT.Value();
+                else
+                    tempResponse = TempResponseFunc.ValueIndexed(hourlyTemp[i]);
+
+                rueReductionFactor = Math.Min(tempResponse, FN.Value()) * FCO2.Value();
+                hourlyRUE.Add(RUE.Value() * rueReductionFactor);
+            }
+        }
+        //------------------------------------------------------------------------------------------------
+
+        private void CalcPotTr()
+        {
+            // Calculates hourlyPotTr as the product of hourlyRUE, hourlyVPD and transpEffCoef
+            hourlyPotTr = new List<double>();
+            for (int i = 0; i < 24; i++)
+                hourlyPotTr.Add(hourlyRad[i] * hourlyRUE[i] * hourlyVPD[i] / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
         private void CalcVPDCappedTr()
         {
+            // Calculates hourlyVPDCappedTr as the product of hourlyRUE, Math.Min(hourlyVPD, MaxVPD) and transpEffCoef
             hourlyVPDCappedTr = new List<double>();
             for (int i = 0; i < 24; i++)
-                hourlyVPDCappedTr.Add((hourlyRad[i] * RueAct) * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
+                hourlyVPDCappedTr.Add(hourlyRad[i] * hourlyRUE[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
         private void CalcTrCappedTr()
         {
+            // Calculates hourlyTrCappedTr by capping hourlyVPDCappedTr at MaxTr
             hourlyTrCappedTr = new List<double>();
-            foreach (double hDemand in hourlyVPDCappedTr) hourlyTrCappedTr.Add(Math.Min(MaxTr, hDemand));
+            foreach (double hDemand in hourlyVPDCappedTr)
+                hourlyTrCappedTr.Add(Math.Min(MaxTr, hDemand));
         }
         //------------------------------------------------------------------------------------------------
 
         private void CalcSoilLimitedTr()
         {
-            // set hourlyTr = hourlyVPDCappedTr (hourlyTr becomes uptake)
-            // change to scaling each hour until sum of hourlyTr = rootWaterSupp
+            // Sets hourlyTr = hourlyVPDCappedTr and scales value at each hour until sum of hourlyTr = rootWaterSupp
             hourlyTr = new List<double>(hourlyTrCappedTr);
 
             double rootWaterSupp = myRoot.TotalExtractableWater();
             double reduction = 0.99;
             double maxHourlyT = hourlyTr.Max();
 
-            if (rootWaterSupp == 0)
+            if (rootWaterSupp < 1e-5)
                 for (int i = 0; i < 24; i++) hourlyTr[i] = 0;
             else
+            {
                 while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
                 {
                     maxHourlyT *= reduction;
                     for (int i = 0; i < 24; i++)
-                        if (hourlyTr[i] >= maxHourlyT) hourlyTr[i] = maxHourlyT;
+                    {
+                        double diff = Math.Max(0, hourlyTr.Sum() - rootWaterSupp);
+                        if (hourlyTr[i] >= maxHourlyT) hourlyTr[i] = Math.Max(maxHourlyT, hourlyTr[i] - diff);
+                        if (hourlyTr.Sum() - rootWaterSupp < 1e-5) break;
+                    }
                 }
+            }
 
             //while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
             //{
@@ -305,9 +367,38 @@ namespace Models.Functions.SupplyFunctions
 
         private void CalcBiomass()
         {
+            // Calculates hourlyDM and hourlyPotDM as a product of RUE, TR, TEC and hourlyVPD.
+            // If there is a link to a GrossDailyAssimilate model, it will be used and its outputs
+            // will be scaled to follow the same durnal pattern as that of the hourly RUE model.
+            // If no such a link exists, the 'net' daily assimilate is calculated.
+
+            hourlyPotDM = new List<double>();
+            for (int i = 0; i < 24; i++) hourlyPotDM.Add(hourlyPotTr[i] * transpEffCoef / hourlyVPD[i]);
+
             hourlyDM = new List<double>();
             for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
+
             DailyDM = hourlyDM.Sum();
+            double DailyPotDM = hourlyPotDM.Sum();
+
+            if (GrossDailyAssimilate != null && hourlyPotDM.Sum() > 0 && hourlyDM.Sum() > 0)
+            {
+                double DailyDMGross = hourlyDM.Sum() / hourlyPotDM.Sum() * GrossDailyAssimilate.Value();
+                if (double.IsNaN(GrossDailyAssimilate.Value()))
+                    DailyDMGross = 0;
+
+                if (double.IsNaN(DailyDMGross))
+                    DailyDM = 0;
+                else
+                {
+                    DailyDM = hourlyDM.Sum();
+                    if (DailyDM > 0 && !double.IsNaN(DailyDMGross))
+                        for (int i = 0; i < 24; i++) hourlyDM[i] = hourlyDM[i] / DailyDM * DailyDMGross;
+                    else
+                        for (int i = 0; i < 24; i++) hourlyDM[i] = 0;
+                    DailyDM = hourlyDM.Sum();
+                }
+            }
         }
         //------------------------------------------------------------------------------------------------
 
@@ -323,7 +414,7 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private double CalcSolarRadn(double ratio, double dayLR, double latR, double solarDec) // solar radiation
+        private double CalcSolarRadn(double ratio, double dayLR, double latR, double solarDec)
         {
             return (24.0 * 3600.0 * 1360.0 * (dayLR * Math.Sin(latR) * Math.Sin(solarDec) +
                      Math.Cos(latR) * Math.Cos(solarDec) * Math.Sin(dayLR)) / (Math.PI * 1000000.0)) * ratio;
@@ -339,6 +430,6 @@ namespace Models.Functions.SupplyFunctions
             if (IDiff > ITot) IDiff = ITot;
             return ITot - IDiff;
         }
-        //------------------------------------------------------------------------------------------------       
+        //------------------------------------------------------------------------------------------------  
     }
 }

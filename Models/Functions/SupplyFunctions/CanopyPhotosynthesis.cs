@@ -48,30 +48,6 @@ namespace Models.Functions.SupplyFunctions
         /// <summary> The amount of DM that is fixed by photosynthesis </summary>
         public double GrossPhotosynthesis { get; set; }
 
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-
-        [EventSubscribe("DoPotentialPlantGrowth")]
-
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (Plant.IsEmerged)
-            {
-                GrossPhotosynthesis = DailyCanopyGrossPhotosythesis(Canopy.LAI,
-                                                      Weather.Latitude,
-                                                      Clock.Today.DayOfYear,
-                                                      Weather.Radn,
-                                                      Weather.MaxT,
-                                                      Weather.MinT,
-                                                      Weather.CO2,
-                                                      Weather.DiffuseFraction,
-                                                      1.0) * 30/ 44 * 0.1;     
-                //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
-
-            }
-        }
-
         ///<summary>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         ///float DLL DailyCanopyGrossPhotosythesis(LPSTR pCrop,float fLAI, float fLatitude,int nDay,
         ///                                        float fRad,float fTmpMax,float fTmpMin,float fCO2,
@@ -220,6 +196,20 @@ namespace Models.Functions.SupplyFunctions
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
         {
+            if (Plant.IsEmerged)
+            {
+                GrossPhotosynthesis = DailyCanopyGrossPhotosythesis(Canopy.LAI,
+                                                      Weather.Latitude,
+                                                      Clock.Today.DayOfYear,
+                                                      Weather.Radn,
+                                                      Weather.MaxT,
+                                                      Weather.MinT,
+                                                      Weather.CO2,
+                                                      Weather.DiffuseFraction,
+                                                      1.0) * 30 / 44 * 0.1;
+                //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
+                double stage = Plant.Phenology.Stage;
+            }
             return GrossPhotosynthesis;
         }
     }
