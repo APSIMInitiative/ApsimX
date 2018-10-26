@@ -62,6 +62,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
     {
         /// <summary>Tolerance for biomass comparisons</summary>
