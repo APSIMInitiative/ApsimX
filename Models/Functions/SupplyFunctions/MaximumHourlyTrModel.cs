@@ -262,23 +262,11 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        /// <summary>Gets the VPD in hPa</summary>
-        public double VPD
-        {
-            get
-            {
-                if (hourlyVPD != null)
-                    return hourlyVPD.Average() * 10;
-                else
-                    return 0;
-            }
-        }
-        //------------------------------------------------------------------------------------------------
-
-        /// <summary>Hourly total plant "actual" radiation use efficiency corrected by reducing factors (g biomass/MJ global solar radiation)</summary>
         private void CalcRUE()
         {
             // Calculates hourlyRUE as the product of reference RUE, temperature, N and CO2.
+            // Hourly total plant "actual" radiation use efficiency corrected by reducing factors
+            // (g biomass / MJ global solar radiation)
             double rueReductionFactor = 1;
             double tempResponse = 1;
             hourlyRUE = new List<double>();
