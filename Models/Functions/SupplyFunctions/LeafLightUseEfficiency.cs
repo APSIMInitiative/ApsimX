@@ -74,7 +74,6 @@ namespace Models.Functions.SupplyFunctions
             else
                 throw new ApsimXException(this, "Need to be C3 or C4");
 
-  
             return EffPAR;
         }
     }

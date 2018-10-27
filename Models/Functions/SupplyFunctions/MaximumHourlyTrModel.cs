@@ -25,12 +25,13 @@ namespace Models.Functions.SupplyFunctions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
+
     public class MaximumHourlyTrModel : Model, IFunction
     {
         //[Input]
         /// <summary>The weather data</summary>
         [Link]
-        private IWeather myWeather = null;
+        private Weather myWeather = null;
 
         /// <summary>The Clock</summary>
         [Link]
@@ -71,16 +72,18 @@ namespace Models.Functions.SupplyFunctions
         [Link]
         private IFunction RadnInt = null;
 
-        /// <summary>The mean temperature impact on RUE</summary>
-        [Link]
-        [ChildLinkByName(IsOptional = true)]
-        private IFunction FT = null;
-
         /// <summary>The daily gross assimilate calculated by a another photosynthesis model</summary>
-        [ChildLinkByName(IsOptional = true)]
-        [Link]
-        private IFunction GrossDailyAssimilate = null; 
+        [Link(IsOptional = true)]
+        private IFunction GrossDailyAssimilate = null;
+
+        /// <summary>The mean temperature impact on RUE</summary>
+        [Link(IsOptional = true)]
+        private IFunction FT = null;
         //------------------------------------------------------------------------------------------------
+
+        /// <summary>The photosynthesis type (net/gross)</summary>
+        [Description("The photosynthesis type (net or gross)")]
+        public string Type { get; set; } = "net";
 
         /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
         [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
@@ -93,6 +96,30 @@ namespace Models.Functions.SupplyFunctions
         [Bounds(Lower = 0.01, Upper = 1000.0)]
         [Units("mm/hr")]
         public double MaxTr { get; set; } = 999;
+
+        /// <summary>The KDIF</summary>
+        [Description("The multiplier by which the 'net' TEC must be multiplied for gross assimilate")]
+        public double TECIncForGross { get; set; } = 1.2;
+
+        /// <summary>The KDIF</summary>
+        [Description("The weight of maximim temperature for calculating mean temperature (negative to use hourly data)")]
+        public double MaximumTempWeight { get; set; } = -1;
+
+        /// <summary>The KDIF</summary>
+        [Description("KDIF")]
+        public double KDIF { get; set; } = 0.7;
+
+        /// <summary>LUE at low light at 340ppm and 20C </summary>
+        [Description("LUE at low light at 340ppm and 20C (kgCO2/ha/h / J/m2/s)")]
+        public double LUEref { get; set; } = 0.6;
+
+        /// <summary>Leaf gross photosynthesis rate at 340ppm CO2 </summary>
+        [Description("Maximum gross photosynthesis rate Pmax (kgCO2/ha/h)")]
+        public double Pgmmax { get; set; } = 45;
+
+        /// <summary>Photosynthesis pathway (C3/C4)</summary>
+        [Description("Photosynthesis pathway C3/C4")]
+        public string pathway { get; set; } = "C3";
         //------------------------------------------------------------------------------------------------
 
         private double maxLag = 1.86;       // a, Greg=1.5
@@ -105,7 +132,8 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyRad;
         private List<double> hourlySVP;
         private List<double> hourlyVPD;
-        private List<double> hourlyRUE;
+        private List<double> hourlyRUE; 
+        private List<double> hourlyPotB; 
         private List<double> hourlyPotTr;
         private List<double> hourlyVPDCappedTr;
         private List<double> hourlyTrCappedTr;
@@ -141,12 +169,15 @@ namespace Models.Functions.SupplyFunctions
             if (myPlant.IsEmerged && radiationInterception > 0)
             {
                 transpEffCoef = TEC.Value() * 1e3;
+                if (!string.Equals(Type, "net"))
+                    transpEffCoef *= TECIncForGross;
 
                 CalcTemperature();
                 CalcRadiation();
                 CalcSVP();
                 CalcVPD();
                 CalcRUE();
+                CalcPotAssimilate();
                 CalcPotTr();
                 CalcVPDCappedTr();
                 CalcTrCappedTr();
@@ -272,7 +303,7 @@ namespace Models.Functions.SupplyFunctions
             hourlyRUE = new List<double>();
 
             TempResponseFunc.X = new double[4] { 0, 15, 25, 35 };
-            TempResponseFunc.Y= new double[4] { 0, 1, 1, 0 };
+            TempResponseFunc.Y = new double[4] { 0, 1, 1, 0 };
 
             for (int i = 0; i < 24; i++)
             {
@@ -287,12 +318,30 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
+        private void CalcPotAssimilate()
+        {
+            // Calculates hourlyPotTr as the product of hourlyRUE, hourlyVPD and transpEffCoef
+            hourlyPotB = new List<double>();
+
+            if (string.Equals(Type, "net"))
+            {
+                for (int i = 0; i < 24; i++) hourlyPotB.Add(hourlyRad[i] * hourlyRUE[i]);
+            }
+            else
+            {
+                hourlyPotB = DailyGrossPhotosythesis(myPlant.Canopy.LAI, myWeather.Latitude,
+                                                      myClock.Today.DayOfYear, myWeather.Radn,
+                                                      myWeather.MaxT, myWeather.MinT,
+                                                      myWeather.CO2, myWeather.DiffuseFraction, 1.0);
+            }
+        }
+        //------------------------------------------------------------------------------------------------
+
         private void CalcPotTr()
         {
             // Calculates hourlyPotTr as the product of hourlyRUE, hourlyVPD and transpEffCoef
             hourlyPotTr = new List<double>();
-            for (int i = 0; i < 24; i++)
-                hourlyPotTr.Add(hourlyRad[i] * hourlyRUE[i] * hourlyVPD[i] / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyPotTr.Add(hourlyPotB[i] * hourlyVPD[i] / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -300,8 +349,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, Math.Min(hourlyVPD, MaxVPD) and transpEffCoef
             hourlyVPDCappedTr = new List<double>();
-            for (int i = 0; i < 24; i++)
-                hourlyVPDCappedTr.Add(hourlyRad[i] * hourlyRUE[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotB[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -309,8 +357,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyTrCappedTr by capping hourlyVPDCappedTr at MaxTr
             hourlyTrCappedTr = new List<double>();
-            foreach (double hDemand in hourlyVPDCappedTr)
-                hourlyTrCappedTr.Add(Math.Min(MaxTr, hDemand));
+            foreach (double hDemand in hourlyVPDCappedTr) hourlyTrCappedTr.Add(Math.Min(MaxTr, hDemand));
         }
         //------------------------------------------------------------------------------------------------
 
@@ -338,18 +385,6 @@ namespace Models.Functions.SupplyFunctions
                     }
                 }
             }
-
-            //while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
-            //{
-            //    for (int i = 23; i >= 0; i--)
-            //    {
-            //        double sumTR = 0;
-            //        for (int j = 0; j < i; j++) sumTR += hourlyTr[j];
-            //        double remTR = Math.Max(0.0, Math.Min(rootWaterSupp - sumTR, hourlyTr[i]));
-            //        hourlyTr[i] = remTR;
-            //        if (remTR > 0) break;
-            //    }
-            //}
         }
         //------------------------------------------------------------------------------------------------
 
@@ -387,6 +422,343 @@ namespace Models.Functions.SupplyFunctions
                     DailyDM = hourlyDM.Sum();
                 }
             }
+        }
+        //------------------------------------------------------------------------------------------------
+
+        private List<double> DailyGrossPhotosythesis(double LAI, double Latitude, int Day, double Radn, double Tmax,
+            double Tmin, double CO2, double DifFr, double Fact)
+        {
+            List<double> HourlyGrossB = new List<double>(24);
+            double GrossPs, Temp, PAR, PARDIF, PARDIR;
+
+            //double GlobalRadiation, SinHeight, Dayl, AtmTrans, DifFr;
+            double GlobalRadiation, SinHeight, Dayl, AtmTrans;
+            double Dec, Sin, Cos, Rsc, SolarConst, DailySin, DailySinE, Hour, RadExt;
+            double LUE, PgMax;
+
+            //double[] xGauss = { 0.0469101, 0.2307534, 0.5000000, 0.7692465, 0.9530899 };
+            //double[] wGauss = { 0.1184635, 0.2393144, 0.2844444, 0.2393144, 0.1184635 };
+            List<double> wGauss = new List<double>(24);
+            double PI = Math.PI;
+            double RAD = PI / 180.0;
+
+            GlobalRadiation = (double)Radn * 1E6;    //J/m2.d
+
+            //===========================================================================================
+            //Dailenght, Solar constant and daily extraterrestrial radiation
+            //===========================================================================================
+            //Declination of the sun as function of Daynumber (vDay)
+
+            Dec = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * ((double)Day + 10.0) / 365.0));
+
+            //vSin, vCos and vRsc are intermediate variables
+            Sin = Math.Sin(RAD * Latitude) * Math.Sin(Dec);
+            Cos = Math.Cos(RAD * Latitude) * Math.Cos(Dec);
+            Rsc = Sin / Cos;
+
+            //Astronomical daylength (hr)
+            Dayl = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
+
+            double riseHour = 0.5 * (24 - Dayl);
+            double setHour = riseHour + Dayl;            
+
+            for (int t = 1; t <= 24; t++)
+            {
+                if (t < riseHour) wGauss.Add(0);
+                else if (t > riseHour && t - 1 < riseHour) wGauss.Add(t - riseHour);
+                else if (t >= riseHour && t < setHour) wGauss.Add(1);
+                else if (t > setHour && t - 1 < setHour) wGauss.Add(1 - (t - setHour));
+                else if (t > setHour) wGauss.Add(0);
+            }
+
+            //Sine of solar height(vDailySin), inegral of vDailySin(vDailySin) and integrel of vDailySin
+            //with correction for lower atmospheric transmission at low solar elevations (vDailySinE)
+            DailySin = 3600.0 * (Dayl * Sin + 24.0 * Cos * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
+            DailySinE = 3600.0 * (Dayl * (Sin + 0.4 * (Sin * Sin + Cos * Cos * 0.5))
+                     + 12.0 * Cos * (2.0 + 3.0 * 0.4 * Sin) * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
+
+            //Solar constant(vSolarConst) and daily extraterrestrial (vRadExt)
+            SolarConst = 1370.0 * (1.0 + 0.033 * Math.Cos(2.0 * PI * (double)Day / 365.0));   //J/m2.d
+            RadExt = SolarConst * DailySin * 1E-6;               //MJ/m2.d
+
+            //===========================================================================================
+            //Daily photosynthesis
+            //===========================================================================================
+
+            for (int i = 0; i < 24; i++)
+            {
+                GrossPs = 0;
+                Hour = i + 0.5;
+
+                //Sine of solar elevation
+                SinHeight = Math.Max(0.0, Sin + Cos * Math.Cos(2.0 * PI * (Hour + 12.0) / 24.0));
+                //Diffuse light fraction (vDifFr) from atmospheric transmission (vAtmTrans)
+                PAR = 0.5 * GlobalRadiation * SinHeight * (1.0 + 0.4 * SinHeight) / DailySinE;
+
+                if (PAR>0)
+                {
+                    AtmTrans = PAR / (0.5 * SolarConst * SinHeight);
+
+                    if (DifFr < 0)
+                    {
+                        if (AtmTrans <= 0.22)
+                            DifFr = 1.0;
+                        else
+                        {
+                            if ((AtmTrans > 0.22) && (AtmTrans <= 0.35))
+                                DifFr = 1.0 - 6.4 * (AtmTrans - 0.22) * (AtmTrans - 0.22);
+                            else
+                                DifFr = 1.47 - 1.66 * AtmTrans;
+                        }
+                        DifFr = Math.Max(DifFr, 0.15 + 0.85 * (1.0 - Math.Exp(-0.1 / SinHeight)));
+                    }
+
+                    if (DifFr < 0 | DifFr > 1)
+                        throw new Exception("Diffuse fraction should be between 0 and 1.");
+
+                    //Diffuse PAR (PARDIF) and direct PAR (PARDIR)
+                    PARDIF = Math.Min(PAR, SinHeight * DifFr * AtmTrans * 0.5 * SolarConst);
+                    PARDIR = PAR - PARDIF;
+
+                    if (MaximumTempWeight > 1)
+                        throw new Exception("MaximumTempWeight fraction should be between 0 and 1, or negative to be ignored");
+
+                    if (MaximumTempWeight>0)
+                        Temp = MaximumTempWeight * myWeather.MaxT + (1 - MaximumTempWeight) * myWeather.MinT;
+                    else
+                        Temp = hourlyTemp[i];
+
+                    //Light response parameters
+                    PgMax = MaxGrossPhotosynthesis(CO2, Temp, Fact);
+                    LUE = LightUseEfficiency(Temp, CO2);
+
+                    //Canopy gross photosynthesis
+                    GrossPs = HourlyGrossPhotosythesis(PgMax, LUE, LAI, Latitude, Day, Hour, PARDIR, PARDIF);
+                    GrossPs *= wGauss[i];
+                }
+
+                HourlyGrossB.Add(GrossPs * 30 / 44 * 0.1);
+            }
+            return HourlyGrossB;
+        }
+        //------------------------------------------------------------------------------------------------
+
+        private double HourlyGrossPhotosythesis(double fPgMax, double fLUE, double fLAI,
+                              double fLatitude, int nDay, double fHour, double fPARdir, double fPARdif)
+        {
+            int i, j;
+            double PMAX, EFF, vLAI, PARDIR, PARDIF, SINB;
+            double SQV, REFH, REFS, CLUSTF, KDIRBL, KDIRT, FGROS, LAIC, VISDF, VIST, VISD, VISSHD, FGRSH;
+            double FGRSUN, VISSUN, VISPP, FGRS, FSLLA, FGL, LAT, DAY, HOUR, DEC, vSin, vCos;
+            int nGauss = 5;
+            double[] xGauss = { 0.0469101, 0.2307534, 0.5000000, 0.7692465, 0.9530899 };
+            double[] wGauss = { 0.1184635, 0.2393144, 0.2844444, 0.2393144, 0.1184635 };
+
+            double PI = Math.PI;
+            double RAD = PI / 180.0;
+
+            double SCV = 0.20;    //Scattering coefficient of leaves for visible radiation (PAR)
+
+            PMAX = fPgMax;
+            EFF = fLUE;
+            vLAI = fLAI;
+            PARDIR = fPARdir;
+            PARDIF = fPARdif;
+            LAT = fLatitude;
+            HOUR = fHour;
+            DAY = nDay;
+
+            //===========================================================================================
+            //Sine of the solar height
+            //===========================================================================================
+            //Declination of the sun as function of Daynumber (vDay)
+            DEC = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * (DAY + 10.0) / 365.0));
+
+            //vSin, vCos and vRsc are intermediate variables
+            vSin = Math.Sin(RAD * LAT) * Math.Sin(DEC);
+            vCos = Math.Cos(RAD * LAT) * Math.Cos(DEC);
+
+            SINB = Math.Max(0.0, vSin + vCos * Math.Cos(2.0 * PI * (HOUR + 12.0) / 24.0));
+
+            //===========================================================================================
+            //Reflection of horizontal and spherical leaf angle distribution
+            SQV = Math.Sqrt(1.0 - SCV);
+            REFH = (1.0 - SQV) / (1.0 + SQV);
+            REFS = REFH * 2.0 / (1.0 + 2.0 * SINB);
+
+            //Extinction coefficient for direct radiation and total direct flux
+            CLUSTF = KDIF / (0.8 * SQV);
+            KDIRBL = (0.5 / SINB) * CLUSTF;
+            KDIRT = KDIRBL * SQV;
+
+            //===========================================================================================
+            //Selection of depth of canopy, canopy assimilation is set to zero
+            FGROS = 0;
+            for (i = 0; i < nGauss; i++)
+            {
+                LAIC = vLAI * xGauss[i];
+
+                //Absorbed fluxes per unit leaf area: diffuse flux, total direct
+                //flux, direct component of direct flux.
+                VISDF = (1.0 - REFH) * PARDIF * KDIF * Math.Exp(-KDIF * LAIC);
+                VIST = (1.0 - REFS) * PARDIR * KDIRT * Math.Exp(-KDIRT * LAIC);
+                VISD = (1.0 - SCV) * PARDIR * KDIRBL * Math.Exp(-KDIRBL * LAIC);
+
+                //Absorbed flux (J/M2 leaf/s) for shaded leaves and assimilation of shaded leaves
+                VISSHD = VISDF + VIST - VISD;
+                if (PMAX > 0.0)
+                    FGRSH = PMAX * (1.0 - Math.Exp(-VISSHD * EFF / PMAX));
+                else
+                    FGRSH = 0.0;
+
+                //Direct flux absorbed by leaves perpendicular on direct beam and
+                //assimilation of sunlit leaf area
+                VISPP = (1.0 - SCV) * PARDIR / SINB;
+
+                FGRSUN = 0.0;
+                for (j = 0; j < nGauss; j++)
+                {
+                    VISSUN = VISSHD + VISPP * xGauss[j];
+
+                    if (PMAX > 0.0)
+                        FGRS = PMAX * (1.0 - Math.Exp(-VISSUN * EFF / PMAX));
+                    else
+                        FGRS = 0.0;
+
+                    FGRSUN = FGRSUN + FGRS * wGauss[j];
+                }
+
+                //Fraction sunlit leaf area (FSLLA) and local assimilation rate (FGL)
+                FSLLA = CLUSTF * Math.Exp(-KDIRBL * LAIC);
+                FGL = FSLLA * FGRSUN + (1.0 - FSLLA) * FGRSH;
+
+                //Integration of local assimilation rate to canopy assimilation (FGROS)
+                FGROS = FGROS + FGL * wGauss[i];
+            }
+
+            FGROS = FGROS * vLAI;
+            return FGROS;
+        }
+        //------------------------------------------------------------------------------------------------
+
+        private double LightUseEfficiency(double Temp, double fCO2)
+        {
+            double CO2PhotoCmp0, CO2PhotoCmp, EffPAR;
+
+            //Efect of CO2 concentration
+            if (fCO2 < 0.0) fCO2 = 350;
+
+            //Check wheather a C3 or C4 crop
+            if (pathway == "C3")   //C3 plants
+            {
+                CO2PhotoCmp0 = 38.0; //vppm
+                CO2PhotoCmp = CO2PhotoCmp0 * Math.Pow(2.0, (Temp - 20.0) / 10.0); //Efect of Temperature on CO2PhotoCmp
+                fCO2 = Math.Max(fCO2, CO2PhotoCmp);
+
+                //--------------------------------------------------------------------------------------------------------------
+                //Original SPASS version based on Goudriaan & van Laar (1994)
+                //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.6 kgCO2/ha/h / J/m2/s
+                //EffPAR   = LUEref * (fCO2-fCO2PhotoCmp)/(fCO2+2*fCO2PhotoCmp);
+
+                //--------------------------------------------------------------------------------------------------------------
+                //The following equations were from Bauman et al (2001) ORYZA2000 
+                //The tempeature function was standardised to 20C.
+                //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.48 kgCO2/ha/h / J/m2/s
+                double Ft = (0.6667 - 0.0067 * Temp) / (0.6667 - 0.0067 * 20);
+                EffPAR = LUEref * Ft * (1.0 - Math.Exp(-0.00305 * fCO2 - 0.222)) / (1.0 - Math.Exp(-0.00305 * 340.0 - 0.222));
+            }
+
+            else if (pathway == "C4")
+            {
+                CO2PhotoCmp = 0.0;
+
+                //--------------------------------------------------------------------------------------------------------------
+                //Original SPASS version based on Goudriaan & van Laar (1994)
+                //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.5 kgCO2/ha/h / J/m2/s
+                EffPAR = LUEref * (fCO2 - CO2PhotoCmp) / (fCO2 + 2 * CO2PhotoCmp);
+
+            }
+            else
+                throw new ApsimXException(this, "Need to be C3 or C4");
+
+            return EffPAR;
+        }
+        //------------------------------------------------------------------------------------------------
+
+        private double MaxGrossPhotosynthesis(double CO2, double Temp, double Fact)
+        {
+            double CO2I, CO2I340, CO2Func, PmaxGross;
+            double CO2ref, TempFunc;
+            double CO2Cmp, CO2R;
+
+            //------------------------------------------------------------------------
+            //Efect of CO2 concentration of the air
+            if (CO2 < 0.0) CO2 = 350;
+
+            //Check wheather a C3 or C4 crop
+            if (pathway == "C3")   //C3 plants
+            {
+                CO2Cmp = 50; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4 
+                CO2R = 0.7;  //CO2 internal/external ratio of leaf(C3= 0.7, C4= 0.4)
+                CO2ref = 340;
+
+                CO2 = Math.Max(CO2, CO2Cmp);
+                CO2I = CO2R * CO2;
+                CO2I340 = CO2R * CO2ref;
+
+                // For C3 crop, Original Code SPASS
+                //   fCO2Func= min((float)2.3,(fCO2I-fCO2Cmp)/(fCO2I340-fCO2Cmp)); //For C3 crops
+                //   fCO2Func= min((float)2.3,pow((fCO2I-fCO2Cmp)/(fCO2I340-fCO2Cmp),0.5)); //For C3 crops
+
+                //For C3 rice, based on Bouman et al (2001) ORYZA2000: modelling lowland rice, IRRI Publication
+                CO2Func = (49.57 / 34.26) * (1.0 - Math.Exp(-0.208 * (CO2 - 60.0) / 49.57));
+            }
+            else if (pathway == "C4")
+            {
+                CO2Cmp = 5; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4 
+                CO2R = 0.4;  //CO2 internal/external ratio of leaf(C3= 0.7, C4= 0.4)
+                CO2ref = 380;
+
+                CO2 = Math.Max(CO2, CO2Cmp);
+                CO2I = CO2R * CO2;
+
+                //For C4 crop, AgPasture Proposed by Cullen et al. (2009) based on FACE experiments
+                CO2Func = CO2 / (CO2 + 150) * (CO2ref + 150) / CO2ref;
+            }
+
+            else
+                throw new ApsimXException(this, "Need to be C3 or C4");
+
+            //------------------------------------------------------------------------
+            //Temperature response and Efect of daytime temperature
+            TempFunc = WangEngelTempFunction(Temp);
+
+            //------------------------------------------------------------------------
+            //Maximum leaf gross photosynthesis
+            PmaxGross = Math.Max((float)1.0, Pgmmax * (CO2Func * TempFunc * Fact));
+
+            return PmaxGross;
+        }
+        //------------------------------------------------------------------------------------------------
+
+        private double WangEngelTempFunction(double Temp, double MinTemp=0, double OptTemp=27.5, double MaxTemp=40, double RefTemp=27.5)
+        {
+            double RelEff = 0.0;
+            double RelEffRefTemp = 1.0;
+            double p = 0.0;
+
+            if ((Temp > MinTemp) && (Temp < MaxTemp))
+            {
+                p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));
+                RelEff = (2 * Math.Pow(Temp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(Temp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
+            }
+
+            if ((RefTemp > MinTemp) && (RefTemp < MaxTemp))
+            {
+                p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));
+                RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
+            }
+            return RelEff / RelEffRefTemp;
         }
         //------------------------------------------------------------------------------------------------
 

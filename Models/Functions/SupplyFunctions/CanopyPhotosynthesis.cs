@@ -208,7 +208,6 @@ namespace Models.Functions.SupplyFunctions
                                                       Weather.DiffuseFraction,
                                                       1.0) * 30 / 44 * 0.1;
                 //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
-                double stage = Plant.Phenology.Stage;
             }
             return GrossPhotosynthesis;
         }
