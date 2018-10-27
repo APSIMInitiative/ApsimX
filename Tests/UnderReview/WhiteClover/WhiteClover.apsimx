@@ -1579,6 +1579,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <WaterDemand>0</WaterDemand>
         <MicroClimatePresent>true</MicroClimatePresent>
         <LeafInitialisationStage>Emergence</LeafInitialisationStage>
         <KDead>0</KDead>
@@ -6890,23 +6891,72 @@ Published data for the shoot-to-root ratio in white clover show a considerable v
       <Enabled>true</Enabled>
       <ReadOnly>false</ReadOnly>
       <Script>
-        <Crop>
-        </Crop>
-        <cutPasture_StartDate>2050-05-20</cutPasture_StartDate>
-        <cutPasture_EndDate>2100-12-31</cutPasture_EndDate>
-        <defoliateType>Graze</defoliateType>
-        <interval2Cut>21</interval2Cut>
-        <durationOfCut>1</durationOfCut>
-        <removeAmountType>DMToRemove</removeAmountType>
-        <herbageAmount>500</herbageAmount>
-        <fracDM2Remove>1</fracDM2Remove>
-        <fracN2Remove>1</fracN2Remove>
-        <urineDepth>10</urineDepth>
-        <fracN2Dung>0.4</fracN2Dung>
-        <fracPopDecline>0.05</fracPopDecline>
+        <ControlDefoliationAllowed>False</ControlDefoliationAllowed>
+        <DefoliationStartDate>1900-01-01</DefoliationStartDate>
+        <DefoliationEndDate>2100-12-31</DefoliationEndDate>
+        <Crop>.Simulations.Replacements.WhiteClover</Crop>
+        <DefoliateType>Cut</DefoliateType>
+        <DefoliationTriggerType>TargetInterval</DefoliationTriggerType>
+        <IntervalBetweenDefoliations>21</IntervalBetweenDefoliations>
+        <TargetStandingBiomass>200</TargetStandingBiomass>
+        <DurationOfEachDefoliation>1</DurationOfEachDefoliation>
+        <RemoveAmountType>ResidualDM</RemoveAmountType>
+        <BaseAmountGiven>50</BaseAmountGiven>
+        <RemoveFractionType>BasedOnCurrentBiomass</RemoveFractionType>
+        <UserSetOrgans>Leaf,Petiole,Stolon,Inflorescence,Taproot,Root,Nodule</UserSetOrgans>
+        <UserSetLiveRemoveFractions>0.75,0.5,0.05,0.75,0,0,0</UserSetLiveRemoveFractions>
+        <UserSetDeadRemoveFractions>0.6,0.6,0,0.6,0,0,0</UserSetDeadRemoveFractions>
+        <UserSetLiveResidueFractions>0,0,0,0,0,0,0</UserSetLiveResidueFractions>
+        <UserSetDeadResidueFractions>0.2,0.2,0.3,0.2,0,0,0</UserSetDeadResidueFractions>
+        <UserSetMaxRemoveFractions>0.9,0.9,0.3,0.9,0,0,0</UserSetMaxRemoveFractions>
+        <DMRemoveType>UserDefinedFraction</DMRemoveType>
+        <FractionDM2Remove>1</FractionDM2Remove>
+        <FractionN2Remove>1</FractionN2Remove>
+        <ReturnType>AsResidue</ReturnType>
+        <NDungType>DefineProportion</NDungType>
+        <ProportionN2Dung>0.4</ProportionN2Dung>
+        <CNRatioDung>20</CNRatioDung>
+        <UrineDepth>250</UrineDepth>
+        <FractionPopulationDecline>0.05</FractionPopulationDecline>
       </Script>
-      <Code><![CDATA[// Defoliates on a regular cycle or one-off via a schedule
-// currently defoliates by the amount specified spread evenly over the specified period
+      <Code><![CDATA[// Performs defoliations, or removes biomass, from a PMF crop based on a set of given rules.  Defoliations can be triggered automatically by this manager or be
+//  called from another Script or a Schedule model. More details in the attached Memo (or it could be there!).
+// Developed by RCichota, last updated in 25/Oct/2018
+
+// Any other Script or Schedule can trigger a defoliation by calling the Defoliate() function. The function has four parameters:
+//  - defoliationType: one of the PMF biomass removal types (Cut, Graze, or Harvest). Though the manager is meant to primarily deal with the first two;
+//  - amountDM: a dry matter amount to be used to define how much biomass is going to be removed;
+//  - amountType: defines how the amount above is used, one of the RemoveAmountTypes (RemoveAmountTypes, ResidualDM, UseRemovalFractions);
+//  - duration: the duration of each defoliation event (days);
+// The other parameters, such as those defining how residue is handled, are defined in this managers and are not meant to be changed by external inputs.
+// The automatic rules simulate a rotation triggered by either a given interval between events, which can be interpreted in tow ways, or a target standing biomass:
+//  - FixedInterval: the events are triggered strictly at given times, even if there is no material to be defoliated. The counter for days between events is always
+//      reset and another attempt to defoliate only happens after a new cycle is completed;
+//  - TargetInterval: the events are triggered whenever the time after the last event is equal of greater than the interval, but only if there is enough biomass.
+//      The manager will keep trying every day since until a defoliation is done. The counter for the days between events is zeroed only after a defoliation;
+//  - TargetStandingBiomass: a defoliation event is triggered when the aboveground biomass reaches a given target;
+// The amount being defoliated can be defined using one of the three different RemoveAmountTypes:
+//  - DMToRemove: the manager will attempt to remove a given amount, or any (lower) amount that is available;
+//  - ResidualDM: the manager attempts to remove any biomass above the residual amount given;
+//  - UseRemovalFractions: the manager will ignore any amount given and will remove biomass according to RemovalFractions for each organ (defaults or given);
+// Note: currently, if the defoliation period is more than one day, the amount to be removed is spread approximately evenly over the specified period.
+// To perform a biomass removal from any PMF crop, the fractions of biomass to be removed from each organs are specified (instead of amounts).
+//  This manager can do this based on three options:
+//  - UseCropDefaults: the manager reads the default removal fractions for each organ;
+//  - UserDefinedValues: the manager will use the values given by the user for each organ. If none are specified, default values are used;
+//  - BasedOnCurrentBiomass: the partition is based on the current relative biomass amounts of each organ. The maximum fraction to be removed can be specified for
+//      each organ (to avoid issues such as removal of all biomass or from belowground organs);
+// Note that the base removal fractions will be adjusted when an amount to defoliate has been specified. This adjust may change the proportions removed from each organ
+//  if the current biomass is considerably different than the fractions specified;
+// The manager can return a fraction of the defoliated material back to the paddock, the fraction of biomass to remove off field can be defined in the UI by choosing one of the options
+//  available (RemoveAll, RemoveNone, UserDefinedFraction, or BasedOnDigestibility). When using UserDefinedFraction, a value must be supplied in the UI. BasedOnDigestibility is not enabled yet.
+// The material not removed is returned to the paddock, this can be done in two ways:
+//  - AsResidue: the manager will return the remaining biomass and N as a residue to the surface organic matter model;
+//  - AsDungUrine: the manager will return the remaining biomass and N mimicking the deposition of dung and urine (both spread evenly over the paddock);
+// A dung deposition adds the biomass and a fraction of returned N to the surface organic matter model, while urine deposition is simply the addition of remaining N to the soil.
+// The partition of the N to be returned as dung or urine can be defined by two ways:
+//  - DefineProportion: a given fraction of the N is returned as dung, the remaining goes to urine;
+//  - DefineCNratio: the CN ratio of dung is defined. From this the amount of dung N is computed (limited to the amount being returned) and the remainder goes to urine;
 
 using System;
 using Models.Core;
@@ -6915,443 +6965,818 @@ using System.Text;
 using Models;
 using Models.Soils;
 using Models.PMF;
+using Models.PMF.Interfaces;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
 namespace Models
 {
-    [Serializable]
-    public class Script : Model
-    {
-        [Link] Zone zone;
-        [Link] Clock Clock;
-        [Link] Plant WhiteClover;
-        [Link] Fertiliser fertiliser;
-        [Link] ISummary summary = null;
+	[Serializable]
+	public class Script : Model
+	{
+		// - Links to APSIM models
+		[Link] Zone myZone;
+		[Link] Clock clock;
+		[Link] Soil mySoil;
+		[Link] SoluteManager mySoluteManager;
+		[Link] ISummary summary = null;
 
-        [Description("Choose the crop to harvest:")]
-        public IPlant Crop { get; set; }
+		// - Parameters for this manager
+		[Separator("Rules for controlling the defoliation of a forage and residue management")]
+		[Description("Allow this manager to control defoliations?")]
+		public bool ControlDefoliationAllowed { get; set; }
+		[Description("Date to start the defoliation management (dd/mm/yyyy):")]
+		public DateTime DefoliationStartDate { get; set; }
+		[Description("Date to end the defoliation management (dd/mm/yyyy):")]
+		public DateTime DefoliationEndDate { get; set; }
 
-        [Description("Enter the date to start the rotation (dd/mm/yyyy):")]
-        public DateTime cutPasture_StartDate { get; set; }
+		[Separator("Defining the crop and defoliation rules")]
+		[Description("Which crop is to be defoliated?")]
+		public IPlant Crop { get; set; }
+		[Description("What is the defoliation type?")]
+		public DefoliateTypes DefoliateType { get; set; }
+		[Description("How the defoliations should be triggered?")]
+		public DefoliationTriggerTypes DefoliationTriggerType { get; set; }
+		[Description("  If trigger is an interval, enter the minimum number of days between defoliations:")]
+		public int IntervalBetweenDefoliations { get; set; }
+		[Description("  If using a biomass target, enter the aboveground amount to trigger a defoliation (g/m2):")]
+		public int TargetStandingBiomass { get; set; }
+		[Description("Number of days to defoliate over (days):")]
+		public int DurationOfEachDefoliation { get; set; }
 
-        [Description("Enter the date to end the rotation (dd/mm/yyyy):")]
-        public DateTime cutPasture_EndDate { get; set; }
+		[Separator("Defining the amount of biomass to remove and the proportion from each organ")]
+		[Description("What amount is being defined?")]
+		public RemoveAmountTypes RemoveAmountType { get; set; }
+		[Description("Amount to use (g DM/m2):")]
+		public double BaseAmountGiven { get; set; }
+		[Description("How the biomass fractions to be removed from each organ are defined:")]
+		public FractionsToRemoveTypes RemoveFractionType { get; set; }
+		[Description("List of organs for which the biomass removal fractions are defined:")]
+		public string[] UserSetOrgans { get; set; }
+		[Description("Fractions of live biomass to remove off field for each organ listed above:")]
+		public double[] UserSetLiveRemoveFractions { get; set; }
+		[Description("Fractions of dead biomass to remove off field for each organ listed above:")]
+		public double[] UserSetDeadRemoveFractions { get; set; }
+		[Description("Fractions of live biomass to return as residue for each organ listed above:")]
+		public double[] UserSetLiveResidueFractions { get; set; }
+		[Description("Fractions of dead biomass to return as residue for each organ listed above:")]
+		public double[] UserSetDeadResidueFractions { get; set; }
+		[Description("Maximum total fractions of biomass to remove for each organ listed above, used when BasedOnCurrentBiomass:")]
+		public double[] UserSetMaxRemoveFractions { get; set; }
 
-        [Description("Select type of defoliation:")]
-        public defoliationTypes defoliateType { get; set; }
+		[Separator("Management of defoliated material and residue")]
+		[Description("How much of the defoliated material is removed from the field:")]
+		public RemoveDMTypes DMRemoveType { get; set; }
+		[Description("Fraction of material to remove off field, if choosing UserDefinedFraction (0-1):")]
+		public double FractionDM2Remove { get; set; }
+		[Description("Fraction of N that is removed from the field (0-1):")]
+		public double FractionN2Remove { get; set; }
+		[Description("How the non-removed material is returned to the field?")]
+		public ReturnAsTypes ReturnType { get; set; }
 
-        [Description("Enter the interval between defoliations (days):")]
-        public int interval2Cut { get; set; }
+		[Separator("Parameters used when returning material as dung and urine")]
+		[Description("How the partition of N to dung and urine is defined?")]
+		public DungNContentTypes NDungType { get; set; }
+		[Description("Proportion of N returned in dung (0-1): ")]
+		public double ProportionN2Dung { get; set; }
+		[Description("The C:N of dung (typically around 20): ")]
+		public double CNRatioDung { get; set; }
+		[Description("Depth down to which urine will be applied (mm):")]
+		public double UrineDepth { get; set; }
 
-        [Description("Enter the number of days to defoliate over (days):")]
-        public int durationOfCut { get; set; }
+		[Separator("Additional effects of defoliation in the plant")]
+		[Description("Fraction of population decline due to defoliation (0-1):")]
+		public double FractionPopulationDecline { get; set; }
 
-        [Description("Choose what amount is being defined:")]
-        public removeAmountTypes removeAmountType { get; set; }
+		// - Outputs from this manager
+		//Plant DM defoliated today
+		[XmlIgnore] [Units("g/m2")] public double DefoliatedDM{ get; set; }
+		//N in the plant material defoliated today
+		[XmlIgnore] [Units("g/m2")] public double DefoliatedN{ get; set; }
+		//N concentration in today's defoliated material
+		[XmlIgnore] [Units("g/m2")] public double DefoliatedNConc{ get; set; }
+		//Plant DM harvested today
+		[XmlIgnore] [Units("g/m2")] public double HarvestedDM{ get; set; }
+		//N in the plant material harvested today
+		[XmlIgnore] [Units("g/m2")] public double HarvestedN{ get; set; }
+		//N concentration in today's harvested material
+		[XmlIgnore] [Units("g/g")] public double HarvestedNConc{ get; set; }
+		//Plant DM removed from the paddock
+		[XmlIgnore] [Units("g/m2")] public double RemovedDM{ get; set; }
+		//Plant N removed from the paddock
+		[XmlIgnore] [Units("g/m2")] public double RemovedN{ get; set; }
+		//N concentration in today's removed material
+		[XmlIgnore] [Units("g/g")] public double RemovedNConc{ get; set; }
+		//Plant DM returned to the paddock
+		[XmlIgnore] [Units("g/m2")] public double ReturnedDM{ get; set; }
+		//PlantN returned to the paddock
+		[XmlIgnore] [Units("g/m2")] public double ReturnedN{ get; set; }
+		//N concentration in today's returned material
+		[XmlIgnore] [Units("g/g")] public double ReturnedNConc{ get; set; }
+		//Amount of N returned as dung (SurfaceOM)
+		[XmlIgnore] [Units("g/m2")] public double NReturnedInDung{ get; set; }
+		//Amount of N returned as urine (urea)
+		[XmlIgnore] [Units("g/m2")] public double NReturnedInUrine{ get; set; }
+		//Number of days after last defoliation ended
+		[XmlIgnore] [Units("days")] public int DaysAfterDefoliation{ get; set; }
+		//Total aboveground DM before a defoliation
+		[XmlIgnore] [Units("g/m2")] public double PreHarvestDM{ get; set; }
+		//Total aboveground DM after a defoliation
+		[XmlIgnore] [Units("g/m2")] public double PostHarvestDM{ get; set; }
+		//Total plant DM harvested this rotation
+		[XmlIgnore] [Units("g/m2")] public double RotationHarvestedDM{ get; set; }
+		//Amount given to Defoliate method this rotation
+		[XmlIgnore] [Units("g/m2")] public double AmountGiven{ get; set; }
+		//Duration of defoliation in this rotation
+		[XmlIgnore] [Units("g/m2")] public double DurationOfDefoliation{ get; set; }
 
-        [Description("Enter the amount to use (kgDM/ha):")]
-        public double herbageAmount { get; set; }
+		// - Internal variables
+		// PMF plant to defoliate
+		private Plant myPlant;
+		// total herbage to remove in g/m2 per day
+		private double herbageToRemove;
+		// type of defoliation (Cut, Graze, or Harvest)
+		private string defoliationsType;
+		// which DM amount is set (ResidualDM or DMToRemove)
+		private string amountType;
+		// how fraction of DM to remove is set (ResidualDM, DMToRemove, or UseRemovalFractions)
+		private string removalFractionType;
+		// fractions to remove from each organ
+		private RemovalFractions removalFractions = new RemovalFractions();
+		// counter for days within a defoliation
+		private int daysDefoliating;
+		// amount havested during a defoliation period
+		private double cumAmountHarvested;
+		// fraction of urine that is applied to each layer
+		private double[] fractionUrine;
+		// number of layers in the soil
+		private int nLayers;
+		// flag whether any defoliation has happened in this simulation run
+		private bool aDefoliationHappened = false;
+		// flag whether available biomass is insufficient to trigger a defoliation
+		private bool biomassInsufficient;
+		// lists of organs and removal fractions
+		private List<string> plantOrgans = new List<string>();
+		private List<double[]> removeFractions = new List<double[]>();
+		private double[][] baseFractions;
+		// event to add residue / dung to surface OM
+		public event BiomassRemovedDelegate BiomassRemoved;
 
-        [Description("Enter the fraction of DM that is removed from the field (0-1):")]
-        public double fracDM2Remove { get; set; }
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			// reset some variables
+			DaysAfterDefoliation = 0;
+			daysDefoliating = 0;
+			biomassInsufficient = false;
+			resetVariables();
 
-        [Description("Enter the fraction of N that is removed from the field (0-1):")]
-        public double fracN2Remove { get; set; }
+			// get the type of defoliation given
+			if (DefoliateType == DefoliateTypes.Cut)
+				defoliationsType = "Cut";
+			else if (DefoliateType == DefoliateTypes.Graze)
+				defoliationsType = "Graze";
+			else
+				defoliationsType = "Harvest";
 
-        [Description("Enter the depth down to which urine will applied (mm):")]
-        public double urineDepth { get; set; }
+			// check the period to defoliate
+			if(DurationOfEachDefoliation <=0)
+				throw new Exception("The period to defoliate over cannot be zero or negative!");
 
-        [Description("Enter the proportion of N returned in dung (0-1):")]
-        public double fracN2Dung { get; set; }
+			// get the type of amount given
+			if (RemoveAmountType == RemoveAmountTypes.DMToRemove)
+			{
+				amountType = "DMToRemove";
+				if (BaseAmountGiven <0.0)
+					throw new Exception("The amount given for bioamss to defoliate cannot be negative!");
+			}
+			else if (RemoveAmountType == RemoveAmountTypes.ResidualDM)
+			{
+				amountType = "ResidualDM";
+				if (BaseAmountGiven <0.0)
+					throw new Exception("The amount given for residual biomass cannot be negative!");
+			}
+			else
+				amountType = "UseRemovalFractions";
 
-        [Description("Enter the fraction of population decline due to defoliation (0-1):")]
-        public double fracPopDecline { get; set; }
+			// check that the number of organs and removal fraction are the same
+			if (RemoveFractionType == FractionsToRemoveTypes.UserDefinedValues)
+			{
+				if (UserSetOrgans.Length != UserSetLiveRemoveFractions.Length)
+					throw new Exception("The number of organs and fractions live biomass to remove must contain the same number of items!");
+				if (UserSetOrgans.Length != UserSetDeadRemoveFractions.Length)
+					throw new Exception("The number of organs and fractions dead biomass to remove must contain the same number of items!");
+				if (UserSetOrgans.Length != UserSetLiveResidueFractions.Length)
+					throw new Exception("The number of organs and fractions live biomass to residue must contain the same number of items!");
+				if (UserSetOrgans.Length != UserSetDeadResidueFractions.Length)
+					throw new Exception("The number of organs and fractions dead biomass to residue must contain the same number of items!");
 
-        //fraction of each plant part returned as residue (0-1), wastage
-        private double leafResidueFrac = 0.01;
-        private double stolonResidueFrac = 0.01;
-        private double petioleResidueFrac = 0.01;
-        private double flowerResidueFrac = 0.01;
-        private double minLeafAmount = 5.0;
+				for (int i = 0; i < UserSetOrgans.Length; i++)
+				{
+					if (UserSetLiveRemoveFractions[i] + UserSetLiveResidueFractions[i] > 1.0)
+						throw new Exception("The sum of fractions to remove and to residue of live biomass must less than one!");
+					if (UserSetDeadRemoveFractions[i] + UserSetDeadResidueFractions[i] > 1.0)
+						throw new Exception("The sum of fractions to remove and to residue of dead biomass must less than one!");
+				}
+			}
+			else if (RemoveFractionType == FractionsToRemoveTypes.BasedOnCurrentBiomass)
+			{
+				if (UserSetOrgans.Length != UserSetMaxRemoveFractions.Length)
+					throw new Exception("The number of organs and maximum fractions of biomass to remove must contain the same number of items!");
 
-        //maximum fraction of stolons to remove
-        private double stolonMaxRemovalFrac = 0.10;
+				for (int i = 0; i < UserSetOrgans.Length; i++)
+					if (UserSetMaxRemoveFractions[i] > 1.0)
+						throw new Exception("The maximum fractions to remove cannot be greater than one!");
+			}
 
-        //Outputs
-        //Pasture DM defoliated today (kg/ha)
-        [XmlIgnore] public double DefoliatedDM{ get; set; }
-        //N defoliate today
-        [XmlIgnore] public double DefoliatedN{ get; set; }
-        //N concentration in today's defoliated material
-        [XmlIgnore] public double DefoliatedNConc{ get; set; }
-        //Pasture DM harvested today (kg/ha)
-        [XmlIgnore] public double HarvestedDM{ get; set; }
-        //N harvested today
-        [XmlIgnore] public double HarvestedN{ get; set; }
-        //N concentration in today's harvested material
-        [XmlIgnore] public double HarvestedNConc{ get; set; }
-        //DM removed from the paddock
-        [XmlIgnore] public double RemovedDM{ get; set; }
-        //N removed from the paddock
-        [XmlIgnore] public double RemovedN{ get; set; }
-        //N concentration in today's removed material
-        [XmlIgnore] public double RemovedNConc{ get; set; }
-        //DM returned to the paddock
-        [XmlIgnore] public double ReturnedDM{ get; set; }
-        //N returned to the paddock
-        [XmlIgnore] public double ReturnedN{ get; set; }
-        //N concentration in today's returned material
-        [XmlIgnore] public double ReturnedNConc{ get; set; }
-        //N returned as dung (SurfaceOM)
-        [XmlIgnore] public double NReturnedInDung{ get; set; }
-        //N returned as urine (urea)
-        [XmlIgnore] public double NReturnedInUrine{ get; set; }
-        //Number of days after last harvest
-        [XmlIgnore] public int DaysAfterCut{ get; set; }
-        //Total standing DM (Leaf + Stem/Sheath) before cut
-        [XmlIgnore] public double PreHarvestDM{ get; set; }
-        //Total standing DM (Leaf + Stem/Sheath) after cut
-        [XmlIgnore] public double PostHarvestDM{ get; set; }
+			// check the fraction of defoliated material to remove
+			if (DMRemoveType == RemoveDMTypes.RemoveAll)
+				FractionDM2Remove = 1.0;
+			else if (DMRemoveType == RemoveDMTypes.RemoveNone)
+				FractionDM2Remove = 0.0;
+			else if (DMRemoveType == RemoveDMTypes.BasedOnDigestibility)
+				throw new Exception("Remove defoliated material type \"BasedOnDigestibility\" has not been implemented yet!");
+			else // DMRemoveType == RemoveDMTypes.UserDefinedFraction
+			{
+				if (FractionDM2Remove < 0.0)
+					throw new Exception("The fraction of defoliated material to remove from the field cannot be negative!");
+			}
 
-        //Pasture DM harvested this rotation (kg/ha)
-        [XmlIgnore] public double RotationHarvestedDM{ get; set; }
-        //Pasture DM to be harvested this rotation (kg/ha)
-        [XmlIgnore] public double RotationHarvestingDM{ get; set; }
+			// Get link to the plant being defoliated and a list of its organs
+			foreach (Plant species in Apsim.Children(myZone, typeof(Plant)))
+			{
+				//if (species.Name == (Crop as IModel).Name)
+				//{
+				myPlant = species;
+				foreach (IOrgan organ in Apsim.Children(myPlant, typeof(IOrgan)))
+				{
+					plantOrgans.Add(organ.Name);
 
-        //Internal variables
-        private RemovalFractions removalFractions;
-        //The fraction of urine to be applied in each layer
-        private double[] FracLayer;
-        // total herbage to remove in g/m2 per day
-        private double herbageToRemove;
-        // counter
-        private int daysCutting = 0;
-        // type of defoliation (Cut or Graze)
-        private string defoliationType;
-        // type of DM amount (ResidualDM or DMToRemove)
-        private string amountType;
-        // auxiliary
-        private bool aCutHasHappened = false;
-        private bool isStillCutting = false;
-        private double cumAmountHarvested;
+					// get the biomass removal fractions
+					removeFractions.Add(getBaseRemovalFractions(organ.Name, defoliationsType));
+				}
+				//}
+			}
+			baseFractions = new double[plantOrgans.Count][];
 
-        // event to add residue / dung to surface OM
-        public event BiomassRemovedDelegate BiomassRemoved;
+			// get the proportion of urine for each layer
+			nLayers = mySoil.Thickness.Length;
+			fractionUrine = new double[nLayers];
+			if (ReturnType == ReturnAsTypes.AsDungUrine)
+			{
+				double soilDepth = 0.0;
+				double distFactor = 1.5;
+				if (ReturnType == ReturnAsTypes.AsDungUrine)
+				{
+					double atZ0;
+					double atZ1;
+					double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);
+	                
+					atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);
+					for (int z = 0; z < nLayers; z++)
+					{
+						atZ0 = atZ1;
+						soilDepth += mySoil.Thickness[z];
+						atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);
+						if (1.0 - (soilDepth / UrineDepth) < 0.0)
+							atZ1 = 0;
+						fractionUrine[z] = (atZ0 - atZ1) / totalProp;
+					}
+				}
+			}
 
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            removalFractions = new RemovalFractions();
-            DaysAfterCut = 0;
-            resetVariables();
-            if (defoliateType == defoliationTypes.Cut)
-                defoliationType = "Cut";
-            else
-                defoliationType = "Graze";
+			// make sure that management starts when StartDate < simulationStartDay
+			if ((clock.Today > DefoliationStartDate) && (clock.Today < DefoliationEndDate))
+				DefoliationStartDate = clock.Today;
 
-            if (removeAmountType == removeAmountTypes.ResidualDM)
-                amountType = "ResidualDM";
-            else
-                amountType = "DMToRemove";
+			// write message in summary
+			if (ControlDefoliationAllowed)
+			{
+				summary.WriteMessage(this, "Defoliation management initialised. Rules valid between " + DefoliationStartDate.ToShortDateString() + " and " + DefoliationEndDate.ToShortDateString() + ".");
+				if (DefoliationTriggerType == DefoliationTriggerTypes.TargetStandingBiomass)
+					summary.WriteMessage(this, "   The manager will remove biomass from " + myPlant.Name + " simulating a \"" + defoliationsType + "\" whenever aboveground biomass is " + TargetStandingBiomass.ToString("#0.0") + " g/m2.");
+				else
+					summary.WriteMessage(this, "   The manager will remove biomass from " + myPlant.Name + " simulating a \"" + defoliationsType + "\" every " + IntervalBetweenDefoliations + " days.");
+			}
+			else
+			{
+				summary.WriteMessage(this, "Defoliation management initialised. These rules will not be applied automatically, they can be called by another manager.");
+				summary.WriteMessage(this, "   If called, the manager will remove biomass from " + myPlant.Name + " simulating a \"" + defoliationsType + "\" event.");
+			}
+		}
 
-            // make sure that rotation start when startDate<simulationStartDay
-            if ((Clock.Today > cutPasture_StartDate) && (Clock.Today < cutPasture_EndDate))
-                cutPasture_StartDate = Clock.Today;
-        }
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			// check whether defoliation is allowed at all
+			if (ControlDefoliationAllowed)
+			{
+				if ((clock.Today == DefoliationStartDate) && (DefoliationTriggerType != DefoliationTriggerTypes.TargetStandingBiomass))
+					DaysAfterDefoliation = IntervalBetweenDefoliations;
 
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (Clock.Today == cutPasture_StartDate)
-                DaysAfterCut = interval2Cut;
+				// check whether we are within the period in which defoliations can happen
+				if ((clock.Today >= DefoliationStartDate) && (clock.Today <= DefoliationEndDate) && myPlant.IsEmerged)
+				{
+					// check whether we should start a defoliation
+					if (DefoliationTriggerType == DefoliationTriggerTypes.FixedInterval)
+					{
+						// defoliation is triggered by a fixed interval between events
+						if (DaysAfterDefoliation == IntervalBetweenDefoliations)
+							Defoliate(defoliationsType, BaseAmountGiven, amountType, DurationOfEachDefoliation);
+					}
+					else if (DefoliationTriggerType == DefoliationTriggerTypes.TargetInterval)
+					{
+						// defoliation is triggered by a target interval between events
+						if (DaysAfterDefoliation >= IntervalBetweenDefoliations)
+							Defoliate(defoliationsType, BaseAmountGiven, amountType, DurationOfEachDefoliation);
+					}
+					else
+					{
+						// defoliation is triggered by standing (aboveground) biomass
+						double standingDM = (double)myZone.Get(myPlant.Name + ".AboveGround.Wt");
+						if (standingDM >= TargetStandingBiomass)
+							Defoliate(defoliationsType, BaseAmountGiven, amountType, DurationOfEachDefoliation);
+					}
+				}
 
-            if ((Clock.Today >= cutPasture_StartDate) && (Clock.Today <= cutPasture_EndDate))
-            {
-                // Check whether we should start cutting
-                if ((WhiteClover.IsEmerged) && (DaysAfterCut > 0) && (DaysAfterCut == interval2Cut))
-                {
-                    Defoliate(defoliationType, herbageAmount * 0.1, amountType, durationOfCut);
-                }
-            }
+				//// Note: Only the code above, responsible for triggering automatic events, is limited by 'ControlDefoliationAllowed'. 
+				////       The rest of the code is still available to perform one-off defoliations.
+				////       It can be called from another manager or a schedulle thingy via Defoliate().
+			}
 
-            // Check whether we need to continue cutting
-            //if ((daysCutting > 0) && (daysCutting <= durationOfCut))
-            if (isStillCutting)
-            {
-                // reset outputs
-                resetVariables();
+			// check whether we need to continue defoliating
+			if ((daysDefoliating > 0) && (daysDefoliating < DurationOfDefoliation))
+			{
+				// reset outputs
+				resetVariables();
 
-                removeDM(herbageToRemove, defoliationType);
-                returnExcreta();
-                cumAmountHarvested += HarvestedDM;
-                daysCutting += 1;
-            }
+				// re-check the amount to remove
+				if (amountType == "DMToRemove")
+				{
+					herbageToRemove = (AmountGiven - cumAmountHarvested) / (DurationOfDefoliation - daysDefoliating);
+				}
+				else if (amountType == "ResidualDM")
+				{
+					double todaysPreHarvestWt = (double)myZone.Get(myPlant.Name + ".AboveGround.Wt");
+					herbageToRemove = (todaysPreHarvestWt - AmountGiven) / (DurationOfDefoliation - daysDefoliating);
+				}
 
-            // reset outputs
-            if (daysCutting < 0)
-            {
-                resetVariables();
-                daysCutting = 0;
-            }
-        }
+				// remove biomass and return residue
+				if (herbageToRemove > 0.0)
+				{
+					removeDM(herbageToRemove, defoliationsType);
+					if (ReturnType == ReturnAsTypes.AsResidue)
+						returnResidues();
+					else
+						returnExcreta();
+					cumAmountHarvested += HarvestedDM;
+				}
 
-        [EventSubscribe("DoManagementCalculations")]
-        private void OnDoManagementCalculations(object sender, EventArgs e)
-        {
-            if ((daysCutting > 0) && (daysCutting < durationOfCut))
-                isStillCutting = true;
+				daysDefoliating += 1;
+			}
 
-            if (daysCutting == durationOfCut)
-            {
-                PostHarvestDM = (double)zone.Get("WhiteClover.AboveGround.Wt");
-                RotationHarvestedDM = cumAmountHarvested;
-                aCutHasHappened = true;
-                isStillCutting = false;
-                daysCutting = -1;
-                WhiteClover.Population = WhiteClover.Population * (1.0 - fracPopDecline);
-            }
+			// reset outputs
+			if (daysDefoliating < 0)
+			{
+				resetVariables();
+				daysDefoliating = 0;
+			}
+		}
 
-            if (aCutHasHappened && (daysCutting == 0))
-                DaysAfterCut += 1;
-        }
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			// check for end of defoliation
+			if (daysDefoliating == DurationOfDefoliation)
+			{
+				PostHarvestDM = (double)myZone.Get(myPlant.Name + ".AboveGround.Wt");
+				RotationHarvestedDM = cumAmountHarvested;
+				aDefoliationHappened = true;
+				daysDefoliating = -1;
 
-        public enum removeAmountTypes
-        {
-            /// <summary>Setting DM amount to remove</summary>
-            DMToRemove,
-            /// <summary>Setting residual DM amount</summary>
-            ResidualDM
-        }
+				// reduce plant population due to damage caused by defoliation
+				if (cumAmountHarvested > 0.0)
+					myPlant.Population = myPlant.Population * (1.0 - FractionPopulationDecline);
+			}
 
-        public enum defoliationTypes
-        {
-            /// <summary>Cut</summary>
-            Cut,
-            /// <summary>Graze</summary>
-            Graze
-        }
+			// count the days after a defoliation
+			if (aDefoliationHappened && (daysDefoliating == 0))
+				DaysAfterDefoliation += 1;
+		}
 
-        // resets the values of all outputs
-        private void resetVariables()
-        {
-            DefoliatedDM = 0.0;
-            DefoliatedN = 0.0;
-            DefoliatedNConc = 0.0;
-            HarvestedDM = 0.0;
-            HarvestedN = 0.0;
-            HarvestedNConc = 0.0;
-            RemovedDM = 0.0;
-            RemovedN = 0.0;
-            RemovedNConc = 0.0;
-            ReturnedDM = 0.0;
-            ReturnedN = 0.0;
-            ReturnedNConc = 0.0;
-            NReturnedInDung = 0.0;
-            NReturnedInUrine = 0.0;
-            RotationHarvestedDM = 0.0;
-            RotationHarvestingDM = 0.0;
-        }
+		/// <summary>Resets the values of all outputs.</summary>
+		private void resetVariables()
+		{
+			DefoliatedDM = 0.0;
+			DefoliatedN = 0.0;
+			DefoliatedNConc = 0.0;
+			HarvestedDM = 0.0;
+			HarvestedN = 0.0;
+			HarvestedNConc = 0.0;
+			RemovedDM = 0.0;
+			RemovedN = 0.0;
+			RemovedNConc = 0.0;
+			ReturnedDM = 0.0;
+			ReturnedN = 0.0;
+			ReturnedNConc = 0.0;
+			NReturnedInDung = 0.0;
+			NReturnedInUrine = 0.0;
+			RotationHarvestedDM = 0.0;
+			herbageToRemove = 0.0;
+		}
 
-        // Perform the basic calculations for defoliation
-        public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)
-        {
-            // get the existing plant amount
-            PreHarvestDM = (double)zone.Get("WhiteClover.AboveGround.Wt");
+		/// <summary>Performs the basic checks and triggers a defoliation.</summary>
+		public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)
+		{
+			// check whehter plant has emerged and get the existing aboveground plant biomass
+			if (myPlant.IsEmerged)
+				PreHarvestDM = (double)myZone.Get(myPlant.Name + ".AboveGround.Wt");
+			else
+				PreHarvestDM = 0.0;
 
-            // check duration
-            if (duration <= 0)
-                throw new Exception("Duration of graze/cut rotation is zero or negative");
+			// check the defoliation type
+			if (!(defoliationType == "Cut" || defoliationType == "Graze" || defoliationType == "Harvest"))
+				throw new Exception("Defoliation type should be either \"Cut\", \"Graze\", or \"Harvest\"!");
+
+			// check duration given
+			if (duration <= 0)
+				throw new Exception("Duration of defoliation cannot be zero or negative!");
+			else
+				DurationOfDefoliation = duration;
             
-            // check amount to remove
-            if ((amountType == "DMToRemove") && (PreHarvestDM > 0.0))
-            {
-                summary.WriteMessage(this, "   Defoliating " + (10.0 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-                herbageToRemove = amountDM / duration;
-            }
-            else if ((amountType == "ResidualDM") && (PreHarvestDM > amountDM))
-            {
-                summary.WriteMessage(this, "   Defoliating down to approximately " + (10.0 * amountDM).ToString("#0.0") + "kg/ha over " + duration + " days");
-                herbageToRemove = (PreHarvestDM - amountDM) / duration;
-            }
-            else
-            {
-                herbageToRemove = 0.0;
-                summary.WriteMessage(this, "   Defoliation will not happend because there is not enough plant material");
-                return;
-            }
+			// check amount given
+			if (amountDM < 0.0)
+				throw new Exception("Amount to defoliate cannot be negative!");
+			else
+				AmountGiven = amountDM;
 
-            RotationHarvestingDM = herbageToRemove * duration;
-            durationOfCut = duration;
-            // first defoliation
-            removeDM(herbageToRemove, defoliationType);
-            returnExcreta();
-            cumAmountHarvested = HarvestedDM;
-            daysCutting = 1;
-            DaysAfterCut = 0;
-        }
+			// check type and amount to remove
+			if (amountType == "DMToRemove")
+			{
+				summary.WriteMessage(this, "   Defoliation triggered, attempting to remove " + AmountGiven.ToString("#0.0") + " g DM/m2 over " + DurationOfDefoliation + " days");
+				if (PreHarvestDM <= 0.0)
+					biomassInsufficient = true;
+				else
+					herbageToRemove = AmountGiven / DurationOfDefoliation;
+			}
+			else if (amountType == "ResidualDM")
+			{
+				summary.WriteMessage(this, "   Defoliation triggered, attempting to remove biomass down to " + AmountGiven.ToString("#0.0") + " g DM/m2 over " + DurationOfDefoliation + " days");
+				if (PreHarvestDM <= AmountGiven)
+					biomassInsufficient = true;
+				else
+					herbageToRemove = (PreHarvestDM - AmountGiven) / DurationOfDefoliation;
+			}
+			else if (amountType == "UseRemovalFractions")
+			{
+				summary.WriteMessage(this, "   Defoliation triggered, removing biomass using the removal fractions (set or default), over " + DurationOfDefoliation + " days");
+				if (PreHarvestDM <= 0.0)
+					biomassInsufficient = true;
+				else
+					herbageToRemove = -1.0;
+			}
+			else
+			{
+				throw new Exception("Amount type should be \"DMToRemove\", \"ResidualDM\", or \"UseRemovalFractions\"!");
+			}
 
-        private void removeDM(double removeAmount, string removeType)
-        {
-            // get the existing biomass
-            double leafLiveWt = (double)zone.Get("WhiteClover.Leaf.Live.Wt");
-            double stolonLiveWt = (double)zone.Get("WhiteClover.Stolon.Live.Wt");
-            double petioleLiveWt = (double)zone.Get("WhiteClover.Petiole.Live.Wt");
-            double flowerLiveWt = (double)zone.Get("WhiteClover.Inflorescence.Live.Wt");
-            double leafDeadWt = (double)zone.Get("WhiteClover.Leaf.Dead.Wt");
-            double stolonDeadWt = (double)zone.Get("WhiteClover.Stolon.Dead.Wt");
-            double petioleDeadWt = (double)zone.Get("WhiteClover.Petiole.Dead.Wt");
-            double flowerDeadWt = (double)zone.Get("WhiteClover.Inflorescence.Dead.Wt");
-            double leafLiveN = (double)zone.Get("WhiteClover.Leaf.Live.N");
-            double stolonLiveN = (double)zone.Get("WhiteClover.Stolon.Live.N");
-            double petioleLiveN = (double)zone.Get("WhiteClover.Petiole.Live.N");
-            double flowerLiveN = (double)zone.Get("WhiteClover.Inflorescence.Live.N");
-            double leafDeadN = (double)zone.Get("WhiteClover.Leaf.Dead.N");
-            double stolonDeadN = (double)zone.Get("WhiteClover.Stolon.Dead.N");
-            double petioleDeadN = (double)zone.Get("WhiteClover.Petiole.Dead.N");
-            double flowerDeadN = (double)zone.Get("WhiteClover.Inflorescence.Dead.N");
+			// if there is not enough biomass, abort command
+			if (biomassInsufficient)
+			{
+				// check interval type
+				if (DefoliationTriggerType == DefoliationTriggerTypes.FixedInterval)
+				{ // count the event as if it did happen
+					cumAmountHarvested = 0.0;
+					daysDefoliating = 1;
+					DaysAfterDefoliation = 0;
+				}
 
-            double existingWt = leafLiveWt + leafDeadWt + (stolonLiveWt + stolonDeadWt)*stolonMaxRemovalFrac + petioleLiveWt + petioleDeadWt + flowerLiveWt + flowerDeadWt;
-            double existingN = leafLiveN + leafDeadN + (stolonLiveN + stolonDeadN)*stolonMaxRemovalFrac + petioleLiveN + petioleDeadN + flowerLiveN + flowerDeadN;
+				herbageToRemove = 0.0;
+				biomassInsufficient = false;
+				summary.WriteMessage(this, "   Defoliation will not happend because current aboveground biomass, " + PreHarvestDM.ToString("#0.0") + " g DM/m2, is too low");
+			}
+			else
+			{
+				// start the defoliation
+				removeDM(herbageToRemove, defoliationType);
+				if (ReturnType == ReturnAsTypes.AsResidue)
+					returnResidues();
+				else
+					returnExcreta();
+				cumAmountHarvested = HarvestedDM;
+				daysDefoliating = 1;
+				DaysAfterDefoliation = 0;
+			}
+		}
 
-            // Can we harvest anything?
-            double removingWt = Math.Min(existingWt, removeAmount);
-            if (removingWt > 0.0)
-            {
-                // get the fractions to remove for each organ (will override the default values)
-                // the default is [WhiteClover].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent
-                // >> double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;
-                double fracToRemove = removingWt / existingWt;
-                double stolonFracToRemove = ((stolonLiveWt + stolonDeadWt) > 0.0) ? fracToRemove : 0.0;
-                if(stolonFracToRemove>stolonMaxRemovalFrac)
-                {
-                    stolonFracToRemove = stolonMaxRemovalFrac;
-                    fracToRemove += 2.0*(stolonFracToRemove-stolonMaxRemovalFrac)/6.0;
-                }
+		/// <summary>Triggers the actual biomass remove and gathers the DM and N amounts.</summary>
+		private void removeDM(double removeAmount, string typeOfDefoliation)
+		{
+			// get the amounts of biomass and N before today's defoliation
+			double preRemoveDM = (double)myZone.Get(myPlant.Name + ".AboveGround.Wt");
+			double preRemoveN = (double)myZone.Get(myPlant.Name + ".AboveGround.N");
 
-                double leafFracToRemove = 0.0;
-                if ((leafLiveWt + leafDeadWt) > 0.0)
-                {
-                    if (leafLiveWt < minLeafAmount)
-                    {
-                        // leafWt cannot go below a minimum
-                        leafFracToRemove = (removingWt + leafLiveWt - minLeafAmount) / existingWt;
-                        fracToRemove += Math.Max(0.0,fracToRemove-leafFracToRemove)/4.0;
-                    }
-                    else
-                        leafFracToRemove = fracToRemove;
-                }
+			// gather the actual biomass removal fractions, checking whether they need to be adjusted
+			if (removeAmount < 0.0)
+			{
+				// defoliation is not based on an amount, removal is determined simply by the removal fractions
+				if (RemoveFractionType != FractionsToRemoveTypes.UseCropDefaults)
+				{
+					// removing biomass according to user defined fractions
+					for (int i = 0; i < plantOrgans.Count; i++)
+					{
+						removalFractions.SetFractionToRemove(plantOrgans[i], removeFractions[i][0], "Live");
+						removalFractions.SetFractionToResidue(plantOrgans[i], removeFractions[i][1], "Live");
+						removalFractions.SetFractionToRemove(plantOrgans[i], removeFractions[i][2], "Dead");
+						removalFractions.SetFractionToResidue(plantOrgans[i], removeFractions[i][3], "Dead");
+					}
+				}
+			}
+			else
+			{
+				// an amount was given for defoliation, adjust removal fractions in order to remove the amount specified
+				double totalDM = 0.0;
+				double[] fractionsToRemove = new double[4];
 
-                double petioleFracToRemove = ((petioleLiveWt + petioleDeadWt) > 0.0) ? fracToRemove : 0.0;
-                double flowerFracToRemove = ((flowerLiveWt + flowerDeadWt) > 0.0) ? fracToRemove : 0.0;
+				// get the base fractions and the total (weighted) biomass
+				for (int i = 0; i < plantOrgans.Count; i++)
+				{
+					// check whether the defoliation type has changed and need to update default fractions
+					if ((RemoveFractionType != FractionsToRemoveTypes.UseCropDefaults) && (typeOfDefoliation != defoliationsType))
+						baseFractions[i] = getBaseRemovalFractions(plantOrgans[i], typeOfDefoliation);
+					else
+						baseFractions[i] = removeFractions[i];
+					
+					totalDM += (double)myZone.Get(myPlant.Name + "." + plantOrgans[i] + ".Live.Wt") * (baseFractions[i][0] + baseFractions[i][1]);
+				}
 
-                // get the fractions to residue (i.e. wastage - will override the default values)
-                // the default is [WhiteClover].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent
-                double leafFracToResidue = leafResidueFrac * leafFracToRemove;
-                double stolonFracToResidue = stolonResidueFrac * stolonFracToRemove;
-                double petioleFracToResidue = petioleResidueFrac * petioleFracToRemove;
-                double flowerFracToResidue = flowerResidueFrac * flowerFracToRemove;
+				// get the adjusted fractions of biomass to remove
+				for (int i = 0; i < plantOrgans.Count; i++)
+				{
+					// adjust fractions based on amount to remove and weighted total biomass
+					fractionsToRemove[0] = baseFractions[i][0] * removeAmount / totalDM;
+					fractionsToRemove[1] = baseFractions[i][1] * removeAmount / totalDM;
+					fractionsToRemove[2] = baseFractions[i][2] * removeAmount / totalDM;
+					fractionsToRemove[3] = baseFractions[i][3] * removeAmount / totalDM;
 
-                // correct the values to defoliate (so our removing = remove + residue)
-                leafFracToRemove -= leafFracToResidue;
-                stolonFracToRemove -= stolonFracToResidue;
-                petioleFracToRemove -= petioleFracToResidue;
-                flowerFracToRemove -= flowerFracToResidue;
+					// check the fractions
+					double sumFractions = fractionsToRemove[0] + fractionsToRemove[1];
+					if (sumFractions > 1.0)
+					{ //normalise the values, sum of Live cannot be greater than one
+						fractionsToRemove[0] /= sumFractions;
+						fractionsToRemove[1] /= sumFractions;
+					}
+					sumFractions = fractionsToRemove[2] + fractionsToRemove[3];
+					if (sumFractions > 1.0)
+					{ //normalise the values, sum of Dead cannot be greater than one
+						fractionsToRemove[2] /= sumFractions;
+						fractionsToRemove[3] /= sumFractions;
+					}
 
-                // set removal fractions (these overrides the default removals in the plant)
-                removalFractions.SetFractionToRemove("Leaf", leafFracToRemove, "Live");
-                removalFractions.SetFractionToResidue("Leaf", leafFracToResidue, "Live");
-                removalFractions.SetFractionToRemove("Leaf", leafFracToRemove, "Dead");
-                removalFractions.SetFractionToResidue("Leaf", leafFracToResidue, "Dead");
-                removalFractions.SetFractionToRemove("Stolon", stolonFracToRemove, "Live");
-                removalFractions.SetFractionToResidue("Stolon", stolonFracToResidue, "Live");
-                removalFractions.SetFractionToRemove("Stolon", stolonFracToRemove, "Dead");
-                removalFractions.SetFractionToResidue("Stolon", stolonFracToResidue, "Dead");
-                removalFractions.SetFractionToRemove("Petiole", petioleFracToRemove, "Live");
-                removalFractions.SetFractionToResidue("Petiole", petioleFracToResidue, "Live");
-                removalFractions.SetFractionToRemove("Petiole", petioleFracToRemove, "Dead");
-                removalFractions.SetFractionToResidue("Petiole", petioleFracToResidue, "Dead");
-                removalFractions.SetFractionToRemove("Inflorescence", flowerFracToRemove, "Live");
-                removalFractions.SetFractionToResidue("Inflorescence", flowerFracToResidue, "Live");
-                removalFractions.SetFractionToRemove("Inflorescence", flowerFracToRemove, "Dead");
-                removalFractions.SetFractionToResidue("Inflorescence", flowerFracToResidue, "Dead");
+					// set the fractions to remove
+					removalFractions.SetFractionToRemove(plantOrgans[i], fractionsToRemove[0], "Live");
+					removalFractions.SetFractionToResidue(plantOrgans[i], fractionsToRemove[1], "Live");
+					removalFractions.SetFractionToRemove(plantOrgans[i], fractionsToRemove[2], "Dead");
+					removalFractions.SetFractionToResidue(plantOrgans[i], fractionsToRemove[3], "Dead");
+				}
+			}
 
-                removalFractions.SetFractionToRemove("Root", 0.0);
-                removalFractions.SetFractionToResidue("Root", 0.0);
-                removalFractions.SetFractionToRemove("Taproot", 0.0);
-                removalFractions.SetFractionToResidue("Taproot", 0.0);
-                removalFractions.SetFractionToRemove("Nodule", 0.0);
-                removalFractions.SetFractionToResidue("Nodule", 0.0);
+			// do the actual biomass removal
+			if (RemoveFractionType == FractionsToRemoveTypes.UseCropDefaults)
+				myPlant.RemoveBiomass(typeOfDefoliation);
+			else
+				myPlant.RemoveBiomass(typeOfDefoliation, removalFractions);
+		
+			// get the amounts of biomass and N after today's defoliation
+			double postRemoveDM = (double)myZone.Get(myPlant.Name + ".AboveGround.Wt");
+			double postRemoveN = (double)myZone.Get(myPlant.Name + ".AboveGround.N");
 
-                // Actually do the biomass removal
-                WhiteClover.RemoveBiomass(removeType, removalFractions);
+			// get total defoliation (total plant stuff lost)
+			DefoliatedDM = preRemoveDM - postRemoveDM;
+			DefoliatedN = preRemoveN - postRemoveN;
+			if (DefoliatedDM > 0.0)
+				DefoliatedNConc = DefoliatedN / DefoliatedDM;
 
-                // get the new existing plant amount
-                double postHarvestWt = (double)zone.Get("WhiteClover.AboveGround.Wt");
-                double postHarvestN = (double)zone.Get("WhiteClover.AboveGround.N");
+			// get total harvested (plant stuff removed from plants)
+			HarvestedDM = (double)myZone.Get(myPlant.Name + ".Leaf.Removed.Wt")
+			+ (double)myZone.Get(myPlant.Name + ".Stolon.Removed.Wt")
+			+ (double)myZone.Get(myPlant.Name + ".Petiole.Removed.Wt")
+			+ (double)myZone.Get(myPlant.Name + ".Inflorescence.Removed.Wt");
+			HarvestedN = (double)myZone.Get(myPlant.Name + ".Leaf.Removed.N")
+			+ (double)myZone.Get(myPlant.Name + ".Stolon.Removed.N")
+			+ (double)myZone.Get(myPlant.Name + ".Petiole.Removed.N")
+			+ (double)myZone.Get(myPlant.Name + ".Inflorescence.Removed.N");
+			if (HarvestedDM > 0.0)
+				HarvestedNConc = HarvestedN / HarvestedDM;
 
-                // get total defoliation (total plant stuff lost)
-                DefoliatedDM = existingWt - postHarvestWt;
-                DefoliatedN = existingN - postHarvestN;
-                if (DefoliatedDM > 0.0)
-                    DefoliatedNConc = DefoliatedN/DefoliatedDM;
+			// get amounts actually removed from field
+			RemovedDM = HarvestedDM * FractionDM2Remove;
+			RemovedN = HarvestedN * FractionN2Remove;
+			if (RemovedDM > 0.0)
+				RemovedNConc = RemovedN / RemovedDM;
 
-                // get total harvested (plant stuff removed from plants)
-                HarvestedDM = (double)zone.Get("WhiteClover.Leaf.Removed.Wt")
-                + (double)zone.Get("WhiteClover.Stolon.Removed.Wt")
-                + (double)zone.Get("WhiteClover.Petiole.Removed.Wt")
-                + (double)zone.Get("WhiteClover.Inflorescence.Removed.Wt");
-                HarvestedN = (double)zone.Get("WhiteClover.Leaf.Removed.N")
-                + (double)zone.Get("WhiteClover.Stolon.Removed.N")
-                + (double)zone.Get("WhiteClover.Petiole.Removed.N")
-                + (double)zone.Get("WhiteClover.Inflorescence.Removed.N");
-                if (HarvestedDM > 0.0)
-                    HarvestedNConc = HarvestedN/HarvestedDM;
+			// get amounts to be returned to the field (as residue or dung+urine)
+			ReturnedDM = HarvestedDM - RemovedDM;
+			ReturnedN = HarvestedN - RemovedN;
+			if (ReturnedDM > 0.0)
+				ReturnedNConc = ReturnedN / ReturnedDM;
+			if (NDungType == DungNContentTypes.DefineCNratio)
+			{
+				NReturnedInDung = ReturnedDM * 0.4 / CNRatioDung;
+				NReturnedInDung = Math.Min(NReturnedInDung, ReturnedN);
+			}
+			else
+				NReturnedInDung = ReturnedN * ProportionN2Dung;
+			NReturnedInUrine = ReturnedN - NReturnedInDung;
+		}
 
-                // get amounts actually removed from field and that to be returned (residue or dung/urine)
-                RemovedDM = HarvestedDM * fracDM2Remove;
-                RemovedN = HarvestedN * fracN2Remove;
-                if (RemovedDM > 0.0)
-                    RemovedNConc = RemovedN/RemovedDM;
-                ReturnedDM = HarvestedDM - RemovedDM;
-                ReturnedN = HarvestedN - RemovedN;
-                if (ReturnedDM > 0.0)
-                    ReturnedNConc = ReturnedN/ReturnedDM;
-                NReturnedInDung = ReturnedN * fracN2Dung;
-                NReturnedInUrine = ReturnedN - NReturnedInDung;
-            }
-            else
-            {
-            }
-        }
+		/// <summary>Gets or computes the biomass removal fractions for a given organ.</summary>
+		private double[] getBaseRemovalFractions(string organ, string typeOfDefoliation)
+		{
+			// get or determine the basic biomass removal fractions
+			double[] fractions = new double[4];
+			if (RemoveFractionType == FractionsToRemoveTypes.UseCropDefaults)
+			{
+				// read the default values
+				fractions[0] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionLiveToRemove");
+				fractions[1] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionLiveToResidue");
+				fractions[2] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToRemove");
+				fractions[3] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToResidue");
+			}
+			else if (RemoveFractionType == FractionsToRemoveTypes.BasedOnCurrentBiomass)
+			{
+				// the fractions to remove are proportional to the existing biomass of each organ (and none goes to residue)
+				// check that a maximum removal fraction was given
+				fractions[0] = -1.0;
+				for (int i = 0; i < UserSetOrgans.Length; i++)
+				{
+					if (UserSetOrgans[i] == organ)
+					{
+						fractions[0] = UserSetMaxRemoveFractions[i];
+						fractions[1] = 0.0;
+						fractions[2] = UserSetMaxRemoveFractions[i];
+						fractions[3] = 0.0;
+					}
+				}
+				// otherwise allows all biomass to be removed
+				if (fractions[0] < 0.0)
+				{
+					fractions[0] = 1.0;
+					fractions[1] = 0.0;
+					fractions[2] = 1.0;
+					fractions[3] = 0.0;
+				}
+			}
+			else //UserDefinedValues
+			{
+				// check whether the user has provided values for each organ
+				fractions[0] = -1.0;
+				for (int i = 0; i < UserSetOrgans.Length; i++)
+				{
+					if (UserSetOrgans[i] == organ)
+					{
+						fractions[0] = UserSetLiveRemoveFractions[i];
+						fractions[1] = UserSetLiveResidueFractions[i];
+						fractions[2] = UserSetDeadRemoveFractions[i];
+						fractions[3] = UserSetDeadResidueFractions[i];
+					}
+				}
+				// if not, get the default values
+				if (fractions[0] < 0.0)
+				{
+					fractions[0] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionLiveToRemove");
+					fractions[1] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionLiveToResidue");
+					fractions[2] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToRemove");
+					fractions[3] = (double)myZone.Get(myPlant.Name + "." + organ + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToResidue");
+				}
+			}
 
-        // Return dung and urine
-        private void returnExcreta()
-        {
-            if ((ReturnedDM > 0.0) || (NReturnedInDung > 0.0))
-            {
-                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();
-                string[] type = new string[] { "RuminantDung_PastureFed" };
-                float[] dltdm = new float[] { (Single)ReturnedDM };
-                float[] dltn = new float[] { (Single)NReturnedInDung };
-                float[] dltp = new float[] { 0 };
-                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
+			return fractions;
+		}
 
-                BiomassDung.crop_type = "RuminantDung_PastureFed";
-                BiomassDung.dm_type = type;
-                BiomassDung.dlt_crop_dm = dltdm;
-                BiomassDung.dlt_dm_n = dltn;
-                BiomassDung.dlt_dm_p = dltp;
-                BiomassDung.fraction_to_residue = fraction;
-                BiomassRemoved.Invoke(BiomassDung);
-            }
+		/// <summary>Returns the material not removed off field as residue.</summary>
+		private void returnResidues()
+		{
+			if ((ReturnedDM > 0.0) || (ReturnedN > 0.0))
+			{
+				PMF.BiomassRemovedType biomassResidue = new PMF.BiomassRemovedType();
+				string[] type = new string[] { myPlant.Name };
+				float[] dltdm = new float[] { (float)(10.0 * ReturnedDM) };
+				float[] dltn = new float[] { (float)(10.0 * ReturnedN) };
+				float[] dltp = new float[] { 0 };
+				float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
 
-            if (NReturnedInUrine > 0.0)
-            {
-                fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, urineDepth);
-            }
-        }
-    }
+				biomassResidue.crop_type = myPlant.Name;
+				biomassResidue.dm_type = type;
+				biomassResidue.dlt_crop_dm = dltdm;
+				biomassResidue.dlt_dm_n = dltn;
+				biomassResidue.dlt_dm_p = dltp;
+				biomassResidue.fraction_to_residue = fraction;
+				BiomassRemoved.Invoke(biomassResidue);
+			}
+		}
+
+		/// <summary>Returns the material not removed off field as dung and urine).</summary>
+		private void returnExcreta()
+		{
+			if ((ReturnedDM > 0.0) || (NReturnedInDung > 0.0))
+			{
+				PMF.BiomassRemovedType biomassDung = new PMF.BiomassRemovedType();
+				string[] type = new string[] { "RuminantDung_PastureFed" };
+				float[] dltdm = new float[] { (float)(10.0 * ReturnedDM) };
+				float[] dltn = new float[] { (float)(10.0 * NReturnedInDung) };
+				float[] dltp = new float[] { 0 };
+				float[] fraction = new float[] { 1 };     // fraction is always 1.0 here
+
+				biomassDung.crop_type = "RuminantDung_PastureFed";
+				biomassDung.dm_type = type;
+				biomassDung.dlt_crop_dm = dltdm;
+				biomassDung.dlt_dm_n = dltn;
+				biomassDung.dlt_dm_p = dltp;
+				biomassDung.fraction_to_residue = fraction;
+				BiomassRemoved.Invoke(biomassDung);
+			}
+
+			if (NReturnedInUrine > 0.0)
+			{
+				double[] myUrineDeposition = new double[nLayers];
+				for (int z = 0; z < nLayers; z++)
+					myUrineDeposition[z] = 10 * NReturnedInUrine * fractionUrine[z];
+
+				mySoluteManager.Add("urea", SoluteManager.SoluteSetterType.Fertiliser, myUrineDeposition);
+			}
+		}
+
+		// Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		public enum DefoliateTypes
+		{
+			/// <summary>Cut</summary>
+			Cut,
+			/// <summary>Graze</summary>
+			Graze,
+			/// <summary>Graze</summary>
+			Harvest
+		}
+
+		public enum RemoveAmountTypes
+		{
+			/// <summary>Setting a DM amount to remove</summary>
+			DMToRemove,
+			/// <summary>Setting the residual DM amount</summary>
+			ResidualDM,
+			/// <summary>Remove according to crop's default RemoveFractions</summary>
+			None_UseRemovalFractions
+		}
+
+		public enum FractionsToRemoveTypes
+		{
+			/// <summary>Based on crop default values</summary>
+			UseCropDefaults,
+			/// <summary>Use the values given by user</summary>
+			UserDefinedValues,
+			/// <summary>Based on biomass proportions</summary>
+			BasedOnCurrentBiomass
+		}
+
+		public enum DefoliationTriggerTypes
+		{
+			/// <summary>Setting a fixed interval</summary>
+			FixedInterval,
+			/// <summary>Setting a target (minimum) inteval</summary>
+			TargetInterval,
+			/// <summary>Setting a target (maximum) standing biomass</summary>
+			TargetStandingBiomass
+		}
+
+		public enum RemoveDMTypes
+		{
+			/// <summary>Remove all DM</summary>
+			RemoveAll,
+			/// <summary>Remove no DM</summary>
+			RemoveNone,
+			/// <summary>Remove a user-defined fraction</summary>
+			UserDefinedFraction,
+			/// <summary>Remove a fraction based on plant digestibility</summary>
+			BasedOnDigestibility
+		}
+
+		public enum ReturnAsTypes
+		{
+			/// <summary>Return plant material as residue</summary>
+			AsResidue,
+			/// <summary>Return meterial as dung and urine</summary>
+			AsDungUrine
+		}
+
+		public enum DungNContentTypes
+		{
+			/// <summary>Define the proportion of N returned as dung</summary>
+			DefineProportion,
+			/// <summary>Define the C:N of dung</summary>
+			DefineCNratio,
+		}
+	}
 }
 ]]></Code>
     </Manager>
