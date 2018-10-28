@@ -19,7 +19,7 @@ namespace Models.Functions
         #region Class Data Members
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        [Link]
+        [Link(IsOptional = true)]
         private XYPairs XYPairs = null;   // VPD effect on Growth Interpolation Set
 
         /// <summary>The maximum temperature weighting</summary>
@@ -43,7 +43,11 @@ namespace Models.Functions
             VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
             double meanVPD = MaximumVPDWeight * VPDmaxt + (1 - MaximumVPDWeight) * VPDmint;
-            return XYPairs.ValueIndexed(meanVPD);
+
+            if (XYPairs != null)
+                return XYPairs.ValueIndexed(meanVPD);
+            else
+                return meanVPD;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
