@@ -484,7 +484,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1628,7 +1628,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1636,7 +1636,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.0275</FixedValue>
+          <FixedValue>0.0175</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1644,7 +1644,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.035</FixedValue>
+          <FixedValue>0.03</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -2306,7 +2306,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -2314,7 +2314,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.015</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -2322,7 +2322,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.03</FixedValue>
+          <FixedValue>0.035</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -3132,7 +3132,7 @@ The main reason for grouping all flowers and seeds together is the complexity of
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[The N concentration in the inflorescence of is relatively low compared to other organs (typical values about 2.0%), but the seed N content is considerably higher (about 4.5%).  The model currently does not separate inflrescence from seeds, thus it uses variable thresholds to account for the fact that the proportion of seed increases with time during the reproductive phase.  
+            <MemoText><![CDATA[The N concentration in the inflorescence of is relatively low compared to other organs (typical values about 2.0%), but the seed N content is considerably higher (about 4.5%).  The model currently does not separate inflorescence from seeds, thus it uses variable thresholds to account for the fact that the proportion of seed increases with time during the reproductive phase.  
 ]]></MemoText>
           </Memo>
           <XYPairs>
@@ -3143,16 +3143,18 @@ The main reason for grouping all flowers and seeds together is the complexity of
             <X>
               <double>5</double>
               <double>5.1</double>
+              <double>5.3</double>
               <double>5.5</double>
               <double>5.75</double>
               <double>6</double>
             </X>
             <Y>
-              <double>0.025</double>
-              <double>0.03</double>
-              <double>0.04</double>
-              <double>0.045</double>
-              <double>0.045</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.022</double>
+              <double>0.035</double>
+              <double>0.043</double>
+              <double>0.044</double>
             </Y>
           </XYPairs>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -3170,13 +3172,15 @@ The main reason for grouping all flowers and seeds together is the complexity of
             <X>
               <double>5</double>
               <double>5.1</double>
+              <double>5.3</double>
               <double>5.5</double>
               <double>5.75</double>
               <double>6</double>
             </X>
             <Y>
               <double>0.025</double>
-              <double>0.03</double>
+              <double>0.025</double>
+              <double>0.029</double>
               <double>0.04</double>
               <double>0.045</double>
               <double>0.045</double>
@@ -3197,12 +3201,14 @@ The main reason for grouping all flowers and seeds together is the complexity of
             <X>
               <double>5</double>
               <double>5.1</double>
+              <double>5.3</double>
               <double>5.5</double>
               <double>5.75</double>
               <double>6</double>
             </X>
             <Y>
               <double>0.03</double>
+              <double>0.031</double>
               <double>0.035</double>
               <double>0.042</double>
               <double>0.045</double>
@@ -3835,7 +3841,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.05</FixedValue>
+          <FixedValue>0.04</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -3850,7 +3856,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.55</FixedValue>
+          <FixedValue>0.055</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -3865,7 +3871,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.55</FixedValue>
+          <FixedValue>0.06</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -4614,7 +4620,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -4622,7 +4628,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.015</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -4630,7 +4636,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.03</FixedValue>
+          <FixedValue>0.04</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -5451,7 +5457,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
