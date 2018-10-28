@@ -1523,30 +1523,30 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.2</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0.55</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0.13</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.7</FractionLiveToRemove>
-            <FractionDeadToRemove>0.1</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.2</FractionDeadToResidue>
+            <FractionLiveToRemove>0.56</FractionLiveToRemove>
+            <FractionDeadToRemove>0.56</FractionDeadToRemove>
+            <FractionLiveToResidue>0.24</FractionLiveToResidue>
+            <FractionDeadToResidue>0.24</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.1</FractionLiveToRemove>
-            <FractionDeadToRemove>0.1</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionLiveToRemove>0.06</FractionLiveToRemove>
+            <FractionDeadToRemove>0.07</FractionDeadToRemove>
+            <FractionLiveToResidue>0.24</FractionLiveToResidue>
+            <FractionDeadToResidue>0.27</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
@@ -1555,8 +1555,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0.2</FractionDeadToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -2220,30 +2220,30 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
-            <FractionDeadToRemove>0.5</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToRemove>0.35</FractionLiveToRemove>
+            <FractionDeadToRemove>0.32</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0.13</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionLiveToRemove>0.3</FractionLiveToRemove>
             <FractionDeadToRemove>0.3</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0.3</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.1</FractionLiveToRemove>
-            <FractionDeadToRemove>0.2</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionLiveToRemove>0.08</FractionLiveToRemove>
+            <FractionDeadToRemove>0.09</FractionDeadToRemove>
+            <FractionLiveToResidue>0.32</FractionLiveToResidue>
+            <FractionDeadToResidue>0.36</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
@@ -2252,8 +2252,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0.2</FractionDeadToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -3056,30 +3056,30 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToRemove>0.1</FractionLiveToRemove>
+            <FractionDeadToRemove>0.09</FractionDeadToRemove>
+            <FractionLiveToResidue>0.01</FractionLiveToResidue>
+            <FractionDeadToResidue>0.01</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.2</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.2</FractionDeadToResidue>
+            <FractionLiveToRemove>0.15</FractionLiveToRemove>
+            <FractionDeadToRemove>0.15</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0.15</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToRemove>0.01</FractionLiveToRemove>
+            <FractionDeadToRemove>0.01</FractionDeadToRemove>
+            <FractionLiveToResidue>0.04</FractionLiveToResidue>
+            <FractionDeadToResidue>0.04</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
@@ -3088,8 +3088,8 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0.2</FractionDeadToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -3752,30 +3752,30 @@ The main reason for grouping all flowers and seeds together is the complexity of
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.6</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0.54</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0.13</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0.2</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0.3</FractionDeadToResidue>
+            <FractionLiveToRemove>0.56</FractionLiveToRemove>
+            <FractionDeadToRemove>0.56</FractionDeadToRemove>
+            <FractionLiveToResidue>0.24</FractionLiveToResidue>
+            <FractionDeadToResidue>0.24</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0.8</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+            <FractionLiveToRemove>0.64</FractionLiveToRemove>
+            <FractionDeadToRemove>0.7</FractionDeadToRemove>
+            <FractionLiveToResidue>0.16</FractionLiveToResidue>
+            <FractionDeadToResidue>0.18</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
@@ -3784,8 +3784,8 @@ The main reason for grouping all flowers and seeds together is the complexity of
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0.2</FractionDeadToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
@@ -4535,7 +4535,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.025</FractionLiveToResidue>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -4545,7 +4545,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.025</FractionLiveToResidue>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -4555,7 +4555,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.025</FractionLiveToResidue>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -4565,7 +4565,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.025</FractionLiveToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -5379,7 +5379,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionLiveToResidue>0.03</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -5389,7 +5389,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionLiveToResidue>0.03</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -5399,7 +5399,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionLiveToResidue>0.01</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -5409,7 +5409,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -6505,7 +6505,7 @@ The KLModifier allows for a dynamic adjustment of the KL factor (defined in the 
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionLiveToResidue>0.03</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
@@ -6515,7 +6515,7 @@ The KLModifier allows for a dynamic adjustment of the KL factor (defined in the 
             <ReadOnly>false</ReadOnly>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -6908,7 +6908,7 @@ Published data for the shoot-to-root ratio in white clover show a considerable v
         <DurationOfEachDefoliation>1</DurationOfEachDefoliation>
         <RemoveAmountType>ResidualDM</RemoveAmountType>
         <BaseAmountGiven>50</BaseAmountGiven>
-        <RemoveFractionType>BasedOnCurrentBiomass</RemoveFractionType>
+        <RemoveFractionType>UseCropDefaults</RemoveFractionType>
         <UserSetOrgans>Leaf,Petiole,Stolon,Inflorescence,Taproot,Root,Nodule</UserSetOrgans>
         <UserSetLiveRemoveFractions>0.75,0.5,0.05,0.75,0,0,0</UserSetLiveRemoveFractions>
         <UserSetDeadRemoveFractions>0.6,0.6,0,0.6,0,0,0</UserSetDeadRemoveFractions>
