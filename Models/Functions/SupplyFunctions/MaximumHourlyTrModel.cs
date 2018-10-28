@@ -133,7 +133,6 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlySVP;
         private List<double> hourlyVPD;
         private List<double> hourlyRUE; 
-        private List<double> hourlyPotB; 
         private List<double> hourlyPotTr;
         private List<double> hourlyVPDCappedTr;
         private List<double> hourlyTrCappedTr;
@@ -145,6 +144,9 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>Total daily assimilation in g/m2</summary>
         public double DailyDM { get; set; }
+
+        /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
+        public double DMStress { get; set; }
         //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>
@@ -339,16 +341,16 @@ namespace Models.Functions.SupplyFunctions
 
         private void CalcPotAssimilate()
         {
-            // Calculates hourlyPotTr as the product of hourlyRUE, hourlyVPD and transpEffCoef
-            hourlyPotB = new List<double>();
+            // Calculates hourlyPotDM as the product of hourlyRUE, hourlyVPD and transpEffCoef
+            hourlyPotDM = new List<double>();
 
             if (string.Equals(Type, "net"))
             {
-                for (int i = 0; i < 24; i++) hourlyPotB.Add(hourlyRad[i] * hourlyRUE[i]);
+                for (int i = 0; i < 24; i++) hourlyPotDM.Add(hourlyRad[i] * hourlyRUE[i]);
             }
             else
             {
-                hourlyPotB = DailyGrossPhotosythesis(myPlant.Canopy.LAI, myWeather.Latitude,
+                hourlyPotDM = DailyGrossPhotosythesis(myPlant.Canopy.LAI, myWeather.Latitude,
                                                       myClock.Today.DayOfYear, myWeather.Radn,
                                                       myWeather.MaxT, myWeather.MinT,
                                                       myWeather.CO2, myWeather.DiffuseFraction, 1.0);
@@ -360,7 +362,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyPotTr as the product of hourlyRUE, hourlyVPD and transpEffCoef
             hourlyPotTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyPotTr.Add(hourlyPotB[i] * hourlyVPD[i] / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyPotTr.Add(hourlyPotDM[i] * hourlyVPD[i] / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -368,7 +370,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, Math.Min(hourlyVPD, MaxVPD) and transpEffCoef
             hourlyVPDCappedTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotB[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -414,9 +416,6 @@ namespace Models.Functions.SupplyFunctions
             // will be scaled to follow the same durnal pattern as that of the hourly RUE model.
             // If no such a link exists, the 'net' daily assimilate is calculated.
 
-            hourlyPotDM = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyPotDM.Add(hourlyPotTr[i] * transpEffCoef / hourlyVPD[i]);
-
             hourlyDM = new List<double>();
             for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
 
@@ -441,6 +440,7 @@ namespace Models.Functions.SupplyFunctions
                     DailyDM = hourlyDM.Sum();
                 }
             }
+            DMStress = MathUtilities.Round(MathUtilities.Divide(DailyDM, DailyPotDM, 0), 3);
         }
         //------------------------------------------------------------------------------------------------
 
