@@ -182,7 +182,7 @@ namespace Models.Functions.SupplyFunctions
                 CalcVPDCappedTr();
                 CalcTrCappedTr();
                 CalcSoilLimitedTr();
-                CalcBiomass();
+                CalcActAssimilate();
                 myLeaf.PotentialEP = hourlyTrCappedTr.Sum();
                 myLeaf.WaterDemand = hourlyTr.Sum();
             }
@@ -200,7 +200,7 @@ namespace Models.Functions.SupplyFunctions
         private void CalcTemperature()
         {
             hourlyTemp = new List<double>();
-            // A Model for Diurnal Variation in mySoil and Air hourlyTemp
+            // A Model for Diurnal Variation in Soil and Air Temperature.
             // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216.
             // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
 
@@ -240,35 +240,54 @@ namespace Models.Functions.SupplyFunctions
         private void CalcRadiation()
         {
             // Calculates the ground solar incident radiation per hour and scales it to the actual radiation
-            // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
+            // Developed by Greg McLean and adapted/modified by Behnam (Ben) Ababaei.
 
             hourlyRad = new List<double>();
             for (int i = 0; i < 24; i++) hourlyRad.Add(0.0);
 
-            // some constants
-            double RATIO = 0.75; // Hammer, Wright (Aust. J. Agric. Res., 1994, 45)
+            latR = Math.PI / 180.0 * myWeather.Latitude;      // convert latitude (degrees) to radians
 
             // some calculations
             double SolarDec = CalcSolarDeclination(myClock.Today.DayOfYear);
             double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
             double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
-            double Solar = CalcSolarRadn(RATIO, DayLR, latR, SolarDec);     // solar radiation
+            double GlobalRadiation = myWeather.Radn * 1e6;     // solar radiation
+            List<double> hrWeights;
 
-            //do the radiation calculation zeroing at dawn
-            double DuskDawnFract = (DayL - Math.Floor(DayL)) / 2; // the remainder part of the hour at dusk and dawn
-            double DawnTime = 12 - (DayL / 2);
+            double PI = Math.PI;
+            double RAD = PI / 180.0;
 
-            //The first partial hour
-            hourlyRad[Convert.ToInt32(Math.Floor(DawnTime))] += GlobalRadiation(DuskDawnFract / DayL, latR, SolarDec, DayL, Solar) * 3600 * DuskDawnFract;
+            //Declination of the sun as function of Daynumber (vDay)
+            double Dec = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * ((double)myClock.Today.DayOfYear + 10.0) / 365.0));
 
-            //Add the next lot
-            int iDayLH = Convert.ToInt32(Math.Floor(DayL));
+            //vSin, vCos and vRsc are intermediate variables
+            double Sin = Math.Sin(latR) * Math.Sin(Dec);
+            double Cos = Math.Cos(latR) * Math.Cos(Dec);
+            double Rsc = Sin / Cos;
 
-            for (int i = 0; i < iDayLH - 1; i++)
-                hourlyRad[(int)DawnTime + i + 1] += GlobalRadiation(DuskDawnFract / DayL + (double)(i + 1) * 1.0 / (double)(int)DayL, latR, SolarDec, DayL, Solar) * 3600;
+            //Astronomical daylength (hr)
+            DayL = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
 
-            //Add the last one
-            hourlyRad[(int)DawnTime + (int)DayL + 1] += (GlobalRadiation(1, latR, SolarDec, DayL, Solar) * 3600 * DuskDawnFract);
+            //Sine of solar height(vDailySin), inegral of vDailySin(vDailySin) and integrel of vDailySin
+            //with correction for lower atmospheric transmission at low solar elevations (vDailySinE)
+            double DailySin = 3600.0 * (DayL * Sin + 24.0 * Cos * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
+            double DailySinE = 3600.0 * (DayL * (Sin + 0.4 * (Sin * Sin + Cos * Cos * 0.5))
+                     + 12.0 * Cos * (2.0 + 3.0 * 0.4 * Sin) * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
+
+            double riseHour = 0.5 * (24 - DayL);
+            double setHour = riseHour + DayL;
+            hrWeights = HourlyWeights(riseHour, setHour);
+
+            for (int t = 1; t <= 24; t++)
+            {
+                double Hour1 = Math.Min(setHour, Math.Max(riseHour, t - 1));
+                double SinHeight1 = Math.Max(0.0, Sin + Cos * Math.Cos(2.0 * PI * (Hour1 - 12.0) / 24.0));
+                double Hour2 = Math.Min(setHour, Math.Max(riseHour, t));
+                double SinHeight2 = Math.Max(0.0, Sin + Cos * Math.Cos(2.0 * PI * (Hour2 - 12.0) / 24.0));
+                double SinHeight = 0.5 * (SinHeight1 + SinHeight2);
+                hourlyRad[t - 1] = Math.Max(0, GlobalRadiation * SinHeight * (1.0 + 0.4 * SinHeight) / DailySinE);
+                hourlyRad[t - 1] *= hrWeights[t-1];
+            }
 
             // scale to today's radiation
             double TotalRad = hourlyRad.Sum();
@@ -388,7 +407,7 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private void CalcBiomass()
+        private void CalcActAssimilate()
         {
             // Calculates hourlyDM and hourlyPotDM as a product of RUE, TR, TEC and hourlyVPD.
             // If there is a link to a GrossDailyAssimilate model, it will be used and its outputs
@@ -431,14 +450,14 @@ namespace Models.Functions.SupplyFunctions
             List<double> HourlyGrossB = new List<double>(24);
             double GrossPs, Temp, PAR, PARDIF, PARDIR;
 
-            //double GlobalRadiation, SinHeight, Dayl, AtmTrans, DifFr;
-            double GlobalRadiation, SinHeight, Dayl, AtmTrans;
-            double Dec, Sin, Cos, Rsc, SolarConst, DailySin, DailySinE, Hour, RadExt;
+            //double GlobalRadiation, SinHeight, DayL, AtmTrans, DifFr;
+            double GlobalRadiation, SinHeight, DayL, AtmTrans;
+            double Dec, Sin, Cos, Rsc, SolarConst, DailySin, DailySinE, RadExt;
             double LUE, PgMax;
 
             //double[] xGauss = { 0.0469101, 0.2307534, 0.5000000, 0.7692465, 0.9530899 };
             //double[] wGauss = { 0.1184635, 0.2393144, 0.2844444, 0.2393144, 0.1184635 };
-            List<double> wGauss = new List<double>(24);
+            List<double> hrWeights = new List<double>(24);
             double PI = Math.PI;
             double RAD = PI / 180.0;
 
@@ -457,24 +476,16 @@ namespace Models.Functions.SupplyFunctions
             Rsc = Sin / Cos;
 
             //Astronomical daylength (hr)
-            Dayl = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
+            DayL = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
 
-            double riseHour = 0.5 * (24 - Dayl);
-            double setHour = riseHour + Dayl;            
-
-            for (int t = 1; t <= 24; t++)
-            {
-                if (t < riseHour) wGauss.Add(0);
-                else if (t > riseHour && t - 1 < riseHour) wGauss.Add(t - riseHour);
-                else if (t >= riseHour && t < setHour) wGauss.Add(1);
-                else if (t > setHour && t - 1 < setHour) wGauss.Add(1 - (t - setHour));
-                else if (t > setHour) wGauss.Add(0);
-            }
+            double riseHour = 0.5 * (24 - DayL);
+            double setHour = riseHour + DayL;
+            hrWeights = HourlyWeights(riseHour, setHour);
 
             //Sine of solar height(vDailySin), inegral of vDailySin(vDailySin) and integrel of vDailySin
             //with correction for lower atmospheric transmission at low solar elevations (vDailySinE)
-            DailySin = 3600.0 * (Dayl * Sin + 24.0 * Cos * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
-            DailySinE = 3600.0 * (Dayl * (Sin + 0.4 * (Sin * Sin + Cos * Cos * 0.5))
+            DailySin = 3600.0 * (DayL * Sin + 24.0 * Cos * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
+            DailySinE = 3600.0 * (DayL * (Sin + 0.4 * (Sin * Sin + Cos * Cos * 0.5))
                      + 12.0 * Cos * (2.0 + 3.0 * 0.4 * Sin) * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
 
             //Solar constant(vSolarConst) and daily extraterrestrial (vRadExt)
@@ -485,13 +496,15 @@ namespace Models.Functions.SupplyFunctions
             //Daily photosynthesis
             //===========================================================================================
 
-            for (int i = 0; i < 24; i++)
+            for (int t = 0; t < 24; t++)
             {
-                GrossPs = 0;
-                Hour = i + 0.5;
-
                 //Sine of solar elevation
-                SinHeight = Math.Max(0.0, Sin + Cos * Math.Cos(2.0 * PI * (Hour + 12.0) / 24.0));
+                double Hour1 = Math.Min(setHour, Math.Max(riseHour, t));
+                double SinHeight1 = Math.Max(0.0, Sin + Cos * Math.Cos(2.0 * PI * (Hour1 - 12.0) / 24.0));
+                double Hour2 = Math.Min(setHour, Math.Max(riseHour, t + 1));
+                double SinHeight2 = Math.Max(0.0, Sin + Cos * Math.Cos(2.0 * PI * (Hour2 - 12.0) / 24.0));
+                SinHeight = 0.5 * (SinHeight1 + SinHeight2);
+
                 //Diffuse light fraction (vDifFr) from atmospheric transmission (vAtmTrans)
                 PAR = 0.5 * GlobalRadiation * SinHeight * (1.0 + 0.4 * SinHeight) / DailySinE;
 
@@ -526,16 +539,17 @@ namespace Models.Functions.SupplyFunctions
                     if (MaximumTempWeight>0)
                         Temp = MaximumTempWeight * myWeather.MaxT + (1 - MaximumTempWeight) * myWeather.MinT;
                     else
-                        Temp = hourlyTemp[i];
+                        Temp = hourlyTemp[t];
 
                     //Light response parameters
                     PgMax = MaxGrossPhotosynthesis(CO2, Temp, Fact);
                     LUE = LightUseEfficiency(Temp, CO2);
 
                     //Canopy gross photosynthesis
-                    GrossPs = HourlyGrossPhotosythesis(PgMax, LUE, LAI, Latitude, Day, Hour, PARDIR, PARDIF);
-                    GrossPs *= wGauss[i];
-                }
+                    GrossPs = HourlyGrossPhotosythesis(PgMax, LUE, LAI, Latitude, Day, SinHeight, PARDIR, PARDIF);
+                    GrossPs *= hrWeights[t];
+                } else
+                    GrossPs = 0;
 
                 HourlyGrossB.Add(GrossPs * 30 / 44 * 0.1);
             }
@@ -544,12 +558,12 @@ namespace Models.Functions.SupplyFunctions
         //------------------------------------------------------------------------------------------------
 
         private double HourlyGrossPhotosythesis(double fPgMax, double fLUE, double fLAI,
-                              double fLatitude, int nDay, double fHour, double fPARdir, double fPARdif)
+                              double fLatitude, int nDay, double fSINB, double fPARdir, double fPARdif)
         {
             int i, j;
-            double PMAX, EFF, vLAI, PARDIR, PARDIF, SINB;
-            double SQV, REFH, REFS, CLUSTF, KDIRBL, KDIRT, FGROS, LAIC, VISDF, VIST, VISD, VISSHD, FGRSH;
-            double FGRSUN, VISSUN, VISPP, FGRS, FSLLA, FGL, LAT, DAY, HOUR, DEC, vSin, vCos;
+            double PMAX, EFF, vLAI, PARDIR, PARDIF;
+            double SQV, REFH, REFS, CLUSTF, KDIRBL, KDIRT, FGROS, LAIC, SINB, VISDF, VIST, VISD, VISSHD, FGRSH;
+            double FGRSUN, VISSUN, VISPP, FGRS, FSLLA, FGL, LAT, DAY, DEC, vSin, vCos;
             int nGauss = 5;
             double[] xGauss = { 0.0469101, 0.2307534, 0.5000000, 0.7692465, 0.9530899 };
             double[] wGauss = { 0.1184635, 0.2393144, 0.2844444, 0.2393144, 0.1184635 };
@@ -565,8 +579,8 @@ namespace Models.Functions.SupplyFunctions
             PARDIR = fPARdir;
             PARDIF = fPARdif;
             LAT = fLatitude;
-            HOUR = fHour;
             DAY = nDay;
+            SINB = fSINB;
 
             //===========================================================================================
             //Sine of the solar height
@@ -577,8 +591,6 @@ namespace Models.Functions.SupplyFunctions
             //vSin, vCos and vRsc are intermediate variables
             vSin = Math.Sin(RAD * LAT) * Math.Sin(DEC);
             vCos = Math.Cos(RAD * LAT) * Math.Cos(DEC);
-
-            SINB = Math.Max(0.0, vSin + vCos * Math.Cos(2.0 * PI * (HOUR + 12.0) / 24.0));
 
             //===========================================================================================
             //Reflection of horizontal and spherical leaf angle distribution
@@ -781,7 +793,7 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private double GlobalRadiation(double oTime, double latitude, double solarDec, double dayLH, double solar)
+        private double HourluGlobalRadiation(double oTime, double latitude, double solarDec, double dayLH, double solar)
         {
             double Alpha = Math.Asin(Math.Sin(latitude) * Math.Sin(solarDec) +
                   Math.Cos(latitude) * Math.Cos(solarDec) * Math.Cos((Math.PI / 12.0) * dayLH * (oTime - 0.5)));
@@ -791,5 +803,58 @@ namespace Models.Functions.SupplyFunctions
             return ITot - IDiff;
         }
         //------------------------------------------------------------------------------------------------  
+
+        private List<double> HourlyWeights(double riseHour, double setHour)
+        {
+            List<double> weights = new List<double>(24);
+            for (int t = 1; t <= 24; t++)
+            {
+                if (t < riseHour) weights.Add(0);
+                else if (t > riseHour && t - 1 < riseHour) weights.Add(t - riseHour);
+                else if (t >= riseHour && t < setHour) weights.Add(1);
+                else if (t > setHour && t - 1 < setHour) weights.Add(1 - (t - setHour));
+                else if (t > setHour) weights.Add(0);
+            }
+            return weights;
+        }
+        //------------------------------------------------------------------------------------------------
+
+        private void CalcRadiationOld()
+        {
+            // Calculates the ground solar incident radiation per hour and scales it to the actual radiation
+            // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
+
+            hourlyRad = new List<double>();
+            for (int i = 0; i < 24; i++) hourlyRad.Add(0.0);
+
+            latR = Math.PI / 180.0 * myWeather.Latitude;      // convert latitude (degrees) to radians
+
+            // some calculations
+            double SolarDec = CalcSolarDeclination(myClock.Today.DayOfYear);
+            double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
+            double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
+            double Solar = myWeather.Radn;     // solar radiation
+
+            //do the radiation calculation zeroing at dawn
+            double DuskDawnFract = (DayL - Math.Floor(DayL)) / 2; // the remainder part of the hour at dusk and dawn
+            double riseHour = 12 - (DayL / 2);
+
+            //The first partial hour
+            hourlyRad[Convert.ToInt32(Math.Floor(riseHour))] += HourluGlobalRadiation(DuskDawnFract / DayL, latR, SolarDec, DayL, Solar) * 3600 * DuskDawnFract;
+
+            //Add the next lot
+            int iDayLH = Convert.ToInt32(Math.Floor(DayL));
+
+            for (int i = 0; i < iDayLH - 1; i++)
+                hourlyRad[(int)riseHour + i + 1] += HourluGlobalRadiation(DuskDawnFract / DayL + (double)(i + 1) * 1.0 / (double)(int)DayL, latR, SolarDec, DayL, Solar) * 3600;
+
+            //Add the last one
+            hourlyRad[(int)riseHour + (int)DayL + 1] += (HourluGlobalRadiation(1, latR, SolarDec, DayL, Solar) * 3600 * DuskDawnFract);
+
+            // scale to today's radiation
+            double TotalRad = hourlyRad.Sum();
+            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadnInt.Value();
+        }
+        //------------------------------------------------------------------------------------------------
     }
 }
