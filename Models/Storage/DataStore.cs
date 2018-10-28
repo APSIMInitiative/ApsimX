@@ -874,10 +874,6 @@
                     throw new Exception("Cannot find a filename for the DataStore database.");
             }
 
-            if (ProcessUtilities.CurrentOS.IsWindows && FileName.Any(c => c > 255))
-            {
-                FileName = PathUtilities.GetShortPath(FileName);
-            }
             Close();
 
             if (useFirebird)
