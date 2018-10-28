@@ -203,6 +203,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.Functions.VariableReference))]
         [XmlElement(typeof(Models.Functions.WeightedTemperatureFunction))]
         [XmlElement(typeof(Models.Functions.WangEngelTempFunction))]
+        [XmlElement(typeof(Models.Functions.DailyMeanVPD))]
+        [XmlElement(typeof(Models.Functions.DailyMeanVPDFunction))]
         [XmlElement(typeof(Models.Functions.XYPairs))]
         [XmlElement(typeof(Models.Functions.SupplyFunctions.CanopyPhotosynthesis))]
         [XmlElement(typeof(Models.Functions.DemandFunctions.AllometricDemandFunction))]

@@ -2394,7 +2394,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<ReadOnly>false</ReadOnly>
 		<XProperty>[Leaf].Fn</XProperty>
 	  </LinearInterpolationFunction>
-	  <LinearInterpolationFunction>
+	  <DailyMeanVPDFunction>
 		<Name>FVPD</Name>
 		<XYPairs>
 		  <Name>XYPairs</Name>
@@ -2412,11 +2412,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 			<double>0</double>
 		  </Y>
 		</XYPairs>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Enabled>true</Enabled>
+		<ReadOnly>false</ReadOnly>
+		<MaximumVPDWeight>0.66</MaximumVPDWeight>
 		<IncludeInDocumentation>false</IncludeInDocumentation>
 		<Enabled>true</Enabled>
 		<ReadOnly>false</ReadOnly>
 		<XProperty>[Weather].VPD</XProperty>
-	  </LinearInterpolationFunction>
+	  </DailyMeanVPDFunction>
 	  <IncludeInDocumentation>false</IncludeInDocumentation>
 	  <Enabled>true</Enabled>
 	  <ReadOnly>false</ReadOnly>
