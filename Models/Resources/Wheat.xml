@@ -2297,25 +2297,29 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
-      <LinearInterpolationFunction>
-        <Name>FVPD</Name>
-        <XYPairs>
-          <Name>XYPairs</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <X>
-            <double>0</double>
-            <double>10</double>
-            <double>40</double>
-          </X>
-          <Y>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-          </Y>
-        </XYPairs>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <XProperty>[Photosynthesis].VPD</XProperty>
-      </LinearInterpolationFunction>
+	  <DailyMeanVPDFunction>
+		<Name>FVPD</Name>
+		<XYPairs>
+		  <Name>XYPairs</Name>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
+		  <Enabled>true</Enabled>
+		  <ReadOnly>false</ReadOnly>
+		  <X>
+			<double>0</double>
+			<double>10</double>
+			<double>40</double>
+		  </X>
+		  <Y>
+			<double>1</double>
+			<double>1</double>
+			<double>0</double>
+		  </Y>
+		</XYPairs>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
+		<Enabled>true</Enabled>
+		<ReadOnly>false</ReadOnly>
+		<MaximumVPDWeight>0.66</MaximumVPDWeight>
+	  </DailyMeanVPDFunction>
       <RUECO2Function>
         <Name>FCO2</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2350,7 +2354,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<Name>FT</Name>
 		<XYPairs>
 		  <Name>XYPairs</Name>
-		  <IncludeInDocumentation>false</IncludeInDocumentation>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
 		  <Enabled>true</Enabled>
 		  <ReadOnly>false</ReadOnly>
 		  <X>
@@ -2366,7 +2370,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 			<double>0</double>
 		  </Y>
 		</XYPairs>
-		<IncludeInDocumentation>false</IncludeInDocumentation>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
 		<Enabled>true</Enabled>
 		<ReadOnly>false</ReadOnly>
 		<MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
@@ -2375,7 +2379,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<Name>FN</Name>
 		<XYPairs>
 		  <Name>XYPairs</Name>
-		  <IncludeInDocumentation>false</IncludeInDocumentation>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
 		  <Enabled>true</Enabled>
 		  <ReadOnly>false</ReadOnly>
 		  <X>
@@ -2389,7 +2393,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 			<double>1</double>
 		  </Y>
 		</XYPairs>
-		<IncludeInDocumentation>false</IncludeInDocumentation>
+		<IncludeInDocumentation>true</IncludeInDocumentation>
 		<Enabled>true</Enabled>
 		<ReadOnly>false</ReadOnly>
 		<XProperty>[Leaf].Fn</XProperty>
@@ -2398,7 +2402,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<Name>FVPD</Name>
 		<XYPairs>
 		  <Name>XYPairs</Name>
-		  <IncludeInDocumentation>false</IncludeInDocumentation>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
 		  <Enabled>true</Enabled>
 		  <ReadOnly>false</ReadOnly>
 		  <X>
@@ -2416,12 +2420,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<Enabled>true</Enabled>
 		<ReadOnly>false</ReadOnly>
 		<MaximumVPDWeight>0.66</MaximumVPDWeight>
-		<IncludeInDocumentation>false</IncludeInDocumentation>
-		<Enabled>true</Enabled>
-		<ReadOnly>false</ReadOnly>
-		<XProperty>[Weather].VPD</XProperty>
 	  </DailyMeanVPDFunction>
-	  <IncludeInDocumentation>false</IncludeInDocumentation>
+	  <IncludeInDocumentation>true</IncludeInDocumentation>
 	  <Enabled>true</Enabled>
 	  <ReadOnly>false</ReadOnly>
 	</MinimumFunction>
