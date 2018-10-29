@@ -66,18 +66,9 @@ namespace Models.Functions.SupplyFunctions
             get
             {
                 if (MetData != null)
-                {
                     return MetData.VPD;
-                }
                 else
-                {
-                    const double SVPfrac = 0.66;
-                    double VPDmint = MetUtilities.svp((float)MetData.MinT) - MetData.VP;
-                    VPDmint = Math.Max(VPDmint, 0.0);
-                    double VPDmaxt = MetUtilities.svp((float)MetData.MaxT) - MetData.VP;
-                    VPDmaxt = Math.Max(VPDmaxt, 0.0);
-                    return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
-                }
+                    return 0;
             }
         }
 
