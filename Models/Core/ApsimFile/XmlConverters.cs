@@ -7,11 +7,16 @@ namespace Models.Core.ApsimFile
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
+    using static Models.Factorial.Factor;
 
+    /// <summary>
+    /// Contains all converters that convert from one XML version to another.
+    /// </summary>
     class XmlConverters
     {
         /// <summary>Converts a .apsimx string to the latest version.</summary>
@@ -39,7 +44,7 @@ namespace Models.Core.ApsimFile
 
             // Update the xml if not at the latest version.
             bool changed = false;
-            while (fileVersion < toVersion)
+            while (fileVersion < Math.Min(toVersion, 46))
             {
                 changed = true;
 
@@ -820,36 +825,251 @@ namespace Models.Core.ApsimFile
 
             var factors = new List<KeyValuePair<string, string>>();
 
-            Experiment exp = XmlUtilities.Deserialise(node, typeof(Experiment)) as Experiment;
-            Apsim.ParentAllChildren(exp);
-            if (exp != null)
+            string experimentName = XmlUtilities.Value(node, "Name");
+            XmlNode baseSimulation = XmlUtilities.FindByType(node, "Simulation");
+            foreach (XmlNode zone in XmlUtilities.FindAllRecursivelyByTypes(baseSimulation, zoneTypes))
             {
-                XmlNode baseSimulation = XmlUtilities.FindByType(node, "Simulation");
-                foreach (XmlNode zone in XmlUtilities.FindAllRecursivelyByTypes(baseSimulation, zoneTypes))
+                foreach (List<FValue> combination in AllCombinations(node))
                 {
-                    foreach (List<FactorValue> combination in (exp).AllCombinations())
+                    string zoneName = XmlUtilities.Value(zone, "Name");
+                    string simulationName = experimentName;
+                    factors.Add(new KeyValuePair<string, string>("Simulation", null));
+                    factors.Add(new KeyValuePair<string, string>("Zone", zoneName));
+                    foreach (FValue value in combination)
                     {
-                        string zoneName = XmlUtilities.Value(zone, "Name");
-                        string simulationName = exp.Name;
-                        factors.Add(new KeyValuePair<string, string>("Simulation", null));
-                        factors.Add(new KeyValuePair<string, string>("Zone", zoneName));
-                        foreach (FactorValue value in combination)
+                        simulationName += value.Name;
+                        string factorName = value.FactorName;
+                        if (value.FactorParentIsFactor)
                         {
-                            simulationName += value.Name;
-                            string factorName = value.Factor.Name;
-                            if (value.Factor.Parent is Factor)
-                            {
-                                factorName = value.Factor.Parent.Name;
-                            }
-                            string factorValue = value.Name.Replace(factorName, "");
-                            factors.Add(new KeyValuePair<string, string>(factorName, factorValue));
+                            factorName = value.FactorParentName;
                         }
-                        factors.Add(new KeyValuePair<string, string>("Experiment", exp.Name));
+                        string factorValue = value.Name.Replace(factorName, "");
+                        factors.Add(new KeyValuePair<string, string>(factorName, factorValue));
                     }
+                    factors.Add(new KeyValuePair<string, string>("Experiment", experimentName));
                 }
             }
             return factors;
         }
+
+        private static List<List<FValue>> AllCombinations(XmlNode node)
+        {
+            var allValues = new List<List<FValue>>();
+
+            XmlNode factorNode = XmlUtilities.Find(node, "Factors");
+            if (factorNode != null)
+            {
+                //bool doFullFactorial = true;
+
+                foreach (XmlNode factor in XmlUtilities.ChildNodes(factorNode, "Factor"))
+                {
+                    List<FValue> factorValues = CreateValues(factor);
+                    allValues.Add(factorValues);
+                }
+
+                return MathUtilities.AllCombinationsOf<FValue>(allValues.ToArray());
+            }
+            return allValues;
+        }
+
+        private class FValue
+        {
+            public string Name { get; set; }
+            public string FactorName { get; set; }
+            public string FactorParentName { get; set; }
+            public bool FactorParentIsFactor { get; set; }
+        }
+
+        private static List<FValue> CreateValues(XmlNode factorNode)
+        {
+            List<FValue> factorValues = new List<FValue>();
+            List<List<PathValuesPair>> allValues = new List<List<PathValuesPair>>();
+            List<PathValuesPair> fixedValues = new List<PathValuesPair>();
+
+            List<string> specifications = XmlUtilities.Values(factorNode, "Specifications/string");
+            foreach (string specification in specifications)
+            {
+                if (specification.Contains(" to ") &&
+                    specification.Contains(" step "))
+                    allValues.Add(ParseRangeSpecification(specification));
+                else
+                {
+                    List<PathValuesPair> localValues;
+                    if (specification.Contains('='))
+                        localValues = ParseSimpleSpecification(specification);
+                    else
+                        localValues = ParseModelReplacementSpecification(factorNode, specification);
+
+                    if (localValues.Count == 1)
+                        fixedValues.Add(localValues[0]);
+                    else if (localValues.Count > 1)
+                        allValues.Add(localValues);
+                }
+            }
+
+            string factorName = XmlUtilities.Value(factorNode, "Name");
+            string factorParentName = XmlUtilities.Value(factorNode.ParentNode, "Name");
+            if (allValues.Count > 0 && specifications.Count == allValues[0].Count)
+            {
+                FValue factorValue = new FValue()
+                {
+                    Name = factorName,
+                    FactorName = factorName,
+                    FactorParentName = factorParentName,
+                    FactorParentIsFactor = factorNode.ParentNode.Name == "Factor"
+                };
+                factorValues.Add(factorValue);
+            }
+            else
+            {
+                // Look for child Factor models.
+                foreach (XmlNode childFactor in XmlUtilities.ChildNodes(factorNode, "Factor"))
+                {
+                    foreach (FValue childFactorValue in CreateValues(childFactor))
+                    {
+                        childFactorValue.Name = factorName + childFactorValue.Name;
+                        factorValues.Add(childFactorValue);
+                    }
+                }
+
+                if (allValues.Count == 0)
+                {
+                    PathValuesPairToFactorValue(factorNode, factorValues, fixedValues, null);
+                }
+
+                List<List<PathValuesPair>> allCombinations = MathUtilities.AllCombinationsOf<PathValuesPair>(allValues.ToArray());
+
+                if (allCombinations != null)
+                {
+                    foreach (List<PathValuesPair> combination in allCombinations)
+                        PathValuesPairToFactorValue(factorNode, factorValues, fixedValues, combination);
+                }
+            }
+            return factorValues;
+        }
+
+        private static void PathValuesPairToFactorValue(XmlNode factorNode, List<FValue> factorValues, List<PathValuesPair> fixedValues, List<PathValuesPair> combination)
+        {
+            List<string> pathsForFactor = new List<string>();
+            List<object> valuesForFactor = new List<object>();
+
+            // Add in fixed path/values.
+            foreach (PathValuesPair fixedPathValue in fixedValues)
+            {
+                pathsForFactor.Add(fixedPathValue.path);
+                valuesForFactor.Add(fixedPathValue.value);
+            }
+
+            // Add in rest.
+            string factorName = XmlUtilities.Value(factorNode, "Name");
+            string factorParentName = XmlUtilities.Value(factorNode.ParentNode, "Name");
+            string factorParentParentName = factorNode.ParentNode.ParentNode.Name;
+            if (combination != null)
+            {
+                foreach (PathValuesPair pathValue in combination)
+                {
+                    pathsForFactor.Add(pathValue.path);
+                    valuesForFactor.Add(pathValue.value);
+
+                    if (pathValue.value is IModel)
+                        factorName += (pathValue.value as IModel).Name;
+                    else
+                        factorName += pathValue.value.ToString();
+                }
+            }
+            else if (pathsForFactor.Count == 1 && valuesForFactor.Count == 1 && !(factorNode.ParentNode.Name == "Factor"))
+            {
+                if (valuesForFactor[0] is string)
+                    factorName += valuesForFactor[0];
+                else if (valuesForFactor[0] is IModel)
+                    factorName += (valuesForFactor[0] as IModel).Name;
+                else
+                    factorName += valuesForFactor.ToString();
+            }
+
+            if (pathsForFactor.Count > 0)
+            {
+                FValue factorValue = new FValue()
+                {
+                    Name = factorName,
+                    FactorName = XmlUtilities.Value(factorNode, "Name"),
+                    FactorParentName = factorParentName,
+                    FactorParentIsFactor = factorNode.ParentNode.Name == "Factor"
+                };
+                factorValues.Add(factorValue);
+            }
+        }
+
+        private static List<PathValuesPair> ParseSimpleSpecification(string specification)
+        {
+            List<PathValuesPair> pairs = new List<PathValuesPair>();
+
+            // Can be multiple values on specification line, separated by commas. Return a separate
+            // factor value for each value.
+
+            string path = specification;
+            string value = StringUtilities.SplitOffAfterDelimiter(ref path, "=").Trim();
+
+            if (value == null)
+                throw new Exception("Cannot find any values on the specification line: " + specification);
+            if (value.StartsWith("{"))
+            {
+                string rawValue = value.Replace("{", "").Replace("}", "");
+                pairs.Add(new PathValuesPair() { path = path.Trim(), value = rawValue });
+            }
+            else
+            {
+                string[] valueStrings = value.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string stringValue in valueStrings)
+                    pairs.Add(new PathValuesPair() { path = path.Trim(), value = stringValue.Trim() });
+            }
+
+            return pairs;
+        }
+
+        private static List<PathValuesPair> ParseRangeSpecification(string specification)
+        {
+            List<PathValuesPair> pairs = new List<PathValuesPair>();
+
+            // Format of a range:
+            //    value1 to value2 step increment.
+            string path = specification;
+            string rangeString = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
+            string[] rangeBits = rangeString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            double from = Convert.ToDouble(rangeBits[0], CultureInfo.InvariantCulture);
+            double to = Convert.ToDouble(rangeBits[2], CultureInfo.InvariantCulture);
+            double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
+
+            for (double value = from; value <= to; value += step)
+                pairs.Add(new PathValuesPair() { path = path.Trim(), value = value.ToString() });
+            return pairs;
+        }
+
+        private static List<PathValuesPair> ParseModelReplacementSpecification(XmlNode factorNode, string specification)
+        {
+            List<PathValuesPair> pairs = new List<PathValuesPair>();
+
+            // Must be a model replacement.
+            // Need to find a child value of the correct type.
+
+            XmlNode experiment = XmlUtilities.ParentOfType(factorNode, "Experiment");
+            if (experiment != null)
+            {
+                List<XmlNode> baseSimulations = XmlUtilities.ChildNodes(experiment, "Simulation");
+                if (baseSimulations.Count == 1)
+                {
+                    string childType = specification.Replace("[", "").Replace("]", "");
+
+                    List<string> specifications = XmlUtilities.Values(factorNode, "Specifications/string");
+
+                    foreach (XmlNode child in XmlUtilities.ChildNodes(factorNode, childType))
+                        pairs.Add(new PathValuesPair() { path = specification, value = XmlUtilities.Value(child, "Name") });
+                }
+            }
+            return pairs;
+        }
+
 
         /// <summary>Build a list of simulation / zone pairs from the specified simulation</summary>
         private static List<KeyValuePair<string, string>> BuildListFromSimulation(XmlNode node)

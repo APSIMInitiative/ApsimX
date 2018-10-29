@@ -31,49 +31,56 @@
             int offset = st.TakeWhile(c => char.IsWhiteSpace(c)).Count();
             char firstNonBlankChar = st[offset];
 
-            if (firstNonBlankChar == '{')
+            if (firstNonBlankChar == '<')
+            {
+                bool changed = XmlConverters.DoConvert(ref st, Math.Min(toVersion, 46), fileName);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(st);
+                int fileVersion = Convert.ToInt32(XmlUtilities.Attribute(doc.DocumentElement, "Version"));
+                if (fileVersion == toVersion)
+                    return new ConverterReturnType()
+                    { DidConvert = changed, RootXml = doc };
+
+                st = ConvertToJSON(st, fileName);
+                returnData.Root = JObject.Parse(st);
+            }
+            else if (firstNonBlankChar == '{')
             {
                 // json
                 returnData.Root = JObject.Parse(st);
-                if (returnData.Root.ContainsKey("Version"))
-                {
-                    int fileVersion = (int)returnData.Root["Version"];
-
-                    // Update the xml if not at the latest version.
-                    
-                    while (fileVersion < toVersion)
-                    {
-                        returnData.DidConvert = true;
-
-                        // Find the method to call to upgrade the file by one version.
-                        int versionFunction = fileVersion + 1;
-                        MethodInfo method = typeof(Converter).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
-                        if (method == null)
-                            throw new Exception("Cannot find converter to go to version " + versionFunction);
-
-                        // Found converter method so call it.
-                        method.Invoke(null, new object[] { returnData.Root, fileName });
-
-                        fileVersion++;
-                    }
-
-                    if (returnData.DidConvert)
-                    {
-                        returnData.Root["Version"] = fileVersion;
-                        st = returnData.Root.ToString();
-                    }
-                }
-            }
-            else if (firstNonBlankChar == '<')
-            {
-                XmlConverters.DoConvert(ref st, Math.Min(toVersion, 46), fileName);
-                st = ConvertToJSON(st, fileName);
-                returnData.Root = JObject.Parse(st);
-                returnData.DidConvert = true;
             }
             else
             {
                 throw new Exception("Unknown string encountered. Not JSON or XML. String: " + st);
+            }
+
+            if (returnData.Root.ContainsKey("Version"))
+            {
+                int fileVersion = (int)returnData.Root["Version"];
+
+                // Update the xml if not at the latest version.
+                    
+                while (fileVersion < toVersion)
+                {
+                    returnData.DidConvert = true;
+
+                    // Find the method to call to upgrade the file by one version.
+                    int versionFunction = fileVersion + 1;
+                    MethodInfo method = typeof(Converter).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
+                    if (method == null)
+                        throw new Exception("Cannot find converter to go to version " + versionFunction);
+
+                    // Found converter method so call it.
+                    method.Invoke(null, new object[] { returnData.Root, fileName });
+
+                    fileVersion++;
+                }
+
+                if (returnData.DidConvert)
+                {
+                    returnData.Root["Version"] = fileVersion;
+                    st = returnData.Root.ToString();
+                }
             }
             returnData.DidConvert = EnsureSoilHasInitWaterAndSample(returnData.Root) || returnData.DidConvert;
 

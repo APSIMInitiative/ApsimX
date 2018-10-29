@@ -5,6 +5,7 @@
     using NUnit.Framework;
     using System.Data;
     using System.IO;
+    using System.Xml;
 
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]
@@ -41,7 +42,7 @@
                                "</Series>" +
                              "</Graph>" +
                            "</Simulation>";
-            Assert.AreEqual(fromXML, toXML);
+            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
         }
 
         /// <summary>Test version 2</summary>
@@ -68,7 +69,7 @@
                                  "</Alias>" +
                              "</Cultivar>" +
                            "</Simulation>";
-            Assert.AreEqual(fromXML, toXML);
+            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
         }
 
         /// <summary>Test version 7</summary>
@@ -151,7 +152,7 @@
                                 "</VariableNames>" +
                              "</Report>" +
                            "</Simulation>";
-            Assert.AreEqual(fromXML, toXML);
+            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
         }
 
         /// <summary>Test version 10</summary>
@@ -192,7 +193,7 @@
                                "</VariableReference>" +
                              "</GenericOrgan>" +
                             "</Simulation>";
-            Assert.AreEqual(fromXML, toXML);
+            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
         }
 
         /// <summary>Test version 11</summary>
@@ -299,7 +300,7 @@
                                "<Value>1</Value>" +
                              "</StorageNReallocated>" +
                            "</Simulation>";
-            Assert.AreEqual(fromXML, toXML);
+            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
         }
 
         public void Version9()
@@ -330,6 +331,22 @@
             {
                 connection.CloseDatabase();
                 File.Delete(fileName);
+            }
+        }
+
+        [Test]
+        public void ConverterTests_Version32()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.ConverterTests_Version32 before.xml");
+            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.ConverterTests_Version32 after.xml");
+
+            var converter = Converter.DoConvert(xml, 33);
+            Assert.IsTrue(converter.DidConvert);
+
+            using (StringWriter writer = new StringWriter())
+            {
+                converter.RootXml.Save(writer);
+                Assert.AreEqual(writer.ToString(), expectedXml);
             }
         }
     }

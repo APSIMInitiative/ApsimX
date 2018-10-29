@@ -2,6 +2,7 @@
 
 namespace Models.Core.ApsimFile
 {
+    using APSIM.Shared.Utilities;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
@@ -31,6 +32,11 @@ namespace Models.Core.ApsimFile
             JObject root = JObject.Parse(json);
 
             JToken newRoot = CreateObject(root[doc.DocumentElement.Name]);
+
+            // The order of child nodes can be wrong. Newtonsoft XML to JSON will
+            // group child nodes of the same type into an array. This alters the
+            // order of children. Need to reorder children.
+            ReorderChildren(newRoot, doc.DocumentElement);
 
             json = newRoot.ToString();
 
@@ -201,9 +207,12 @@ namespace Models.Core.ApsimFile
                 Type t = GetModelTypeName((element as JProperty).Name);
                 if (t != null)
                     newChild["$type"] = t.FullName + ", Models";
+                if (newChild["Name"] == null)
+                    newChild["Name"] = (element as JProperty).Name;
             }
             else
                 newChild = CreateObject(element as JObject);
+
 
             if (newRoot["Children"] == null)
                 newRoot["Children"] = new JArray();
@@ -286,5 +295,42 @@ namespace Models.Core.ApsimFile
             }
             return null;
         }
+
+        /// <summary>
+        /// Make sure the child nodes of JToken are the same as for the original XML document.
+        /// Do this recursively.
+        /// </summary>
+        /// <param name="jsonNode">The JSON node.</param>
+        /// <param name="xmlNode">The XML node.</param>
+        private static void ReorderChildren(JToken jsonNode, XmlNode xmlNode)
+        {
+            if (jsonNode["Children"] != null)
+            {
+                JArray newArray = new JArray();
+
+                JArray children = jsonNode["Children"] as JArray;
+                foreach (var childXmlNode in XmlUtilities.ChildNodes(xmlNode, null))
+                {
+                    string childXmlName = XmlUtilities.Value(childXmlNode, "Name");
+                    if (childXmlName == string.Empty)
+                    {
+                        if (GetModelTypeName(childXmlNode.Name) != null)
+                            childXmlName = childXmlNode.Name;
+                    }
+                    if (childXmlName != string.Empty || GetModelTypeName(childXmlNode.Name) != null)
+                    {
+                        var childJsonNode = children.FirstOrDefault(c => c["Name"].ToString() == childXmlName);
+                        if (childJsonNode != null)
+                        {
+                            ReorderChildren(childJsonNode, childXmlNode);
+                            newArray.Add(childJsonNode);
+                        }
+                    }
+                }
+                jsonNode["Children"] = newArray;
+            }
+        }
+
+
     }
 }

@@ -7,6 +7,9 @@
       <Name>Clock</Name>
       <A>a</A>
     </Clock>
+    <Folder>
+      <Name>Folder1</Name>
+    </Folder>
     <Clock>
       <Name>Clock2</Name>
       <A>b</A>
