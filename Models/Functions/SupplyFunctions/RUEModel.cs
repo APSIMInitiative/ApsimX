@@ -42,16 +42,35 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>The FVPD</summary>
         [Link]
         public IFunction FVPD = null;
-        
+
+        /// <summary>The met data</summary>
+        [Link]
+        Weather MetData = null;
+
         /// <summary>The radiation interception data</summary>
         [Link]
         public IFunction RadnInt = null;
-        
+
         #region Class Data Members
         //[Input]
         //public NewMetType MetData;
 
         #endregion
+
+        #region Associated variables
+
+        /// <summary>Gets the VPD.</summary>
+        /// <value>The VPD.</value>
+        public double VPD
+        {
+            get
+            {
+                if (MetData != null)
+                    return MetData.VPD;
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>
         /// Total plant "actual" radiation use efficiency (for the day) corrected by reducing factors (g biomass/MJ global solar radiation) CHCK-EIT
@@ -66,7 +85,6 @@ namespace Models.Functions.SupplyFunctions
                 return RUE.Value() * RueReductionFactor;
             }
         }
-
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
@@ -78,5 +96,6 @@ namespace Models.Functions.SupplyFunctions
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
             return radiationInterception * RueAct;
         }
+        #endregion
     }
 }
