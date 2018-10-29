@@ -205,7 +205,7 @@ During this phase the plant has completed its growth and is drying ready for har
       <End>Maturity</End>
     </GenericPhase>
     <EndPhase>
-      <Name>ReadyForHarvest</Name>
+      <Name>ReadyForHarvesting</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>

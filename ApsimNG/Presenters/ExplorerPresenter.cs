@@ -1027,12 +1027,28 @@ namespace UserInterface.Presenters
             TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
 
-            description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
-            ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
-            if (info == null || (typeof(IModel).Assembly.DefinedTypes.Any(t => string.Equals(t.Name, model.Name, StringComparison.Ordinal)) && model.GetType().Name != model.Name))
+            // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
+            // an image with the same name as the model.
+            // Otherwise, we attempt to find an icon with the same name as the model's type.
+            // e.g. A Graph called Biomass should use an icon called Graph.png
+            // e.g. A Plant called Wheat should use an icon called Wheat.png
+
+            if (model is ModelCollectionFromResource)
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
+            else
                 description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
-            if (typeof(Models.Functions.IFunction).IsAssignableFrom(model.GetType()))
-                description.ToolTip = model.GetType().Name;
+
+            ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
+            if (info == null)
+            {
+                // Try the opposite.
+                if (model is ModelCollectionFromResource)
+                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
+                else
+                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
+            }
+
+            description.ToolTip = model.GetType().Name;
 
             description.Children = new List<TreeViewNode>();
             foreach (Model child in model.Children)

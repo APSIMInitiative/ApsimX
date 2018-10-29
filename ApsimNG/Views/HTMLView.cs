@@ -819,7 +819,7 @@ namespace UserInterface.Views
             else
                browser.LoadHTML(contents);
 
-            if (browser is TWWebBrowserIE)
+            if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).wb != null)
             {
                 keyPressObject = (browser as TWWebBrowserIE).wb.Document.ActiveElement;
                 if (keyPressObject != null)

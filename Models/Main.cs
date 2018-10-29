@@ -31,9 +31,12 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
-            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-            Directory.CreateDirectory(tempFolder);
-            Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            if (!Path.GetTempPath().Contains("ApsimX"))
+            {
+                string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
+                Directory.CreateDirectory(tempFolder);
+                Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            }
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             int exitCode = 0;
