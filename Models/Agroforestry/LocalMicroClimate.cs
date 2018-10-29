@@ -2,6 +2,8 @@
 using Models.Core;
 using Models.PMF;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
+
 namespace Models.Agroforestry
 {
     /// <summary>
@@ -37,6 +39,25 @@ namespace Models.Agroforestry
         /// Daily Mean temperature (oC)
         /// </summary>
         public double MeanT { get { return (MaxT + MinT) / 2; } }
+
+        /// <summary>
+        /// Daily mean VPD (hPa)
+        /// </summary>
+        [Units("hPa")]
+        public double VPD
+        {
+            get
+            {
+                const double SVPfrac = 0.66;
+                double VPDmint = MetUtilities.svp((float)MinT) - VP;
+                VPDmint = Math.Max(VPDmint, 0.0);
+
+                double VPDmaxt = MetUtilities.svp((float)MaxT) - VP;
+                VPDmaxt = Math.Max(VPDmaxt, 0.0);
+
+                return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
+            }
+        }
 
         /// <summary>Gets or sets the rainfall (mm)</summary>
         public double Rain { get { return weather.Rain; } }
