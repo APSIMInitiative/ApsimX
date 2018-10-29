@@ -386,6 +386,10 @@ namespace UserInterface.Presenters
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
             }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
             finally
             {
                 explorerPresenter.MainPresenter.ShowWaitCursor(false);

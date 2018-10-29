@@ -263,7 +263,7 @@
           "$type": "Models.PMF.Phen.EndPhase, Models",
           "Start": "Maturity",
           "End": "Unused",
-          "Name": "ReadyForHarvest",
+          "Name": "ReadyForHarvesting",
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
