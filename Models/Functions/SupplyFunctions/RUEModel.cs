@@ -45,7 +45,7 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The met data</summary>
         [Link]
-        Weather MetData = null;
+        IWeather MetData = null;
 
         /// <summary>The radiation interception data</summary>
         [Link]
