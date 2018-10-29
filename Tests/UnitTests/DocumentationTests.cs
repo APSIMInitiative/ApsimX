@@ -47,6 +47,7 @@ namespace UnitTests
                 double successRate = Math.Round((double)successes / total, 2);
                 TestContext.WriteLine();
                 TestContext.WriteLine("Success ratio: {0} ({1}/{2}).", successRate, successes, total);
+                Assert.Fail();
             }
         }
     }
