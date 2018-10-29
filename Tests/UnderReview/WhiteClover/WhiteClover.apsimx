@@ -6909,7 +6909,7 @@ Published data for the shoot-to-root ratio in white clover show a considerable v
         <RemoveAmountType>ResidualDM</RemoveAmountType>
         <BaseAmountGiven>50</BaseAmountGiven>
         <RemoveFractionType>UseCropDefaults</RemoveFractionType>
-        <UserSetOrgans>Leaf,Petiole,Stolon,Inflorescence,Taproot,Root,Nodule</UserSetOrgans>
+        <UserSetOrgans>Leaf,Petiole,Stolon,Inflorescence,Nodule,Taproot,Root</UserSetOrgans>
         <UserSetLiveRemoveFractions>0.75,0.5,0.05,0.75,0,0,0</UserSetLiveRemoveFractions>
         <UserSetDeadRemoveFractions>0.6,0.6,0,0.6,0,0,0</UserSetDeadRemoveFractions>
         <UserSetLiveResidueFractions>0,0,0,0,0,0,0</UserSetLiveResidueFractions>
@@ -6923,7 +6923,7 @@ Published data for the shoot-to-root ratio in white clover show a considerable v
         <ProportionN2Dung>0.4</ProportionN2Dung>
         <CNRatioDung>20</CNRatioDung>
         <UrineDepth>250</UrineDepth>
-        <FractionPopulationDecline>0.05</FractionPopulationDecline>
+        <FractionPopulationDecline>0.01</FractionPopulationDecline>
       </Script>
       <Code><![CDATA[// Performs defoliations, or removes biomass, from a PMF crop based on a set of given rules.  Defoliations can be triggered automatically by this manager or be
 //  called from another Script or a Schedule model. More details in the attached Memo (or it could be there!).
@@ -7146,20 +7146,20 @@ namespace Models
 				defoliationsType = "Harvest";
 
 			// check the period to defoliate
-			if(DurationOfEachDefoliation <=0)
+			if (DurationOfEachDefoliation <= 0)
 				throw new Exception("The period to defoliate over cannot be zero or negative!");
 
 			// get the type of amount given
 			if (RemoveAmountType == RemoveAmountTypes.DMToRemove)
 			{
 				amountType = "DMToRemove";
-				if (BaseAmountGiven <0.0)
+				if (BaseAmountGiven < 0.0)
 					throw new Exception("The amount given for bioamss to defoliate cannot be negative!");
 			}
 			else if (RemoveAmountType == RemoveAmountTypes.ResidualDM)
 			{
 				amountType = "ResidualDM";
-				if (BaseAmountGiven <0.0)
+				if (BaseAmountGiven < 0.0)
 					throw new Exception("The amount given for residual biomass cannot be negative!");
 			}
 			else
@@ -7512,8 +7512,9 @@ namespace Models
 						baseFractions[i] = getBaseRemovalFractions(plantOrgans[i], typeOfDefoliation);
 					else
 						baseFractions[i] = removeFractions[i];
-					
+
 					totalDM += (double)myZone.Get(myPlant.Name + "." + plantOrgans[i] + ".Live.Wt") * (baseFractions[i][0] + baseFractions[i][1]);
+					totalDM += (double)myZone.Get(myPlant.Name + "." + plantOrgans[i] + ".Dead.Wt") * (baseFractions[i][2] + baseFractions[i][3]);
 				}
 
 				// get the adjusted fractions of biomass to remove
@@ -7525,18 +7526,18 @@ namespace Models
 					fractionsToRemove[2] = baseFractions[i][2] * removeAmount / totalDM;
 					fractionsToRemove[3] = baseFractions[i][3] * removeAmount / totalDM;
 
-					// check the fractions
+					// check the fractions (make sure sum <= 0.999 for each pool)
 					double sumFractions = fractionsToRemove[0] + fractionsToRemove[1];
-					if (sumFractions > 1.0)
+					if (sumFractions > 0.999)
 					{ //normalise the values, sum of Live cannot be greater than one
-						fractionsToRemove[0] /= sumFractions;
-						fractionsToRemove[1] /= sumFractions;
+						fractionsToRemove[0] = 0.999 * fractionsToRemove[0] / sumFractions;
+						fractionsToRemove[1] = 0.999 * fractionsToRemove[1] / sumFractions;
 					}
 					sumFractions = fractionsToRemove[2] + fractionsToRemove[3];
-					if (sumFractions > 1.0)
+					if (sumFractions > 0.999)
 					{ //normalise the values, sum of Dead cannot be greater than one
-						fractionsToRemove[2] /= sumFractions;
-						fractionsToRemove[3] /= sumFractions;
+						fractionsToRemove[2] = 0.999 * fractionsToRemove[2] / sumFractions;
+						fractionsToRemove[3] = 0.999 * fractionsToRemove[3] / sumFractions;
 					}
 
 					// set the fractions to remove
@@ -7548,7 +7549,7 @@ namespace Models
 			}
 
 			// do the actual biomass removal
-			if (RemoveFractionType == FractionsToRemoveTypes.UseCropDefaults)
+			if ((removeAmount < 0.0) && (RemoveFractionType == FractionsToRemoveTypes.UseCropDefaults))
 				myPlant.RemoveBiomass(typeOfDefoliation);
 			else
 				myPlant.RemoveBiomass(typeOfDefoliation, removalFractions);
