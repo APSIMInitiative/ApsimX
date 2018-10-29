@@ -2297,8 +2297,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
-	  <DailyMeanVPDFunction>
+	  <LinearInterpolationFunction>
 		<Name>FVPD</Name>
+		<DailyMeanVPD>
+		  <Name>VPD</Name>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
+		  <Enabled>true</Enabled>
+		  <ReadOnly>false</ReadOnly>
+		  <MaximumVPDWeight>0.66</MaximumVPDWeight>
+		</DailyMeanVPD>
 		<XYPairs>
 		  <Name>XYPairs</Name>
 		  <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2318,8 +2325,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<IncludeInDocumentation>true</IncludeInDocumentation>
 		<Enabled>true</Enabled>
 		<ReadOnly>false</ReadOnly>
-		<MaximumVPDWeight>0.66</MaximumVPDWeight>
-	  </DailyMeanVPDFunction>
+		<XProperty>VPD.Value()</XProperty>
+	  </LinearInterpolationFunction>
       <RUECO2Function>
         <Name>FCO2</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2398,8 +2405,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<ReadOnly>false</ReadOnly>
 		<XProperty>[Leaf].Fn</XProperty>
 	  </LinearInterpolationFunction>
-	  <DailyMeanVPDFunction>
+	  <LinearInterpolationFunction>
 		<Name>FVPD</Name>
+		<DailyMeanVPD>
+		  <Name>VPD</Name>
+		  <IncludeInDocumentation>true</IncludeInDocumentation>
+		  <Enabled>true</Enabled>
+		  <ReadOnly>false</ReadOnly>
+		  <MaximumVPDWeight>0.66</MaximumVPDWeight>
+		</DailyMeanVPD>
 		<XYPairs>
 		  <Name>XYPairs</Name>
 		  <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2419,8 +2433,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
 		<IncludeInDocumentation>true</IncludeInDocumentation>
 		<Enabled>true</Enabled>
 		<ReadOnly>false</ReadOnly>
-		<MaximumVPDWeight>0.66</MaximumVPDWeight>
-	  </DailyMeanVPDFunction>
+		<XProperty>VPD.Value()</XProperty>
+	  </LinearInterpolationFunction>
 	  <IncludeInDocumentation>true</IncludeInDocumentation>
 	  <Enabled>true</Enabled>
 	  <ReadOnly>false</ReadOnly>
