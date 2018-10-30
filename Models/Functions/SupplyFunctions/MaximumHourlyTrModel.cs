@@ -55,9 +55,9 @@ namespace Models.Functions.SupplyFunctions
         [Description("hourlyRad use efficiency")]
         private IFunction RUE = null;
 
-        /// <summary>The transpiration efficiency coefficient</summary>
+        /// <summary>The transpiration efficiency coefficient for net biomass assimilate</summary>
         [Link]
-        [Description("Transpiration efficiency coefficient")]
+        [Description("The transpiration efficiency coefficient for net biomass assimilate")]
         [Units("kPa/gC/m^2/mm water")]
         private IFunction TEC = null;
 
