@@ -452,6 +452,7 @@ namespace Models.Functions.SupplyFunctions
                     DailyDM = hourlyDM.Sum();
                 }
             }
+
             DMStress = MathUtilities.Round(MathUtilities.Divide(DailyDM, DailyPotDM, 0), 3);
         }
         //------------------------------------------------------------------------------------------------
