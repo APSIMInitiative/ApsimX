@@ -105,6 +105,7 @@
     <Compile Include="APSIMFileReaderTests.cs" />
     <Compile Include="StructureTests.cs" />
     <Compile Include="XMLToJSONTests.cs" />
+    <Compile Include="DocumentationTests.cs" />
     <Compile Include="ManagerConverterTests.cs" />
     <Compile Include="StorageTests.cs" />
     <Compile Include="TestIndexedDataTable.cs" />
