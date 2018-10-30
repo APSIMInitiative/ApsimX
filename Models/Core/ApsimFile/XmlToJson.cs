@@ -15,8 +15,9 @@ namespace Models.Core.ApsimFile
     public class XmlToJson
     {
         private static string[] builtinTypeNames = new string[] { "string", "int", "double" };
-        private static string[] arrayVariableNames = new string[] { "AcceptedStats", "Operation" };
-        private static string[] arrayVariables = new[] { "Command", "Alias" };
+        private static string[] arrayVariableNames = new string[] { "AcceptedStats", "Operation", "Parameters", "cultivars" };
+        private static string[] arrayVariables = new[] { "Command", "Alias", "Leaves", "ZoneNamesToGrowRootsIn", "ZoneRootDepths", "ZoneInitialDM" };
+        private static string[] propertiesToIgnore = new[] { "ParameterValues" };
 
         /// <summary>
         /// Convert APSIM Next Generation xml to json.
@@ -56,9 +57,9 @@ namespace Models.Core.ApsimFile
             JToken child = root.First;
             while (child != null)
             {
-                if (child is JProperty)
+                JProperty property = child as JProperty;
+                if (property != null && !propertiesToIgnore.Contains(property.Name))
                 {
-                    JProperty property = child as JProperty;
                     if (property.Value is JArray)
                     {
                         if (builtinTypeNames.Contains(property.Name))
@@ -184,6 +185,8 @@ namespace Models.Core.ApsimFile
                         newArray.Add(new JValue(element.ToString()));
                     else if (name == "double")
                         newArray.Add(new JValue(double.Parse(element.ToString())));
+                    else if (name == "int")
+                        newArray.Add(new JValue(int.Parse(element.ToString())));
                     else if (modelType == null || modelType.GetInterface("IModel") == null)
                         newArray.Add(CreateObject(element));
                     else

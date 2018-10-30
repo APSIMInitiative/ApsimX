@@ -176,6 +176,7 @@
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureOneLineModelConverts.json" />
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureCultivarConverts.json" />
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureResidueTypesConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureLeavesIsntWritten.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
@@ -258,6 +259,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureResidueTypesConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureLeavesIsntWritten.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

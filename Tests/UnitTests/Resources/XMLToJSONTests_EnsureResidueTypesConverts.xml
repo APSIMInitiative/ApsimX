@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+
+  <ResidueTypes>
+    <Name>ResidueTypes</Name>
+    <ResidueType>
+      <fom_type>base_type</fom_type>
+      <fraction_C description="fraction of Carbon in FOM (0-1)">0.4</fraction_C>
+      <po4ppm description="labile P concentration(ppm)">0.0</po4ppm>
+      <nh4ppm description="ammonium N concentration (ppm)">0.0</nh4ppm>
+      <no3ppm description="nitrate N concentration (ppm)">0.0</no3ppm>
+      <specific_area description="specific area of residue (ha/kg">0.0005</specific_area>
+      <cf_contrib>1</cf_contrib>
+      <pot_decomp_rate>0.1</pot_decomp_rate>
+      <fr_c>
+        <double>0.2</double>
+        <double>0.7</double>
+        <double>0.1</double>
+      </fr_c>
+      <fr_n>
+        <double>0.2</double>
+        <double>0.7</double>
+        <double>0.1</double>
+      </fr_n>
+      <fr_p>
+        <double>0.2</double>
+        <double>0.7</double>
+        <double>0.1</double>
+      </fr_p>
+    </ResidueType>
+    <ResidueType>
+      <derived_from>base_type</derived_from>
+      <fom_type>inert</fom_type>
+      <pot_decomp_rate>0.0</pot_decomp_rate>
+    </ResidueType>
+  </ResidueTypes>
+  
+  
+</Simulations>

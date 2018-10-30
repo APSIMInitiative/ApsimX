@@ -1714,7 +1714,6 @@
     },
     {
       "$type": "Models.PMF.Organs.Leaf, Models",
-      "Leaves": null,
       "CurrentExpandingLeaf": 34.0,
       "StartFractionExpanded": 0.83819041077407885,
       "FractionNextleafExpanded": 0.92664093062319453,

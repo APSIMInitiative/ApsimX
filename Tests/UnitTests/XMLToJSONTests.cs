@@ -120,5 +120,16 @@
             string json = XmlToJson.Convert(xml);
             Assert.AreEqual(json, expectedJson);
         }
+
+        /// <summary>Ensure Leaf.Leaves isn't written.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureLeavesIsntWritten()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureLeavesIsntWritten.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureLeavesIsntWritten.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
     }
 }

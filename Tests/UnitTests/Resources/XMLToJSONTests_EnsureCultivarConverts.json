@@ -1,0 +1,23 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Name": "Alberic",
+      "Command": [
+        "[Phenology].MinimumLeafNumber.FixedValue = 9",
+        "[Phenology].VrnSensitivity.FixedValue = 7",
+        "[Phenology].PpSensitivity.FixedValue = 3"
+      ]
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Name": "B",
+      "Command": [
+        "[Phenology].MinimumLeafNumber.FixedValue = 9"
+      ]
+    }
+  ]
+}

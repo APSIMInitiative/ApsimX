@@ -2200,7 +2200,6 @@
     },
     {
       "$type": "Models.PMF.Organs.Leaf, Models",
-      "Leaves": null,
       "CurrentExpandingLeaf": 0.0,
       "StartFractionExpanded": 0.0,
       "FractionNextleafExpanded": 0.0,
