@@ -37,6 +37,8 @@ namespace UnitTests
 
         public double VP { get; set; }
 
+        public double VPD { get; set; }
+
         public double Wind { get; set; }
 
         public double CalculateDayLength(double Twilight)
