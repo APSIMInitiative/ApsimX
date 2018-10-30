@@ -8,7 +8,8 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions
 {
     /// <summary>
-    /// This Function calculates a mean daily VPD from Max and Min weighted toward Max according to the specified MaximumVPDWeighting factor.  
+    /// This Function calculates a mean daily VPD from Max and Min weighted toward Max according to the specified MaximumVPDWeight factor.  
+    /// This is then passed into the XY matrix as the x property and the function returns the y value
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

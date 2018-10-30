@@ -194,7 +194,7 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
-    <Compile Include="Functions\DailyMeanVPDFunction.cs" />
+    <Compile Include="Functions\DailyMeanVPD.cs" />
     <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
     <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
     <Compile Include="Functions\SupplyFunctions\MaximumHourlyTrModel.cs" />
