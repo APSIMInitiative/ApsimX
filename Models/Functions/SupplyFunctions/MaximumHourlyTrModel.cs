@@ -11,6 +11,7 @@ using Models.Soils;
 using System.Linq;
 using System.Threading.Tasks;
 using Models.PMF;
+using Models.PMF.Interfaces;
 
 namespace Models.Functions.SupplyFunctions
 {
@@ -97,11 +98,7 @@ namespace Models.Functions.SupplyFunctions
         [Units("mm/hr")]
         public double MaxTr { get; set; } = 999;
 
-        /// <summary>The KDIF</summary>
-        [Description("The multiplier by which the 'net' TEC must be multiplied for gross assimilate")]
-        public double TECIncForGross { get; set; } = 1.2;
-
-        /// <summary>The KDIF</summary>
+        /// <summary>The MaximumTempWeight</summary>
         [Description("The weight of maximim temperature for calculating mean temperature (negative to use hourly data)")]
         public double MaximumTempWeight { get; set; } = -1;
 
@@ -147,6 +144,10 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
         public double DMStress { get; set; }
+
+        /// <summary>The TEC for gross assimilate</summary>
+        [Description("The ration of TEC of gross assimilate to TEC of net assimilate")]
+        public double TECGrossToNet { get; set; }
         //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>
@@ -172,7 +173,18 @@ namespace Models.Functions.SupplyFunctions
             {
                 transpEffCoef = TEC.Value() * 1e3;
                 if (!string.Equals(Type, "net"))
-                    transpEffCoef *= TECIncForGross;
+                {
+                    List<IArbitration> Organs = new List<IArbitration>();
+                    foreach (IOrgan organ in myPlant.Organs)
+                        if (organ is IArbitration)
+                            Organs.Add(organ as IArbitration);
+
+                    double grossAssim = Organs.Sum(organ => organ.DMSupply.Fixation);
+                    double respiration = Organs.Sum(organ => organ.MaintenanceRespiration);
+                    double netAssim = Math.Max(0, grossAssim - respiration);
+                    TECGrossToNet = MathUtilities.Divide(grossAssim, netAssim, 1);
+                    transpEffCoef *= TECGrossToNet;
+                }
 
                 CalcTemperature();
                 CalcRadiation();
