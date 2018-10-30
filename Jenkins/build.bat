@@ -1,6 +1,6 @@
 @echo off
 setlocal
-
+setlocal enabledelayedexpansion
 rem Display help syntax if necessary.
 if "%1"=="/?" (
 	echo Compiles Apsim
@@ -20,7 +20,7 @@ if errorlevel 1 (
 rem Ensure apsimx environment variable is defined.
 if "%apsimx%"=="" (
 	pushd %~dp0..>nul
-	set apsimx=%cd%
+	set apsimx=!cd!
 	popd>nul
 )
 

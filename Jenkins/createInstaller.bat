@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 rem Ensure we have an apsimx variable.
 if "%apsimx%"=="" (
 	pushd %~dp0..>nul
-	set "apsimx=%cd%"
+	set "apsimx=!cd!"
 	popd>nul
 )
 set "setup=%apsimx%\Setup"
@@ -38,6 +38,15 @@ if "%1"=="%macossyntax%" goto :macos
 echo Usage: %0 ^(windows ^| debian ^| macos^)
 goto :end
 
+:getIssueNumber
+rem Get the issue number for the pull request which triggered this build.
+sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
+set /p APSIM_VERSION=<Version.tmp
+set ISSUE_NUMBER=%APSIM_VERSION:~-4,4%
+set APSIM_VERSION=
+del Version.tmp
+exit /b
+
 :windows
 call :getIssueNumber
 echo Generating installer...
@@ -60,33 +69,22 @@ goto :upload
 call :getIssueNumber
 echo Generating installer...
 call %setup%\osx\BuildMacDist.bat
+set "file_name=%setup%\osx\ApsimSetup%ISSUE_NUMBER%.dmg"
 goto :upload
 	
 :upload
 if errorlevel 1 (
-	echo Error encountered while generating installer!
+	echo Encountered an error while generating installer!
 	exit /b 1
-)
+) else echo Done.
 echo Uploading %file_name%...
-echo curl -u %APSIM_SITE_CREDS% -T %file_name% ftp://www.apsim.info/APSIM/ApsimXFiles/
-rem @curl -u %APSIM_SITE_CREDS% -T Output\APSIMSetup%ISSUE_NUMBER%.exe ftp://www.apsim.info/APSIM/ApsimXFiles/
+@curl -s -u !APSIM_SITE_CREDS! -T %file_name% ftp://www.apsim.info/APSIM/ApsimXFiles/
 if errorlevel 1 (
 	echo Encountered an error while uploading %file_name%!
 ) else (
 	echo Done.
 )
 goto :end
-
-:getIssueNumber
-
-rem Get the issue number for the pull request which triggered this build.
-set PULL_ID=%ghprbPullId%
-echo Fetching issue number...
-curl -ks https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
-for /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
-for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET ISSUE_NUMBER=%%J
-echo ISSUE_NUMBER=%ISSUE_NUMBER%
-exit /b
 
 :end
 endlocal
