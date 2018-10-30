@@ -67,7 +67,14 @@ if errorlevel 1 (
 	echo Error encountered while generating installer!
 	exit /b 1
 )
-echo file_name=%file_name%
+echo Uploading %file_name%...
+echo curl -u %APSIM_SITE_CREDS% -T %file_name% ftp://www.apsim.info/APSIM/ApsimXFiles/
+rem @curl -u %APSIM_SITE_CREDS% -T Output\APSIMSetup%ISSUE_NUMBER%.exe ftp://www.apsim.info/APSIM/ApsimXFiles/
+if errorlevel 1 (
+	echo Encountered an error while uploading %file_name%!
+) else (
+	echo Done.
+)
 goto :end
 
 :getIssueNumber
