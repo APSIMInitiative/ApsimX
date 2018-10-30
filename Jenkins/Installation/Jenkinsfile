@@ -1,0 +1,131 @@
+pipeline {
+	agent none
+    stages {
+		stage('CreateInstallers') {
+			parallel {
+				stage('Documentation') {
+					agent {
+						label "windows"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							cleanup
+							build
+							runTests Validation
+							createDocumentation
+							uploadDocumentation
+						'''
+					}
+				}
+				stage('Windows') {
+					agent {
+						label "windows"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							cleanup
+							build /r
+							createInstaller Windows
+						'''
+					}
+				}
+				stage('MacOS') {
+					agent {
+						label "linux && docker"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							echo sha1: %sha1%
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							call ApsimX\\Docker\\cleanup.bat
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							call ApsimX\\Docker\\CreateInstallations.bat macos
+						'''
+					}
+				}
+				stage('Linux') {
+					agent {
+						label "windows && docker"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							echo sha1: %sha1%
+							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							call ApsimX\\Docker\\cleanup.bat
+						'''
+						copyArtifacts filter: 'ApsimX\\bin.zip', fingerprintArtifacts: true, projectName: 'CreateInstallation', selector: specific('${BUILD_NUMBER}')
+						bat '''
+							call ApsimX\\Docker\\CreateInstallations.bat linux
+						'''
+					}
+				}
+			}
+		}
+		stage('Deploy') {
+			agent {
+				label "windows && docker"
+			}
+			environment {
+				CHANGE_DB_CREDS = credentials('change-db-creds')
+			}
+			steps {
+				bat '''
+					@echo off
+					echo sha1: %sha1%
+					rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
+					if not exist ApsimX (
+						git config --system core.longpaths true
+						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+					)
+					call ApsimX\\Docker\\cleanup.bat
+					docker build -m 16g -t deploy ApsimX\\Docker\\Deploy
+					docker run -m 16g -e "PASSWORD=%CHANGE_DB_CREDS_PSW%" -e ISSUE_NUMBER -e PULL_ID -e ISSUE_TITLE -e RELEASED deploy
+				'''
+			}
+		}
+	}
+}
