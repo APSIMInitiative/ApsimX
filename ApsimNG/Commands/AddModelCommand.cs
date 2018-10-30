@@ -39,7 +39,7 @@ namespace UserInterface.Commands
         public AddModelCommand(IModel parent, XmlNode child, TreeViewNode nodeDescription, IExplorerView explorerView)
         {
             if (parent.ReadOnly)
-                throw new ApsimXException(parent, string.Format("Unable to modify {0} - it is read-only.", parent.Name));
+                throw new ApsimXException(parent, string.Format("Unable to add model to {0} - it is read-only.", parent.Name));
             this.parent = parent;
             this.child = child;
             this.nodeDescription = nodeDescription;
