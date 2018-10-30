@@ -1,4 +1,5 @@
 {
+  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
   "InitialResidueName": null,
   "InitialResidueType": null,
   "InitialResidueMass": 0.0,
@@ -11,8 +12,9 @@
   "Children": [
     {
       "$type": "Models.Surface.ResidueTypes, Models",
-      "Types": [
+      "ResidueType": [
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "base_type",
           "derived_from": null,
           "fraction_C": 0.4,
@@ -39,6 +41,7 @@
           ]
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "inert",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -53,6 +56,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "manure",
           "derived_from": "base_type",
           "fraction_C": 0.08,
@@ -79,6 +83,7 @@
           ]
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "RuminantDung_PastureFed",
           "derived_from": "base_type",
           "fraction_C": 0.4,
@@ -105,6 +110,7 @@
           ]
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "algae",
           "derived_from": "base_type",
           "fraction_C": 0.4,
@@ -119,6 +125,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "fym",
           "derived_from": "base_type",
           "fraction_C": 0.08,
@@ -145,6 +152,7 @@
           ]
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "goatmanure",
           "derived_from": "base_type",
           "fraction_C": 0.08,
@@ -171,6 +179,7 @@
           ]
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "chickenmanure_base",
           "derived_from": "base_type",
           "fraction_C": 0.374,
@@ -197,6 +206,7 @@
           ]
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "cm",
           "derived_from": "chickenmanure_base",
           "fraction_C": 0.277,
@@ -211,6 +221,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "cmA",
           "derived_from": "chickenmanure_base",
           "fraction_C": 0.374,
@@ -225,6 +236,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "cmB",
           "derived_from": "chickenmanure_base",
           "fraction_C": 0.24,
@@ -239,6 +251,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "manB",
           "derived_from": "base_type",
           "fraction_C": 0.08,
@@ -265,6 +278,7 @@
           ]
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "tithonia",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -279,174 +293,7 @@
           "fr_p": null
         },
         {
-          "fom_type": "bambatsi",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0005,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "barley",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0005,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "broccoli",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0004,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "butterflypea",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0004,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "camaldulensis",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0002,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "canola",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0002,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "centro",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0004,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "chickpea",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0002,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "chicory",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0003,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "plantain",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0003,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "whiteclover",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0003,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
-          "fom_type": "redclover",
-          "derived_from": "base_type",
-          "fraction_C": 0.0,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
-          "specific_area": 0.0003,
-          "cf_contrib": 0,
-          "pot_decomp_rate": 0.0,
-          "fr_c": null,
-          "fr_n": null,
-          "fr_p": null
-        },
-        {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "TropicalPasture",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -461,7 +308,8 @@
           "fr_p": null
         },
         {
-          "fom_type": "bambatsi",
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "Bambatsi",
           "derived_from": "base_type",
           "fraction_C": 0.0,
           "po4ppm": 0.0,
@@ -475,6 +323,172 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "barley",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0005,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "broccoli",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0004,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "butterflypea",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0004,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "camaldulensis",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0002,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "canola",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0002,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "centro",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0004,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "chickpea",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0002,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "chicory",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0003,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "plantain",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0003,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "whiteclover",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0003,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
+          "fom_type": "redclover",
+          "derived_from": "base_type",
+          "fraction_C": 0.0,
+          "po4ppm": 0.0,
+          "nh4ppm": 0.0,
+          "no3ppm": 0.0,
+          "specific_area": 0.0003,
+          "cf_contrib": 0,
+          "pot_decomp_rate": 0.0,
+          "fr_c": null,
+          "fr_n": null,
+          "fr_p": null
+        },
+        {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "cowpea",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -489,6 +503,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "danthonia",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -503,6 +518,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "nativepasture",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -517,6 +533,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "pasture",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -531,6 +548,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "gliricidia",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -545,6 +563,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "globulus",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -559,6 +578,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "Eucalyptus",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -573,6 +593,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "fababean",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -587,6 +608,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "fieldpea",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -601,6 +623,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "soybean",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -615,6 +638,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "grass",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -629,6 +653,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "lablab",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -643,6 +668,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "lentil",
           "derived_from": "chickpea",
           "fraction_C": 0.0,
@@ -657,6 +683,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "lucerne",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -671,6 +698,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "lucerne2",
           "derived_from": "lucerne",
           "fraction_C": 0.0,
@@ -685,6 +713,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "lupin",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -699,6 +728,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "maize",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -713,6 +743,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "medic",
           "derived_from": "lucerne",
           "fraction_C": 0.0,
@@ -727,6 +758,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "millet",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -741,6 +773,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "mucuna",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -755,6 +788,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "mungbean",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -769,6 +803,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "horsegram",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -783,6 +818,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "navybean",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -797,6 +833,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "cotton",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -811,6 +848,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "oats",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -825,6 +863,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "orobanche",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -839,6 +878,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "peanut",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -853,6 +893,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "pigeonpea",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -867,6 +908,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "poppies",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -881,6 +923,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "potato",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -895,6 +938,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "fodderbeet",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -909,6 +953,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "kale",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -923,6 +968,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "rice",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -937,6 +983,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "soybean",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -951,6 +998,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "sorghum",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -965,6 +1013,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "stylo",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -979,6 +1028,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "sugarcane",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -993,6 +1043,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "sunflower",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1007,6 +1058,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "sweetcorn",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1021,6 +1073,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "sweetsorghum",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1035,6 +1088,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "vetch",
           "derived_from": "fieldpea",
           "fraction_C": 0.0,
@@ -1049,6 +1103,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "weed",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1063,6 +1118,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "WF_Millet",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1077,6 +1133,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "wheat",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1091,6 +1148,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "Grapevine",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1105,6 +1163,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "teff",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1119,6 +1178,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "oilmallee",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1133,6 +1193,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "lolium_rigidum",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1147,6 +1208,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "frenchbean",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1161,6 +1223,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "oilpalmunderstory",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1175,6 +1238,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "raphanus_raphanistrum",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1189,6 +1253,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "scrum",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1203,6 +1268,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "slurp",
           "derived_from": "base_type",
           "fraction_C": 0.0,
@@ -1217,6 +1283,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "oilpalm",
           "derived_from": "base_type",
           "fraction_C": 0.44,
@@ -1231,6 +1298,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "oilpalmstem",
           "derived_from": "base_type",
           "fraction_C": 0.44,
@@ -1245,6 +1313,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "all_carb",
           "derived_from": "base_type",
           "fraction_C": 1.0,
@@ -1267,6 +1336,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "all_cell",
           "derived_from": "base_type",
           "fraction_C": 1.0,
@@ -1289,6 +1359,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "all_lign",
           "derived_from": "base_type",
           "fraction_C": 1.0,
@@ -1311,6 +1382,7 @@
           "fr_p": null
         },
         {
+          "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "fyn",
           "derived_from": "base_type",
           "fraction_C": 0.08,

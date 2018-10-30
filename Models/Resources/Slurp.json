@@ -1,11 +1,12 @@
 {
+  "$type": "Models.PMF.Plant, Models",
   "CropType": "Slurp",
   "ResourceName": null,
   "Name": "Slurp",
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "CodeCData": "\r\n# SLURP: the Sound of a crop using water\r\n\r\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  \r\n\r\nSLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  \r\n\r\n   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  \r\n   2. Root which extracts water and nitrogen from the soil for plant growth  \r\n \r\n#Inclusion in APSIM simulations\r\nA Slurp crop is included in a simulation the same as any other APSIM crop  \r\n\r\n * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \r\n * It is then planted with a sowing rule  \r\n~~~\r\nSlurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  \r\n~~~\r\n  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \r\n  * `depth` in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation\r\n\r\n#Altering Slurp properties during runs\r\nIn some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.\r\n\r\n~~~\r\nobject LAIResetValue = leaflai;  \r\nzone.Set(\"Slurp.Leaf.LAIFunction.Value()\", LAIResetValue);  \r\nobject HeightResetValue = CoverToday * MaximumHeight;  \r\nzone.Set(\"Slurp.Leaf.HeightFunction.Value()\", HeightResetValue);  \r\n~~~\r\n",
+      "Text": "\n# SLURP: the Sound of a crop using water\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  \n\nSLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  \n\n   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  \n   2. Root which extracts water and nitrogen from the soil for plant growth  \n \n#Inclusion in APSIM simulations\nA Slurp crop is included in a simulation the same as any other APSIM crop  \n\n * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \n * It is then planted with a sowing rule  \n~~~\nSlurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  \n~~~\n  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \n  * `depth` in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation\n\n#Altering Slurp properties during runs\nIn some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.\n\n~~~\nobject LAIResetValue = leaflai;  \nzone.Set(\"Slurp.Leaf.LAIFunction.Value()\", LAIResetValue);  \nobject HeightResetValue = CoverToday * MaximumHeight;  \nzone.Set(\"Slurp.Leaf.HeightFunction.Value()\", HeightResetValue);  \n~~~\n",
       "Name": "TitlePage",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -206,7 +207,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -278,7 +279,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThis is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species\r\n",
+              "Text": "\nThis is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -698,6 +699,7 @@
       "Height": 0.0,
       "FRGR": 0.0,
       "PotentialEP": 0.0,
+      "WaterDemand": 0.0,
       "MicroClimatePresent": true,
       "LightProfile": null,
       "LeafInitialisationStage": "Sowing",
@@ -723,7 +725,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1222,12 +1224,12 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": null,
+      "Command": null,
       "Name": "StaticCrop",
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "The static crop is the base crop and uses all the paramaters values specified above.\r\n",
+          "Text": "The static crop is the base crop and uses all the paramaters values specified above.\n",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1241,7 +1243,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Root].MaximumRootDepth.FixedValue = 2600",
         "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65",
         "[Leaf].HeightFunction.FixedValue = 5000",
@@ -1252,7 +1254,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient\r\n",
+          "Text": "The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient\n",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1266,7 +1268,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Root].MaximumRootDepth.FixedValue = 800",
         "[Root].RootFrontVelocity.Potential.FixedValue = 15",
         "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65",
@@ -1277,7 +1279,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.\r\n",
+          "Text": "The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.\n",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1291,7 +1293,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Root].MaximumRootDepth.FixedValue = 2500",
         "[Root].RootFrontVelocity.Potential.FixedValue = 15",
         "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.8",
@@ -1302,7 +1304,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient\r\n",
+          "Text": "Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient\n",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,

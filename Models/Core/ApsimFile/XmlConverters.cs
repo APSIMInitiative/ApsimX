@@ -37,27 +37,32 @@ namespace Models.Core.ApsimFile
             }
             XmlNode rootNode = doc.DocumentElement;
 
+            bool changed = false;
             string fileVersionString = XmlUtilities.Attribute(rootNode, "Version");
             int fileVersion = 0;
-            if (fileVersionString != string.Empty)
+            if (fileVersionString == string.Empty)
+                changed = true;
+            else
+            {
                 fileVersion = int.Parse(fileVersionString);
 
-            // Update the xml if not at the latest version.
-            bool changed = false;
-            while (fileVersion < Math.Min(toVersion, 46))
-            {
-                changed = true;
+                // Update the xml if not at the latest version.
+                changed = false;
+                while (fileVersion < Math.Min(toVersion, 46))
+                {
+                    changed = true;
 
-                // Find the method to call to upgrade the file by one version.
-                int versionFunction = fileVersion + 1;
-                MethodInfo method = typeof(XmlConverters).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
-                if (method == null)
-                    throw new Exception("Cannot find converter to go to version " + versionFunction);
+                    // Find the method to call to upgrade the file by one version.
+                    int versionFunction = fileVersion + 1;
+                    MethodInfo method = typeof(XmlConverters).GetMethod("UpgradeToVersion" + versionFunction, BindingFlags.NonPublic | BindingFlags.Static);
+                    if (method == null)
+                        throw new Exception("Cannot find converter to go to version " + versionFunction);
 
-                // Found converter method so call it.
-                method.Invoke(null, new object[] { rootNode, fileName });
+                    // Found converter method so call it.
+                    method.Invoke(null, new object[] { rootNode, fileName });
 
-                fileVersion++;
+                    fileVersion++;
+                }
             }
 
             if (changed)
@@ -759,40 +764,43 @@ namespace Models.Core.ApsimFile
             {
                 string[] parentTypesToMatch = new string[] { "Simulation", "Zone", "Experiment", "Folder", "Simulations" };
                 XmlNode parent = XmlUtilities.ParentOfType(series, parentTypesToMatch);
-                List<KeyValuePair<string, string>> factorNames;
-                do
+                if (parent != null)
                 {
-                    factorNames = GetFactorNames(parent);
-                    parent = parent.ParentNode;
-                }
-                while (factorNames.Count == 0 && parent != null);
+                    List<KeyValuePair<string, string>> factorNames;
+                    do
+                    {
+                        factorNames = GetFactorNames(parent);
+                        parent = parent.ParentNode;
+                    }
+                    while (factorNames.Count == 0 && parent != null);
 
-                var uniqueFactorNames = CalculateDistinctFactorNames(factorNames);
-                string value = XmlUtilities.Value(series, "FactorIndexToVaryColours");
-                if (value != string.Empty)
-                {
-                    int index = Convert.ToInt32(value);
-                    if (index > -1 && index < uniqueFactorNames.Count())
-                        XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
-                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
-                }
+                    var uniqueFactorNames = CalculateDistinctFactorNames(factorNames);
+                    string value = XmlUtilities.Value(series, "FactorIndexToVaryColours");
+                    if (value != string.Empty)
+                    {
+                        int index = Convert.ToInt32(value);
+                        if (index > -1 && index < uniqueFactorNames.Count())
+                            XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
+                        XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
+                    }
 
-                value = XmlUtilities.Value(series, "FactorIndexToVaryMarkers");
-                if (value != string.Empty)
-                {
-                    int index = Convert.ToInt32(value);
-                    if (index > -1 && index < uniqueFactorNames.Count())
-                        XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
-                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
-                }
+                    value = XmlUtilities.Value(series, "FactorIndexToVaryMarkers");
+                    if (value != string.Empty)
+                    {
+                        int index = Convert.ToInt32(value);
+                        if (index > -1 && index < uniqueFactorNames.Count())
+                            XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
+                        XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
+                    }
 
-                value = XmlUtilities.Value(series, "FactorIndexToVaryLines");
-                if (value != string.Empty)
-                {
-                    int index = Convert.ToInt32(value);
-                    if (index > -1 && index < uniqueFactorNames.Count())
-                        XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
-                    XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
+                    value = XmlUtilities.Value(series, "FactorIndexToVaryLines");
+                    if (value != string.Empty)
+                    {
+                        int index = Convert.ToInt32(value);
+                        if (index > -1 && index < uniqueFactorNames.Count())
+                            XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
+                        XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
+                    }
                 }
             }
         }

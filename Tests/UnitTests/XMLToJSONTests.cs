@@ -44,9 +44,7 @@
             Assert.AreEqual(json, expectedJson);
         }
 
-        /// <summary>
-        /// Ensure a manager model can be converted.
-        /// </summary>
+        /// <summary>Ensure a manager model can be converted.</summary>
         [Test]
         public void XMLToJSONTests_EnsureManagerWorks()
         {
@@ -57,9 +55,7 @@
             Assert.AreEqual(json, expectedJson);
         }
 
-        /// <summary>
-        /// Ensure a child not implementing IModel (e.g. Axis) is converted OK.
-        /// </summary>
+        /// <summary>Ensure a child not implementing IModel (e.g. Axis) is converted OK.</summary>
         [Test]
         public void XMLToJSONTests_ChildNotOfTypeModel()
         {
@@ -70,9 +66,7 @@
             Assert.AreEqual(json, expectedJson);
         }
 
-        /// <summary>
-        /// Ensure a memo model can be converted.
-        /// </summary>
+        /// <summary>Ensure a memo model can be converted.</summary>
         [Test]
         public void XMLToJSONTests_EnsureMemoWorks()
         {
@@ -83,9 +77,7 @@
             Assert.AreEqual(json, expectedJson);
         }
 
-        /// <summary>
-        /// Ensure a memo model can be converted.
-        /// </summary>
+        /// <summary>Ensure a memo model can be converted.</summary>
         [Test]
         public void XMLToJSONTests_EnsureTestsWorks()
         {
@@ -96,10 +88,7 @@
             Assert.AreEqual(json, expectedJson);
         }
 
-        /// <summary>
-        /// Ensure a one line model in XML can be converted.
-        /// 
-        /// </summary>
+        /// <summary>Ensure a one line model in XML can be converted.</summary>
         [Test]
         public void XMLToJSONTests_EnsureOneLineModelConverts()
         {
@@ -110,6 +99,26 @@
             Assert.AreEqual(json, expectedJson);
         }
 
+        /// <summary>Ensure a cultivar is converted.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureCultivarConverts()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureCultivarConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureCultivarConverts.json");
 
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
+
+        /// <summary>Ensure residuetypes is converted.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureResidueTypesConverts()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureResidueTypesConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureResidueTypesConverts.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
     }
 }

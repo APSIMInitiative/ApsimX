@@ -6,10 +6,7 @@ namespace Models.Core.ApsimFile
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Xml;
 
     /// <summary>
@@ -19,6 +16,8 @@ namespace Models.Core.ApsimFile
     {
         private static string[] builtinTypeNames = new string[] { "string", "int", "double" };
         private static string[] arrayVariableNames = new string[] { "AcceptedStats", "Operation" };
+        private static string[] arrayVariables = new[] { "Command", "Alias" };
+
         /// <summary>
         /// Convert APSIM Next Generation xml to json.
         /// </summary>
@@ -90,7 +89,13 @@ namespace Models.Core.ApsimFile
                             // a model without any child nodes.
                             AddNewChild(property, newRoot);
                         }
-                        else
+                        else if (arrayVariables.Contains(property.Name))
+                        {
+                            JArray arrayOfModels = CreateArray(property.Name, property.Value, newRoot);
+                            if (arrayOfModels.Count > 0)
+                                newRoot[property.Name] = arrayOfModels;
+                        }
+                        else 
                             WriteProperty(property, newRoot);
                     }
                     else if (property.Value is JObject)
@@ -168,28 +173,28 @@ namespace Models.Core.ApsimFile
 
         private static JArray CreateArray(string name, JToken array, JObject newRoot)
         {
-            // Array of non models. e.g. array of Axis.
             JArray newArray = new JArray();
             if (array is JArray)
             {
+                // Array of non models. e.g. array of Axis.
                 foreach (var element in array.Children())
                 {
                     Type modelType = GetModelTypeName(name);
-                    if (name == "string")
+                    if (name == "string" || name == "Command" || name == "Alias")
                         newArray.Add(new JValue(element.ToString()));
                     else if (name == "double")
                         newArray.Add(new JValue(double.Parse(element.ToString())));
                     else if (modelType == null || modelType.GetInterface("IModel") == null)
-                        newArray.Add(CreateObject(element as JObject));
+                        newArray.Add(CreateObject(element));
                     else
                         AddNewChild(element, newRoot);
                 }
             }
             else if (array is JValue)
             {
-                // simply put the single property into the array. e.g. report event names
+                // Simply put the single property into the array. e.g. report event names
                 JValue value = array as JValue;
-                if (name == "string")
+                if (name == "string" || name == "Command" || name == "Alias")
                     newArray.Add(new JValue(value.ToString()));
                 else if (name == "double")
                     newArray.Add(new JValue(double.Parse(value.ToString())));
@@ -319,7 +324,7 @@ namespace Models.Core.ApsimFile
                     }
                     if (childXmlName != string.Empty || GetModelTypeName(childXmlNode.Name) != null)
                     {
-                        var childJsonNode = children.FirstOrDefault(c => c["Name"].ToString() == childXmlName);
+                        var childJsonNode = children.FirstOrDefault(c => !(c is JArray) && c["Name"].ToString() == childXmlName);
                         if (childJsonNode != null)
                         {
                             ReorderChildren(childJsonNode, childXmlNode);

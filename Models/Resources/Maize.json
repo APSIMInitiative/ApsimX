@@ -1,4 +1,5 @@
 {
+  "$type": "Models.PMF.Plant, Models",
   "CropType": "Maize",
   "ResourceName": null,
   "Name": "Maize",
@@ -157,7 +158,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "CodeCData": "\r\nThe photoperiod is likely to vary with individual maize cultivars.  Therefore, the response shown here is indicative only.  See the descriptions of individual cultivars for more detail on photoperiod responses used by the maize model.\r\n",
+                  "Text": "\nThe photoperiod is likely to vary with individual maize cultivars.  Therefore, the response shown here is indicative only.  See the descriptions of individual cultivars for more detail on photoperiod responses used by the maize model.\n",
                   "Name": "memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -400,7 +401,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nA function is used to provide flowering date as days after sowing(DAS).\r\n",
+              "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -439,7 +440,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nA function is used to provide maturity date as days after sowing(DAS).",
+              "Text": "\nA function is used to provide maturity date as days after sowing(DAS).",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -491,7 +492,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThough tillering is common in some maize varieties under certain agronomic conditions, no tillering is accounted for within this model.  Therefore all branching has been parameterised out of the current maize model.\r\n",
+          "Text": "\nThough tillering is common in some maize varieties under certain agronomic conditions, no tillering is accounted for within this model.  Therefore all branching has been parameterised out of the current maize model.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -877,9 +878,10 @@
       "NDemand": null,
       "DMSupply": null,
       "NSupply": null,
-      "RipeStage": "",
+      "RipeStage": null,
       "potentialDMAllocation": null,
       "Live": {
+        "$type": "Models.PMF.Biomass, Models",
         "DMDOfStructural": 0.6,
         "Name": "Biomass",
         "Children": [],
@@ -888,6 +890,7 @@
         "ReadOnly": false
       },
       "Dead": {
+        "$type": "Models.PMF.Biomass, Models",
         "DMDOfStructural": 0.6,
         "Name": "Biomass",
         "Children": [],
@@ -910,7 +913,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1538,7 +1541,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in maize KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.\r\n",
+              "Text": "\nThe parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in maize KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1579,7 +1582,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1594,7 +1597,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nNo effect of soil water content on root growth is currently captured in the model.\r\n",
+              "Text": "\nNo effect of soil water content on root growth is currently captured in the model.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1614,7 +1617,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nMaximum daily N uptake is set to an arbitrarily high value.\r\n",
+              "Text": "\nMaximum daily N uptake is set to an arbitrarily high value.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1634,7 +1637,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nJones and Kiniry (1986) used a constant root senescence fraction in the CERES-Maize model.\r\n",
+              "Text": "\nJones and Kiniry (1986) used a constant root senescence fraction in the CERES-Maize model.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1686,7 +1689,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "CodeCData": "\r\n[Hammer_etal_2009] used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.\r\n",
+                  "Text": "\n[Hammer_etal_2009] used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.\n",
                   "Name": "memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2197,7 +2200,7 @@
     },
     {
       "$type": "Models.PMF.Organs.Leaf, Models",
-      "Leaves": [],
+      "Leaves": null,
       "CurrentExpandingLeaf": 0.0,
       "StartFractionExpanded": 0.0,
       "FractionNextleafExpanded": 0.0,
@@ -2214,6 +2217,7 @@
       "R50": 160.0,
       "FRGR": 0.0,
       "PotentialEP": 0.0,
+      "WaterDemand": 0.0,
       "LightProfile": null,
       "MicroClimatePresent": true,
       "KDead": 0.03,
@@ -2309,7 +2313,7 @@
             {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
-              "Units": "",
+              "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -2352,7 +2356,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "CodeCData": "\r\nPotential leaf area is calculated from leaf number using the approach of Keating and Wafula (1992).\r\nIndividual leaf size is described using a bell-shaped curve, the parameters of which are derived from final leaf number.\r\n",
+                  "Text": "\nPotential leaf area is calculated from leaf number using the approach of Keating and Wafula (1992).\nIndividual leaf size is described using a bell-shaped curve, the parameters of which are derived from final leaf number.\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3260,7 +3264,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nExtinction coefficient is specified in terms of a potential extinction coefficient which is then discounted during periods of water stress to account for the impact of leaf curling.\r\n",
+              "Text": "\nExtinction coefficient is specified in terms of a potential extinction coefficient which is then discounted during periods of water stress to account for the impact of leaf curling.\n",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3364,7 +3368,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -3521,7 +3525,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -4206,7 +4210,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -4775,7 +4779,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5381,7 +5385,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe AboveGround composite biomass object includes all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe AboveGround composite biomass object includes all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5404,7 +5408,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe BelowGround composite biomass object includes all root biomass pools to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe BelowGround composite biomass object includes all root biomass pools to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5437,7 +5441,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe Total composite biomass object includes all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe Total composite biomass object includes all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5464,7 +5468,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe TotalLive composite biomass object includes the Live pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe TotalLive composite biomass object includes the Live pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5491,7 +5495,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe TotalDead composite biomass object includes the Dead pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe TotalDead composite biomass object includes the Dead pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5515,7 +5519,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5541,7 +5545,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5567,7 +5571,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5581,7 +5585,7 @@
     },
     {
       "$type": "Models.Memo, Models",
-      "CodeCData": "#Future Development requirements\r\n\r\n* Phenology not responding to stress events.  Requires better data sets for quantifying the effects of water and nitrogen on leaf apperance and the timing of development stages.\r\n* Phosphorus response\r\n* Improved parameterisation of supply and demand for N and DM from organs and arbitration of these resources.\r\n* Heat Stress responses in grain number\r\n* More validation under a wider range of environments with more detailed datasets\r\n* Seedling mortality\r\n* Water demand (MicroClimate) needs validation\r\n\r\n\r\n\r\n\r\n",
+      "Text": "#Future Development requirements\n\n* Phenology not responding to stress events.  Requires better data sets for quantifying the effects of water and nitrogen on leaf apperance and the timing of development stages.\n* Phosphorus response\n* Improved parameterisation of supply and demand for N and DM from organs and arbitration of these resources.\n* Heat Stress responses in grain number\n* More validation under a wider range of environments with more detailed datasets\n* Seedling mortality\n* Water demand (MicroClimate) needs validation\n\n\n\n\n",
       "Name": "Future Development Needs",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -5594,7 +5598,7 @@
       "Children": [
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 190",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124",
@@ -5612,7 +5616,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].GrainFilling.Target.FixedValue = 550",
             "[Phenology].Juvenile.Target.FixedValue = 270"
           ],
@@ -5624,7 +5628,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 210",
             "[Phenology].GrainFilling.Target.FixedValue = 550"
           ],
@@ -5636,7 +5640,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 280",
             "[Phenology].GrainFilling.Target.FixedValue = 550"
           ],
@@ -5644,7 +5648,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nVShort duration variety released in New Zealand by Pioneer\r\n",
+              "Text": "\nVShort duration variety released in New Zealand by Pioneer\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5658,7 +5662,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 100",
             "[Phenology].GrainFilling.Target.FixedValue = 500",
             "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
@@ -5672,7 +5676,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nVShort duration variety released in New Zealand by Pioneer\r\n",
+              "Text": "\nVShort duration variety released in New Zealand by Pioneer\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5686,7 +5690,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 150",
             "[Phenology].GrainFilling.Target.FixedValue = 500",
             "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
@@ -5700,7 +5704,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nMaize variety used in trials at Wageningen University\r\n",
+              "Text": "\nMaize variety used in trials at Wageningen University\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5714,7 +5718,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 211",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
@@ -5734,7 +5738,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 225",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24.0",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124",
@@ -5752,7 +5756,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 190",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124",
@@ -5770,7 +5774,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 190",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 300",
@@ -5788,7 +5792,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 211",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 472",
@@ -5806,7 +5810,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 280",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -5821,7 +5825,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety malawi_local is a Malawian medium-late maturing local variety.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety malawi_local is a Malawian medium-late maturing local variety.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5835,7 +5839,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 290",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -5850,7 +5854,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5864,7 +5868,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 290",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -5879,7 +5883,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5893,7 +5897,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 290",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -5908,7 +5912,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5922,7 +5926,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 290",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -5937,7 +5941,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5951,7 +5955,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 280",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -5966,7 +5970,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5980,7 +5984,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 280",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -5995,7 +5999,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6009,7 +6013,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 280",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6024,7 +6028,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6038,7 +6042,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 233",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6053,7 +6057,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6067,7 +6071,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 260",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6082,7 +6086,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6096,7 +6100,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 250",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6111,7 +6115,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6125,7 +6129,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 230",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6140,7 +6144,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety Melkassa is a local early-medium maturing Ethiopian variety.\r\n",
+              "Text": "\nThe variety Melkassa is a local early-medium maturing Ethiopian variety.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6154,7 +6158,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 250",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6169,7 +6173,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6183,7 +6187,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 250",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6198,7 +6202,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6212,7 +6216,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 230",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6227,7 +6231,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6241,7 +6245,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 230",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6256,7 +6260,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6270,7 +6274,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 230",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5",
@@ -6285,7 +6289,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\r\n",
+              "Text": "\nThe variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6299,7 +6303,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 150",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115",
@@ -6314,7 +6318,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety Makueni Composite is a kenyan variety with similar phenology but slightly higher cob size than Katumani composite.\r\n",
+              "Text": "\nThe variety Makueni Composite is a kenyan variety with similar phenology but slightly higher cob size than Katumani composite.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6328,7 +6332,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 150",
             "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
             "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115",
@@ -6343,7 +6347,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.\r\n",
+              "Text": "\nThe variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.\n",
               "Name": "memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6357,9 +6361,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
-            ""
-          ],
+          "Command": null,
           "Name": "Pioneer_3153",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -6368,7 +6370,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Phenology].Juvenile.Target.FixedValue = 180",
             "[Phenology].GrainFilling.Target.FixedValue = 500",
             "[Grain].MaximumGrainsPerCob.FixedValue = 550",
@@ -6398,7 +6400,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe SpikeLive composite biomass object includes the Live pools of then non-grain organs within the reproductive spike to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\r\n",
+          "Text": "\nThe SpikeLive composite biomass object includes the Live pools of then non-grain organs within the reproductive spike to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,

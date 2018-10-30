@@ -116,13 +116,13 @@
                     SetParametersInObject(script);
 
                     // Add the new script model to our models collection.
-                    Children.Clear();
+                    Children.RemoveAll(x => x.GetType().Name == "Script");
                     Children.Add(script);
                     script.Parent = this;
                 }
                 catch (Exception err)
                 {
-                    Children.Clear();
+                    Children.RemoveAll(x => x.GetType().Name == "Script");
                     CompiledCode = null;
                     throw new Exception("Unable to compile \"" + Name + "\"", err);
                 }

@@ -1,11 +1,12 @@
 {
+  "$type": "Models.PMF.Plant, Models",
   "CropType": "SCRUM",
   "ResourceName": null,
   "Name": "SCRUM",
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "CodeCData": "\r\n# SCRUM: the Simple Crop Resource Uptake Model\r\n\r\n_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_\r\n\r\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed or is not available. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  Because of this the model is not as generically applicable as full APSIM crop models.   It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that because it is a simple model the the parameters might need changing for crops in different locations or for crops sown at different times of the year.  Some sensibility testing or validation is recommended before application in different sutuations.   \r\n\r\nSCRUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCRUM has 4 organ classes to represent different biomass components and the real biomass components that these classes represent changes from crop to crop:  \r\n   1. A Simple leaf class called <b>Stover</b> which represents the unharvested parts of the plant.  Generally, this represents the leaf and stem components of the crop but for crops where stem and leaf are part of the harvested product (e.g forages and leafy vegetables) than stover is the residual fraction of leaf and stem that is not harvested.  \r\n   2. A Generic organ class called <b>Product</b> which represents the plant parts that are harvested and removed from the field.  This could represent grain, fruits, tubers, leaf or stem depending on what sort of crop is being represented.  \r\n   3. A Root organ which extracts water and nitrogen from the soil for plant growth and returns biomass to the soil on harvest  \r\n   4. A Nodule organ which is only activated and fixes nitrogen for the legume crops.  \r\nAn Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.\r\n\r\n#Inclusion in APSIM simulations\r\nA scrum crop is included in a simulation the same as any other APSIM crop  \r\n * The SCRUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \r\n * It is then planted with a sowing rule  \r\n~~~\r\nSCRUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  \r\n~~~\r\n  * Note that SCRUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \r\n  * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.\r\n~~~\r\n zone.Set(\"[SCRUM].Product.ExpectedYield.Value()\", ResetValue);  \r\n~~~\r\n* SCRUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  \r\n~~~\r\n[EventSubscribe(\"Commencing\")]  \r\nprivate void OnSimulationCommencing(object sender, EventArgs e)  \r\n{  \r\n  Remove = new RemovalFractions(SCRUM.Organs);  \r\n}  \r\n[EventSubscribe(\"DoManagement\")]    \r\nprivate void OnDoManagement(object sender, EventArgs e)  \r\n{  \r\n  if (Clock.Today.Date == HarvestDate2)  \r\n  {  \r\n    Remove.SetFractionLiveToRemove(\"Product\", 1.0);\r\n    Remove.SetFractionLiveToRemove(\"Stover\", 0.05);  \r\n    Remove.SetFractionLiveToResidue(\"Stover\",0.95)\r\n    SCRUM.Harvest(Remove);  \r\n    SCRUM.EndCrop();  \r\n  }  \r\n}  \r\n~~~\r\n* A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.\r\n * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCRUM crop.  \r\n",
+      "Text": "\n# SCRUM: the Simple Crop Resource Uptake Model\n\n_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed or is not available. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  Because of this the model is not as generically applicable as full APSIM crop models.   It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that because it is a simple model the the parameters might need changing for crops in different locations or for crops sown at different times of the year.  Some sensibility testing or validation is recommended before application in different sutuations.   \n\nSCRUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCRUM has 4 organ classes to represent different biomass components and the real biomass components that these classes represent changes from crop to crop:  \n   1. A Simple leaf class called <b>Stover</b> which represents the unharvested parts of the plant.  Generally, this represents the leaf and stem components of the crop but for crops where stem and leaf are part of the harvested product (e.g forages and leafy vegetables) than stover is the residual fraction of leaf and stem that is not harvested.  \n   2. A Generic organ class called <b>Product</b> which represents the plant parts that are harvested and removed from the field.  This could represent grain, fruits, tubers, leaf or stem depending on what sort of crop is being represented.  \n   3. A Root organ which extracts water and nitrogen from the soil for plant growth and returns biomass to the soil on harvest  \n   4. A Nodule organ which is only activated and fixes nitrogen for the legume crops.  \nAn Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.\n\n#Inclusion in APSIM simulations\nA scrum crop is included in a simulation the same as any other APSIM crop  \n * The SCRUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \n * It is then planted with a sowing rule  \n~~~\nSCRUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  \n~~~\n  * Note that SCRUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \n  * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.\n~~~\n zone.Set(\"[SCRUM].Product.ExpectedYield.Value()\", ResetValue);  \n~~~\n* SCRUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  \n~~~\n[EventSubscribe(\"Commencing\")]  \nprivate void OnSimulationCommencing(object sender, EventArgs e)  \n{  \n  Remove = new RemovalFractions(SCRUM.Organs);  \n}  \n[EventSubscribe(\"DoManagement\")]    \nprivate void OnDoManagement(object sender, EventArgs e)  \n{  \n  if (Clock.Today.Date == HarvestDate2)  \n  {  \n    Remove.SetFractionLiveToRemove(\"Product\", 1.0);\n    Remove.SetFractionLiveToRemove(\"Stover\", 0.05);  \n    Remove.SetFractionLiveToResidue(\"Stover\",0.95)\n    SCRUM.Harvest(Remove);  \n    SCRUM.EndCrop();  \n  }  \n}  \n~~~\n* A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.\n * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCRUM crop.  \n",
       "Name": "TitlePage",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -22,7 +23,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress",
+              "Text": "Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -54,7 +55,7 @@
         },
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "As ThermalTime accumulates the crop progresses through the following phases:",
+          "Text": "As ThermalTime accumulates the crop progresses through the following phases:",
           "Name": "Description1",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -91,7 +92,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "Currently the duration of the Emergence phase is set to zero because the period of zero cover and biomass production following sowing is accounted for in the cover and biomass accumulation functions.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.",
+              "Text": "Currently the duration of the Emergence phase is set to zero because the period of zero cover and biomass production following sowing is accounted for in the cover and biomass accumulation functions.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -111,7 +112,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nDuring this phase the plant only partitions biomass to Root and Stover (leaf and stem) Organs\r\n",
+              "Text": "\nDuring this phase the plant only partitions biomass to Root and Stover (leaf and stem) Organs\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -150,7 +151,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nDuring this phase the plant is partitioning biomass to Root, Stover and Product organs.\r\n",
+              "Text": "\nDuring this phase the plant is partitioning biomass to Root, Stover and Product organs.\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -189,7 +190,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nDuring this phase the plant is partitioning biomass to Root and Product organs and the canopy cover decreases from its maximum to zero\r\n",
+              "Text": "\nDuring this phase the plant is partitioning biomass to Root and Product organs and the canopy cover decreases from its maximum to zero\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -247,7 +248,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nDuring this phase the plant has completed its growth and is drying ready for harvest.\r\n",
+              "Text": "\nDuring this phase the plant has completed its growth and is drying ready for harvest.\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -320,7 +321,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.",
+          "Text": "It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -360,7 +361,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -375,7 +376,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\n\r\nThis is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting\r\n",
+              "Text": "\n\nThis is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -395,7 +396,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThis is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ",
+              "Text": "\nThis is the dry matter content of the harvested yield and is used to convert fresh yield into *DryYield* which are subsequently used in determining *Ymax* (total biomass production), daily dry matter production, *HarvestIndex* and the *PartitioningFraction* of each organ",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -413,7 +414,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThis variable is the product yield of the crop in g/m2 dry weight\r\n",
+              "Text": "\nThis variable is the product yield of the crop in g/m2 dry weight\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -449,7 +450,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "This is used to convert the total Dry Matter of this organ back to fresh mass once daily partitining is complete.",
+              "Text": "This is used to convert the total Dry Matter of this organ back to fresh mass once daily partitining is complete.",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -488,7 +489,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\n\r\nThis is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting\r\n",
+              "Text": "\n\nThis is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -975,6 +976,7 @@
       "Height": 0.0,
       "FRGR": 0.0,
       "PotentialEP": 0.0,
+      "WaterDemand": 0.0,
       "MicroClimatePresent": true,
       "LightProfile": null,
       "LeafInitialisationStage": "Emergence",
@@ -989,7 +991,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nStover represents any part of the crop that is not removed at harvest (i.e not part of the product).",
+          "Text": "\nStover represents any part of the crop that is not removed at harvest (i.e not part of the product).",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1009,7 +1011,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1403,7 +1405,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThe extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover\r\n",
+              "Text": "\nThe extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1492,7 +1494,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nIs a coefficient for the potential biomass accumulation function\r\n",
+              "Text": "\nIs a coefficient for the potential biomass accumulation function\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1512,7 +1514,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nIs another coefficient for the potential biomass accumulation function\r\n",
+              "Text": "\nIs another coefficient for the potential biomass accumulation function\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1530,7 +1532,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThis variable is the total biomass (g/m2dry weight) that the crop will produce at maturity in the absence of stress\r\n",
+              "Text": "\nThis variable is the total biomass (g/m2dry weight) that the crop will produce at maturity in the absence of stress\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1908,7 +1910,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "CodeCData": "\r\nDM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop\r\n",
+                      "Text": "\nDM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2337,7 +2339,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\r\n",
+          "Text": "\nThe root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -2357,7 +2359,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -2443,7 +2445,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThis is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  \r\n\r\n~~~\r\nfor (int layer = 0; layer lessthan  Soil.Thickness.Length; layer++)  \r\n{  \r\nif (layer.depth lessthan 305)  \r\n layer.KLModifier = 1;  \r\nelse if (layer.depth lessthan Crop.RootDepth)  \r\n layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  \r\nelse:  \r\n layer.KLModifier = 0;  \r\n}  \r\n~~~\r\n\r\nThis gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  \r\n\r\nIt is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ",
+              "Text": "\nThis is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  \n\n~~~\nfor (int layer = 0; layer lessthan  Soil.Thickness.Length; layer++)  \n{  \nif (layer.depth lessthan 305)  \n layer.KLModifier = 1;  \nelse if (layer.depth lessthan Crop.RootDepth)  \n layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  \nelse:  \n layer.KLModifier = 0;  \n}  \n~~~\n\nThis gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  \n\nIt is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -2633,7 +2635,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "\r\nThis is the proportion of total biomass that is paritioned into the roots and is used to set the partitioning fraction for the roots\r\n",
+              "Text": "\nThis is the proportion of total biomass that is paritioned into the roots and is used to set the partitioning fraction for the roots\n",
               "Name": "Description",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3048,7 +3050,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe nodule organ is unparameterised and simply has a switch that is turned on for legume crops (so they can fix what ever N the crop demands) and switched off for non legume crops (which fix no N)\r\n",
+          "Text": "\nThe nodule organ is unparameterised and simply has a switch that is turned on for legume crops (so they can fix what ever N the crop demands) and switched off for non legume crops (which fix no N)\n",
           "Name": "Description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -3068,7 +3070,7 @@
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
-          "Units": "",
+          "Units": null,
           "Name": "RemobilisationCost",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -3509,7 +3511,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "CodeCData": "\r\nThe AboveGround composite biomass object includes Stover and Product organs.\r\n",
+          "Text": "\nThe AboveGround composite biomass object includes Stover and Product organs.\n",
           "Name": "memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -3523,7 +3525,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1461.0",
@@ -3555,7 +3557,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 848.0",
@@ -3587,7 +3589,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 326.0",
@@ -3619,7 +3621,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 874.0",
@@ -3651,7 +3653,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1831.0",
@@ -3683,7 +3685,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 420.0",
@@ -3715,7 +3717,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1064.0",
@@ -3747,7 +3749,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1664.0",
@@ -3779,7 +3781,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1739.0",
@@ -3811,7 +3813,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1470.0",
@@ -3843,7 +3845,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1080.0",
@@ -3875,7 +3877,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1269.0",
@@ -3907,7 +3909,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 955.0",
@@ -3939,7 +3941,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1422.0",
@@ -3971,7 +3973,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1566.0",
@@ -4003,7 +4005,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 2017.0",
@@ -4035,7 +4037,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 2141.0",
@@ -4067,7 +4069,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1249.0",
@@ -4099,7 +4101,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 755.0",
@@ -4131,7 +4133,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 755.0",
@@ -4163,7 +4165,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 782.0",
@@ -4195,7 +4197,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 782.0",
@@ -4227,7 +4229,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1150.0",
@@ -4259,7 +4261,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 716.0",
@@ -4291,7 +4293,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 755.0",
@@ -4323,7 +4325,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1299.0",
@@ -4355,7 +4357,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 939.0",
@@ -4387,7 +4389,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 1000",
         "[Phenology].CanopyExpanding.Target.FixedValue = 420.0",
@@ -4419,7 +4421,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1923.0",
@@ -4451,7 +4453,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1785.0",
@@ -4483,7 +4485,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1648.0",
@@ -4515,7 +4517,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 652.0",
@@ -4547,7 +4549,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 420.0",
@@ -4579,7 +4581,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1064.0",
@@ -4611,7 +4613,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 458.0",
@@ -4643,7 +4645,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1546.0",
@@ -4675,7 +4677,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 543.0",
@@ -4707,7 +4709,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 939.0",
@@ -4739,7 +4741,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 326.0",
@@ -4771,7 +4773,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 899.0",
@@ -4803,7 +4805,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 939.0",
@@ -4835,7 +4837,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 489.0",
@@ -4867,7 +4869,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 420.0",
@@ -4899,7 +4901,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1831.0",
@@ -4931,7 +4933,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 690.0",
@@ -4963,7 +4965,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 638.0",
@@ -4995,7 +4997,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 590.0",
@@ -5027,7 +5029,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1064.0",
@@ -5059,7 +5061,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 999.0",
@@ -5091,7 +5093,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1064.0",
@@ -5123,7 +5125,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 543.0",
@@ -5155,7 +5157,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 326.0",
@@ -5187,7 +5189,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1590.0",
@@ -5219,7 +5221,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1237.0",
@@ -5251,7 +5253,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1150.0",
@@ -5283,7 +5285,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 939.0",
@@ -5315,7 +5317,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1064.0",
@@ -5347,7 +5349,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 899.0",
@@ -5379,7 +5381,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 794.0",
@@ -5411,7 +5413,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1590.0",
@@ -5443,7 +5445,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1236.0",
@@ -5475,7 +5477,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 543.0",
@@ -5507,7 +5509,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 326.0",
@@ -5539,7 +5541,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 1461.0",
@@ -5571,7 +5573,7 @@
     },
     {
       "$type": "Models.PMF.Cultivar, Models",
-      "Commands": [
+      "Command": [
         "[Nodule].FixationMetabolicCost.FixedValue = 0",
         "[Nodule].FixationRate.FixedValue = 0",
         "[Phenology].CanopyExpanding.Target.FixedValue = 848.0",

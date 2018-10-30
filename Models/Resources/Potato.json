@@ -1,11 +1,12 @@
 {
+  "$type": "Models.PMF.Plant, Models",
   "CropType": "Potato",
   "ResourceName": null,
   "Name": "Potato",
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "CodeCData": "\r\n# The APSIM Potato Model\r\n\r\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\r\n\r\n#Building the model.\r\nThe APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a structure model to simulate plant morphology  \r\n* a collection of organs to simulate the biomass (N and Weight) of various plant parts  \r\n* an arbitrator to allocate biomass to the various plant organs  \r\n\r\n#Pecularities of potato\r\nPotato is a challenging crop to model because it is vegetatviely propigated.  For seed propigated crops, plants are always equally dormant at planting and their development begins from there.  With potato the physiological status of the seed tubers vary depending on:  \r\n\r\n* the conditions the mother plant encountered late in its life (Stress, Desication etc)   \r\n* the conditions that the tuber was stored in (Cool store, ground store, dry store etc)   \r\n* treatment of the seed prior to planting (chitting, cutting etc).   \r\n\r\nAll of these factors infuence the developmental behaviour of the crop that is produced including:   \r\n\r\n* The timing of emergence   \r\n* The number of stems produced per plant and subsequent tuber number and canopy development   \r\n* The timing of tuber initiation and subsequent growth and partitioning   \r\n* The duration of haulm growth and subsequent tuber filling duration   \r\n\r\nThere are an enormous number of potato cultivars and they all differ in their responses of post planting behavour due to pre planting seed conditions, there is not a good quantitative understanding of how environment and managemet of seed potato prior to planting influences post planting behaviour and it is beyond the scope of the current APSIM infrastructure to provide environmental conditions during storage of seed.  We have tried but with a list of excuses this long we have not yet succeeded in building the effects of seed physiology into the potato model in anything other than a very elementry way.  However, it is possible to set the model up to capture seed effects for specific simulations. \r\n\r\n#Including a potato crop in an APSIM simulation\r\nThere is a Potato example simulation available by clicking the \"Open an Example\" icon available on the first tab displayed when APSIM Next Gen is opened.  This provides a useful demonstration of how to simulate a potato crop and provides some useful graphs for viewing models predictions.  \r\nTo incluce a potato crop in a simulation the \"Potato\" model needs to be added to the paddock, field or zone in which it is to be grown.  This can be done by right clicking on the \"Paddock\", selecting \"Add\" from the drop down menu and then selecting \"Potato\" from the list that comes up.  A sowing action also needs to be set to start the crop off and a harvest event to remove the potato crop so the next crop can be simulated.  The \"PotatoPlantAndHarvest\" manager module that is included in the \"Potato\" example simulation has script written to instigate these events and can be copied from the example simulation into other simulations.\r\n##Setting sowing depth (emergence date)\r\nThe potato model predicts emergence date as a function of sowing depth and all subsequent phenology is dependent on this timing.  Because this date is effected by seed physiology and can't yet be modeled we recommend that planting depth is not set at the actual planting depth, but varied to ensure the model predicts a realistic emergence date.  Planting depth is set in the 'PotatoPlantAndHarvest' module\r\n##Setting stem number (tuber number and early canopy growth)\r\nThe 'PotatoPlantAndHarvest' script sets the \"Number of stems per seed piece\".  This varies enormiously due to seed physiology and variety and should be set to a number that is realistic for the cultivar being simulated and the pre-planting treatment of the seed tubers.  This parameter influences tuber number and the early development of the canopy so should be set carefully.\r\n##Setting final leaf number (Crop duration)\r\nThe duration of a potato crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.  This responds to photoperiod in many varieties and is influenced by the pre-planting treatment of seed tubers.  As such this parameter is given a default value for each cultivar but can also be set in the \"PotatoPlantAndHarvest\" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.  Please read  [Brown_etal_2011] for a clear definition of final leaf number.",
+      "Text": "\n# The APSIM Potato Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\n#Building the model.\nThe APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\n\nThe model consists of:\n\n* a phenology model to simulate development between growth phases  \n* a structure model to simulate plant morphology  \n* a collection of organs to simulate the biomass (N and Weight) of various plant parts  \n* an arbitrator to allocate biomass to the various plant organs  \n\n#Pecularities of potato\nPotato is a challenging crop to model because it is vegetatviely propigated.  For seed propigated crops, plants are always equally dormant at planting and their development begins from there.  With potato the physiological status of the seed tubers vary depending on:  \n\n* the conditions the mother plant encountered late in its life (Stress, Desication etc)   \n* the conditions that the tuber was stored in (Cool store, ground store, dry store etc)   \n* treatment of the seed prior to planting (chitting, cutting etc).   \n\nAll of these factors infuence the developmental behaviour of the crop that is produced including:   \n\n* The timing of emergence   \n* The number of stems produced per plant and subsequent tuber number and canopy development   \n* The timing of tuber initiation and subsequent growth and partitioning   \n* The duration of haulm growth and subsequent tuber filling duration   \n\nThere are an enormous number of potato cultivars and they all differ in their responses of post planting behavour due to pre planting seed conditions, there is not a good quantitative understanding of how environment and managemet of seed potato prior to planting influences post planting behaviour and it is beyond the scope of the current APSIM infrastructure to provide environmental conditions during storage of seed.  We have tried but with a list of excuses this long we have not yet succeeded in building the effects of seed physiology into the potato model in anything other than a very elementry way.  However, it is possible to set the model up to capture seed effects for specific simulations. \n\n#Including a potato crop in an APSIM simulation\nThere is a Potato example simulation available by clicking the \"Open an Example\" icon available on the first tab displayed when APSIM Next Gen is opened.  This provides a useful demonstration of how to simulate a potato crop and provides some useful graphs for viewing models predictions.  \nTo incluce a potato crop in a simulation the \"Potato\" model needs to be added to the paddock, field or zone in which it is to be grown.  This can be done by right clicking on the \"Paddock\", selecting \"Add\" from the drop down menu and then selecting \"Potato\" from the list that comes up.  A sowing action also needs to be set to start the crop off and a harvest event to remove the potato crop so the next crop can be simulated.  The \"PotatoPlantAndHarvest\" manager module that is included in the \"Potato\" example simulation has script written to instigate these events and can be copied from the example simulation into other simulations.\n##Setting sowing depth (emergence date)\nThe potato model predicts emergence date as a function of sowing depth and all subsequent phenology is dependent on this timing.  Because this date is effected by seed physiology and can't yet be modeled we recommend that planting depth is not set at the actual planting depth, but varied to ensure the model predicts a realistic emergence date.  Planting depth is set in the 'PotatoPlantAndHarvest' module\n##Setting stem number (tuber number and early canopy growth)\nThe 'PotatoPlantAndHarvest' script sets the \"Number of stems per seed piece\".  This varies enormiously due to seed physiology and variety and should be set to a number that is realistic for the cultivar being simulated and the pre-planting treatment of the seed tubers.  This parameter influences tuber number and the early development of the canopy so should be set carefully.\n##Setting final leaf number (Crop duration)\nThe duration of a potato crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.  This responds to photoperiod in many varieties and is influenced by the pre-planting treatment of seed tubers.  As such this parameter is given a default value for each cultivar but can also be set in the \"PotatoPlantAndHarvest\" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.  Please read  [Brown_etal_2011] for a clear definition of final leaf number.",
       "Name": "TitlePage",
       "Children": [],
       "IncludeInDocumentation": false,
@@ -22,7 +23,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "Thermal time drives progress through all phenological phases, including those which are driven by leaf apparance and senescence.  The base temperature of  2 degrees was determined by [Brown_etal_2011] and [Oliveria_2015] and the upper threshold of 30 degrees is from [VanKeulen_1995].  The optimum of 20 degrees was determined in an unpublished model fitting exercise (Brown pers com).",
+              "Text": "Thermal time drives progress through all phenological phases, including those which are driven by leaf apparance and senescence.  The base temperature of  2 degrees was determined by [Brown_etal_2011] and [Oliveria_2015] and the upper threshold of 30 degrees is from [VanKeulen_1995].  The optimum of 20 degrees was determined in an unpublished model fitting exercise (Brown pers com).",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -79,7 +80,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "This phase is currenttly set with a very short duration and is a place holder until we have a suitalbe method for modelling tuber dormancy",
+              "Text": "This phase is currenttly set with a very short duration and is a place holder until we have a suitalbe method for modelling tuber dormancy",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -111,7 +112,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "The sprouting phase controls when the crop emerges.  In potato this is influenced by the physiological state of the seed tuber when it is planted.  This is difficult to model as the seed tubers physiological status begins when it is still on the mother plant and is influenced by the treatment of the mother plant, the storage conditions of the tuber, conditions when the seed is being prepared for planting and the variety of potato.  There is currently no good way of modelling this as it would require environmental information from beyond the field where the crop is to be grown which is currently beyond the scope of APSIM.  In the absence of something more elegent, we recommend that the user adjusts sowing depth to achieve a realistic emergence date and let the model deal with phenological develpment there after.",
+              "Text": "The sprouting phase controls when the crop emerges.  In potato this is influenced by the physiological state of the seed tuber when it is planted.  This is difficult to model as the seed tubers physiological status begins when it is still on the mother plant and is influenced by the treatment of the mother plant, the storage conditions of the tuber, conditions when the seed is being prepared for planting and the variety of potato.  There is currently no good way of modelling this as it would require environmental information from beyond the field where the crop is to be grown which is currently beyond the scope of APSIM.  In the absence of something more elegent, we recommend that the user adjusts sowing depth to achieve a realistic emergence date and let the model deal with phenological develpment there after.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -150,7 +151,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "During the *Vegetative Phase* the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after *Emergence* and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.",
+              "Text": "During the *Vegetative Phase* the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after *Emergence* and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -170,7 +171,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "The *FinalLeafNumber* responds to photoperiod in many varieties and is influenced by the pre-planting treatment \r\nof seed tubers. Therefore *FinalLeafNumber* is given a default value for each cultivar but can also be set in the\r\n\"PotatoPlantAndHarvest\" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.",
+              "Text": "The *FinalLeafNumber* responds to photoperiod in many varieties and is influenced by the pre-planting treatment \nof seed tubers. Therefore *FinalLeafNumber* is given a default value for each cultivar but can also be set in the\n\"PotatoPlantAndHarvest\" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -219,7 +220,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "During this phase the potato crop has no live shoots above ground but the tubers may be left in the ground to allow their skins to harden so they are not damaged by mechanical digging.",
+              "Text": "During this phase the potato crop has no live shoots above ground but the tubers may be left in the ground to allow their skins to harden so they are not damaged by mechanical digging.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -356,7 +357,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "A default *FinalLeafNumber* is given for Potato but most cultivars overwrite this with different values and it may also be overwritten in the sowing rule as described in the section \"Including a potato crop in an APSIM simulation\" above.",
+              "Text": "A default *FinalLeafNumber* is given for Potato but most cultivars overwrite this with different values and it may also be overwritten in the sowing rule as described in the section \"Including a potato crop in an APSIM simulation\" above.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -470,7 +471,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "Branching rate is calculated as the product of a potential brainching rate, which specifies the branching pattern of widely spaces plants, and a crowding function which decreases branching rate as green cover increases.",
+              "Text": "Branching rate is calculated as the product of a potential brainching rate, which specifies the branching pattern of widely spaces plants, and a crowding function which decreases branching rate as green cover increases.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -562,7 +563,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "CodeCData": "Defalt values are set for *DryMatterContent* but this is normally overwritten in the cultivar description",
+                  "Text": "Defalt values are set for *DryMatterContent* but this is normally overwritten in the cultivar description",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1390,7 +1391,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "CodeCData": "KL is not modified by any plant or soil attribute and so a constant value of 1 is used for this KL modifier.",
+              "Text": "KL is not modified by any plant or soil attribute and so a constant value of 1 is used for this KL modifier.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -1481,13 +1482,13 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "TuberInitiation",
-                          "End": "FinalLeaf",
+                          "Start": "Emergence",
+                          "End": "TuberInitiation",
                           "Name": "PhaseLookupValue",
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.05,
+                              "FixedValue": 0.3,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -1502,13 +1503,13 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "FinalLeaf",
-                          "End": "FullSenescence",
+                          "Start": "Emergence",
+                          "End": "TuberInitiation",
                           "Name": "PhaseLookupValue",
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
+                              "FixedValue": 0.3,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -1713,7 +1714,7 @@
     },
     {
       "$type": "Models.PMF.Organs.Leaf, Models",
-      "Leaves": [],
+      "Leaves": null,
       "CurrentExpandingLeaf": 34.0,
       "StartFractionExpanded": 0.83819041077407885,
       "FractionNextleafExpanded": 0.92664093062319453,
@@ -1730,6 +1731,7 @@
       "R50": 200.0,
       "FRGR": 0.0,
       "PotentialEP": 0.0,
+      "WaterDemand": 0.0,
       "LightProfile": null,
       "MicroClimatePresent": true,
       "KDead": 0.3,
@@ -2167,7 +2169,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "CodeCData": "The model assumes no impact of shading on leaf senescence.",
+                  "Text": "The model assumes no impact of shading on leaf senescence.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -2420,7 +2422,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "CodeCData": "This model assumes no impact of VPD on stomatal conductance or photosynthesis.",
+                  "Text": "This model assumes no impact of VPD on stomatal conductance or photosynthesis.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -3235,7 +3237,7 @@
       "Children": [
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.10,0.19",
             "[Phenology].Vegetative.Target.FixedValue = 200"
           ],
@@ -3247,7 +3249,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 28",
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16"
           ],
@@ -3259,7 +3261,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 26",
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18",
             "[Phenology].Vegetative.Target.FixedValue = 200"
@@ -3272,7 +3274,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 19",
             "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11",
             "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0",
@@ -3287,7 +3289,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 29",
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
           ],
@@ -3299,7 +3301,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 29",
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15"
           ],
@@ -3311,7 +3313,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 36",
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21"
           ],
@@ -3323,7 +3325,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
           ],
           "Name": "RedRascal",
@@ -3334,7 +3336,7 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 29",
             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
             "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
@@ -3350,60 +3352,11 @@
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
-          "Commands": [
+          "Command": [
             "[Structure].FinalLeafNumber.FixedValue = 34"
           ],
           "Name": "RussetBurbank",
-          "Children": [
-            {
-              "$type": "Models.Core.Alias, Models",
-              "Name": "Fianna",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Alias, Models",
-              "Name": "RussetRanger",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Alias, Models",
-              "Name": "Moonlight",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Alias, Models",
-              "Name": "Agria",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Alias, Models",
-              "Name": "Bondi",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Alias, Models",
-              "Name": "Crop39",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
+          "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
