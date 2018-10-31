@@ -83,7 +83,7 @@ namespace Models.Functions
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
-                if (Parent.GetType() == typeof(PhaseLookup))
+                if (Parent is PhaseLookup)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
                     // write children.

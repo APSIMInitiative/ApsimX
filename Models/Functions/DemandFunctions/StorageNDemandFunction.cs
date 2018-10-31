@@ -77,6 +77,8 @@ namespace Models.Functions.DemandFunctions
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // find parent organ's name
+                if (Parent == null)
+                    return;
                 string organName = "";
                 bool seekingParentOrgan = true;
                 IModel parentClass = this.Parent;
