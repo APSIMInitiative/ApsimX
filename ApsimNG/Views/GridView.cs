@@ -455,6 +455,7 @@
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
+                                comboRend.CellBackgroundGdk = Grid.Style.Base(cellState);
                                 return;
                             }
                         }

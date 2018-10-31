@@ -372,7 +372,7 @@ namespace Models.PMF
         {
             if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the implementation and model parameterisation are provided in the following sections.", indent));
                 // Write Plant Model Table
                 tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
                 DataTable tableData = new DataTable();

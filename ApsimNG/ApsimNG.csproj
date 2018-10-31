@@ -83,7 +83,6 @@
     <EmbeddedResource Include="Resources\Glade\GridView.glade" />
     <EmbeddedResource Include="Resources\Glade\TabbedMetDataView.glade" />
     <EmbeddedResource Include="Resources\Glade\GraphView.glade" />
-    <EmbeddedResource Include="Resources\Glade\SummaryView.glade" />
     <EmbeddedResource Include="Resources\Glade\HTMLView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -638,6 +637,7 @@
     <EmbeddedResource Include="Resources\MenuImages\Clear Status.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

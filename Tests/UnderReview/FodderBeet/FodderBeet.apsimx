@@ -1947,6 +1947,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <R50>150</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <WaterDemand>0</WaterDemand>
         <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.2</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
@@ -2171,13 +2172,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
               </MultiplyFunction>
-              <Constant>
-                <Name>DMRetranslocationFactor</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <FixedValue>0</FixedValue>
-              </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
@@ -2200,32 +2194,6 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <ReadOnly>false</ReadOnly>
             <FixedValue>0</FixedValue>
           </Constant>
-          <StorageDMDemandFunction>
-            <Name>StorageM</Name>
-            <SubtractFunction>
-              <Name>StorageFraction</Name>
-              <Constant>
-                <Name>One</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <FixedValue>1</FixedValue>
-              </Constant>
-              <VariableReference>
-                <Name>StructuralFraction</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <VariableName>[Petiole].DMDemands.Structural.StructuralFraction.Value()</VariableName>
-              </VariableReference>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <ReadOnly>false</ReadOnly>
-            </SubtractFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-          </StorageDMDemandFunction>
           <MultiplyFunction>
             <Name>Storage</Name>
             <VariableReference>
@@ -4214,6 +4182,9 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -6914,6 +6885,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -9441,6 +9415,9 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -10895,7 +10872,12 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>BrigadierSep</string>
+                <string>BrigadierOct</string>
+                <string>BrigadierNov</string>
+                <string>BrigadierDec</string>
+              </DisabledSeries>
             </Graph>
             <Graph>
               <Name>StorageRootWt</Name>
@@ -12805,6 +12787,9 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -18229,6 +18214,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -22103,6 +22091,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
+                <CaptureErrors>true</CaptureErrors>
+                <CaptureWarnings>true</CaptureWarnings>
+                <CaptureSummaryText>true</CaptureSummaryText>
               </Summary>
               <Weather>
                 <Name>Weather</Name>
@@ -23925,6 +23916,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
+                <CaptureErrors>true</CaptureErrors>
+                <CaptureWarnings>true</CaptureWarnings>
+                <CaptureSummaryText>true</CaptureSummaryText>
               </Summary>
               <Weather>
                 <Name>Weather</Name>
@@ -25679,6 +25673,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
+                <CaptureErrors>true</CaptureErrors>
+                <CaptureWarnings>true</CaptureWarnings>
+                <CaptureSummaryText>true</CaptureSummaryText>
               </Summary>
               <Weather>
                 <Name>Weather</Name>
@@ -26773,6 +26770,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
+                <CaptureErrors>true</CaptureErrors>
+                <CaptureWarnings>true</CaptureWarnings>
+                <CaptureSummaryText>true</CaptureSummaryText>
               </Summary>
               <Weather>
                 <Name>Weather</Name>
@@ -27934,6 +27934,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
+                <CaptureErrors>true</CaptureErrors>
+                <CaptureWarnings>true</CaptureWarnings>
+                <CaptureSummaryText>true</CaptureSummaryText>
               </Summary>
               <Weather>
                 <Name>Weather</Name>
@@ -29028,6 +29031,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
+                <CaptureErrors>true</CaptureErrors>
+                <CaptureWarnings>true</CaptureWarnings>
+                <CaptureSummaryText>true</CaptureSummaryText>
               </Summary>
               <Weather>
                 <Name>Weather</Name>
@@ -30122,6 +30128,9 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
+                <CaptureErrors>true</CaptureErrors>
+                <CaptureWarnings>true</CaptureWarnings>
+                <CaptureSummaryText>true</CaptureSummaryText>
               </Summary>
               <Weather>
                 <Name>Weather</Name>
@@ -31754,6 +31763,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -32840,6 +32852,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -34000,6 +34015,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -35176,6 +35194,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -36380,6 +36401,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -37559,6 +37583,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -38647,6 +38674,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -40155,6 +40185,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -41676,6 +41709,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -43157,6 +43193,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -45043,6 +45082,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -46150,6 +46192,9 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <Weather>
               <Name>Weather</Name>
@@ -47224,6 +47269,9 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
+            <CaptureErrors>true</CaptureErrors>
+            <CaptureWarnings>true</CaptureWarnings>
+            <CaptureSummaryText>true</CaptureSummaryText>
           </Summary>
           <Weather>
             <Name>Weather</Name>
@@ -48305,7 +48353,7 @@ namespace Models
     <Folder>
       <Name>NZ_Sensitivity</Name>
       <Folder>
-        <Name>Lincoln</Name>
+        <Name>LincolnSens</Name>
         <Experiment>
           <Name>Lincoln2016Temp</Name>
           <Memo>
@@ -48401,6 +48449,9 @@ Fodder beet (cultiva "Rivage") was precision drilled on 18 October 2016. Sowing 
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
@@ -49847,7 +49898,7 @@ namespace Models
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16747854</ColourArgb>
                 <FactorToVaryColours>Experiment</FactorToVaryColours>
-                <FactorToVaryMarkers>Nit</FactorToVaryMarkers>
+                <FactorToVaryMarkers>Temperature</FactorToVaryMarkers>
                 <Marker>Circle</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
@@ -50424,6 +50475,9 @@ Fodder beet (cultiva "Rivage") was precision drilled on 18 October 2016. Sowing 
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
+              <CaptureErrors>true</CaptureErrors>
+              <CaptureWarnings>true</CaptureWarnings>
+              <CaptureSummaryText>true</CaptureSummaryText>
             </Summary>
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
@@ -51732,5 +51786,5 @@ namespace Models
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <Enabled>true</Enabled>
   <ReadOnly>false</ReadOnly>
-  <ExplorerWidth>456</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>

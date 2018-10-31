@@ -123,12 +123,14 @@
             double sAge = structure.LeafTipsAppeared - age;
             for (int i = apexGroupAge.Count; i > 0; i--)
             {
-                if (apexGroupAge[i - 1] < age)
+                if (apexGroupAge[i - 1] < (int)age)
                 {
                     num += apexGroupSize[i - 1];
                 }
                 else
                 {
+                    double diff = 1 - (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared));
+                    diff -= age - (int)age;
                     num += (1 - (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared))) * apexGroupSize[i - 1];
                     break;
                 }

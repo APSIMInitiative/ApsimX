@@ -257,10 +257,11 @@ namespace UserInterface.Presenters
                     else if (properties[i].Display != null &&
                              properties[i].Display.Type == DisplayType.FieldName)
                     {
-                        string[] fieldNames = GetFieldNames();
+                        List<string> fieldNames = GetFieldNames();
                         if (fieldNames != null)
                         {
-                            cell.DropDownStrings = fieldNames;
+                            fieldNames.Insert(0, string.Empty);
+                            cell.DropDownStrings = fieldNames.ToArray();
                         }
                     }
                 }
@@ -352,10 +353,11 @@ namespace UserInterface.Presenters
                          properties[i].Display.Type == DisplayType.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    string[] fieldNames = GetFieldNames();
+                    List<string> fieldNames = GetFieldNames();
                     if (fieldNames != null)
                     {
-                        cell.DropDownStrings = fieldNames;
+                        fieldNames.Insert(0, string.Empty);
+                        cell.DropDownStrings = fieldNames.ToArray();
                     }
                 }
                 else if (properties[i].Display != null && 
@@ -464,12 +466,12 @@ namespace UserInterface.Presenters
         /// Returns the names associated with the first table name in the property list
         /// </summary>
         /// <returns>A list of fieldnames.</returns>
-        private string[] GetFieldNames()
+        private List<string> GetFieldNames()
         {
-            string[] fieldNames = null;
+            List<string> fieldNames = null;
             for (int i = 0; i < properties.Count; i++)
             {
-                if (properties[i].Display.Type == DisplayType.TableName)
+                if (properties[i].Display != null && properties[i].Display.Type == DisplayType.TableName)
                 {
                     IGridCell cell = grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
@@ -479,11 +481,14 @@ namespace UserInterface.Presenters
                         if (storage.TableNames.Contains(tableName))
                             data = storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
-                            fieldNames = DataTableUtilities.GetColumnNames(data);
+                        {
+                            fieldNames = DataTableUtilities.GetColumnNames(data).ToList();
+                            if (fieldNames.Contains("SimulationID"))
+                                fieldNames.Add("SimulationName");
+                        }
                     }
                 }
             }
-
             return fieldNames;
         }
 
