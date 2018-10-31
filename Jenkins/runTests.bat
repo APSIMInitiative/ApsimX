@@ -20,34 +20,11 @@ set uisyntax=UI
 set prototypesyntax=Prototypes
 set examplessyntax=Examples
 set validationsyntax=Validation
-set performancesyntax=Performance
 
 if "%1"=="%unitsyntax%" (
 	echo Running Unit Tests...
 	nunit3-console.exe %bin%\UnitTests.dll
 	goto :end
-)
-
-if "%1"=="%performancesyntax%" (
-	set COMMIT_AUTHOR=%ghprbActualCommitAuthor%
-	set PULL_ID=%ghprbPullId%
-	curl -k https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
-	for /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
-	del temp.txt
-	for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
-	
-	echo Pull request ID: 	"%PULL_ID%"
-	echo DateTime stamp: 	"%DATETIMESTAMP%"
-	echo Commit author:		"%COMMIT_AUTHOR%"
-	echo Running performance tests collector...
-	%apsimx%\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
-	set err=%errorlevel%
-	if err neq 0 (
-		echo APSIM.PerformanceTests.Collector did not run succecssfully!
-		echo Log file:
-		type %apsimx%\Docker\runtests\APSIM.PerformanceTests.Collector\PerformanceCollector.txt
-	)
-	exit /b %err%
 )
 
 if "%1"=="%uisyntax%" (
