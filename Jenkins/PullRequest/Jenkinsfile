@@ -10,7 +10,6 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
-							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -33,7 +32,6 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
-							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -56,7 +54,6 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
-							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -79,7 +76,6 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
-							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
@@ -102,7 +98,6 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
-							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
