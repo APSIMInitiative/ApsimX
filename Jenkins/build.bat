@@ -17,6 +17,13 @@ if errorlevel 1 (
 	exit 1
 )
 
+rem Check if nuget is on path.
+where nuget>nul
+if errorlevel 1 (
+	echo error: nuget is not on path.
+	exit 1
+)
+
 rem Ensure apsimx environment variable is defined.
 if "%apsimx%"=="" (
 	pushd %~dp0..>nul
@@ -30,6 +37,13 @@ if not exist "%solution_file%" (
 	echo Unable to find ApsimX.sln; attempted to locate it at %solution_file%
 	exit /b 1
 )
+
+rem Restore NuGet packages.
+echo Restoring NuGet packages...
+pushd "%apsimx%">nul
+nuget restore -verbosity quiet
+echo Done.
+popd>nul
 
 rem Set verbosity to minimal, don't display the logo, 
 rem and use the multithreaded switch.
