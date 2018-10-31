@@ -1042,6 +1042,7 @@ namespace UserInterface.Presenters
             }
             description.Strikethrough = !model.Enabled;
             description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            description.Colour = System.Drawing.Color.Empty;
             /*
             // Set the colour here
             System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;

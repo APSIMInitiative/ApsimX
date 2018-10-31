@@ -397,6 +397,11 @@ namespace UserInterface.Views
             if (cell is CellRendererText)
             {
                 Color colour = (Color)model.GetValue(iter, 4);
+                if (colour == Color.Empty)
+                {
+                    Gdk.Color defaultColour = treeview1.Style.Foreground(StateType.Normal);
+                    colour = Color.FromArgb(255 * (defaultColour.Red / 65535), 255 * (defaultColour.Green / 65535), 255 * (defaultColour.Blue / 65535));
+                }
                 (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
                 //(cell as CellRendererText).ForegroundGdk = colour;
 
