@@ -1,8 +1,11 @@
 @echo off
+setlocal
 SETLOCAL EnableDelayedExpansion
-pushd %~dp0..>nul
-set apsimx=%cd%
-popd>nul
+if "%apsimx%"=="" (
+	pushd %~dp0..>nul
+	set apsimx=!cd!
+	popd>nul
+)
 set "bin=%apsimx%\Bin"
 
 rem Add bin to path.
@@ -102,3 +105,4 @@ del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
 echo errorlevel: "%errorlevel%"
+endlocal

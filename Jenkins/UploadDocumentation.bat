@@ -2,8 +2,8 @@
 setlocal
 setlocal EnableDelayedExpansion
 if "%apsimx%"=="" (
-	pushd %~dp0.. >nul
-	set apsimx=%cd%
+	pushd %~dp0..>nul
+	set apsimx=!cd!
 	popd>nul
 )
 
