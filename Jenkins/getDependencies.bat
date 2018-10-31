@@ -3,11 +3,11 @@
 rem Install chocolatey.
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 
-refreshenv
+call refreshenv
 
 rem Disable the chocolatey progress bar. This doesn't display well in a log file.
 choco feature disable –name showDownloadProgress
-
+choco feature enable -n allowGlobalConfirmation
 rem curl is used to call several web services as well as to upload the installers (for now).
 rem wget is used to download utilities unavailable via chocolatey.
 rem git is needed for obvious reasons.
@@ -21,7 +21,7 @@ choco install curl wget git innosetup fciv cygwin 7zip r.project nunit-console-r
 
 mkdir C:\Utilities>nul
 mkdir C:\Utilities\downloads>nul
-pushd downloads>nul
+pushd C:\Utilities\downloads>nul
 
 rem Now install some missing build tools
 echo Downloading Visual Studio installer...
