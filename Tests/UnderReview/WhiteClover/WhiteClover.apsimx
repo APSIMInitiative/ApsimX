@@ -484,7 +484,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.035</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1408,20 +1408,6 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>1</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Memo>
-            <Name>Description</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-            <ReadOnly>false</ReadOnly>
-            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
-          </Memo>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Enabled>true</Enabled>
-          <ReadOnly>false</ReadOnly>
-          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <MultiplyFunction>
@@ -1502,6 +1488,21 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
         </MultiplyFunction>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Memo>
+            <Name>Description</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <MemoText><![CDATA[This is the default value for PMF. ]]></MemoText>
+          </Memo>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <FixedValue>1</FixedValue>
+          <Units>/day</Units>
+        </Constant>
         <Constant>
           <Name>RemobilisationCost</Name>
           <Memo>
@@ -1628,7 +1629,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1636,7 +1637,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.0175</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -2189,6 +2190,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>0</FixedValue>
+          <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -2306,7 +2308,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -2314,7 +2316,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.015</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -2924,6 +2926,7 @@ Flower emergence typically starts in spring, peaks at the beginning of summer an
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>1</FixedValue>
+          <Units>/day</Units>
         </Constant>
         <MultiplyFunction>
           <Name>NRetranslocationFactor</Name>
@@ -3149,12 +3152,12 @@ The main reason for grouping all flowers and seeds together is the complexity of
               <double>6</double>
             </X>
             <Y>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.022</double>
-              <double>0.035</double>
-              <double>0.043</double>
+              <double>0.025</double>
+              <double>0.026</double>
+              <double>0.03</double>
+              <double>0.04</double>
               <double>0.044</double>
+              <double>0.045</double>
             </Y>
           </XYPairs>
           <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -3179,10 +3182,10 @@ The main reason for grouping all flowers and seeds together is the complexity of
             </X>
             <Y>
               <double>0.025</double>
-              <double>0.025</double>
-              <double>0.029</double>
+              <double>0.026</double>
+              <double>0.03</double>
               <double>0.04</double>
-              <double>0.045</double>
+              <double>0.044</double>
               <double>0.045</double>
             </Y>
           </XYPairs>
@@ -3721,6 +3724,7 @@ The main reason for grouping all flowers and seeds together is the complexity of
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>1</FixedValue>
+          <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -3841,7 +3845,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.04</FixedValue>
+          <FixedValue>0.05</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -4489,7 +4493,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>1</FixedValue>
-          <Units>/d</Units>
+          <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
@@ -4497,6 +4501,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>0</FixedValue>
+          <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>DMReallocationFactor</Name>
@@ -4504,6 +4509,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>1</FixedValue>
+          <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -4511,6 +4517,7 @@ The host plant controls the supply of sugars and oxygen to the nodules, thus reg
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>0</FixedValue>
+          <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
@@ -4620,7 +4627,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -4628,7 +4635,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.015</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -5249,6 +5256,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
           <FixedValue>0</FixedValue>
+          <Units>/day</Units>
         </Constant>
         <MultiplyFunction>
           <Name>NRetranslocationFactor</Name>
@@ -5457,7 +5465,7 @@ Taproots in white clover are generally efemerous.  They develop from seeds and a
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Enabled>true</Enabled>
           <ReadOnly>false</ReadOnly>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.025</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -19567,7 +19575,7 @@ namespace Models
             <Graph>
               <Name>FDM</Name>
               <Series>
-                <Name>AboveGround</Name>
+                <Name>Arbitrator</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
@@ -19734,29 +19742,6 @@ namespace Models
             </Graph>
             <Graph>
               <Name>FW</Name>
-              <Series>
-                <Name>Arbitrator</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryLines>NRate</FactorToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Dash</Line>
-                <LineThickness>Normal</LineThickness>
-                <Checkpoint>Current</Checkpoint>
-                <TableName>Report</TableName>
-                <XFieldName>Date</XFieldName>
-                <YFieldName>WhiteClover.Arbitrator.FW</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
               <Series>
                 <Name>Leaf</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -30818,7 +30803,7 @@ namespace Models
             <Graph>
               <Name>FDM</Name>
               <Series>
-                <Name>AboveGround</Name>
+                <Name>Arbitrator</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
@@ -30985,29 +30970,6 @@ namespace Models
             </Graph>
             <Graph>
               <Name>FW</Name>
-              <Series>
-                <Name>Arbitrator</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <ReadOnly>false</ReadOnly>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorToVaryLines>NRate</FactorToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Dash</Line>
-                <LineThickness>Normal</LineThickness>
-                <Checkpoint>Current</Checkpoint>
-                <TableName>Report</TableName>
-                <XFieldName>Date</XFieldName>
-                <YFieldName>WhiteClover.Arbitrator.FW</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
               <Series>
                 <Name>Leaf</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
