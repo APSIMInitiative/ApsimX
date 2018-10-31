@@ -1,10 +1,16 @@
-rem @echo off
+@echo off
 set "PATH=%PATH%;C:\Utilities"
 if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
 if Exist Version.tmp Del Version.tmp
 if not exist %apsimx%\Bin\Models.exe exit /B 1
 cd %apsimx%\Setup\Linux
+rem Microsoft, in their infinite wisdom, decided that it would be a good idea for
+rem sysinternals such as sigcheck to spawn a popup window the first time you run them,
+rem which asks you to agree to their eula. To get around this, we just need to set a few
+rem registry entries...
+reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f	
+reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 
 sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
@@ -115,7 +121,7 @@ if not exist %apsimx%\Setup\Output (
 	mkdir %apsimx%\Setup\Output
 )
 
-dir
-ar vr %apsimx%\Setup\Output\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
+ar vr C:\APSIMSetup.deb debian-binary control.tar.gz data.tar.gz
+move C:\APSIMSetup.deb %apsimx%\Setup\Output\
 echo Finished creating installer.
 exit /b %errorlevel%
