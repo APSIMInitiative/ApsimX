@@ -1016,8 +1016,12 @@
         /// <param name="e"></param>
         private void OnToggleTheme(object sender, EventArgs e)
         {
-            Utility.Configuration.Settings.DarkTheme = !Utility.Configuration.Settings.DarkTheme;
-            view.RefreshTheme();
+            Configuration.Settings.DarkTheme = !Configuration.Settings.DarkTheme;
+            // Might be better to restart automatically (after asking the user),
+            // but I haven't been able to figure out a reliable cross-platform 
+            // way of attaching the debugger to the new process. I leave this
+            // as an exercise to the reader.
+            view.ShowMsgDialog("Theme changes will be applied upon restarting Apsim.", "Theme Changes", Gtk.MessageType.Info, Gtk.ButtonsType.Ok);
         }
 
         /// <summary>
