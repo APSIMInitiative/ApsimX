@@ -187,7 +187,7 @@
             // Ignore everything before most recent model name in square brackets.
             // I'm assuming that model/node names cannot start with a number.
             string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
-            var matches = System.Text.RegularExpressions.Regex.Matches(cellContents, modelNamePattern);
+            var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
             if (matches.Count > 0)
             {
                 int modelNameIndex = objectName.LastIndexOf(matches[matches.Count - 1].Value);

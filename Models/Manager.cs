@@ -240,7 +240,7 @@ namespace Models
                             SetParametersInObject(Script, parameters);
 
                             // Add the new script model to our models collection.
-                            Children.Clear();
+                            Children.RemoveAll(x => x.GetType().Name == "Script");
                             Children.Add(Script);
                             Script.Parent = this;
                         }
