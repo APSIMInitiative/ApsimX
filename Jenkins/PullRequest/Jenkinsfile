@@ -18,7 +18,7 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							cd ApsimX\Jenkins
+							cd ApsimX\\Jenkins
 							cleanup
 							build
 							runTests Prototypes
@@ -40,7 +40,7 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							cd ApsimX\Jenkins
+							cd ApsimX\\Jenkins
 							cleanup
 							build
 							runTests UI
@@ -62,7 +62,7 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							cd ApsimX\Jenkins
+							cd ApsimX\\Jenkins
 							cleanup
 							build
 							runTests Validation
@@ -85,7 +85,7 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							cd ApsimX\Jenkins
+							cd ApsimX\\Jenkins
 							cleanup
 							build
 							runTests Unit
@@ -107,7 +107,7 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							cd ApsimX\Jenkins
+							cd ApsimX\\Jenkins
 							cleanup
 							build
 							runTests Examples
