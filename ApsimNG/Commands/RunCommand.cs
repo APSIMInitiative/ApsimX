@@ -99,18 +99,18 @@
         {
             if (e.exceptionThrown != null)
                 errors.Add(e.exceptionThrown);
-
-            Stop();
-            if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                        + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.MessageType.Information);
-            else
+            try
             {
-                string errorMessage = null;
-                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine
-                                                     +  "----------------------------------------------" + Environment.NewLine);
-                explorerPresenter.MainPresenter.ShowError(errors);
+                Stop();
             }
+            catch
+            {
+                // We could display the error message, but we're about to display output to the user anyway.
+            }
+            if (errors.Count == 0)
+                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, stopwatch.Elapsed.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information);
+            else
+                explorerPresenter.MainPresenter.ShowError(errors);
 
             SoundPlayer player = new SoundPlayer();
             if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
@@ -145,9 +145,9 @@
         private void Stop()
         {
             this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
-            timer.Stop();
-            stopwatch.Stop();
-            jobRunner.Stop();
+            timer?.Stop();
+            stopwatch?.Stop();
+            jobRunner?.Stop();
 
             IsRunning = false;
             jobManager = null;
