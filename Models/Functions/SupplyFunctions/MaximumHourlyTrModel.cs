@@ -139,6 +139,9 @@ namespace Models.Functions.SupplyFunctions
 
         private XYPairs TempResponseFunc = new XYPairs();
 
+        /// <summary>Total potential daily assimilation in g/m2</summary>
+        public double DailyPotDM { get; set; }
+
         /// <summary>Total daily assimilation in g/m2</summary>
         public double DailyDM { get; set; }
 
@@ -183,7 +186,7 @@ namespace Models.Functions.SupplyFunctions
                     double respiration = Organs.Sum(organ => organ.MaintenanceRespiration);
                     double netAssim = Math.Max(0, grossAssim - respiration);
                     TECGrossToNet = MathUtilities.Divide(grossAssim, netAssim, 1);
-                    transpEffCoef *= TECGrossToNet;
+                    transpEffCoef *= TECGrossToNet * 30 / 12;
                 }
 
                 CalcTemperature();
@@ -403,18 +406,27 @@ namespace Models.Functions.SupplyFunctions
             double reduction = 0.99;
             double maxHourlyT = hourlyTr.Max();
 
-            if (rootWaterSupp < 1e-5)
-                for (int i = 0; i < 24; i++) hourlyTr[i] = 0;
+            if (reduction < 0)
+            {
+                double sumTr = hourlyTr.Sum();
+                for (int i = 0; i < 24; i++)
+                    hourlyTr[i] *= Math.Min(1, MathUtilities.Divide(rootWaterSupp, sumTr, 0));
+            }
             else
             {
-                while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
+                if (rootWaterSupp < 1e-8)
+                    for (int i = 0; i < 24; i++) hourlyTr[i] = 0;
+                else
                 {
-                    maxHourlyT *= reduction;
-                    for (int i = 0; i < 24; i++)
+                    while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
                     {
-                        double diff = Math.Max(0, hourlyTr.Sum() - rootWaterSupp);
-                        if (hourlyTr[i] >= maxHourlyT) hourlyTr[i] = Math.Max(maxHourlyT, hourlyTr[i] - diff);
-                        if (hourlyTr.Sum() - rootWaterSupp < 1e-5) break;
+                        maxHourlyT *= reduction;
+                        for (int i = 0; i < 24; i++)
+                        {
+                            double diff = Math.Max(0, hourlyTr.Sum() - rootWaterSupp);
+                            if (hourlyTr[i] >= maxHourlyT) hourlyTr[i] = Math.Max(maxHourlyT, hourlyTr[i] - diff);
+                            if (hourlyTr.Sum() - rootWaterSupp < 1e-5) break;
+                        }
                     }
                 }
             }
@@ -431,8 +443,8 @@ namespace Models.Functions.SupplyFunctions
             hourlyDM = new List<double>();
             for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
 
+            DailyPotDM = hourlyPotDM.Sum();
             DailyDM = hourlyDM.Sum();
-            double DailyPotDM = hourlyPotDM.Sum();
 
             if (GrossDailyAssimilate != null && hourlyPotDM.Sum() > 0 && hourlyDM.Sum() > 0)
             {
@@ -521,7 +533,7 @@ namespace Models.Functions.SupplyFunctions
                 //Diffuse light fraction (vDifFr) from atmospheric transmission (vAtmTrans)
                 PAR = 0.5 * GlobalRadiation * SinHeight * (1.0 + 0.4 * SinHeight) / DailySinE;
 
-                if (PAR>0)
+                if (PAR > 1e-10)
                 {
                     AtmTrans = PAR / (0.5 * SolarConst * SinHeight);
 
