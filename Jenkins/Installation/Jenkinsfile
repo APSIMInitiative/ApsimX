@@ -22,11 +22,11 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build /r
-							runTests Validation
-							createDocumentation
-							uploadDocumentation
+							call cleanup
+							call build /r
+							call runTests Validation
+							call createDocumentation
+							call uploadDocumentation
 						'''
 					}
 				}
@@ -49,9 +49,9 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build /r
-							createInstaller Windows
+							call cleanup
+							call build /r
+							call createInstaller Windows
 						'''
 					}
 				}
@@ -74,9 +74,9 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build /r
-							createInstaller macos
+							call cleanup
+							call build /r
+							call createInstaller macos
 						'''
 					}
 				}
@@ -99,9 +99,9 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build /r
-							createInstaller debian
+							call cleanup
+							call build /r
+							call createInstaller debian
 						'''
 					}
 				}
@@ -122,8 +122,8 @@ pipeline {
 						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 					)
 					cd ApsimX\\Jenkins
-					cleanup
-					deploy "%PULL_ID%" "%CHANGE_DB_CREDS_PSW%"
+					call cleanup
+					call deploy "%PULL_ID%" "%CHANGE_DB_CREDS_PSW%"
 				'''
 			}
 		}

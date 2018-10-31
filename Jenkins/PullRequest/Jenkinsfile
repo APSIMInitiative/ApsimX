@@ -19,9 +19,9 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build
-							runTests Prototypes
+							call cleanup
+							call build
+							call runTests Prototypes
 						'''
 					}
 				}
@@ -41,9 +41,9 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build
-							runTests UI
+							call cleanup
+							call build
+							call runTests UI
 						'''
 					}
 				}
@@ -63,10 +63,10 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build
-							runTests Validation
-							performanceTests
+							call cleanup
+							call build
+							call runTests Validation
+							call performanceTests
 						'''
 					}
 				}
@@ -86,9 +86,9 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build
-							runTests Unit
+							call cleanup
+							call build
+							call runTests Unit
 						'''
 					}
 				}
@@ -108,9 +108,9 @@ pipeline {
 							)
 							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
-							cleanup
-							build
-							runTests Examples
+							call cleanup
+							call build
+							call runTests Examples
 						'''
 					}
 				}
