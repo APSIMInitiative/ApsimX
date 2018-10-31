@@ -36,18 +36,18 @@ wget -q --no-check-certificate https://download.sysinternals.com/files/Sigcheck.
 echo Installing sigcheck...
 7z e sigcheck.zip *.exe -o..>nul
 
-rem dos2unix is to convert a few files' crlf to lf when creating the debian/macos installers.
+rem dos2unix is to convert a few files' crlf to lf when creating the Debian/macos installers.
 echo Downloading dos2unix...
 wget -q --no-check-certificate https://nchc.dl.sourceforge.net/project/dos2unix/dos2unix/7.4.0/dos2unix-7.4.0-win64.zip -O dos2unix.zip
 echo Installing dos2unix...
 7z e dos2unix.zip bin\dos2unix.exe -o..>nul
 
-rem ar is used to create the debian installer.
+rem ar is used to create the Debian installer.
 echo Downloading ar...
 wget -q http://bob.apsim.info/files/ar.exe -O ..\ar.exe
 echo Installing ar...
 
-rem coreutils. This contains the md5sum utility, which is used when creating the debian installer.
+rem coreutils. This contains the md5sum utility, which is used when creating the Debian installer.
 echo Downloading coreutils...
 wget -q --no-check-certificate https://nchc.dl.sourceforge.net/project/gnuwin32/coreutils/5.3.0/coreutils-5.3.0-bin.zip -O coreutils_bin.zip
 echo Installing coreutils...
@@ -59,7 +59,7 @@ wget -q --no-check-certificate https://nchc.dl.sourceforge.net/project/gnuwin32/
 echo Installing coreutils dependencies
 7z e coreutils_dep.zip bin\*.dll -o..>nul
 
-rem tar is used when creating the debian installer.
+rem tar is used when creating the Debian installer.
 echo Downloading tar...
 wget -q --no-check-certificate https://nchc.dl.sourceforge.net/project/gnuwin32/tar/1.13-1/tar-1.13-1-bin.zip -O tar_bin.zip
 echo Installing tar...
