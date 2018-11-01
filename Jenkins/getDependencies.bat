@@ -28,7 +28,7 @@ echo Downloading Visual Studio installer...
 wget -q --no-check-certificate https://aka.ms/vs/15/release/vs_buildtools.exe -O vs_buildtools.exe
 echo Installing Visual Studio build tools...
 
-vs_BuildTools.exe -q --wait --norestart --nocache --installPath C:\Utilities\BuildTools --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools
+vs_BuildTools.exe -q --wait --norestart --nocache --installPath C:\Utilities\BuildTools --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools --add Microsoft.Net.Component.4.6.TargetingPack --add Microsoft.Net.Component.4.5.2.TargetingPack
 call C:\Utilities\BuildTools\Common7\Tools\VsDevCmd.bat
 
 rem Sigcheck is used several times to get the Apsim version number from Models.exe.
