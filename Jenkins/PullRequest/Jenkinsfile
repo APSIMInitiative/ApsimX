@@ -18,7 +18,6 @@ pipeline {
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
 							git -C APSIM.Shared pull origin master
-							echo %path%
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
