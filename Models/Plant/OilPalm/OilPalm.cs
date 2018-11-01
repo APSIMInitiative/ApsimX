@@ -85,6 +85,11 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         public double PotentialEP { get; set; }
 
+        /// <summary>Sets the actual water demand.</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -1167,35 +1172,27 @@ namespace Models.PMF.OilPalm
                 BiomassRemoved.Invoke(BiomassRemovedData);
             }
         }
-        /// <summary>Saturated Vapour Pressuer</summary>
-        /// <param name="temp">The temperature.</param>
-        /// <returns></returns>
-        private double svp(double temp)  
-        {
-            return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
-        }
 
         /// <summary>VPDs this instance.</summary>
         /// <returns></returns>
         /// The following helper functions [VDP and svp] are for calculating Fvdp
-        ///         /// <summary>Gets the lai.</summary>
-        /// <value>The lai.</value>
         [Description("Vapour Pressure Deficit")]
-        [Units("kPa")]
+        [Units("hPa")]
         public double VPD
         {
             get
             {
-                double VPDmint = svp(MetData.MinT) - MetData.VP;
+                double VPDmint = MetUtilities.svp(MetData.MinT) - MetData.VP;
                 VPDmint = Math.Max(VPDmint, 0.0);
 
-                double VPDmaxt = svp(MetData.MaxT) - MetData.VP;
+                double VPDmaxt = MetUtilities.svp(MetData.MaxT) - MetData.VP;
                 VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
                 double vdp = 0.75 * VPDmaxt + 0.25 * VPDmint;
                 return vdp;
             }
         }
+
         /// <summary>Does the water balance.</summary>
         private void DoWaterBalance()
         {

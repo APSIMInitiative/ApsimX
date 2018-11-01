@@ -31,9 +31,13 @@ namespace Models
         private bool HasLoaded = false;
         /// <summary>The elements as XML</summary>
         private string elementsAsXml = null;
-        /// <summary>Name of compiled assembly</summary>
+        /// <summary>Name of compiled assembly.</summary>
         [NonSerialized]
         private string assemblyName = null;
+
+        /// <summary>Path of compiled assembly.</summary>
+        [NonSerialized]
+        private string assemblyPath = null;
 
         /// <summary>The _ script</summary>
         [NonSerialized] private Model _Script;
@@ -213,6 +217,7 @@ namespace Models
                         try
                         {
                             compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
+                            assemblyPath = compiledAssembly.Location;
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
@@ -235,7 +240,7 @@ namespace Models
                             SetParametersInObject(Script, parameters);
 
                             // Add the new script model to our models collection.
-                            Children.Clear();
+                            Children.RemoveAll(x => x.GetType().Name == "Script");
                             Children.Add(Script);
                             Script.Parent = this;
                         }
@@ -252,7 +257,7 @@ namespace Models
         /// <summary>Work out the assembly file name (with path).</summary>
         public string GetAssemblyFileName()
         {
-            return Path.ChangeExtension(Path.GetTempFileName(), ".dll");
+            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".dll");
         }
 
         /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>

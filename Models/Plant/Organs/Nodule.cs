@@ -182,9 +182,9 @@ namespace Models.PMF.Organs
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
 
-        /// <summary>The nitrogen demand switch</summary>
-        [ChildLinkByName]
-        private IFunction nitrogenDemandSwitch = null;
+        // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
+        //[ChildLinkByName]
+        // private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
         [ChildLinkByName]
@@ -622,13 +622,13 @@ namespace Models.PMF.Organs
                 {
                     if (NDemSwitch.GetType() == typeof(Constant))
                     {
-                        if (nitrogenDemandSwitch.Value() == 1.0)
+                        if ((NDemSwitch as Constant).Value() == 1.0)
                         {
                             //Don't bother documenting as is does nothing
                         }
                         else
                         {
-                            tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + nitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandSwitch", indent));
+                            tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + (NDemSwitch as Constant).Value() + " as specified by the NitrogenDemandSwitch", indent));
                         }
                     }
                     else
@@ -645,10 +645,10 @@ namespace Models.PMF.Organs
                 {
                     if (DMReallocFac.GetType() == typeof(Constant))
                     {
-                        if (dmReallocationFactor.Value() == 0)
+                        if ((DMReallocFac as Constant).Value() == 0)
                             tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs.", indent));
                         else
-                            tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + dmReallocationFactor.Value() * 100 + "% of DM that senesces each day.", indent));
+                            tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + (DMReallocFac as Constant).Value() * 100 + "% of DM that senesces each day.", indent));
                     }
                     else
                     {
@@ -662,10 +662,10 @@ namespace Models.PMF.Organs
                 {
                     if (DMRetransFac.GetType() == typeof(Constant))
                     {
-                        if (dmRetranslocationFactor.Value() == 0)
+                        if ((DMRetransFac as Constant).Value() == 0)
                             tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM.", indent));
                         else
-                            tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + dmRetranslocationFactor.Value() * 100 + "% of non-structural DM each day.", indent));
+                            tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + (DMRetransFac as Constant).Value() * 100 + "% of non-structural DM each day.", indent));
                     }
                     else
                     {
@@ -682,10 +682,10 @@ namespace Models.PMF.Organs
 
                     if (NReallocFac.GetType() == typeof(Constant))
                     {
-                        if (nReallocationFactor.Value() == 0)
+                        if ((NReallocFac as Constant).Value() == 0)
                             tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
                         else
-                            tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + nReallocationFactor.Value() * 100 + "% of N that senesces each day.", indent));
+                            tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + (NReallocFac as Constant).Value() * 100 + "% of N that senesces each day.", indent));
                     }
                     else
                     {
@@ -699,10 +699,10 @@ namespace Models.PMF.Organs
                 {
                     if (NRetransFac.GetType() == typeof(Constant))
                     {
-                        if (nRetranslocationFactor.Value() == 0)
+                        if ((NRetransFac as Constant).Value() == 0)
                             tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
                         else
-                            tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + nRetranslocationFactor.Value() * 100 + "% of non-structural N each day.", indent));
+                            tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + (NRetransFac as Constant).Value() * 100 + "% of non-structural N each day.", indent));
                     }
                     else
                     {
@@ -723,10 +723,10 @@ namespace Models.PMF.Organs
                     tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
                     if (senRate.GetType() == typeof(Constant))
                     {
-                        if (senescenceRate.Value() == 0)
+                        if ((senRate as Constant).Value() == 0)
                             tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive.", indent));
                         else
-                            tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + senescenceRate.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
+                            tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + (senRate as Constant).Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
                     }
                     else
                     {
@@ -740,10 +740,10 @@ namespace Models.PMF.Organs
                 {
                     if (detRate.GetType() == typeof(Constant))
                     {
-                        if (detachmentRateFunction.Value() == 0)
+                        if ((detRate as Constant).Value() == 0)
                             tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
                         else
-                            tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + detachmentRateFunction.Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition.", indent));
+                            tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + (detRate as Constant).Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition.", indent));
                     }
                     else
                     {
