@@ -95,6 +95,6 @@ rem registry entries...
 reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 
-setx PATH "%PATH%;C:\Utilities"
+setx PATH "%PATH%;C:\Utilities;C:\Utilities\BuildTools\MSBuild\15.0\Bin"
 echo Done!
 popd>nul
