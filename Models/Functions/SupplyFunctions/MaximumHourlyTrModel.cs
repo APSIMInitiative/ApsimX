@@ -377,7 +377,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyPotTr as the product of hourlyRUE, hourlyVPD and transpEffCoef
             hourlyPotTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyPotTr.Add(hourlyPotDM[i] * hourlyVPD[i] / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyPotTr.Add(hourlyPotDM[i] * hourlyVPD[i] * FN.Value() / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -385,7 +385,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, Math.Min(hourlyVPD, MaxVPD) and transpEffCoef
             hourlyVPDCappedTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) * FN.Value() / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
