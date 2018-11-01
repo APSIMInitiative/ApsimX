@@ -41,8 +41,7 @@ if not exist "%solution_file%" (
 rem Restore NuGet packages.
 echo Restoring NuGet packages...
 pushd "%apsimx%">nul
-echo %cd%
-nuget restore
+nuget restore -verbosity quiet
 echo Done.
 popd>nul
 
