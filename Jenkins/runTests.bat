@@ -41,7 +41,7 @@ if "%1"=="%uisyntax%" (
 	
 	echo Running UI Tests...
 	start /wait %bin%\ApsimNG.exe !uitests!\CheckStandardToolBox.cs
-	goto :end
+	exit /b
 )
 
 if "%1"=="%prototypesyntax%" (
@@ -78,5 +78,5 @@ del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-echo exit code: "%errorlevel%"
+echo Done. exit code=%errorlevel%
 endlocal
