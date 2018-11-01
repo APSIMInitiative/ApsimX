@@ -102,3 +102,4 @@ reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 setx PATH "%PATH%;C:\Utilities;C:\Utilities\BuildTools\MSBuild\15.0\Bin"
 echo Done!
 popd>nul
+pause
