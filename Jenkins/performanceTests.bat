@@ -1,4 +1,11 @@
 @echo off
+setlocal enabledelayedexpansion
+setlocal
+if "%apsimx%"=="" (
+	pushd %~dp0..>nul
+	set "apsimx=!cd!"
+	popd>nul
+)
 set COMMIT_AUTHOR=%ghprbActualCommitAuthor%
 set PULL_ID=%ghprbPullId%
 curl -k https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
@@ -19,4 +26,5 @@ if errorlevel 1 (
 ) else (
 	echo Done.
 )
+endlocal
 exit /b %err%

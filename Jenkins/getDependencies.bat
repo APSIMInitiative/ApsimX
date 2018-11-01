@@ -28,7 +28,8 @@ echo Downloading Visual Studio installer...
 wget -q --no-check-certificate https://aka.ms/vs/15/release/vs_buildtools.exe -O vs_buildtools.exe
 echo Installing Visual Studio build tools...
 
-powershell -Command Start-Process -FilePath 'vs_BuildTools.exe' -Wait -ArgumentList '--quiet', '--wait', '--norestart', '--nocache', '--installPath C:\Utilities\BuildTools', '--add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools'
+vs_BuildTools.exe -q --wait --norestart --nocache --installPath C:\Utilities\BuildTools --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools --add Microsoft.Net.Component.4.6.TargetingPack --add Microsoft.Net.Component.4.5.2.TargetingPack
+call C:\Utilities\BuildTools\Common7\Tools\VsDevCmd.bat
 
 rem Sigcheck is used several times to get the Apsim version number from Models.exe.
 echo Downloading sigcheck...
@@ -78,6 +79,10 @@ wget -q --no-check-certificate https://nchc.dl.sourceforge.net/project/gnuwin32/
 echo Installing gzip...
 7z e gzip.zip bin\gzip.exe -o..>nul
 
+echo Downloading NuGet...
+wget -q https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O ..\nuget.exe
+echo Installing NuGet...
+
 echo Performing additional setup...
 
 cd C:\Utilities
@@ -90,6 +95,11 @@ rem registry entries...
 reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 
-setx PATH "%PATH%;C:\Utilities"
+rem Modify registry entry so that DateTime format is dd/MM/yyyy.
+echo Modifying system DateTime format...
+reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
+
+setx PATH "%PATH%;C:\Utilities;C:\Utilities\BuildTools\MSBuild\15.0\Bin"
 echo Done!
 popd>nul
+pause

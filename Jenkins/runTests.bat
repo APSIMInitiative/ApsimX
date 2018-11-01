@@ -9,7 +9,7 @@ if "%apsimx%"=="" (
 set "bin=%apsimx%\Bin"
 
 rem Add bin to path.
-set "PATH=%PATH%;%bin%;C:\ProgramData\chocolatey\bin"
+set "PATH=%PATH%;%bin%"
 
 rem Copy files from DeploymentSupport.
 copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin% >nul
@@ -24,7 +24,7 @@ set validationsyntax=Validation
 if "%1"=="%unitsyntax%" (
 	echo Running Unit Tests...
 	nunit3-console.exe %bin%\UnitTests.dll
-	goto :end
+	exit /b
 )
 
 if "%1"=="%uisyntax%" (
@@ -41,7 +41,7 @@ if "%1"=="%uisyntax%" (
 	
 	echo Running UI Tests...
 	start /wait %bin%\ApsimNG.exe !uitests!\CheckStandardToolBox.cs
-	goto :end
+	exit /b
 )
 
 if "%1"=="%prototypesyntax%" (
@@ -72,14 +72,11 @@ if not exist "%testdir%" (
 	echo %testdir% does not exist. Aborting...
 	exit 1
 )
-rem Modify registry entry so that DateTime format is dd/MM/yyyy.
-echo Modifying system DateTime format...
-reg add "HKCU\Control Panel\International" /v sShortDate /d "dd/MM/yyyy" /f
 
 echo Deleting temp directory...
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-echo errorlevel: "%errorlevel%"
+echo Done. exit code=%errorlevel%
 endlocal
