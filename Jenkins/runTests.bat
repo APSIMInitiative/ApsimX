@@ -24,7 +24,7 @@ set validationsyntax=Validation
 if "%1"=="%unitsyntax%" (
 	echo Running Unit Tests...
 	nunit3-console.exe %bin%\UnitTests.dll
-	goto :end
+	exit /b
 )
 
 if "%1"=="%uisyntax%" (
