@@ -69,6 +69,10 @@ namespace Models.Functions.SupplyFunctions
         [Link]
         private IFunction FN = null;
 
+        /// <summary>The stress impact on PgMax</summary>
+        [Link]
+        private IFunction PgMaxStress = null;
+
         /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
         private IFunction RadnInt = null;
@@ -84,7 +88,11 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The photosynthesis type (net/gross)</summary>
         [Description("The photosynthesis type (net or gross)")]
-        public string Type { get; set; } = "net";
+        public string AssimilateType { get; set; } = "net";
+
+        /// <summary>The photosynthesis type (net/gross)</summary>
+        [Description("The way soil moisture should be treated (hourly or daily)")]
+        public string SWType { get; set; } = "hourly";
 
         /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
         [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
@@ -148,8 +156,7 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
         public double DMStress { get; set; }
 
-        /// <summary>The TEC for gross assimilate</summary>
-        [Description("The ration of TEC of gross assimilate to TEC of net assimilate")]
+        /// <summary>The ratio of TEC of gross assimilate to TEC of net assimilate</summary>
         public double TECGrossToNet { get; set; }
         //------------------------------------------------------------------------------------------------
 
@@ -175,7 +182,7 @@ namespace Models.Functions.SupplyFunctions
             if (myPlant.IsEmerged && radiationInterception > 0)
             {
                 transpEffCoef = TEC.Value() * 1e3;
-                if (!string.Equals(Type, "net"))
+                if (!string.Equals(AssimilateType, "net"))
                 {
                     List<IArbitration> Organs = new List<IArbitration>();
                     foreach (IOrgan organ in myPlant.Organs)
@@ -251,6 +258,9 @@ namespace Models.Functions.SupplyFunctions
                 }
                 hourlyTemp.Add(tempr);
             }
+
+            double MeanTemp = hourlyTemp.Average();
+            for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * myWeather.MeanT;
         }
         //------------------------------------------------------------------------------------------------
 
@@ -334,7 +344,7 @@ namespace Models.Functions.SupplyFunctions
             // Calculates hourlyRUE as the product of reference RUE, temperature, N and CO2.
             // Hourly total plant "actual" radiation use efficiency corrected by reducing factors
             // (g biomass / MJ global solar radiation)
-            double rueReductionFactor = 1;
+            double rueFactor = 1;
             double tempResponse = 1;
             hourlyRUE = new List<double>();
 
@@ -348,8 +358,8 @@ namespace Models.Functions.SupplyFunctions
                 else
                     tempResponse = TempResponseFunc.ValueIndexed(hourlyTemp[i]);
 
-                rueReductionFactor = Math.Min(tempResponse, FN.Value()) * FCO2.Value();
-                hourlyRUE.Add(RUE.Value() * rueReductionFactor);
+                rueFactor = Math.Min(tempResponse, FN.Value()) * FCO2.Value();
+                hourlyRUE.Add(RUE.Value() * rueFactor);
             }
         }
         //------------------------------------------------------------------------------------------------
@@ -359,7 +369,7 @@ namespace Models.Functions.SupplyFunctions
             // Calculates hourlyPotDM as the product of hourlyRUE, hourlyVPD and transpEffCoef
             hourlyPotDM = new List<double>();
 
-            if (string.Equals(Type, "net"))
+            if (string.Equals(AssimilateType, "net"))
             {
                 for (int i = 0; i < 24; i++) hourlyPotDM.Add(hourlyRad[i] * hourlyRUE[i]);
             }
@@ -377,7 +387,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyPotTr as the product of hourlyRUE, hourlyVPD and transpEffCoef
             hourlyPotTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyPotTr.Add(hourlyPotDM[i] * hourlyVPD[i] * FN.Value() / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyPotTr.Add(hourlyPotDM[i] * hourlyVPD[i] / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -385,7 +395,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, Math.Min(hourlyVPD, MaxVPD) and transpEffCoef
             hourlyVPDCappedTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) * FN.Value() / transpEffCoef);
+            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -393,7 +403,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyTrCappedTr by capping hourlyVPDCappedTr at MaxTr
             hourlyTrCappedTr = new List<double>();
-            foreach (double hDemand in hourlyVPDCappedTr) hourlyTrCappedTr.Add(Math.Min(MaxTr, hDemand));
+            for (int i = 0; i < 24; i++) hourlyTrCappedTr.Add(Math.Min(hourlyVPDCappedTr[i], MaxTr));
         }
         //------------------------------------------------------------------------------------------------
 
@@ -406,7 +416,7 @@ namespace Models.Functions.SupplyFunctions
             double reduction = 0.99;
             double maxHourlyT = hourlyTr.Max();
 
-            if (reduction < 0)
+            if (string.Equals(SWType, "daily"))
             {
                 double sumTr = hourlyTr.Sum();
                 for (int i = 0; i < 24; i++)
@@ -713,7 +723,6 @@ namespace Models.Functions.SupplyFunctions
                 //Original SPASS version based on Goudriaan & van Laar (1994)
                 //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.5 kgCO2/ha/h / J/m2/s
                 EffPAR = LUEref * (fCO2 - CO2PhotoCmp) / (fCO2 + 2 * CO2PhotoCmp);
-
             }
             else
                 throw new ApsimXException(this, "Need to be C3 or C4");
@@ -725,7 +734,7 @@ namespace Models.Functions.SupplyFunctions
         private double MaxGrossPhotosynthesis(double CO2, double Temp, double Fact)
         {
             double CO2I, CO2I340, CO2Func, PmaxGross;
-            double CO2ref, TempFunc;
+            double CO2ref, tempResponse;
             double CO2Cmp, CO2R;
 
             //------------------------------------------------------------------------
@@ -767,12 +776,13 @@ namespace Models.Functions.SupplyFunctions
                 throw new ApsimXException(this, "Need to be C3 or C4");
 
             //------------------------------------------------------------------------
-            //Temperature response and Efect of daytime temperature
-            TempFunc = WangEngelTempFunction(Temp);
+            //Temperature response and effect of daytime temperature
+            tempResponse = WangEngelTempFunction(Temp);
 
             //------------------------------------------------------------------------
             //Maximum leaf gross photosynthesis
-            PmaxGross = Math.Max((float)1.0, Pgmmax * (CO2Func * TempFunc * Fact));
+            double factor = tempResponse * CO2Func * Fact * PgMaxStress.Value();
+            PmaxGross = Math.Max(1.0, Pgmmax * factor);
 
             return PmaxGross;
         }
