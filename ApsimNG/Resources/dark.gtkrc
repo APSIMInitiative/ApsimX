@@ -151,3 +151,9 @@ GtkCheckButton::indicator-spacing = 4
 	text[INSENSITIVE] = mix (0.5, @base_color, @text_color)
 }
 class "GtkWidget" style "default"
+
+style "notebook_style" {
+	bg[NORMAL]			= shade (1.5, @bg_color) # Tab background.
+	bg[ACTIVE]			= shade (1.5, @bg_color) # Unfocused tab background.
+}
+widget_class "*<GtkNotebook>*<GtkEventBox>"     	style "notebook_style"

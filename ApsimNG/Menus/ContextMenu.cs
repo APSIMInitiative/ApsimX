@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using Models.Report;
+    using Utility;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -450,7 +451,7 @@ namespace UserInterface.Presenters
             try
             {
                 string summaryFleName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".sum");
-                Summary.WriteSummaryToTextFiles(storage, summaryFleName);
+                Summary.WriteSummaryToTextFiles(storage, summaryFleName, Configuration.Settings.DarkTheme);
                 explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.MessageType.Information);
             }
             catch (Exception err)

@@ -7,9 +7,9 @@
     using Models;
     using Models.Core;
     using Models.Factorial;
-    using global::UserInterface.Views;
-    using global::EventArguments;
-    using global::UserInterface.Commands;
+    using Views;
+    using Commands;
+    using Utility;
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
@@ -88,7 +88,7 @@
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(this.dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
+            Summary.WriteReport(this.dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html, darkTheme : Configuration.Settings.DarkTheme);
             summaryView.HtmlView.SetContents(writer.ToString(), false);
             writer.Close();
         }

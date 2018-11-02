@@ -6,7 +6,7 @@ using Gtk;
 using WebKit;
 using MonoMac.AppKit;
 using APSIM.Shared.Utilities;
-using EventArguments;
+using UserInterface.EventArguments;
 using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
@@ -187,8 +187,11 @@ namespace UserInterface.Views
             while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
-            BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
-            ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
+            if (Utility.Configuration.Settings.DarkTheme)
+            {
+                BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
+                ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
+            }
         }
 
         public System.Drawing.Color BackgroundColour
