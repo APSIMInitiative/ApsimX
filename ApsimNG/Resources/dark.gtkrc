@@ -133,7 +133,7 @@ GtkCheckButton::indicator-spacing = 4
 	fg[INSENSITIVE] = mix (0.5, @bg_color, @fg_color)
 
 	bg[NORMAL] = @bg_color
-	bg[PRELIGHT] = shade (1.02, @bg_color)
+	bg[PRELIGHT] = shade (1.5, @bg_color)
 	bg[SELECTED] = @selected_bg_color
 	bg[ACTIVE] = shade (0.9, @bg_color)
 	bg[INSENSITIVE] = @bg_color
