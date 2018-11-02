@@ -42,7 +42,6 @@ rem Restore NuGet packages.
 echo Restoring NuGet packages...
 pushd "%apsimx%">nul
 nuget restore -verbosity quiet
-echo Done.
 popd>nul
 
 rem Set verbosity to minimal, don't display the logo, 

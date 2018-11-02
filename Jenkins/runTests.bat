@@ -78,5 +78,4 @@ del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
 models.exe %testdir%\*.apsimx /Recurse
-echo Done. exit code=%errorlevel%
 endlocal
