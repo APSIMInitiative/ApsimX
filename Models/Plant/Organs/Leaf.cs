@@ -1663,7 +1663,7 @@ namespace Models.PMF.Organs
             double ExtentOfError = Math.Abs(EndWt - CheckValue);
             double FloatingPointError = 0.00000001;
             if (ExtentOfError > FloatingPointError)
-                throw new Exception(Name + "Not all leaf DM allocation was used");
+                throw new Exception(Name + " Not all leaf DM allocation was used");
         }
 
         /// <summary>Sets the n allocation.</summary>
@@ -1819,8 +1819,11 @@ namespace Models.PMF.Organs
                 {
                     throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
                 }
-                L.Live.MetabolicWt -= resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort;
-                L.Live.StorageWt -= resLeafCohort * L.Live.StorageWt / totalBMLeafCohort;
+                if (totalBMLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)
+                {
+                    L.Live.MetabolicWt -= resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort;
+                    L.Live.StorageWt -= resLeafCohort * L.Live.StorageWt / totalBMLeafCohort;
+                }
             }
         }
 
