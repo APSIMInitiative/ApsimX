@@ -32,23 +32,23 @@ namespace Models.Functions.SupplyFunctions
         //[Input]
         /// <summary>The weather data</summary>
         [Link]
-        private Weather myWeather = null;
+        private Weather Weather = null;
 
         /// <summary>The Clock</summary>
         [Link]
-        private Clock myClock = null;
+        private Clock Clock = null;
 
         /// <summary>The Leaf organ</summary>
         [Link]
-        private Plant myPlant = null;
+        private Plant Plant = null;
 
         /// <summary>The Leaf organ</summary>
         [Link]
-        private Leaf myLeaf = null;
+        private Leaf Leaf = null;
 
         /// <summary>The Root organ</summary>
         [Link]
-        private Root myRoot = null;
+        private Root Root = null;
 
         /// <summary>The radiation use efficiency</summary>
         [Link]
@@ -75,11 +75,11 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
-        private IFunction RadnInt = null;
+        private IFunction RadIntTot = null;
 
         /// <summary>The daily gross assimilate calculated by a another photosynthesis model</summary>
         [Link(IsOptional = true)]
-        private IFunction GrossDailyAssimilate = null;
+        private IFunction GrossAssimilateModel = null;
 
         /// <summary>The mean temperature impact on RUE</summary>
         [Link(IsOptional = true)]
@@ -120,11 +120,11 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>Leaf gross photosynthesis rate at 340ppm CO2 </summary>
         [Description("Maximum gross photosynthesis rate Pmax (kgCO2/ha/h)")]
-        public double Pgmmax { get; set; } = 45;
+        public double PgMax { get; set; } = 45;
 
-        /// <summary>Photosynthesis pathway (C3/C4)</summary>
+        /// <summary>Photosynthesis Pathway (C3/C4)</summary>
         [Description("Photosynthesis pathway C3/C4")]
-        public string pathway { get; set; } = "C3";
+        public string Pathway { get; set; } = "C3";
         //------------------------------------------------------------------------------------------------
 
         private double maxLag = 1.86;       // a, Greg=1.5
@@ -132,7 +132,6 @@ namespace Models.Functions.SupplyFunctions
         private double minLag = -0.17;      // c, Greg=1.0
         private double latR;
         private double transpEffCoef;
-        private double dailyDM;
 
         private List<double> hourlyTemp;
         private List<double> hourlyRad;
@@ -146,30 +145,26 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyPotDM;
         private List<double> hourlyDM;
 
-        private XYPairs TempResponseFunc = new XYPairs();
+        private XYPairs tempResponseFunc = new XYPairs();
 
         /// <summary>Total potential daily assimilation in g/m2</summary>
-        public double DailyPotDM { get; set; }
+        private double dailyPotDM;
 
         /// <summary>Total daily assimilation in g/m2</summary>    
-        public double DailyDM
-        {
-            get { return dailyDM; }
-            set { dailyDM = value; }
-        }
+        private double dailyDM;
 
         /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
-        public double DMStress { get; set; }
+        private double stressFactor;
 
         /// <summary>The ratio of TEC of gross assimilate to TEC of net assimilate</summary>
-        public double TECGrossToNet { get; set; }
+        private double TECGrossToNet;
         //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
         {
-            return DailyDM;
+            return dailyDM;
         }
         //------------------------------------------------------------------------------------------------
 
@@ -178,19 +173,19 @@ namespace Models.Functions.SupplyFunctions
         [EventSubscribe("DoUpdateWaterDemand")]
         private void Calculate(object sender, EventArgs e)
         {
-            double radiationInterception = RadnInt.Value();
+            double radiationInterception = RadIntTot.Value();
             if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN daily interception value supplied to RUE model");
             if (radiationInterception < 0)
                 throw new Exception("Negative daily interception value supplied to RUE model");
 
-            if (myPlant.IsEmerged && radiationInterception > 0)
+            if (Plant.IsEmerged && radiationInterception > 0)
             {
                 transpEffCoef = TEC.Value() * 1e3;
                 if (!string.Equals(AssimilateType, "net"))
                 {
                     List<IArbitration> Organs = new List<IArbitration>();
-                    foreach (IOrgan organ in myPlant.Organs)
+                    foreach (IOrgan organ in Plant.Organs)
                         if (organ is IArbitration)
                             Organs.Add(organ as IArbitration);
 
@@ -212,15 +207,15 @@ namespace Models.Functions.SupplyFunctions
                 CalcTrCappedTr();
                 CalcSoilLimitedTr();
                 CalcActAssimilate();
-                myLeaf.PotentialEP = hourlyTrCappedTr.Sum();
-                myLeaf.WaterDemand = hourlyTr.Sum();
+                Leaf.PotentialEP = hourlyTrCappedTr.Sum();
+                Leaf.WaterDemand = hourlyTr.Sum();
             }
             else
             {
                 hourlyDM = new List<double>();
                 for (int i = 0; i < 24; i++) hourlyDM.Add(0.0);
-                myLeaf.PotentialEP = 0;
-                myLeaf.WaterDemand = 0;
+                Leaf.PotentialEP = 0;
+                Leaf.WaterDemand = 0;
                 dailyDM = 0;
             }
         }
@@ -233,9 +228,9 @@ namespace Models.Functions.SupplyFunctions
             // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216.
             // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
 
-            latR = Math.PI / 180.0 * myWeather.Latitude;      // convert latitude (degrees) to radians
+            latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
 
-            double SolarDec = CalcSolarDeclination(myClock.Today.DayOfYear);
+            double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
             double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
             double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
             double nightL = (24.0 - DayL);                                  // night length, hours
@@ -250,7 +245,7 @@ namespace Models.Functions.SupplyFunctions
                 {
                     double m = 0; // the number of hours after the minimum temperature occurs
                     m = hr - sunrise;
-                    tempr = (myWeather.MaxT - myWeather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + myWeather.MinT;
+                    tempr = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + Weather.MinT;
                 }
                 else  // night
                 {
@@ -258,14 +253,14 @@ namespace Models.Functions.SupplyFunctions
                     if (hr > sunset) n = hr - sunset;
                     if (hr < sunrise) n = (24.0 - sunset) + hr;
                     double ddy = DayL - minLag;         // time of sunset after minimum temperature occurs
-                    double tsn = (myWeather.MaxT - myWeather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + myWeather.MinT;
-                    tempr = myWeather.MinT + (tsn - myWeather.MinT) * Math.Exp(-nightCoef * n / nightL);
+                    double tsn = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + Weather.MinT;
+                    tempr = Weather.MinT + (tsn - Weather.MinT) * Math.Exp(-nightCoef * n / nightL);
                 }
                 hourlyTemp.Add(tempr);
             }
 
             double MeanTemp = hourlyTemp.Average();
-            for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * myWeather.MeanT;
+            for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * Weather.MeanT;
         }
         //------------------------------------------------------------------------------------------------
 
@@ -277,20 +272,20 @@ namespace Models.Functions.SupplyFunctions
             hourlyRad = new List<double>();
             for (int i = 0; i < 24; i++) hourlyRad.Add(0.0);
 
-            latR = Math.PI / 180.0 * myWeather.Latitude;      // convert latitude (degrees) to radians
+            latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
 
             // some calculations
-            double SolarDec = CalcSolarDeclination(myClock.Today.DayOfYear);
+            double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
             double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
             double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
-            double GlobalRadiation = myWeather.Radn * 1e6;     // solar radiation
+            double GlobalRadiation = Weather.Radn * 1e6;     // solar radiation
             List<double> hrWeights;
 
             double PI = Math.PI;
             double RAD = PI / 180.0;
 
             //Declination of the sun as function of Daynumber (vDay)
-            double Dec = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * ((double)myClock.Today.DayOfYear + 10.0) / 365.0));
+            double Dec = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * ((double)Clock.Today.DayOfYear + 10.0) / 365.0));
 
             //vSin, vCos and vRsc are intermediate variables
             double Sin = Math.Sin(latR) * Math.Sin(Dec);
@@ -323,7 +318,7 @@ namespace Models.Functions.SupplyFunctions
 
             // scale to today's radiation
             double TotalRad = hourlyRad.Sum();
-            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadnInt.Value();
+            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadIntTot.Value();
         }
         //------------------------------------------------------------------------------------------------
 
@@ -340,7 +335,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPD at the air temperature in kPa
             hourlyVPD = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyVPD.Add(0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(myWeather.MinT)));
+            for (int i = 0; i < 24; i++) hourlyVPD.Add(0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(Weather.MinT)));
         }
         //------------------------------------------------------------------------------------------------
 
@@ -353,15 +348,15 @@ namespace Models.Functions.SupplyFunctions
             double tempResponse = 1;
             hourlyRUE = new List<double>();
 
-            TempResponseFunc.X = new double[4] { 0, 15, 25, 35 };
-            TempResponseFunc.Y = new double[4] { 0, 1, 1, 0 };
+            tempResponseFunc.X = new double[4] { 0, 15, 25, 35 };
+            tempResponseFunc.Y = new double[4] { 0, 1, 1, 0 };
 
             for (int i = 0; i < 24; i++)
             {
                 if (FT != null)
                     tempResponse = FT.Value();
                 else
-                    tempResponse = TempResponseFunc.ValueIndexed(hourlyTemp[i]);
+                    tempResponse = tempResponseFunc.ValueIndexed(hourlyTemp[i]);
 
                 rueFactor = Math.Min(tempResponse, FN.Value()) * FCO2.Value();
                 hourlyRUE.Add(RUE.Value() * rueFactor);
@@ -380,10 +375,10 @@ namespace Models.Functions.SupplyFunctions
             }
             else
             {
-                hourlyPotDM = DailyGrossPhotosythesis(myPlant.Canopy.LAI, myWeather.Latitude,
-                                                      myClock.Today.DayOfYear, myWeather.Radn,
-                                                      myWeather.MaxT, myWeather.MinT,
-                                                      myWeather.CO2, myWeather.DiffuseFraction, 1.0);
+                hourlyPotDM = DailyGrossPhotosythesis(Plant.Canopy.LAI, Weather.Latitude,
+                                                      Clock.Today.DayOfYear, Weather.Radn,
+                                                      Weather.MaxT, Weather.MinT,
+                                                      Weather.CO2, Weather.DiffuseFraction, 1.0);
             }
         }
         //------------------------------------------------------------------------------------------------
@@ -417,7 +412,7 @@ namespace Models.Functions.SupplyFunctions
             // Sets hourlyTr = hourlyVPDCappedTr and scales value at each hour until sum of hourlyTr = rootWaterSupp
             hourlyTr = new List<double>(hourlyTrCappedTr);
 
-            double rootWaterSupp = myRoot.TotalExtractableWater();
+            double rootWaterSupp = Root.TotalExtractableWater();
             double reduction = 0.99;
             double maxHourlyT = hourlyTr.Max();
 
@@ -451,20 +446,20 @@ namespace Models.Functions.SupplyFunctions
         private void CalcActAssimilate()
         {
             // Calculates hourlyDM and hourlyPotDM as a product of RUE, TR, TEC and hourlyVPD.
-            // If there is a link to a GrossDailyAssimilate model, it will be used and its outputs
+            // If there is a link to a grossAssimilateModel model, it will be used and its outputs
             // will be scaled to follow the same durnal pattern as that of the hourly RUE model.
             // If no such a link exists, the 'net' daily assimilate is calculated.
 
             hourlyDM = new List<double>();
             for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
 
-            DailyPotDM = hourlyPotDM.Sum();
+            dailyPotDM = hourlyPotDM.Sum();
             dailyDM = hourlyDM.Sum();
 
-            if (GrossDailyAssimilate != null && hourlyPotDM.Sum() > 0 && hourlyDM.Sum() > 0)
+            if (GrossAssimilateModel != null && hourlyPotDM.Sum() > 0 && hourlyDM.Sum() > 0)
             {
-                double DailyDMGross = hourlyDM.Sum() / hourlyPotDM.Sum() * GrossDailyAssimilate.Value();
-                if (double.IsNaN(GrossDailyAssimilate.Value()))
+                double DailyDMGross = hourlyDM.Sum() / hourlyPotDM.Sum() * GrossAssimilateModel.Value();
+                if (double.IsNaN(GrossAssimilateModel.Value()))
                     DailyDMGross = 0;
 
                 if (double.IsNaN(DailyDMGross))
@@ -480,7 +475,7 @@ namespace Models.Functions.SupplyFunctions
                 }
             }
 
-            DMStress = MathUtilities.Round(MathUtilities.Divide(dailyDM, DailyPotDM, 0), 3);
+            stressFactor = MathUtilities.Round(MathUtilities.Divide(dailyDM, dailyPotDM, 0), 3);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -577,7 +572,7 @@ namespace Models.Functions.SupplyFunctions
                         throw new Exception("MaximumTempWeight fraction should be between 0 and 1, or negative to be ignored");
 
                     if (MaximumTempWeight>0)
-                        Temp = MaximumTempWeight * myWeather.MaxT + (1 - MaximumTempWeight) * myWeather.MinT;
+                        Temp = MaximumTempWeight * Weather.MaxT + (1 - MaximumTempWeight) * Weather.MinT;
                     else
                         Temp = hourlyTemp[t];
 
@@ -701,7 +696,7 @@ namespace Models.Functions.SupplyFunctions
             if (fCO2 < 0.0) fCO2 = 350;
 
             //Check wheather a C3 or C4 crop
-            if (pathway == "C3")   //C3 plants
+            if (Pathway == "C3")   //C3 plants
             {
                 CO2PhotoCmp0 = 38.0; //vppm
                 CO2PhotoCmp = CO2PhotoCmp0 * Math.Pow(2.0, (Temp - 20.0) / 10.0); //Efect of Temperature on CO2PhotoCmp
@@ -720,7 +715,7 @@ namespace Models.Functions.SupplyFunctions
                 EffPAR = LUEref * Ft * (1.0 - Math.Exp(-0.00305 * fCO2 - 0.222)) / (1.0 - Math.Exp(-0.00305 * 340.0 - 0.222));
             }
 
-            else if (pathway == "C4")
+            else if (Pathway == "C4")
             {
                 CO2PhotoCmp = 0.0;
 
@@ -747,7 +742,7 @@ namespace Models.Functions.SupplyFunctions
             if (CO2 < 0.0) CO2 = 350;
 
             //Check wheather a C3 or C4 crop
-            if (pathway == "C3")   //C3 plants
+            if (Pathway == "C3")   //C3 plants
             {
                 CO2Cmp = 50; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4 
                 CO2R = 0.7;  //CO2 internal/external ratio of leaf(C3= 0.7, C4= 0.4)
@@ -764,7 +759,7 @@ namespace Models.Functions.SupplyFunctions
                 //For C3 rice, based on Bouman et al (2001) ORYZA2000: modelling lowland rice, IRRI Publication
                 CO2Func = (49.57 / 34.26) * (1.0 - Math.Exp(-0.208 * (CO2 - 60.0) / 49.57));
             }
-            else if (pathway == "C4")
+            else if (Pathway == "C4")
             {
                 CO2Cmp = 5; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4 
                 CO2R = 0.4;  //CO2 internal/external ratio of leaf(C3= 0.7, C4= 0.4)
@@ -787,7 +782,7 @@ namespace Models.Functions.SupplyFunctions
             //------------------------------------------------------------------------
             //Maximum leaf gross photosynthesis
             double factor = tempResponse * CO2Func * Fact * PgMaxStress.Value();
-            PmaxGross = Math.Max(1.0, Pgmmax * factor);
+            PmaxGross = Math.Max(1.0, PgMax * factor);
 
             return PmaxGross;
         }
@@ -867,13 +862,13 @@ namespace Models.Functions.SupplyFunctions
             hourlyRad = new List<double>();
             for (int i = 0; i < 24; i++) hourlyRad.Add(0.0);
 
-            latR = Math.PI / 180.0 * myWeather.Latitude;      // convert latitude (degrees) to radians
+            latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
 
             // some calculations
-            double SolarDec = CalcSolarDeclination(myClock.Today.DayOfYear);
+            double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
             double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
             double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
-            double Solar = myWeather.Radn;     // solar radiation
+            double Solar = Weather.Radn;     // solar radiation
 
             //do the radiation calculation zeroing at dawn
             double DuskDawnFract = (DayL - Math.Floor(DayL)) / 2; // the remainder part of the hour at dusk and dawn
@@ -893,7 +888,7 @@ namespace Models.Functions.SupplyFunctions
 
             // scale to today's radiation
             double TotalRad = hourlyRad.Sum();
-            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadnInt.Value();
+            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadIntTot.Value();
         }
         //------------------------------------------------------------------------------------------------
     }
