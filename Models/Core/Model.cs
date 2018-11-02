@@ -206,6 +206,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.Functions.DailyMeanVPD))]
         [XmlElement(typeof(Models.Functions.XYPairs))]
         [XmlElement(typeof(Models.Functions.SupplyFunctions.CanopyPhotosynthesis))]
+        [XmlElement(typeof(Models.Functions.SupplyFunctions.CanopyGrossPhotosynthesisHourly))]
         [XmlElement(typeof(Models.Functions.DemandFunctions.AllometricDemandFunction))]
         [XmlElement(typeof(Models.Functions.DemandFunctions.TEWaterDemandFunction))]
         [XmlElement(typeof(Models.Functions.DemandFunctions.InternodeDemandFunction))]
