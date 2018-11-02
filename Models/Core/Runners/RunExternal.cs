@@ -4,6 +4,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Text;
     using System.Threading;
 
     /// <summary>
@@ -33,6 +34,25 @@
         /// <summary>Should the child process' output be redirected?</summary>
         private bool verbose;
 
+        /// <summary>
+        /// Standard error from the process which is being run.
+        /// </summary>
+        /// <remarks>
+        /// See <see cref="output"/> for more info on why this is needed.
+        /// </remarks>
+        private StringBuilder error = new StringBuilder();
+
+        /// <summary>Standard output from the process which is being run.</summary>
+        /// <remarks>
+        /// If we wait for the process to exit before reading StandardOutput, 
+        /// the process can block trying to write to it, so the process never ends.
+        /// 
+        /// If we read from StandardOutput using ReadToEnd then this process can 
+        /// block if the process never closes StandardOutput (for example if it 
+        /// never terminates, or if it is blocked writing to StandardError).
+        /// </remarks>
+        private StringBuilder output = new StringBuilder();
+
         /// <summary>Initializes a new instance of the <see cref="RunExternal"/> class.</summary>
         /// <param name="executable">Name of the executable file.</param>
         /// <param name="arguments">The arguments.</param>
@@ -61,30 +81,31 @@
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
-            if (verbose)
-            {
-                p.OutputDataReceived += OnOutputDataReceived;
-                p.ErrorDataReceived += OnErrorDataReceived;
-            }
+            p.OutputDataReceived += OnOutputDataReceived;
+            p.ErrorDataReceived += OnErrorDataReceived;
 
             p.Start();
-            if (verbose)
-            {
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-            }
+            p.BeginOutputReadLine();
+            p.BeginErrorReadLine();
             p.WaitForExit();
-            if (verbose)
+            p.CancelOutputRead();
+            p.CancelErrorRead();
+            // If we are running in verbose mode, this information will have already
+            // been displayed.
+            if (p.ExitCode > 0 && !verbose)
             {
-                p.CancelOutputRead();
-                p.CancelErrorRead();
-            }
-            string stdout = p.StandardOutput.ReadToEnd();
-            if (p.ExitCode > 0)
-            {
-                string errorMessage = "Error in file: " + arguments + Environment.NewLine;
-                errorMessage += stdout;
-                throw new RunExternalException(errorMessage);
+                StringBuilder errorMessage = new StringBuilder();
+                errorMessage.AppendLine("Error in file: " + arguments);
+
+                string stdout = output.ToString();
+                if (!string.IsNullOrWhiteSpace(stdout))
+                    errorMessage.AppendLine(stdout);
+
+                string stderr = error.ToString();
+                if (!string.IsNullOrWhiteSpace(stderr))
+                    errorMessage.AppendLine(stderr);
+
+                throw new RunExternalException(errorMessage.ToString());
             }
         }
 
@@ -96,7 +117,9 @@
         /// <param name="args">Event arguments.</param>
         private void OnOutputDataReceived(object sender, DataReceivedEventArgs args)
         {
-            Console.WriteLine(args.Data);
+            output.AppendLine(args.Data);
+            if (verbose)
+                Console.WriteLine(args.Data);
         }
 
         /// <summary>
@@ -107,7 +130,9 @@
         /// <param name="args">Event arguments.</param>
         private void OnErrorDataReceived(object sender, DataReceivedEventArgs args)
         {
-            Console.Error.WriteLine(args.Data);
+            error.AppendLine(args.Data);
+            if (verbose)
+                Console.Error.WriteLine(args.Data);
         }
     }
 }
