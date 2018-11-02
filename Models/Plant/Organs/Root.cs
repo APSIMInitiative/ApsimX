@@ -62,6 +62,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
     {
         /// <summary>Tolerance for biomass comparisons</summary>
@@ -842,6 +843,24 @@ namespace Models.PMF.Organs
             dmRetranslocationSupply = AvailableDMRetranslocation();
             nReallocationSupply = AvailableNReallocation();
             nRetranslocationSupply = AvailableNRetranslocation();
+        }
+
+        /// <summary>Computes root total water supply.</summary>
+        public double TotalExtractableWater()
+        {
+            double[] LL = PlantZone.soil.LL(Plant.Name);
+            double[] KL = PlantZone.soil.KL(Plant.Name);
+            double[] SWmm = PlantZone.soil.Water;
+            double[] DZ = PlantZone.soil.Thickness;
+
+            double supply = 0;
+            for (int layer = 0; layer < LL.Length; layer++)
+            {
+                if (layer <= Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness))
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
+                        Soil.ProportionThroughLayer(layer, Depth, DZ));
+            }
+            return supply;
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>

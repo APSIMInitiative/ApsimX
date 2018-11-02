@@ -418,7 +418,7 @@ namespace Models.Soils
         [Description("Available SW-LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
-        public double[] PAWTotalmm
+        public double[] PAWmmInitial
         {
             get
             {
@@ -466,6 +466,16 @@ namespace Models.Soils
                                 LL15,
                                 SoilWater.SW,
                                 null);
+            }
+        }
+
+        /// <summary>Plant available water at standard thickness. Units:mm</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, Thickness);
             }
         }
 

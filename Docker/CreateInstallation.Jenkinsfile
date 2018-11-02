@@ -29,6 +29,7 @@ pipeline {
 					if %errorlevel% neq 0 (
 						exit 1
 					)
+					echo sha1: %sha1%
 					cd ..
 					if not exist APSIM.Shared (
 						git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
@@ -63,6 +64,7 @@ pipeline {
 					echo	     \\/ \\__,_^|_^|_^|\\__,_^|\\__,_^|\\__^|_^|\\___/^|_^| ^|_^|                                                                                            
 					echo.
 					echo.
+					echo sha1: %sha1%
 					rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 					if not exist ApsimX (
 						git config --system core.longpaths true
@@ -88,7 +90,7 @@ pipeline {
 					git -C APSIM.Shared pull origin master
 					set /P DATETIMESTAMP=<ApsimX\\datetimestamp.txt
 					docker build -m 16g -t runtests ApsimX\\Docker\\runtests
-					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%PULL_ID%" -e "COMMIT_AUTHOR=%COMMIT_AUTHOR%" -e "RUN_PERFORMANCE_TESTS=no_thanks" -e "ARCHIVE_RESULTS=TRUE" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared runtests Validation
+					docker run -m 16g --cpu-count %NUMBER_OF_PROCESSORS% --cpu-percent 100 -e "DATETIMESTAMP=%DATETIMESTAMP%" -e "PULL_ID=%PULL_ID%" -e "COMMIT_AUTHOR=%COMMIT_AUTHOR%" -e "RUN_PERFORMANCE_TESTS=no_thanks" -e "ARCHIVE_RESULTS=TRUE" -v %cd%\\ApsimX:C:\\ApsimX -v %cd%\\APSIM.Shared:C:\\APSIM.Shared -p 4020:4020 -p 4021:4021 runtests Validation
 					cd ApsimX
 				'''
 				archiveArtifacts artifacts: 'ApsimX\\results.7z', onlyIfSuccessful: true
@@ -106,6 +108,7 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
+							echo sha1: %sha1%
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -136,6 +139,7 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
+							echo sha1: %sha1%
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -160,6 +164,7 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
+							echo sha1: %sha1%
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -183,6 +188,7 @@ pipeline {
 					steps {
 						bat '''
 							@echo off
+							echo sha1: %sha1%
 							rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 							if not exist ApsimX (
 								git config --system core.longpaths true
@@ -208,6 +214,7 @@ pipeline {
 			steps {
 				bat '''
 					@echo off
+					echo sha1: %sha1%
 					rem We want to copy the build artifacts into ApsimX directory, however this directory may not exist yet.
 					if not exist ApsimX (
 						git config --system core.longpaths true

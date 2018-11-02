@@ -46,11 +46,11 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>The met data</summary>
         [Link]
         IWeather MetData = null;
-        
+
         /// <summary>The radiation interception data</summary>
         [Link]
         public IFunction RadnInt = null;
-        
+
         #region Class Data Members
         //[Input]
         //public NewMetType MetData;
@@ -65,18 +65,10 @@ namespace Models.Functions.SupplyFunctions
         {
             get
             {
-                const double SVPfrac = 0.66;
                 if (MetData != null)
-                {
-                    double VPDmint = MetUtilities.svp((float)MetData.MinT) - MetData.VP;
-                    VPDmint = Math.Max(VPDmint, 0.0);
-
-                    double VPDmaxt = MetUtilities.svp((float)MetData.MaxT) - MetData.VP;
-                    VPDmaxt = Math.Max(VPDmaxt, 0.0);
-
-                    return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
-                }
-                return 0;
+                    return MetData.VPD;
+                else
+                    return 0;
             }
         }
 
