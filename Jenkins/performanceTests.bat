@@ -12,6 +12,8 @@ curl -ks https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDe
 for /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
 del temp.txt
 for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
+rem Temporary workaround to get performance tests running again.
+copy /y "%apsimx%\Jenkins\APSIM.PerformanceTests.Collector.exe.config" "%apsimx%\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe.config"
 echo Running performance tests collector...
 %apsimx%\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 set err=%errorlevel%
