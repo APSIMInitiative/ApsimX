@@ -1811,6 +1811,11 @@ namespace Models.PMF.Organs
         {
             double totalResLeaf = MaintenanceRespiration;
 
+            Summary.WriteMessage(this, "LAI " + LAI);
+            Summary.WriteMessage(this, "Live.StorageWt " + Live.StorageWt);
+            Summary.WriteMessage(this, "Live.MetabolicWt " + Live.MetabolicWt);
+            Summary.WriteMessage(this, "MaintenanceRespiration " + MaintenanceRespiration);
+
             foreach (LeafCohort L in Leaves)
             {
                 double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
@@ -1819,10 +1824,11 @@ namespace Models.PMF.Organs
                 {
                     throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
                 }
-                L.Live.MetabolicWt = L.Live.MetabolicWt - 
-                    (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
-                L.Live.StorageWt = L.Live.StorageWt - 
-                    (resLeafCohort * L.Live.StorageWt / totalBMLeafCohort);
+                if (totalBMLeafCohort > 0 && resLeafCohort > 0)
+                {
+                    L.Live.MetabolicWt -= resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort;
+                    L.Live.StorageWt -= resLeafCohort * L.Live.StorageWt / totalBMLeafCohort;
+                }
             }
         }
 

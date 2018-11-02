@@ -132,6 +132,7 @@ namespace Models.Functions.SupplyFunctions
         private double minLag = -0.17;      // c, Greg=1.0
         private double latR;
         private double transpEffCoef;
+        private double dailyDM;
 
         private List<double> hourlyTemp;
         private List<double> hourlyRad;
@@ -150,8 +151,12 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>Total potential daily assimilation in g/m2</summary>
         public double DailyPotDM { get; set; }
 
-        /// <summary>Total daily assimilation in g/m2</summary>
-        public double DailyDM { get; set; }
+        /// <summary>Total daily assimilation in g/m2</summary>    
+        public double DailyDM
+        {
+            get { return dailyDM; }
+            set { dailyDM = value; }
+        }
 
         /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
         public double DMStress { get; set; }
@@ -216,7 +221,7 @@ namespace Models.Functions.SupplyFunctions
                 for (int i = 0; i < 24; i++) hourlyDM.Add(0.0);
                 myLeaf.PotentialEP = 0;
                 myLeaf.WaterDemand = 0;
-                DailyDM = 0;
+                dailyDM = 0;
             }
         }
         //------------------------------------------------------------------------------------------------
@@ -454,7 +459,7 @@ namespace Models.Functions.SupplyFunctions
             for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
 
             DailyPotDM = hourlyPotDM.Sum();
-            DailyDM = hourlyDM.Sum();
+            dailyDM = hourlyDM.Sum();
 
             if (GrossDailyAssimilate != null && hourlyPotDM.Sum() > 0 && hourlyDM.Sum() > 0)
             {
@@ -463,19 +468,19 @@ namespace Models.Functions.SupplyFunctions
                     DailyDMGross = 0;
 
                 if (double.IsNaN(DailyDMGross))
-                    DailyDM = 0;
+                    dailyDM = 0;
                 else
                 {
-                    DailyDM = hourlyDM.Sum();
-                    if (DailyDM > 0 && !double.IsNaN(DailyDMGross))
-                        for (int i = 0; i < 24; i++) hourlyDM[i] = hourlyDM[i] / DailyDM * DailyDMGross;
+                    dailyDM = hourlyDM.Sum();
+                    if (dailyDM > 0 && !double.IsNaN(DailyDMGross))
+                        for (int i = 0; i < 24; i++) hourlyDM[i] = hourlyDM[i] / dailyDM * DailyDMGross;
                     else
                         for (int i = 0; i < 24; i++) hourlyDM[i] = 0;
-                    DailyDM = hourlyDM.Sum();
+                    dailyDM = hourlyDM.Sum();
                 }
             }
 
-            DMStress = MathUtilities.Round(MathUtilities.Divide(DailyDM, DailyPotDM, 0), 3);
+            DMStress = MathUtilities.Round(MathUtilities.Divide(dailyDM, DailyPotDM, 0), 3);
         }
         //------------------------------------------------------------------------------------------------
 

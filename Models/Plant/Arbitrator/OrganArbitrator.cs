@@ -386,8 +386,7 @@ namespace Models.PMF
                 double remainRespiration = respiration - total;
                 for (int i = 0; i < Organs.ToArray().Length; i++)
                 {
-                    double organRespiration = remainRespiration *
-                        Organs[i].MaintenanceRespiration / respiration;
+                    double organRespiration = remainRespiration * Organs[i].MaintenanceRespiration / respiration;
                     Organs[i].RemoveMaintenanceRespiration(organRespiration);
                 }
             }
