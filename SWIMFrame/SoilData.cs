@@ -169,8 +169,8 @@ namespace SWIMFrame
                 {
                     id = isid[j, i].ToString();
                     mm = Math.Round(10.0 * dz[j, i]).ToString();
-                    Console.WriteLine(id);
-                    Console.WriteLine(mm);
+                    // Console.WriteLine(id);
+                    // Console.WriteLine(mm);
                     ftname[j] = "soil" + id + "dz" + mm;
                 }
                 if (isid[1, i] == isid[2, i])
