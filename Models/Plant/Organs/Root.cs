@@ -1038,12 +1038,14 @@ namespace Models.PMF.Organs
                 RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
             }
             needToRecalculateLiveDead = false;
+
             // Do maintenance respiration
             MaintenanceRespiration = 0;
-            MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-            // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
-            MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
-            // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
+            if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+            {
+                MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+                MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+            }
             needToRecalculateLiveDead = true;
         }
 
