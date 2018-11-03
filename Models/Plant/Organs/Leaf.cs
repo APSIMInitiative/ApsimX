@@ -1663,7 +1663,7 @@ namespace Models.PMF.Organs
             double ExtentOfError = Math.Abs(EndWt - CheckValue);
             double FloatingPointError = 0.00000001;
             if (ExtentOfError > FloatingPointError)
-                throw new Exception(Name + " Not all leaf DM allocation was used");
+                throw new Exception(Name + ": " + ExtentOfError.ToString() + " of DM allocation was not used");
         }
 
         /// <summary>Sets the n allocation.</summary>

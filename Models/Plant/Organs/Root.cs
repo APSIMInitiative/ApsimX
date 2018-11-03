@@ -1038,6 +1038,7 @@ namespace Models.PMF.Organs
                 RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
             }
             needToRecalculateLiveDead = false;
+
             // Do maintenance respiration
             MaintenanceRespiration = 0;
             if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
