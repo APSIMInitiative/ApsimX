@@ -1034,19 +1034,19 @@ namespace Models.PMF.Organs
             {
                 foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
+
                 // Do Root Senescence
                 RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
-            }
-            needToRecalculateLiveDead = false;
 
-            // Do maintenance respiration
-            MaintenanceRespiration = 0;
-            if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
-            {
-                MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                // Do maintenance respiration
+                MaintenanceRespiration = 0;
+                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                {
+                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                }
+                needToRecalculateLiveDead = true;
             }
-            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Called when crop is ending</summary>

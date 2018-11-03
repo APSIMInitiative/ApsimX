@@ -1819,10 +1819,11 @@ namespace Models.PMF.Organs
                 if (resLeafCohort > totalBMLeafCohort)
                     throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
 
-                if (totalBMLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)
+                if (resLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)
                 {
-                    L.Live.MetabolicWt -= resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort;
-                    L.Live.StorageWt -= resLeafCohort * L.Live.StorageWt / totalBMLeafCohort;
+                    L.Live.MetabolicWt -= (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
+                    L.Live.StorageWt -= (resLeafCohort * L.Live.StorageWt / totalBMLeafCohort);
+                    needToRecalculateLiveDead = true;
                 }
             }
         }
