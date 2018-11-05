@@ -139,11 +139,11 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyVPD;
         private List<double> hourlyRUE; 
         private List<double> hourlyPotTr;
-        private List<double> hourlyVPDCappedTr;
-        private List<double> hourlyTrCappedTr;
-        private List<double> hourlyTr;
+        private List<double> hourlyPotTr_VPDLimited;
+        private List<double> hourlyPotTr_Limited;
+        private List<double> hourlyActTr;
         private List<double> hourlyPotDM;
-        private List<double> hourlyDM;
+        private List<double> hourlyActDM;
 
         private XYPairs tempResponseFunc = new XYPairs();
 
@@ -151,7 +151,7 @@ namespace Models.Functions.SupplyFunctions
         private double dailyPotDM;
 
         /// <summary>Total daily assimilation in g/m2</summary>    
-        private double dailyDM;
+        private double dailyActDM;
 
         /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
         private double stressFactor;
@@ -164,7 +164,7 @@ namespace Models.Functions.SupplyFunctions
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
         {
-            return dailyDM;
+            return dailyActDM;
         }
         //------------------------------------------------------------------------------------------------
 
@@ -207,16 +207,16 @@ namespace Models.Functions.SupplyFunctions
                 CalcTrCappedTr();
                 CalcSoilLimitedTr();
                 CalcActAssimilate();
-                Leaf.PotentialEP = hourlyTrCappedTr.Sum();
-                Leaf.WaterDemand = hourlyTr.Sum();
+                Leaf.PotentialEP = hourlyPotTr_Limited.Sum();
+                Leaf.WaterDemand = hourlyActTr.Sum();
             }
             else
             {
-                hourlyDM = new List<double>();
-                for (int i = 0; i < 24; i++) hourlyDM.Add(0.0);
+                hourlyActDM = new List<double>();
+                for (int i = 0; i < 24; i++) hourlyActDM.Add(0.0);
                 Leaf.PotentialEP = 0;
                 Leaf.WaterDemand = 0;
-                dailyDM = 0;
+                dailyActDM = 0;
             }
         }
         //------------------------------------------------------------------------------------------------
@@ -394,48 +394,48 @@ namespace Models.Functions.SupplyFunctions
         private void CalcVPDCappedTr()
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, Math.Min(hourlyVPD, MaxVPD) and transpEffCoef
-            hourlyVPDCappedTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyVPDCappedTr.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
+            hourlyPotTr_VPDLimited = new List<double>();
+            for (int i = 0; i < 24; i++) hourlyPotTr_VPDLimited.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
         }
         //------------------------------------------------------------------------------------------------
 
         private void CalcTrCappedTr()
         {
             // Calculates hourlyTrCappedTr by capping hourlyVPDCappedTr at MaxTr
-            hourlyTrCappedTr = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyTrCappedTr.Add(Math.Min(hourlyVPDCappedTr[i], MaxTr));
+            hourlyPotTr_Limited = new List<double>();
+            for (int i = 0; i < 24; i++) hourlyPotTr_Limited.Add(Math.Min(hourlyPotTr_VPDLimited[i], MaxTr));
         }
         //------------------------------------------------------------------------------------------------
 
         private void CalcSoilLimitedTr()
         {
             // Sets hourlyTr = hourlyVPDCappedTr and scales value at each hour until sum of hourlyTr = rootWaterSupp
-            hourlyTr = new List<double>(hourlyTrCappedTr);
+            hourlyActTr = new List<double>(hourlyPotTr_Limited);
 
             double rootWaterSupp = Root.TotalExtractableWater();
             double reduction = 0.99;
-            double maxHourlyT = hourlyTr.Max();
+            double maxHourlyT = hourlyActTr.Max();
 
             if (string.Equals(SWType, "daily"))
             {
-                double sumTr = hourlyTr.Sum();
+                double sumTr = hourlyActTr.Sum();
                 for (int i = 0; i < 24; i++)
-                    hourlyTr[i] *= Math.Min(1, MathUtilities.Divide(rootWaterSupp, sumTr, 0));
+                    hourlyActTr[i] *= Math.Min(1, MathUtilities.Divide(rootWaterSupp, sumTr, 0));
             }
             else
             {
                 if (rootWaterSupp < 1e-8)
-                    for (int i = 0; i < 24; i++) hourlyTr[i] = 0;
+                    for (int i = 0; i < 24; i++) hourlyActTr[i] = 0;
                 else
                 {
-                    while (hourlyTr.Sum() - rootWaterSupp > 1e-5)
+                    while (hourlyActTr.Sum() - rootWaterSupp > 1e-5)
                     {
                         maxHourlyT *= reduction;
                         for (int i = 0; i < 24; i++)
                         {
-                            double diff = Math.Max(0, hourlyTr.Sum() - rootWaterSupp);
-                            if (hourlyTr[i] >= maxHourlyT) hourlyTr[i] = Math.Max(maxHourlyT, hourlyTr[i] - diff);
-                            if (hourlyTr.Sum() - rootWaterSupp < 1e-5) break;
+                            double diff = Math.Max(0, hourlyActTr.Sum() - rootWaterSupp);
+                            if (hourlyActTr[i] >= maxHourlyT) hourlyActTr[i] = Math.Max(maxHourlyT, hourlyActTr[i] - diff);
+                            if (hourlyActTr.Sum() - rootWaterSupp < 1e-5) break;
                         }
                     }
                 }
@@ -450,32 +450,32 @@ namespace Models.Functions.SupplyFunctions
             // will be scaled to follow the same durnal pattern as that of the hourly RUE model.
             // If no such a link exists, the 'net' daily assimilate is calculated.
 
-            hourlyDM = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyDM.Add(hourlyTr[i] * transpEffCoef / hourlyVPD[i]);
+            hourlyActDM = new List<double>();
+            for (int i = 0; i < 24; i++) hourlyActDM.Add(hourlyActTr[i] * transpEffCoef / hourlyVPD[i]);
 
             dailyPotDM = hourlyPotDM.Sum();
-            dailyDM = hourlyDM.Sum();
+            dailyActDM = hourlyActDM.Sum();
 
-            if (GrossAssimilateModel != null && hourlyPotDM.Sum() > 0 && hourlyDM.Sum() > 0)
+            if (GrossAssimilateModel != null && hourlyPotDM.Sum() > 0 && hourlyActDM.Sum() > 0)
             {
-                double DailyDMGross = hourlyDM.Sum() / hourlyPotDM.Sum() * GrossAssimilateModel.Value();
+                double DailyDMGross = hourlyActDM.Sum() / hourlyPotDM.Sum() * GrossAssimilateModel.Value();
                 if (double.IsNaN(GrossAssimilateModel.Value()))
                     DailyDMGross = 0;
 
                 if (double.IsNaN(DailyDMGross))
-                    dailyDM = 0;
+                    dailyActDM = 0;
                 else
                 {
-                    dailyDM = hourlyDM.Sum();
-                    if (dailyDM > 0 && !double.IsNaN(DailyDMGross))
-                        for (int i = 0; i < 24; i++) hourlyDM[i] = hourlyDM[i] / dailyDM * DailyDMGross;
+                    dailyActDM = hourlyActDM.Sum();
+                    if (dailyActDM > 0 && !double.IsNaN(DailyDMGross))
+                        for (int i = 0; i < 24; i++) hourlyActDM[i] = hourlyActDM[i] / dailyActDM * DailyDMGross;
                     else
-                        for (int i = 0; i < 24; i++) hourlyDM[i] = 0;
-                    dailyDM = hourlyDM.Sum();
+                        for (int i = 0; i < 24; i++) hourlyActDM[i] = 0;
+                    dailyActDM = hourlyActDM.Sum();
                 }
             }
 
-            stressFactor = MathUtilities.Round(MathUtilities.Divide(dailyDM, dailyPotDM, 0), 3);
+            stressFactor = MathUtilities.Round(MathUtilities.Divide(dailyActDM, dailyPotDM, 0), 3);
         }
         //------------------------------------------------------------------------------------------------
 
