@@ -6,10 +6,9 @@
 namespace UserInterface.Presenters
 {
     using System.IO;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
     using Models;
     using Views;
+    using System;
 
     /// <summary>
     /// Presents the text from a memo component.
@@ -51,10 +50,17 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            string markdown = this.memoViewer.GetMarkdown();
-            if (markdown != this.memoModel.MemoText)
+            try
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", markdown));
+                string markdown = this.memoViewer.GetMarkdown();
+                if (markdown != this.memoModel.MemoText)
+                {
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", markdown));
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

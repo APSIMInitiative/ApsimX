@@ -21,6 +21,7 @@ namespace Models.Core
     ///    [PotatoSowingRule].Script.SowDate    RELATIVE TO A MODEL IN SCOPE
     ///    Leaf.LAI                             RELATIVE CHILD MODEL.
     /// </summary>
+    [Serializable]
     public class Locator : ILocator
     {
         /// <summary>The model this locator is relative to</summary>

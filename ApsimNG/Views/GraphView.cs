@@ -26,7 +26,7 @@ namespace UserInterface.Views
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
-    public class GraphView : ViewBase, Interfaces.IGraphView
+    public class GraphView : ViewBase, IGraphView
     {
         /// <summary>
         /// Overall font size for the graph.
@@ -70,7 +70,7 @@ namespace UserInterface.Views
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
+            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (VBox)builder.GetObject("vbox2");

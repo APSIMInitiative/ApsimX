@@ -110,11 +110,6 @@ namespace ApsimNG.Cloud
         private int numBlobs;
 
         /// <summary>
-        /// Mutual exclusion semaphore for updating the progress of a job.
-        /// </summary>
-        private object progressMutex;
-
-        /// <summary>
         /// Array of all valid result file formats.
         /// </summary>
         private readonly string[] resultFileFormats = { ".db", ".out" };
@@ -155,7 +150,6 @@ namespace ApsimNG.Cloud
             outputPath = path;
             rawResultsPath = outputPath + "\\" + jobName.ToString() + "_Results";
             tempPath = Path.GetTempPath() + "\\" + jobId;
-            progressMutex = new object();
             dbMutex = new object();
             presenter = explorer;
             unzipResults = unzipResultFiles;

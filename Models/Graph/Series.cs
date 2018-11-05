@@ -147,6 +147,7 @@ namespace Models.Graph
 
                 // Get a list of factors that the presenter uses to show the user.
                 FactorNamesForVarying = GetFactorList(factors);
+                FactorNamesForVarying.Add("Graph series");
 
                 // If a factor isn't being used to vary a colour/marker/line, then remove the factor. i.e. we
                 // don't care about it.
@@ -161,8 +162,14 @@ namespace Models.Graph
                 DataTable baseData = GetBaseData(storage, factors);
 
                 // Get data for each simulation / zone object
-                if (baseData != null && baseData.Rows.Count > 0)
-                    ourDefinitions = ConvertToSeriesDefinitions(factors, storage, baseData);
+                if (baseData != null)
+                {
+                    if (baseData.Rows.Count > 0)
+                        ourDefinitions = ConvertToSeriesDefinitions(factors, storage, baseData);
+                    else if (Apsim.Parent(this, typeof(Simulation)).Parent is Experiment)
+                        throw new Exception("Unable to find any data points - should this graph be directly under an experiment?");
+                }
+                    
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
@@ -192,10 +199,8 @@ namespace Models.Graph
         /// Go through all simulation zone objects and remove factors that don't vary between objects.
         /// </summary>
         /// <param name="factors">A list of factors.</param>
-        /// <returns>A new list of factors</returns>
         private void RemoveFactorsThatDontVary(List<ISimulationGeneratorFactors> factors)
         {
-            List<ISimulationGeneratorFactors> newFactors = new List<ISimulationGeneratorFactors>();
             foreach (string factorName in GetFactorList(factors))
             {
                 List<string> factorValues = new List<string>();
@@ -223,17 +228,17 @@ namespace Models.Graph
             if (FactorToVaryMarkers != null)
                 factorsToKeep.Add(FactorToVaryMarkers);
             factorsToKeep = factorsToKeep.Distinct().ToList();
+            if (factorsToKeep.Count != 0)
+            {
+                var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
 
-            var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
+                foreach (var factor in factors)
+                    foreach (var factorToRemove in factorsToRemove)
+                        factor.RemoveFactor(factorToRemove);
+            }
 
-            foreach (var factor in factors)
-                foreach (var factorToRemove in factorsToRemove)
-                    factor.RemoveFactor(factorToRemove);
-
-            // Make sure each factor has the factors we want to keep.
-            foreach (var factor in factors)
-                foreach (var factorToKeep in factorsToKeep)
-                    factor.AddFactorIfNotExist(factorToKeep, "?");
+            // Remove empty factors
+            factors.RemoveAll(f => f.Factors.Count == 0);
         }
 
         /// <summary>
@@ -310,80 +315,6 @@ namespace Models.Graph
             }
             return simulationZonePairs;
         }
-
-        ///// <summary>
-        ///// Build a list of simulation / zone pairs from the specified simulation
-        ///// </summary>
-        ///// <param name="model">This can be either a simulation or a zone</param>
-        ///// <returns>A list of simulation / zone pairs</returns>
-        ////private List<SimulationZone> BuildListFromSimulation(IModel model)
-        //{
-        //    IModel simulation = Apsim.Parent(model, typeof(Simulation));
-        //    List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
-        //    foreach (Zone zone in Apsim.ChildrenRecursively(model, typeof(Zone)))
-        //        simulationZonePairs.Add(new SimulationZone(simulation.Name, zone.Name));
-
-        //    if (typeof(Zone).IsAssignableFrom(model.GetType()))
-        //        simulationZonePairs.Add(new SimulationZone(simulation.Name, model.Name));
-        //    return simulationZonePairs;
-        //}
-
-        ///// <summary>
-        ///// Build a list of simulation / zone pairs from the specified experiment
-        ///// </summary>
-        ///// <param name="model"></param>
-        ///// <returns></returns>
-        //private List<SimulationZone> BuildListFromExperiment(IModel model)
-        //{
-        //    List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
-        //    foreach (SimulationZone simulationZonePair in BuildListFromSimulation((model as Experiment).BaseSimulation))
-        //    {
-        //        foreach (List<FactorValue> combination in (model as Experiment).AllCombinations())
-        //        {
-        //            string zoneName = simulationZonePair.factorNameValues.Find(factorValue => factorValue.Key == "Zone").Value;
-        //            SimulationZone simulationZone = new SimulationZone(null, zoneName);
-        //            string simulationName = model.Name;
-        //            foreach (FactorValue value in combination)
-        //            {
-        //                simulationName += value.Name;
-        //                string factorName = value.Factor.Name;
-        //                if (value.Factor.Parent is Factor)
-        //                {
-        //                    factorName = value.Factor.Parent.Name;
-        //                }
-        //                string factorValue = value.Name.Replace(factorName, "");
-        //                simulationZone.factorNameValues.Add(new KeyValuePair<string, string>(factorName, factorValue));
-        //            }
-        //            simulationZone.factorNameValues.Add(new KeyValuePair<string, string>("Experiment", (model as Experiment).Name));
-        //            simulationZone.simulationNames.Add(simulationName);
-        //            simulationZonePairs.Add(simulationZone);
-        //        }
-        //    }
-        //    return simulationZonePairs;
-        //}
-
-        ///// <summary>
-        ///// Build a list of simulation / zone pairs from the specified experiment
-        ///// </summary>
-        ///// <param name="simGenerator">Simulation generator</param>
-        ///// <returns></returns>
-        //private List<SimulationZone> BuildListFromSimulationGenerator(ISimulationGenerator simGenerator)
-        //{
-        //    List<SimulationZone> simulationZonePairs = new List<SimulationZone>();
-
-        //    // Get a list of simulation names from generator.
-        //    IEnumerable simulationNames = simGenerator.GetSimulationNames();
-
-        //    // Get a list of factor names from generator.
-        //    List<SimulationGeneratorFactor> factors = simGenerator.GetFactors();
-
-        //    //foreach (string simulationName in simulationNames)
-        //        simulationZonePairs.Add(new SimulationZone(null, factors));
-
-        //    return simulationZonePairs;
-        //}
-
-
 
         /// <summary>
         /// Paint the visual elements (colour, line and marker) of all simulation / zone pairs.
@@ -474,7 +405,7 @@ namespace Models.Graph
                 visualElement.LineThickness = LineThickness;
                 visualElement.Marker = Marker;
                 visualElement.MarkerSize = MarkerSize;
-                painter.PaintSimulationZone(factor, visualElement);
+                painter.PaintSimulationZone(factor, visualElement, this);
 
                 SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
                 seriesDefinition.type = Type;
@@ -490,17 +421,24 @@ namespace Models.Graph
                 seriesDefinition.xFieldUnits = storage.GetUnits(TableName, XFieldName);
                 seriesDefinition.yFieldUnits = storage.GetUnits(TableName, YFieldName);
                 seriesDefinition.showInLegend = ShowInLegend;
-                factor.Factors.ForEach(f => seriesDefinition.title += f.Value);
-                if (IncludeSeriesNameInLegend)
+                if (factor.Factors.Count == 1 && factor.Factors[0].Key == "Graph series")
+                    seriesDefinition.title = Name;
+                else
                 {
-                    seriesDefinition.title += ": " + Name;
+                    factor.Factors.ForEach(f => seriesDefinition.title += f.Value);
+                    if (IncludeSeriesNameInLegend || seriesDefinition.title == "?")
+                    {
+                        seriesDefinition.title += ": " + Name;
+                    }
                 }
+
                 if (Checkpoint != "Current")
                     seriesDefinition.title += " (" + Checkpoint + ")";
                 DataView data = new DataView(baseData);
                 try
                 {
-                    data.RowFilter = CreateRowFilter(new ISimulationGeneratorFactors[] { factor });
+                    data.RowFilter = CreateRowFilter(storage, new ISimulationGeneratorFactors[] { factor },
+                                                     DataTableUtilities.GetColumnNames(baseData));
                 }
                 catch
                 {
@@ -662,9 +600,14 @@ namespace Models.Graph
         /// <param name="storage">Storage service</param>
         private DataTable GetBaseData(IStorageReader storage, List<ISimulationGeneratorFactors> factors)
         {
+            var columnsInTable = storage.ColumnNames(TableName).ToList();
+            columnsInTable.Add("SimulationName");
             List<string> fieldNames = new List<string>();
             foreach (ISimulationGeneratorFactors factor in factors)
-                fieldNames.Add(factor.ColumnName);
+                foreach (var column in factor.Columns)
+                    if (!fieldNames.Contains(column.Key) && columnsInTable.Contains(column.Key))
+                        fieldNames.Add(column.Key);
+
             if (XFieldName != null)
                 fieldNames.Add(XFieldName);
             if (YFieldName != null)
@@ -685,9 +628,9 @@ namespace Models.Graph
 
             string filterToUse;
             if (Filter == null || Filter == string.Empty)
-                filterToUse = CreateRowFilter(factors);
+                filterToUse = CreateRowFilter(storage, factors, columnsInTable);
             else
-                filterToUse = Filter + " AND (" + CreateRowFilter(factors) + ")";
+                filterToUse = Filter + " AND (" + CreateRowFilter(storage, factors, columnsInTable) + ")";
 
             return storage.GetData(tableName: TableName, checkpointName: Checkpoint, fieldNames: fieldNames.Distinct(), filter: filterToUse);
         }
@@ -698,36 +641,44 @@ namespace Models.Graph
             public string ColumnName { get; set; }
             public List<string> ColumnValues { get; set; }
 
-            public ColumnNameValues(string name, List<string> values)
+            public ColumnNameValues(string name, string value)
             {
                 ColumnName = name;
                 ColumnValues = new List<string>();
-                ColumnValues.AddRange(values);
+                ColumnValues.Add(value);
             }
         }
 
         /// <summary>
         /// Create a row filter for the specified factors.
         /// </summary>
-        /// <param name="factors">A list of factors to build a filter for</param>
-        private string CreateRowFilter(IEnumerable<ISimulationGeneratorFactors> factors)
+        /// <param name="storage">Storage service</param>
+        /// <param name="factors">A list of factors to build a filter for.</param>
+        /// <param name="columnsInTable">Columns in table</param>
+        private string CreateRowFilter(IStorageReader storage, IEnumerable<ISimulationGeneratorFactors> factors, IEnumerable<string> columnsInTable)
         {
             string factorFilters = null;
 
             List<ColumnNameValues> columns = new List<ColumnNameValues>();
             foreach (var factor in factors)
             {
-                ColumnNameValues column = columns.Find(col => col.ColumnName == factor.ColumnName);
-                if (column == null)
-                    columns.Add(new ColumnNameValues(factor.ColumnName, factor.ColumnValues));
-                else
-                    column.ColumnValues.AddRange(factor.ColumnValues);
+                foreach (var factorColumn in factor.Columns)
+                {
+                    if (columnsInTable.Contains(factorColumn.Key))
+                    {
+                        ColumnNameValues column = columns.Find(col => col.ColumnName == factorColumn.Key);
+                        if (column == null)
+                            columns.Add(new ColumnNameValues(factorColumn.Key, factorColumn.Value));
+                        else if (!column.ColumnValues.Contains(factorColumn.Value))
+                            column.ColumnValues.Add(factorColumn.Value);
+                    }
+                }
             }
 
             foreach (var column in columns)
             {
                 if (factorFilters != null)
-                    factorFilters += " OR ";
+                    factorFilters += " AND ";
                 if (column.ColumnValues.Count == 1)
                     foreach (var value in column.ColumnValues)
                         factorFilters += column.ColumnName + " = '" + value + "'";
@@ -798,7 +749,7 @@ namespace Models.Graph
             /// <summary>A painter interface for setting visual elements of a simulation/zone pair</summary>
             public interface IPainter
             {
-                void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement);
+                void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series);
             }
 
             /// <summary>A default painter for setting a simulation / zone pair to default values.</summary>
@@ -807,7 +758,7 @@ namespace Models.Graph
                 public Color Colour { get; set; }
                 public LineType LineType { get; set; }
                 public MarkerType MarkerType { get; set; }
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     visualElement.colour = Colour;
                     visualElement.Line = LineType;
@@ -823,15 +774,25 @@ namespace Models.Graph
                 public int MaximumIndex { get; set; }
                 public SetFunction Setter { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
-                    string factorValue = factor.GetFactorValue(FactorName);
-                    int index = values.IndexOf(factorValue);
-                    if (index == -1)
+                    int index;
+                    if (FactorName == "Graph series")
                     {
-                        values.Add(factorValue);
-                        index = values.Count - 1;
+                        index = (series.Parent as Graph).Series.IndexOf(series);
                     }
+                    else
+                    {
+                        string factorValue = factor.GetFactorValue(FactorName);
+
+                        index = values.IndexOf(factorValue);
+                        if (index == -1)
+                        {
+                            values.Add(factorValue);
+                            index = values.Count - 1;
+                        }
+                    }
+
                     index = index % MaximumIndex;
                     Setter(visualElement, index);
                 }
@@ -848,7 +809,7 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     string factorValue = factor.GetFactorValue(FactorName);
 
@@ -879,7 +840,7 @@ namespace Models.Graph
                 public SetFunction Setter1 { get; set; }
                 public SetFunction Setter2 { get; set; }
 
-                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement)
+                public void PaintSimulationZone(ISimulationGeneratorFactors factor, VisualElements visualElement, Series series)
                 {
                     string factorValue1 = factor.GetFactorValue(FactorName1);
                     string factorValue2 = factor.GetFactorValue(FactorName2);

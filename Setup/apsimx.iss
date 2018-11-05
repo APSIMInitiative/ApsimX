@@ -153,7 +153,7 @@ Source: ..\DeploymentSupport\Windows\Bin64\lib\gtk-2.0\2.10.0\engines\*.dll; Des
 Source: ..\Bin\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
 Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion; 
+Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs

@@ -8,6 +8,7 @@ namespace UserInterface.Interfaces
     using System;
     using System.Drawing;
     using EventArguments;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The interface to a grid view. Clients of this class should set the data source
@@ -15,6 +16,21 @@ namespace UserInterface.Interfaces
     /// </summary>
     public interface IGridView
     {
+        /// <summary>
+        /// Invoked when the user wants to copy a range of cells to the clipboard.
+        /// </summary>
+        event EventHandler<GridCellActionArgs> CopyCells;
+
+        /// <summary>
+        /// Invoked when the user wants to paste data into a range of cells.
+        /// </summary>
+        event EventHandler<GridCellPasteArgs> PasteCells;
+
+        /// <summary>
+        /// Invoked when the user wants to delete data from a range of cells.
+        /// </summary>
+        event EventHandler<GridCellActionArgs> DeleteCells;
+
         /// <summary>
         /// This event is invoked when the values of 1 or more cells have changed.
         /// </summary>
@@ -25,16 +41,15 @@ namespace UserInterface.Interfaces
         /// </summary>
         event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
 
-        /// <summary>Occurs when user clicks a button on the cell.</summary>
+        /// <summary>
+        /// Occurs when user clicks a button on the cell.
+        /// </summary>
         event EventHandler<GridCellsChangedArgs> ButtonClick;
 
-        event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
-
         /// <summary>
-        /// Invoked when the columns need to be reset to their default colours.
-        /// If this event handler is null, the default colours are assumed to be white.
+        /// Invoked when the user needs context items for the intellisense.
         /// </summary>
-        event EventHandler<EventArgs> FormatColumns;
+        event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
@@ -43,8 +58,14 @@ namespace UserInterface.Interfaces
 
         /// <summary>
         /// Gets or sets the number of rows in grid.
+        /// Setting this when <see cref="CanGrow"/> is false will generate an exception.
         /// </summary>
         int RowCount { get; set; }
+
+        /// <summary>
+        /// Gets the number of columns in the grid.
+        /// </summary>
+        int ColumnCount { get; }
         
         /// <summary>
         /// Gets or sets the numeric grid format e.g. N3
@@ -57,19 +78,9 @@ namespace UserInterface.Interfaces
         bool ReadOnly { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether "property" mode is enabled
+        /// If true, the grid can grow larger.
         /// </summary>
-        bool PropertyMode { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the grid has an auto filter
-        /// </summary>
-        bool AutoFilterOn { get; set; }
-
-        /// <summary>
-        /// The name of the associated model.
-        /// </summary>
-        string ModelName { get; set; }
+        bool CanGrow { get; set; }
 
         /// <summary>
         /// Gets or sets the currently selected cell.
@@ -95,14 +106,7 @@ namespace UserInterface.Interfaces
         /// Add a separator line to the context menu
         /// </summary>
         void AddContextSeparator();
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
-        /// <param name="onClick">The event handler to call when menu is selected</param>
-        void AddContextAction(string menuItemText, System.EventHandler onClick);
-
+        
         /// <summary>
         /// Add an option (on context menu) on the series grid.
         /// </summary>
@@ -116,11 +120,6 @@ namespace UserInterface.Interfaces
         /// Clear all presenter defined context items.
         /// </summary>
         void ClearContextActions();
-
-        /// <summary>
-        /// Load the image associated with the Model (if it exists).
-        /// </summary>
-        void LoadImage();
 
         /// <summary>
         /// Returns true if the grid row is empty.
@@ -138,9 +137,6 @@ namespace UserInterface.Interfaces
         /// <param name="number"></param>
         void LockLeftMostColumns(int number);
 
-        /// <summary>Get screenshot of grid.</summary>
-        Image GetScreenshot();
-
         /// <summary>
         /// Indicates that a row should be treated as a separator line
         /// </summary>
@@ -149,9 +145,39 @@ namespace UserInterface.Interfaces
         void SetRowAsSeparator(int row, bool isSep = true);
 
         /// <summary>
+        /// Checks if a row is a separator row.
+        /// </summary>
+        /// <param name="row">Index of the row.</param>
+        /// <returns>True iff the row is a separator row.</returns>
+        bool IsSeparator(int row);
+
+        /// <summary>
         /// Inserts text into the current cell at the cursor position.
         /// </summary>
         /// <param name="text">Text to be inserted.</param>
         void InsertText(string text);
+
+        /// <summary>
+        /// Refreshes the grid.
+        /// </summary>
+        void Refresh();
+
+        /// <summary>
+        /// Refreshes the grid and updates the model.
+        /// </summary>
+        /// <param name="args"></param>
+        void Refresh(GridCellsChangedArgs args);
+
+        /// <summary>
+        /// Unselects any currently selected cells and selects a new range of cells.
+        /// Passing in a null or empty list of cells will deselect all cells.
+        /// </summary>
+        /// <param name="cells">Cells to be selected.</param>
+        void SelectCells(List<IGridCell> cells);
+
+        /// <summary>
+        /// Does some cleanup work on the Grid.
+        /// </summary>
+        void Dispose();
     }
 }

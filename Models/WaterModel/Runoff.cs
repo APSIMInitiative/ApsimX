@@ -10,7 +10,7 @@ namespace Models.WaterModel
     using Core;
     using Interfaces;
     using Functions;
-    using SurfaceOM;
+    using Surface;
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;

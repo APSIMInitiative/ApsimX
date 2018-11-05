@@ -23,5 +23,10 @@ namespace Models.Core
         /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
         void WriteWarning(IModel model, string message);
+
+        /// <summary>Write an error message to the summary</summary>
+        /// <param name="model">The model writing the message</param>
+        /// <param name="message">The warning message to write</param>
+        void WriteError(IModel model, string message);
     }
 }

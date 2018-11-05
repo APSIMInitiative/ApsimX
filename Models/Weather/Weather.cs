@@ -1,36 +1,17 @@
-// -----------------------------------------------------------------------
-// <copyright file="WeatherFile.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models
+ï»¿namespace Models
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Xml.Serialization;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Models.Interfaces;
 
     ///<summary>
     /// Reads in weather data and makes it available to other models.
     ///</summary>
-    ///    
-    ///<remarks>
-    /// Keywords in the weather file
-    /// - Maxt for maximum temperature
-    /// - Mint for minimum temperature
-    /// - Radn for radiation
-    /// - Rain for rainfall
-    /// - VP for vapour pressure
-    /// - Wind for wind speed
-    ///     
-    /// VP is calculated using function Utility.Met.svp
-    /// Wind assign default value 3 if Wind is not resent.
-    ///</remarks>
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
@@ -90,9 +71,9 @@ namespace Models
         private int windIndex;
 
         /// <summary>
-        /// An instance of the weather data.
+        /// The index of the DiffuseFraction column in the weather file
         /// </summary>
-        private NewMetType todaysMetData = new NewMetType();
+        private int DiffuseFractionIndex;
 
         /// <summary>
         /// A flag indicating whether this model should do a seek on the weather file
@@ -150,13 +131,9 @@ namespace Models
             get
             {
                 if (this.reader != null)
-                {
                     return this.reader.FirstDate;
-                }
                 else
-                {
                     return new DateTime(0);
-                }
             }
         }
 
@@ -168,177 +145,98 @@ namespace Models
             get
             {
                 if (this.reader != null)
-                {
                     return this.reader.LastDate;
-                }
                 else
-                {
                     return new DateTime(0);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the weather data as a single structure.
-        /// </summary>
-        public NewMetType MetData
-        {
-            get
-            {
-                return this.todaysMetData;
             }
         }
 
         /// <summary>
         /// Gets or sets the maximum temperature (oC)
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        [Units("°C")]
+        [Units("Â°C")]
         [XmlIgnore]
-        public double MaxT
-        {
-            get
-            {
-                return this.MetData.Maxt;
-            }
-
-            set
-            {
-                this.todaysMetData.Maxt = value;
-            }
-        }
+        public double MaxT { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum temperature (oC)
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         [XmlIgnore]
-        [Units("°C")]
-        public double MinT
-        {
-            get
-            {
-                return this.MetData.Mint;
-            }
+        [Units("Â°C")]
+        public double MinT { get; set; }
 
-            set
-            {
-                this.todaysMetData.Mint = value;
-            }
-        }
         /// <summary>
         /// Daily Mean temperature (oC)
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        [Units("°C")]
+        [Units("Â°C")]
         [XmlIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
+
+        /// <summary>
+        /// Daily mean VPD (hPa)
+        /// </summary>
+        [Units("hPa")]
+        [XmlIgnore]
+        public double VPD
+        {
+            get
+            {
+                const double SVPfrac = 0.66;
+                double VPDmint = MetUtilities.svp((float)MinT) - VP;
+                VPDmint = Math.Max(VPDmint, 0.0);
+
+                double VPDmaxt = MetUtilities.svp((float)MaxT) - VP;
+                VPDmaxt = Math.Max(VPDmaxt, 0.0);
+
+                return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
         [Units("mm")]
         [XmlIgnore]
-        public double Rain
-        {
-            get
-            {
-                return this.MetData.Rain;
-            }
-
-            set
-            {
-                this.todaysMetData.Rain = value;
-            }
-        }
+        public double Rain { get; set; }
 
         /// <summary>
         /// Gets or sets the solar radiation. MJ/m2/day
         /// </summary>
         [Units("MJ/m^2/d")]
         [XmlIgnore]
-        public double Radn
-        {
-            get
-            {
-                return this.MetData.Radn;
-            }
-
-            set
-            {
-                this.todaysMetData.Radn = value;
-            }
-        }
+        public double Radn { get; set; }
 
         /// <summary>
         /// Gets or sets the Pan Evaporation (mm) (Class A pan)
         /// </summary>
         [Units("mm")]
         [XmlIgnore]
-        public double PanEvap
-            {
-            get
-                {
-                return this.MetData.PanEvap;
-                }
-
-            set
-                {
-                this.todaysMetData.PanEvap = value;
-                }
-            }
+        public double PanEvap { get; set; }
 
         /// <summary>
         /// Gets or sets the number of hours rainfall occured in
         /// </summary>
         [XmlIgnore]
-        public double RainfallHours
-        {
-            get
-            {
-                return this.MetData.RainfallHours;
-            }
-
-            set
-            {
-                this.todaysMetData.RainfallHours = value;
-            }
-        }
+        public double RainfallHours { get; set; }
 
         /// <summary>
         /// Gets or sets the vapor pressure (hPa)
         /// </summary>
         [Units("hPa")]
         [XmlIgnore]
-        public double VP
-        {
-            get
-            {
-                return this.MetData.VP;
-            }
-
-            set
-            {
-                this.todaysMetData.VP = value;
-            }
-        }
+        public double VP { get; set; }
 
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified. (code says 3.0 not zero)
         /// </summary>
         [XmlIgnore]
-        public double Wind
-        {
-            get
-            {
-                return this.MetData.Wind;
-            }
+        public double Wind { get; set; }
 
-            set
-            {
-                this.todaysMetData.Wind = value;
-            }
-        }
+        /// <summary>
+        /// Gets or sets the DF value found in weather file or zero if not specified
+        /// </summary>
+        [XmlIgnore]
+        public double DiffuseFraction { get; set; }
 
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
@@ -353,7 +251,6 @@ namespace Models
         [XmlIgnore]
         public double AirPressure { get; set; }
 
-
         /// <summary>
         /// Gets the latitude
         /// </summary>
@@ -362,13 +259,9 @@ namespace Models
             get
             {
                 if (this.reader == null || this.reader.Constant("Latitude") == null)
-                {
                     return 0;
-                }
                 else
-                {
                     return this.reader.ConstantAsDouble("Latitude");
-                }
             }
         }
 
@@ -380,33 +273,24 @@ namespace Models
             get
             {
                 if (this.reader == null || this.reader.Constant("Longitude") == null)
-                {
                     return 0;
-                }
                 else
-                {
                     return this.reader.ConstantAsDouble("Longitude");
-                }
             }
         }
 
         /// <summary>
         /// Gets the average temperature
         /// </summary>
-        [Units("°C")]
+        [Units("Â°C")]
         public double Tav
         {
             get
             {
                 if (this.reader == null)
-                {
                     return 0;
-                }
                 else if (this.reader.Constant("tav") == null)
-                {
-                    // this constant has not been found so do a calculation
                     this.CalcTAVAMP();
-                }
 
                 return this.reader.ConstantAsDouble("tav");
             }
@@ -420,14 +304,9 @@ namespace Models
             get
             {
                 if (this.reader == null)
-                {
                     return 0;
-                }
                 else if (this.reader.Constant("amp") == null)
-                {
-                    // this constant has not been found so do a calculation
                     this.CalcTAVAMP();
-                }
 
                 return this.reader.ConstantAsDouble("amp");
             }
@@ -450,17 +329,6 @@ namespace Models
         [XmlIgnore] public int ShowYears = 1;
 
 
-        /// <summary>
-        /// Gets the daily Photothermal Quotient (ptq).
-        /// </summary>
-        public double PhotothermalQuotient
-        {
-            get
-            {
-                return this.MetData.Radn / ((this.MetData.Maxt + this.MetData.Mint) / 2);
-            }
-        }
-
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
@@ -473,35 +341,6 @@ namespace Models
         public double CalculateDayLength(double Twilight)
         {
                 return MathUtilities.DayLength(this.clock.Today.DayOfYear, Twilight, this.Latitude);
-        }
-
-        /// <summary>
-        /// Gets the 3 hourly estimates of air temperature in this daily timestep.
-        /// ref: Jones, C. A., and Kiniry, J. R. (1986). "'CERES-Maize: A simulation model of maize growth
-        ///      and development'." Texas A and M University Press: College Station, TX.
-        /// Example of use:
-        /// <code>
-        /// double tot = 0;
-        /// for (int period = 1; period &lt;= 8; period++)
-        /// {
-        ///    tot = tot + ThermalTimeFn.ValueIndexed(Temps3Hours[i]);
-        /// }
-        /// return tot / 8;
-        /// </code>    
-        /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        public double[] Temps3Hours
-        {
-            get
-            {
-                double[] periodTemps = new double[8];
-                for (int period = 1; period <= 8; period++)
-                {
-                    periodTemps[period - 1] = this.Temp3Hr(this.MetData.Maxt, this.MetData.Mint, period);  // get an air temperature for this period
-                }
-
-                return periodTemps;
-            }
         }
 
         /// <summary>
@@ -519,6 +358,7 @@ namespace Models
             this.rainfallHoursIndex = 0;
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
+            this.DiffuseFractionIndex = 0;
             this.CO2 = 350;
             this.AirPressure = 1010;
         }
@@ -530,10 +370,8 @@ namespace Models
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (this.reader != null)
-            {
                 this.reader.Close();
-                this.reader = null;
-            }
+            this.reader = null;            
         }
 
         /// <summary>
@@ -552,13 +390,12 @@ namespace Models
                 metProps.Add("radn");
                 metProps.Add("rain");
                 metProps.Add("wind");
+                metProps.Add("diffr");
 
                 return this.reader.ToTable(metProps);
             }
             else
-            {
                 return null;
-            }
         }
 
         /// <summary>
@@ -572,9 +409,7 @@ namespace Models
             if (this.doSeek)
             {
                 if (!this.OpenDataFile())
-                {
                     throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
-                }
 
                 this.doSeek = false;
                 this.reader.SeekToDate(this.clock.Today);
@@ -583,75 +418,55 @@ namespace Models
             object[] values = this.reader.GetNextLineOfData();
 
             if (this.clock.Today != this.reader.GetDateFromValues(values))
-            {
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
-            }
 
-            this.todaysMetData.Today = this.clock.Today;
             if (this.radiationIndex != -1)
-                this.todaysMetData.Radn = Convert.ToSingle(values[this.radiationIndex]);
+                this.Radn = Convert.ToSingle(values[this.radiationIndex]);
             else
-                this.todaysMetData.Radn = this.reader.ConstantAsDouble("radn");
+                this.Radn = this.reader.ConstantAsDouble("radn");
 
             if (this.maximumTemperatureIndex != -1)
-                this.todaysMetData.Maxt = Convert.ToSingle(values[this.maximumTemperatureIndex]);
+                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex]);
             else
-                this.todaysMetData.Maxt = this.reader.ConstantAsDouble("maxt");
+                this.MaxT = this.reader.ConstantAsDouble("maxt");
 
             if (this.minimumTemperatureIndex != -1)
-                this.todaysMetData.Mint = Convert.ToSingle(values[this.minimumTemperatureIndex]);
+                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex]);
             else
-                this.todaysMetData.Mint = this.reader.ConstantAsDouble("mint");
+                this.MinT = this.reader.ConstantAsDouble("mint");
 
             if (this.rainIndex != -1)
-                this.todaysMetData.Rain = Convert.ToSingle(values[this.rainIndex]);
+                this.Rain = Convert.ToSingle(values[this.rainIndex]);
             else
-                this.todaysMetData.Rain = this.reader.ConstantAsDouble("rain");
+                this.Rain = this.reader.ConstantAsDouble("rain");
 				
             if (this.evaporationIndex == -1)
-                {
-                // If Evap is not present in the weather file assign a default value
-                this.todaysMetData.PanEvap = double.NaN;
-                }
+                this.PanEvap = double.NaN;
             else
-                {
-                this.todaysMetData.PanEvap = Convert.ToSingle(values[this.evaporationIndex]);
-                }
+                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex]);
 
             if (this.rainfallHoursIndex == -1)
-            {
-                // If Evap is not present in the weather file assign a default value
-                this.todaysMetData.RainfallHours = double.NaN;
-            }
+                this.RainfallHours = double.NaN;
             else
-            {
-                this.todaysMetData.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex]);
-            }
+                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex]);
 
             if (this.vapourPressureIndex == -1)
-            {
-                // If VP is not present in the weather file assign a defalt value
-                this.todaysMetData.VP = Math.Max(0, MetUtilities.svp(this.MetData.Mint));
-            }
+                this.VP = Math.Max(0, MetUtilities.svp(this.MinT));
             else
-            {
-                this.todaysMetData.VP = Convert.ToSingle(values[this.vapourPressureIndex]);
-            }
+                this.VP = Convert.ToSingle(values[this.vapourPressureIndex]);
 
             if (this.windIndex == -1)
-            {
-                // If Wind is not present in the weather file assign a default value
-                this.todaysMetData.Wind = 3.0;
-            }
+                this.Wind = 3.0;
             else
-            {
-                this.todaysMetData.Wind = Convert.ToSingle(values[this.windIndex]);
-            }
+                this.Wind = Convert.ToSingle(values[this.windIndex]);
+
+            if (this.DiffuseFractionIndex == -1)
+                this.DiffuseFraction = -1;
+            else
+                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex]);
 
             if (this.PreparingNewWeatherData != null)
-            {
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
-            }
         }
 
         /// <summary>
@@ -675,29 +490,23 @@ namespace Models
                     this.rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "RainHours");
                     this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
+                    this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
+
                     if (this.maximumTemperatureIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("maxt") == null)
                             throw new Exception("Cannot find MaxT in weather file: " + this.FullFileName);
-                    }
 
                     if (this.minimumTemperatureIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("mint") == null)
                             throw new Exception("Cannot find MinT in weather file: " + this.FullFileName);
-                    }
 
                     if (this.radiationIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("radn") == null)
                             throw new Exception("Cannot find Radn in weather file: " + this.FullFileName);
-                    }
 
                     if (this.rainIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("rain") == null)
                             throw new Exception("Cannot find Rain in weather file: " + this.FullFileName);
-                    }
                 }
                 else
                 {
@@ -717,17 +526,14 @@ namespace Models
         public void CloseDataFile()
         {
             if (reader != null)
-            {
                 reader.Close();
-                reader = null;
-            }
+            reader = null;
         }
 
         /// <summary>
         /// Calculate the amp and tav 'constant' values for this weather file
         /// and store the values into the File constants.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         private void CalcTAVAMP()
         {
             double tav = 0;
@@ -737,22 +543,14 @@ namespace Models
             this.ProcessMonthlyTAVAMP(out tav, out amp);
 
             if (this.reader.Constant("tav") == null)
-            {
                 this.reader.AddConstant("tav", tav.ToString(), string.Empty, string.Empty); // add a new constant
-            }
             else
-            {
                 this.reader.SetConstant("tav", tav.ToString());
-            }
-
+ 
             if (this.reader.Constant("amp") == null)
-            {
                 this.reader.AddConstant("amp", amp.ToString(), string.Empty, string.Empty); // add a new constant
-            }
             else
-            {
                 this.reader.SetConstant("amp", amp.ToString());
-            }
         }
 
         /// <summary>
@@ -760,7 +558,6 @@ namespace Models
         /// </summary>
         /// <param name="tav">The calculated tav value</param>
         /// <param name="amp">The calculated amp value</param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         private void ProcessMonthlyTAVAMP(out double tav, out double amp)
         {
             int savedPosition = reader.GetCurrentPosition();
@@ -807,10 +604,7 @@ namespace Models
                 monthlyDays[curMonth - 1, yearIndex]++;
 
                 if (curDate >= last)
-                {
-                    // if have read last record
                     moreData = false;
-                }
             }
 
             // do more summary calculations
@@ -839,77 +633,6 @@ namespace Models
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             reader.SeekToPosition(savedPosition);
-        }
-
-        /// <summary>
-        /// An estimate of mean air temperature for the period number in this time step
-        /// </summary>
-        /// <param name="tempMax">The maximum temperature</param>
-        /// <param name="tempMin">The minimum temperature</param>
-        /// <param name="period">The period number 1 to 8</param>
-        /// <returns>The mean air temperature</returns>
-        private double Temp3Hr(double tempMax, double tempMin, double period)
-        {
-            double tempRangeFract = 0.92105 + (0.1140 * period) -
-                                           (0.0703 * Math.Pow(period, 2)) +
-                                           (0.0053 * Math.Pow(period, 3));
-            double diurnalRange = tempMax - tempMin;
-            double deviation = tempRangeFract * diurnalRange;
-            return tempMin + deviation;
-        }
-
-        /// <summary>
-        /// A structure containing the commonly used weather data.
-        /// </summary>
-        [Serializable]
-        public struct NewMetType
-        {
-            /// <summary>
-            /// The current date
-            /// </summary>
-            public DateTime Today;
-
-            /// <summary>
-            /// Solar radiation. MJ/m2/day
-            /// </summary>
-            public double Radn;
-
-            /// <summary>
-            /// Maximum temperature (oC)
-            /// </summary>
-            [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-            public double Maxt;
-
-            /// <summary>
-            /// Minimum temperature (oC)
-            /// </summary>
-            [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-            public double Mint;
-
-            /// <summary>
-            /// Rainfall (mm)
-            /// </summary>
-            public double Rain;
-
-            /// <summary>
-            /// Pan Evaporation (mm) (Class A pan) (NaN if not present)
-            /// </summary>
-            public double PanEvap;
-
-            /// <summary>
-            /// Pan Evaporation (mm) (Class A pan) (NaN if not present)
-            /// </summary>
-            public double RainfallHours;
-
-            /// <summary>
-            /// The vapor pressure (hPa)
-            /// </summary>
-            public double VP;
-
-            /// <summary>
-            /// The wind value found in weather file or zero if not specified (code says 3.0 not zero).
-            /// </summary>
-            public double Wind;
         }
     }
 }

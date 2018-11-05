@@ -31,17 +31,20 @@ namespace Models.PMF.Interfaces
     /// </remarks>
     public interface IArbitration
     {
-        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
-        BiomassPoolType CalculateDryMatterDemand();
+        /// <summary>Returns the organs dry matter demand</summary>
+        BiomassPoolType DMDemand { get; }
 
-        /// <summary>Calculate and return dry matter supply (g/m2)</summary>
-        BiomassSupplyType CalculateDryMatterSupply();
+        /// <summary>Returns the organs dry matter supply</summary>
+        BiomassSupplyType DMSupply { get; }
 
-        /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
-        BiomassPoolType CalculateNitrogenDemand();
+        /// <summary>Returns the organs N demand</summary>
+        BiomassPoolType NDemand { get; }
 
-        /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
-        BiomassSupplyType CalculateNitrogenSupply();
+        /// <summary>Returns the organs N supply</summary>
+        BiomassSupplyType NSupply { get; }
+
+        /// <summary>Returns the DM that can be paritioned to the organ of N is not limited </summary>
+        BiomassPoolType potentialDMAllocation { get; }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
         void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter);
@@ -60,6 +63,9 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Gets the total biomass</summary>
         Biomass Total { get; }
+
+        /// <summary>Gets the live biomass</summary>
+        Biomass Live { get; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         double MaintenanceRespiration { get; }

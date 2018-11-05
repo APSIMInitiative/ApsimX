@@ -98,6 +98,23 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Returns the closest ancestor to a node of the specified type.
+        /// Returns null if not found.
+        /// </summary>
+        /// <typeparam name="T">Type of model to search for.</typeparam>
+        /// <param name="model">The reference model.</param>
+        /// <returns></returns>
+        public static T Ancestor<T>(IModel model)
+        {
+            IModel obj = model == null ? null : model.Parent;
+            while (obj != null && !(obj is T))
+                obj = obj.Parent;
+            if (obj == null)
+                return default(T);
+            return (T)obj;
+        }
+
+        /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
         /// </summary>
         /// <param name="model">The reference model</param>
@@ -456,6 +473,19 @@ namespace Models.Core
             {
                 child.Parent = model;
                 ParentAllChildren(child);
+            }
+        }
+
+        /// <summary>
+        /// Parent all children of 'model'.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void UnparentAllChildren(IModel model)
+        {
+            foreach (IModel child in model.Children)
+            {
+                child.Parent = null;
+                UnparentAllChildren(child);
             }
         }
 

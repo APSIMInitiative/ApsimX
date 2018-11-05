@@ -15,7 +15,7 @@ namespace UserInterface.Commands
         private string OriginalName;
 
         /// <summary>The node description</summary>
-        NodeDescriptionArgs nodeDescription;
+        TreeViewNode nodeDescription;
 
         /// <summary>The explorer view</summary>
         IExplorerView explorerView;
@@ -23,8 +23,12 @@ namespace UserInterface.Commands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MoveModelCommand(Model FromModel, Model ToParent, NodeDescriptionArgs nodeDescription, IExplorerView explorerView)
+        public MoveModelCommand(Model FromModel, Model ToParent, TreeViewNode nodeDescription, IExplorerView explorerView)
         {
+            if (FromModel.ReadOnly)
+                throw new ApsimXException(FromModel, string.Format("Unable to move {0} to {1} - {0} is read-only.", FromModel.Name, ToParent.Name));
+            if (ToParent.ReadOnly)
+                throw new ApsimXException(ToParent, string.Format("Unable to move {0} to {1} - {1} is read-only.", FromModel.Name, ToParent.Name));
             this.FromModel = FromModel;
             this.ToParent = ToParent;
             this.nodeDescription = nodeDescription;
@@ -44,7 +48,7 @@ namespace UserInterface.Commands
             // Add model to new parent.
             if (ModelMoved)
             {
-                this.explorerView.Delete(Apsim.FullPath(this.FromModel));
+                this.explorerView.Tree.Delete(Apsim.FullPath(this.FromModel));
                 // The AddModel method may rename the FromModel. Go get the original name in case of
                 // Undo later.
                 OriginalName = FromModel.Name;
@@ -53,7 +57,7 @@ namespace UserInterface.Commands
                 FromModel.Parent = ToParent;
                 Apsim.EnsureNameIsUnique(FromModel);
                 nodeDescription.Name = FromModel.Name;
-                this.explorerView.AddChild(Apsim.FullPath(ToParent), nodeDescription);
+                this.explorerView.Tree.AddChild(Apsim.FullPath(ToParent), nodeDescription);
                 CommandHistory.InvokeModelStructureChanged(FromParent);
                 CommandHistory.InvokeModelStructureChanged(ToParent);
             }
@@ -67,12 +71,12 @@ namespace UserInterface.Commands
             if (ModelMoved)
             {
                 ToParent.Children.Remove(FromModel);
-                this.explorerView.Delete(Apsim.FullPath(this.FromModel));
+                this.explorerView.Tree.Delete(Apsim.FullPath(this.FromModel));
                 FromModel.Name = OriginalName;
                 nodeDescription.Name = OriginalName;
                 FromParent.Children.Add(FromModel);
                 FromModel.Parent = FromParent;
-                this.explorerView.AddChild(Apsim.FullPath(FromParent), nodeDescription);
+                this.explorerView.Tree.AddChild(Apsim.FullPath(FromParent), nodeDescription);
 
                 CommandHistory.InvokeModelStructureChanged(FromParent);
                 CommandHistory.InvokeModelStructureChanged(ToParent);

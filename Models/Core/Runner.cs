@@ -27,10 +27,11 @@
         /// <param name="fileSpec">The file specification</param>
         /// <param name="recurse">Recurse throug sub directories?</param>
         /// <param name="runTests">Run the test nodes?</param>
+        /// <param name="verbose">Should the child process' output be redirected?</param>
         /// <returns>The file of jobs that were run.</returns>
-        public static IJobManager ForFolder(string fileSpec, bool recurse, bool runTests)
+        public static IJobManager ForFolder(string fileSpec, bool recurse, bool runTests, bool verbose)
         {
-            return new RunDirectoryOfApsimFiles(fileSpec, recurse, runTests);
+            return new RunDirectoryOfApsimFiles(fileSpec, recurse, runTests, verbose);
         }
 
         /// <summary>Run simulations in files specified by a file specification.</summary>
@@ -88,6 +89,11 @@
             private List<ISimulationGenerator> modelsToRun;
             private Simulation currentSimulation;
 
+            /// <summary>
+            /// List of simulation clocks - allows us to monitor progress of the runs.
+            /// </summary>
+            public List<IClock> simClocks { get; private set; } = new List<IClock>();
+
             /// <summary>Simulation names being run</summary>
             public List<string> SimulationNamesBeingRun { get; private set; }
 
@@ -127,6 +133,11 @@
                                 currentSimulation = modelsToRun[0].NextSimulationToRun(false);
                         }
                     }
+                    if (currentSimulation != null)
+                    {
+                        IClock simClock = (IClock)Apsim.ChildrenRecursively(currentSimulation).Find(m => typeof(IClock).IsAssignableFrom(m.GetType()));
+                        simClocks.Add(simClock);
+                    }
                     return currentSimulation != null;
                 }
             }
@@ -134,6 +145,7 @@
             /// <summary>Reset the enumerator</summary>
             void IEnumerator.Reset()
             {
+                simClocks.Clear();
                 FindListOfModelsToRun();
             }
 

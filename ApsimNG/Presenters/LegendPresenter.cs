@@ -121,16 +121,23 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnDisabledSeriesChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-            List<string> disabledSeries = new List<string>();
-            disabledSeries.AddRange(this.view.GetDisabledSeriesNames());
-            if (disabledSeries.Count < this.GetSeriesNames().Count)
+            try
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "DisabledSeries", disabledSeries));
-            }
+                this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                List<string> disabledSeries = new List<string>();
+                disabledSeries.AddRange(this.view.GetDisabledSeriesNames());
+                if (disabledSeries.Count < this.GetSeriesNames().Count)
+                {
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "DisabledSeries", disabledSeries));
+                }
+
+                this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -152,9 +159,16 @@ namespace UserInterface.Presenters
         /// <param name="newText">The text for the title</param>
         private void OnTitleChanged(string newText)
         {
-            Graph.LegendPositionType legendPosition;
-            Enum.TryParse<Graph.LegendPositionType>(newText, out legendPosition);
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "LegendPosition", legendPosition));
+            try
+            {
+                Graph.LegendPositionType legendPosition;
+                Enum.TryParse<Graph.LegendPositionType>(newText, out legendPosition);
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "LegendPosition", legendPosition));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
     }
 }

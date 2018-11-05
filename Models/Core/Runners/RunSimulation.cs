@@ -90,10 +90,7 @@
                 if (cloneSimulationBeforeRun)
                 {
                     simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
-                    events = new Events(simulationToRun);
-                    simulationEngine.MakeSubstitutions(simulationToRun);
-                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                    events.Publish("Loaded", new object[] { simulationToRun, loadedArgs });
+                    simulationEngine.MakeSubsAndLoad(simulationToRun);
                 }
                 else
                     events = new Events(simulationToRun);
@@ -112,7 +109,7 @@
                     links = new Core.Links(Services);
 
                 // Resolve links and events.
-                links.Resolve(simulationToRun);
+                links.Resolve(simulationToRun, allLinks:true);
                 events.ConnectEvents();
 
                 simulationToRun.ClearCaches();
@@ -134,7 +131,7 @@
                 
                 ISummary summary = Apsim.Find(simulationToRun, typeof(Summary)) as ISummary;
                 if (summary != null)
-                    summary.WriteMessage(simulationToRun, errorMessage);
+                    summary.WriteError(simulationToRun, errorMessage);
                 
                 throw new Exception(errorMessage, err);
             }
@@ -145,7 +142,7 @@
                 // Cleanup the simulation
                 if (events != null)
                     events.DisconnectEvents();
-                links.Unresolve(simulationToRun);
+                links.Unresolve(simulationToRun, allLinks:true);
 
                 timer.Stop();
                 Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(fileName) +

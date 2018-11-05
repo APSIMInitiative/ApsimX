@@ -425,7 +425,7 @@ namespace Models.Soils
         [Description("Available SW-LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
-        public double[] PAWTotalmm
+        public double[] PAWmmInitial
         {
             get
             {
@@ -473,6 +473,16 @@ namespace Models.Soils
                                 LL15,
                                 SoilWater.SW,
                                 null);
+            }
+        }
+
+        /// <summary>Plant available water at standard thickness. Units:mm</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, Thickness);
             }
         }
 
@@ -1410,8 +1420,8 @@ namespace Models.Soils
         internal double[] KLMapped (string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
-                ModifyKLForSubSoilConstraints(SoilCrop);
+            //if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
+            //    ModifyKLForSubSoilConstraints(SoilCrop);
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.KL;
             return Map(SoilCrop.KL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.KL));

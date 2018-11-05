@@ -109,6 +109,9 @@
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.RtfRendering-gdi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PdfSharp-gdi, Version=1.50.3638.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\PdfSharp-gdi.dll</HintPath>
       <Private>True</Private>
@@ -139,6 +142,7 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
     <Compile Include="CLEM\FileSQLiteGRASP.cs" />
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
@@ -190,7 +194,10 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
-    <Compile Include="Functions\StringComparisonFunction.cs" />
+	<Compile Include="Functions\StringComparisonFunction.cs" />
+    <Compile Include="Functions\DailyMeanVPD.cs" />
+    <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
+    <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
@@ -200,8 +207,17 @@
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Biomass\BiomassDemand.cs" />
+    <Compile Include="Plant\Phenology\Phases\PhotoperiodPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
+    <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
+    <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
     <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
-    <Compile Include="Plant\Phenology\BBCH.cs" />
+    <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
+    <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
+    <Compile Include="Plant\Structure\BudNumberFunction.cs" />
+    <Compile Include="Soils\Nutrient\Chloride.cs" />
+    <Compile Include="Plant\Structure\ApexBase.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
@@ -264,13 +280,9 @@
     <Compile Include="Plant\Structure\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
-    <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
-    <Compile Include="Plant\Phenology\BuddingPhase.cs" />
-    <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
-    <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
-    <Compile Include="Plant\Phenology\QualitativePPEffect.cs" />
-    <Compile Include="Plant\Phenology\VernalisationC.cs" />
-    <Compile Include="Plant\Phenology\ZadokPMF.cs" />
+    <Compile Include="Plant\Phenology\Phases\NodeNumberPhase.cs" />
+    <Compile Include="Functions\QualitativePPEffect.cs" />
+    <Compile Include="Plant\Phenology\Scales\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
@@ -306,7 +318,6 @@
     <Compile Include="Factorial\Factors.cs" />
     <Compile Include="Factorial\FactorValue.cs" />
     <Compile Include="Memo.cs" />
-    <Compile Include="NullSummary.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -320,17 +331,17 @@
     <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
-    <Compile Include="Soils\Nutrients\NFlow.cs" />
-    <Compile Include="Soils\Nutrients\CarbonFlow.cs" />
-    <Compile Include="Soils\Nutrients\NutrientPool.cs" />
-    <Compile Include="Soils\Nutrients\Nutrient.cs" />
+    <Compile Include="Soils\Nutrient\NFlow.cs" />
+    <Compile Include="Soils\Nutrient\CFlow.cs" />
+    <Compile Include="Soils\Nutrient\NutrientPool.cs" />
+    <Compile Include="Soils\Nutrient\Nutrient.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
-    <Compile Include="Soils\Nutrients\Solute.cs" />
+    <Compile Include="Soils\Nutrient\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
     <Compile Include="Soils\MultiPoreWater\Evapotranspiration.cs" />
     <Compile Include="Soils\MultiPoreWater\MRSpline.cs" />
@@ -404,7 +415,6 @@
     <Compile Include="Functions\Exponential.cs" />
     <Compile Include="Functions\ExpressionFunction.cs" />
     <Compile Include="Functions\ExternalVariable.cs" />
-    <Compile Include="Functions\InPhaseTtFunction.cs" />
     <Compile Include="Functions\LessThanFunction.cs" />
     <Compile Include="Functions\LinearInterpolationFunction.cs" />
     <Compile Include="Functions\MaximumFunction.cs" />
@@ -431,7 +441,6 @@
     <Compile Include="Functions\WeightedTemperatureFunction.cs" />
     <Compile Include="Functions\XYPairs.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
-    <Compile Include="Plant\Organs\BaseOrgan.cs" />
     <Compile Include="Plant\Organs\GenericOrgan.cs" />
     <Compile Include="Plant\Organs\HIReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Leaf.cs" />
@@ -440,24 +449,18 @@
     <Compile Include="Plant\Interfaces\IOrgan.cs" />
     <Compile Include="Plant\Organs\ReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Root.cs" />
-    <Compile Include="Plant\Organs\RootSWIM.cs" />
     <Compile Include="Plant\Organs\SimpleLeaf.cs" />
-    <Compile Include="Plant\Phenology\EmergingPhase.cs" />
-    <Compile Include="Plant\Phenology\EndPhase.cs" />
-    <Compile Include="Plant\Phenology\GenericPhase.cs" />
-    <Compile Include="Plant\Phenology\GerminatingPhase.cs" />
-    <Compile Include="Plant\Phenology\GotoPhase.cs" />
-    <Compile Include="Plant\Phenology\LeafAppearancePhase.cs" />
-    <Compile Include="Plant\Phenology\LeafDeathPhase.cs" />
-    <Compile Include="Plant\Phenology\MolecularPhenology.cs" />
-    <Compile Include="Plant\Phenology\Phase.cs" />
+    <Compile Include="Plant\Phenology\Phases\EmergingPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\EndPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\GenericPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\GerminatingPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\GotoPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\LeafAppearancePhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\LeafDeathPhase.cs" />
     <Compile Include="Plant\Phenology\Phenology.cs" />
-    <Compile Include="Plant\Phenology\Vernalisation.cs" />
-    <Compile Include="Plant\Phenology\VernalisationCW.cs" />
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\RunoffEventType.cs" />
     <Compile Include="Soils\Analysis.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />
@@ -477,7 +480,12 @@
     <Compile Include="Soils\Water.cs" />
     <Compile Include="Soils\SoilWater.cs" />
     <Compile Include="Summary.cs" />
-    <Compile Include="SurfaceOrganicMatter.cs" />
+    <Compile Include="Surface\AddFaecesType.cs" />
+    <Compile Include="Surface\OMFractionType.cs" />
+    <Compile Include="Surface\SurfaceOrganicMatter.cs" />
+    <Compile Include="Surface\ResidueType.cs" />
+    <Compile Include="Surface\ResidueTypes.cs" />
+    <Compile Include="Surface\SurfOrganicMatterType.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\Model.cs" />
@@ -658,7 +666,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resources\Morris.R" />
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">
@@ -677,11 +684,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Oats.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Resources\Maize.xml" />
     <None Include="Resources\Chicory.xml" />
     <None Include="Resources\Potato.xml" />
     <None Include="Resources\Plantain.xml" />
-    <Content Include="Resources\ResidueTypes.xml">
+    <Content Include="Resources\SurfaceOrganicMatter.xml">
       <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\SCRUM.xml" />

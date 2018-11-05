@@ -9,7 +9,7 @@ using Models.Core;
 using Models;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
-using Models.SurfaceOM;
+using Models.Surface;
 
 namespace Models.Soils
 {

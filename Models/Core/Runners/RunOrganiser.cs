@@ -16,6 +16,20 @@
         /// <summary>Simulation names being run</summary>
         public List<string> SimulationNamesBeingRun { get; private set; }
 
+        /// <summary>
+        /// Clocks of simulations that have begun running
+        /// </summary>
+        public List<IClock> SimClocks
+        {
+            get
+            {
+                if (simulationEnumerator as Runner.SimulationEnumerator != null)
+                    return (simulationEnumerator as Runner.SimulationEnumerator).simClocks;
+                else
+                    return null;
+            }
+        }
+
         /// <summary>All known simulation names</summary>
         public List<string> AllSimulationNames
         {
@@ -55,7 +69,18 @@
                 SimulationNamesBeingRun = enumerator.SimulationNamesBeingRun;
 
                 // Send event telling all models that we're about to begin running.
-                events.Publish("RunCommencing", new object[] { AllSimulationNames, SimulationNamesBeingRun });
+                Dictionary<string, string> simAndFolderNames = new Dictionary<string, string>();
+                foreach (ISimulationGenerator simulation in Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>())
+                {
+                    string folderName = Apsim.Parent(simulation as IModel, typeof(Folder)).Name;
+                    foreach (string simulationName in simulation.GetSimulationNames())
+                    {
+                        if (simAndFolderNames.ContainsKey(simulationName))
+                            throw new Exception(string.Format("Duplicate simulation names found: {0} in simulation {1}", simulationName, (simulation as IModel).Name));
+                        simAndFolderNames.Add(simulationName, folderName);
+                    }
+                }
+                events.Publish("RunCommencing", new object[] { simAndFolderNames, SimulationNamesBeingRun });
             }
 
             // If we didn't find anything to run then return null to tell job runner to exit.

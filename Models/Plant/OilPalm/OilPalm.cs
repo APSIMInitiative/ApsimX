@@ -85,6 +85,11 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         public double PotentialEP { get; set; }
 
+        /// <summary>Sets the actual water demand.</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -842,8 +847,8 @@ namespace Models.PMF.OilPalm
         /// <summary>Called when [do plant growth].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (!CropInGround)
                 return;
@@ -860,7 +865,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -868,7 +873,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
 
@@ -877,12 +882,12 @@ namespace Models.PMF.OilPalm
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         { }
 
         /// <summary>Does the flower abortion.</summary>
@@ -1167,35 +1172,27 @@ namespace Models.PMF.OilPalm
                 BiomassRemoved.Invoke(BiomassRemovedData);
             }
         }
-        /// <summary>Saturated Vapour Pressuer</summary>
-        /// <param name="temp">The temperature.</param>
-        /// <returns></returns>
-        private double svp(double temp)  
-        {
-            return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
-        }
 
         /// <summary>VPDs this instance.</summary>
         /// <returns></returns>
         /// The following helper functions [VDP and svp] are for calculating Fvdp
-        ///         /// <summary>Gets the lai.</summary>
-        /// <value>The lai.</value>
         [Description("Vapour Pressure Deficit")]
-        [Units("kPa")]
+        [Units("hPa")]
         public double VPD
         {
             get
             {
-                double VPDmint = svp(MetData.MinT) - MetData.VP;
+                double VPDmint = MetUtilities.svp(MetData.MinT) - MetData.VP;
                 VPDmint = Math.Max(VPDmint, 0.0);
 
-                double VPDmaxt = svp(MetData.MaxT) - MetData.VP;
+                double VPDmaxt = MetUtilities.svp(MetData.MaxT) - MetData.VP;
                 VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
                 double vdp = 0.75 * VPDmaxt + 0.25 * VPDmint;
                 return vdp;
             }
         }
+
         /// <summary>Does the water balance.</summary>
         private void DoWaterBalance()
         {

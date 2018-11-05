@@ -25,6 +25,8 @@ namespace UnitTests
 
         public double MinT { get; set; }
 
+        public double MeanT { get; set; }
+
         public double Radn { get; set; }
 
         public double Rain { get; set; }
@@ -34,6 +36,8 @@ namespace UnitTests
         public double Tav { get; set; }
 
         public double VP { get; set; }
+
+        public double VPD { get; set; }
 
         public double Wind { get; set; }
 

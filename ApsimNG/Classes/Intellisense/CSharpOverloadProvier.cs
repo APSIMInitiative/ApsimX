@@ -49,6 +49,13 @@ namespace UserInterface.Intellisense
             get { return (selectedIndex + 1).ToString() + " of " + this.Count.ToString(); }
         }
 
+        public CSharpInsightItem[] Items
+        {
+            get
+            {
+                return items.ToArray();
+            }
+        }
         public int SelectedIndex
         {
             get { return selectedIndex; }

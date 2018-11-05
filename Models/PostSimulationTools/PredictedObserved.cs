@@ -54,7 +54,7 @@ namespace Models.PostSimulationTools
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         /// <param name="dataStore">The data store.</param>
         /// <exception cref="ApsimXException">
-        /// Could not find model data table:  + ObservedTableName
+        /// Could not find model data table:  + PredictedTableName
         /// or
         /// Could not find observed data table:  + ObservedTableName
         /// </exception>
@@ -64,18 +64,17 @@ namespace Models.PostSimulationTools
             {
                 dataStore.DeleteDataInTable(this.Name);
 
-                DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
-                DataTable observedDataNames = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
+                List<string> predictedDataNames = dataStore.GetTableColumns(PredictedTableName);
+                List<string> observedDataNames = dataStore.GetTableColumns(ObservedTableName);
 
                 if (predictedDataNames == null)
-                    throw new ApsimXException(this, "Could not find model data table: " + ObservedTableName);
+                    throw new ApsimXException(this, "Could not find model data table: " + PredictedTableName);
 
                 if (observedDataNames == null)
                     throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
-                IEnumerable<string> commonCols = from p in predictedDataNames.AsEnumerable()
-                                                 join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]
-                                                 select p["name"] as string;
+                // get the common columns between these lists of columns
+                IEnumerable<string> commonCols = predictedDataNames.Intersect(observedDataNames);
 
                 StringBuilder query = new StringBuilder("SELECT ");
                 foreach (string s in commonCols)
@@ -87,7 +86,6 @@ namespace Models.PostSimulationTools
 
                     query.Replace("@field", s);
                 }
-
 
                 query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match1' = R.'@match1'");
                 if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
@@ -164,7 +162,6 @@ namespace Models.PostSimulationTools
                     else
                         throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
                 }
-
             }
         }
     }

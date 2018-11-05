@@ -31,9 +31,12 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
-            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-            Directory.CreateDirectory(tempFolder);
-            Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            if (!Path.GetTempPath().Contains("ApsimX"))
+            {
+                string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
+                Directory.CreateDirectory(tempFolder);
+                Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            }
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             int exitCode = 0;
@@ -45,9 +48,10 @@ namespace Models
                 if (args.Length >= 1)
                     fileName = args[0];
 
+                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/?]";
                 if (args.Contains("/?"))
                 {
-                    string detailedHelpInfo = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/?]";
+                    string detailedHelpInfo = usageMessage;
                     detailedHelpInfo += Environment.NewLine + Environment.NewLine;
                     detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
                     detailedHelpInfo += Environment.NewLine + Environment.NewLine + "Options:" + Environment.NewLine;
@@ -55,15 +59,24 @@ namespace Models
                     detailedHelpInfo += "    /SingleThreaded      Run all simulations in a single thread." + Environment.NewLine;
                     detailedHelpInfo += "    /RunTests            Run all tests." + Environment.NewLine;
                     detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
+                    detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
+                    detailedHelpInfo += "    /Verbose             Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
                     detailedHelpInfo += "    /?                   Show detailed help information.";
                     Console.WriteLine(detailedHelpInfo);
                     return 1;
                 }
 
-                if (args.Length < 1 || args.Length > 6)
+                if (args.Length < 1 || args.Length > 8)
                 {
-                    Console.WriteLine("Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/?]");
+                    Console.WriteLine(usageMessage);
                     return 1;
+                }
+
+                if (args.Contains("/Version"))
+                {
+                    Model m = new Model();
+                    Console.WriteLine(m.ApsimVersion);
+                    return 0;
                 }
 
                 Stopwatch timer = new Stopwatch();
@@ -73,7 +86,7 @@ namespace Models
                 // Otherwise, create a JobManager to open the filename and run it in a separate, external process
                 IJobManager job;
                 if (fileName.Contains('*') || fileName.Contains('?'))
-                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"));
+                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"));
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 

@@ -12,6 +12,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Models.Factorial;
     using Views;
+    using EventArguments;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -21,6 +22,11 @@ namespace UserInterface.Presenters
 
         /// <summary>The data store view to work with.</summary>
         private IDataStoreView view;
+
+        /// <summary>
+        /// The intellisense.
+        /// </summary>
+        private IntellisensePresenter intellisense;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -40,6 +46,8 @@ namespace UserInterface.Presenters
             dataStore = model as IStorageReader;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
+            intellisense = new IntellisensePresenter(this.view as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
@@ -55,6 +63,8 @@ namespace UserInterface.Presenters
 
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
+            this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
+            this.view.RowFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
             PopulateGrid();
         }
@@ -65,7 +75,10 @@ namespace UserInterface.Presenters
             (view.MaximumNumberRecords as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
+            view.RowFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            intellisense.Cleanup();
         }
 
         /// <summary>Populate the grid control with data.</summary>
@@ -82,12 +95,21 @@ namespace UserInterface.Presenters
                         if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
                         {
                             numFrozenColumns = i;
+                            // Make the date column the left-most column
+                            data.Columns[i].SetOrdinal(0);
                             break;
                         }
                     }
 
-                    int simulationId = 0;
+                    int colPos = 1;
+                    // Make "Simulation Name" the second column, if present
+                    if (data.Columns.Contains("SimulationName"))
+                        data.Columns["SimulationName"].SetOrdinal(colPos++);
+                    if (data.Columns.Contains("Zone"))
+                        data.Columns["Zone"].SetOrdinal(colPos++);
 
+                    int simulationId = 0;
+         
                     for (int i = 0; i < data.Columns.Count; i++)
                     {
                         if (data.Columns[i].ColumnName == "SimulationID")
@@ -101,8 +123,8 @@ namespace UserInterface.Presenters
                             i--;
                         }
                         else if (i >= numFrozenColumns &&
-                                 this.view.ColumnFilter.Value != string.Empty &&
-                                 !data.Columns[i].ColumnName.Contains(this.view.ColumnFilter.Value))
+                                 view.ColumnFilter.Value != string.Empty &&
+                                 !view.ColumnFilter.Value.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
                         {
                             data.Columns.RemoveAt(i);
                             i--;
@@ -153,6 +175,8 @@ namespace UserInterface.Presenters
                     if (ExperimentFilter != null)
                     {
                         string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        if (!string.IsNullOrEmpty(view.RowFilter.Value))
+                            filter += " AND " + view.RowFilter.Value;
                         data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                     }
                     else if (SimulationFilter != null)
@@ -197,6 +221,37 @@ namespace UserInterface.Presenters
         private void OnColumnFilterChanged(object sender, EventArgs e)
         {
             PopulateGrid();
+        }
+
+        /// <summary>
+        /// The view is asking for items for the intellisense.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseNeeded(object sender, NeedContextItemsArgs args)
+        {
+            try
+            {
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore))
+                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            try
+            {
+                view.ColumnFilter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                PopulateGrid();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>The maximum number of records has changed.</summary>

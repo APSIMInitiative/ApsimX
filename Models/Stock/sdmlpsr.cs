@@ -8,9 +8,9 @@ namespace CMPServices
 	/// <summary>
 	/// Specialised parser for the SDML found in an XML document.
 	/// </summary>
-	/// <seealso cref="TXMLParser">TXMLParser Class</seealso>
+	/// <seealso cref="XMLParser">XMLParser Class</seealso>
     //===========================================================================
-   public class TSDMLParser : TXMLParser
+   public class SDMLParser : XMLParser
    {
       private const String fieldElement = "field";   //String used as the tag in the xml description. Normally "field"
       private const String arrayElement = "element"; //String used as the tag in the xml description. Normally "element"
@@ -45,7 +45,7 @@ namespace CMPServices
       /// </summary>
       /// <param name="xml">XML string in SDML form.</param>
       //======================================================================
-      public TSDMLParser(String xml) : base(xml)
+      public SDMLParser(String xml) : base(xml)
       {
          getDescription();
       }
@@ -55,7 +55,7 @@ namespace CMPServices
       /// </summary>
       /// <param name="domNode">The DOM node to use for creating the parser object.</param>
       //======================================================================
-      public TSDMLParser(XmlNode domNode) : base(domNode)
+      public SDMLParser(XmlNode domNode) : base(domNode)
       {
          getDescription();
       }

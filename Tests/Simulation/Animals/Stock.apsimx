@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="30">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <MemoText><![CDATA[# The APSIM Stock model
 
 This is the documenation for the stock model.]]></MemoText>
@@ -17,16 +18,19 @@ This is the documenation for the stock model.]]></MemoText>
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <StartDate>1999-01-01T00:00:00</StartDate>
           <EndDate>2000-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
         </Summary>
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <FileName>Dalby.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
@@ -35,6 +39,7 @@ This is the documenation for the stock model.]]></MemoText>
           <Report>
             <Name>Report</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -51,6 +56,7 @@ This is the documenation for the stock model.]]></MemoText>
               <SoilCrop>
                 <Name>WheatSoil</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Enabled>true</Enabled>
                 <LL>
                   <double>0.261</double>
                   <double>0.248</double>
@@ -80,6 +86,7 @@ This is the documenation for the stock model.]]></MemoText>
                 </XF>
               </SoilCrop>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -147,6 +154,7 @@ This is the documenation for the stock model.]]></MemoText>
             <SoilWater>
               <Name>SoilWater</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -181,11 +189,12 @@ This is the documenation for the stock model.]]></MemoText>
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
+              <ResidueInterception>0</ResidueInterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -222,6 +231,7 @@ This is the documenation for the stock model.]]></MemoText>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -277,6 +287,7 @@ This is the documenation for the stock model.]]></MemoText>
             <Analysis>
               <Name>Analysis</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -301,6 +312,7 @@ This is the documenation for the stock model.]]></MemoText>
             <InitialWater>
               <Name>InitialWater</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
@@ -308,6 +320,7 @@ This is the documenation for the stock model.]]></MemoText>
             <Sample>
               <Name>InitialN</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -398,8 +411,10 @@ This is the documenation for the stock model.]]></MemoText>
             <CERESSoilTemperature>
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
             </CERESSoilTemperature>
             <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -421,9 +436,11 @@ This is the documenation for the stock model.]]></MemoText>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -458,6 +475,7 @@ This is the documenation for the stock model.]]></MemoText>
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -474,16 +492,19 @@ This is the documenation for the stock model.]]></MemoText>
           <SoluteManager>
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
           </SoluteManager>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Area>10</Area>
           <Slope>0</Slope>
         </Zone>
         <Supplement>
           <Name>Supplement</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <SpoilageTime>0</SpoilageTime>
-          <stores>
+          <Stores>
             <StoreType>
               <IsRoughage>true</IsRoughage>
               <DMContent>0.85</DMContent>
@@ -516,12 +537,13 @@ This is the documenation for the stock model.]]></MemoText>
               <Name>wheat, crushed</Name>
               <Stored>500000</Stored>
             </StoreType>
-          </stores>
+          </Stores>
           <PaddockList />
         </Supplement>
         <Stock>
           <Name>Stock</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <RandSeed>9999</RandSeed>
           <GenoTypes />
           <Sheep />
@@ -540,6 +562,7 @@ This is the documenation for the stock model.]]></MemoText>
         <Manager>
           <Name>BuySell</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <Script>
             <dateToBuySell>10</dateToBuySell>
             <stockRate>11</stockRate>
@@ -619,6 +642,7 @@ namespace Models
         <Report>
           <Name>Report</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -647,17 +671,22 @@ namespace Models
           </EventNames>
         </Report>
         <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
       </Simulation>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>false</IncludeInDocumentation>
+    <Enabled>true</Enabled>
   </DataStore>
   <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
   <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

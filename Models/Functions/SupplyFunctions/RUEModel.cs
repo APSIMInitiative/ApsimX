@@ -10,9 +10,9 @@ namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
     /// # [Name]
-    /// Biomass accumulation is modeled as the product of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
+    /// Biomass fixation is modelled as the product of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
     ///   This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.  
-    ///   RUE is calculated from a potential value which is discounted using stress factors that account for plant nutrition (FN), air temperature (FT), vapour pressure deficit (FVPD), water supply (FW) and atmospheric CO<sub>2</sub> concentration (FCO2).  
+    ///   The potential photosynthesis calculated using RUE is then adjusted according to stress factors, these account for plant nutrition (FN), air temperature (FT), vapour pressure deficit (FVPD), water supply (FW) and atmospheric CO<sub>2</sub> concentration (FCO2).  
     ///   NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
     /// </summary>
     [Serializable]
@@ -46,11 +46,11 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>The met data</summary>
         [Link]
         IWeather MetData = null;
-        
+
         /// <summary>The radiation interception data</summary>
         [Link]
         public IFunction RadnInt = null;
-        
+
         #region Class Data Members
         //[Input]
         //public NewMetType MetData;
@@ -65,18 +65,10 @@ namespace Models.Functions.SupplyFunctions
         {
             get
             {
-                const double SVPfrac = 0.66;
                 if (MetData != null)
-                {
-                    double VPDmint = MetUtilities.svp((float)MetData.MinT) - MetData.VP;
-                    VPDmint = Math.Max(VPDmint, 0.0);
-
-                    double VPDmaxt = MetUtilities.svp((float)MetData.MaxT) - MetData.VP;
-                    VPDmaxt = Math.Max(VPDmaxt, 0.0);
-
-                    return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
-                }
-                return 0;
+                    return MetData.VPD;
+                else
+                    return 0;
             }
         }
 

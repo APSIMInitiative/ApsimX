@@ -108,33 +108,33 @@ namespace Models.Soils.Arbitrator
             Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
             Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
 
-            List<ZoneWaterAndN> listOfZoneWaterAndNs = new List<ZoneWaterAndN>();
-            List <CropUptakes> UptakesFinal = new List<CropUptakes>();
+            List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
+            List <CropUptakes> ActualUptakes = new List<CropUptakes>();
             foreach (CropUptakes U in UptakeEstimate1.Values)
             {
-                CropUptakes CWU = new CropUptakes();
-                CWU.Crop = U.Crop;
-                foreach (ZoneWaterAndN ZW1 in U.Zones)
+                CropUptakes CU = new CropUptakes();
+                CU.Crop = U.Crop;
+                foreach (ZoneWaterAndN ZU in U.Zones)
                 {
-                    ZoneWaterAndN NewZ = UptakeEstimate1.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0)
-                                       + UptakeEstimate2.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate3.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate4.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0);
-                    CWU.Zones.Add(NewZ);
-                    listOfZoneWaterAndNs.Add(NewZ);
+                    ZoneWaterAndN NewZone = UptakeEstimate1.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0)
+                                        + UptakeEstimate2.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate3.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate4.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0);
+                    CU.Zones.Add(NewZone);
+                    listOfZoneUptakes.Add(NewZone);
                 }
 
-                UptakesFinal.Add(CWU);
+                ActualUptakes.Add(CU);
             }
 
-            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneWaterAndNs);
+            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneUptakes);
 
-            foreach (CropUptakes Uptake in UptakesFinal)
+            foreach (CropUptakes Uptake in ActualUptakes)
             {
                 if (arbitrationType == Estimate.CalcType.Water)
-                    Uptake.Crop.SetSWUptake(Uptake.Zones);
+                    Uptake.Crop.SetActualWaterUptake(Uptake.Zones);
                 else
-                    Uptake.Crop.SetNUptake(Uptake.Zones);
+                    Uptake.Crop.SetActualNitrogenUptakes(Uptake.Zones);
             }
         }
 

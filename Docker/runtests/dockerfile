@@ -7,8 +7,16 @@ RUN 			Install-PackageProvider -Name Chocolatey            -Force -RequiredVersi
 RUN 			Set-ExecutionPolicy Bypass -Scope Process -Force; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex; 	\
 				choco feature disable –name showDownloadProgress;                                        							\
 				choco feature enable -n allowGlobalConfirmation;                                         							\
-				choco install r.project;
-
+				choco install r.project;																							\
+				choco install nunit-console-runner;																					\
+				choco install 7zip;
+				
 COPY 			master.bat master.bat
 
 ENTRYPOINT 		["master.bat"]
+
+EXPOSE			4020 4021
+
+RUN				Invoke-WebRequest -OutFile c:\rtools_setup_x64.exe -Uri https://download.visualstudio.microsoft.com/download/pr/7dc739dc-7ac6-4d3e-9a1a-8545ec7b4b2b/5ad9ec4cc15ad30e7560dfb8620ad4bf/vs_remotetools.exe;
+
+RUN 			& 'c:\rtools_setup_x64.exe' /install /quiet

@@ -9,13 +9,14 @@ namespace UserInterface.Presenters
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
+    using EventArguments;
     using System.Linq;
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
     using Models.Graph;
     using Views;
-
+    using Commands;
     /// <summary>
     /// A presenter class for graph series.
     /// </summary>
@@ -39,6 +40,11 @@ namespace UserInterface.Presenters
         /// <summary>The graph presenter</summary>
         private GraphPresenter graphPresenter;
 
+        /// <summary>
+        /// The intellisense.
+        /// </summary>
+        private IntellisensePresenter intellisense;
+
         /// <summary>Attach the model and view to this presenter.</summary>
         /// <param name="model">The graph model to work with</param>
         /// <param name="view">The series view to work with</param>
@@ -48,6 +54,8 @@ namespace UserInterface.Presenters
             this.series = model as Series;
             this.seriesView = view as SeriesView;
             this.explorerPresenter = explorerPresenter;
+            intellisense = new IntellisensePresenter(seriesView as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
             if (parentGraph != null)
@@ -66,6 +74,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             seriesView.EndEdit();
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             if (graphPresenter != null)
             {
                 graphPresenter.Detach();
@@ -77,49 +86,51 @@ namespace UserInterface.Presenters
         /// <summary>Connect all view events.</summary>
         private void ConnectViewEvents()
         {
-            this.seriesView.Checkpoint.Changed += OnCheckpointChanged;
-            this.seriesView.DataSource.Changed += OnDataSourceChanged;
-            this.seriesView.SeriesType.Changed += OnSeriesTypeChanged;
-            this.seriesView.LineType.Changed += OnLineTypeChanged;
-            this.seriesView.MarkerType.Changed += OnMarkerTypeChanged;
-            this.seriesView.LineThickness.Changed += OnLineThicknessChanged;
-            this.seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
-            this.seriesView.Colour.Changed += OnColourChanged;
-            this.seriesView.XOnTop.Changed += OnXOnTopChanged;
-            this.seriesView.YOnRight.Changed += OnYOnRightChanged;
-            this.seriesView.X.Changed += OnXChanged;
-            this.seriesView.Y.Changed += OnYChanged;
-            this.seriesView.X2.Changed += OnX2Changed;
-            this.seriesView.Y2.Changed += OnY2Changed;
-            this.seriesView.ShowInLegend.Changed += OnShowInLegendChanged;
-            this.seriesView.IncludeSeriesNameInLegend.Changed += OnIncludeSeriesNameInLegendChanged;
-            this.seriesView.YCumulative.Changed += OnCumulativeYChanged;
-            this.seriesView.XCumulative.Changed += OnCumulativeXChanged;
-            this.seriesView.Filter.Changed += OnFilterChanged;
+            seriesView.Checkpoint.Changed += OnCheckpointChanged;
+            seriesView.DataSource.Changed += OnDataSourceChanged;
+            seriesView.SeriesType.Changed += OnSeriesTypeChanged;
+            seriesView.LineType.Changed += OnLineTypeChanged;
+            seriesView.MarkerType.Changed += OnMarkerTypeChanged;
+            seriesView.LineThickness.Changed += OnLineThicknessChanged;
+            seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
+            seriesView.Colour.Changed += OnColourChanged;
+            seriesView.XOnTop.Changed += OnXOnTopChanged;
+            seriesView.YOnRight.Changed += OnYOnRightChanged;
+            seriesView.X.Changed += OnXChanged;
+            seriesView.Y.Changed += OnYChanged;
+            seriesView.X2.Changed += OnX2Changed;
+            seriesView.Y2.Changed += OnY2Changed;
+            seriesView.ShowInLegend.Changed += OnShowInLegendChanged;
+            seriesView.IncludeSeriesNameInLegend.Changed += OnIncludeSeriesNameInLegendChanged;
+            seriesView.YCumulative.Changed += OnCumulativeYChanged;
+            seriesView.XCumulative.Changed += OnCumulativeXChanged;
+            seriesView.Filter.Changed += OnFilterChanged;
+            seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
         /// <summary>Disconnect all view events.</summary>
         private void DisconnectViewEvents()
         {
-            this.seriesView.Checkpoint.Changed -= OnCheckpointChanged;
-            this.seriesView.DataSource.Changed -= OnDataSourceChanged;
-            this.seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
-            this.seriesView.LineType.Changed -= OnLineTypeChanged;
-            this.seriesView.MarkerType.Changed -= OnMarkerTypeChanged;
-            this.seriesView.LineThickness.Changed += OnLineThicknessChanged;
-            this.seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
-            this.seriesView.Colour.Changed -= OnColourChanged;
-            this.seriesView.XOnTop.Changed -= OnXOnTopChanged;
-            this.seriesView.YOnRight.Changed -= OnYOnRightChanged;
-            this.seriesView.X.Changed -= OnXChanged;
-            this.seriesView.Y.Changed -= OnYChanged;
-            this.seriesView.X2.Changed -= OnX2Changed;
-            this.seriesView.Y2.Changed -= OnY2Changed;
-            this.seriesView.ShowInLegend.Changed -= OnShowInLegendChanged;
-            this.seriesView.IncludeSeriesNameInLegend.Changed -= OnIncludeSeriesNameInLegendChanged;
-            this.seriesView.YCumulative.Changed -= OnCumulativeYChanged;
-            this.seriesView.XCumulative.Changed -= OnCumulativeXChanged;
-            this.seriesView.Filter.Changed -= OnFilterChanged;
+            seriesView.Checkpoint.Changed -= OnCheckpointChanged;
+            seriesView.DataSource.Changed -= OnDataSourceChanged;
+            seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
+            seriesView.LineType.Changed -= OnLineTypeChanged;
+            seriesView.MarkerType.Changed -= OnMarkerTypeChanged;
+            seriesView.LineThickness.Changed += OnLineThicknessChanged;
+            seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
+            seriesView.Colour.Changed -= OnColourChanged;
+            seriesView.XOnTop.Changed -= OnXOnTopChanged;
+            seriesView.YOnRight.Changed -= OnYOnRightChanged;
+            seriesView.X.Changed -= OnXChanged;
+            seriesView.Y.Changed -= OnYChanged;
+            seriesView.X2.Changed -= OnX2Changed;
+            seriesView.Y2.Changed -= OnY2Changed;
+            seriesView.ShowInLegend.Changed -= OnShowInLegendChanged;
+            seriesView.IncludeSeriesNameInLegend.Changed -= OnIncludeSeriesNameInLegendChanged;
+            seriesView.YCumulative.Changed -= OnCumulativeYChanged;
+            seriesView.XCumulative.Changed -= OnCumulativeXChanged;
+            seriesView.Filter.Changed -= OnFilterChanged;
+            seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
         /// <summary>Set the value of the graph models property</summary>
@@ -127,8 +138,32 @@ namespace UserInterface.Presenters
         /// <param name="value">The value of the property to set it to</param>
         private void SetModelProperty(string name, object value)
         {
-            Commands.ChangeProperty command = new Commands.ChangeProperty(series, name, value);
-            this.explorerPresenter.CommandHistory.Add(command);
+            try
+            {
+                ChangeProperty command = new ChangeProperty(series, name, value);
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense window.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            try
+            {
+                seriesView.Filter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         #region Events from the view
@@ -334,6 +369,24 @@ namespace UserInterface.Presenters
         private void OnFilterChanged(object sender, EventArgs e)
         {
             this.SetModelProperty("Filter", this.seriesView.Filter.Value);
+        }
+
+        /// <summary>
+        /// Invoked when the user is asking for items for the intellisense.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemsNeeded(object sender, NeedContextItemsArgs args)
+        {
+            try
+            {
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, seriesView.DataSource.SelectedValue, storage))
+                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         #endregion

@@ -69,7 +69,7 @@ namespace Models.Functions
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             //Put the first data member into the list on the day that moving average is to start being calculated
-            if (phaseChange.EventStageName == StageToStartMovingAverage)
+            if (phaseChange.StageName == StageToStartMovingAverage)
             {
                 AccumulatedValues.Add(ChildFunction.Value());
                 InitialisedToday = true;
@@ -113,7 +113,8 @@ namespace Models.Functions
                 // add a heading.
                 Name = this.Name;
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving average of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString() + " days.", indent));
+                if (Apsim.Children(this, typeof(IFunction)).Count ==1)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving average of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString() + " days.", indent));
 
                 // write children.
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))

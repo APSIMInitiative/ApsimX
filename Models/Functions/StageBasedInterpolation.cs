@@ -60,8 +60,8 @@ namespace Models.Functions
                 StageCodes = new int[Stages.Length];
                 for (int i = 0; i < Stages.Length; i++)
                 {
-                    Phase p = Phenology.PhaseStartingWith(Stages[i]);
-                    StageCodes[i] = Phenology.IndexOfPhase(p.Name) + 1;
+                    IPhase p = Phenology.PhaseStartingWith(Stages[i]);
+                    StageCodes[i] = Phenology.IndexFromPhaseName(p.Name) + 1;
                 }
             }
 
