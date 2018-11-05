@@ -4942,51 +4942,6 @@ namespace Models.AgPasture
                 }
             }
         }
-        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
-        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
-        /// <param name="amountN">The N amount to send (kg/ha)</param>
-        private void DoAddDetachedRootToSoilFOM(double amountDM, double amountN)
-        {
-            // ****  RCichota, Jun/2014
-            // root senesced are returned to soil (as FOM) considering return is proportional to root mass
-
-            if (amountDM + amountN > 0.0)
-            {
-                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-
-                for (int layer = 0; layer < nLayers; layer++)
-                {
-                    FOMType fomData = new FOMType();
-                    fomData.amount = amountDM * plantZoneRoots.Tissue[0].FractionWt[layer];
-                    fomData.N = amountN * plantZoneRoots.Tissue[0].FractionWt[layer];
-                    fomData.C = amountDM * CarbonFractionInDM * plantZoneRoots.Tissue[0].FractionWt[layer];
-                    fomData.P = 0.0; // P not considered here
-                    fomData.AshAlk = 0.0; // Ash not considered here
-
-                    FOMLayerLayerType layerData = new FOMLayerLayerType();
-                    layerData.FOM = fomData;
-                    layerData.CNR = 0.0; // not used here
-                    layerData.LabileP = 0; // not used here
-
-                    FOMdataLayer[layer] = layerData;
-                }
-
-                FOMLayerType FOMData = new FOMLayerType();
-                FOMData.Type = mySpeciesFamily.ToString();
-                FOMData.Layer = FOMdataLayer;
-
-                InvokeIncorpFOM(FOMData);
-            }
-        }
-        /// <summary>
-        /// Invoke the Incorp FOM Event
-        /// </summary>
-        /// <param name="FOMData"></param>
-        public void InvokeIncorpFOM( FOMLayerType FOMData)
-        {
-            if (IncorpFOM != null)
-                IncorpFOM.Invoke(FOMData);
-        }
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

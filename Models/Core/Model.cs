@@ -197,6 +197,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.Functions.SoilTemperatureWeightedFunction))]
         [XmlElement(typeof(Models.Functions.SplineInterpolationFunction))]
         [XmlElement(typeof(Models.Functions.StageBasedInterpolation))]
+        [XmlElement(typeof(Models.Functions.StringComparisonFunction))]
         [XmlElement(typeof(Models.Functions.SubtractFunction))]
         [XmlElement(typeof(Models.Functions.TrackerFunction))]
         [XmlElement(typeof(Models.Functions.VariableReference))]
