@@ -1208,8 +1208,8 @@
                 ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
                 ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
                 ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
-                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");                
+                ConverterUtilities.SearchReplaceReportCode(report, ".SoilNitrogen.Nitrification", ".Nutrient.NH4.Nitrification");
             }
 
             foreach (XmlNode SOM in XmlUtilities.FindAllRecursivelyByType(node, "SoilOrganicMatter"))
