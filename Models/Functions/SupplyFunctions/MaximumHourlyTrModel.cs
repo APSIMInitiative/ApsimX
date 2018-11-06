@@ -91,8 +91,8 @@ namespace Models.Functions.SupplyFunctions
         public string AssimilateType { get; set; } = "net";
 
         /// <summary>The photosynthesis type (net/gross)</summary>
-        [Description("The way soil moisture should be treated (hourly or daily)")]
-        public string SWType { get; set; } = "hourly";
+        [Description("The way soil moisture should be treated (daily/numeric/dcaps)")]
+        public string SWType { get; set; } = "numeric";
 
         /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
         [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
@@ -127,9 +127,6 @@ namespace Models.Functions.SupplyFunctions
         public string Pathway { get; set; } = "C3";
         //------------------------------------------------------------------------------------------------
 
-        private double maxLag = 1.86;       // a, Greg=1.5
-        private double nightCoef = 2.2;     // b, Greg=4.0
-        private double minLag = -0.17;      // c, Greg=1.0
         private double latR;
         private double transpEffCoef;
 
@@ -224,43 +221,53 @@ namespace Models.Functions.SupplyFunctions
         private void CalcTemperature()
         {
             hourlyTemp = new List<double>();
-            // A Model for Diurnal Variation in Soil and Air Temperature.
-            // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216.
-            // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
 
-            latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
+            double TempMethod = 1;
 
-            double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
-            double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
-            double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
-            double nightL = (24.0 - DayL);                                  // night length, hours
-                                                                            // determine if the hour is during the day or night
-            double sunrise = 12.0 - DayL / 2.0 + minLag;                    // corrected dawn
-            double sunset = 12.0 + DayL / 2.0;                              // sundown
-
-            for (int hr = 1; hr <= 24; hr++)
+            if (TempMethod == 1)
             {
-                double tempr;
-                if (hr >= sunrise && hr < sunset)  //day
-                {
-                    double m = 0; // the number of hours after the minimum temperature occurs
-                    m = hr - sunrise;
-                    tempr = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + Weather.MinT;
-                }
-                else  // night
-                {
-                    double n = 0;                       // the number of hours after sunset
-                    if (hr > sunset) n = hr - sunset;
-                    if (hr < sunrise) n = (24.0 - sunset) + hr;
-                    double ddy = DayL - minLag;         // time of sunset after minimum temperature occurs
-                    double tsn = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + Weather.MinT;
-                    tempr = Weather.MinT + (tsn - Weather.MinT) * Math.Exp(-nightCoef * n / nightL);
-                }
-                hourlyTemp.Add(tempr);
-            }
+                // A Model for Diurnal Variation in Soil and Air Temperature.
+                // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216.
+                // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
 
-            double MeanTemp = hourlyTemp.Average();
-            for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * Weather.MeanT;
+                double minLag = 0.17;       // c, Greg=1.0
+                double maxLag = 1.86;       // a, Greg=1.5
+                double nightCoef = 2.2;     // b, Greg=4.0
+
+                latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
+                double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
+                double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
+                double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
+                double nightL = (24.0 - DayL);                                  // night length, hours
+                                                                                // determine if the hour is during the day or night
+                double riseHour = 12.0 - DayL / 2.0 - minLag;                   // time of daily min temperature
+                double setHour = 12.0 + DayL / 2.0;                             // time of sunset
+
+                for (int t = 1; t <= 24; t++)
+                {
+                    double hr = t - 0.5;
+                    double tempr;
+                    if (hr >= riseHour && hr < setHour)  //day
+                    {
+                        double m = 0; // the number of hours after the minimum temperature occurs
+                        m = hr - riseHour;
+                        tempr = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + Weather.MinT;
+                    }
+                    else  // night
+                    {
+                        double n = 0;                       // the number of hours after setHour
+                        if (hr > setHour) n = hr - setHour;
+                        if (hr < riseHour) n = (24.0 - setHour) + hr;
+                        double ddy = DayL - minLag;         // time of setHour after minimum temperature occurs
+                        double tsn = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + Weather.MinT;
+                        tempr = Weather.MinT + (tsn - Weather.MinT) * Math.Exp(-nightCoef * n / nightL);
+                    }
+                    hourlyTemp.Add(tempr);
+                }
+
+                double MeanTemp = hourlyTemp.Average();
+                for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * Weather.MeanT;
+            }
         }
         //------------------------------------------------------------------------------------------------
 
@@ -272,15 +279,9 @@ namespace Models.Functions.SupplyFunctions
             hourlyRad = new List<double>();
             for (int i = 0; i < 24; i++) hourlyRad.Add(0.0);
 
-            latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
-
-            // some calculations
-            double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
-            double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
-            double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
-            double GlobalRadiation = Weather.Radn * 1e6;     // solar radiation
             List<double> hrWeights;
-
+            latR = Math.PI / 180.0 * Weather.Latitude;       // convert latitude (degrees) to radians
+            double GlobalRadiation = Weather.Radn * 1e6;     // solar radiation
             double PI = Math.PI;
             double RAD = PI / 180.0;
 
@@ -293,11 +294,7 @@ namespace Models.Functions.SupplyFunctions
             double Rsc = Sin / Cos;
 
             //Astronomical daylength (hr)
-            DayL = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
-
-            //Sine of solar height(vDailySin), inegral of vDailySin(vDailySin) and integrel of vDailySin
-            //with correction for lower atmospheric transmission at low solar elevations (vDailySinE)
-            double DailySin = 3600.0 * (DayL * Sin + 24.0 * Cos * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
+            double DayL = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
             double DailySinE = 3600.0 * (DayL * (Sin + 0.4 * (Sin * Sin + Cos * Cos * 0.5))
                      + 12.0 * Cos * (2.0 + 3.0 * 0.4 * Sin) * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
 
@@ -415,29 +412,83 @@ namespace Models.Functions.SupplyFunctions
             double rootWaterSupp = Root.TotalExtractableWater();
             double reduction = 0.99;
             double maxHourlyT = hourlyActTr.Max();
+            double minPercError = 0.5;
+            double sumTr = hourlyActTr.Sum();
 
-            if (string.Equals(SWType, "daily"))
+            if (hourlyActTr.Sum() - rootWaterSupp > 1e-5)
             {
-                double sumTr = hourlyActTr.Sum();
-                for (int i = 0; i < 24; i++)
-                    hourlyActTr[i] *= Math.Min(1, MathUtilities.Divide(rootWaterSupp, sumTr, 0));
-            }
-            else
-            {
-                if (rootWaterSupp < 1e-8)
-                    for (int i = 0; i < 24; i++) hourlyActTr[i] = 0;
+                if (string.Equals(SWType, "daily"))
+                {
+                    for (int i = 0; i < 24; i++)
+                        hourlyActTr[i] *= Math.Min(1, MathUtilities.Divide(rootWaterSupp, sumTr, 0));
+                }
                 else
                 {
-                    while (hourlyActTr.Sum() - rootWaterSupp > 1e-5)
+                    if (rootWaterSupp < 1e-8)
                     {
-                        maxHourlyT *= reduction;
-                        for (int i = 0; i < 24; i++)
+                        for (int i = 0; i < 24; i++) hourlyActTr[i] = 0;
+                    }
+                    else if (string.Equals(SWType, "dcaps"))
+                    {
+                        if (rootWaterSupp < 1e-8)
+                            for (int i = 0; i < 24; i++) hourlyActTr[i] = 0;
+                        else
                         {
-                            double diff = Math.Max(0, hourlyActTr.Sum() - rootWaterSupp);
-                            if (hourlyActTr[i] >= maxHourlyT) hourlyActTr[i] = Math.Max(maxHourlyT, hourlyActTr[i] - diff);
-                            if (hourlyActTr.Sum() - rootWaterSupp < 1e-5) break;
+                            while (((hourlyActTr.Sum() - rootWaterSupp) / rootWaterSupp * 100) > minPercError)
+                            {
+                                maxHourlyT *= reduction;
+                                for (int i = 0; i < 24; i++)
+                                {
+                                    double diff = Math.Max(0, hourlyActTr.Sum() - rootWaterSupp);
+                                    if (hourlyActTr[i] >= maxHourlyT) hourlyActTr[i] = Math.Max(maxHourlyT, hourlyActTr[i] - diff);
+                                    if (hourlyActTr.Sum() - rootWaterSupp < 1e-5) break;
+                                }
+                            }
                         }
                     }
+                    else if (string.Equals(SWType, "numeric"))
+                    {
+                        double threshold = hourlyActTr.Max() / 2;
+                        double upperLimit = hourlyActTr.Max();
+                        double lowerLimit = 0;
+
+                        while (true)
+                        {
+                            List<double> hourlyActTrTemp = new List<double>(hourlyPotTr_Limited);
+                            for (int i = 0; i < 24; i++) hourlyActTrTemp[i] = Math.Min(hourlyActTrTemp[i], threshold);
+
+                            if (Math.Abs((hourlyActTrTemp.Sum() - rootWaterSupp) / rootWaterSupp * 100) < minPercError)
+                            {
+                                hourlyActTr = new List<double>(hourlyActTrTemp);
+                                break;
+                            }
+                            else
+                            {
+                                if (hourlyActTrTemp.Sum() < rootWaterSupp)
+                                {
+                                    lowerLimit = threshold;
+                                    threshold = 0.5 * (threshold + upperLimit);
+                                }
+                                else
+                                {
+                                    upperLimit = threshold;
+                                    threshold = 0.5 * (threshold + lowerLimit);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("SWType must be one of 'daily', 'dcaps' or 'numeric'");
+                    }
+                }
+
+                // Final tune
+                if (!string.Equals(SWType, "daily"))
+                {
+                    sumTr = hourlyActTr.Sum();
+                    for (int i = 0; i < 24; i++)
+                        hourlyActTr[i] *= MathUtilities.Divide(rootWaterSupp, sumTr, 0);
                 }
             }
         }
