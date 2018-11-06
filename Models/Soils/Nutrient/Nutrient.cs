@@ -155,7 +155,7 @@
         /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
         /// <param name="FOMdata">The in fo mdata.</param>
         [EventSubscribe("IncorpFOM")]
-        private void OnIncorpFOM(FOMLayerType FOMdata)
+        public void DoIncorpFOM(FOMLayerType FOMdata)
         {
             // +  Purpose:
             //      Partition the given FOM C and N into fractions in each layer.
