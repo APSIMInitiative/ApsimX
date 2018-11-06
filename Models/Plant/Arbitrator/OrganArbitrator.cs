@@ -202,12 +202,9 @@ namespace Models.PMF
                 if (o is IHasWaterDemand)
                 {
                     double demand = (o as IHasWaterDemand).CalculateWaterDemand();
-                    if (demand > 0)
-                    {
-                        double allocation = fraction * demand;
-                        (o as IHasWaterDemand).WaterAllocation = allocation;
-                        WAllocated += allocation;
-                    }
+                    double allocation = fraction * demand;
+                    (o as IHasWaterDemand).WaterAllocation = allocation;
+                    WAllocated += allocation;
                 }
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
