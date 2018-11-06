@@ -1,23 +1,34 @@
-﻿namespace Models.Soils.Nutrient
+﻿
+
+namespace Models.Soils.Nutrients
 {
     using Core;
     using Interfaces;
+    using Functions;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// # [Name]
-    /// Encapsulates a solute class.
+    /// [DocumentType Memo]
+    /// 
+    /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.
+    /// 
+    /// ## Mineral N Flows
+    /// [DocumentType NFlow]
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
-    [ValidParent(ParentType = typeof(Soil))]
-    public class Chloride : Model, ISolute
+    public class Solute : Model, ISolute
     {
         [Link]
         Soil soil = null;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        public double[] kgha { get; set; } 
+        public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
         public double[] ppm { get { return soil.kgha2ppm(kgha); } }
@@ -28,7 +39,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            double[] initialppm = soil.Cl;
+            double[] initialppm = Apsim.Get(soil, "Initial" + Name + "N", true) as double[];
             if (initialppm == null)
                 initialppm = new double[soil.Thickness.Length];
             kgha = soil.ppm2kgha(initialppm);
