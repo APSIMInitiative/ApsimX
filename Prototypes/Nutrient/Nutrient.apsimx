@@ -6421,7 +6421,7 @@ using Models.PMF;
 using Models.PMF;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
-using Models.Soils.Nutrient;
+using Models.Soils.Nutrients;
 using System.Diagnostics;
 
 namespace Models
