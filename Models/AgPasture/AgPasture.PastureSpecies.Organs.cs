@@ -458,7 +458,7 @@ namespace Models.AgPasture
         public Soil mySoil = null;
 
         /// <summary>Soil nitrogen model.</summary>
-        private INutrient SoilNitrogen;
+        private SoilNitrogen SoilNitrogen;
 
         /// <summary>The solute manager in this zone</summary>
         public SoluteManager solutes = null;
@@ -540,7 +540,7 @@ namespace Models.AgPasture
             if (solutes == null)
                 throw new Exception("Cannot find solute manager in zone");
 
-            SoilNitrogen = Apsim.Find(mySoil, typeof(INutrient)) as INutrient;
+            SoilNitrogen = Apsim.Find(mySoil, typeof(SoilNitrogen)) as SoilNitrogen;
             if (SoilNitrogen == null)
                 throw new Exception("Cannot find SoilNitrogen in zone");
 
