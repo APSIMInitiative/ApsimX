@@ -197,6 +197,7 @@
     <Compile Include="Functions\DailyMeanVPD.cs" />
     <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
     <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
+    <Compile Include="Functions\StringComparisonFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
