@@ -2862,6 +2862,26 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
       </CultivarFolder>
+      <AddFunction>
+        <Name>SCS</Name>
+        <VariableReference>
+          <Name>Storage</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <VariableName>[StorageRoot].Live.MetabolicWt</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>Metabolic</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <VariableName>[StorageRoot].Live.StorageWt</VariableName>
+        </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </AddFunction>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
       <ReadOnly>false</ReadOnly>
@@ -2951,6 +2971,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
         <string>[FodderBeet].Total.Wt</string>
         <string>[FodderBeet].TotalDead.N</string>
         <string>[FodderBeet].TotalDead.NConc</string>
+        <string>[FodderBeet].SCS</string>
         <string>[Phenology].Photoperiod.Value()</string>
         <string>[Soil].SoilWater.SW</string>
         <string>[Soil].SoilWater.SWmm</string>
@@ -10024,10 +10045,10 @@ namespace Models
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
                   <Script>
-                    <InitialRootDepth>5</InitialRootDepth>
                     <Cultivar>
                     </Cultivar>
                     <SowingDate>2014-10-17</SowingDate>
+                    <InitialRootDepth>5</InitialRootDepth>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -22924,8 +22945,8 @@ namespace Models
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
                     <Script>
-                      <SplitFactor>0</SplitFactor>
                       <NitAmount>0</NitAmount>
+                      <SplitFactor>0</SplitFactor>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -24674,8 +24695,8 @@ namespace Models
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
                     <Script>
-                      <SplitFactor>0</SplitFactor>
                       <NitAmount>0</NitAmount>
+                      <SplitFactor>0</SplitFactor>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -26446,8 +26467,8 @@ namespace Models
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
                     <Script>
-                      <SplitFactor>0</SplitFactor>
                       <NitAmount>0</NitAmount>
+                      <SplitFactor>0</SplitFactor>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -27603,8 +27624,8 @@ namespace Models
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
                     <Script>
-                      <SplitFactor>0</SplitFactor>
                       <NitAmount>0</NitAmount>
+                      <SplitFactor>0</SplitFactor>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -28707,8 +28728,8 @@ namespace Models
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
                     <Script>
-                      <SplitFactor>0</SplitFactor>
                       <NitAmount>0</NitAmount>
+                      <SplitFactor>0</SplitFactor>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -29804,8 +29825,8 @@ namespace Models
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
                     <Script>
-                      <SplitFactor>0</SplitFactor>
                       <NitAmount>0</NitAmount>
+                      <SplitFactor>0</SplitFactor>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -30961,8 +30982,8 @@ namespace Models
                     <Enabled>true</Enabled>
                     <ReadOnly>false</ReadOnly>
                     <Script>
-                      <SplitFactor>0</SplitFactor>
                       <NitAmount>0</NitAmount>
+                      <SplitFactor>0</SplitFactor>
                     </Script>
                     <Code><![CDATA[using System;
 using Models.Core;
@@ -47951,10 +47972,10 @@ namespace Models
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
                 <Script>
+                  <Population>9</Population>
                   <InitialRootDepth>2.5</InitialRootDepth>
                   <CropToSow>Brigadier</CropToSow>
                   <SowingDate>2010-12-28</SowingDate>
-                  <Population>9</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -48653,9 +48674,9 @@ Fodder beet (cultiva "Rivage") was precision drilled on 18 October 2016. Sowing 
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
                   <Script>
+                    <TempFactor>0</TempFactor>
                     <StartDate>2016-10-17</StartDate>
                     <EndDate>2017-05-20</EndDate>
-                    <TempFactor>0</TempFactor>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -49743,6 +49764,54 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries />
             </Graph>
+            <Graph>
+              <Name>Soluble Carbohydrates</Name>
+              <Series>
+                <Name>Simulated</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorToVaryColours>Temperature</FactorToVaryColours>
+                <FactorToVaryLines>Temperature</FactorToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <Checkpoint>Current</Checkpoint>
+                <TableName>Report</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>FodderBeet.SCS</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Crop Biomass (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>500</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>Date</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+            </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <ReadOnly>false</ReadOnly>
@@ -50679,9 +50748,9 @@ Fodder beet (cultiva "Rivage") was precision drilled on 18 October 2016. Sowing 
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
                   <Script>
+                    <TempFactor>0</TempFactor>
                     <StartDate>2016-10-17</StartDate>
                     <EndDate>2017-05-20</EndDate>
-                    <TempFactor>0</TempFactor>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
@@ -51001,10 +51070,10 @@ namespace Models
                   <Enabled>true</Enabled>
                   <ReadOnly>false</ReadOnly>
                   <Script>
+                    <Extinc>0.8</Extinc>
                     <InitialRootDepth>5</InitialRootDepth>
                     <CropToSow>Rivage</CropToSow>
                     <SowingDate>2016-10-18</SowingDate>
-                    <Extinc>0.8</Extinc>
                   </Script>
                   <Code><![CDATA[using System;
 using Models.Core;
