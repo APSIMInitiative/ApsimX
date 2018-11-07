@@ -220,8 +220,12 @@ namespace Models.Functions.SupplyFunctions
 
         private void CalcTemperature()
         {
-            hourlyTemp = new List<double>();
+            // Hourly temperatures are only estimated for the day time (sunrise to sunset).
+            // At other times, temperature is assumed equal to daily minimum temperature.
+            // These times of day do not affect biomass assimilation (i.e. no radiation, no assimilation).
 
+            hourlyTemp = new List<double>();
+            for (int i = 0; i < 24; i++) hourlyTemp.Add(Weather.MinT);
             double TempMethod = 1;
 
             if (TempMethod == 1)
@@ -230,43 +234,64 @@ namespace Models.Functions.SupplyFunctions
                 // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216.
                 // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
 
-                double minLag = 0.17;       // c, Greg=1.0
-                double maxLag = 1.86;       // a, Greg=1.5
-                double nightCoef = 2.2;     // b, Greg=4.0
+                double minLag = 1.0;        // 0.17;  // c, Greg=1.0
+                double maxLag = 1.5;        // 1.86;  // a, Greg=1.5
+                double nightCoef = 4;       // 2.20;  // b, Greg=4.0
 
-                latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
-                double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
-                double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
-                double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
+                latR = Math.PI / 180.0 * Weather.Latitude;       // convert latitude (degrees) to radians
+                double GlobalRadiation = Weather.Radn * 1e6;     // solar radiation
+                double PI = Math.PI;
+                double RAD = PI / 180.0;
+
+                //Declination of the sun as function of Daynumber (vDay)
+                double Dec = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * ((double)Clock.Today.DayOfYear + 10.0) / 365.0));
+
+                //vSin, vCos and vRsc are intermediate variables
+                double Sin = Math.Sin(latR) * Math.Sin(Dec);
+                double Cos = Math.Cos(latR) * Math.Cos(Dec);
+                double Rsc = Sin / Cos;
+
+                //Astronomical daylength (hr)
+                double DayL = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
+                double DailySinE = 3600.0 * (DayL * (Sin + 0.4 * (Sin * Sin + Cos * Cos * 0.5))
+                         + 12.0 * Cos * (2.0 + 3.0 * 0.4 * Sin) * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
+
                 double nightL = (24.0 - DayL);                                  // night length, hours
-                                                                                // determine if the hour is during the day or night
-                double riseHour = 12.0 - DayL / 2.0 - minLag;                   // time of daily min temperature
-                double setHour = 12.0 + DayL / 2.0;                             // time of sunset
+                double riseHour = 0.5 * (24 - DayL);
+                double setHour = riseHour + DayL;                               // determine if the hour is during the day or night
+                double tTmin = riseHour - minLag;                               // time of daily min temperature
+                List<double> hrWeights = HourlyWeights(riseHour, setHour);
 
                 for (int t = 1; t <= 24; t++)
                 {
-                    double hr = t - 0.5;
-                    double tempr;
-                    if (hr >= riseHour && hr < setHour)  //day
+                    if (Math.Ceiling(hrWeights[t - 1]) == 1)
                     {
-                        double m = 0; // the number of hours after the minimum temperature occurs
-                        m = hr - riseHour;
-                        tempr = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + Weather.MinT;
+                        double Hour1 = Math.Min(setHour, Math.Max(riseHour, t - 1));
+                        double Hour2 = Math.Min(setHour, Math.Max(riseHour, t));
+                        double hr = 0.5 * (Hour1 + Hour2);
+                        double tempr;
+
+                        if (hr >= tTmin && hr < setHour)  //day
+                        {
+                            double m = 0; // the number of hours after the minimum temperature occurs
+                            m = hr - tTmin;
+                            tempr = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + Weather.MinT;
+                        }
+                        else  // night
+                        {
+                            double n = 0;                       // the number of hours after setHour
+                            if (hr > setHour) n = hr - setHour;
+                            if (hr < tTmin) n = (24.0 - setHour) + hr;
+                            double ddy = DayL - minLag;         // time of setHour after minimum temperature occurs
+                            double tsn = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + Weather.MinT;
+                            tempr = Weather.MinT + (tsn - Weather.MinT) * Math.Exp(-nightCoef * n / nightL);
+                        }
+                        hourlyTemp[t - 1] = tempr;
                     }
-                    else  // night
-                    {
-                        double n = 0;                       // the number of hours after setHour
-                        if (hr > setHour) n = hr - setHour;
-                        if (hr < riseHour) n = (24.0 - setHour) + hr;
-                        double ddy = DayL - minLag;         // time of setHour after minimum temperature occurs
-                        double tsn = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + Weather.MinT;
-                        tempr = Weather.MinT + (tsn - Weather.MinT) * Math.Exp(-nightCoef * n / nightL);
-                    }
-                    hourlyTemp.Add(tempr);
                 }
 
                 double MeanTemp = hourlyTemp.Average();
-                for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * Weather.MeanT;
+                // for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * Weather.MeanT;
             }
         }
         //------------------------------------------------------------------------------------------------
@@ -502,7 +527,7 @@ namespace Models.Functions.SupplyFunctions
             // If no such a link exists, the 'net' daily assimilate is calculated.
 
             hourlyActDM = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyActDM.Add(hourlyActTr[i] * transpEffCoef / hourlyVPD[i]);
+            for (int i = 0; i < 24; i++) hourlyActDM.Add(MathUtilities.Divide(hourlyActTr[i] * transpEffCoef, hourlyVPD[i], 0));
 
             dailyPotDM = hourlyPotDM.Sum();
             dailyActDM = hourlyActDM.Sum();
