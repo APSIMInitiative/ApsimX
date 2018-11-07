@@ -24,6 +24,9 @@
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
+        <CaptureErrors>true</CaptureErrors>
+        <CaptureWarnings>true</CaptureWarnings>
+        <CaptureSummaryText>true</CaptureSummaryText>
       </Summary>
       <Weather>
         <Name>Weather</Name>
@@ -503,6 +506,8 @@
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Interfaces;
 using Models.Utilities;
 using Models.Surface;
 using APSIM.Shared.Utilities;
@@ -515,7 +520,7 @@ namespace Models
     {
         [Link] Clock Clock;
         [Link] SoilWater SoilWater = null;
-        [Link] SoilNitrogen SoilN = null;
+        [Link] INutrient Nutrient = null;
         [Link] SurfaceOrganicMatter SOM = null;
         [Link] Summary Summary;
         [Link] Report.Report Report;
@@ -560,7 +565,7 @@ namespace Models
                 if (ResetN == "Yes")
                 {
                     Summary.WriteMessage(this, "Reset Nitrogen");
-                    SoilN.Reset();
+                    Nutrient.Reset();
                 }
                 if (ResetSOM == "Yes")
                 {

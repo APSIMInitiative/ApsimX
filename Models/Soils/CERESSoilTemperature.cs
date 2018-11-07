@@ -192,7 +192,7 @@ namespace Models.Soils
 
                 // soil temperature
                 st[layer] = LayerTemp(depth_lag, alx, TempChange);
-                if (st[layer] < -20.0 || st[layer] > 80.0)
+                if (st[layer] < -50.0 || st[layer] > 80.0)
                     throw new Exception("Value for soil_temp is out of range");
             }
         }

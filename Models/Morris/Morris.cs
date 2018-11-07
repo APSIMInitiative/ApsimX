@@ -155,8 +155,11 @@
         [EventSubscribe("BeginRun")]
         private void OnBeginRun()
         {
-            Initialise();
-            simulationNumber = 1;
+            if (Enabled)
+            {
+                Initialise();
+                simulationNumber = 1;
+            }
         }
 
         /// <summary>Gets the next job to run</summary>
