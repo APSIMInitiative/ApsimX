@@ -70,7 +70,7 @@
 
                 // Send event telling all models that we're about to begin running.
                 Dictionary<string, string> simAndFolderNames = new Dictionary<string, string>();
-                foreach (ISimulationGenerator simulation in Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>())
+                foreach (ISimulationGenerator simulation in Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Where(m => m.Enabled).Cast<ISimulationGenerator>())
                 {
                     string folderName = Apsim.Parent(simulation as IModel, typeof(Folder)).Name;
                     foreach (string simulationName in simulation.GetSimulationNames())
