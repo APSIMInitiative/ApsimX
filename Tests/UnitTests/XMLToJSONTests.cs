@@ -165,6 +165,17 @@
             Assert.AreEqual(json, expectedJson);
         }
 
+        /// <summary>Ensure stock works.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureStockConverts()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureStockConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureStockConverts.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
+
         /// <summary>Ensure 2 models of same name works.</summary>
         [Test]
         public void XMLToJSONTests_EnsureModelsWithSameNameConverts()

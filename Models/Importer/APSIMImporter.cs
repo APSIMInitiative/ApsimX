@@ -85,7 +85,7 @@
         /// <summary>
         /// Used as flags during importation
         /// </summary>
-        private DateTime startDate;
+        private DateTime startDate = DateTime.MinValue;
 
         /// <summary>
         /// fertiliser type conversion lookups

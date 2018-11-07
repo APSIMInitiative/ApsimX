@@ -105,10 +105,6 @@ namespace Models.Core.ApsimFile
                     else if (property.Value is JObject)
                         ProcessObject(property.Name, property.Value, newRoot);
                 }
-                else if (propertiesToIgnore.Contains(property.Name))
-                {
-
-                }
 
                 child = child.Next;
             }
@@ -154,6 +150,17 @@ namespace Models.Core.ApsimFile
                     parameters.Add(newParameter);
                 }
                 newRoot["Parameters"] = parameters;
+            }
+            else if (name.Equals("PaddockList", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // manager parameters.
+                JArray values = new JArray();
+                foreach (var child in obj.Children())
+                {
+                    var newObject = CreateObject(child.First);
+                    values.Add(newObject);
+                }
+                newRoot[name] = values;
             }
             else
             {

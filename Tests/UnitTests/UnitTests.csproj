@@ -174,6 +174,7 @@
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureXSITypeConverts.json" />
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureSupplimentConverts.json" />
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureModelsWithSameNameConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureStockConverts.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
@@ -281,6 +282,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureModelsWithSameNameConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureStockConverts.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
