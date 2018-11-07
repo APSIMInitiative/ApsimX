@@ -125,7 +125,7 @@ namespace Models.Core.Runners
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
                 ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, workingDirectory, false);
+                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), false);
             }
         }
 
