@@ -62,6 +62,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
     {
         /// <summary>Tolerance for biomass comparisons</summary>
@@ -1033,17 +1034,19 @@ namespace Models.PMF.Organs
             {
                 foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
+
                 // Do Root Senescence
                 RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
+
+                // Do maintenance respiration
+                MaintenanceRespiration = 0;
+                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                {
+                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                }
+                needToRecalculateLiveDead = true;
             }
-            needToRecalculateLiveDead = false;
-            // Do maintenance respiration
-            MaintenanceRespiration = 0;
-            MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-            // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
-            MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
-            // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
-            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Called when crop is ending</summary>

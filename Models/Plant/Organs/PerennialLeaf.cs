@@ -794,13 +794,11 @@ namespace Models.PMF.Organs
 
                 MaintenanceRespiration = 0;
                 //Do Maintenance respiration
-                if (MaintenanceRespirationFunction != null)
+                if (MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
                 {
                     MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
                     RespireLeafFraction(MaintenanceRespirationFunction.Value());
-
                     MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-
                 }
 
                 if (DryMatterContent != null)

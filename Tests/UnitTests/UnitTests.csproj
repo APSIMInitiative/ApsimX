@@ -103,7 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APSIMFileReaderTests.cs" />
+    <Compile Include="DocumentationTests.cs" />
     <Compile Include="ManagerConverterTests.cs" />
+    <Compile Include="StorageTests.cs" />
     <Compile Include="TestIndexedDataTable.cs" />
     <Compile Include="TrackerFunctionTests.cs" />
     <Compile Include="RunnerTests.cs" />

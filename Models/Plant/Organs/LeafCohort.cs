@@ -736,12 +736,13 @@ namespace Models.PMF.Organs
             }
             else
                 CohortPopulation = Structure.TotalStemPopn;
+            CohortPopulation *= cohortParams.FinalFraction;
             Age = cohortParams.CohortAge;
 
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
 
-            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * cohortParams.FinalFraction;
+            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameters.GrowthDuration.Value() * cohortParams.FinalFraction;
             LagDuration = leafCohortParameters.LagDuration.Value();
@@ -966,11 +967,14 @@ namespace Models.PMF.Organs
             Dead.StorageWt += Math.Max(0.0,
                 StorageWtSenescing - DMRetranslocated - StorageWtReallocated);
 
-            MaintenanceRespiration = 0;
             //Do Maintenance respiration
-            MaintenanceRespiration += Live.MetabolicWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            MaintenanceRespiration += Live.StorageWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            
+            MaintenanceRespiration = 0;
+            if (leafCohortParameters.MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+            {
+                MaintenanceRespiration += Live.MetabolicWt * leafCohortParameters.MaintenanceRespirationFunction.Value();
+                MaintenanceRespiration += Live.StorageWt * leafCohortParameters.MaintenanceRespirationFunction.Value();
+            }
+
             Age = Age + thermalTime;
 
             // Do Detachment of this Leaf Cohort
@@ -1100,12 +1104,12 @@ namespace Models.PMF.Organs
                     }
                     else
                     {
-                        _lagDuration = GrowthDuration * leafCohortParameters.LeafSizeAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
+                        _GrowthDuration = GrowthDuration * leafCohortParameters.LeafSizeAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                         _lagDuration = LagDuration * leafCohortParameters.LagDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                         _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                     }
 
-                    if (Age >= 0 & Age < _lagDuration + GrowthDuration + _senescenceDuration / 2)
+                    if (Age >= 0 & Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
                     {
                         lsn += ApexCohort.GroupSize[i];
                     }
