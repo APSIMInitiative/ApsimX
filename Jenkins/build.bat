@@ -64,6 +64,10 @@ exit /b %errorlevel%
 :getVersion
 rem We generate a version number by calling a webservice.
 echo PULL_ID=%PULL_ID%
+if "%PULL_ID%"=="" (
+	echo Error: PULL_ID is not set.
+	exit /b 1
+)
 echo Getting version number from web service...
 curl -ks https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
 echo Done.
