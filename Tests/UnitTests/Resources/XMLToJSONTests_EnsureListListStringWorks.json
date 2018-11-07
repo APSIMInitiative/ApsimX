@@ -1,0 +1,31 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Agroforestry.TreeProxy, Models",
+      "Name": "TreeProxy",
+      "Table": [
+        [
+          "Parameter",
+          "0",
+          "0.5h",
+          "1h"
+        ],
+        [
+          "Shade (%)",
+          "Root Length Density (cm/cm3)",
+          "15-30"
+        ]
+      ],
+      "dates": [
+        "1900-01-01T00:00:00",
+        "1900-03-01T00:00:00",
+        "1900-06-01T00:00:00",
+        "1900-09-01T00:00:00",
+        "1900-12-31T00:00:00"
+      ]
+    }
+  ]
+}

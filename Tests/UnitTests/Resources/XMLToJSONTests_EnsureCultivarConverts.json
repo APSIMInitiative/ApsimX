@@ -10,6 +10,18 @@
         "[Phenology].MinimumLeafNumber.FixedValue = 9",
         "[Phenology].VrnSensitivity.FixedValue = 7",
         "[Phenology].PpSensitivity.FixedValue = 3"
+      ],
+      "Children": [
+        {
+          "$type": "Models.Core.Alias, Models",
+          "Name": "Gregory",
+          "IncludeInDocumentation": true
+        },
+        {
+          "$type": "Models.Core.Alias, Models",
+          "Name": "Lancer",
+          "IncludeInDocumentation": true
+        }
       ]
     },
     {

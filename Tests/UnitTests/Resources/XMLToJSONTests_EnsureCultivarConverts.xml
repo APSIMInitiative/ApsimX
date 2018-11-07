@@ -7,6 +7,14 @@
     <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
     <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
     <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+    <Alias>
+      <Name>Gregory</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Alias>
+    <Alias>
+      <Name>Lancer</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Alias>    
   </Cultivar>
 
   <Cultivar>

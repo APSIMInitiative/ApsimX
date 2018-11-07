@@ -17,8 +17,13 @@ namespace Models.Core.ApsimFile
     /// <summary>
     /// Contains all converters that convert from one XML version to another.
     /// </summary>
-    class XmlConverters
+    public class XmlConverters
     {
+        /// <summary>
+        /// The last XML file version.
+        /// </summary>
+        public const int LastVersion = 46;
+
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
         /// <param name="toVersion">The optional version to convert to.</param>
@@ -48,7 +53,7 @@ namespace Models.Core.ApsimFile
 
                 // Update the xml if not at the latest version.
                 changed = false;
-                while (fileVersion < Math.Min(toVersion, 46))
+                while (fileVersion < Math.Min(toVersion, LastVersion))
                 {
                     changed = true;
 

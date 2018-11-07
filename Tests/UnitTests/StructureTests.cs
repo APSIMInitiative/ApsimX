@@ -21,7 +21,7 @@
             "<Memo>" +
             "  <Name>TitlePage</Name>" +
             "  <IncludeInDocumentation>true</IncludeInDocumentation>" +
-            "  <MemoText>Some text</MemoText>" +
+            "  <Text>Some text</Text>" +
             "</Memo>";
 
             Structure.Add(xml, simulation);

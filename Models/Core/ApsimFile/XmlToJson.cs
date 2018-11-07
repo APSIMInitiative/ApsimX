@@ -6,6 +6,7 @@ namespace Models.Core.ApsimFile
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Xml;
 
@@ -14,10 +15,10 @@ namespace Models.Core.ApsimFile
     /// </summary>
     public class XmlToJson
     {
-        private static string[] builtinTypeNames = new string[] { "string", "int", "double" };
-        private static string[] arrayVariableNames = new string[] { "AcceptedStats", "Operation", "Parameters", "cultivars" };
+        private static string[] builtinTypeNames = new string[] { "string", "int", "double", "dateTime", "ArrayOfString" };
+        private static string[] arrayVariableNames = new string[] { "AcceptedStats", "Operation", "Parameters", "cultivars", "Nodes", "Stores", "PaddockList" };
         private static string[] arrayVariables = new[] { "Command", "Alias", "Leaves", "ZoneNamesToGrowRootsIn", "ZoneRootDepths", "ZoneInitialDM" };
-        private static string[] propertiesToIgnore = new[] { "ParameterValues" };
+        private static string[] propertiesToIgnore = new[] { "ParameterValues", "Nodes", "Arcs", "Weirdo" };
 
         /// <summary>
         /// Convert APSIM Next Generation xml to json.
@@ -85,7 +86,9 @@ namespace Models.Core.ApsimFile
                             // with one element.
                             return CreateArray(property.Name, property.Value, newRoot);
                         }
-                        else if (GetModelTypeName(property.Name) != null)
+                        else if (GetModelTypeName(property.Name) != null && 
+                                 property.Name != "Parameter" &&
+                                 GetModelTypeName(property.Name).GetInterface("IModel") != null)  // CLEM.LabourFilter has a Parameter property.
                         {
                             // a model without any child nodes.
                             AddNewChild(property, newRoot);
@@ -102,6 +105,10 @@ namespace Models.Core.ApsimFile
                     else if (property.Value is JObject)
                         ProcessObject(property.Name, property.Value, newRoot);
                 }
+                else if (propertiesToIgnore.Contains(property.Name))
+                {
+
+                }
 
                 child = child.Next;
             }
@@ -111,7 +118,13 @@ namespace Models.Core.ApsimFile
 
         private static void AddTypeToObject(JToken root, JToken newRoot)
         {
-            Type t = GetModelTypeName(root.Parent.Path);
+            string modelType;
+            if (root["@xsi:type"] != null)
+                modelType = root["@xsi:type"].ToString();
+            else
+                modelType = root.Parent.Path;
+
+            Type t = GetModelTypeName(modelType);
             if (t != null)
                 newRoot["$type"] = t.FullName + ", Models";
         }
@@ -129,7 +142,7 @@ namespace Models.Core.ApsimFile
                 JValue childAsValue = obj.First.First as JValue;
                 newRoot["Text"] = childAsValue.Value.ToString();
             }
-            else if (name == "Script")
+            else if (name.Equals("Script", StringComparison.CurrentCultureIgnoreCase))
             {
                 // manager parameters.
                 JArray parameters = new JArray();
@@ -181,12 +194,21 @@ namespace Models.Core.ApsimFile
                 foreach (var element in array.Children())
                 {
                     Type modelType = GetModelTypeName(name);
-                    if (name == "string" || name == "Command" || name == "Alias")
+                    if (name == "string" || name == "Command")
                         newArray.Add(new JValue(element.ToString()));
                     else if (name == "double")
                         newArray.Add(new JValue(double.Parse(element.ToString())));
                     else if (name == "int")
                         newArray.Add(new JValue(int.Parse(element.ToString())));
+                    else if (name == "dateTime")
+                        newArray.Add(new JValue(DateTime.Parse(element.ToString())));
+                    else if (name == "ArrayOfString")
+                    {
+                        JArray nestedArray = new JArray();
+                        foreach (var value in element.First.Values<JArray>())
+                            newArray.Add(value);
+                        //newArray.Add(nestedArray);
+                    }
                     else if (modelType == null || modelType.GetInterface("IModel") == null)
                         newArray.Add(CreateObject(element));
                     else
@@ -215,11 +237,20 @@ namespace Models.Core.ApsimFile
                 Type t = GetModelTypeName((element as JProperty).Name);
                 if (t != null)
                     newChild["$type"] = t.FullName + ", Models";
+
                 if (newChild["Name"] == null)
                     newChild["Name"] = (element as JProperty).Name;
             }
             else
+            {
                 newChild = CreateObject(element as JObject);
+                if (newChild["Name"] == null && newChild["$type"] != null)
+                {
+                    string type = newChild["$type"].Value<string>().Replace(", Models", "");
+                    string[] words = type.Split(".".ToCharArray());
+                    newChild["Name"] = words.Last();
+                }
+            }
 
 
             if (newRoot["Children"] == null)
@@ -273,7 +304,9 @@ namespace Models.Core.ApsimFile
                     double doubleValue;
                     bool boolValue;
                     DateTime dateValue;
-                    if (int.TryParse(value, out intValue))
+                    if (property.Name == "Name")
+                        toObject[propertyName] = value;
+                    else if (int.TryParse(value, out intValue))
                         toObject[propertyName] = intValue;
                     else if (double.TryParse(value, out doubleValue))
                         toObject[propertyName] = doubleValue;
@@ -299,7 +332,9 @@ namespace Models.Core.ApsimFile
             foreach (var type in types)
             {
                 if (type.Name == m)
+                {
                     return type;
+                }
             }
             return null;
         }
@@ -316,25 +351,47 @@ namespace Models.Core.ApsimFile
             {
                 JArray newArray = new JArray();
 
+                // Some simulations can have a 2 child models with same name.
+                List<string> childNamesDone = new List<string>();
+
                 JArray children = jsonNode["Children"] as JArray;
                 foreach (var childXmlNode in XmlUtilities.ChildNodes(xmlNode, null))
                 {
                     string childXmlName = XmlUtilities.Value(childXmlNode, "Name");
-                    if (childXmlName == string.Empty)
+
+                    if (!childNamesDone.Contains(childXmlName))
                     {
-                        if (GetModelTypeName(childXmlNode.Name) != null)
-                            childXmlName = childXmlNode.Name;
-                    }
-                    if (childXmlName != string.Empty || GetModelTypeName(childXmlNode.Name) != null)
-                    {
-                        var childJsonNode = children.FirstOrDefault(c => !(c is JArray) && c["Name"].ToString() == childXmlName);
-                        if (childJsonNode != null)
+                        if (childXmlName == string.Empty)
                         {
-                            ReorderChildren(childJsonNode, childXmlNode);
-                            newArray.Add(childJsonNode);
+                            if (GetModelTypeName(childXmlNode.Name) != null)
+                                childXmlName = childXmlNode.Name;
+                        }
+                        if (childXmlName != string.Empty || GetModelTypeName(childXmlNode.Name) != null)
+                        {
+                            int i = 1;
+                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName))
+                            {
+                                bool alreadyAdded = newArray.FirstOrDefault(c => c["Name"].ToString() == childXmlName) != null;
+
+                                if (childJsonNode != null)
+                                {
+                                    if (alreadyAdded)
+                                    {
+                                        string name = childJsonNode["Name"].ToString();
+                                        string newName = name + i.ToString();
+                                        childJsonNode["Name"] = newName;
+                                        i++;
+                                    }
+
+                                    ReorderChildren(childJsonNode, childXmlNode);
+                                    newArray.Add(childJsonNode);
+                                }
+                            }
+                            childNamesDone.Add(childXmlName);
                         }
                     }
                 }
+
                 jsonNode["Children"] = newArray;
             }
         }

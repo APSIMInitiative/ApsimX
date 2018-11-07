@@ -131,5 +131,50 @@
             string json = XmlToJson.Convert(xml);
             Assert.AreEqual(json, expectedJson);
         }
+
+        /// <summary>Ensure List of List of strings.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureListListStringWorks()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureListListStringWorks.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureListListStringWorks.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
+
+        /// <summary>Some models have an xsi:type attribute.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureXSITypeConverts()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureXSITypeConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureXSITypeConverts.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
+
+        /// <summary>Ensure suppliment works.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureSupplimentConverts()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureSupplimentConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureSupplimentConverts.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
+
+        /// <summary>Ensure 2 models of same name works.</summary>
+        [Test]
+        public void XMLToJSONTests_EnsureModelsWithSameNameConverts()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureModelsWithSameNameConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureModelsWithSameNameConverts.json");
+
+            string json = XmlToJson.Convert(xml);
+            Assert.AreEqual(json, expectedJson);
+        }
+
     }
 }

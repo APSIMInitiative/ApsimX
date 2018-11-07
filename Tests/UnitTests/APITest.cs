@@ -49,39 +49,20 @@ namespace UnitTests
             string tempFolder = Path.Combine(Path.GetTempPath(), "UnitTests");
             Directory.CreateDirectory(tempFolder);
             Directory.SetCurrentDirectory(tempFolder);
-            FileStream oldfile = new FileStream("Continuous_Wheat.apsim", FileMode.Create);
-            oldfile.Write(UnitTests.Properties.Resources.Continuous_Wheat, 0, UnitTests.Properties.Resources.Continuous_Wheat.Length);
-            oldfile.Close();
-            
-            FileStream f = new FileStream("Test.apsimx", FileMode.Create);
-            f.Write(UnitTests.Properties.Resources.TestFile, 0, UnitTests.Properties.Resources.TestFile.Length);
-            f.Close();
-            FileStream w = new FileStream("Goondiwindi.met", FileMode.Create);
-            w.Write(UnitTests.Properties.Resources.Goondiwindi, 0, UnitTests.Properties.Resources.Goondiwindi.Length);
-            w.Close();
+
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.APITest.xml");
             List<Exception> creationExceptions;
-            simulations = FileFormat.ReadFromFile<Simulations>("Test.apsimx", out creationExceptions);
+            simulations = FileFormat.ReadFromString<Simulations>(xml, out creationExceptions);
 
-            string sqliteSourceFileName = TestDataStore.FindSqlite3DLL();
+            //string sqliteSourceFileName = TestDataStore.FindSqlite3DLL();
 
-            string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
-            if (!File.Exists(sqliteFileName))
-            {
-                File.Copy(sqliteSourceFileName, sqliteFileName);
-            }
+            //string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
+            //if (!File.Exists(sqliteFileName))
+            //{
+            //    File.Copy(sqliteSourceFileName, sqliteFileName);
+            //}
 
             this.simulation = this.simulations.Children[0] as Simulation;
-        }
-
-        /// <summary>
-        /// Clean up code for all tests.
-        /// </summary>
-        [TearDown]
-        public void Cleanup()
-        {
-            //this.simulation.CleanupRun();
-            //File.Delete("Test.apsimx");
-            //File.Delete("Goondiwindi.met");
         }
 
         /// <summary>
@@ -116,7 +97,7 @@ namespace UnitTests
             Assert.AreEqual(this.simulation.Children[4].Name, "Field2");
 
             Zone zone = this.simulation.Children[3] as Zone;
-            Assert.AreEqual(zone.Children.Count, 2);
+            Assert.AreEqual(zone.Children.Count, 1);
             Assert.AreEqual(zone.Children[0].Name, "Field1Report");
         }
         
@@ -238,25 +219,6 @@ namespace UnitTests
             IModel clock = Apsim.Child(simulation, typeof(Clock));
             List<IModel> allSiblings = Apsim.Siblings(clock);
             Assert.AreEqual(allSiblings.Count, 4);
-        }
-  
-        /// <summary>
-        /// Tests for the importer
-        /// </summary>
-        [Test]
-        public void ImportOldAPSIM()
-        {
-            // test the importing of an example simulation from APSIM 7.6
-            APSIMImporter importer = new APSIMImporter();
-            importer.ProcessFile("Continuous_Wheat.apsim");
-
-            List<Exception> creationExceptions;
-            var testrunSimulations = FileFormat.ReadFromFile<Simulations>("Continuous_Wheat.apsimx", out creationExceptions);
-
-            Assert.IsNotNull(Apsim.Find(testrunSimulations, "wheat"));
-            Assert.IsNotNull(Apsim.Find(testrunSimulations, "clock"));
-            Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilNitrogen"));
-            Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilWater"));
         }
 
         /// <summary>
