@@ -1,15 +1,8 @@
-﻿
-
-namespace Models.Soils.Nutrient
+﻿namespace Models.Soils.Nutrients
 {
     using Core;
     using Interfaces;
-    using Functions;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// # [Name]
@@ -17,13 +10,14 @@ namespace Models.Soils.Nutrient
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
-    public class Solute : Model, ISolute
+    [ValidParent(ParentType = typeof(Soil))]
+    public class Chloride : Model, ISolute
     {
         [Link]
         Soil soil = null;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        public double[] kgha { get; set; }
+        public double[] kgha { get; set; } 
 
         /// <summary>Solute amount (ppm)</summary>
         public double[] ppm { get { return soil.kgha2ppm(kgha); } }
@@ -34,7 +28,7 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            double[] initialppm = Apsim.Get(soil, "Initial" + Name + "N", true) as double[];
+            double[] initialppm = soil.Cl;
             if (initialppm == null)
                 initialppm = new double[soil.Thickness.Length];
             kgha = soil.ppm2kgha(initialppm);
