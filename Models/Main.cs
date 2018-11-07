@@ -92,8 +92,8 @@ namespace Models
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 
-                IStorageWriter writer = new DataStore(Path.ChangeExtension(fileName, ".db"));
-
+                DataStore writer = new DataStore(Path.ChangeExtension(fileName, ".db"));
+                writer.Open(false);
                 // Run the job created above using either a single thread or multi threaded (default)
                 IJobRunner jobRunner;
                 if (args.Contains("/SingleThreaded"))
