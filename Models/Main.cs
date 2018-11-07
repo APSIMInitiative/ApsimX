@@ -49,7 +49,7 @@ namespace Models
                 if (args.Length >= 1)
                     fileName = args[0];
 
-                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/m] [/?]";
+                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/m] [/?]";
                 if (args.Contains("/?"))
                 {
                     string detailedHelpInfo = usageMessage;
@@ -61,13 +61,14 @@ namespace Models
                     detailedHelpInfo += "    /RunTests            Run all tests." + Environment.NewLine;
                     detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
                     detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
+                    detailedHelpInfo += "    /Verbose             Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
                     detailedHelpInfo += "    /m                   Use the experimental multi-process job runner." + Environment.NewLine;
                     detailedHelpInfo += "    /?                   Show detailed help information.";
                     Console.WriteLine(detailedHelpInfo);
                     return 1;
                 }
 
-                if (args.Length < 1 || args.Length > 8)
+                if (args.Length < 1 || args.Length > 9)
                 {
                     Console.WriteLine(usageMessage);
                     return 1;
@@ -87,7 +88,7 @@ namespace Models
                 // Otherwise, create a JobManager to open the filename and run it in a separate, external process
                 IJobManager job;
                 if (fileName.Contains('*') || fileName.Contains('?'))
-                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"));
+                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"));
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 

@@ -202,12 +202,9 @@ namespace Models.PMF
                 if (o is IHasWaterDemand)
                 {
                     double demand = (o as IHasWaterDemand).CalculateWaterDemand();
-                    if (demand > 0)
-                    {
-                        double allocation = fraction * demand;
-                        (o as IHasWaterDemand).WaterAllocation = allocation;
-                        WAllocated += allocation;
-                    }
+                    double allocation = fraction * demand;
+                    (o as IHasWaterDemand).WaterAllocation = allocation;
+                    WAllocated += allocation;
                 }
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
@@ -389,9 +386,11 @@ namespace Models.PMF
                 double remainRespiration = respiration - total;
                 for (int i = 0; i < Organs.ToArray().Length; i++)
                 {
-                    double organRespiration = remainRespiration *
-                        Organs[i].MaintenanceRespiration / respiration;
-                    Organs[i].RemoveMaintenanceRespiration(organRespiration);
+                    if ((Organs[i].Live.StorageWt + Organs[i].Live.MetabolicWt) > 0)
+                    {
+                        double organRespiration = remainRespiration * Organs[i].MaintenanceRespiration / respiration;
+                        Organs[i].RemoveMaintenanceRespiration(organRespiration);
+                    }
                 }
             }
         }
