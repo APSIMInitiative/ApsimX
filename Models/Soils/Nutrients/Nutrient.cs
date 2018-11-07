@@ -69,6 +69,11 @@
         private SurfaceOrganicMatterDecompType PotentialSOMDecomp = null;
 
         /// <summary>
+        /// Reset all pools
+        /// </summary>
+        public void Reset() { }
+
+        /// <summary>
         /// Total C in each soil layer
         /// </summary>
         public double[] TotalC
