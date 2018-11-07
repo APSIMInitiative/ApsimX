@@ -13,6 +13,7 @@ namespace Models
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
+    using Models.Storage;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
@@ -48,7 +49,7 @@ namespace Models
                 if (args.Length >= 1)
                     fileName = args[0];
 
-                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/?]";
+                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/m] [/?]";
                 if (args.Contains("/?"))
                 {
                     string detailedHelpInfo = usageMessage;
@@ -60,12 +61,13 @@ namespace Models
                     detailedHelpInfo += "    /RunTests            Run all tests." + Environment.NewLine;
                     detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
                     detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
+                    detailedHelpInfo += "    /m                   Use the experimental multi-process job runner." + Environment.NewLine;
                     detailedHelpInfo += "    /?                   Show detailed help information.";
                     Console.WriteLine(detailedHelpInfo);
                     return 1;
                 }
 
-                if (args.Length < 1 || args.Length > 7)
+                if (args.Length < 1 || args.Length > 8)
                 {
                     Console.WriteLine(usageMessage);
                     return 1;
@@ -89,10 +91,14 @@ namespace Models
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 
+                IStorageWriter writer = new DataStore(Path.ChangeExtension(fileName, ".db"));
+
                 // Run the job created above using either a single thread or multi threaded (default)
                 IJobRunner jobRunner;
                 if (args.Contains("/SingleThreaded"))
                     jobRunner = new JobRunnerSync();
+                else if (args.Contains("/m"))
+                    jobRunner = new JobRunnerMultiProcess(writer);
                 else
                     jobRunner = new JobRunnerAsync();
                 if (args.Select(arg => arg.ToLower()).Contains("/csv"))
