@@ -975,19 +975,19 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
             <SubtractFunction>
               <Name>MetabolicNconc</Name>
               <VariableReference>
-                <Name>CritNconc</Name>
+                <Name>MaxNconc</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
-                <VariableName>[StorageRoot].criticalNConc.Value()</VariableName>
+                <VariableName>[StorageRoot].maximumNconc.Value()</VariableName>
               </VariableReference>
-              <VariableReference>
-                <Name>MinNconc</Name>
+              <Constant>
+                <Name>Zero</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Enabled>true</Enabled>
                 <ReadOnly>false</ReadOnly>
-                <VariableName>[StorageRoot].minimumNconc.Value()</VariableName>
-              </VariableReference>
+                <FixedValue>0</FixedValue>
+              </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
@@ -2181,7 +2181,7 @@ A value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vege
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
-              <FixedValue>0.95</FixedValue>
+              <FixedValue>0.5</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
