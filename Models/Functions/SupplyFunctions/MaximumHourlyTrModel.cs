@@ -194,10 +194,13 @@ namespace Models.Functions.SupplyFunctions
                 }
 
                 CalcTemperature();
-                CalcRadiation();
                 CalcSVP();
                 CalcVPD();
-                CalcRUE();
+                if (string.Equals(AssimilateType, "net") || (GrossAssimilateModel != null))
+                {
+                    CalcRadiation();
+                    CalcRUE();
+                }
                 CalcPotAssimilate();
                 CalcPotTr();
                 CalcVPDCappedTr();
@@ -391,7 +394,7 @@ namespace Models.Functions.SupplyFunctions
             // Calculates hourlyPotDM as the product of hourlyRUE, hourlyVPD and transpEffCoef
             hourlyPotDM = new List<double>();
 
-            if (string.Equals(AssimilateType, "net"))
+            if (string.Equals(AssimilateType, "net") || (GrossAssimilateModel != null))
             {
                 for (int i = 0; i < 24; i++) hourlyPotDM.Add(hourlyRad[i] * hourlyRUE[i]);
             }
@@ -534,17 +537,17 @@ namespace Models.Functions.SupplyFunctions
 
             if (GrossAssimilateModel != null && hourlyPotDM.Sum() > 0 && hourlyActDM.Sum() > 0)
             {
-                double DailyDMGross = hourlyActDM.Sum() / hourlyPotDM.Sum() * GrossAssimilateModel.Value();
+                double dailyActGrossDM = hourlyActDM.Sum() / hourlyPotDM.Sum() * GrossAssimilateModel.Value();
                 if (double.IsNaN(GrossAssimilateModel.Value()))
-                    DailyDMGross = 0;
+                    dailyActGrossDM = 0;
 
-                if (double.IsNaN(DailyDMGross))
+                if (double.IsNaN(dailyActGrossDM))
                     dailyActDM = 0;
                 else
                 {
                     dailyActDM = hourlyActDM.Sum();
-                    if (dailyActDM > 0 && !double.IsNaN(DailyDMGross))
-                        for (int i = 0; i < 24; i++) hourlyActDM[i] = hourlyActDM[i] / dailyActDM * DailyDMGross;
+                    if (dailyActDM > 0 && !double.IsNaN(dailyActGrossDM))
+                        for (int i = 0; i < 24; i++) hourlyActDM[i] = hourlyActDM[i] / dailyActDM * dailyActGrossDM;
                     else
                         for (int i = 0; i < 24; i++) hourlyActDM[i] = 0;
                     dailyActDM = hourlyActDM.Sum();
