@@ -155,13 +155,20 @@
         /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
         /// <param name="FOMdata">The in fo mdata.</param>
         [EventSubscribe("IncorpFOM")]
-        private void OnIncorpFOM(FOMLayerType FOMdata)
+        private void IncorpFOM(FOMLayerType FOMdata)
         {
+            DoIncorpFOM(FOMdata);
+        }
+
+        /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
+        /// <param name="FOMdata">The in fo mdata.</param>
+        public void DoIncorpFOM(FOMLayerType FOMdata)
+        { 
             // +  Purpose:
             //      Partition the given FOM C and N into fractions in each layer.
             //      It will be assumed that the CN ratios of all fractions are equal
 
-            bool nSpecified = false;
+        bool nSpecified = false;
             for (int layer = 0; layer < FOMdata.Layer.Length; layer++)
             {
                 // If the caller specified CNR values then use them to calculate N from Amount.
