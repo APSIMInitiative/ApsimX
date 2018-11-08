@@ -47,7 +47,7 @@
         /// <param name="presenter">The explorer presenter.</param>
         /// <param name="multiProcess">Use the multi-process runner?</param>
         /// <param name="storage">A storage writer where all data should be stored</param>
-        public RunCommand(IModel model, ExplorerPresenter presenter, bool multiProcess, IStorageWriter storage)
+        public RunCommand(IModel model, ExplorerPresenter presenter, bool multiProcess)
         {
             this.jobName = model.Name;
             this.explorerPresenter = presenter;

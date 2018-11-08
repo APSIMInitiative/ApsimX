@@ -27,9 +27,6 @@ namespace UserInterface.Presenters
         [Link(IsOptional = true)]
         IStorageReader storage = null;
 
-        [Link(IsOptional = true)]
-        IStorageWriter storageWriter = null;
-
         /// <summary>
         /// Reference to the ExplorerPresenter.
         /// </summary>
@@ -293,7 +290,7 @@ namespace UserInterface.Presenters
                 else
                 {
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    this.command = new Commands.RunCommand(model, this.explorerPresenter, multiProcessRunner, storageWriter);
+                    this.command = new RunCommand(model, this.explorerPresenter, multiProcessRunner);
                     this.command.Do(null);
                 }
             }
