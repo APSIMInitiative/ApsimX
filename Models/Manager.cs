@@ -45,7 +45,7 @@ namespace Models
         [NonSerialized] private XmlElement[] _elements;
 
         /// <summary>The compiled code</summary>
-        [NonSerialized] private string CompiledCode = "";
+        private string CompiledCode = "";
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>

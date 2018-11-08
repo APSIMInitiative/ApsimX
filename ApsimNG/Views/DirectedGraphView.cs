@@ -13,6 +13,7 @@ namespace UserInterface.Views
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -20,28 +21,62 @@ namespace UserInterface.Views
     /// </summary>
     public class DirectedGraphView : ViewBase
     {
+        /// <summary>
+        /// The currently selected node/object.
+        /// </summary>
         private DGObject selectedObject;
+
+        /// <summary>
+        /// Keeps track of whether the mouse button is currently down.
+        /// </summary>
         private bool mouseDown = false;
+
+        /// <summary>
+        /// Drawing area upon which the graph is rendered.
+        /// </summary>
+        private DrawingArea drawable;
+
+        /// <summary>
+        /// Position of the last moved node.
+        /// </summary>
         private PointD lastPos;
-        private List<DGNode> Nodes = new List<DGNode>();
-        private List<DGArc> Arcs = new List<DGArc>();
+
+        /// <summary>
+        /// List of nodes. These are currently circles with text in them.
+        /// </summary>
+        private List<DGNode> nodes = new List<DGNode>();
+
+        /// <summary>
+        /// List of arcs which connect the nodes.
+        /// </summary>
+        private List<DGArc> arcs = new List<DGArc>();
 
         /// <summary>Initializes a new instance of the <see cref="DirectedGraphView" /> class.</summary>
         public DirectedGraphView(ViewBase owner = null) : base(owner)
         {
-            DrawingArea drawingArea = new DrawingArea();
-
-            drawingArea.AddEvents(
+            drawable = new DrawingArea();
+            
+            drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-            drawingArea.ExposeEvent += OnDrawingAreaExpose;
-            drawingArea.ButtonPressEvent += OnMouseButtonPress;
-            drawingArea.ButtonReleaseEvent += OnMouseButtonRelease; ;
-            drawingArea.MotionNotifyEvent += OnMouseMove; ;
-            _mainWidget = drawingArea;
-            drawingArea.ModifyBg(StateType.Normal, new Gdk.Color(255, 255, 255));
+            drawable.ExposeEvent += OnDrawingAreaExpose;
+            drawable.ButtonPressEvent += OnMouseButtonPress;
+            drawable.ButtonReleaseEvent += OnMouseButtonRelease;
+            drawable.MotionNotifyEvent += OnMouseMove;
+
+            ScrolledWindow scroller = new ScrolledWindow(new Adjustment(0, 0, 100, 1, 1, 1), new Adjustment(0, 0, 100, 1, 1, 1))
+            {
+                HscrollbarPolicy = PolicyType.Always,
+                VscrollbarPolicy = PolicyType.Always
+            };
+            
+            scroller.AddWithViewport(drawable);
+
+            _mainWidget = scroller;
+            drawable.ModifyBg(StateType.Normal, new Gdk.Color(255, 255, 255));
+            drawable.Realized += OnRealized;
         }
 
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>
@@ -50,14 +85,14 @@ namespace UserInterface.Views
             get
             {
                 DirectedGraph graph = new DirectedGraph();
-                Nodes.ForEach(node => graph.Nodes.Add(node.ToNode()));
-                Arcs.ForEach(arc => graph.Arcs.Add(arc.ToArc()));
+                nodes.ForEach(node => graph.Nodes.Add(node.ToNode()));
+                arcs.ForEach(arc => graph.Arcs.Add(arc.ToArc()));
                 return graph;
             }
             set
             {
-                value.Nodes.ForEach(node => Nodes.Add(new DGNode(node)));
-                value.Arcs.ForEach(arc => Arcs.Add(new DGArc(arc, Nodes)));
+                value.Nodes.ForEach(node => nodes.Add(new DGNode(node)));
+                value.Arcs.ForEach(arc => arcs.Add(new DGArc(arc, nodes)));
             }
         }
 
@@ -67,7 +102,7 @@ namespace UserInterface.Views
             int width;
             int height;
             MainWidget.GdkWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(MainWidget.GdkWindow, MainWidget.Colormap, 0, 0, 0, 0, width, height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
             byte[] buffer = screenshot.SaveToBuffer("png");
             MemoryStream stream = new MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new Bitmap(stream);
@@ -81,9 +116,9 @@ namespace UserInterface.Views
 
             Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
 
-            foreach (DGArc tmpArc in Arcs)
+            foreach (DGArc tmpArc in arcs)
                 tmpArc.Paint(context);
-            foreach (DGNode tmpNode in Nodes)
+            foreach (DGNode tmpNode in nodes)
                 tmpNode.Paint(context);
 
             ((IDisposable)context.Target).Dispose();
@@ -101,11 +136,11 @@ namespace UserInterface.Views
                 selectedObject.Selected = false;
 
             // Look through nodes for the click point
-            selectedObject = Nodes.FindLast(node => node.HitTest(clickPoint));
+            selectedObject = nodes.FindLast(node => node.HitTest(clickPoint));
 
             // If not found, look through arcs for the click point
             if (selectedObject == null)
-                selectedObject = Arcs.FindLast(arc => arc.HitTest(clickPoint));
+                selectedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
 
             // If found object, select it.
             if (selectedObject != null)
@@ -140,8 +175,35 @@ namespace UserInterface.Views
         private void OnMouseButtonRelease(object o, ButtonReleaseEventArgs args)
         {
             mouseDown = false;
+            CheckSizing();
         }
 
-        
+        /// <summary>
+        /// Drawing area has been rendered - make sure it has enough space.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnRealized(object sender, EventArgs args)
+        {
+            CheckSizing();
+        }
+
+        /// <summary>
+        /// If the right-most node is out of the drawing area, doubles the width.
+        /// If the bottom-most node is out of the drawing area, doubles the height;
+        /// </summary>
+        private void CheckSizing()
+        {
+            if (nodes != null && nodes.Any())
+            {
+                DGNode rightMostNode = nodes.Aggregate((node1, node2) => node1.Location.X > node2.Location.X ? node1 : node2);
+                DGNode bottomMostNode = nodes.Aggregate((node1, node2) => node1.Location.Y > node2.Location.Y ? node1 : node2);
+                if (rightMostNode.Location.X + rightMostNode.Width >= drawable.Allocation.Width)
+                    drawable.WidthRequest = 2 * drawable.Allocation.Width;
+                // I Assume that the nodes are circles such that width = height.
+                if (bottomMostNode.Location.Y + bottomMostNode.Width >= drawable.Allocation.Height)
+                    drawable.HeightRequest = 2 * drawable.Allocation.Height;
+            }
+        }
     }
 }

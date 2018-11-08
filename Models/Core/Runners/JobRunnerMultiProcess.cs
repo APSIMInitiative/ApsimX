@@ -94,7 +94,15 @@ namespace Models.Core.Runners
                     DeleteRunners();
                     runningJobs.Clear();
 
-                    jobs.Completed();
+                    try
+                    {
+                        jobs.Completed();
+                    }
+                    catch (Exception err)
+                    {
+                        errors += Environment.NewLine + err.ToString();
+                    }
+
                     if (AllJobsCompleted != null)
                     {
                         AllCompletedArgs args = new AllCompletedArgs();
