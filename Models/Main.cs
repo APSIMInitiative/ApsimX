@@ -87,8 +87,9 @@ namespace Models
                 // If the filename argument has a wildcard then create a IJobManager to go look for matching files to run.
                 // Otherwise, create a JobManager to open the filename and run it in a separate, external process
                 IJobManager job;
-                if (fileName.Contains('*') || fileName.Contains('?'))
-                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"));
+                bool hasWildcard = fileName.Contains('*') || fileName.Contains('?');
+                if (hasWildcard)
+                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"), args.Contains("/m"));
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 
@@ -97,7 +98,16 @@ namespace Models
                 if (args.Contains("/SingleThreaded"))
                     jobRunner = new JobRunnerSync();
                 else if (args.Contains("/m"))
-                    jobRunner = new JobRunnerMultiProcess();
+                {
+                    // If the multi-process switch has been provided as well as a wildcard in the filename,
+                    // we want to use the single threaded job runner, but run each job in multi-process mode.
+                    // TODO : might be useful to allow users to run a directory of apsimx files via the multi-
+                    // process job runner. This could be faster if they have many small files.
+                    if (hasWildcard)
+                        jobRunner = new JobRunnerSync();
+                    else
+                        jobRunner = new JobRunnerMultiProcess();
+                }
                 else
                     jobRunner = new JobRunnerAsync();
                 if (args.Select(arg => arg.ToLower()).Contains("/csv"))
