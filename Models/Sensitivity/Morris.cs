@@ -31,6 +31,9 @@
         /// <summary>A number of the currently running sim</summary>
         private int simulationNumber;
 
+        /// <summary>Used to track whether this particular Morris has been run.</summary>
+        private bool hasRun = false;
+
         /// <summary>Parameter values coming back from R</summary>
         public DataTable ParameterValues { get; set; }
 
@@ -153,8 +156,11 @@
         [EventSubscribe("BeginRun")]
         private void OnBeginRun()
         {
-            Initialise();
-            simulationNumber = 1;
+            if (Enabled)
+            {
+                Initialise();
+                simulationNumber = 1;
+            }
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -219,6 +225,7 @@
         /// <returns>Empty string if successful, error message if it fails.</returns>
         public void GenerateApsimXFile(string path)
         {
+            hasRun = true;
             Simulation sim = NextSimulationToRun();
             while (sim != null)
             {
@@ -318,7 +325,7 @@
         {
             string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
             DataTable predictedData = dataStore.RunQuery(sql);
-            if (predictedData != null)
+            if (predictedData != null && hasRun)
             {
 
                 // Determine how many years we have per simulation
@@ -438,6 +445,7 @@
                 dataStore.DeleteDataInTable(muStarTable.TableName);
                 dataStore.WriteTable(muStarTable);
             }
+            hasRun = false;
         }
 
 

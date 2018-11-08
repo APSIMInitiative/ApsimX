@@ -820,8 +820,11 @@ namespace Models.PMF.Organs
 
                 // Do maintenance respiration
                 MaintenanceRespiration = 0;
-                MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                {
+                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                }
             }
         }
 
@@ -885,7 +888,7 @@ namespace Models.PMF.Organs
                 IModel MaxN = Apsim.Child(this, "MaximumNConc");
                 AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
                 IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
-                if (NDemSwitch.GetType() == typeof(Constant))
+                if (NDemSwitch is Constant)
                 {
                     if ((NDemSwitch as Constant).Value() == 1.0)
                     {
@@ -905,7 +908,7 @@ namespace Models.PMF.Organs
                 // document DM supplies
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
                 IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
-                if (DMReallocFac.GetType() == typeof(Constant))
+                if (DMReallocFac is Constant)
                 {
                     if ((DMReallocFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs.", indent));
@@ -918,7 +921,7 @@ namespace Models.PMF.Organs
                     AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
                 }
                 IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
-                if (DMRetransFac.GetType() == typeof(Constant))
+                if (DMRetransFac is Constant)
                 {
                     if ((DMRetransFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM.", indent));
@@ -938,7 +941,7 @@ namespace Models.PMF.Organs
                 // document N supplies
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
                 IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
-                if (NReallocFac.GetType() == typeof(Constant))
+                if (NReallocFac is Constant)
                 {
                     if ((NReallocFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
@@ -951,7 +954,7 @@ namespace Models.PMF.Organs
                     AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
                 }
                 IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
-                if (NRetransFac.GetType() == typeof(Constant))
+                if (NRetransFac is Constant)
                 {
                     if ((NRetransFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
@@ -986,7 +989,7 @@ namespace Models.PMF.Organs
                 // document senescence and detachment
                 tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
                 IModel SenRate = Apsim.Child(this, "SenescenceRate");
-                if (SenRate.GetType() == typeof(Constant))
+                if (SenRate is Constant)
                 {
                     if ((SenRate as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive.", indent));
@@ -1000,7 +1003,7 @@ namespace Models.PMF.Organs
                 }
 
                 IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
-                if (DetRate.GetType() == typeof(Constant))
+                if (DetRate is Constant)
                 {
                     if ((DetRate as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));

@@ -20,5 +20,14 @@ namespace Models.Interfaces
         /// Calculate actual decomposition
         /// </summary>
         SurfaceOrganicMatterDecompType CalculateActualSOMDecomp();
+        /// <summary>
+        /// Incorporate FOM
+        /// </summary>
+        void DoIncorpFOM(FOMLayerType FOMdata);
+        /// <summary>
+        /// Reset all Pools
+        /// </summary>
+        void Reset();
+
     }
 }

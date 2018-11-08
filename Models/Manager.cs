@@ -45,7 +45,7 @@ namespace Models
         [NonSerialized] private XmlElement[] _elements;
 
         /// <summary>The compiled code</summary>
-        [NonSerialized] private string CompiledCode = "";
+        private string CompiledCode = "";
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>
@@ -240,7 +240,7 @@ namespace Models
                             SetParametersInObject(Script, parameters);
 
                             // Add the new script model to our models collection.
-                            Children.Clear();
+                            Children.RemoveAll(x => x.GetType().Name == "Script");
                             Children.Add(Script);
                             Script.Parent = this;
                         }
