@@ -26,7 +26,7 @@ namespace UserInterface.Views
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
-    public class GraphView : ViewBase, Interfaces.IGraphView
+    public class GraphView : ViewBase, IGraphView
     {
         /// <summary>
         /// Overall font size for the graph.

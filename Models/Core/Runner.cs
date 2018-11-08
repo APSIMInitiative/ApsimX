@@ -27,10 +27,11 @@
         /// <param name="fileSpec">The file specification</param>
         /// <param name="recurse">Recurse throug sub directories?</param>
         /// <param name="runTests">Run the test nodes?</param>
+        /// <param name="verbose">Should the child process' output be redirected?</param>
         /// <returns>The file of jobs that were run.</returns>
-        public static IJobManager ForFolder(string fileSpec, bool recurse, bool runTests)
+        public static IJobManager ForFolder(string fileSpec, bool recurse, bool runTests, bool verbose)
         {
-            return new RunDirectoryOfApsimFiles(fileSpec, recurse, runTests);
+            return new RunDirectoryOfApsimFiles(fileSpec, recurse, runTests, verbose);
         }
 
         /// <summary>Run simulations in files specified by a file specification.</summary>

@@ -123,13 +123,18 @@
             double sAge = structure.LeafTipsAppeared - age;
             for (int i = apexGroupAge.Count; i > 0; i--)
             {
-                if (apexGroupAge[i - 1] < age)
+                if (i == apexGroupAge.Count)
+                {
+                    num += apexGroupSize[i - 1] * (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared)); 
+                } else if (apexGroupAge[i - 1] <= (int)age)
                 {
                     num += apexGroupSize[i - 1];
                 }
                 else
                 {
-                    num += (1 - (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared))) * apexGroupSize[i - 1];
+                    // double diff = 1 - (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared));
+                    double diff = age - (int)age;
+                    num += diff * apexGroupSize[i - 1];
                     break;
                 }
             }
@@ -217,6 +222,7 @@
                 {
                     double senescenceNum = NumByAge(stemSenescenceAge.Value());
                     Number -= senescenceNum;
+                    Number = Math.Max(1, Number);
                     SenescenceByAge = true;
                     structure.TotalStemPopn -= senescenceNum * plant.Population;
                 }

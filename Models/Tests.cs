@@ -253,7 +253,8 @@ namespace Models
         {
             if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Heading(Parent.Name, headingLevel));
+                if (Parent != null)
+                    tags.Add(new AutoDocumentation.Heading(Parent.Name, headingLevel));
 
                 // Run test suite so that data table is full.
                 Test(accept: false, GUIrun: true);
@@ -274,7 +275,7 @@ namespace Models
                 }
 
                 int rowIndex = 0;
-                while (rowIndex < Table.Rows.Count)
+                while (Table != null && rowIndex < Table.Rows.Count)
                 {
                     DataRow row = dataForDoc.NewRow();
                     dataForDoc.Rows.Add(row);

@@ -8,15 +8,14 @@ using Models.Interfaces;
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// # [Name]
-    /// This model calculates CO2 Impact on RUE using the approach of [Reyenga1999].
+    /// This model calculates the CO<sub>2</sub> impact on RUE using the approach of [Reyenga1999].
     /// </summary>
     [Serializable]
     [Description("This model calculates CO2 Impact on RUE using the approach of <br>Reyenga, Howden, Meinke, Mckeon (1999) <br>Modelling global change impact on wheat cropping in south-east Queensland, Australia. <br>Enivironmental Modelling & Software 14:297-306")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class RUECO2Function : Model, IFunction
+    public class RUECO2Function : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The photosynthetic pathway</summary>
         [Description("PhotosyntheticPathway")]
@@ -71,6 +70,30 @@ namespace Models.Functions.SupplyFunctions
             }
             else
                 throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // get description of this class
+                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+
+                // write memos
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
         }
     }
 }

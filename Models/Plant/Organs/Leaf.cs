@@ -14,14 +14,14 @@ namespace Models.PMF.Organs
 {
     /// <summary>
     /// # [Name]
-    /// The leaves are modeled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.  
+    /// The leaves are modelled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.  
     ///   A cohort represents all the leaves of a given main stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
     ///   The number of leaves in each cohort is the product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
     ///   The *Structure* class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the *Leaf* class models the area and biomass dynamics of each.  
     ///   It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to *LeafCohort* classes.  
     /// 
     /// ## Dry Matter Fixation
-    /// The most important DM supply from leaf is the photosynthetic fixiation supply.  Radiation interception is calculated from
+    /// The most important DM supply from leaf is the photosynthetic fixation supply.  Radiation interception is calculated from
     ///   LAI using an extinction coefficient of:
     /// [Document ExtinctionCoeff]
     /// [Document Photosynthesis]
@@ -178,6 +178,10 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Sets the actual water demand.</summary>
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
@@ -191,7 +195,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            return PotentialEP;
+            return WaterDemand;
         }
 
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1080,7 +1084,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]
@@ -1659,7 +1663,7 @@ namespace Models.PMF.Organs
             double ExtentOfError = Math.Abs(EndWt - CheckValue);
             double FloatingPointError = 0.00000001;
             if (ExtentOfError > FloatingPointError)
-                throw new Exception(Name + "Not all leaf DM allocation was used");
+                throw new Exception(Name + ": " + ExtentOfError.ToString() + " of DM allocation was not used");
         }
 
         /// <summary>Sets the n allocation.</summary>
@@ -1811,14 +1815,16 @@ namespace Models.PMF.Organs
             {
                 double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
                 double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
+
                 if (resLeafCohort > totalBMLeafCohort)
-                {
                     throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+
+                if (resLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)
+                {
+                    L.Live.MetabolicWt -= (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
+                    L.Live.StorageWt -= (resLeafCohort * L.Live.StorageWt / totalBMLeafCohort);
+                    needToRecalculateLiveDead = true;
                 }
-                L.Live.MetabolicWt = L.Live.MetabolicWt - 
-                    (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
-                L.Live.StorageWt = L.Live.StorageWt - 
-                    (resLeafCohort * L.Live.StorageWt / totalBMLeafCohort);
             }
         }
 

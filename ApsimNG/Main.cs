@@ -36,7 +36,8 @@
             while (Gtk.Application.EventsPending())
                 Gtk.Application.RunIteration();
             Directory.CreateDirectory(tempFolder);
-            Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            if (!Path.GetTempPath().Contains("ApsimX"))
+                Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             try
