@@ -1482,13 +1482,13 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "TuberInitiation",
-                          "Name": "PhaseLookupValue",
+                          "Start": "TuberInitiation",
+                          "End": "FinalLeaf",
+                          "Name": "PhaseLookupValue1",
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.3,
+                              "FixedValue": 0.05,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -1503,13 +1503,13 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "TuberInitiation",
-                          "Name": "PhaseLookupValue",
+                          "Start": "FinalLeaf",
+                          "End": "FullSenescence",
+                          "Name": "PhaseLookupValue2",
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.3,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -1714,6 +1714,7 @@
     },
     {
       "$type": "Models.PMF.Organs.Leaf, Models",
+      "Leaves": [],
       "CurrentExpandingLeaf": 34.0,
       "StartFractionExpanded": 0.83819041077407885,
       "FractionNextleafExpanded": 0.92664093062319453,
@@ -3355,7 +3356,56 @@
             "[Structure].FinalLeafNumber.FixedValue = 34"
           ],
           "Name": "RussetBurbank",
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Fianna",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "RussetRanger",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Moonlight",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Agria",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Bondi",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Crop39",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
