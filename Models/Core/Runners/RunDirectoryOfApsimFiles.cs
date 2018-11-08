@@ -22,6 +22,9 @@
         /// <summary>Search recursively for files?</summary>
         private bool recurse;
 
+        /// <summary>Should the child process' output be redirected?</summary>
+        private bool verbose;
+
         /// <summary>List of files found that need running</summary>
         private List<string> files;
 
@@ -29,11 +32,13 @@
         /// <param name="fileSpec">The filespec to search for simulations.</param>
         /// <param name="recurse">True if need to recurse through folder structure.</param>
         /// <param name="runTests">Run the test nodes?</param>
-        public RunDirectoryOfApsimFiles(string fileSpec, bool recurse, bool runTests)
+        /// <param name="verbose">Should the child process' output be redirected?</param>
+        public RunDirectoryOfApsimFiles(string fileSpec, bool recurse, bool runTests, bool verbose)
         {
             this.fileSpec = fileSpec;
             this.recurse = recurse;
             this.runTests = runTests;
+            this.verbose = verbose;
         }
 
         /// <summary>Return the index of next job to run or -1 if nothing to run.</summary>
@@ -71,7 +76,7 @@
             files.RemoveAt(0);
             if (runTests)
                 arguments += " /RunTests";
-            return new RunExternal(apsimExe, arguments, workingDirectory);
+            return new RunExternal(apsimExe, arguments, workingDirectory, verbose);
         }
 
         /// <summary>Called by the job runner when all jobs completed</summary>

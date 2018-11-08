@@ -320,8 +320,8 @@ namespace SWIMFrame
 
             if (qin < q1 || qin > q2)
             {
-                Console.WriteLine("ssflux: qin {0} out of range {1} {2}", qin, q1, q2);
-                Console.WriteLine("at ia, ib = {0} {1}", ia, ib);
+                //Console.WriteLine("ssflux: qin {0} out of range {1} {2}", qin, q1, q2);
+                //Console.WriteLine("at ia, ib = {0} {1}", ia, ib);
             }
             else
                 q = qin;
