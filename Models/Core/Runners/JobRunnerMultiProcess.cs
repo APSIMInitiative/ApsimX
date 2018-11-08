@@ -19,7 +19,7 @@ namespace Models.Core.Runners
     public class JobRunnerMultiProcess : IJobRunner
     {
         private SocketServer server;
-        private IStorageWriter storageWriter;
+        private IStorageWriter storageWriter = null;
         private IJobManager jobs;
 
         /// <summary>A token for cancelling running of jobs</summary>
@@ -37,10 +37,8 @@ namespace Models.Core.Runners
         public event EventHandler<JobCompleteArgs> JobCompleted;
 
         /// <summary>Constructor</summary>
-        /// <param name="writer">The writer where all data should be stored</param>
-        public JobRunnerMultiProcess(IStorageWriter writer)
+        public JobRunnerMultiProcess()
         {
-            storageWriter = writer;
         }
 
         /// <summary>Run the specified jobs</summary>
@@ -50,6 +48,11 @@ namespace Models.Core.Runners
         public void Run(IJobManager jobManager, bool wait = false, int numberOfProcessors = -1)
         {
             jobs = jobManager;
+
+            // If the job manager is a RunExternal, then we don't need to worry about storage - 
+            // each ApsimRunner will launch its own Models.exe which will manage storage itself.
+            if (jobs is RunOrganiser)
+                storageWriter = (jobs as RunOrganiser).Storage;
 
             // Determine number of threads to use
             if (numberOfProcessors == -1)
@@ -169,13 +172,25 @@ namespace Models.Core.Runners
                     server.Send(args.socket, "NULL");
                 else
                 {
-                    RunSimulation runner = jobToRun as RunSimulation;
-                    IModel savedParent = runner.SetParentOfSimulation(null);
-                    GetJobReturnData returnData = new GetJobReturnData();
-                    returnData.key = jobKey;
-                    returnData.job = runner;
-                    server.Send(args.socket, returnData);
-                    runner.SetParentOfSimulation(savedParent);
+                    if (jobToRun is RunSimulation)
+                    {
+                        RunSimulation runner = jobToRun as RunSimulation;
+                        IModel savedParent = runner.SetParentOfSimulation(null);
+                        GetJobReturnData returnData = new GetJobReturnData();
+                        returnData.key = jobKey;
+                        returnData.job = runner;
+                        server.Send(args.socket, returnData);
+                        runner.SetParentOfSimulation(savedParent);
+                    }
+                    else
+                    {
+                        GetJobReturnData returnData = new GetJobReturnData()
+                        {
+                            key = jobKey,
+                            job = jobToRun
+                        };
+                        server.Send(args.socket, returnData);
+                    }
                 }
             }
             catch (Exception err)

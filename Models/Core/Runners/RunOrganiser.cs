@@ -42,6 +42,17 @@
             }
         }
 
+        /// <summary>
+        /// The object used to write data for the simulations.
+        /// </summary>
+        public IStorageWriter Storage
+        {
+            get
+            {
+                return Apsim.Find(simulations, typeof(IStorageWriter)) as IStorageWriter;
+            }
+        }
+
         /// <summary>Constructor</summary>
         /// <param name="model">The model to run.</param>
         /// <param name="simulations">simulations object.</param>

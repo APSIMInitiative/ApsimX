@@ -20,7 +20,8 @@
     /// <summary>
     /// This runnable class runs an external process.
     /// </summary>
-    class RunExternal : IRunnable, IComputationalyTimeConsuming
+    [Serializable]
+    public class RunExternal : IRunnable, IComputationalyTimeConsuming
     {
         /// <summary>Gets or sets the executable file.</summary>
         private string executable;

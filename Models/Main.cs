@@ -92,14 +92,12 @@ namespace Models
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 
-                DataStore writer = new DataStore(Path.ChangeExtension(fileName, ".db"));
-                writer.Open(false);
                 // Run the job created above using either a single thread or multi threaded (default)
                 IJobRunner jobRunner;
                 if (args.Contains("/SingleThreaded"))
                     jobRunner = new JobRunnerSync();
                 else if (args.Contains("/m"))
-                    jobRunner = new JobRunnerMultiProcess(writer);
+                    jobRunner = new JobRunnerMultiProcess();
                 else
                     jobRunner = new JobRunnerAsync();
                 if (args.Select(arg => arg.ToLower()).Contains("/csv"))
