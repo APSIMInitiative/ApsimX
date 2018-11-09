@@ -429,15 +429,6 @@
                 DecomposeSurfom(actualSOMDecomp);
         }
 
-        /// <summary>Model has been loaded.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The event data</param>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, EventArgs args)
-        {
-            //Children.ForEach(child => child.IsHidden = true);
-        }
-
         /// <summary>
         /// Read in all parameters from parameter file
         /// </summary>

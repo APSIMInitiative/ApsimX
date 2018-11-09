@@ -294,7 +294,8 @@
                     Experiment.GetFactorNamesAndValues(factors, names, values);
                     // Pack all factor levels for the current simulation into a list.
                     string name = model.Name + GetName(factors);
-                    bool flag = !model.DisabledSimNames.Contains(name);
+                    bool flag = model.DisabledSimNames == null || 
+                                !model.DisabledSimNames.Contains(name);
                     sims.Add(new Tuple<string, List<string>, bool>(name, values, flag));
                     i++;
                 }

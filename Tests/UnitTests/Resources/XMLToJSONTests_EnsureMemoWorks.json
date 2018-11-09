@@ -1,0 +1,12 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Name": "TitlePage",
+      "Text": "# The APSIM Wheat Model\r\n\r\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._"
+    }
+  ]
+}

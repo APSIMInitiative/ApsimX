@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+
+  <CanopyPhotosynthesis>
+    <Name>Photosynthesis</Name>
+    <Model xsi:type="CanopyGrossPhotosynthesisHourly">
+      <Name>CanopyGrossPhotosynthesisHourly</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <KDIF>0.7</KDIF>
+    </Model>
+  </CanopyPhotosynthesis>
+  
+</Simulations>
