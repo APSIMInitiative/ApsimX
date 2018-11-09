@@ -7,6 +7,7 @@
     using System.IO;
     using System.Collections;
     using System.Linq;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// Gets a run job for running one or more simulations.
@@ -41,8 +42,9 @@
         public static RunOrganiser ForFile(string fileName, bool runTests)
         {
             if (!File.Exists(fileName))
-                throw new Exception("Cannot find file: " + fileName);            
-            Simulations simulations = Simulations.Read(fileName);            
+                throw new Exception("Cannot find file: " + fileName);
+            List<Exception> creationExceptions;
+            Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);            
             return ForSimulations(simulations, simulations, runTests);
         }
 

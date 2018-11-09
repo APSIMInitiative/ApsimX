@@ -1,0 +1,32 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Wheat",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Name": "Clock",
+          "A": "a"
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "Name": "Folder1"
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Name": "Clock2",
+          "A": "b"
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Name": "Clock3",
+          "A": "c"
+        }
+      ]
+    }
+  ]
+}

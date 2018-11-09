@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <Tests>
+      <Name>Test with no stats</Name>
+      <AcceptedStats />
+    </Tests>
+    <Tests>
+      <Name>Test with one stat</Name>
+      <AcceptedStats>
+        <RegrStats>
+          <Name>MaxLeafSize.Script.MaxLeafSize</Name>
+          <n>137</n>
+          <Slope>1.0249885182199205</Slope>
+          <Intercept>-87.8828733653645</Intercept>
+          <SEslope>0.027203290933558777</SEslope>
+          <SEintercept>36.338643450782946</SEintercept>
+          <R2>0.91316625822182118</R2>
+          <RMSE>220.84183606992877</RMSE>
+          <NSE>0.89174017848484943</NSE>
+          <ME>-59.022390864536483</ME>
+          <MAE>153.41315252397067</MAE>
+          <RSR>0.32782556922829786</RSR>
+        </RegrStats>
+      </AcceptedStats>
+      <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+      <POName>LeafSizeObsPred</POName>
+    </Tests>
+    <Tests>
+      <Name>Test with two stat</Name>
+      <AcceptedStats>
+        <RegrStats>
+          <Name>ET</Name>
+          <n>123</n>
+          <Slope>1.1316911691807905</Slope>
+          <Intercept>-0.42852485758004422</Intercept>
+          <SEslope>0.043714911759702088</SEslope>
+          <SEintercept>0.1695726877605401</SEintercept>
+          <R2>0.84706542402663543</R2>
+          <RMSE>0.75711046274626093</RMSE>
+          <NSE>0.75067193089921658</NSE>
+          <ME>0.041670683467817562</ME>
+          <MAE>0.55823408215881576</MAE>
+          <RSR>0.49729368750107755</RSR>
+        </RegrStats>
+        <RegrStats>
+          <Name>ProfileWater</Name>
+          <n>1327</n>
+          <Slope>0.87658770051688029</Slope>
+          <Intercept>76.038910287756153</Intercept>
+          <SEslope>0.013020263518700569</SEslope>
+          <SEintercept>5.4794675052507227</SEintercept>
+          <R2>0.7737996752709706</R2>
+          <RMSE>58.787578405735566</RMSE>
+          <NSE>0.70273305322129209</NSE>
+          <ME>25.835469273289075</ME>
+          <MAE>33.060033011877238</MAE>
+          <RSR>0.54501645158729284</RSR>
+        </RegrStats>
+      </AcceptedStats>
+    </Tests>
+  </DataStore>
+</Simulations>

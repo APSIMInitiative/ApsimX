@@ -49,7 +49,7 @@ namespace UserInterface.Commands
                 List<Simulation> sims = new List<Models.Core.Simulation>();
                 clonedSimulation = Apsim.Clone(simulation) as Simulation;
                 sims.Add(clonedSimulation);
-                explorerPresenter.ApsimXFile.MakeSubstitutions(clonedSimulation);
+                explorerPresenter.ApsimXFile.MakeSubsAndLoad(clonedSimulation);
 
                 events = explorerPresenter.ApsimXFile.GetEventService(clonedSimulation);
                 events.ConnectEvents();
