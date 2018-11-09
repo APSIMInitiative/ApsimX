@@ -106,7 +106,7 @@ namespace Models
                     if (hasWildcard)
                         jobRunner = new JobRunnerSync();
                     else
-                        jobRunner = new JobRunnerMultiProcess();
+                        jobRunner = new JobRunnerMultiProcess(args.Contains("/Verbose"));
                 }
                 else
                     jobRunner = new JobRunnerAsync();

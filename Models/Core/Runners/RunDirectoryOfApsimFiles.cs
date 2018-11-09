@@ -78,11 +78,13 @@
             string apsimExe = Path.Combine(binDirectory, "Models.exe");
 
             string arguments = StringUtilities.DQuote(files[0]);
+            files.RemoveAt(0);
             if (multiProcess)
                 arguments += " /m";
-            files.RemoveAt(0);
             if (runTests)
                 arguments += " /RunTests";
+            if (verbose)
+                arguments += " /Verbose";
             return new RunExternal(apsimExe, arguments, workingDirectory, verbose);
         }
 

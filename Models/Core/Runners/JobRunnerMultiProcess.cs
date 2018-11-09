@@ -25,6 +25,9 @@ namespace Models.Core.Runners
         /// <summary>A token for cancelling running of jobs</summary>
         private CancellationTokenSource cancelToken;
 
+        /// <summary>Write child process' output to standard output?</summary>
+        private bool verbose;
+
         /// <summary>Non simulation errors thrown by runners or this class on socket threads</summary>
         private string errors;
 
@@ -37,8 +40,10 @@ namespace Models.Core.Runners
         public event EventHandler<JobCompleteArgs> JobCompleted;
 
         /// <summary>Constructor</summary>
-        public JobRunnerMultiProcess()
+        /// <param name="verbose">Write child process' output to standard output?</param>
+        public JobRunnerMultiProcess(bool verbose)
         {
+            this.verbose = verbose;
         }
 
         /// <summary>Run the specified jobs</summary>
@@ -65,11 +70,6 @@ namespace Models.Core.Runners
 
             cancelToken = new CancellationTokenSource();
 
-            DeleteRunners();
-            CreateRunners(numberOfProcessors);
-
-            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
-
             // Spin up a job manager server.
             server = new SocketServer();
             server.AddCommand("GetJob", OnGetJob);
@@ -78,6 +78,11 @@ namespace Models.Core.Runners
 
             // Tell server to start listening.
             Task t = Task.Run(() => server.StartListening(2222));
+
+            DeleteRunners();
+            CreateRunners(numberOfProcessors);
+
+            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
             if (wait)
                 while (!t.IsCompleted)
@@ -128,7 +133,7 @@ namespace Models.Core.Runners
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
                 ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), false);
+                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), verbose);
             }
         }
 

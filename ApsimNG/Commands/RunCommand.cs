@@ -55,7 +55,7 @@
             jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
 
             if (multiProcess)
-                jobRunner = new JobRunnerMultiProcess();
+                jobRunner = new JobRunnerMultiProcess(false);
             else
                 jobRunner = new JobRunnerAsync();
             jobRunner.JobCompleted += OnJobCompleded;
