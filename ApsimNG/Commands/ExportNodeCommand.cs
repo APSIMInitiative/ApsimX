@@ -237,7 +237,7 @@ namespace UserInterface.Commands
                 ExplorerPresenter examplePresenter = ExplorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl: true);
 
                 Memo instructionsMemo = userDocumentation.Children[0] as Memo;
-                string[] instructions = instructionsMemo.MemoText.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] instructions = instructionsMemo.Text.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string instruction in instructions)
                 {
                     IModel model = Apsim.Find(examplePresenter.ApsimXFile, instruction);

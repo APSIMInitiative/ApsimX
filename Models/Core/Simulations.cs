@@ -11,6 +11,9 @@ using System.Linq;
 using Models.Core.Interfaces;
 using Models.Core.Runners;
 using Models.Storage;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Models.Core.ApsimFile;
 
 namespace Models.Core
 {
@@ -58,13 +61,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// A list of all exceptions thrown during the creation and loading of the simulation.
-        /// </summary>
-        /// <value>The load errors.</value>
-        [XmlIgnore]
-        public List<Exception> LoadErrors { get; private set; }
-
         /// <summary>Returns an instance of a links service</summary>
         [XmlIgnore]
         public Links Links
@@ -92,10 +88,9 @@ namespace Models.Core
         }
 
         /// <summary>Constructor</summary>
-        private Simulations()
+        public Simulations()
         {
             Version = ApsimFile.Converter.LatestVersion;
-            LoadErrors = new List<Exception>();
             checkpoints = new Checkpoints(this);
         }
 
@@ -108,23 +103,13 @@ namespace Models.Core
             Simulations newSimulations = new Core.Simulations();
             newSimulations.Children.AddRange(children.Cast<Model>());
 
-            // Call the OnDeserialised method in each model.
-            Events events = new Core.Events(newSimulations);
-            object[] args = new object[] { true };
-            events.Publish("Deserialised", args);
-
             // Parent all models.
             newSimulations.Parent = null;
             Apsim.ParentAllChildren(newSimulations);
 
-            // Call OnLoaded in all models.
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newSimulations, loadedArgs });
-            if (loadedArgs.errors.Count > 0)
-            {
-                newSimulations.LoadErrors = new List<Exception>();
-                newSimulations.LoadErrors.AddRange(loadedArgs.errors);
-            }
+            // Call OnCreated in all models.
+            Apsim.ChildrenRecursively(newSimulations).ForEach(m => m.OnCreated());
+
             return newSimulations;
         }
 
@@ -152,93 +137,10 @@ namespace Models.Core
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
                 storage.RevertCheckpoint(checkpointName);
-            return Read(FileName);
+            List<Exception> creationExceptions = new List<Exception>();
+            return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
 
-        /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="FileName">Name of the file.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
-        public static Simulations Read(string FileName)
-        {
-            if (!File.Exists(FileName))
-                throw new Exception("Cannot read file: " + FileName + ". File does not exist.");
-
-            // Run the converter.
-            Stream inStream = ApsimFile.Converter.ConvertToLatestVersion(FileName);
-
-            // Deserialise
-            Simulations simulations = XmlUtilities.Deserialise(inStream, Assembly.GetExecutingAssembly()) as Simulations;
-            if (simulations.Version > ApsimFile.Converter.LatestVersion)
-                throw new Exception("This file has previously been opened with a more recent version of Apsim. Please upgrade to a newer version to open this file.");
-            inStream.Close();
-
-            if (simulations != null)
-            {
-                // Set the filename
-                simulations.FileName = FileName;
-                simulations.SetFileNameInAllSimulations();
-
-                // Call the OnDeserialised method in each model.
-                Events events = new Core.Events(simulations);
-                object[] args = new object[] { true };
-                events.Publish("Deserialised", args);
-
-                // Parent all models.
-                simulations.Parent = null;
-                Apsim.ParentAllChildren(simulations);
-
-                // Call OnLoaded in all models.
-                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                events.Publish("Loaded", new object[] { simulations, loadedArgs });
-                if (loadedArgs.errors.Count > 0)
-                {
-                    simulations.LoadErrors = new List<Exception>();
-                    simulations.LoadErrors.AddRange(loadedArgs.errors);
-                }
-            }
-
-            return simulations;
-        }
-
-        /// <summary>Create a simulations object by reading the specified filename</summary>
-        /// <param name="node">The node.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
-        public static Simulations Read(XmlNode node)
-        {
-            // Run the converter.
-            ApsimFile.Converter.ConvertToLatestVersion(node, null);
-
-            // Deserialise
-            Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
-
-            if (simulations != null)
-            {
-                // Set the filename
-                simulations.SetFileNameInAllSimulations();
-
-                // Call the OnSerialised method in each model.
-                object[] args = new object[] { true };
-                Events events = new Events(simulations);
-                events.Publish("Deserialised", args);
-
-                // Parent all models.
-                simulations.Parent = null;
-                Apsim.ParentAllChildren(simulations);
-
-                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                events.Publish("Loaded", new object[] { simulations, loadedArgs });
-                if (loadedArgs.errors.Count > 0)
-                {
-                    simulations.LoadErrors = new List<Exception>();
-                    simulations.LoadErrors.AddRange(loadedArgs.errors);
-                }
-            }
-            else
-                throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
-            return simulations;
-        }
 
         /// <summary>Run a simulation</summary>
         /// <param name="simulation">The simulation to run</param>
@@ -252,21 +154,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Perform model substitutions, if necessary, then issue a "Loaded" event
+        /// Perform model substitutions
         /// </summary>
-        public void MakeSubsAndLoad(Simulation simulation)
-        {
-            MakeSubstitutions(simulation);
-
-            // Call OnLoaded in all models.
-            Events events = new Events(simulation);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { simulation, loadedArgs });
-        }
-
-        /// <summary>Make model substitutions if necessary.</summary>
-        /// <param name="model">The model to make substitutions in.</param>
-        public void MakeSubstitutions(IModel model)
+        public void MakeSubsAndLoad(Simulation model)
         {
             IModel replacements = Apsim.Child(this, "Replacements");
             if (replacements != null)
@@ -283,14 +173,8 @@ namespace Models.Core
                             match.Parent.Children.Insert(index, newModel as Model);
                             newModel.Parent = match.Parent;
                             match.Parent.Children.Remove(match as Model);
-                            // If we're doing substitutions for an entire Simulation,
-                            // the Loaded event will be issued later. Otherwise, issue one now
-                            if (!(model is Simulation))
-                            {
-                                Events events = new Events(newModel);
-                                LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                                events.Publish("Loaded", new object[] { newModel, loadedArgs });
-                            }
+
+                            newModel.OnCreated();
                         }
                     }
                 }
@@ -302,9 +186,7 @@ namespace Models.Core
         public void Write(string FileName)
         {
             string tempFileName = Path.GetTempFileName();
-            StreamWriter Out = new StreamWriter(tempFileName);
-            Write(Out);
-            Out.Close();
+            File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
@@ -315,25 +197,6 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
-        }
-
-        /// <summary>Write the specified simulation set to the specified 'stream'</summary>
-        /// <param name="stream">The stream.</param>
-        public void Write(TextWriter stream)
-        {
-            object[] args = new object[] { true };
-
-            Events events = new Events(this);
-            events.Publish("Serialising", args);
-
-            try
-            {
-                stream.Write(XmlUtilities.Serialise(this, true));
-            }
-            finally
-            {
-                events.Publish("Serialised", args);
-            }
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>
@@ -463,7 +326,7 @@ namespace Models.Core
                     Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
 
                     // Make any substitutions.
-                    MakeSubstitutions(clonedSimulation);
+                    MakeSubsAndLoad(clonedSimulation);
 
                     // Now use the path to get the model we want to document.
                     modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;

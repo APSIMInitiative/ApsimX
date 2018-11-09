@@ -5,7 +5,7 @@ pipeline {
 			parallel {
 				stage('Prototypes') {
 					agent {
-						label "windows"
+						label "windows && midweight"
 					}
 					steps {
 						bat '''
@@ -27,7 +27,7 @@ pipeline {
 				}
 				stage('Validation') {
 					agent {
-						label "windows"
+						label "windows && heavyweight"
 					}
 					steps {
 						bat '''

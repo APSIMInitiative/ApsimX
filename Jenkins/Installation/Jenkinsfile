@@ -51,7 +51,7 @@ pipeline {
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build /r
-							call createInstaller Windows
+							call createInstaller windows
 						'''
 					}
 				}
