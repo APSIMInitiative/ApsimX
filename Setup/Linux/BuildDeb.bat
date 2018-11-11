@@ -1,4 +1,4 @@
-@echo on
+@echo off
 set "PATH=%PATH%;C:\Utilities"
 if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
