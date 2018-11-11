@@ -25,6 +25,7 @@ pipeline {
 							call cleanup
 							call build /r
 							call runTests Validation
+							call runTests Examples
 							call createDocumentation
 							call uploadDocumentation
 						'''
