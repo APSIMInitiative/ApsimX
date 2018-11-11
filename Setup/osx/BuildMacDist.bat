@@ -1,4 +1,4 @@
-@echo on
+@echo off
 setlocal enabledelayedexpansion
 if "%apsimx%"=="" (
 	pushd %~dp0..\..>nul
