@@ -446,9 +446,8 @@ namespace Models.Functions.SupplyFunctions
             double minPercError = 0.5;
             double sumTr = hourlyActTr.Sum();
 
-            //List<double> hourlyUptake = new List<double>(hourlyRad);
-            //double sumRad = hourlyRad.Sum();
-            //for (int i = 0; i < 24; i++) hourlyUptake[i] = Leaf.PotentialEP * hourlyRad[i] / sumRad;
+            // It's assumed that total extractable water is evenly distributed over the day time.
+            // Maximum hourly transpiration cannot exceed the maximum hourly supply.
             double maxUptake = rootWaterSupp / DayLength();
             for (int i = 0; i < 24; i++) hourlyActTr[i] = Math.Min(maxUptake, hourlyActTr[i]);
 
