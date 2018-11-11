@@ -38,6 +38,12 @@ if not exist "%solution_file%" (
 	exit /b 1
 )
 
+rem Copy DeploymentSupport files.
+echo Copying DeploymentSupport files...
+xcopy /e /i %apsimx%\DeploymentSupport\Windows\Bin64\lib %apsimx%\lib>nul
+copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin>nul
+echo Done.
+
 rem Restore NuGet packages.
 echo Restoring NuGet packages...
 pushd "%apsimx%">nul
