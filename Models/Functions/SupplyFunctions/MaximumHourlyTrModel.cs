@@ -196,6 +196,9 @@ namespace Models.Functions.SupplyFunctions
                 CalcTemperature();
                 CalcSVP();
                 CalcVPD();
+                CalcRadiation();
+                CalcRUE();
+
                 if (string.Equals(AssimilateType, "net") || (GrossAssimilateModel != null))
                 {
                     CalcRadiation();
@@ -443,6 +446,12 @@ namespace Models.Functions.SupplyFunctions
             double minPercError = 0.5;
             double sumTr = hourlyActTr.Sum();
 
+            //List<double> hourlyUptake = new List<double>(hourlyRad);
+            //double sumRad = hourlyRad.Sum();
+            //for (int i = 0; i < 24; i++) hourlyUptake[i] = Leaf.PotentialEP * hourlyRad[i] / sumRad;
+            double maxUptake = rootWaterSupp / DayLength();
+            for (int i = 0; i < 24; i++) hourlyActTr[i] = Math.Min(maxUptake, hourlyActTr[i]);
+
             if (hourlyActTr.Sum() - rootWaterSupp > 1e-5)
             {
                 if (string.Equals(SWType, "daily"))
@@ -469,7 +478,6 @@ namespace Models.Functions.SupplyFunctions
                                 {
                                     double diff = Math.Max(0, hourlyActTr.Sum() - rootWaterSupp);
                                     if (hourlyActTr[i] >= maxHourlyT) hourlyActTr[i] = Math.Max(maxHourlyT, hourlyActTr[i] - diff);
-                                    if (hourlyActTr.Sum() - rootWaterSupp < 1e-5) break;
                                 }
                             }
                         }
@@ -894,9 +902,22 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private double CalcDayLength(double latR, double solarDec)
+        private double DayLength()
         {
-            return Math.Acos(-Math.Tan(latR) * Math.Tan(solarDec));
+            latR = Math.PI / 180.0 * Weather.Latitude;       // convert latitude (degrees) to radians
+            double PI = Math.PI;
+            double RAD = PI / 180.0;
+
+            //Declination of the sun as function of Daynumber (vDay)
+            double Dec = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * ((double)Clock.Today.DayOfYear + 10.0) / 365.0));
+
+            //vSin and vCos are intermediate variables
+            double Sin = Math.Sin(latR) * Math.Sin(Dec);
+            double Cos = Math.Cos(latR) * Math.Cos(Dec);
+
+            //Astronomical daylength (hr)
+            double DayL = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
+            return DayL;
         }
         //------------------------------------------------------------------------------------------------
 
@@ -930,44 +951,6 @@ namespace Models.Functions.SupplyFunctions
                 else if (t > setHour) weights.Add(0);
             }
             return weights;
-        }
-        //------------------------------------------------------------------------------------------------
-
-        private void CalcRadiationOld()
-        {
-            // Calculates the ground solar incident radiation per hour and scales it to the actual radiation
-            // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
-
-            hourlyRad = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyRad.Add(0.0);
-
-            latR = Math.PI / 180.0 * Weather.Latitude;      // convert latitude (degrees) to radians
-
-            // some calculations
-            double SolarDec = CalcSolarDeclination(Clock.Today.DayOfYear);
-            double DayLR = CalcDayLength(latR, SolarDec);                   // day length (radians)
-            double DayL = (2.0 / 15.0 * DayLR) * (180 / Math.PI);           // day length (hours)
-            double Solar = Weather.Radn;     // solar radiation
-
-            //do the radiation calculation zeroing at dawn
-            double DuskDawnFract = (DayL - Math.Floor(DayL)) / 2; // the remainder part of the hour at dusk and dawn
-            double riseHour = 12 - (DayL / 2);
-
-            //The first partial hour
-            hourlyRad[Convert.ToInt32(Math.Floor(riseHour))] += HourluGlobalRadiation(DuskDawnFract / DayL, latR, SolarDec, DayL, Solar) * 3600 * DuskDawnFract;
-
-            //Add the next lot
-            int iDayLH = Convert.ToInt32(Math.Floor(DayL));
-
-            for (int i = 0; i < iDayLH - 1; i++)
-                hourlyRad[(int)riseHour + i + 1] += HourluGlobalRadiation(DuskDawnFract / DayL + (double)(i + 1) * 1.0 / (double)(int)DayL, latR, SolarDec, DayL, Solar) * 3600;
-
-            //Add the last one
-            hourlyRad[(int)riseHour + (int)DayL + 1] += (HourluGlobalRadiation(1, latR, SolarDec, DayL, Solar) * 3600 * DuskDawnFract);
-
-            // scale to today's radiation
-            double TotalRad = hourlyRad.Sum();
-            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadIntTot.Value();
         }
         //------------------------------------------------------------------------------------------------
     }
