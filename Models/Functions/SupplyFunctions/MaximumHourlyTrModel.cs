@@ -52,12 +52,12 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The radiation use efficiency</summary>
         [Link]
-        [Description("hourlyRad use efficiency")]
+        [Description("Radiation use efficiency")]
         private IFunction RUE = null;
 
         /// <summary>The transpiration efficiency coefficient for net biomass assimilate</summary>
         [Link]
-        [Description("The transpiration efficiency coefficient for net biomass assimilate")]
+        [Description("Transpiration efficiency coefficient for net biomass assimilate")]
         [Units("kPa/gC/m^2/mm water")]
         private IFunction TEC = null;
 
@@ -91,19 +91,25 @@ namespace Models.Functions.SupplyFunctions
         public string AssimilateType { get; set; } = "net";
 
         /// <summary>The photosynthesis type (net/gross)</summary>
-        [Description("The way soil moisture should be treated (daily/numeric/dcaps)")]
+        [Description("The way soil moisture should be treated (daily or numeric or dcaps)")]
         public string SWType { get; set; } = "numeric";
 
         /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
         [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
-        [Bounds(Lower = 0.1, Upper = 1000)]
         [Units("kPa")]
+        [Bounds(Lower = 0.1, Upper = 1000)]
         public double MaxVPD { get; set; } = 999;
+
+        /// <summary>Fraction of (hourly VPD - MaxVPD) used in calculating hourly transpiration when VPD is above MaxVPD</summary>
+        [Description("Fraction of (hourly VPD - MaxVPD) used in calculating hourly transpiration when VPD is above MaxVPD (0-1; zero to cap at MaxVPD)")]
+        [Units("-")]
+        [Bounds(Lower = 0, Upper = 1)]
+        public double HighVPDFrac { get; set; } = 0;
 
         /// <summary>The maximum hourly transpiration rate</summary>
         [Description("Maximum hourly transpiration rate (mm/hr)")]
-        [Bounds(Lower = 0.01, Upper = 1000.0)]
         [Units("mm/hr")]
+        [Bounds(Lower = 0.01, Upper = 1000.0)]
         public double MaxTr { get; set; } = 999;
 
         /// <summary>The MaximumTempWeight</summary>
@@ -114,15 +120,15 @@ namespace Models.Functions.SupplyFunctions
         [Description("KDIF")]
         public double KDIF { get; set; } = 0.7;
 
-        /// <summary>LUE at low light at 340ppm and 20C </summary>
+        /// <summary>LUE at low light at 340ppm and 20C</summary>
         [Description("LUE at low light at 340ppm and 20C (kgCO2/ha/h / J/m2/s)")]
         public double LUEref { get; set; } = 0.6;
 
-        /// <summary>Leaf gross photosynthesis rate at 340ppm CO2 </summary>
+        /// <summary>Leaf gross photosynthesis rate at 340ppm CO2</summary>
         [Description("Maximum gross photosynthesis rate Pmax (kgCO2/ha/h)")]
         public double PgMax { get; set; } = 45;
 
-        /// <summary>Photosynthesis Pathway (C3/C4)</summary>
+        /// <summary>Photosynthesis Pathway</summary>
         [Description("Photosynthesis pathway C3/C4")]
         public string Pathway { get; set; } = "C3";
         //------------------------------------------------------------------------------------------------
@@ -421,9 +427,14 @@ namespace Models.Functions.SupplyFunctions
 
         private void CalcVPDCappedTr()
         {
-            // Calculates hourlyVPDCappedTr as the product of hourlyRUE, Math.Min(hourlyVPD, MaxVPD) and transpEffCoef
+            // Calculates hourlyVPDCappedTr as the product of hourlyRUE, capped hourlyVPD and transpEffCoef
             hourlyPotTr_VPDLimited = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyPotTr_VPDLimited.Add(hourlyPotDM[i] * Math.Min(hourlyVPD[i], MaxVPD) / transpEffCoef);
+            for (int i = 0; i < 24; i++)
+            {
+                double vpd = MaxVPD + (hourlyVPD[i] - MaxVPD) * HighVPDFrac;
+                vpd = hourlyVPD[i] > MaxVPD ? vpd : hourlyVPD[i];
+                hourlyPotTr_VPDLimited.Add(hourlyPotDM[i] * vpd / transpEffCoef);
+            }
         }
         //------------------------------------------------------------------------------------------------
 
