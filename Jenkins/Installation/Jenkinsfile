@@ -5,7 +5,7 @@ pipeline {
 			parallel {
 				stage('Documentation') {
 					agent {
-						label "windows && installation"
+						label "installation"
 					}
 					environment {
 						APSIM_SITE_CREDS = credentials('apsim-site-creds')
@@ -33,7 +33,7 @@ pipeline {
 				}
 				stage('Windows') {
 					agent {
-						label "windows && installation"
+						label "installation"
 					}
 					environment {
 						APSIM_SITE_CREDS = credentials('apsim-site-creds')
@@ -58,7 +58,7 @@ pipeline {
 				}
 				stage('MacOS') {
 					agent {
-						label "windows && installation"
+						label "installation"
 					}
 					environment {
 						APSIM_SITE_CREDS = credentials('apsim-site-creds')
@@ -83,7 +83,7 @@ pipeline {
 				}
 				stage('Debian') {
 					agent {
-						label "windows && installation"
+						label "installation"
 					}
 					environment {
 						APSIM_SITE_CREDS = credentials('apsim-site-creds')
@@ -110,7 +110,7 @@ pipeline {
 		}
 		stage('Deploy') {
 			agent {
-				label "windows && installation"
+				label "installation"
 			}
 			environment {
 				CHANGE_DB_CREDS = credentials('change-db-creds')
