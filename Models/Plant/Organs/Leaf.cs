@@ -178,9 +178,14 @@ namespace Models.PMF.Organs
             }
         }
 
+        private double _WaterDemand;
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
-        public double WaterDemand { get; set; }
+        public double WaterDemand
+        {
+            get { return _WaterDemand; }
+            set { _WaterDemand = value; }
+        }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }

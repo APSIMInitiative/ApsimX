@@ -163,9 +163,14 @@ namespace Models.PMF.Organs
             }
         }
 
+        private double _WaterDemand;
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
-        public double WaterDemand { get; set; }
+        public double WaterDemand
+        {
+            get { return _WaterDemand; }
+            set { _WaterDemand = value; }
+        }
 
         /// <summary>
         /// Flag to test if Microclimate is present
