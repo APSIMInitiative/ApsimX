@@ -100,8 +100,8 @@ namespace Models.Functions.SupplyFunctions
         [Bounds(Lower = 0.1, Upper = 1000)]
         public double VPDThresh { get; set; } = 999;
 
-        /// <summary>Fraction of (hourly VPD - MaxVPD) used in calculating hourly transpiration when VPD is above MaxVPD</summary>
-        [Description("Reduction in the part of hourly transpiration above Tr at MaxVPD (0-1; set 1 to cap at MaxVPD)")]
+        /// <summary>Fraction of (hourly VPD - VPDThresh) used in calculating hourly transpiration when VPD is above VPDThresh</summary>
+        [Description("Reduction in the part of hourly transpiration above Tr at VPDThresh (0-1; set 1 to cap at VPDThresh)")]
         [Units("-")]
         [Bounds(Lower = 0, Upper = 1)]
         public double HighVPDReduction { get; set; } = 1;
@@ -429,11 +429,22 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, capped hourlyVPD and transpEffCoef
             hourlyPotTr_VPDLimited = new List<double>();
+
+            XYPairs interpol = new XYPairs();
+            interpol.X = hourlyVPD.ToArray();
+            interpol.Y = hourlyPotDM.ToArray();
+            double dmVPDThresh = interpol.ValueIndexed(VPDThresh);
+
             for (int i = 0; i < 24; i++)
             {
-                double trMaxVPD = hourlyPotDM[i] * VPDThresh / transpEffCoef; // Hourly transpiration at MaxVPD
-                double reduction = Math.Max(0, hourlyPotTr[i] - trMaxVPD) * HighVPDReduction; // Reduction in the part of hourly transpiration above trMaxVPD
-                hourlyPotTr_VPDLimited.Add(hourlyPotTr[i] - reduction);
+                if (hourlyVPD[i] > VPDThresh)
+                {
+                    double trVPDThresh = dmVPDThresh * VPDThresh / transpEffCoef; // Hourly transpiration at VPDThresh
+                    double reduction = Math.Max(0, hourlyPotTr[i] - trVPDThresh) * HighVPDReduction; // Reduction in the part of hourly transpiration above trVPDThresh
+                    hourlyPotTr_VPDLimited.Add(hourlyPotTr[i] - reduction);
+
+                } else
+                    hourlyPotTr_VPDLimited.Add(hourlyPotDM[i]);
             }
         }
         //------------------------------------------------------------------------------------------------
