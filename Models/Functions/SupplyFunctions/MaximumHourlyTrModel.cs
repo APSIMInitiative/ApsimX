@@ -94,17 +94,17 @@ namespace Models.Functions.SupplyFunctions
         [Description("The way soil moisture should be treated (daily or numeric or dcaps)")]
         public string SWType { get; set; } = "numeric";
 
-        /// <summary>The maximum hourlyVPD when hourly transpiration rate cease to further increase</summary>
-        [Description("Maximum hourly VPD when hourly transpiration rate cease to further increase (kPa)")]
+        /// <summary>Threshold of hourly VPD at which hourly transpiration rate cease to linearly increase by VPD/TEC</summary>
+        [Description("Threshold of hourly VPD at which hourly transpiration rate cease to linearly increase by VPD/TEC (kPa)")]
         [Units("kPa")]
         [Bounds(Lower = 0.1, Upper = 1000)]
-        public double MaxVPD { get; set; } = 999;
+        public double VPDThresh { get; set; } = 999;
 
         /// <summary>Fraction of (hourly VPD - MaxVPD) used in calculating hourly transpiration when VPD is above MaxVPD</summary>
-        [Description("Fraction of (hourly VPD - MaxVPD) used in calculating hourly transpiration when VPD is above MaxVPD (0-1; zero to cap at MaxVPD)")]
+        [Description("Reduction in the part of hourly transpiration above Tr at MaxVPD (0-1; set 1 to cap at MaxVPD)")]
         [Units("-")]
         [Bounds(Lower = 0, Upper = 1)]
-        public double HighVPDFrac { get; set; } = 0;
+        public double HighVPDReduction { get; set; } = 1;
 
         /// <summary>The maximum hourly transpiration rate</summary>
         [Description("Maximum hourly transpiration rate (mm/hr)")]
@@ -431,9 +431,9 @@ namespace Models.Functions.SupplyFunctions
             hourlyPotTr_VPDLimited = new List<double>();
             for (int i = 0; i < 24; i++)
             {
-                double vpd = MaxVPD + (hourlyVPD[i] - MaxVPD) * HighVPDFrac;
-                vpd = hourlyVPD[i] > MaxVPD ? vpd : hourlyVPD[i];
-                hourlyPotTr_VPDLimited.Add(hourlyPotDM[i] * vpd / transpEffCoef);
+                double trMaxVPD = hourlyPotDM[i] * VPDThresh / transpEffCoef; // Hourly transpiration at MaxVPD
+                double reduction = Math.Max(0, hourlyPotTr[i] - trMaxVPD) * HighVPDReduction; // Reduction in the part of hourly transpiration above trMaxVPD
+                hourlyPotTr_VPDLimited.Add(hourlyPotTr[i] - reduction);
             }
         }
         //------------------------------------------------------------------------------------------------
