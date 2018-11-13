@@ -166,6 +166,7 @@
         /// <summary>Gets the next job to run</summary>
         public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
+            hasRun = true;
             if (allCombinations.Count == 0)
                 return null;
 
@@ -225,7 +226,6 @@
         /// <returns>Empty string if successful, error message if it fails.</returns>
         public void GenerateApsimXFile(string path)
         {
-            hasRun = true;
             Simulation sim = NextSimulationToRun();
             while (sim != null)
             {
@@ -323,9 +323,11 @@
         /// <param name="dataStore">The data store.</param>
         public void Run(IStorageReader dataStore)
         {
+            if (!hasRun)
+                return;
             string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
             DataTable predictedData = dataStore.RunQuery(sql);
-            if (predictedData != null && hasRun)
+            if (predictedData != null)
             {
 
                 // Determine how many years we have per simulation
